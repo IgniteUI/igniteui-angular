@@ -1,10 +1,9 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, NgModuleRef } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, FormControl } from '@angular/forms';
-import { IgxCalendarComponent } from '../calendar/public_api';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -17,7 +16,9 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { AutoPositionStrategy } from '../services/public_api';
+import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
+import { AnimationMetadata, AnimationOptions } from '@angular/animations';
+import { create } from 'domain';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -33,56 +34,146 @@ const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 
-describe('IgxDateRangePicker', () => {
+fdescribe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
+        let mockElement: any;
+        let mockElementRef: any;
+        let mockFactoryResolver: any;
+        let mockApplicationRef: any;
+        let mockAnimationBuilder: any;
+        let mockDocument: any;
+        let mockNgZone: any;
+        let mockPlatformUtil: any;
+        let overlay: IgxOverlayService;
+        let mockInjector;
+        let ngModuleRef: any;
         const elementRef = { nativeElement: null };
-        const calendar = new IgxCalendarComponent();
+        // const calendar = new IgxCalendarComponent();
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
-        const mockInjector = jasmine.createSpyObj('Injector', {
-            get: mockNgControl
+        beforeEach(() => {
+            ngModuleRef = ({
+                injector: (...args: any[]) => { },
+                componentFactoryResolver: () => mockFactoryResolver,
+                instance: () => { },
+                destroy: () => { },
+                onDestroy: (fn: any) => { }
+            });
+            mockElement = {
+                style: { visibility: '', cursor: '', transitionDuration: '' },
+                classList: { add: () => { }, remove: () => { } },
+                appendChild: () => { },
+                removeChild: () => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                getBoundingClientRect: () => ({ width: 10, height: 10 }),
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
+                contains: () => { }
+            };
+            mockElement.parent = mockElement;
+            mockElement.parentElement = mockElement;
+            mockElementRef = { nativeElement: mockElement };
+            mockFactoryResolver = {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                resolveComponentFactory: (c: any) => ({
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    create: (i: any) => ({
+                        hostView: '',
+                        location: mockElementRef,
+                        changeDetectorRef: { detectChanges: () => { } },
+                        destroy: () => { }
+                    })
+                })
+            };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
+            mockInjector = jasmine.createSpyObj('Injector', {
+                get: mockNgControl
+            });
+            mockAnimationBuilder = {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                build: (a: AnimationMetadata | AnimationMetadata[]) => ({
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    create: (e: any, opt?: AnimationOptions) => ({
+                        onDone: (fn: any) => { },
+                        onStart: (fn: any) => { },
+                        onDestroy: (fn: any) => { },
+                        init: () => { },
+                        hasStarted: () => true,
+                        play: () => { },
+                        pause: () => { },
+                        restart: () => { },
+                        finish: () => { },
+                        destroy: () => { },
+                        rest: () => { },
+                        setPosition: (p: any) => { },
+                        getPosition: () => 0,
+                        parentPlayer: {},
+                        totalTime: 0,
+                        beforeDestroy: () => { }
+                    })
+                })
+            };
+            mockDocument = {
+                body: mockElement,
+                defaultView: mockElement,
+                createElement: () => mockElement,
+                appendChild: () => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+            };
+            mockNgZone = {};
+            mockPlatformUtil = { isIOS: false };
+
+            overlay = new IgxOverlayService(
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
         });
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
+            // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
 
             // select range
-            dateRange.selectRange(startDate, endDate);
+            dateRange.select(startDate, endDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(endDate);
 
             // select startDate only
             startDate = new Date(2023, 2, 11);
-            dateRange.selectRange(startDate);
+            dateRange.select(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
         });
 
         it('should emit rangeSelected on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
-            dateRange.calendar = calendar;
-            spyOn(dateRange.rangeSelected, 'emit');
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
+            // dateRange.calendar = calendar;
+            spyOn(dateRange.selected, 'emit');
             let startDate = new Date(2017, 4, 5);
             const endDate = new Date(2017, 11, 22);
 
             // select range
-            dateRange.selectRange(startDate, endDate);
+            dateRange.select(startDate, endDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(endDate);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(1);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
+            expect(dateRange.selected.emit).toHaveBeenCalledTimes(1);
+            expect(dateRange.selected.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
 
             // select startDate only
             startDate = new Date(2024, 12, 15);
-            dateRange.selectRange(startDate);
+            dateRange.select(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(2);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
+            expect(dateRange.selected.emit).toHaveBeenCalledTimes(2);
+            expect(dateRange.selected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
         it('should correctly implement interface methods - ControlValueAccessor', () => {
@@ -90,7 +181,7 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
+            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null, null, null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
             spyOn(dateRangePicker, 'handleSelection').and.callThrough();
@@ -123,11 +214,11 @@ describe('IgxDateRangePicker', () => {
             expect(dateRangePicker.disabled).toBe(false);
         });
 
-        it('should validate correctly minValue and maxValue ', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+        it('should validate correctly minValue and maxValue', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            // dateRange.calendar = calendar;
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
 
@@ -148,15 +239,20 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+        fit('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, ngModuleRef, overlay);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            // dateRange.calendar = calendar;
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
-            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            dateRange.open({
+                closeOnOutsideClick: true,
+                modal: false,
+                target: dateRange.element.nativeElement
+            });
+            spyOn(dateRange.calendar, 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
             expect(dateRange.calendar.disabledDates.length).toEqual(2);
             expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
@@ -166,14 +262,14 @@ describe('IgxDateRangePicker', () => {
         }));
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            // dateRange.calendar = calendar;
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
-            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            spyOn(dateRange.calendar, 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
             expect(dateRange.calendar.disabledDates.length).toEqual(2);
             expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
@@ -298,13 +394,13 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     startDate = new Date(2020, 10, 8, 0, 0, 0);
                     endDate = new Date(2020, 11, 8, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
 
                     startDate = new Date(2006, 5, 18, 0, 0, 0);
                     endDate = new Date(2006, 8, 18, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
                 });
@@ -329,7 +425,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     const longDateOptions = { month: 'long', day: 'numeric' };
                     let inputStartDate = `${ControlsFunction.formatDate(startDate, longDateOptions)}, ${startDate.getFullYear()}`;
@@ -343,7 +439,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.inputDirective.placeholder).toEqual(`M/d/yy - M/d/yy`);
                     startDate.setDate(2);
                     endDate.setDate(19);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const shortDateOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -358,7 +454,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.inputDirective.placeholder).toEqual(`EEEE, MMMM d, y - EEEE, MMMM d, y`);
                     startDate.setDate(12);
                     endDate.setDate(23);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const fullDateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
@@ -372,7 +468,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(9);
                     endDate.setDate(13);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const customFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -387,8 +483,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
                     const dayRange = 8;
@@ -411,10 +507,10 @@ describe('IgxDateRangePicker', () => {
 
                     verifyDateRangeInSingleInput();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
                 it('should show the "Done" button only in dialog mode', () => {
@@ -465,19 +561,19 @@ describe('IgxDateRangePicker', () => {
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     dateRange.open();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
                     const dayRange = 5;
                     const today = new Date();
@@ -491,26 +587,26 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
                 it('should emit open/close events - toggle method', fakeAsync(() => {
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     dateRange.toggle();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
                     const dayRange = 6;
                     const today = new Date();
@@ -523,16 +619,16 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
                 it('should not close calendar if closing event is canceled', fakeAsync(() => {
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
-                    dateRange.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    dateRange.closing.subscribe((e: CancelableEventArgs) => e.cancel = true);
 
                     dateRange.toggle();
                     tick(DEBOUNCE_TIME);
@@ -544,14 +640,14 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 14, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
 
                     dateRange.close();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalled();
-                    expect(dateRange.onClosed.emit).not.toHaveBeenCalled();
+                    expect(dateRange.closing.emit).toHaveBeenCalled();
+                    expect(dateRange.closed.emit).not.toHaveBeenCalled();
                 }));
             });
 
@@ -560,33 +656,33 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     dateRange.open();
@@ -598,8 +694,8 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
@@ -607,15 +703,15 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
 
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
             });
 
@@ -730,13 +826,13 @@ describe('IgxDateRangePicker', () => {
                 it('should assign range values correctly when selecting through API', () => {
                     startDate = new Date(2020, 10, 8, 0, 0, 0);
                     endDate = new Date(2020, 11, 8, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRange();
 
                     startDate = new Date(2003, 5, 18, 0, 0, 0);
                     endDate = new Date(2003, 8, 18, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRange();
                 });
@@ -792,7 +888,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     expect(startInput.nativeElement.value).toEqual(ControlsFunction.formatDate(startDate, DEFAULT_FORMAT_OPTIONS));
                     expect(endInput.nativeElement.value).toEqual(ControlsFunction.formatDate(endDate, DEFAULT_FORMAT_OPTIONS));
@@ -802,7 +898,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(2);
                     endDate.setDate(19);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const shortDateFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -814,7 +910,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(12);
                     endDate.setDate(23);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const fullDateFormatOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
@@ -826,7 +922,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(9);
                     endDate.setDate(13);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const customFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -871,33 +967,33 @@ describe('IgxDateRangePicker', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
                     UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
                     fixture.componentInstance.mode = InteractionMode.DropDown;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     dateRange.toggle();
@@ -909,23 +1005,23 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
 
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
             });
 
@@ -1093,7 +1189,7 @@ describe('IgxDateRangePicker', () => {
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
                 expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
 
-                dateRange.selectRange(startDate, endDate);
+                dateRange.select(startDate, endDate);
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
             }));
@@ -1115,7 +1211,7 @@ describe('IgxDateRangePicker', () => {
 
                 startDate = new Date(2020, 10, 8, 0, 0, 0);
                 endDate = new Date(2020, 11, 8, 0, 0, 0);
-                dateRange.selectRange(startDate, endDate);
+                dateRange.select(startDate, endDate);
                 fixture.detectChanges();
 
                 const result = fixture.componentInstance.formatter({ start: startDate, end: endDate });
@@ -1274,5 +1370,5 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     `
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
-    range;
+    public range;
 }

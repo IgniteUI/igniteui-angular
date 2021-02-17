@@ -1,12 +1,22 @@
 <ng-template #defaultDatePickerActions>
     <div *ngIf="cancelButtonLabel || todayButtonLabel" class="igx-date-picker__buttons">
-        <button #closeButton *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="close()">
+        <button #closeButton *ngIf="cancelButtonLabel" igxButton="flat" igxRipple (click)="this.emitCalendarClose()">
             {{ cancelButtonLabel }}
         </button>
-        <button #todayButton *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="selectToday()">
+        <button #todayButton *ngIf="todayButtonLabel" igxButton="flat" igxRipple (click)="this.selectToday()">
             {{ todayButtonLabel }}
         </button>
     </div>
 </ng-template>
-<igx-calendar #calendar></igx-calendar>
-<ng-container *ngTemplateOutlet="datePickerActions ? datePickerActions.template : defaultDatePickerActions"></ng-container>
+
+<div [style.flex-basis]="displayMonthsCount * 320 + 'px'" [style.width]="displayMonthsCount * 320 + 'px'"
+    [style.max-width]="'90vw'">
+    <igx-calendar #calendar></igx-calendar>
+    <div *ngIf="this.mode === 'dialog' && this.selectionMode === 'range'" class="igx-date-range-picker-buttons">
+        <button igxButton type="button" (click)="this.emitCalendarClose()">{{ doneButtonText }}</button>
+    </div>
+</div>
+<ng-container *ngTemplateOutlet="datePickerActions 
+    ? datePickerActions.template 
+    : defaultDatePickerActions">
+</ng-container>

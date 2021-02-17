@@ -1,5 +1,5 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { IgxCalendarComponent } from '../../calendar/public_api';
+import { Calendar, CalendarSelection, IgxCalendarComponent } from '../../calendar/public_api';
 import { InteractionMode } from '../../core/enums';
 import { IgxDatePickerActionsDirective } from '../../date-picker/date-picker.directives';
 
@@ -27,6 +27,15 @@ export class IgxCalendarContainerComponent {
 
     @Input()
     public datePickerActions: IgxDatePickerActionsDirective;
+
+    @Input()
+    public selectionMode: CalendarSelection;
+
+    @Input()
+    public doneButtonText: string;
+
+    @Input()
+    public displayMonthsCount: number;
 
     /** @hidden @internal */
     @Output()
