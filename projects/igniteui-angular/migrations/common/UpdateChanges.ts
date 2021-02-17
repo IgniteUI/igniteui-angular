@@ -321,7 +321,9 @@ export class UpdateChanges {
                 for (const match of matches) {
                     if (match.indexOf(change.name) !== -1) {
                         const name = change.name.replace('$', '\\$');
+                        const replaceWith = change.replaceWith?.replace('$', '\\$');
                         const reg = new RegExp(String.raw`^\s*${name}:`);
+                        const existing = new RegExp(String.raw`${replaceWith}[^:]*`);
                         const opening = `${change.owner}(`;
                         const closing = /\s*\);$/.exec(match).pop();
                         const body = match.substr(opening.length, match.length - opening.length - closing.length);
@@ -329,9 +331,9 @@ export class UpdateChanges {
                         let params = this.splitFunctionProps(body);
                         params = params.reduce((arr, param) => {
                             if (reg.test(param)) {
-                                const duplicates = arr.filter(p => p.indexOf(change.replaceWith) !== -1);
+                                const duplicate = arr.some(p => existing.test(p));
 
-                                if (!change.remove && duplicates.length === 0) {
+                                if (!change.remove && !duplicate) {
                                     arr.push(param.replace(change.name, change.replaceWith));
                                 }
                             } else {
