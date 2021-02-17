@@ -68,8 +68,8 @@ function readInput(options: Options): Rule {
         context.logger.warn('polyfills.ts file path not found. ' + animationsWarn);
       }
     }
-  }
-};
+  };
+}
 
 function addNormalize(options: Options): Rule {
   return (tree: Tree, context: SchematicContext) => {
