@@ -325,7 +325,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
      * @hidden @internal
      */
     get grid(): IgxGridBaseDirective {
-        return this.gridAPI?.grid ?? this.column?.grid;
+        return this.column?.grid ?? this.gridAPI?.grid;
     }
 
     /**
