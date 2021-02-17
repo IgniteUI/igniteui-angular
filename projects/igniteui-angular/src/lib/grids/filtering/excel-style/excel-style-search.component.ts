@@ -246,6 +246,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public get type(): string {
         switch (this.esf.column?.dataType) {
             case DataType.Number:
+            case DataType.Currency:
+            case DataType.Percent:
                 return 'number';
             default:
                 return 'text';
@@ -415,6 +417,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             case DataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
             case DataType.Number:
+            case DataType.Currency:
+            case DataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);

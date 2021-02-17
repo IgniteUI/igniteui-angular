@@ -165,9 +165,12 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             case DataType.Boolean:
                 return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
             case DataType.Number:
+            case DataType.Percent:
                 return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
             case DataType.Date:
                 return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
+            case DataType.Currency:
+                return this.esf.grid.resourceStrings.igx_grid_excel_currency_filter;
             default:
                 return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;
         }
