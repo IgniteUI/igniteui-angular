@@ -221,10 +221,14 @@
         $elevation: str-index($key, 'elevation');
 
         @if not(index($ignore, $key) or $elevation) and type-of($value) != 'map' {
-            @if $prefix {
-                --#{$prefix}-#{$key}: var(--#{$name}-#{$key}, #{$value});
+            @if($name) {
+                @if $prefix {
+                    --#{$prefix}-#{$key}: var(--#{$name}-#{$key}, #{$value});
+                } @else {
+                    --#{$key}: var(--#{$name}-#{$key}, #{$value});
+                }
             } @else {
-                --#{$key}: var(--#{$name}-#{$key}, #{$value});
+                @error 'Yor theme should have name property. Example: my-theme: (name: my-theme)'
             }
         }
     }
