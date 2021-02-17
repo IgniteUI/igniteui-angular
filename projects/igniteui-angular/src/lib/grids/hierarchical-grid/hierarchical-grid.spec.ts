@@ -1274,25 +1274,24 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
 describe('IgxHierarchicalGrid custom template #hGrid', () => {
     configureTestSuite();
-    let fixture: ComponentFixture<IgxHierarchicalGridCustomTemplateComponent>;
-    let hierarchicalGrid: IgxHierarchicalGridComponent;
+
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxHierarchicalGridCustomTemplateComponent
+                IgxHierarchicalGridCustomTemplateComponent,
+                IgxHierarchicalGridCustomFilteringTemplateComponent,
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
         }).compileComponents();
     }));
 
-    beforeEach(fakeAsync(() => {
-        fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);
+    it('should allow setting custom template for expand/collapse icons', async () => {
+        const fixture = TestBed.createComponent(IgxHierarchicalGridCustomTemplateComponent);
         fixture.detectChanges();
-        hierarchicalGrid = fixture.componentInstance.hgrid;
-    }));
 
-    it(' should allow setting custom template for expand/collapse icons', async () => {
+        const hierarchicalGrid = fixture.componentInstance.hgrid;
+
         let rows = hierarchicalGrid.dataRowList.toArray();
         for (const row of rows) {
             const expander =  row.nativeElement.querySelector('.igx-grid__hierarchical-expander');
@@ -1325,6 +1324,36 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
         fixture.detectChanges();
         expect((hierarchicalGrid as any).headerHierarchyExpander.nativeElement.innerText).toBe('COLLAPSED');
     });
+
+    it('should correctly filter templated row island in hierarchical grid', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxHierarchicalGridCustomFilteringTemplateComponent);
+        fixture.detectChanges();
+
+        const hierarchicalGrid = fixture.componentInstance.hgrid;
+        const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+        fixture.detectChanges();
+
+        GridFunctions.clickExcelFilterIconFromCode(fixture, hierarchicalGrid, 'ProductName');
+        tick(200);
+        fixture.detectChanges();
+
+        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fixture, null, 'igx-hierarchical-grid');
+        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fixture, searchComponent, 'igx-hierarchical-grid');
+        UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'A4', fixture);
+        tick(100);
+        fixture.detectChanges();
+
+        GridFunctions.clickApplyExcelStyleFiltering(fixture, null, 'igx-hierarchical-grid');
+        tick(100);
+        fixture.detectChanges();
+
+        const gridCellValues = GridFunctions.getColumnCells(fixture, 'ProductName', 'igx-hierarchical-grid-cell')
+            .map(c => c.nativeElement.innerText)
+            .sort();
+
+        expect(gridCellValues.length).toBe(1);
+    }));
 });
 
 @Component({
@@ -1557,6 +1586,60 @@ public toggleChildRI = true;
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [showExpandAll]='true'
+        [autoGenerate]="false" [height]="'400px'" [width]="width" [allowFiltering]='true' filterMode="excelStyleFilter" #hierarchicalGrid>
+
+     <igx-column field="ID"></igx-column>
+     <igx-column field="ProductName"></igx-column>
+
+    <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false"
+        [allowFiltering]='true' filterMode="excelStyleFilter" #rowIsland>
+
+        <ng-template igxExcelStyleHeaderIcon>
+            <igx-icon>filter_alt</igx-icon>
+        </ng-template>
+
+        <igx-grid-excel-style-filtering [minHeight]="'280px'" [maxHeight]="'300px'">
+            <igx-excel-style-column-operations>
+                <igx-excel-style-header
+                    [showPinning]="true"
+                    [showHiding]="true"
+                >
+                </igx-excel-style-header>
+
+                <igx-excel-style-sorting></igx-excel-style-sorting>
+            </igx-excel-style-column-operations>
+
+            <igx-excel-style-filter-operations>
+                <igx-excel-style-search></igx-excel-style-search>
+            </igx-excel-style-filter-operations>
+        </igx-grid-excel-style-filtering>
+
+        <igx-column field="ID"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+
+        <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 >
+        </igx-row-island>
+    </igx-row-island>
+
+        <ng-template igxRowExpandedIndicator>
+                <span>EXPANDED</span>
+        </ng-template>
+        <ng-template igxRowCollapsedIndicator>
+                <span>COLLAPSED</span>
+        </ng-template>
+        <ng-template igxHeaderCollapsedIndicator>
+            <span>COLLAPSED</span>
+        </ng-template>
+        <ng-template igxHeaderExpandedIndicator>
+            <span>EXPANDED</span>
+        </ng-template>
+    </igx-hierarchical-grid>`
+})
+export class IgxHierarchicalGridCustomFilteringTemplateComponent extends IgxHierarchicalGridTestBaseComponent {}
 
 @Component({
     template: `
