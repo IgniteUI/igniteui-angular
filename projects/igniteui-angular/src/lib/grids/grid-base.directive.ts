@@ -154,6 +154,7 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { ExportUtilities } from '../services/exporter-common/export-utilities';
 
 let FAKE_ROW_ID = -1;
 
@@ -5642,11 +5643,30 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public copyHandler(event) {
+        const selectedColumns = this.gridAPI.grid.selectedColumns();
+        const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        const selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+
+        let data = [];
+
         if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
             return;
         }
 
-        const data = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        if (selectedColumns.length) {
+            const collection = [];
+            const columnKeys = ExportUtilities.getKeysFromData(columnData);
+            selectedData.forEach(cellValue => {
+                const cellKey = Object.keys(cellValue);
+                if (!columnKeys.includes(cellKey[0])) {
+                    collection.push(cellValue);
+                }
+            });
+            data = [...collection, ...columnData];
+        } else {
+            data = selectedData;
+        }
+
         const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
