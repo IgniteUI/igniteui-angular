@@ -2,8 +2,8 @@
     [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
     <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">
         <igx-grid-toolbar-actions>
-            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            <igx-grid-toolbar-pinning *ngIf="columnPinning"></igx-grid-toolbar-pinning>
+            <igx-grid-toolbar-hiding *ngIf="columnHiding"></igx-grid-toolbar-hiding>
             <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
             <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
                 <span excelText>Export to Excel 👌</span>
@@ -57,8 +57,8 @@
 
 <igx-switch [(ngModel)]="grid1.paging">Enable Paging</igx-switch>
 <igx-switch [(ngModel)]="grid1.allowFiltering">allowFiltering</igx-switch>
-<igx-switch [(ngModel)]="grid1.columnHiding">columnHiding</igx-switch>
-<igx-switch [(ngModel)]="grid1.columnPinning">columnPinning</igx-switch>
+<igx-switch [(ngModel)]="columnHiding">columnHiding</igx-switch>
+<igx-switch [(ngModel)]="columnPinning">columnPinning</igx-switch>
 <igx-switch (change)='onChange()'>Left Pinning toggle</igx-switch>
 <igx-switch [(ngModel)]="showToolbar">showToolbar</igx-switch>
 <igx-switch [(ngModel)]="groupable">ReorderLevel groupable</igx-switch>

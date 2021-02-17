@@ -206,9 +206,13 @@
                                 [autoGenerate]="false"
                                 [rowSelection]="'multiple'"
                                 [paging]="true"
-                                [allowFiltering]="true"
-                                [columnHiding]="true"
-                                [columnPinning]="true">
+                                [allowFiltering]="true">
+                    <igx-grid-toolbar [displayDensity]="treeGridHier.displayDensity">
+                        <igx-grid-toolbar-actions>
+                            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
                     <igx-column field="Name" dataType="string" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true" [hasSummary]="true"></igx-column>
                     <igx-column field="HireDate" dataType="date" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true"></igx-column>
                     <igx-column field="Age" dataType="number" [sortable]="true" [editable]="true" [movable]="true" [resizable]="true"></igx-column>

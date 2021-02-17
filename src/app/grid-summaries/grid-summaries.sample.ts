@@ -48,6 +48,8 @@ export class GridSummaryComponent implements OnInit {
     public hasSummaryUnit = true;
     public hasHidden = false;
     public showToolbar = false;
+    public columnHiding = false;
+    public columnPinning = false;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
 

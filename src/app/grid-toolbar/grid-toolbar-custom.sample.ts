@@ -13,7 +13,7 @@ export class GridToolbarCustomSampleComponent {
     public columnPinning = true;
     public exportExcel = true;
     public exportCsv = true;
-    public
+    public toolbarTitle = 'Grid Toolbar';
 
     data = [
         {
