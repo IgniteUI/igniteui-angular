@@ -9,6 +9,7 @@ import { TSLanguageService } from './tsPlugin/TSLanguageService';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
+export const NG_CORE_PACKAGE_NAME = '@angular/core';
 export const CUSTOM_TS_PLUGIN_NAME = './tsPlugin';
 
 /** Returns a source file */
