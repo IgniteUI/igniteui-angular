@@ -753,8 +753,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanging)="visibilityChanging($event)"></igx-grid>
      * ```
      */
-   @Output()
-   public columnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
+    @Output()
+    public columnVisibilityChanging = new EventEmitter<IColumnVisibilityChangingEventArgs>();
 
     /**
      * Emitted after column visibility is changed.
@@ -3377,7 +3377,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.zone.run(() => {
                     this.notifyChanges(true);
                 });
-        });
+            });
 
         this.onColumnMovingEnd.pipe(destructor).subscribe(() => this.endEdit(false));
 
@@ -4587,7 +4587,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.gridAPI.prepare_sorting_expression([sortingState], expression);
         }
 
-        const eventArgs: ISortingEventArgs = {owner: this, sortingExpressions: sortingState, cancel: false };
+        const eventArgs: ISortingEventArgs = { owner: this, sortingExpressions: sortingState, cancel: false };
         this.sorting.emit(eventArgs);
 
         if (eventArgs.cancel) {
@@ -5648,25 +5648,47 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
 
         let data = [];
+        let result;
 
-        if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
+        if (event.code === 'KeyC' && event.ctrlKey && event.currentTarget.className === 'igx-grid__thead-wrapper') {
+            data = columnData;
+            result = this.prepareCopyData(event, data);
+
+            if (isIE()) {
+                (window as any).clipboardData.setData('Text', result);
+                return;
+            }
+            navigator.clipboard.writeText(result).then().catch(e => console.error(e));
+        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
             return;
-        }
-
-        if (selectedColumns.length) {
-            const collection = [];
-            const columnKeys = ExportUtilities.getKeysFromData(columnData);
-            selectedData.forEach(cellValue => {
-                const cellKey = Object.keys(cellValue);
-                if (!columnKeys.includes(cellKey[0])) {
-                    collection.push(cellValue);
-                }
-            });
-            data = [...collection, ...columnData];
         } else {
-            data = selectedData;
-        }
+            if (selectedColumns.length) {
+                const collection = [];
+                const columnKeys = ExportUtilities.getKeysFromData(columnData);
+                selectedData.forEach(cellValue => {
+                    const cellKey = Object.keys(cellValue);
+                    if (!columnKeys.includes(cellKey[0])) {
+                        collection.push(cellValue);
+                    }
+                });
+                data = [...collection, ...columnData];
+            } else {
+                data = selectedData;
+            }
+            result = this.prepareCopyData(event, data);
 
+            if (isIE()) {
+                (window as any).clipboardData.setData('Text', result);
+                return;
+            }
+            event.clipboardData.setData('text/plain', result);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public prepareCopyData(event, data) {
         const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
@@ -5681,18 +5703,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             result = result.substring(result.indexOf('\n') + 1);
         }
 
-        if (isIE()) {
-            (window as any).clipboardData.setData('Text', result);
-            return;
-        }
-
         event.preventDefault();
 
         /* Necessary for the hiearachical case but will probably have to
            change how getSelectedData is propagated in the hiearachical grid
         */
         event.stopPropagation();
-        event.clipboardData.setData('text/plain', result);
+
+        return result;
     }
 
     /**
