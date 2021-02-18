@@ -2048,11 +2048,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Input()
     public set selectedRows(rowIDs: any[]) {
-        if (rowIDs.length > 0) {
-            this.selectRows(rowIDs, true);
-        } else {
-            this.deselectAllRows();
-        }
+        this.selectRows(rowIDs || [], true);
     }
 
     public get selectedRows(): any[] {
@@ -2603,8 +2599,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets row selection mode
      *
      * @remarks
-     * By default the row selection mode is none
-     * @param selectionMode: GridSelectionMode
+     * By default the row selection mode is 'none'
+     * Note that in IgxGrid and IgxHierarchicalGrid 'multipleCascade' behaves like 'multiple'
      */
     @WatchChanges()
     @Input()
@@ -2614,7 +2610,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set rowSelection(selectionMode: GridSelectionMode) {
         this._rowSelectionMode = selectionMode;
-        if (this.gridAPI.grid && this.columnList) {
+        if (!this._init) {
             this.selectionService.clearAllSelectedRows();
             this.notifyChanges(true);
         }
@@ -3057,7 +3053,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get isMultiRowSelectionEnabled(): boolean {
-        return this.rowSelection === GridSelectionMode.multiple;
+        return this.rowSelection === GridSelectionMode.multiple
+            || this.rowSelection === GridSelectionMode.multipleCascade;
     }
 
     /**
