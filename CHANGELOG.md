@@ -24,6 +24,12 @@ All notable changes for each version of this project will be documented in this 
     - `paging` and `pagingDone` events are now emitted.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
+- `igxSplitter` now has the following additional outputs: 
+    - `resizeStart` - Emits when pane resizing starts.
+    - `resizing`- Emits while panes are being resized.
+    - `resizeEnd` - Emits when pane resizing ends.
+
+    All emit with the two panes affected by the resize operation as arguments.
 
 ### General
 - **Breaking Change** - Many outputs are renamed with the introduction of new rules in Ignite UI for Angular's naming convention. Please, ensure that when you update to 11.1 you do so through
