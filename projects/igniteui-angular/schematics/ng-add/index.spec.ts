@@ -298,7 +298,7 @@ describe('ng-add schematics', () => {
 
     const result = `
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
-// import 'classlist.js';  // Run \`npm install --save classlist.js\`.
+import 'classlist.js';  // Run \`npm install --save classlist.js\`.
 
 import 'web-animations-js';  // Run \`npm install --save web-animations-js\`.
   `;
