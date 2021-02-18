@@ -138,6 +138,22 @@
             width: rem(18px);
             height: rem(18px);
         }
+
+        igx-icon + [igxLabel] {
+            margin-#{$left}: rem(12px);
+        }
+
+        &%igx-drop-down__item--cosy {
+            igx-icon + [igxLabel] {
+                margin-#{$left}: rem(10px);
+            }
+        }
+
+        &%igx-drop-down__item--compact {
+            igx-icon + [igxLabel] {
+                margin-#{$left}: rem(8px);
+            }
+        }
     }
 
     %igx-action-strip__menu-item--danger {
