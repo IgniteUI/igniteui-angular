@@ -28,11 +28,9 @@
                 <ng-template igxToolbarCustomContent let-sampleGrid="grid">
                     <button igxButton="outlined" #columnSelectionButton igxRipple (click)="toggleColumnSelection()"
                         [displayDensity]="sampleGrid.displayDensity">
-                        <div class="igx-grid-toolbar__button-space">
-                            <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
-                            </igx-checkbox>
-                            <span>{{ sampleGrid.selectedColumns().length }}</span>
-                        </div>
+                        <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
+                        </igx-checkbox>
+                        <span>{{ sampleGrid.selectedColumns().length }}</span>
                     </button>
                     <igx-drop-down #columnSelectionDropdown>
                         <igx-input-group class="igx-column-hiding__header-input">
