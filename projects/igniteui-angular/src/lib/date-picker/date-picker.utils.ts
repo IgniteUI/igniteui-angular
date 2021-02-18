@@ -347,16 +347,16 @@ export abstract class DatePickerUtil {
      * @param minValue The lowest possible value that `value` can take
      * @param maxValue The largest possible value that `value` can take
      */
-    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string): ValidationErrors | null {
+    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string, includeTime = false, includeDate = true): ValidationErrors | null {
         const errors = {};
         const min = DatePickerUtil.parseDate(minValue);
         const max = DatePickerUtil.parseDate(maxValue);
-        if ((min && value && DatePickerUtil.lessThanMinValue(value, min, false))
-            || (min && value && DatePickerUtil.lessThanMinValue(value, min, false))) {
+        if ((min && value && DatePickerUtil.lessThanMinValue(value, min, includeTime, includeDate))
+            || (min && value && DatePickerUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DatePickerUtil.greaterThanMaxValue(value, max, false))
-            || (max && value && DatePickerUtil.greaterThanMaxValue(value, max, false))) {
+        if ((max && value && DatePickerUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
+            || (max && value && DatePickerUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
             Object.assign(errors, { maxValue: true });
         }
 

@@ -1,47 +1,8 @@
-<!-- <ng-template #labelTemplate>
-    <ng-content select="[igxLabel]"></ng-content>
-</ng-template> -->
-
-<!-- <ng-template #dropdownInputTemplate>
-    <igx-input-group #group (mousedown)="mouseDown($event)" [suppressInputAutofocus]="true">
-        <label igxLabel *ngIf="!labelDirective">Time</label>
-        <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
-        <igx-prefix (click)="open()">
-            <igx-icon>access_time</igx-icon>
-        </igx-prefix>
-        <input type="text" [igxMask]="mask" igxInput 
-            [includeLiterals]="true" [placeholder]="format"
-            [displayValuePipe]="displayFormat" [focusedValuePipe]="inputFormat" [promptChar]="promptChar"
-            [value]="displayValue" [igxTextSelection]="true" (input)="onInput($event)" (blur)="onBlur($event)"
-            (focus)="onFocus($event)" (wheel)="spinOnEdit($event)" [disabled]="disabled" />
-        <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
-            <igx-icon>clear</igx-icon>
-        </igx-suffix>
-    </igx-input-group>
-</ng-template> -->
-
-<!-- <ng-template #defaultTimePickerTemplate>
-    <igx-input-group (click)="open()" (mousedown)="mouseDown($event)">
-        <igx-prefix>
-            <igx-icon>access_time</igx-icon>
-        </igx-prefix>
-        <label igxLabel *ngIf="!labelDirective">Time</label>
-        <ng-container ngProjectAs="[igxLabel]" *ngTemplateOutlet="labelTemplate"></ng-container>
-        <input
-            igxInput
-            [value]="displayTime || ''"
-            [disabled]="disabled"
-            tabindex="0" readonly
-            (blur)="onBlur($event)" />
-    </igx-input-group>
-</ng-template> -->
- <!-- [igxT[headerOrientation]="this.headerOrientation"extSelection]="true" -->
-
-<!-- (mousedown)="mouseDown($event)" -->
     <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && open()">
         <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text"
-            [readonly]="!this.isDropdown" tabindex="0"
+            [readonly]="!this.isDropdown"
             [preventSpinOnWheel]="!this.isDropdown"
+            [disabled]="this.disabled"
             [displayFormat]="this.displayFormat"
             [placeholder]="this.placeholder"
             role="combobox" aria-haspopup="dialog"
@@ -83,8 +44,6 @@
         clear
     </igx-icon>
 </ng-template>
-
-<!-- <ng-container *ngTemplateOutlet="template; context: context"></ng-container> -->
 
 <ng-template #defaultTimePickerActions>
     <div *ngIf="cancelButtonLabel || okButtonLabel" class="igx-time-picker__buttons">
