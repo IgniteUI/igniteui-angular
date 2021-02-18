@@ -24,11 +24,15 @@ const enableIESupport = (tree: Tree, context: SchematicContext) => {
 };
 
 // Only required if AnimationBuilder is used (igniteui-angular does) & using IE/Edge or Safari
-const enableWebAnimationsAndGridSupport = (tree: Tree, targetFile: string, polyfillsData: any): void => {
+const updatePolyfillsForIESupport = (tree: Tree, targetFile: string, polyfillsData: any): void => {
   // Target the web-animations-js commented import statement and uncomment it.
   const webAnimationsLine = '// import \'web-animations-js\';';
+  const classlistLine = '// import \'classlist.js\';';
   polyfillsData = polyfillsData.replace(webAnimationsLine,
-  webAnimationsLine.substring(3, webAnimationsLine.length));
+    webAnimationsLine.substring(3, webAnimationsLine.length));
+
+  polyfillsData = polyfillsData.replace(classlistLine,
+    classlistLine.substring(3, classlistLine.length));
 
   tree.overwrite(targetFile, polyfillsData);
 };
@@ -51,7 +55,7 @@ const readInput = (options: Options): Rule =>
       if (polyfillsFilePath) {
         const polyfillsData = tree.read(polyfillsFilePath)?.toString();
         if (polyfillsData) {
-          enableWebAnimationsAndGridSupport(tree, polyfillsFilePath, polyfillsData);
+          updatePolyfillsForIESupport(tree, polyfillsFilePath, polyfillsData);
         } else {
           context.logger.warn('polyfills.ts file not found OR empty. ' + animationsWarn);
         }
