@@ -18,6 +18,7 @@ import {
     IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -1759,6 +1760,48 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 'incorrect vertical position of operator dropdown');
             expect(Math.abs(dropdownRect.left - inputGroupRect.left) < delta).toBe(true,
                 'incorrect horizontal position of operator dropdown');
+        }));
+
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['Downloads']);
+            grid.filterStrategy = formattedStrategy;
+            const downloadsFormatter = (val: number): number => {
+                if (!val || val > 0 && val < 100) {
+                    return 1;
+                } else if (val >= 100 && val < 500) {
+                    return 2;
+                } else {
+                    return 3;
+                }
+            };
+            grid.columns[2].formatter = downloadsFormatter;
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            tick(200);
+            fix.detectChanges();
+
+            // Add root group.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Add a new expression
+            selectColumnInEditModeExpression(fix, 2); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1', fix); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(3, 'Wrong filtered rows count');
         }));
 
         describe('Context Menu - ', () => {
