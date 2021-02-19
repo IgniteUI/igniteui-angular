@@ -107,7 +107,7 @@
             @include output() {
                 @include gen-color-class($name, $variant, $prefix, $suffix) {
                     content: 'test';
-                };
+                }
             }
 
             @include expect() {
@@ -199,7 +199,7 @@
 
         @include assert() {
             @include output() {
-                @include  if-rtl {
+                @include  if-rtl() {
                     margin: 1px;
                 }
             }
@@ -214,7 +214,7 @@
 
         @include assert() {
             @include output() {
-                @include  if-ltr {
+                @include  if-ltr() {
                     margin: 1px;
                 }
             }
@@ -235,13 +235,13 @@
             }
 
             @include contains() {
-                animation: "fade-in" 0.3s ease-out;
+                animation: 'fade-in' .3s ease-out;
             }
         }
     }
 }
 
-@include describe('Keyframes') {
+@include describe('Keyframes'[mixin]) {
     $keyframes: () !default;
     @include it('should registers a keyframe animation in the global keyframes registry list') {
         @include keyframes('my-keyframe');
@@ -255,6 +255,7 @@
                     0% {
                         opacity: 1;
                     }
+
                     100% {
                         opacity: 0;
                     }
@@ -266,6 +267,7 @@
                     0% {
                         opacity: 1;
                     }
+
                     100% {
                         opacity: 0;
                     }
