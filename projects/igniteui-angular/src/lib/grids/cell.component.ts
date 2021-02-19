@@ -27,6 +27,7 @@ import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
+import { DataType } from '../data-operations/data-util';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -283,7 +284,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.value;
+        return this.editMode || this.cellTemplate ? '' : this.column.dataType === DataType.Percent ?
+        this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
+        this.column.dataType === DataType.Currency ?
+        this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
+            this.column.pipeArgs.digitsInfo, this.grid.locale) :
+        this.value;
     }
 
     @HostBinding('class.igx-grid__td--bool-true')
@@ -593,6 +599,16 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public activeHighlightClass = 'igx-highlight__active';
+
+    /** @hidden @internal */
+    public get step(): number {
+        const digitsInfo = this.column.pipeArgs.digitsInfo;
+        if (!digitsInfo) {
+            return 1;
+        }
+        const step = +digitsInfo.substr(digitsInfo.indexOf('.') + 1, 1);
+        return 1 / (Math.pow(10, step));
+    }
 
     /** @hidden @internal */
     public get currencyCode(): string {
