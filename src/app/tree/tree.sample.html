@@ -19,19 +19,25 @@
     </div>
 </div>
 
-
+<button igxButton (click)="selectAll()">Select</button>
+<button igxButton (click)="tree1.selection = tree1.selection === 'None' ? 'BiState' : 'None'">
+    {{ tree1.selection}}
+</button>
 
 <div class="row">
     <div class="column tree-container">
         <p>IgxTree</p>
         <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
-            [animationSettings]="animationSettings">
+            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
             <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
                 {{ node.CompanyName }}
                 <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
                     {{ child.CompanyName }}
                     <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
                         {{ leafchild.CompanyName }}
+                        <igx-combo>
+
+                        </igx-combo>
                     </igx-tree-node>
                 </igx-tree-node>
             </igx-tree-node>

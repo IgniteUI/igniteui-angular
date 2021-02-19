@@ -7,9 +7,12 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import { IgxSelectionAPIService } from '../../core/selection';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
-import { IGX_TREE_COMPONENT, IgxTree, IgxTreeNode, IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs } from '../common';
+import {
+    IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
+    IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IGX_TREE_SELECTION_TYPE
+} from '../common';
+import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
 
 
@@ -42,7 +45,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Input()
     public data: T;
 
-    public set animationSettings(val: ToggleAnimationSettings) {}
+    public set animationSettings(val: ToggleAnimationSettings) { }
 
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
@@ -75,13 +78,21 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     constructor(
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
-        protected selectionService: IgxSelectionAPIService,
+        protected selectionService: IgxTreeSelectionService,
         protected treeService: IgxTreeService,
         protected cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
+        private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
         super(builder);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get showSelectors() {
+        return this.tree.selection !== IGX_TREE_SELECTION_TYPE.None;
     }
 
     public get level(): number {
@@ -90,14 +101,14 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     @Input()
     public get selected(): boolean {
-        return this.selectionService.get(this.tree.id).has(this.id);
+        return this.selectionService.isNodeSelected(this);
     }
 
     public set selected(val: boolean) {
         if (val) {
-            this.treeService.select(this);
+            this.selectionService.selectNode(this);
         } else {
-            this.treeService.deselect(this);
+            this.selectionService.deselectNode(this);
         }
     }
 
@@ -128,6 +139,19 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         };
     }
 
+    /**
+     * The native DOM element representing the node. Could be null in certain environments.
+     *
+     * ```typescript
+     * // get the nativeElement of the second node
+     * const node: IgxTreeNode = this.tree.nodes.first();
+     * const nodeElement: HTMLElement = node.nativeElement;
+     * ```
+     */
+    public get nativeElement() {
+        return this.element.nativeElement;
+    }
+
     public ngOnInit() {
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
@@ -142,6 +166,22 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngAfterViewInit() {
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onSelectorClick(event) {
+        event.stopPropagation();
+        if (event.shiftKey) {
+            this.selectionService.selectMultipleNodes(this, event);
+            return;
+        }
+        if (this.selected) {
+            this.selectionService.deselectNode(this, event);
+        } else {
+            this.selectionService.selectNode(this, event);
+        }
     }
 
     public ngOnDestroy() {

@@ -5,15 +5,16 @@
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
             </ng-container>
         </div>
-        <div class="igx-tree-node__select-marker" (click)="selected = !selected">
+       
+        <div *ngIf="showSelectors" class="igx-tree-node__select-marker" (pointerdown)="$event.preventDefault()"
+            (click)="onSelectorClick($event)">
             <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
             </ng-container>
         </div>
     </div>
     <ng-content></ng-content>
 </div>
-<div #childrenContainer *ngIf="expanded"
-    class="igx-tree-node__group" role="group">
+<div #childrenContainer *ngIf="expanded" class="igx-tree-node__group" role="group">
     <ng-content select="igx-tree-node"></ng-content>
 </div>
 
