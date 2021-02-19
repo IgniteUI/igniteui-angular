@@ -244,7 +244,7 @@
 @include describe('Keyframes') {
     $keyframes: () !default;
     @include it('should registers a keyframe animation in the global keyframes registry list') {
-        @include keyframes('my-keyframea');
+        @include keyframes('my-keyframe');
         @include assert-true(map-has-key($keyframes, 'my-keyframe'));
     }
 
