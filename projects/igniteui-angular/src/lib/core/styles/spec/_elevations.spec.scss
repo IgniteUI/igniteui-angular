@@ -1,0 +1,61 @@
+$_my-elevations: igx-elevations(red, green, blue);
+
+@include describe('Elevations') {
+
+    @include it('should add elevations as CSS variables') {
+        @include assert() {
+
+            @include output() {
+                @include igx-elevation-vars($_my-elevations);
+            }
+
+            @include contains() {
+                --igx-elevation-0: none;
+            }
+        }
+    }
+
+    @include it('should get an elevation as a CSS variable from an elevations map') {
+        $expected: none;
+
+        $igx-legacy-support: true !global;
+        $actual: igx-elevation($_my-elevations, 0);
+        @include assert-equal($actual, $expected);
+
+        $igx-legacy-support: false !global;
+        $actual: igx-elevation($_my-elevations, 0);
+        @include assert-equal($actual, $expected);
+    }
+
+    @include it('should get an elevation as a CSS variable w/ legacy-support off') {
+        $expected: var(--igx-elevation-5);
+
+        $igx-legacy-support: false !global;
+        $actual: igx-elevation($elevation: 5);
+        @include assert-equal($actual, $expected);
+    }
+
+    @include it('should get an elevation value w/ legacy-support on') {
+        $expected: none;
+
+        $igx-legacy-support: true !global;
+        $actual: igx-elevation($elevation: 0);
+        @include assert-equal($actual, $expected);
+    }
+}
+
+@include describe('igx-elevation-vars') {
+    @include it('should generate CSS variables for a given elevations map') {
+        @include assert() {
+            @include output() {
+                @include igx-elevation-vars($_my-elevations);
+            }
+
+            @include contains() {
+                @each $level, $shadow in $_my-elevations {
+                    --igx-elevation-#{$level}: #{$shadow};
+                }
+            }
+        }
+    }
+}
