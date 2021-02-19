@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
     - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
     - **Behavioral Change** -
     - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
+    - `Column pinning`, `Column moving`, `paging` interactions now discard the editing value, instead of committing it.
+    - `Column Resizing` now does not exit edit mode.
 
 ### New Features
 - `IgxDropDown`
@@ -108,9 +110,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
     - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
-    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
-    - **Behavioral Change** -
-        - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
 - IgxButton
     - IgxIcon(s) placed in a button now include margin if there are one or more sibling elements to give them some breathing room. The amount of margin applied depends on the display density of the button.
 - `IgxListComponent`
