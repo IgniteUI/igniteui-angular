@@ -217,10 +217,8 @@
     $name: map-get($theme, 'name');
     $ignore: ('name', 'palette', 'variant', 'selector');
 
-    @if not($name) {
-        @error 'Theme should have a name property. Example: my-theme: (name: my-theme)'
-    } @else if ($name == '') {
-        @error 'Theme name cannot be an empty string'
+    @if not($name) or str-length($name) == 0 {
+        @error 'Theme should have a non-null or empty name property. Example: my-theme: (name: my-theme)';
     }
 
     @each $key, $value in $theme {
