@@ -235,7 +235,7 @@
             }
 
             @include contains() {
-                animation: 'fade-in' .3s ease-out;
+                animation: "fade-in" 0.3s ease-out;
             }
         }
     }
