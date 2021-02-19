@@ -5,9 +5,8 @@ import { IgxGridComponent, FilteringExpressionsTree,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IgxPaginatorComponent,
-    IPagingDoneEventArgs,
-    IPagingEventArgs} from 'igniteui-angular';
+    IgxPaginatorComponent} from 'igniteui-angular';
+import { IPagingDoneEventArgs, IPagingEventArgs } from 'projects/igniteui-angular/src/lib/paginator/interfaces';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
