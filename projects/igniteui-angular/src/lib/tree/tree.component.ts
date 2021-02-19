@@ -1,17 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy } from '@angular/core';
+import {
+    Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
-import { IgxSelectionAPIService } from '../core/selection';
 import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
-import { IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
-    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver } from './common';
+import {
+    IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
+    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
+} from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 
 let init_id = 0;
@@ -34,14 +38,28 @@ export class IgxTreeExpandIndicatorDirective {
     styleUrls: ['tree.component.scss'],
     providers: [
         IgxTreeService,
-        { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent}
+        IgxTreeSelectionService,
+        { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
-
+    /**
+     * Gets/Sets tree selection mode
+     *
+     * @remarks
+     * By default the tree selection mode is 'None'
+     * @param selectionMode: IGX_TREE_SELECTION_TYPE
+     */
     @Input()
-    public selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.BiState;
+    public get selection() {
+        return this._selection;
+    }
+
+    public set selection(selectionMode: IGX_TREE_SELECTION_TYPE) {
+        this._selection = selectionMode;
+        this.selectionService.clearNodesSelection();
+    }
 
     @Input()
     public singleBranchExpand = false;
@@ -67,6 +85,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     @Output()
     public nodeCollapsed = new EventEmitter<ITreeNodeToggledEventArgs>();
 
+    // TODO: should we remove this thus checkbox aren't templatable
     @ContentChild(IgxTreeSelectMarkerDirective, { read: TemplateRef })
     public selectMarker: TemplateRef<any>;
 
@@ -74,40 +93,74 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public expandIndicator: TemplateRef<any>;
 
     @ContentChildren(IgxTreeNodeComponent, { descendants: true })
-    private nodes: QueryList<IgxTreeNodeComponent<any>>;
+    public nodes: QueryList<IgxTreeNodeComponent<any>>;
 
     public id = `tree-${init_id++}`;
 
-    constructor(private selectionService: IgxSelectionAPIService, private treeService: IgxTreeService) {
+    private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
+
+    constructor(private selectionService: IgxTreeSelectionService, private treeService: IgxTreeService) {
+        this.selectionService.register(this);
         this.treeService.register(this);
     }
 
-    public expandAll(nodes: IgxTreeNode<any>[]) {}
-    public collapseAll(nodes: IgxTreeNode<any>[]) {}
-    public selectAll(nodes: IgxTreeNode<any>[]) {}
+    public expandAll(nodes: IgxTreeNode<any>[]) { }
+    public collapseAll(nodes: IgxTreeNode<any>[]) { }
 
-    public isNodeSelected(node: IgxTreeNodeComponent<any>): boolean {
-        return this.selectionService.get(this.id).has(node.id);
+    /**
+     * Select all nodes if the nodes collection is empty. Otherwise, select the nodes in the nodes collection.
+     *
+     * @example
+     * ```typescript
+     *  const arr = [
+     *      this.tree.nodes.toArray()[0],
+     *      this.tree.nodes.toArray()[1]
+     *  ];
+     *  this.tree.selectAll(arr, true);
+     * ```
+     * @param nodes: IgxTreeNodeComponent<any>[]
+     * @param clearPrevSelection: boolean; if true clears the current selection
+     */
+    public selectAll(nodes?: IgxTreeNodeComponent<any>[], clearPrevSelection = false) {
+        if (nodes) {
+            this.selectionService.selectAllNodes(nodes, clearPrevSelection);
+        } else {
+            this.selectionService.selectAllNodes();
+        }
     }
 
+    /**
+     * Deselect all nodes if the nodes collection is empty. Otherwise, deselect the nodes in the nodes collection.
+     *
+     * @example
+     * ```typescript
+     *  const arr = [
+     *      this.tree.nodes.toArray()[0],
+     *      this.tree.nodes.toArray()[1]
+     *  ];
+     *  this.tree.deselectAll(arr);
+     * ```
+     * @param nodes: IgxTreeNodeComponent<any>[]
+     */
+    public deselectAll(nodes?: IgxTreeNodeComponent<any>[]) {
+        if (nodes) {
+            this.selectionService.deselectAllNodes(nodes);
+        } else {
+            this.selectionService.deselectAllNodes();
+        }
+    }
 
     public findNodes<T>(searchTerm: T, comparer?: IgxTreeSearchResolver): IgxTreeNode<T>[] | null {
         const compareFunc = comparer || this._comparer;
         return this.nodes.filter(e => compareFunc(searchTerm, e));
     }
 
-    public ngOnInit() {
-        this.selectionService.set(this.id, new Set());
-    }
-    public ngAfterViewInit() {
+    public ngOnInit() { }
+    public ngAfterViewInit() { }
+    public ngOnDestroy() { }
 
-    }
+    private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>,) => node.data === data;
 
-    public ngOnDestroy() {
-        this.selectionService.clear(this.id);
-    }
-
-    private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>, ) => node.data === data;
 }
 
 /**
