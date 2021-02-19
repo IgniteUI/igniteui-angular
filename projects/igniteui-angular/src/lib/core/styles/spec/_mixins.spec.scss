@@ -130,7 +130,7 @@
     }
 }
 
-/* stylelint-disable */
+/* stylelint-disable string-quotes */
 @include describe('Animation') {
     @include it('should produce correct syntax for animation') {
         @include assert() {
@@ -153,7 +153,7 @@
         @include assert-true(map-has-key($keyframes, 'my-keyframe'));
     }
 
-    /* stylelint-disable */
+    /* stylelint-disable max-nesting-depth */
     @include it('should produce a keyframe animation with the passed name') {
         @include assert() {
             @include output() {
