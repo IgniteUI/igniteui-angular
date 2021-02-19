@@ -78,13 +78,24 @@ export const getPackageManager = (host: Tree) => {
 };
 
 export const canResolvePackage = (pkg: string): boolean => {
-    let modulePath;
     try {
-        modulePath = require.resolve(pkg);
-    } finally {
-        // eslint-disable-next-line no-unsafe-finally
-        return !!modulePath;
+        // attempt resolve in child process to keep result out of package.json cache
+        // otherwise resolve will not read the json again (after install) and won't load the main correctly
+        // https://stackoverflow.com/questions/59865584/how-to-invalidate-cached-require-resolve-results
+        execSync(`node -e "require.resolve('${pkg}');"`, { stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
     }
+};
+
+export const getPackageVersion = (pkg: string): string => {
+    let version = null;
+    try {
+        version = require(path.posix.join(pkg, 'package.json'))?.version;
+    } catch {}
+
+    return version;
 };
 
 export const tryInstallPackage = (context: SchematicContext, packageManager: string, pkg: string) => {
