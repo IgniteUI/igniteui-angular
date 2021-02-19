@@ -393,8 +393,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
             return;
         }
 
-        const eventArgs: IPagingDoneEventArgs = { oldPage: this._page, newPage: val, owner: this };
-        const cancelableEventArgs: IPagingEventArgs = { ...eventArgs, cancel: false };
+        const eventArgs: IPagingDoneEventArgs = { oldPage: this._page, newPage: val };
+        const cancelableEventArgs: IPagingEventArgs = { ...eventArgs, cancel: false, owner: this };
         this.paging.emit(cancelableEventArgs);
 
         if (cancelableEventArgs.cancel) {
