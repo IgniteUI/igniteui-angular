@@ -228,7 +228,7 @@
                     --#{$key}: var(--#{$name}-#{$key}, #{$value});
                 }
             } @else {
-                @error 'Yor theme should have name property. Example: my-theme: (name: my-theme)'
+                @error 'Theme should have a name property. Example: my-theme: (name: my-theme)'
             }
         }
     }
