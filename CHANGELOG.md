@@ -2,13 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 ## 11.1.0
-### General
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
-    - **Behavioral Change** -
-    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
-    - `Column pinning`, `Column moving`, `paging` interactions now discard the editing value, instead of committing it.
-    - `Column Resizing` now does not exit edit mode.
 
 ### New Features
 - `IgxDropDown`
@@ -27,6 +20,11 @@ All notable changes for each version of this project will be documented in this 
     - Support for `currency` type columns is added in the grid.
     - Support for `percent` type columns is added in the grid.
     - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
+    - `Column pinning`, `Column moving`, `paging` interactions now discard the editing value, instead of committing it.
+    - `Column Resizing` now does not exit edit mode.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
 - `igxSplitter` now has the following additional outputs: 
