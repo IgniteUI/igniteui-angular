@@ -8,6 +8,7 @@ import { Logger } from './tsLogger';
 
 export const IG_PACKAGE_NAME = 'igniteui-angular';
 export const NG_LANG_SERVICE_PACKAGE_NAME = '@angular/language-service';
+export const NG_CORE_PACKAGE_NAME = '@angular/core';
 
 /** Returns an source file */
 // export function getFileSource(sourceText: string): ts.SourceFile {
