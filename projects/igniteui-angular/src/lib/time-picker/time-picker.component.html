@@ -62,7 +62,7 @@
     <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
-            <span>{{ selectedHour }}</span>:<span>{{ selectedMinute }}</span>:<span>{{ selectedSeconds }}</span>
+            <span *ngIf="showHoursList">{{ selectedHour }}</span><span *ngIf="showMinutesList">:{{ selectedMinute }}</span><span *ngIf="showSecondsList">:{{ selectedSeconds }}</span>
         </h2>
     </div>
     <div class="igx-time-picker__main">

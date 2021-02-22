@@ -1294,8 +1294,8 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         if (this.toggleRef.collapsed) {
             const oldValue = new Date(this.value);
             this.value.setHours(0, 0, 0);
-            this.dateTimeEditor.value.setHours(0, 0, 0);
-            if (oldValue.getTime() !== this.value.getTime()) {
+            this.dateTimeEditor.value = new Date(this.value);
+            if (oldValue.getTime() !== this.value?.getTime()) {
                 this.emitValueChangedEvent(oldValue, this.value);
             }
         } else {
