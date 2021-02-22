@@ -171,7 +171,7 @@
 /// @param {Map} $elevations - The igx elevations map to use to generate CSS variables for.
 ///
 /// @example scss Generate CSS variables for elevations.
-///    $my-elevations: igx-elevations(red, green, blue); // umbra, penumbra, ambient
+///    $elevations: igx-elevations(red, green, blue); // umbra, penumbra, ambient
 ///    @include igx-elevation-vars($elevations);
 ///
 @mixin igx-elevation-vars($elevations) {
@@ -216,6 +216,10 @@
 @mixin css-vars-from-theme($theme, $prefix: null) {
     $name: map-get($theme, 'name');
     $ignore: ('name', 'palette', 'variant', 'selector');
+
+    @if not($name) or str-length($name) == 0 {
+        @error 'Theme should have a non-null or empty name property. Example: my-theme: (name: my-theme)';
+    }
 
     @each $key, $value in $theme {
         $elevation: str-index($key, 'elevation');
