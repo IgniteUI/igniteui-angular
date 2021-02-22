@@ -64,7 +64,7 @@ import {
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
 import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
-import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
+import { IgxDatePickerTemplateDirective, IgxPickerActionsDirective } from './date-picker.directives';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { DeprecateProperty } from '../core/deprecateDecorators';
@@ -686,8 +686,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * @hidden
      */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
-    public datePickerActionsDirective: IgxDatePickerActionsDirective;
+    @ContentChild(IgxPickerActionsDirective, { read: IgxPickerActionsDirective })
+    public datePickerActionsDirective: IgxPickerActionsDirective;
 
     /*
      * @hidden
@@ -1376,9 +1376,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         componentInstance.mode = this.mode;
         componentInstance.vertical = isVertical;
-        componentInstance.cancelButtonLabel = this.cancelButtonLabel;
+        componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
-        componentInstance.datePickerActions = this.datePickerActionsDirective;
+        componentInstance.pickerActions = this.datePickerActionsDirective;
 
         // componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
         // componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
@@ -1455,7 +1455,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     declarations: [
         IgxDatePickerComponent,
         IgxCalendarContainerComponent,
-        IgxDatePickerActionsDirective,
+        IgxPickerActionsDirective,
         IgxDatePickerTemplateDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe
@@ -1466,7 +1466,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     exports: [
         IgxDatePickerComponent,
         IgxDatePickerTemplateDirective,
-        IgxDatePickerActionsDirective,
+        IgxPickerActionsDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe,
         IgxInputGroupModule
