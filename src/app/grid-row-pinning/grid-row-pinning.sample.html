@@ -53,13 +53,8 @@
     <div class="sample-column">
         <div>igxHierarchicalGrid</div>
         <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true'
-<<<<<<< HEAD
-            [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" >
-            <ng-template igxToolbarCustomContent>
-=======
             [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [rowSelection]="true" >
             <igx-grid-toolbar [displayDensity]="hGrid.displayDensity">
->>>>>>> b4666a3428... fix(Toolbar): Fixed grid demos toolbars
                 <app-grid-search-box [grid]="hGrid" [style.width]="'400px'"></app-grid-search-box>
                 <igx-grid-toolbar-actions>
                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -90,10 +85,6 @@
     <div class="sample-column">
         <div>igxTreeGrid</div>
         <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-<<<<<<< HEAD
-        [width]="'900px'" [height]="'800px'" >
-       <igx-column width='150px' [filterable]='false'>
-=======
         [width]="'900px'" [height]="'800px'">
         <igx-grid-toolbar [displayDensity]="treegrid.displayDensity">
             <app-grid-search-box [grid]="treegrid" [style.width]="'450px'"></app-grid-search-box>
@@ -107,7 +98,6 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-column width='150px' [filterable]='false'>
->>>>>>> b4666a3428... fix(Toolbar): Fixed grid demos toolbars
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)">
                     {{cell.row.pinned ? 'lock' : 'lock_open'}}

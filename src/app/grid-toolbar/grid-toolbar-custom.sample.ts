@@ -15,13 +15,6 @@ export class GridToolbarCustomSampleComponent {
     public exportCsv = true;
     public toolbarTitle = 'Grid Toolbar';
 
-    public showToolbar = true;
-    public title = 'Custom Title';
-    public hidingEnabled = true;
-    public pinningEnabled = true;
-    public csv = true;
-    public excel = true;
-
     public data = [
         {
             Name: 'Alice',
