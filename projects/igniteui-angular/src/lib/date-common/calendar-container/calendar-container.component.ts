@@ -1,7 +1,10 @@
 import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { Calendar, CalendarSelection, IgxCalendarComponent } from '../../calendar/public_api';
+import { CalendarSelection, IgxCalendarComponent } from '../../calendar/public_api';
 import { InteractionMode } from '../../core/enums';
-import { IgxDatePickerActionsDirective } from '../../date-picker/date-picker.directives';
+import { IgxPickerActionsDirective } from '../../date-picker/date-picker.directives';
+
+const RANGE_PICKER_BUTTONS_CLASS = 'igx-date-range-picker-buttons';
+const DATE_PICKER_BUTTONS_CLASS = 'igx-date-picker__buttons';
 
 /** @hidden */
 @Component({
@@ -20,19 +23,16 @@ export class IgxCalendarContainerComponent {
     public vertical = false;
 
     @Input()
-    public cancelButtonLabel: string;
+    public closeButtonLabel: string;
 
     @Input()
     public todayButtonLabel: string;
 
     @Input()
-    public datePickerActions: IgxDatePickerActionsDirective;
+    public pickerActions: IgxPickerActionsDirective;
 
     @Input()
     public selectionMode: CalendarSelection;
-
-    @Input()
-    public doneButtonText: string;
 
     @Input()
     public displayMonthsCount: number;
@@ -63,6 +63,10 @@ export class IgxCalendarContainerComponent {
     public onEscape(event) {
         event.preventDefault();
         this.calendarClose.emit();
+    }
+
+    public get buttonClass(): string {
+        return this.selectionMode === 'range' ? RANGE_PICKER_BUTTONS_CLASS : DATE_PICKER_BUTTONS_CLASS;
     }
 
     /**  Returns whether the date-picker is in readonly dialog mode. */

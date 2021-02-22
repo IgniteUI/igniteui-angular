@@ -9,7 +9,7 @@ import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
-import { fromEvent, noop, Subject, Subscription } from 'rxjs';
+import { fromEvent, MonoTypeOperatorFunction, noop, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
@@ -20,13 +20,18 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
+import { PickerCancelableEventArgs } from '../date-common/types';
+import { IgxPickerActionsDirective } from '../date-picker/date-picker.directives';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE
 } from '../input-group/public_api';
-import { AutoPositionStrategy, IgxOverlayService, OverlaySettings, PositionSettings } from '../services/public_api';
+import {
+    AutoPositionStrategy, IgxOverlayService, OverlayCancelableEventArgs, OverlayEventArgs,
+    OverlaySettings, PositionSettings
+} from '../services/public_api';
 import {
     DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
     IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
@@ -317,6 +322,9 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
+    @ContentChild(IgxPickerActionsDirective)
+    public pickerActions: IgxPickerActionsDirective;
+
     /** @hidden @internal */
     @ContentChild(IgxDateRangeSeparatorDirective, { read: TemplateRef })
     public dateSeparatorTemplate: TemplateRef<any>;
@@ -411,7 +419,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private _value: DateRange;
-    private _componentID: string;
+    private overlayId: string;
     private _ngControl: NgControl;
     private destroy$ = new Subject();
     private _statusChanges$: Subscription;
@@ -419,6 +427,11 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     private toggleClickNotifier$ = new Subject();
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
+    private overlaySubFilter:
+        [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
+            filter(x => x.id === this.overlayId),
+            takeUntil(this.destroy$)
+        ];
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true
@@ -462,9 +475,9 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
             : this.dialogOverlaySettings
             , overlaySettings);
 
-        this._componentID = this._overlayService
+        this.overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, settings, this._moduleRef);
-        this._overlayService.show(this._componentID);
+        this._overlayService.show(this.overlayId);
     }
 
     /**
@@ -479,7 +492,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
      */
     public close(): void {
         if (!this.collapsed) {
-            this._overlayService.hide(this._componentID);
+            this._overlayService.hide(this.overlayId);
             // TODO: detach()
         }
     }
@@ -646,8 +659,8 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
-        if (this._componentID) {
-            this._overlayService.hide(this._componentID);
+        if (this.overlayId) {
+            this._overlayService.hide(this.overlayId);
         }
     }
 
@@ -675,12 +688,14 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden @internal */
     public handleSelection(selectionData: Date[]): void {
-        const args: IBaseCancelableBrowserEventArgs = { owner: this, cancel: false };
+        const oldValue = this.value;
+        const newValue = this.extractRange(selectionData);
+        const args: PickerCancelableEventArgs = { owner: this, cancel: false, oldValue, newValue };
         this.selecting.emit(args);
         if (args.cancel) {
             return;
         }
-        this.value = this.extractRange(selectionData);
+        this.value = newValue;
         this.selected.emit(this.value);
         if (this.isDropdown && selectionData?.length > 1) {
             this.close();
@@ -735,40 +750,32 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(
-            filter((overlay) => overlay.id === this._componentID),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const args = eventArgs as IBaseCancelableBrowserEventArgs;
-                this.opening.emit(args);
-                if (args.cancel) {
-                    return;
-                }
+        this._overlayService.onOpening.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+            const args = eventArgs as OverlayCancelableEventArgs;
+            this.opening.emit(args);
+            if (args.cancel) {
+                return;
+            }
 
-                this._initializeCalendarContainer(eventArgs.componentRef.instance);
-                this._collapsed = false;
-                this.updateCalendar();
-            });
+            this._initializeCalendarContainer(eventArgs.componentRef.instance);
+            this._collapsed = false;
+            this.updateCalendar();
+        });
 
-        this._overlayService.onOpened.pipe(
-            filter((overlay) => overlay.id === this._componentID),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                this.calendar?.daysView.focusActiveDate();
-                this.opened.emit(eventArgs as IBaseEventArgs);
-            });
+        this._overlayService.onOpened.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+            this.calendar?.daysView.focusActiveDate();
+            this.opened.emit(eventArgs as IBaseEventArgs);
+        });
 
-        this._overlayService.onClosing.pipe(
-            filter(overlay => overlay.id === this._componentID),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                this.handleClosing(eventArgs);
-            });
+        this._overlayService.onClosing.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+            this.handleClosing(eventArgs as OverlayCancelableEventArgs);
+        });
 
-        this._overlayService.onClosed.pipe(
-            filter(overlay => overlay.id === this._componentID),
-            takeUntil(this.destroy$)).subscribe((event) => {
-                this._collapsed = true;
-                this._componentID = null;
-                this.closed.emit(event as IBaseEventArgs);
-            });
+        this._overlayService.onClosed.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+            this._collapsed = true;
+            this.overlayId = null;
+            this.closed.emit(eventArgs as IBaseEventArgs);
+        });
     }
 
     private updateValue(value: DateRange) {
@@ -879,7 +886,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
         if (range.length > 0) {
             this.calendar.selectDate(range);
-        } else if (range.length <= 0 && this.calendar.monthViews) {
+        } else if (range.length === 0 && this.calendar.monthViews) {
             this.calendar.deselectDate();
         }
         this.calendar.viewDate = range[0] || new Date();
@@ -1043,8 +1050,9 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
         componentInstance.mode = this.mode;
         componentInstance.displayMonthsCount = this.displayMonthsCount;
-        componentInstance.doneButtonText = this.doneButtonText;
+        componentInstance.closeButtonLabel = this.doneButtonText;
         componentInstance.selectionMode = CalendarSelection.RANGE;
+        componentInstance.pickerActions = this.pickerActions;
         componentInstance.calendarClose.pipe(takeUntil(this.destroy$)).subscribe(() => this.close());
     }
 }

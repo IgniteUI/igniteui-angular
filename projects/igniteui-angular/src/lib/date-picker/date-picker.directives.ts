@@ -19,6 +19,6 @@ export class IgxDatePickerTemplateDirective {
 @Directive({
     selector: '[igxDatePickerActions]'
 })
-export class IgxDatePickerActionsDirective {
+export class IgxPickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
 }
