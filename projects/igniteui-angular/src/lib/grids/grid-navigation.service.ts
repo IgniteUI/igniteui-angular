@@ -133,7 +133,10 @@ export class IgxGridNavigationService {
         }
         if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
-            const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
+            let shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
+            if(this.grid.cellSelection === 'none'){
+                shouldClearSelection = true;
+            }
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
                 this.firstVisibleNode(this.lastActiveNode.row) : this.firstVisibleNode());
             if (shouldClearSelection) {
