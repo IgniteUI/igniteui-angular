@@ -144,7 +144,7 @@
         }
     }
 }
-/* stylelint-enable */
+/* stylelint-enable string-quotes */
 
 @include describe('Keyframes') {
     $keyframes: () !default;
@@ -181,6 +181,6 @@
             }
         }
     }
-    /* stylelint-enable */
+    /* stylelint-enable max-nesting-depth */
 
 }
