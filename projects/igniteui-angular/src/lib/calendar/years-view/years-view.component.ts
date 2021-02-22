@@ -1,10 +1,20 @@
-import { Component, Output, EventEmitter, Input, HostBinding, HostListener, ElementRef, Injectable, ViewChildren, QueryList} from '@angular/core';
+import {
+    Component,
+    Output,
+    EventEmitter,
+    Input,
+    HostBinding,
+    HostListener,
+    ElementRef,
+    Injectable,
+    ViewChildren,
+    QueryList
+} from '@angular/core';
 import { range, Calendar } from '../calendar';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
 import { IgxCalendarYearDirective } from '../calendar.directives';
-
-let NEXT_ID = 0;
+import { noop } from 'rxjs';
 
 @Injectable()
 export class CalendarHammerConfig extends HammerGestureConfig {
@@ -29,93 +39,6 @@ export class CalendarHammerConfig extends HammerGestureConfig {
     templateUrl: 'years-view.component.html'
 })
 export class IgxYearsViewComponent implements ControlValueAccessor {
-
-    /**
-     * Sets/gets the `id` of the years view.
-     * If not set, the `id` will have value `"igx-years-view-0"`.
-     * ```html
-     * <igx-years-view id = "my-years-view"></igx-years-view>
-     * ```
-     * ```typescript
-     * let yearsViewId =  this.yearsView.id;
-     * ```
-     * @memberof IgxCalendarComponent
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-years-view-${NEXT_ID++}`;
-
-    /**
-     * Gets/sets the selected date of the years view.
-     * By default it is the current date.
-     * ```html
-     * <igx-years-view [date]="myDate"></igx-years-view>
-     * ```
-     * ```typescript
-     * let date =  this.yearsView.date;
-     * ```
-     * @memberof IgxYearsViewComponent
-     */
-    @Input()
-    public get date() {
-        return this._date;
-    }
-
-    public set date(value: Date) {
-        if (!(value instanceof Date)) { return; }
-        this._date = value;
-    }
-
-    /**
-     * Gets the year format option of the years view.
-     * ```typescript
-     * let yearFormat = this.yearsView.yearFormat.
-     * ```
-     */
-    @Input()
-    public get yearFormat(): string {
-        return this._yearFormat;
-    }
-
-    /**
-     * Sets the year format option of the years view.
-     * ```html
-     * <igx-years-view [yearFormat]="numeric"></igx-years-view>
-     * ```
-     * @memberof IgxYearsViewComponent
-     */
-    public set yearFormat(value: string) {
-        this._yearFormat = value;
-        this.initYearFormatter();
-    }
-
-    /**
-     * Gets the `locale` of the years view.
-     * Default value is `"en"`.
-     * ```typescript
-     * let locale =  this.yearsView.locale;
-     * ```
-     * @memberof IgxYearsViewComponent
-     */
-    @Input()
-    public get locale(): string {
-        return this._locale;
-    }
-
-    /**
-     * Sets the `locale` of the years view.
-     * Expects a valid BCP 47 language tag.
-     * Default value is `"en"`.
-     * ```html
-     * <igx-years-view [locale]="de"></igx-years-view>
-     * ```
-     * @memberof IgxYearsViewComponent
-     */
-    public set locale(value: string) {
-        this._locale = value;
-        this.initYearFormatter();
-    }
-
     /**
      * Gets/sets whether the view should be rendered
      * according to the locale and yearFormat, if any.
@@ -127,12 +50,13 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * Emits an event when a selection is made in the years view.
      * Provides reference the `date` property in the `IgxYearsViewComponent`.
      * ```html
-     * <igx-years-view (onSelection)="onSelection($event)"></igx-years-view>
+     * <igx-years-view (selected)="onSelection($event)"></igx-years-view>
      * ```
+     *
      * @memberof IgxYearsViewComponent
      */
     @Output()
-    public onSelection = new EventEmitter<Date>();
+    public selected = new EventEmitter<Date>();
 
     /**
      * The default css class applied to the component.
@@ -148,26 +72,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      */
     @ViewChildren(IgxCalendarYearDirective, { read: IgxCalendarYearDirective })
     public calendarDir: QueryList<IgxCalendarYearDirective>;
-
-    /**
-     * Returns an array of date objects which are then used to properly
-     * render the years.
-     *
-     * Used in the template of the component.
-     *
-     * @hidden
-     */
-    get decade(): number[] {
-        const result = [];
-        const start = this.date.getFullYear() - 3;
-        const end = this.date.getFullYear() + 4;
-
-        for (const year of range(start, end)) {
-            result.push(new Date(year, this.date.getMonth(), this.date.getDate()));
-        }
-
-        return result;
-    }
 
     /**
      * @hidden
@@ -196,15 +100,146 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     /**
      * @hidden
      */
-    private _onTouchedCallback: () => void = () => { };
+    private _onTouchedCallback: () => void = noop;
+
     /**
      * @hidden
      */
-    private _onChangeCallback: (_: Date) => void = () => { };
+    private _onChangeCallback: (_: Date) => void = noop;
+
+    /**
+     * Gets/sets the selected date of the years view.
+     * By default it is the current date.
+     * ```html
+     * <igx-years-view [date]="myDate"></igx-years-view>
+     * ```
+     * ```typescript
+     * let date =  this.yearsView.date;
+     * ```
+     *
+     * @memberof IgxYearsViewComponent
+     */
+    @Input()
+    public get date() {
+        return this._date;
+    }
+
+    public set date(value: Date) {
+        if (!(value instanceof Date)) {
+            return;
+        }
+        this._date = value;
+    }
+
+    /**
+     * Gets the year format option of the years view.
+     * ```typescript
+     * let yearFormat = this.yearsView.yearFormat.
+     * ```
+     */
+    @Input()
+    public get yearFormat(): string {
+        return this._yearFormat;
+    }
+
+    /**
+     * Sets the year format option of the years view.
+     * ```html
+     * <igx-years-view [yearFormat]="numeric"></igx-years-view>
+     * ```
+     *
+     * @memberof IgxYearsViewComponent
+     */
+    public set yearFormat(value: string) {
+        this._yearFormat = value;
+        this.initYearFormatter();
+    }
+
+    /**
+     * Gets the `locale` of the years view.
+     * Default value is `"en"`.
+     * ```typescript
+     * let locale =  this.yearsView.locale;
+     * ```
+     *
+     * @memberof IgxYearsViewComponent
+     */
+    @Input()
+    public get locale(): string {
+        return this._locale;
+    }
+
+    /**
+     * Sets the `locale` of the years view.
+     * Expects a valid BCP 47 language tag.
+     * Default value is `"en"`.
+     * ```html
+     * <igx-years-view [locale]="de"></igx-years-view>
+     * ```
+     *
+     * @memberof IgxYearsViewComponent
+     */
+    public set locale(value: string) {
+        this._locale = value;
+        this.initYearFormatter();
+    }
+
+    /**
+     * Returns an array of date objects which are then used to properly
+     * render the years.
+     *
+     * Used in the template of the component.
+     *
+     * @hidden
+     */
+    public get decade(): number[] {
+        const result = [];
+        const start = this.date.getFullYear() - 3;
+        const end = this.date.getFullYear() + 4;
+
+        for (const year of range(start, end)) {
+            result.push(new Date(year, this.date.getMonth(), this.date.getDate()));
+        }
+
+        return result;
+    }
 
     constructor(public el: ElementRef) {
         this.initYearFormatter();
         this._calendarModel = new Calendar();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowdown', ['$event'])
+    public onKeydownArrowDown(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.arrowup', ['$event'])
+    public onKeydownArrowUp(event: KeyboardEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        this.generateYearRange(-1);
+        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('keydown.enter')
+    public onKeydownEnter() {
+        this.selected.emit(this.date);
+        this._onChangeCallback(this.date);
     }
 
     /**
@@ -225,7 +260,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
     public selectYear(event) {
         this.date = event;
 
-        this.onSelection.emit(this.date);
+        this.selected.emit(this.date);
         this._onChangeCallback(this.date);
     }
 
@@ -276,39 +311,6 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
         if (value) {
             this.date = value;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowdown', ['$event'])
-    public onKeydownArrowDown(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.nextElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.arrowup', ['$event'])
-    public onKeydownArrowUp(event: KeyboardEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-
-        this.generateYearRange(-1);
-        this.calendarDir.find(date => date.isCurrentYear).nativeElement.previousElementSibling.focus();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('keydown.enter')
-    public onKeydownEnter() {
-        this.onSelection.emit(this.date);
-        this._onChangeCallback(this.date);
     }
 
     /**

@@ -12,12 +12,11 @@
                 </igx-drop-down>
             </div>
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
 
 
-            <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'"
-                [showToolbar]="true" [columnHiding]="true" [columnPinning]='true' [allowFiltering]="true"
+            <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'" [allowFiltering]="true"
                 [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [paging]="false" [width]="'900px'"
                 [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
                 <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [movable]="c.movable"
@@ -29,11 +28,9 @@
                 <ng-template igxToolbarCustomContent let-sampleGrid="grid">
                     <button igxButton="outlined" #columnSelectionButton igxRipple (click)="toggleColumnSelection()"
                         [displayDensity]="sampleGrid.displayDensity">
-                        <div class="igx-grid-toolbar__button-space">
-                            <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
-                            </igx-checkbox>
-                            <span>{{ sampleGrid.selectedColumns().length }}</span>
-                        </div>
+                        <igx-checkbox [checked]="true" [disableRipple]="true" [readonly]="true" [disabled]="true">
+                        </igx-checkbox>
+                        <span>{{ sampleGrid.selectedColumns().length }}</span>
                     </button>
                     <igx-drop-down #columnSelectionDropdown>
                         <igx-input-group class="igx-column-hiding__header-input">
@@ -61,7 +58,7 @@
 
             <h1>TEST EXAMPLE</h1>
             <igx-grid #grid [data]="data" height="500px" width="1000px" [columnSelection]="'multiple'"
-                columnWidth="100px" [columnHiding]="true">
+                columnWidth="100px">
                 <igx-column-group header="General Information">
                     <igx-column field="CompanyName"></igx-column>
                     <igx-column-group header="Person Details">
@@ -84,7 +81,7 @@
                 </igx-column-group>
             </igx-grid>
             <div class="sample-buttons">
-                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (onSelect)="selectFilterMode($event)">
+                <igx-buttongroup [multiSelection]="false" [values]="filterModes" (selected)="selectFilterMode($event)">
                 </igx-buttongroup>
             </div>
             <div class="sample-buttons">

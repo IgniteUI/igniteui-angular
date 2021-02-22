@@ -38,6 +38,7 @@ import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
 
 /**
  * Interface that encapsulates onItemSelection event arguments - new value and cancel selection.
+ *
  * @export
  */
 export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
@@ -77,45 +78,6 @@ export interface AutocompleteOverlaySettings {
     selector: '[igxAutocomplete]'
 })
 export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective implements OnDestroy, AfterViewInit, OnInit {
-
-    private _shouldBeOpen = false;
-    constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
-        @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
-        @Optional() protected group: IgxInputGroupComponent,
-        protected elementRef: ElementRef,
-        protected cdr: ChangeDetectorRef) {
-        super(null);
-    }
-    private destroy$ = new Subject();
-
-    private defaultSettings: OverlaySettings;
-
-    protected id: string;
-    protected get model() {
-        return this.ngModel || this.formControl;
-    }
-
-    /** @hidden @internal */
-    get nativeElement(): HTMLInputElement {
-        return this.elementRef.nativeElement;
-    }
-
-    /** @hidden @internal */
-    get parentElement(): HTMLElement {
-        return this.group ? this.group.element.nativeElement : this.nativeElement;
-    }
-
-    private get settings(): OverlaySettings {
-        const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
-        const target = settings.target || settings.positionStrategy.settings.target;
-        if (!target) {
-            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
-            settings.target = this.parentElement;
-            settings.positionStrategy = positionStrategyClone;
-        }
-        return settings;
-    }
-
     /**
      * Sets the target of the autocomplete directive
      *
@@ -135,25 +97,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     public set target(v: IgxDropDownComponent) {
         this._target = v;
     }
-
-    /**
-     * Enables/disables autocomplete component
-     *
-     * ```typescript
-     * // get
-     * let disabled = this.autocomplete.disabled;
-     * ```
-     * ```html
-     * <!--set-->
-     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteDisabled]="disabled"/>
-     * ```
-     * ```typescript
-     * // set
-     * public disabled = true;
-     * ```
-     */
-    @Input('igxAutocompleteDisabled')
-    public disabled = false;
 
     /**
      * Provide overlay settings for the autocomplete drop down
@@ -179,6 +122,33 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @Input('igxAutocompleteSettings')
     autocompleteSettings: AutocompleteOverlaySettings;
 
+    /** @hidden @internal */
+    @HostBinding('attr.autocomplete')
+    public autofill = 'off';
+
+    /** @hidden  @internal */
+    @HostBinding('attr.role')
+    public role = 'combobox';
+
+    /**
+     * Enables/disables autocomplete component
+     *
+     * ```typescript
+     * // get
+     * let disabled = this.autocomplete.disabled;
+     * ```
+     * ```html
+     * <!--set-->
+     * <input type="text" [igxAutocomplete]="townsPanel" [igxAutocompleteDisabled]="disabled"/>
+     * ```
+     * ```typescript
+     * // set
+     * public disabled = true;
+     * ```
+     */
+    @Input('igxAutocompleteDisabled')
+    public disabled = false;
+
     /**
      * Emitted after item from the drop down is selected
      *
@@ -187,15 +157,28 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Output()
-    onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
+    public onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
     /** @hidden @internal */
-    @HostBinding('attr.autocomplete')
-    public autofill = 'off';
+    get nativeElement(): HTMLInputElement {
+        return this.elementRef.nativeElement;
+    }
 
-    /** @hidden  @internal */
-    @HostBinding('attr.role')
-    public role = 'combobox';
+    /** @hidden @internal */
+    get parentElement(): HTMLElement {
+        return this.group ? this.group.element.nativeElement : this.nativeElement;
+    }
+
+    private get settings(): OverlaySettings {
+        const settings = Object.assign({}, this.defaultSettings, this.autocompleteSettings);
+        const target = settings.target || settings.positionStrategy.settings.target;
+        if (!target) {
+            const positionStrategyClone: IPositionStrategy = settings.positionStrategy.clone();
+            settings.target = this.parentElement;
+            settings.positionStrategy = positionStrategyClone;
+        }
+        return settings;
+    }
 
     /** @hidden  @internal */
     @HostBinding('attr.aria-expanded')
@@ -227,9 +210,26 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         return 'list';
     }
 
+    protected id: string;
+    protected get model() {
+        return this.ngModel || this.formControl;
+    }
+
+    private _shouldBeOpen = false;
+    private destroy$ = new Subject();
+    private defaultSettings: OverlaySettings;
+
+    constructor(@Self() @Optional() @Inject(NgModel) protected ngModel: NgModel,
+        @Self() @Optional() @Inject(FormControlName) protected formControl: FormControlName,
+        @Optional() protected group: IgxInputGroupComponent,
+        protected elementRef: ElementRef,
+        protected cdr: ChangeDetectorRef) {
+        super(null);
+    }
+
     /** @hidden  @internal */
     @HostListener('input')
-    onInput() {
+    public onInput() {
         this.open();
     }
 
@@ -238,7 +238,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     @HostListener('keydown.ArrowUp', ['$event'])
     @HostListener('keydown.Alt.ArrowUp', ['$event'])
-    onArrowDown(event: Event) {
+    public onArrowDown(event: Event) {
         event.preventDefault();
         this.open();
     }
@@ -246,12 +246,13 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     /** @hidden  @internal */
     @HostListener('keydown.Tab')
     @HostListener('keydown.Shift.Tab')
-    onTab() {
+    public onTab() {
+        this._shouldBeOpen = false;
         this.close();
     }
 
     /** @hidden  @internal */
-    handleKeyDown(event) {
+    public handleKeyDown(event) {
         if (!this.collapsed) {
             switch (event.key.toLowerCase()) {
                 case 'space':
@@ -267,22 +268,22 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     }
 
     /** @hidden  @internal */
-    onArrowDownKeyDown() {
+    public onArrowDownKeyDown() {
         super.onArrowDownKeyDown();
     }
 
     /** @hidden  @internal */
-    onArrowUpKeyDown() {
+    public onArrowUpKeyDown() {
         super.onArrowUpKeyDown();
     }
 
     /** @hidden  @internal */
-    onEndKeyDown() {
+    public onEndKeyDown() {
         super.onEndKeyDown();
     }
 
     /** @hidden  @internal */
-    onHomeKeyDown() {
+    public onHomeKeyDown() {
         super.onHomeKeyDown();
     }
 
@@ -290,7 +291,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Closes autocomplete drop down
      */
     public close() {
-        this._shouldBeOpen = false;
         if (this.collapsed) {
             return;
         }
@@ -309,38 +309,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         this.target.width = this.target.width || (this.parentElement.clientWidth + 'px');
         this.target.open(this.settings);
         this.highlightFirstItem();
-    }
-
-    private get collapsed(): boolean {
-        return this.target ? this.target.collapsed : true;
-    }
-
-    private select = (value: ISelectionEventArgs) => {
-        if (!value.newSelection) {
-            return;
-        }
-        value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
-        const newValue = value.newSelection.value;
-        const args: AutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
-        this.onItemSelected.emit(args);
-        if (args.cancel) {
-            return;
-        }
-        this.close();
-        this.nativeElement.focus();
-
-        // Update model after the input is re-focused, in order to have proper valid styling.
-        // Otherwise when item is selected using mouse (and input is blurred), then valid style will be removed.
-        this.model ? this.model.control.setValue(newValue) : this.nativeElement.value = newValue;
-    }
-
-    private highlightFirstItem = () => {
-        if (this.target.focusedItem) {
-            this.target.focusedItem.focused = false;
-            this.target.focusedItem = null;
-        }
-        this.target.navigateFirst();
-        this.cdr.detectChanges();
     }
 
     /** @hidden @internal */
@@ -373,8 +341,45 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 this.close();
             }
         });
-        this.target.onSelection.pipe(takeUntil(this.destroy$)).subscribe(this.select);
+        this.target.onSelection.pipe(takeUntil(this.destroy$)).subscribe(this.select.bind(this));
     }
+
+    private get collapsed(): boolean {
+        return this.target ? this.target.collapsed : true;
+    }
+
+    private select(value: ISelectionEventArgs) {
+        if (!value.newSelection) {
+            return;
+        }
+        value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
+        const newValue = value.newSelection.value;
+        const args: AutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
+        this.onItemSelected.emit(args);
+        if (args.cancel) {
+            return;
+        }
+        this._shouldBeOpen = false;
+        this.close();
+        this.nativeElement.focus();
+
+        // Update model after the input is re-focused, in order to have proper valid styling.
+        // Otherwise when item is selected using mouse (and input is blurred), then valid style will be removed.
+        if (this.model) {
+            this.model.control.setValue(newValue);
+        } else {
+            this.nativeElement.value = newValue;
+        }
+    };
+
+    private highlightFirstItem() {
+        if (this.target.focusedItem) {
+            this.target.focusedItem.focused = false;
+            this.target.focusedItem = null;
+        }
+        this.target.navigateFirst();
+        this.cdr.detectChanges();
+    };
 }
 
 /** @hidden */

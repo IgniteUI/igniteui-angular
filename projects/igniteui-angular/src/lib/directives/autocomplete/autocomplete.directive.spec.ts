@@ -397,7 +397,7 @@ describe('IgxAutocomplete', () => {
             let startsWith = 'so';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
 
-            const verifyDropdownItems = function() {
+            const verifyDropdownItems = () => {
                 expect(dropdownListScrollElement.children.length).toEqual(filteredTowns.length);
                 for (let itemIndex = 0; itemIndex < filteredTowns.length; itemIndex++) {
                     const itemElement = dropdownListScrollElement.children[itemIndex].nativeElement;
@@ -406,8 +406,11 @@ describe('IgxAutocomplete', () => {
                     const isFocused = itemIndex === 0 ? true : false;
                     const hasFocusedClass =
                     itemElement.classList.contains(CSS_CLASS_DROP_DOWN_ITEM_FOCUSED);
-                    isFocused ? expect(hasFocusedClass).toBeTruthy() :
-                    expect(hasFocusedClass).toBeFalsy();
+                    if (isFocused) {
+                        expect(hasFocusedClass).toBeTruthy();
+                    } else {
+                        expect(hasFocusedClass).toBeFalsy();
+                    }
                     expect(dropDown.items[itemIndex].focused).toEqual(isFocused);
                 }
             };
@@ -450,7 +453,7 @@ describe('IgxAutocomplete', () => {
         }));
         it('Should filter and populate dropdown list with matching values on every key stroke', () => {
             const dropdownListScrollElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWNLIST_SCROLL));
-            const verifyDropdownItems = function () {
+            const verifyDropdownItems = () => {
                 const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
                 UIInteractions.setInputElementValue(input, startsWith, fixture);
                 fixture.detectChanges();
@@ -618,7 +621,9 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Stara Zagora', cancel: false });
 
-            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
+            fixture.componentInstance.onItemSelected = (args) => {
+                args.cancel = true;
+            };
             UIInteractions.setInputElementValue(input, 's', fixture);
             tick();
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
@@ -627,7 +632,9 @@ describe('IgxAutocomplete', () => {
         it('Should trigger onItemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
             spyOn(autocomplete.onItemSelected, 'emit').and.callThrough();
 
-            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
+            fixture.componentInstance.onItemSelected = (args) => {
+ args.cancel = true;
+};
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             tick();
@@ -638,7 +645,9 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledTimes(1);
             expect(autocomplete.onItemSelected.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
 
-            fixture.componentInstance.onItemSelected = (args) => { args.cancel = true; };
+            fixture.componentInstance.onItemSelected = (args) => {
+ args.cancel = true;
+};
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             tick();
@@ -919,12 +928,12 @@ describe('IgxAutocomplete', () => {
 
 @Component({
     template: `<igx-input-group style="width: 300px;">
-        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
+        <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
             [igxAutocompleteSettings]='settings' (onItemSelected)="onItemSelected($event)"/>
         <label igxLabel for="towns">Towns</label>
-        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+        <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel [width]="ddWidth">
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
@@ -941,19 +950,17 @@ class AutocompleteComponent {
     public towns;
     public ddWidth = null;
     settings: AutocompleteOverlaySettings = null;
-    onItemSelected(args) { }
 
     constructor() {
         this.towns = [
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             'Sofia', 'Plovdiv', 'Varna', 'Burgas', 'Ruse', 'Stara Zagora', 'Pleven', 'Dobrich', 'Sliven', 'Shumen', 'Pernik', 'Haskovo', 'Yambol', 'Pazardzhik', 'Blagoevgrad', 'Veliko Tarnovo', 'Vratsa', 'Gabrovo', 'Asenovgrad', 'Vidin', 'Kazanlak', 'Kyustendil', 'Kardzhali', 'Montana', 'Dimitrovgrad', 'Targovishte', 'Lovech', 'Silistra', 'Dupnitsa', 'Svishtov', 'Razgrad', 'Gorna Oryahovitsa', 'Smolyan', 'Petrich', 'Sandanski', 'Samokov', 'Sevlievo', 'Lom', 'Karlovo', 'Velingrad', 'Nova Zagora', 'Troyan', 'Aytos', 'Botevgrad', 'Gotse Delchev', 'Peshtera', 'Harmanli', 'Karnobat', 'Svilengrad', 'Panagyurishte', 'Chirpan', 'Popovo', 'Rakovski', 'Radomir', 'Novi Iskar', 'Kozloduy', 'Parvomay', 'Berkovitsa', 'Cherven Bryag', 'Pomorie', 'Ihtiman', 'Radnevo', 'Provadiya', 'Novi Pazar', 'Razlog', 'Byala Slatina', 'Nesebar', 'Balchik', 'Kostinbrod', 'Stamboliyski', 'Kavarna', 'Knezha', 'Pavlikeni', 'Mezdra', 'Etropole', 'Levski', 'Teteven', 'Elhovo', 'Bankya', 'Tryavna', 'Lukovit', 'Tutrakan', 'Sredets', 'Sopot', 'Byala', 'Veliki Preslav', 'Isperih', 'Belene', 'Omurtag', 'Bansko', 'Krichim', 'Galabovo', 'Devnya', 'Septemvri', 'Rakitovo', 'Lyaskovets', 'Svoge', 'Aksakovo', 'Kubrat', 'Dryanovo', 'Beloslav', 'Pirdop', 'Lyubimets', 'Momchilgrad', 'Slivnitsa', 'Hisarya', 'Zlatograd', 'Kostenets', 'Devin', 'General Toshevo', 'Simeonovgrad', 'Simitli', 'Elin Pelin', 'Dolni Chiflik', 'Tervel', 'Dulovo', 'Varshets', 'Kotel', 'Madan', 'Straldzha', 'Saedinenie', 'Bobov Dol', 'Tsarevo', 'Kuklen', 'Tvarditsa', 'Yakoruda', 'Elena', 'Topolovgrad', 'Bozhurishte', 'Chepelare', 'Oryahovo', 'Sozopol', 'Belogradchik', 'Perushtitsa', 'Zlatitsa', 'Strazhitsa', 'Krumovgrad', 'Kameno', 'Dalgopol', 'Vetovo', 'Suvorovo', 'Dolni Dabnik', 'Dolna Banya', 'Pravets', 'Nedelino', 'Polski Trambesh', 'Trastenik', 'Bratsigovo', 'Koynare', 'Godech', 'Slavyanovo', 'Dve Mogili', 'Kostandovo', 'Debelets', 'Strelcha', 'Sapareva Banya', 'Ignatievo', 'Smyadovo', 'Breznik', 'Sveti Vlas', 'Nikopol', 'Shivachevo', 'Belovo', 'Tsar Kaloyan', 'Ivaylovgrad', 'Valchedram', 'Marten', 'Glodzhevo', 'Sarnitsa', 'Letnitsa', 'Varbitsa', 'Iskar', 'Ardino', 'Shabla', 'Rudozem', 'Vetren', 'Kresna', 'Banya', 'Batak', 'Maglizh', 'Valchi Dol', 'Gulyantsi', 'Dragoman', 'Zavet', 'Kran', 'Miziya', 'Primorsko', 'Sungurlare', 'Dolna Mitropoliya', 'Krivodol', 'Kula', 'Kalofer', 'Slivo Pole', 'Kaspichan', 'Apriltsi', 'Belitsa', 'Roman', 'Dzhebel', 'Dolna Oryahovitsa', 'Buhovo', 'Gurkovo', 'Pavel Banya', 'Nikolaevo', 'Yablanitsa', 'Kableshkovo', 'Opaka', 'Rila', 'Ugarchin', 'Dunavtsi', 'Dobrinishte', 'Hadzhidimovo', 'Bregovo', 'Byala Cherkva', 'Zlataritsa', 'Kocherinovo', 'Dospat', 'Tran', 'Sadovo', 'Laki', 'Koprivshtitsa', 'Malko Tarnovo', 'Loznitsa', 'Obzor', 'Kilifarevo', 'Borovo', 'Batanovtsi', 'Chernomorets', 'Aheloy', 'Byala', 'Pordim', 'Suhindol', 'Merichleri', 'Glavinitsa', 'Chiprovtsi', 'Kermen', 'Brezovo', 'Plachkovtsi', 'Zemen', 'Balgarovo', 'Alfatar', 'Boychinovtsi', 'Gramada', 'Senovo', 'Momin Prohod', 'Kaolinovo', 'Shipka', 'Antonovo', 'Ahtopol', 'Boboshevo', 'Bolyarovo', 'Brusartsi', 'Klisura', 'Dimovo', 'Kiten', 'Pliska', 'Madzharovo', 'Melnik'
         ];
     }
+    onItemSelected(args) { }
 
     public filterTowns(startsWith: string) {
-        return this.towns.filter(function (city) {
-            return city.toString().toLowerCase().startsWith(startsWith.toLowerCase());
-        });
+        return this.towns.filter(city => city.toString().toLowerCase().startsWith(startsWith.toLowerCase()));
     }
 }
 
@@ -979,12 +986,12 @@ class AutocompleteInputComponent extends AutocompleteComponent {
     template: `
 <form [formGroup]="reactiveForm" (ngSubmit)="onSubmitReactive()">
 <igx-input-group>
-        <igx-prefix igxRipple><igx-icon fontSet="material">home</igx-icon> </igx-prefix>
+        <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" formControlName="towns" type="text" required
             [igxAutocomplete]='townsPanel'
             [igxAutocompleteSettings]='settings' />
         <label igxLabel for="towns">Towns</label>
-        <igx-suffix igxRipple><igx-icon fontSet="material">clear</igx-icon> </igx-suffix>
+        <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>
     <igx-drop-down #townsPanel>
         <igx-drop-down-item *ngFor="let town of towns | startsWith:townSelected" [value]="town">
@@ -1010,11 +1017,11 @@ class AutocompleteFormComponent {
     constructor(fb: FormBuilder) {
 
         this.towns = [
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             'Sofia', 'Plovdiv', 'Varna', 'Burgas', 'Ruse', 'Stara Zagora', 'Pleven', 'Dobrich', 'Sliven', 'Shumen', 'Pernik', 'Haskovo', 'Yambol', 'Pazardzhik', 'Blagoevgrad', 'Veliko Tarnovo', 'Vratsa', 'Gabrovo', 'Asenovgrad', 'Vidin', 'Kazanlak', 'Kyustendil', 'Kardzhali', 'Montana', 'Dimitrovgrad', 'Targovishte', 'Lovech', 'Silistra', 'Dupnitsa', 'Svishtov', 'Razgrad', 'Gorna Oryahovitsa', 'Smolyan', 'Petrich', 'Sandanski', 'Samokov', 'Sevlievo', 'Lom', 'Karlovo', 'Velingrad', 'Nova Zagora', 'Troyan', 'Aytos', 'Botevgrad', 'Gotse Delchev', 'Peshtera', 'Harmanli', 'Karnobat', 'Svilengrad', 'Panagyurishte', 'Chirpan', 'Popovo', 'Rakovski', 'Radomir', 'Novi Iskar', 'Kozloduy', 'Parvomay', 'Berkovitsa', 'Cherven Bryag', 'Pomorie', 'Ihtiman', 'Radnevo', 'Provadiya', 'Novi Pazar', 'Razlog', 'Byala Slatina', 'Nesebar', 'Balchik', 'Kostinbrod', 'Stamboliyski', 'Kavarna', 'Knezha', 'Pavlikeni', 'Mezdra', 'Etropole', 'Levski', 'Teteven', 'Elhovo', 'Bankya', 'Tryavna', 'Lukovit', 'Tutrakan', 'Sredets', 'Sopot', 'Byala', 'Veliki Preslav', 'Isperih', 'Belene', 'Omurtag', 'Bansko', 'Krichim', 'Galabovo', 'Devnya', 'Septemvri', 'Rakitovo', 'Lyaskovets', 'Svoge', 'Aksakovo', 'Kubrat', 'Dryanovo', 'Beloslav', 'Pirdop', 'Lyubimets', 'Momchilgrad', 'Slivnitsa', 'Hisarya', 'Zlatograd', 'Kostenets', 'Devin', 'General Toshevo', 'Simeonovgrad', 'Simitli', 'Elin Pelin', 'Dolni Chiflik', 'Tervel', 'Dulovo', 'Varshets', 'Kotel', 'Madan', 'Straldzha', 'Saedinenie', 'Bobov Dol', 'Tsarevo', 'Kuklen', 'Tvarditsa', 'Yakoruda', 'Elena', 'Topolovgrad', 'Bozhurishte', 'Chepelare', 'Oryahovo', 'Sozopol', 'Belogradchik', 'Perushtitsa', 'Zlatitsa', 'Strazhitsa', 'Krumovgrad', 'Kameno', 'Dalgopol', 'Vetovo', 'Suvorovo', 'Dolni Dabnik', 'Dolna Banya', 'Pravets', 'Nedelino', 'Polski Trambesh', 'Trastenik', 'Bratsigovo', 'Koynare', 'Godech', 'Slavyanovo', 'Dve Mogili', 'Kostandovo', 'Debelets', 'Strelcha', 'Sapareva Banya', 'Ignatievo', 'Smyadovo', 'Breznik', 'Sveti Vlas', 'Nikopol', 'Shivachevo', 'Belovo', 'Tsar Kaloyan', 'Ivaylovgrad', 'Valchedram', 'Marten', 'Glodzhevo', 'Sarnitsa', 'Letnitsa', 'Varbitsa', 'Iskar', 'Ardino', 'Shabla', 'Rudozem', 'Vetren', 'Kresna', 'Banya', 'Batak', 'Maglizh', 'Valchi Dol', 'Gulyantsi', 'Dragoman', 'Zavet', 'Kran', 'Miziya', 'Primorsko', 'Sungurlare', 'Dolna Mitropoliya', 'Krivodol', 'Kula', 'Kalofer', 'Slivo Pole', 'Kaspichan', 'Apriltsi', 'Belitsa', 'Roman', 'Dzhebel', 'Dolna Oryahovitsa', 'Buhovo', 'Gurkovo', 'Pavel Banya', 'Nikolaevo', 'Yablanitsa', 'Kableshkovo', 'Opaka', 'Rila', 'Ugarchin', 'Dunavtsi', 'Dobrinishte', 'Hadzhidimovo', 'Bregovo', 'Byala Cherkva', 'Zlataritsa', 'Kocherinovo', 'Dospat', 'Tran', 'Sadovo', 'Laki', 'Koprivshtitsa', 'Malko Tarnovo', 'Loznitsa', 'Obzor', 'Kilifarevo', 'Borovo', 'Batanovtsi', 'Chernomorets', 'Aheloy', 'Byala', 'Pordim', 'Suhindol', 'Merichleri', 'Glavinitsa', 'Chiprovtsi', 'Kermen', 'Brezovo', 'Plachkovtsi', 'Zemen', 'Balgarovo', 'Alfatar', 'Boychinovtsi', 'Gramada', 'Senovo', 'Momin Prohod', 'Kaolinovo', 'Shipka', 'Antonovo', 'Ahtopol', 'Boboshevo', 'Bolyarovo', 'Brusartsi', 'Klisura', 'Dimovo', 'Kiten', 'Pliska', 'Madzharovo', 'Melnik'
         ];
         this.reactiveForm = fb.group({
-            'towns': ['', Validators.required]
+            towns: ['', Validators.required]
         });
 
     }

@@ -13,14 +13,14 @@ interface IButton {
 }
 
 class Button {
-    ripple: string;
-    label: string;
-    disabled: boolean;
-    togglable: boolean;
-    selected: boolean;
-    color: string;
-    bgcolor: string;
-    icon: string;
+    public ripple: string;
+    public label: string;
+    public disabled: boolean;
+    public togglable: boolean;
+    public selected: boolean;
+    public color: string;
+    public bgcolor: string;
+    public icon: string;
 
     constructor(obj?: IButton) {
         this.ripple = obj.ripple || 'gray';
@@ -40,12 +40,12 @@ class Button {
 })
 
 export class ButtonGroupSampleComponent implements OnInit {
-    multi = true;
-    alignment = ButtonGroupAlignment.vertical;
-    alignOptions: Button[];
-    fontOptions: Button[];
-    cities: Button[];
-    borders: Button[];
+    public multi = true;
+    public alignment = ButtonGroupAlignment.vertical;
+    public alignOptions: Button[];
+    public fontOptions: Button[];
+    public cities: Button[];
+    public borders: Button[];
 
     constructor() { }
 

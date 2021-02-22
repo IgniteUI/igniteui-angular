@@ -598,9 +598,10 @@ export class IgxBannerCustomTemplateComponent {
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
 export class SimpleBannerEventsComponent {
-    public cancelFlag = false;
     @ViewChild(IgxBannerComponent, { read: IgxBannerComponent, static: true  })
     public banner: IgxBannerComponent;
+
+    public cancelFlag = false;
 
     public handleOpening(event: any) {
         event.cancel = this.cancelFlag;

@@ -19,7 +19,7 @@ import { replaceMatch } from './tsUtils';
 
 const configPaths = ['/.angular.json', '/angular.json'];
 
-export function getProjectPaths(config: WorkspaceSchema, appendPrefix = true): string[] {
+export const getProjectPaths = (config: WorkspaceSchema, appendPrefix = true): string[] => {
     const sourceDirs = [];
 
     const projects = getProjects(config);
@@ -31,21 +31,19 @@ export function getProjectPaths(config: WorkspaceSchema, appendPrefix = true): s
         sourceDirs.push(normalize(sourcePath));
     }
     return sourceDirs;
-}
+};
 
-export function getWorkspacePath(host: Tree): string {
-    return configPaths.find(x => host.exists(x));
-}
+export const getWorkspacePath = (host: Tree): string => configPaths.find(x => host.exists(x));
 
-export function getWorkspace(host: Tree): WorkspaceSchema {
+export const getWorkspace = (host: Tree): WorkspaceSchema => {
     const configPath = getWorkspacePath(host);
     if (configPath) {
         return JSON.parse(host.read(configPath).toString());
     }
     return null;
-}
+};
 
-export function getProjects(config: WorkspaceSchema): WorkspaceProject<ProjectType.Application>[] {
+export const getProjects = (config: WorkspaceSchema): WorkspaceProject<ProjectType.Application>[] => {
     const projects: WorkspaceProject<ProjectType.Application>[] = [];
 
     for (const projName of Object.keys(config.projects)) {
@@ -57,40 +55,50 @@ export function getProjects(config: WorkspaceSchema): WorkspaceProject<ProjectTy
         projects.push(proj as WorkspaceProject<ProjectType.Application>);
     }
     return projects;
-}
+};
 
-export function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
-}
+export const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 
-export function supports(name: string): boolean {
+export const supports = (name: string): boolean => {
     try {
         execSync(`${name} --version`, { stdio: 'ignore' });
         return true;
     } catch {
         return false;
     }
-}
+};
 
-export function getPackageManager(host: Tree) {
+export const getPackageManager = (host: Tree) => {
     const hasYarn = supports('yarn');
     const hasYarnLock = host.exists('yarn.lock');
     if (hasYarn && hasYarnLock) {
         return 'yarn';
     }
     return 'npm';
-}
+};
 
-export function canResolvePackage(pkg: string): boolean {
-    let modulePath;
+export const canResolvePackage = (pkg: string): boolean => {
     try {
-        modulePath = require.resolve(pkg);
-    } finally {
-        return !!modulePath;
+        // attempt resolve in child process to keep result out of package.json cache
+        // otherwise resolve will not read the json again (after install) and won't load the main correctly
+        // https://stackoverflow.com/questions/59865584/how-to-invalidate-cached-require-resolve-results
+        execSync(`node -e "require.resolve('${pkg}');"`, { stdio: 'ignore' });
+        return true;
+    } catch {
+        return false;
     }
-}
+};
 
-export function tryInstallPackage(context: SchematicContext, packageManager: string, pkg: string) {
+export const getPackageVersion = (pkg: string): string => {
+    let version = null;
+    try {
+        version = require(path.posix.join(pkg, 'package.json'))?.version;
+    } catch {}
+
+    return version;
+};
+
+export const tryInstallPackage = (context: SchematicContext, packageManager: string, pkg: string) => {
     try {
         context.logger.debug(`Installing ${pkg} via ${packageManager}.`);
         switch (packageManager) {
@@ -105,9 +113,9 @@ export function tryInstallPackage(context: SchematicContext, packageManager: str
     } catch (e) {
         context.logger.warn(`Could not install ${pkg}.`, JSON.parse(e));
     }
-}
+};
 
-export function tryUninstallPackage(context: SchematicContext, packageManager: string, pkg: string) {
+export const tryUninstallPackage = (context: SchematicContext, packageManager: string, pkg: string) => {
     try {
         context.logger.debug(`Uninstalling ${pkg} via ${packageManager}`);
         switch (packageManager) {
@@ -123,7 +131,7 @@ export function tryUninstallPackage(context: SchematicContext, packageManager: s
         context.logger
             .warn(`Could not uninstall ${pkg}, you may want to uninstall it manually.`, JSON.parse(e));
     }
-}
+};
 
 interface TagOffset {
     start: number;
@@ -165,27 +173,26 @@ export class FileChange {
  * @param filePath
  * @param encoding
  */
-export function parseFile(host: Tree, filePath: string, encoding = 'utf8') {
-    return new HtmlParser().parse(host.read(filePath).toString(encoding), filePath).rootNodes;
-}
+export const parseFile = (host: Tree, filePath: string, encoding = 'utf8') =>
+    new HtmlParser().parse(host.read(filePath).toString(encoding), filePath).rootNodes;
 
-export function findElementNodes(root: Node[], tag: string | string[]): Node[] {
+export const findElementNodes = (root: Node[], tag: string | string[]): Node[] => {
     const tags = new Set(Array.isArray(tag) ? tag : [tag]);
     return flatten(Array.isArray(root) ? root : [root])
         .filter((node: Element) => tags.has(node.name));
-}
+};
 
-export function hasAttribute(root: Element, attribute: string | string[]) {
+export const hasAttribute = (root: Element, attribute: string | string[]) => {
     const attrs = Array.isArray(attribute) ? attribute : [attribute];
     return !!root.attrs.find(a => attrs.includes(a.name));
-}
+};
 
-export function getAttribute(root: Element, attribute: string | string[]) {
+export const getAttribute = (root: Element, attribute: string | string[]) => {
     const attrs = Array.isArray(attribute) ? attribute : [attribute];
     return root.attrs.filter(a => attrs.includes(a.name));
-}
+};
 
-export function getSourceOffset(element: Element): SourceOffset {
+export const getSourceOffset = (element: Element): SourceOffset => {
     const { startSourceSpan, endSourceSpan } = element;
     return {
         startTag: { start: startSourceSpan.start.offset, end: startSourceSpan.end.offset },
@@ -196,12 +203,10 @@ export function getSourceOffset(element: Element): SourceOffset {
         },
         node: element
     };
-}
+};
 
 
-function isElement(node: Node | Element): node is Element {
-    return (node as Element).children !== undefined;
-}
+const isElement = (node: Node | Element): boolean => (node as Element).children !== undefined;
 
 /**
  * Given an array of `Node` objects, flattens the ast tree to a single array.
@@ -209,20 +214,18 @@ function isElement(node: Node | Element): node is Element {
  *
  * @param list
  */
-export function flatten(list: Node[]) {
-    let node: Node;
+export const flatten = (list: Node[]) => {
     let r: Node[] = [];
 
-    for (let i = 0; i < list.length; i++) {
-        node = list[i];
+    for (const node of list) {
         r.push(node);
 
         if (isElement(node)) {
-            r = r.concat(flatten(node.children));
+            r = r.concat(flatten((node as Element).children));
         }
     }
     return r;
-}
+};
 
 /**
  * https://github.com/angular/angular/blob/master/packages/compiler/test/ml_parser/util/util.ts
@@ -268,6 +271,4 @@ class SerializerVisitor implements Visitor {
 }
 
 
-export function serializeNodes(nodes: Node[]): string[] {
-    return nodes.map(node => node.visit(new SerializerVisitor(), null));
-}
+export const serializeNodes = (nodes: Node[]): string[] => nodes.map(node => node.visit(new SerializerVisitor(), null));

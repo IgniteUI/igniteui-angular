@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core';
 
-// tslint:disable:directive-selector
+/* eslint-disable @angular-eslint/directive-selector */
 @Directive({
     selector: 'igx-banner-actions'
 })

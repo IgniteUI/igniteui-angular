@@ -22,20 +22,19 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string,
-        id: string, pipeTrigger: number): ITreeGridRecord[] {
+    public transform(collection: any[], primaryKey: string, foreignKey: string, childDataKey: string, _: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
         let hierarchicalRecords: ITreeGridRecord[] = [];
         const treeGridRecordsMap = new Map<any, ITreeGridRecord>();
         const flatData: any[] = [];
 
         if (primaryKey && foreignKey) {
-            hierarchicalRecords = this.hierarchizeFlatData(id, collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
+            hierarchicalRecords = this.hierarchizeFlatData(collection, primaryKey, foreignKey, treeGridRecordsMap, flatData);
         } else if (childDataKey) {
-            hierarchicalRecords = this.hierarchizeRecursive(id, collection, primaryKey, childDataKey, undefined,
+            hierarchicalRecords = this.hierarchizeRecursive(collection, primaryKey, childDataKey, undefined,
                 flatData, 0, treeGridRecordsMap);
         }
 
@@ -50,7 +49,7 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         return primaryKey ? rowData[primaryKey] : rowData;
     }
 
-    private hierarchizeFlatData(id: string, collection: any[], primaryKey: string, foreignKey: string,
+    private hierarchizeFlatData(collection: any[], primaryKey: string, foreignKey: string,
         map: Map<any, ITreeGridRecord>, flatData: any[]):
         ITreeGridRecord[] {
         const result: ITreeGridRecord[] = [];
@@ -82,41 +81,39 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
             }
         });
 
-        this.setIndentationLevels(id, result, 0, flatData);
+        this.setIndentationLevels(result, 0, flatData);
 
         return result;
     }
 
-    private setIndentationLevels(id: string, collection: ITreeGridRecord[], indentationLevel: number, flatData: any[]) {
-        for (let i = 0; i < collection.length; i++) {
-            const record = collection[i];
+    private setIndentationLevels(collection: ITreeGridRecord[], indentationLevel: number, flatData: any[]) {
+        for (const record of collection) {
             record.level = indentationLevel;
             record.expanded = this.gridAPI.get_row_expansion_state(record);
             flatData.push(record.data);
 
             if (record.children && record.children.length > 0) {
-                this.setIndentationLevels(id, record.children, indentationLevel + 1, flatData);
+                this.setIndentationLevels(record.children, indentationLevel + 1, flatData);
             }
         }
     }
 
-    private hierarchizeRecursive(id: string, collection: any[], primaryKey: string, childDataKey: string,
+    private hierarchizeRecursive(collection: any[], primaryKey: string, childDataKey: string,
         parent: ITreeGridRecord, flatData: any[], indentationLevel: number, map: Map<any, ITreeGridRecord>): ITreeGridRecord[] {
         const result: ITreeGridRecord[] = [];
 
-        for (let i = 0; i < collection.length; i++) {
-            const item = collection[i];
+        for (const item of collection) {
             const record: ITreeGridRecord = {
                 rowID: this.getRowID(primaryKey, item),
                 data: item,
-                parent: parent,
+                parent,
                 level: indentationLevel
             };
             record.expanded = this.gridAPI.get_row_expansion_state(record);
             flatData.push(item);
             map.set(record.rowID, record);
             record.children = item[childDataKey] ?
-                this.hierarchizeRecursive(id, item[childDataKey], primaryKey, childDataKey, record, flatData, indentationLevel + 1, map) :
+                this.hierarchizeRecursive(item[childDataKey], primaryKey, childDataKey, record, flatData, indentationLevel + 1, map) :
                 undefined;
             result.push(record);
         }
@@ -136,11 +133,11 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: ITreeGridRecord[], id: string,
-        expandedLevels: number, expandedStates: Map<any, boolean>, pipeTrigger: number): any[] {
+    public transform(collection: ITreeGridRecord[],
+        expandedLevels: number, expandedStates: Map<any, boolean>, _: number): any[] {
 
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
         const data: ITreeGridRecord[] = [];
@@ -148,7 +145,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
         grid.processedRootRecords = collection;
         grid.processedRecords = new Map<any, ITreeGridRecord>();
 
-        this.getFlatDataRecursive(collection, data, expandedLevels, expandedStates, id, true);
+        this.getFlatDataRecursive(collection, data, expandedLevels, expandedStates, true);
 
         grid.processedExpandedFlatData = data.map(r => r.data);
 
@@ -156,16 +153,13 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
     }
 
     private getFlatDataRecursive(collection: ITreeGridRecord[], data: ITreeGridRecord[],
-        expandedLevels: number, expandedStates: Map<any, boolean>, gridID: string,
-        parentExpanded: boolean) {
+        expandedLevels: number, expandedStates: Map<any, boolean>, parentExpanded: boolean) {
         if (!collection || !collection.length) {
             return;
         }
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
-        for (let i = 0; i < collection.length; i++) {
-            const hierarchicalRecord = collection[i];
-
+        for (const hierarchicalRecord of collection) {
             if (parentExpanded) {
                 data.push(hierarchicalRecord);
             }
@@ -177,7 +171,7 @@ export class IgxTreeGridFlatteningPipe implements PipeTransform {
             grid.processedRecords.set(hierarchicalRecord.rowID, hierarchicalRecord);
 
             this.getFlatDataRecursive(hierarchicalRecord.children, data, expandedLevels,
-                expandedStates, gridID, parentExpanded && hierarchicalRecord.expanded);
+                expandedStates, parentExpanded && hierarchicalRecord.expanded);
         }
     }
 
@@ -196,15 +190,14 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
     public transform(
         hierarchicalData: ITreeGridRecord[],
         expressions: ISortingExpression[],
         sorting: IGridSortingStrategy,
-        id: string,
-        pipeTrigger: number,
+        _: number,
         pinned?: boolean): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
 
@@ -241,12 +234,12 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, id: string, pipeTrigger: number): ITreeGridRecord[] {
+    public transform(collection: ITreeGridRecord[], page = 0, perPage = 15, _: number): ITreeGridRecord[] {
         const grid = this.gridAPI.grid;
-        if (!grid.paging || grid.pagingMode !== GridPagingMode.local) {
+        if (!grid.paging || grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -275,10 +268,10 @@ export class IgxTreeGridTransactionPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService>gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    transform(collection: any[], id: string, pipeTrigger: number): any[] {
+    public transform(collection: any[], _: number): any[] {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         if (grid.transactions.enabled) {
@@ -323,10 +316,10 @@ export class IgxTreeGridNormalizeRecordsPipe implements PipeTransform {
     private gridAPI: IgxTreeGridAPIService;
 
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = <IgxTreeGridAPIService> gridAPI;
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
     }
 
-    transform(collection: any[], pipeTrigger: number): any[] {
+    public transform(_: any[], __: number): any[] {
         const grid =  this.gridAPI.grid;
         const primaryKey = grid.primaryKey;
         // using flattened data because origin data may be hierarchical.

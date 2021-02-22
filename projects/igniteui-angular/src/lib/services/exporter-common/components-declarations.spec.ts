@@ -12,11 +12,10 @@ import { ExportTestDataService } from '../excel/test-data.service.spec';
     `
 })
 export class GridDeclarationComponent {
-
-    data = new ExportTestDataService().simpleGridData;
-
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
+
+    public data = new ExportTestDataService().simpleGridData;
 }
 
 @Component({
@@ -29,10 +28,10 @@ export class GridDeclarationComponent {
     `
 })
 export class GridMarkupPagingDeclarationComponent {
-    public data = new ExportTestDataService().simpleGridData;
-
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
+
+    public data = new ExportTestDataService().simpleGridData;
 }
 
 @Component({
@@ -45,9 +44,8 @@ export class GridMarkupPagingDeclarationComponent {
     `
 })
 export class GridReorderedColumnsComponent {
-
-    public data = new ExportTestDataService().simpleGridData;
-
     @ViewChild('grid1', { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
+
+    public data = new ExportTestDataService().simpleGridData;
 }

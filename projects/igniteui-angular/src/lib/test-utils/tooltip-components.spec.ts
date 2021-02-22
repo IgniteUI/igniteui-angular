@@ -8,7 +8,7 @@ import {
     template: `
         <div class="dummyDiv">dummy div for touch tests</div>
         <button [igxTooltipTarget]="tooltipRef"
-                (onTooltipShow)="showing($event)" (onTooltipHide)="hiding($event)"
+                (tooltipShow)="showing($event)" (tooltipHide)="hiding($event)"
                 style="margin: 200px">
             Hover me
         </button>
@@ -23,13 +23,13 @@ export class IgxTooltipSingleTargetComponent {
     public cancelShowing = false;
     public cancelHiding = false;
 
-    showing(args: ITooltipShowEventArgs) {
+    public showing(args: ITooltipShowEventArgs) {
         if (this.cancelShowing) {
             args.cancel = true;
         }
     }
 
-    hiding(args: ITooltipHideEventArgs) {
+    public hiding(args: ITooltipHideEventArgs) {
         if (this.cancelHiding) {
             args.cancel = true;
         }

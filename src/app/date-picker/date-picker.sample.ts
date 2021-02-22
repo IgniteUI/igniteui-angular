@@ -1,6 +1,6 @@
-import { Component, ViewChild, PipeTransform, Pipe, OnInit } from '@angular/core';
-import { IgxDatePickerComponent, DateRangeType } from 'igniteui-angular';
-import { DatePipe, formatDate } from '@angular/common';
+import { Component, ViewChild } from '@angular/core';
+import { IgxDatePickerComponent } from 'igniteui-angular';
+import { formatDate } from '@angular/common';
 
 import { registerLocaleData } from '@angular/common';
 // import localeDE from '@angular/common/locales/de';
@@ -13,16 +13,22 @@ import localeJA from '@angular/common/locales/ja';
 })
 
 export class DatePickerSampleComponent {
-    date = new Date('10/3/2018');
+    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true })
+    private datepicker1: IgxDatePickerComponent;
 
+    @ViewChild('retemplated', { static: true })
+    private retemplatedDP;
+
+    @ViewChild('datePicker', { static: true })
+    private dp: IgxDatePickerComponent;
+
+    public date = new Date('10/3/2018');
     public formatOptions = {
         day: 'numeric',
         month: 'long',
         weekday: 'short',
         year: 'numeric'
     };
-    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true }) datepicker1: IgxDatePickerComponent;
-
     public date1;
     public date2;
     public date3;
@@ -35,24 +41,6 @@ export class DatePickerSampleComponent {
         new Date(new Date().getFullYear(), new Date().getMonth(), 3),
         new Date(new Date().getFullYear(), new Date().getMonth(), 8)
     ];
-
-    @ViewChild('retemplated', { static: true })
-    private retemplatedDP;
-
-    @ViewChild('datePicker', { static: true })
-    private dp: IgxDatePickerComponent;
-
-    formatter = (_: Date) => {
-        return _.toLocaleString('en');
-    }
-
-    public deselect(datePicker) {
-        datePicker.deselectDate();
-    }
-
-    public setMonthsViewNumber(args: HTMLInputElement) {
-        this.datepicker1.monthsViewNumber = parseInt(args.value, 10);
-    }
 
     constructor() {
         registerLocaleData(localeJA);
@@ -76,6 +64,16 @@ export class DatePickerSampleComponent {
         this.date2 = date2;
         this.date3 = date3;
         this.date4 = date3;
+    }
+
+    public formatter = (_: Date) => _.toLocaleString('en');
+
+    public deselect(datePicker) {
+        datePicker.deselectDate();
+    }
+
+    public setMonthsViewNumber(args: HTMLInputElement) {
+        this.datepicker1.monthsViewNumber = parseInt(args.value, 10);
     }
 
     public changeDate(event) {

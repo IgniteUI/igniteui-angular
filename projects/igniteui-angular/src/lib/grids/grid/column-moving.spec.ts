@@ -25,7 +25,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__thead-title';
 
-    let fixture, grid: IgxGridComponent;
+    let fixture; let grid: IgxGridComponent;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -133,6 +133,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         it('Should exit edit mode and commit the new value when column moving programmatically', () => {
             fixture.componentInstance.isEditable = true;
             fixture.detectChanges();
+            const cacheValue = grid.getCellByColumn(0, 'ID').value;
 
             // step 1 - enter edit mode on a cell
             const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
@@ -158,7 +159,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             // step 4 - verify cell has exited edit mode correctly
             expect(grid.columnList.toArray()[2].field).toEqual('ID');
             expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
-            expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
+            expect(grid.getCellByColumn(0, 'ID').value).toBe(cacheValue);
         });
 
         it('Should preserve hidden columns order after columns are reordered programmatically', () => {
@@ -187,7 +188,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.visibleColumns[2].field).toEqual('LastName');
         });
 
-        it('Should not break vertical or horizontal scrolling after columns are reordered programmatically', (async() => {
+        it('Should not break vertical or horizontal scrolling after columns are reordered programmatically', (async () => {
             let columnsList = grid.columnList.toArray();
 
             // step 1 - move a column
@@ -216,7 +217,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
         }));
 
-        it('Should be able to reorder columns programmatically when a column is grouped.', (async() => {
+        it('Should be able to reorder columns programmatically when a column is grouped.', (async () => {
             fixture.componentInstance.isGroupable = true;
             fixture.detectChanges();
             let columnsList = grid.columnList.toArray();
@@ -268,7 +269,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
 
 
-        it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async() => {
+        it('Should reorder only movable columns when dropping the ghost image on an interactive area.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             expect(grid.columns[0].movable).toBeTruthy();
@@ -293,7 +294,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should not reorder columns when dropping the ghost image on a non-interactive area.', (async() => {
+        it('Should not reorder columns when dropping the ghost image on a non-interactive area.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - start moving a column, release the drag ghost over cells area
@@ -315,7 +316,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should not reorder columns on hitting ESCAPE key.', (async() => {
+        it('Should not reorder columns on hitting ESCAPE key.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 2 - start moving a column
@@ -328,8 +329,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
 
             // step 2 - hit ESCAPE over the headers area and verify column moving is canceled
-            document.dispatchEvent(new KeyboardEvent('keydown', { 'key': 'Escape' }));
-            document.dispatchEvent(new KeyboardEvent('keyup', { 'key': 'Escape' }));
+            document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+            document.dispatchEvent(new KeyboardEvent('keyup', { key: 'Escape' }));
             fixture.detectChanges();
 
             UIInteractions.simulatePointerEvent('pointerup', header, 270, 71);
@@ -342,7 +343,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        it('Should not break sorting and resizing when column moving is enabled.', (async() => {
+        it('Should not break sorting and resizing when column moving is enabled.', (async () => {
             fixture.componentInstance.isFilterable = true;
             fixture.componentInstance.isResizable = true;
             fixture.componentInstance.isSortable = true;
@@ -391,7 +392,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual(6);
         }));
 
-        it('Should not break vertical or horizontal scrolling after columns are reordered.', (async() => {
+        it('Should not break vertical or horizontal scrolling after columns are reordered.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             const header = headers[1].nativeElement;
@@ -428,7 +429,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
         }));
 
-        it('Should fire onColumnMovingStart, onColumnMoving and onColumnMovingEnd with correct values of event arguments.', (async() => {
+        it('Should fire onColumnMovingStart, onColumnMoving and onColumnMovingEnd with correct values of event arguments.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - start moving a column
@@ -458,7 +459,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(fixture.componentInstance.target).toEqual(grid.columnList.toArray()[0]);
         }));
 
-        it('Should be able to cancel onColumnMoving event.', (async() => {
+        it('Should be able to cancel onColumnMoving event.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - try moving a column
@@ -485,7 +486,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        xit('Should preserve filtering after columns are reordered.', async() => {
+        xit('Should preserve filtering after columns are reordered.', async () => {
             pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();
@@ -533,7 +534,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.rowList.length).toEqual(1);
         });
 
-        it('Should exit edit mode and commit the new value when column moving starts.', (async() => {
+        it('Should exit edit mode and discard the new value when column moving starts.', (async () => {
             fixture.componentInstance.isEditable = true;
             fixture.detectChanges();
 
@@ -541,6 +542,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             // step 1 - enter edit mode on a cell
             const cell = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
+            const cacheValue = grid.getCellByColumn(0, 'ID').value;
             cell.nativeElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
 
@@ -569,10 +571,10 @@ describe('IgxGrid - Column Moving #grid', () => {
             // step 4 - verify cell has exited edit mode correctly
             expect(grid.columnList.toArray()[1].field).toEqual('ID');
             expect(grid.getCellByColumn(0, 'ID').editMode).toBe(false);
-            expect(grid.getCellByColumn(0, 'ID').value).toBe('4');
+            expect(grid.getCellByColumn(0, 'ID').value).toBe(cacheValue);
         }));
 
-        it('Should preserve hidden columns order after columns are reordered.', (async() => {
+        it('Should preserve hidden columns order after columns are reordered.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - hide a column
@@ -603,7 +605,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.visibleColumns[1].field).toEqual('Region');
         }));
 
-        it('Should be able to reorder columns when a column is grouped.', (async() => {
+        it('Should be able to reorder columns when a column is grouped.', (async () => {
             fixture.componentInstance.isGroupable = true;
             fixture.detectChanges();
 
@@ -663,7 +665,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').selected).toBeTruthy();
         }));
 
-        it('Should not break KB after columns are reordered - selection does not belong to the moved column.', (async() => {
+        it('Should not break KB after columns are reordered - selection does not belong to the moved column.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from 'ID' column
@@ -708,7 +710,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Should reorder movable columns with templated headers.', (async() => {
+        it('Should reorder movable columns with templated headers.', (async () => {
             fixture.componentInstance.isResizable = true;
             fixture.componentInstance.isSortable = true;
             fixture.componentInstance.isFilterable = true;
@@ -744,7 +746,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('Should be able to scroll forwards to reorder columns that are out of view.', (async() => {
+        it('Should be able to scroll forwards to reorder columns that are out of view.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - start moving a column and verify columns are scrolled into view,
@@ -770,7 +772,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[4].field).toEqual('ID');
         }));
 
-        it('Should be able to scroll backwards to reorder columns that are out of view.', (async() => {
+        it('Should be able to scroll backwards to reorder columns that are out of view.', (async () => {
 
             // step 1 - scroll left to the end
             grid.headerContainer.getScroll().scrollLeft = 1000;
@@ -800,7 +802,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[7].field).toEqual('Phone');
         }));
 
-        it('Should be able to scroll/reorder columns that are out of view - with pinned columns.', (async() => {
+        it('Should be able to scroll/reorder columns that are out of view - with pinned columns.', (async () => {
 
             grid.getColumnByName('ID').pinned = true;
             fixture.detectChanges();
@@ -833,7 +835,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[7].field).toEqual('Fax');
         }));
 
-        it('Should preserve cell selection after columns are reordered.', (async() => {
+        it('Should preserve cell selection after columns are reordered.', (async () => {
             let headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a cell from the 'ID' column
@@ -880,7 +882,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ContactName').selected).toBeTruthy();
         }));
 
-        it('Should preserve cell selection after columns are reordered programatically.', (async() => {
+        it('Should preserve cell selection after columns are reordered programatically.', (async () => {
             let columnsList = grid.columnList.toArray();
 
             // step 1 - select a cell from the 'ID' column
@@ -901,7 +903,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'CompanyName').selected).toBeTruthy();
         }));
 
-        it('Should preserve cell selection after columns are reordered - horizontal scrolling.', (async() => {
+        it('Should preserve cell selection after columns are reordered - horizontal scrolling.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - select a visible cell from the 'ID' column
@@ -932,7 +934,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 0, 0, 0, 0);
         }));
 
-        it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async() => {
+        it('Should preserve cell selection after columns are reordered - vertical scrolling.', (async () => {
             // step 1 - scroll left to the end
             grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(50);
@@ -983,7 +985,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getSelectedData()).toEqual(newSelectedData);
         }));
 
-        it('Should affect all pages when columns are reordered programatically and paging is enabled.', (async() => {
+        it('Should affect all pages when columns are reordered programatically and paging is enabled.', (async () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
 
@@ -1004,7 +1006,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[4].field).toEqual('Address');
         }));
 
-        it('Should affect all pages when columns are reordered and paging is enabled.', (async() => {
+        it('Should affect all pages when columns are reordered and paging is enabled.', (async () => {
             fixture.componentInstance.paging = true;
             fixture.detectChanges();
 
@@ -1032,7 +1034,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[4].field).toEqual('Address');
         }));
 
-        it('Should preserve sorting after columns are reordered.', (async() => {
+        it('Should preserve sorting after columns are reordered.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - sort the 'ID' column
@@ -1056,7 +1058,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
         }));
 
-        it('Should preserve sorting after columns are reordered programatically.', (async() => {
+        it('Should preserve sorting after columns are reordered programatically.', (async () => {
             const columnsList = grid.columnList.toArray();
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
@@ -1075,7 +1077,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getCellByColumn(0, 'ID').value).toEqual('ALFKI');
         }));
 
-        it('Pinning - should be able to reorder pinned columns among themselves.', (async() => {
+        it('Pinning - should be able to reorder pinned columns among themselves.', (async () => {
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1101,7 +1103,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.pinnedColumns[2].field).toEqual('Address');
         }));
 
-        it('Pinning - should be able to programatically reorder pinned columns among themselves.', (async() => {
+        it('Pinning - should be able to programatically reorder pinned columns among themselves.', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ID').pinned = true;
@@ -1119,7 +1121,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.pinnedColumns[2].field).toEqual('ID');
         }));
 
-        it('Pinning - should pin an unpinned column when drag/drop it among pinned columns.', (async() => {
+        it('Pinning - should pin an unpinned column when drag/drop it among pinned columns.', (async () => {
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1145,7 +1147,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ContactName').pinned).toBeTruthy();
         }));
 
-        it('Pinning - should unpin a pinned column when drag/drop it among unpinned columns.', (async() => {
+        it('Pinning - should unpin a pinned column when drag/drop it among unpinned columns.', (async () => {
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1172,7 +1174,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-        it('Pinning - should not be able to pin a column if pinned area exceeds maximum allowed width.', (async() => {
+        it('Pinning - should not be able to pin a column if pinned area exceeds maximum allowed width.', (async () => {
 
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
@@ -1198,7 +1200,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('CompanyName').pinned).toBeFalsy();
         }));
 
-        it('Pinning - Should be able to pin/unpin columns programmatically', (async() => {
+        it('Pinning - Should be able to pin/unpin columns programmatically', (async () => {
             const columnsList = grid.columnList.toArray();
 
             // step 1 - pin some columns
@@ -1220,7 +1222,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.unpinnedColumns[0].field).toEqual('ID');
         }));
 
-        it('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', (async() => {
+        it('Pinning - Should be able to pin/unpin columns both: programmatically and interactively via drag/drop.', (async () => {
 
             // step 1 - pin some columns
             grid.getColumnByName('ID').pinned = true;
@@ -1247,7 +1249,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.unpinnedColumns[0].field).toEqual('ID');
         }));
 
-        it('Pinning - Should not be able to pin a column if disablePinning is enabled for that column', (async() => {
+        it('Pinning - Should not be able to pin a column if disablePinning is enabled for that column', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ID').pinned = true;
@@ -1275,7 +1277,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
         }));
 
-        it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async() => {
+        it('Pinning - Should not be able to pin a column programmaticaly if disablePinning is enabled for that column', (async () => {
             const columnsList = grid.columnList.toArray();
 
             // step 1 - pin some columns
@@ -1299,7 +1301,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ContactName').pinned).toBeFalsy();
         }));
 
-        it('Pinning - Should not be able to move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
+        it('Pinning - Should not be able to move unpinned column if disablePinning is enabled for all unpinned columns', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ContactTitle').pinned = true;
@@ -1331,8 +1333,8 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getColumnByName('ID').pinned).toBeFalsy();
         }));
 
-        // tslint:disable-next-line:max-line-length
-        it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async() => {
+        // eslint-disable-next-line max-len
+        it('Pinning - Should not be able to programmatically move unpinned column if disablePinning is enabled for all unpinned columns', (async () => {
             // step 1 - pin some columns
             grid.getColumnByName('Address').pinned = true;
             grid.getColumnByName('ContactTitle').pinned = true;
@@ -1372,7 +1374,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             grid = fixture.componentInstance.grid;
         }));
 
-        it('MCH - should reorder only columns on the same level (top level simple column).', (async() => {
+        it('MCH - should reorder only columns on the same level (top level simple column).', (async () => {
 
             // step 1 - try reordering simple column level 0 and simple column level 1
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[0].nativeElement;
@@ -1421,7 +1423,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[3].field).toEqual('Missing');
         }));
 
-        it('MCH - should programmatically reorder columns', (async() => {
+        it('MCH - should programmatically reorder columns', (async () => {
             let columnsList = grid.columnList.toArray();
 
             // step 1 - move level 0 column to first position
@@ -1557,7 +1559,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('CompanyName');
         }));
 
-        it('MCH - should not move group column to last position', (async() => {
+        it('MCH - should not move group column to last position', (async () => {
             let columnsList = grid.columnList.toArray();
 
             let column = grid.getColumnByName('Missing');
@@ -1579,7 +1581,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[3].field).toEqual('Missing');
         }));
 
-        it('MCH - should be able to move group column to position lastIndex - group.children.length', (async() => {
+        it('MCH - should be able to move group column to position lastIndex - group.children.length', (async () => {
             let columnsList = grid.columnList.toArray();
 
             let column = grid.getColumnByName('Missing');
@@ -1601,7 +1603,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[8].field).toEqual('ContactTitle');
         }));
 
-        it('MCH - trying to move level 1 column to last position should be impossible', (async() => {
+        it('MCH - trying to move level 1 column to last position should be impossible', (async () => {
             let columnsList = grid.columnList.toArray();
 
             columnsList = grid.columnList.filter((col) => !(col instanceof IgxColumnGroupComponent));
@@ -1622,7 +1624,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[8].field).toEqual('Address');
         }));
 
-        it('MCH - should reorder only columns on the same level (top level group column).', (async() => {
+        it('MCH - should reorder only columns on the same level (top level group column).', (async () => {
 
             // step 1 - try reordering group column level 0 and simple column level 1
             let header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[0].nativeElement;
@@ -1677,7 +1679,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[3].field).toEqual('Region');
         }));
 
-        it('MCH - should reorder only columns on the same level (sub level simple column).', (async() => {
+        it('MCH - should reorder only columns on the same level (sub level simple column).', (async () => {
 
             // step 1 - try reordering simple column level 1 and simple column level 0
             const header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
@@ -1745,7 +1747,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[3].field).toEqual('CompanyName');
         }));
 
-        it('MCH - should reorder only columns on the same level (sub level group column).', (async() => {
+        it('MCH - should reorder only columns on the same level (sub level group column).', (async () => {
 
             // step 1 - try reordering group column level 1 and simple column level 0
             const header = fixture.debugElement.queryAll(By.css(COLUMN_GROUP_HEADER_CLASS))[1].nativeElement;
@@ -1798,7 +1800,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[3].field).toEqual('CompanyName');
         }));
 
-        it('MCH - should reorder only columns on the same level, with same parent.', (async() => {
+        it('MCH - should reorder only columns on the same level, with same parent.', (async () => {
 
             // step 1 - try reordering simple column level 1 and simple column level 1 (different parent)
             let header = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS))[1].nativeElement;
@@ -1850,7 +1852,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[4].field).toEqual('Missing');
         }));
 
-        it('MCH - should not break selection and keyboard navigation when reordering columns.', (async() => {
+        it('MCH - should not break selection and keyboard navigation when reordering columns.', (async () => {
 
             // step 1 - select a cell from 'ContactName' column
             const cell = grid.getCellByColumn(0, 'ContactName');
@@ -1885,7 +1887,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.getSelectedData()).toEqual([{ContactName: 'Maria Anders' }]);
         }));
 
-        it('MCH - should pin only top level columns.', (async() => {
+        it('MCH - should pin only top level columns.', (async () => {
             fixture.componentInstance.isPinned = true;
             await wait();
             fixture.detectChanges();

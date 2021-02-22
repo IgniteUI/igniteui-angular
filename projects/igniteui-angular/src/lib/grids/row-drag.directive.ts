@@ -21,14 +21,14 @@ const cellActiveClass = 'igx-grid__td--active';
     selector: '[igxRowDrag]'
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
+    @Input('igxRowDrag')
+    public data: any;
+
     private subscription$: Subscription;
     private _rowDragStarted = false;
     private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
         return this.data;
     }
-
-    @Input('igxRowDrag')
-    public data: any;
 
     public onPointerDown(event) {
         event.preventDefault();
@@ -95,7 +95,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     protected createGhost(pageX, pageY) {
-        this.row.grid.endEdit(true);
+        this.row.grid.endEdit(false);
         this.row.grid.markForCheck();
         this.ghostContext = {
             $implicit: this.row.rowData,
@@ -125,9 +125,9 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.renderer.removeClass(ghost, rowSelectedClass);
 
         const ghostCells = ghost.getElementsByClassName(gridCellClass);
-        for (let index = 0; index < ghostCells.length; index++) {
-            this.renderer.removeClass(ghostCells[index], cellSelectedClass);
-            this.renderer.removeClass(ghostCells[index], cellActiveClass);
+        for (const cell of ghostCells) {
+            this.renderer.removeClass(cell, cellSelectedClass);
+            this.renderer.removeClass(cell, cellActiveClass);
         }
     }
 
@@ -150,7 +150,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
         this.endDragging();
-    }
+    };
 
     private get isHierarchicalGrid() {
         return this.row.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';

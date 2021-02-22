@@ -1,12 +1,13 @@
 
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxTreeGridModule, IgxTreeGridComponent, IgxTreeGridRowComponent } from './public_api';
+import { IgxTreeGridModule, IgxTreeGridComponent } from './public_api';
 import { IgxTreeGridFilteringComponent, IgxTreeGridFilteringRowEditingComponent } from '../../test-utils/tree-grid-components.spec';
 import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand } from '../../data-operations/filtering-condition';
 import { FilteringStrategy } from '../../data-operations/filtering-strategy';
+import { TreeGridFormattedValuesFilteringStrategy } from './tree-grid.filtering.strategy';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
@@ -254,7 +255,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         expect(rows.length).toBe(10);
 
         // collapse first row
-        (<IgxTreeGridComponent>grid).toggleRow((<IgxTreeGridRowComponent>grid.getRowByIndex(0)).rowID);
+        grid.toggleRow(grid.getRowByIndex(0).rowID);
         fix.detectChanges();
         rows = TreeGridFunctions.getAllRows(fix);
         expect(rows.length).toBe(7);
@@ -276,7 +277,25 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
         TreeGridFunctions.verifyTreeRowHasExpandedIcon(rows[0]);
     });
 
-    describe('Filtering: Row editing', () => {
+    it('should filter cell by its formatted data when using FormattedValuesFilteringStrategy', () => {
+        const formattedStrategy = new TreeGridFormattedValuesFilteringStrategy();
+        grid.filterStrategy = formattedStrategy;
+        const idFormatter = (val: number): number => val % 2;
+        grid.columns[0].formatter = idFormatter;
+        fix.detectChanges();
+
+        grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        let rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toEqual(5, 'Wrong rows count');
+
+        grid.filter('ID', 1, IgxNumberFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        rows = TreeGridFunctions.getAllRows(fix);
+        expect(rows.length).toEqual(16, 'Wrong rows count');
+    });
+
+       describe('Filtering: Row editing', () => {
         let treeGrid: IgxTreeGridComponent;
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridFilteringRowEditingComponent);
@@ -352,9 +371,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(function (n) {
-                    return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
-                });
+                const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
 
                 // if there are any parent nodes in this collection then the changes were preserved
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
@@ -383,9 +400,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 fix.detectChanges();
 
                 // verify that there is a parent which contains the updated child node
-                const filteredParentNodes = treeGrid.data.filter(function (n) {
-                    return n.Employees.filter(e => e.Name === newCellValue).length !== 0;
-                });
+                const filteredParentNodes = treeGrid.data.filter(n => n.Employees.filter(e => e.Name === newCellValue).length !== 0);
 
                 // if there are any parent nodes in this collection then the changes were preserved
                 expect(filteredParentNodes.length).toBeGreaterThan(0);
@@ -401,7 +416,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
 
                 treeGrid.clearFilter();
                 fix.detectChanges();
-                // tslint:disable-next-line: no-use-before-declare
+
                 const customFilter = new CustomTreeGridFilterStrategy();
                 // apply the same filter condition but with custu
                 treeGrid.filterStrategy = customFilter;

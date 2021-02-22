@@ -9,7 +9,14 @@ import { IgxColumnComponent } from 'igniteui-angular';
 })
 export class GridToolbarCustomSampleComponent {
 
-    data = [
+    public showToolbar = true;
+    public title = 'Custom Title';
+    public hidingEnabled = true;
+    public pinningEnabled = true;
+    public csv = true;
+    public excel = true;
+
+    public data = [
         {
             Name: 'Alice',
             Age: 25
@@ -19,9 +26,6 @@ export class GridToolbarCustomSampleComponent {
             Age: 23
         }
     ];
-
-    constructor() {
-    }
 
     public initColumns(column: IgxColumnComponent) {
         column.filterable = true;

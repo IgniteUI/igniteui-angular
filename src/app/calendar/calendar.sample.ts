@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, IViewDateChangeEventArgs } from 'igniteui-angular';
+import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, IViewDateChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-calendar-sample',
@@ -7,9 +7,13 @@ import { IgxCalendarComponent, IgxDialogComponent, DateRangeType, CalendarView, 
     styleUrls: ['calendar.sample.scss']
 })
 export class CalendarSampleComponent implements OnInit, AfterViewInit {
-    @ViewChild('calendar', { static: true }) calendar: IgxCalendarComponent;
-    @ViewChild('calendar1', { static: true }) public calendar1: IgxCalendarComponent;
-    @ViewChild('alert', { static: true }) public dialog: IgxDialogComponent;
+    @ViewChild('calendar', { static: true })
+    private calendar: IgxCalendarComponent;
+    @ViewChild('calendar1', { static: true })
+    private calendar1: IgxCalendarComponent;
+    @ViewChild('alert', { static: true })
+    private dialog: IgxDialogComponent;
+
     public range = [];
     public today = new Date();
     public ppNovember = new Date(this.today.getFullYear(), this.today.getMonth() + 1, 10);
@@ -31,9 +35,10 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
 
     public selectPTOdays(dates: Date[]) {
         this.range = dates;
+        console.log(this.range);
     }
 
-    public submitPTOdays(eventArgs) {
+    public submitPTOdays() {
         this.calendar1.specialDates =
             [{ type: DateRangeType.Specific, dateRange: this.range }];
 
@@ -54,14 +59,16 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     }
 
     public onSelection(event: Date) {
-        const date = event;
+        console.log(`Selected date\s:${event}`);
     }
 
     public viewDateChanged(event: IViewDateChangeEventArgs) {
         console.log(event);
     }
 
-    public activeViewChanged(event: CalendarView) {
+    public activeViewChanged(event) {
+        const calendarView = event;
+        console.log(`Selected date:${calendarView}`);
     }
 
     public setSelection(args: string) {

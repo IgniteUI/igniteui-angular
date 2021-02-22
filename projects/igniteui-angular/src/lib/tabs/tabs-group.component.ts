@@ -54,6 +54,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * ```typescript
      * let isSelected = this.tabGroup.isSelected;
      * ```
+     *
      * @memberof IgxTabsGroupComponent
      */
     public get isSelected(): boolean {
@@ -78,19 +79,6 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * @hidden
      */
-    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
-    protected tabTemplate: IgxTabItemTemplateDirective;
-
-    private _tabTemplate: TemplateRef<any>;
-    private _isSelected = false;
-
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
-        super();
-    }
-
-    /**
-     * @hidden
-     */
     @HostBinding('attr.role')
     public role = 'tabpanel';
 
@@ -102,6 +90,19 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     public styleClass = true;
 
     /**
+     * @hidden
+     */
+    @ContentChild(IgxTabItemTemplateDirective, { read: IgxTabItemTemplateDirective })
+    protected tabTemplate: IgxTabItemTemplateDirective;
+
+    private _tabTemplate: TemplateRef<any>;
+    private _isSelected = false;
+
+    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+        super();
+    }
+
+    /**
      * An accessor that returns the `IgxTabItemComponent` component.
      * ```typescript
      * @ViewChild("MyTabsGroup")
@@ -111,7 +112,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * }
      * ```
      */
-    get relatedTab(): IgxTabItemComponent {
+    public get relatedTab(): IgxTabItemComponent {
         if (this._tabs.tabs) {
             return this._tabs.tabs.toArray()[this.index] as IgxTabItemComponent;
         }
@@ -127,7 +128,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * }
      * ```
      */
-    get index(): number {
+    public get index(): number {
         if (this._tabs.groups) {
             return this._tabs.groups.toArray().indexOf(this);
         }
@@ -137,14 +138,14 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     /**
      * @hidden
      */
-    get customTabTemplate(): TemplateRef<any> {
+    public get customTabTemplate(): TemplateRef<any> {
         return this._tabTemplate;
     }
 
     /**
      * @hidden
      */
-    set customTabTemplate(template: TemplateRef<any>) {
+    public set customTabTemplate(template: TemplateRef<any>) {
         this._tabTemplate = template;
     }
 
@@ -159,6 +160,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
 
     /**
      * A method that sets the focus on a tab.
+     *
      * @memberof {@link IgxTabsGroupComponent}
      * ```typescript
      *  @ViewChild("MyChild")

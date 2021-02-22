@@ -42,9 +42,36 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
 })
 export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private static readonly filterOptimizationThreshold = 2;
-    private _isLoading;
-    private _addToCurrentFilter: FilterListItem;
-    private destroy$ = new Subject<boolean>();
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('class.igx-excel-filter__menu-main')
+    public defaultClass = true;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('input', { read: IgxInputDirective, static: true })
+    public searchInput: IgxInputDirective;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('list', { read: IgxListComponent, static: true })
+    public list: IgxListComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild(IgxForOfDirective, { static: true })
+    protected virtDir: IgxForOfDirective<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
+    protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -97,35 +124,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    @HostBinding('class') class = 'igx-excel-filter__menu-main';
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('input', { read: IgxInputDirective, static: true })
-    public searchInput: IgxInputDirective;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('list', { read: IgxListComponent, static: true })
-    public list: IgxListComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild(IgxForOfDirective, { static: true })
-    protected virtDir: IgxForOfDirective<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultExcelStyleLoadingValuesTemplate', { read: TemplateRef })
-    protected defaultExcelStyleLoadingValuesTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
     public get valuesLoadingTemplate() {
         if (this.esf.grid?.excelStyleLoadingValuesTemplateDirective) {
             return this.esf.grid.excelStyleLoadingValuesTemplateDirective.template;
@@ -133,6 +131,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             return this.defaultExcelStyleLoadingValuesTemplate;
         }
     }
+
+    private _isLoading;
+    private _addToCurrentFilter: FilterListItem;
+    private destroy$ = new Subject<boolean>();
 
     constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -153,9 +155,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         });
 
         esf.listDataLoaded.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            this.searchValue ?
-                this.clearInput() :
+            if (this.searchValue) {
+                this.clearInput();
+            } else {
                 this.filterListData();
+            }
 
             this.cdr.detectChanges();
         });
@@ -165,7 +169,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         this.refreshSize();
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -196,7 +200,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
         if (selectedIndex === 0) {
             this.displayedListData.forEach(element => {
-                if (element === this.addToCurrentFilter) { return; }
+                if (element === this.addToCurrentFilter) {
+                    return;
+                }
                 element.isSelected = eventArgs.checked;
             });
 
@@ -240,6 +246,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     public get type(): string {
         switch (this.esf.column?.dataType) {
             case DataType.Number:
+            case DataType.Currency:
+            case DataType.Percent:
                 return 'number';
             default:
                 return 'text';
@@ -259,7 +267,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    get applyButtonDisabled(): boolean {
+    public get applyButtonDisabled(): boolean {
         return this.esf.listData[0] && !this.esf.listData[0].isSelected && !this.esf.listData[0].indeterminate ||
             this.displayedListData && this.displayedListData.length === 0;
     }
@@ -318,8 +326,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             !it.isBlanks &&
             it.label.toString().toLowerCase().indexOf(searchVal) > -1);
 
-       this.esf.listData.forEach(i => i.isSelected = false);
-       this.displayedListData.forEach(i => i.isSelected = true);
+        this.esf.listData.forEach(i => i.isSelected = false);
+        this.displayedListData.forEach(i => i.isSelected = true);
 
         this.displayedListData.splice(1, 0, this.addToCurrentFilter);
 
@@ -360,7 +368,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         condition = this.createCondition('empty');
                     }
                     filterTree.filteringOperands.push({
-                        condition: condition,
+                        condition,
                         fieldName: this.esf.column.field,
                         ignoreCase: this.esf.column.filteringIgnoreCase,
                         searchVal: element.value
@@ -409,6 +417,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             case DataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
             case DataType.Number:
+            case DataType.Currency:
+            case DataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);

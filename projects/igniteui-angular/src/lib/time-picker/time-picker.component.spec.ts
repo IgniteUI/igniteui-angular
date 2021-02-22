@@ -14,7 +14,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
-// tslint:disable: no-use-before-declare
+/* eslint-disable @typescript-eslint/no-use-before-define */
 describe('IgxTimePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
@@ -416,7 +416,7 @@ describe('IgxTimePicker', () => {
         // get time from dialog header
         const timeFromPopupHeader: any = dom.query(By.css('.igx-time-picker__header')).nativeElement.children;
         const formatedTimeFromPopupHeader =
-            // tslint:disable-next-line: max-line-length
+            // eslint-disable-next-line max-len
             `${timeFromPopupHeader[1].innerText.replace(/\n/g, '')} ${timeFromPopupHeader[0].innerText}`;
 
         args = { key: 'Enter', bubbles: true };
@@ -1840,10 +1840,10 @@ describe('IgxTimePicker', () => {
 
     describe('Hour/minute only mode', () => {
         configureTestSuite();
-        let fixture: ComponentFixture<IgxTimePickerDropDownSingleHourComponent>,
-            timePicker: IgxTimePickerComponent,
-            dom: DebugElement,
-            input: DebugElement;
+        let fixture: ComponentFixture<IgxTimePickerDropDownSingleHourComponent>;
+            let timePicker: IgxTimePickerComponent;
+            let dom: DebugElement;
+            let input: DebugElement;
 
         beforeEach(
             waitForAsync(() => {
@@ -2188,6 +2188,7 @@ describe('IgxTimePicker', () => {
         let toggleRef;
         let injector;
         let inputGroup: IgxInputGroupComponent;
+        let renderer2;
 
         beforeEach(() => {
             ngModel = {
@@ -2206,8 +2207,10 @@ describe('IgxTimePicker', () => {
                 onClosing: new EventEmitter<IBaseCancelableBrowserEventArgs>(),
                 element
             };
+            renderer2 = { setAttribute: () => { } };
+            spyOn(renderer2, 'setAttribute').and.callFake(() => {});
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(element, null, null, document);
+            inputGroup = new IgxInputGroupComponent(element, null, null, document, renderer2);
         });
 
         it('should initialize time picker with required correctly', () => {
@@ -2261,9 +2264,9 @@ export class IgxTimePickerTestComponent {
     `
 })
 export class IgxTimePickerWithPassedTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 3, 24, 17);
     public customFormat = 'h:mm:ss tt';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2272,10 +2275,10 @@ export class IgxTimePickerWithPassedTimeComponent {
     `
 })
 export class IgxTimePickerWithPmTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 12, 27, 23);
     public customFormat = 'h:mm:ss tt';
     public mode = 'dialog';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2284,9 +2287,9 @@ export class IgxTimePickerWithPmTimeComponent {
     `
 })
 export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 23, 27);
     public customFormat = 'hh:mm tt';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2295,9 +2298,9 @@ export class IgxTimePickerWithAMPMLeadingZerosTimeComponent {
     `
 })
 export class IgxTimePickerWith24HTimeComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 24, 27);
     public customFormat = 'HH:mm';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2307,10 +2310,10 @@ export class IgxTimePickerWith24HTimeComponent {
     `
 })
 export class IgxTimePickerWithMInMaxTimeValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 4, 27, 13);
     public myMinValue = '3:24:11 AM';
     public myMaxValue = '5:24:28 AM';
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2320,10 +2323,10 @@ export class IgxTimePickerWithMInMaxTimeValueComponent {
     `
 })
 export class IgxTimePickerWithSpinLoopFalseValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 1, 0, 0);
     public customFormat = 'hh:mm:ss tt';
     public customitemsDelta: any = { hours: 2, minutes: 2, seconds: 3 };
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2333,10 +2336,10 @@ export class IgxTimePickerWithSpinLoopFalseValueComponent {
     `
 })
 export class IgxTimePickerWithItemsDeltaValueComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public dateValue: Date = new Date(2017, 7, 7, 10, 56, 12);
     public customFormat = 'hh:mm:ss tt';
     public customitemsDelta: any = { hours: 2, minutes: 2, seconds: 1 };
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
 }
 
 @Component({
@@ -2378,14 +2381,13 @@ export class IgxTimePickerCustomLabelComponent {
     `
 })
 export class IgxTimePickerDropDownComponent {
-    itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
-    format = 'hh:mm tt';
-    isSpinLoop = true;
-    isVertical = true;
-    date = new Date(2018, 10, 27, 17, 45, 0, 0);
-
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     @ViewChild('dummyInput') public dummyInput: ElementRef;
+    public itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
+    public format = 'hh:mm tt';
+    public isSpinLoop = true;
+    public isVertical = true;
+    public date = new Date(2018, 10, 27, 17, 45, 0, 0);
 }
 @Component({
     template: `
@@ -2397,11 +2399,10 @@ export class IgxTimePickerDropDownComponent {
     `
 })
 export class IgxTimePickerDropDownSingleHourComponent {
-    customDate = new Date(2018, 10, 27, 4, 5);
-    mode = InteractionMode.DropDown;
-    format = 'H:m';
-
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    public customDate = new Date(2018, 10, 27, 4, 5);
+    public mode = InteractionMode.DropDown;
+    public format = 'H:m';
 }
 @Component({
     template: `
@@ -2412,9 +2413,8 @@ export class IgxTimePickerDropDownSingleHourComponent {
     `
 })
 export class IgxTimePickerDropDownNoValueComponent {
-    mode = InteractionMode.DropDown;
-
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    public mode = InteractionMode.DropDown;
 }
 
 
@@ -2464,13 +2464,13 @@ export class IgxTimePickerWithOutletComponent {
 `
 })
 export class IgxTimePickerReactiveFormComponent {
-    reactiveForm: FormGroup;
-
     @ViewChild('timePickerOnChange', { read: IgxTimePickerComponent, static: true })
     public timePickerOnChangeComponent: IgxTimePickerComponent;
 
     @ViewChild('timePickerOnBlur', { read: IgxTimePickerComponent, static: true })
     public timePickerOnBlurComponent: IgxTimePickerComponent;
+
+    public reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
@@ -2478,7 +2478,7 @@ export class IgxTimePickerReactiveFormComponent {
             timePickerOnBlur: [null, { updateOn: 'blur', validators: Validators.required }]
         });
     }
-    onSubmitReactive() { }
+    public onSubmitReactive() { }
 }
 
 @NgModule({
@@ -2513,18 +2513,18 @@ export class IgxTimePickerReactiveFormComponent {
 export class IgxTimePickerTestingModule { }
 
 // helper functions
-function findByInnerText(collection, searchText) {
+const findByInnerText = (collection, searchText) => {
     for (const element of collection) {
         if (element.nativeElement.innerText === searchText) {
             return element;
         }
     }
-}
+};
 
-function getDateStringFromDateObject(date: Date): string {
+const getDateStringFromDateObject = (date: Date): string => {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     const year = date.getFullYear();
 
     return year + '/' + month + '/' + day;
-}
+};

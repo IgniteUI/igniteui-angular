@@ -13,7 +13,6 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
-
 describe('Column Pinning UI #grid', () => {
     configureTestSuite();
     let fix: ComponentFixture<ColumnPinningTestComponent>;
@@ -95,7 +94,7 @@ describe('Column Pinning UI #grid', () => {
 
         it(`- toggling column checkbox checked state successfully changes the column's pinned state.`, () => {
             const checkbox = GridFunctions.getColumnChooserItemElement(columnChooserElement, 'ReleaseDate');
-            verifyCheckbox('ReleaseDate', false, false, columnChooserElement, fix);
+            verifyCheckbox('ReleaseDate', false, false, columnChooserElement);
 
             const column = grid.getColumnByName('ReleaseDate');
             verifyColumnIsPinned(column, false, 0);
@@ -113,27 +112,48 @@ describe('Column Pinning UI #grid', () => {
             verifyColumnIsPinned(column, false, 0);
         });
 
+        it('Checks order of columns after unpinning', () => {
+            for (const column of grid.columns) {
+                column.pin();
+            }
+            fix.detectChanges();
+            grid.getColumnByName('ID').unpin();
+            grid.getColumnByName('ReleaseDate').unpin();
+            grid.getColumnByName('Downloads').unpin();
+            grid.getColumnByName('ProductName').unpin();
+            grid.getColumnByName('Released').unpin();
+            fix.detectChanges();
+            grid.unpinnedColumns.forEach((column, index) => {
+                if (index === grid.unpinnedColumns.length - 1) {
+                    return;
+                }
+                expect(
+                    column.index < grid.unpinnedColumns[index + 1].index
+                ).toBe(true);
+            });
+        });
+
         it('reflects properly grid column pinned value changes.', () => {
             const name = 'ReleaseDate';
-            verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement);
             const column = grid.getColumnByName(name);
 
             column.pinned = true;
             fix.detectChanges();
 
-            verifyCheckbox(name, true, false, columnChooserElement, fix);
+            verifyCheckbox(name, true, false, columnChooserElement);
             verifyColumnIsPinned(column, true, 1);
 
             column.pinned = false;
             fix.detectChanges();
 
-            verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement);
             verifyColumnIsPinned(column, false, 0);
 
             column.pinned = undefined;
             fix.detectChanges();
 
-            verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement);
             verifyColumnIsPinned(column, false, 0);
 
             column.pinned = true;
@@ -143,26 +163,34 @@ describe('Column Pinning UI #grid', () => {
             column.pinned = null;
             fix.detectChanges();
 
-            verifyCheckbox(name, false, false, columnChooserElement, fix);
+            verifyCheckbox(name, false, false, columnChooserElement);
             verifyColumnIsPinned(column, false, 0);
         });
 
         it('onColumnPinning event is fired on toggling checkboxes.', waitForAsync(() => {
             spyOn(grid.onColumnPinning, 'emit').and.callThrough();
+            spyOn(grid.columnPinned, 'emit').and.callThrough();
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
             fix.detectChanges();
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), insertAtIndex: 0, isPinned: true });
+                { column: grid.getColumnByName('ReleaseDate'), insertAtIndex: 0, isPinned: false, cancel: false });
 
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), insertAtIndex: 0, isPinned: true });
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
             fix.detectChanges();
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), insertAtIndex: 1, isPinned: false, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('Downloads'), insertAtIndex: 1, isPinned: true });
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
@@ -171,6 +199,10 @@ describe('Column Pinning UI #grid', () => {
             // When unpinning columns onColumnPinning event should be fired
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(3);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ReleaseDate'), insertAtIndex: 3, isPinned: true, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('ReleaseDate'), insertAtIndex: 3, isPinned: false });
 
 
@@ -179,6 +211,10 @@ describe('Column Pinning UI #grid', () => {
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(4);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('Downloads'), insertAtIndex: 2, isPinned: true, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(4);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('Downloads'), insertAtIndex: 2, isPinned: false });
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ProductName');
@@ -186,28 +222,42 @@ describe('Column Pinning UI #grid', () => {
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(5);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
+                { column: grid.getColumnByName('ProductName'), insertAtIndex: 0, isPinned: false, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(5);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('ProductName'), insertAtIndex: 0, isPinned: true });
         }));
 
         it('onColumnPinning event should fire when pinning and unpining using api', waitForAsync(() => {
             spyOn(grid.onColumnPinning, 'emit').and.callThrough();
+            spyOn(grid.columnPinned, 'emit').and.callThrough();
 
             grid.columns[0].pin();
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: true });
+                { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: false, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
+                    { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: true });
 
             // onColumnPinning should not be fired if column is already pinned
             grid.columns[0].pin();
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(1);
 
             grid.columns[0].unpin();
 
             expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(2);
             expect(grid.onColumnPinning.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: false });
+                { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: true, cancel: false });
+
+            expect(grid.columnPinned.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnPinned.emit).toHaveBeenCalledWith(
+                    { column: grid.getColumnByName('ID'), insertAtIndex: 0, isPinned: false });
         }));
 
         it('does pin columns if unpinned area width will become less than the defined minimum.', () => {
@@ -282,7 +332,7 @@ describe('Column Pinning UI #grid', () => {
             GridFunctions.clickColumnChooserItem(columnChooserElement, columnName);
             fix.detectChanges();
 
-            verifyCheckbox(columnName, true, false, columnChooserElement, fix);
+            verifyCheckbox(columnName, true, false, columnChooserElement);
             expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
         });
 
@@ -292,12 +342,12 @@ describe('Column Pinning UI #grid', () => {
             grid.columns[1].pin();
             fix.detectChanges();
 
-            verifyCheckbox(columnName, true, false, columnChooserElement, fix);
+            verifyCheckbox(columnName, true, false, columnChooserElement);
             expect(grid.columns[1].allChildren.every((col) => col.pinned)).toBe(true);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, columnName);
             fix.detectChanges();
-            verifyCheckbox(columnName, false, false, columnChooserElement, fix);
+            verifyCheckbox(columnName, false, false, columnChooserElement);
             expect(grid.columns[1].allChildren.every((col) => !col.pinned)).toBe(true);
         });
     });

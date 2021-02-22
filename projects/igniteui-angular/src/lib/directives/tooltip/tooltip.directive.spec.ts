@@ -1,4 +1,3 @@
-import { Component, ViewChild } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -6,7 +5,7 @@ import { IgxTooltipModule, IgxTooltipTargetDirective, IgxTooltipDirective } from
 import { IgxTooltipSingleTargetComponent, IgxTooltipMultipleTargetsComponent } from '../../test-utils/tooltip-components.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { ConnectedPositioningStrategy, HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
+import { HorizontalAlignment, VerticalAlignment, AutoPositionStrategy } from '../../services/public_api';
 
 const HIDDEN_TOOLTIP_CLASS = 'igx-tooltip--hidden';
 const TOOLTIP_CLASS = 'igx-tooltip--desktop';
@@ -230,8 +229,8 @@ describe('IgxTooltip', () => {
             flush();
             // Verify that the position of the tooltip is changed.
             verifyTooltipPosition(tooltipNativeElement, button, false);
-            const targetRect = (<HTMLElement>tooltipTarget.nativeElement).getBoundingClientRect();
-            const tooltipRect = (<HTMLElement>tooltipNativeElement).getBoundingClientRect();
+            const targetRect = tooltipTarget.nativeElement.getBoundingClientRect();
+            const tooltipRect = tooltipNativeElement.getBoundingClientRect();
             expect(Math.abs(tooltipRect.top - targetRect.bottom) <= 0.5).toBe(true);
             expect(Math.abs(tooltipRect.left - targetRect.right) <= 0.5).toBe(true);
             unhoverElement(button);
@@ -264,64 +263,64 @@ describe('IgxTooltip', () => {
         describe('Tooltip events', () => {
         // configureTestSuite();
             it('should emit the proper events when hovering/unhovering target', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 hoverElement(button);
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
                 flush();
 
                 unhoverElement(button);
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
 
             it('should emit the proper events when showing/hiding tooltip through API', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 tooltipTarget.showTooltip();
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalled();
                 flush();
 
                 tooltipTarget.hideTooltip();
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalled();
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalled();
                 flush();
             }));
 
             it('should emit the proper events with correct eventArgs when hover/unhover', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
 
                 hoverElement(button);
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
                 flush();
 
                 unhoverElement(button);
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));
 
             it('should emit the proper events with correct eventArgs when show/hide through API', fakeAsync(() => {
-                spyOn(tooltipTarget.onTooltipShow, 'emit');
-                spyOn(tooltipTarget.onTooltipHide, 'emit');
+                spyOn(tooltipTarget.tooltipShow, 'emit');
+                spyOn(tooltipTarget.tooltipHide, 'emit');
 
                 const tooltipShowArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
                 const tooltipHideArgs = { target: tooltipTarget, tooltip: fix.componentInstance.tooltip, cancel: false };
 
                 tooltipTarget.showTooltip();
-                expect(tooltipTarget.onTooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
+                expect(tooltipTarget.tooltipShow.emit).toHaveBeenCalledWith(tooltipShowArgs);
                 flush();
 
                 tooltipTarget.hideTooltip();
                 tick(500);
-                expect(tooltipTarget.onTooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
+                expect(tooltipTarget.tooltipHide.emit).toHaveBeenCalledWith(tooltipHideArgs);
                 flush();
             }));
 
@@ -518,19 +517,13 @@ describe('IgxTooltip', () => {
     });
 });
 
-function hoverElement(element) {
-    element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
-}
+const hoverElement = (element) => element.nativeElement.dispatchEvent(new MouseEvent('mouseenter'));
 
-function unhoverElement(element) {
-    element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
-}
+const unhoverElement = (element) => element.nativeElement.dispatchEvent(new MouseEvent('mouseleave'));
 
-function touchElement(element) {
-    element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
-}
+const touchElement = (element) => element.nativeElement.dispatchEvent(new TouchEvent('touchstart', { bubbles: true }));
 
-function verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) {
+const verifyTooltipVisibility = (tooltipNativeElement, tooltipTarget, shouldBeVisible: boolean) => {
     if (shouldBeVisible) {
         expect(tooltipNativeElement.classList.contains(TOOLTIP_CLASS)).toBe(true);
         expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).toBe(false);
@@ -540,11 +533,11 @@ function verifyTooltipVisibility(tooltipNativeElement, tooltipTarget, shouldBeVi
         expect(tooltipNativeElement.classList.contains(HIDDEN_TOOLTIP_CLASS)).toBe(true);
         expect(tooltipTarget.tooltipHidden).toBe(true);
     }
-}
+};
 
-function verifyTooltipPosition(tooltipNativeElement, actualTarget, shouldBeAligned: boolean) {
-    const targetRect = (<HTMLElement>actualTarget.nativeElement).getBoundingClientRect();
-    const tooltipRect = (<HTMLElement>tooltipNativeElement).getBoundingClientRect();
+const verifyTooltipPosition = (tooltipNativeElement, actualTarget, shouldBeAligned: boolean) => {
+    const targetRect = actualTarget.nativeElement.getBoundingClientRect();
+    const tooltipRect = tooltipNativeElement.getBoundingClientRect();
 
     const targetRectMidX = targetRect.left + targetRect.width / 2;
     const tooltipRectMidX = tooltipRect.left + tooltipRect.width / 2;
@@ -563,4 +556,4 @@ function verifyTooltipPosition(tooltipNativeElement, actualTarget, shouldBeAlign
         // Verify that tooltip and target are NOT horizontally aligned with approximately same center
         expect(horizontalOffset > 0.1).toBe(true, 'tooltip and target are horizontally aligned');
     }
-}
+};

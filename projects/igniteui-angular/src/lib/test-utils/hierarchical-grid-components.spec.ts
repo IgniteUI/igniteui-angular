@@ -24,7 +24,7 @@ import { IgxActionStripComponent } from '../action-strip/public_api';
                 <ng-template igxHeader let-columnRef="column">
                     <div>
                         <span>ID</span>
-                        <igx-icon fontSet="material" (click)="pinColumn(columnRef)">lock</igx-icon>
+                        <igx-icon (click)="pinColumn(columnRef)">lock</igx-icon>
                     </div>
                 </ng-template>
             </igx-column>
@@ -44,7 +44,6 @@ import { IgxActionStripComponent } from '../action-strip/public_api';
     providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridTestBaseComponent {
-
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     public hgrid: IgxHierarchicalGridComponent;
 
@@ -62,8 +61,12 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.data = SampleTestData.generateHGridData(40, 3);
     }
 
-    pinColumn(column: IgxColumnComponent) {
-        column.pinned ? column.unpin() : column.pin();
+    public pinColumn(column: IgxColumnComponent) {
+        if (column.pinned) {
+            column.unpin();
+        } else {
+            column.pin();
+        }
     }
 }
 
@@ -88,11 +91,43 @@ export class IgxHierarchicalGridTestBaseComponent {
     providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridRowSelectionComponent {
-    public data;
-    public selectedRows = [];
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public selectedRows = [];
+
+    constructor() {
+        // 3 level hierarchy
+        this.data = SampleTestData.generateHGridData(5, 3);
+    }
+}
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'"
+        [rowSelection]="'multiple'" [selectedRows]="selectedRows" [selectRowOnClick]="false">
+        <igx-column field="ID" ></igx-column>
+        <igx-column field="ChildLevels"></igx-column>
+        <igx-column field="ProductName"></igx-column>
+        <igx-row-island [key]="'childData'" #rowIsland [primaryKey]="'ID'" [rowSelection]="'single'">
+            <igx-column field="ID"> </igx-column>
+            <igx-column field="ChildLevels"></igx-column>
+            <igx-column field="ProductName"></igx-column>
+            <igx-row-island [key]="'childData'" #rowIsland2 [primaryKey]="'ID'" [rowSelection]="'none'">
+                <igx-column field="ID"></igx-column>
+                <igx-column field="ChildLevels"></igx-column>
+                <igx-column field="ProductName"></igx-column>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    providers: [IgxHierarchicalTransactionServiceFactory]
+})
+export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
+    public selectedRows = [];
 
     constructor() {
         // 3 level hierarchy
@@ -120,10 +155,10 @@ export class IgxHierarchicalGridRowSelectionComponent {
     </igx-hierarchical-grid>`,
 })
 export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
-    public data;
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+    public data;
 
     constructor() {
         // 3 level hierarchy
@@ -167,13 +202,13 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
-    public data = [];
-
     @ViewChild('hGridCustomSelectors', { read: IgxHierarchicalGridComponent, static: true })
     public hGrid: IgxHierarchicalGridComponent;
 
     @ViewChild('rowIsland1', { read: IgxRowIslandComponent, static: true })
     public firstLevelChild: IgxRowIslandComponent;
+
+    public data = [];
 
     public ngOnInit(): void {
         // 2 level hierarchy
@@ -181,11 +216,19 @@ export class IgxHierarchicalGridCustomSelectorsComponent implements OnInit {
     }
 
     public handleHeadSelectorClick(headContext) {
-        headContext.totalCount !== headContext.selectedCount ? headContext.selectAll() : headContext.deselectAll();
+        if (headContext.totalCount !== headContext.selectedCount) {
+            headContext.selectAll();
+        } else {
+            headContext.deselectAll();
+        }
     }
 
     public handleRowSelectorClick(rowContext) {
-        rowContext.selected ? rowContext.deselect() : rowContext.select();
+        if (rowContext.selected) {
+            rowContext.deselect();
+        } else {
+            rowContext.select();
+        }
     }
 }
 

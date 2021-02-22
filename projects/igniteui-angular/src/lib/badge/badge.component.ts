@@ -150,12 +150,12 @@ export class IgxBadgeComponent {
     /**
      * Defines a human-readable, accessor, author-localized description for
      * the `type` and the `icon` or `value` of the element.
+     *
      * @hidden
      * @internal
      */
     @HostBinding('attr.aria-roledescription')
-    get roleDescription() {
-        // tslint:disable-next-line:prefer-conditional-expression
+    public get roleDescription() {
         if (this.icon) {
             return this.type + ' type badge with icon type ' + this.icon;
         } else if (this.value || this.value === 0) {

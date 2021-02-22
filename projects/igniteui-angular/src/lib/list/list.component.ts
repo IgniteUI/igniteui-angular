@@ -67,7 +67,7 @@ export interface IListItemPanningEventArgs extends IBaseEventArgs {
  * Use it to wrap anything you want to be used as a thumbnail.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListThumbnail]'
 })
 export class IgxListThumbnailDirective {}
@@ -77,7 +77,7 @@ export class IgxListThumbnailDirective {}
  * Use it to wrap anything you want to be used as a list action: icon, checkbox...
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListAction]'
 })
 export class IgxListActionDirective {}
@@ -87,7 +87,7 @@ export class IgxListActionDirective {}
  * Use it to wrap anything you want to be used as a plane text.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLine]'
 })
 export class IgxListLineDirective {}
@@ -97,7 +97,7 @@ export class IgxListLineDirective {}
  * Use it to make anything to look like list Title.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineTitle]'
 })
 export class IgxListLineTitleDirective {
@@ -110,7 +110,7 @@ export class IgxListLineTitleDirective {
  * Use it to make anything to look like list Subtitle.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: '[igxListLineSubTitle]'
 })
 export class IgxListLineSubTitleDirective {
@@ -151,29 +151,6 @@ export class IgxListLineSubTitleDirective {
 })
 export class IgxListComponent extends IgxListBaseDirective {
     /**
-     * Sets the resource strings.
-     * By default it uses EN resources.
-     */
-   @Input()
-   set resourceStrings(value: IListResourceStrings) {
-       this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-   }
-
-    /**
-     * Returns the resource strings.
-     */
-    get resourceStrings(): IListResourceStrings {
-        return this._resourceStrings;
-    }
-
-    private _resourceStrings = CurrentResourceStrings.ListResStrings;
-
-    constructor(public element: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
-    }
-
-    /**
      * Returns a collection of all items and headers in the list.
      *
      * @example
@@ -183,20 +160,6 @@ export class IgxListComponent extends IgxListBaseDirective {
      */
     @ContentChildren(forwardRef(() => IgxListItemComponent), { descendants: true })
     public children: QueryList<IgxListItemComponent>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    protected get sortedChildren(): IgxListItemComponent[] {
-        if (this.children !== undefined) {
-            return this.children.toArray()
-                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => {
-                    return a.index - b.index;
-                });
-        }
-        return null;
-    }
 
     /**
      * Sets/gets the empty list template.
@@ -298,20 +261,6 @@ export class IgxListComponent extends IgxListBaseDirective {
     public panEndTriggeringThreshold = 0.5;
 
     /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
-    protected defaultEmptyListTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
-    protected defaultDataLoadingTemplate: TemplateRef<any>;
-
-    /**
      * Sets/gets the `id` of the list.
      *
      * @remarks
@@ -389,11 +338,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list [allowLeftPanning]="true" (onLeftPan)="onLeftPan($event)"></igx-list>
+     * <igx-list [allowLeftPanning]="true" (leftPan)="leftPan($event)"></igx-list>
      * ```
      */
     @Output()
-    public onLeftPan = new EventEmitter<IListItemPanningEventArgs>();
+    public leftPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      * Event emitted when a right pan gesture is executed on a list item.
@@ -403,11 +352,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list [allowRightPanning]="true" (onRightPan)="onRightPan($event)"></igx-list>
+     * <igx-list [allowRightPanning]="true" (rightPan)="rightPan($event)"></igx-list>
      * ```
      */
     @Output()
-    public onRightPan = new EventEmitter<IListItemPanningEventArgs>();
+    public rightPan = new EventEmitter<IListItemPanningEventArgs>();
 
     /**
      *
@@ -418,11 +367,11 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list (onPanStateChange)="onPanStateChange($event)"></igx-list>
+     * <igx-list (panStateChange)="panStateChange($event)"></igx-list>
      * ```
      */
     @Output()
-    public onPanStateChange = new EventEmitter<IPanStateChangeEventArgs>();
+    public panStateChange = new EventEmitter<IPanStateChangeEventArgs>();
 
     /**
      * Event emitted when a list item is clicked.
@@ -432,11 +381,60 @@ export class IgxListComponent extends IgxListBaseDirective {
      *
      * @example
      * ```html
-     * <igx-list (onItemClicked)="onItemClicked($event)"></igx-list>
+     * <igx-list (itemClicked)="onItemClicked($event)"></igx-list>
      * ```
      */
     @Output()
-    public onItemClicked = new EventEmitter<IListItemClickEventArgs>();
+    public itemClicked = new EventEmitter<IListItemClickEventArgs>();
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('defaultEmptyList', { read: TemplateRef, static: true })
+    protected defaultEmptyListTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('defaultDataLoading', { read: TemplateRef, static: true })
+    protected defaultDataLoadingTemplate: TemplateRef<any>;
+
+    private _resourceStrings = CurrentResourceStrings.ListResStrings;
+
+    /**
+     * Sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IListResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * Returns the resource strings.
+     */
+    public get resourceStrings(): IListResourceStrings {
+        return this._resourceStrings;
+    }
+
+    constructor(public element: ElementRef,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected get sortedChildren(): IgxListItemComponent[] {
+        if (this.children !== undefined) {
+            return this.children.toArray()
+                .sort((a: IgxListItemComponent, b: IgxListItemComponent) => a.index - b.index);
+        }
+        return null;
+    }
 
     /**
      * Gets the `role` attribute value.

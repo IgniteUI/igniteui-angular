@@ -2,7 +2,7 @@
     <div class="sample-content">
         <div class="sample-column">
             <div class="density-chooser">
-                <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+                <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
             </div>
 
             <igx-grid
@@ -14,15 +14,7 @@
                 [rowSelection]="selectionMode"
                 [paging]="false"
                 [width]="'980px'"
-                [height]="'600px'"
-                [showToolbar]="true"
-                [columnHiding]="true"
-                [columnPinning]="true"
-                [exportExcel]="true"
-                [exportCsv]="true"
-                exportText="Export"
-                exportExcelText="Export to Excel"
-                exportCsvText="Export to CSV">
+                [height]="'600px'">
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"

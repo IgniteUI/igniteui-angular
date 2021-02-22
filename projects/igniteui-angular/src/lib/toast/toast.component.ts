@@ -67,8 +67,6 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
 })
 export class IgxToastComponent extends IgxToggleDirective
     implements IToggleView, OnInit, OnDestroy {
-    private d$ = new Subject<boolean>();
-
     /**
      * @hidden
      */
@@ -93,49 +91,53 @@ export class IgxToastComponent extends IgxToggleDirective
      * Emits an event prior the toast is shown.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onShowing) = "onShowing($event)"></igx-toast>
+     * <igx-toast (showing)="handleShowing($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty(`'onShowing' property is deprecated. You can use 'onOpening' instead.`)
+    @DeprecateProperty(`'showing' property is deprecated. You can use 'onOpening' instead.`)
     @Output()
-    public onShowing = new EventEmitter<IgxToastComponent>();
+    public showing = new EventEmitter<IgxToastComponent>();
 
     /**
      * Emits an event when the toast is shown.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onShown)="onShown($event)"></igx-toast>
+     * <igx-toast (shown)="handleShown($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty(`'onShown' property is deprecated. You can use 'onOpened' instead.`)
+    @DeprecateProperty(`'shown' property is deprecated. You can use 'onOpened' instead.`)
     @Output()
-    public onShown = new EventEmitter<IgxToastComponent>();
+    public shown = new EventEmitter<IgxToastComponent>();
 
     /**
      * Emits an event prior the toast is hidden.
      * Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHiding)="onHiding($event)"></igx-toast>
+     * <igx-toast (hiding)="handleHiding($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty(`'onHiding' property is deprecated. You can use 'onClosing' instead.`)
+    @DeprecateProperty(`'hiding' property is deprecated. You can use 'onClosing' instead.`)
     @Output()
-    public onHiding = new EventEmitter<IgxToastComponent>();
+    public hiding = new EventEmitter<IgxToastComponent>();
 
     /**
      *  Emits an event when the toast is hidden.
      *  Provides reference to the `IgxToastComponent` as event argument.
      * ```html
-     * <igx-toast (onHidden)="onHidden($event)"></igx-toast>
+     * <igx-toast (hidden)="handleHidden($event)"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
-    @DeprecateProperty(`'onHidden' property is deprecated. You can use 'onClosed' instead.`)
+    @DeprecateProperty(`'hidden' property is deprecated. You can use 'onClosed' instead.`)
     @Output()
-    public onHidden = new EventEmitter<IgxToastComponent>();
+    public hidden = new EventEmitter<IgxToastComponent>();
 
     /**
      * Sets/gets the `role` attribute.
@@ -146,6 +148,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let toastRole = this.toast.role;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -160,6 +163,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let autoHide = this.toast.autoHide;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -175,6 +179,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let displayTime = this.toast.displayTime;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -182,6 +187,7 @@ export class IgxToastComponent extends IgxToggleDirective
 
     /**
      * Gets/Sets the container used for the toast element.
+     *
      * @remarks
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      * @example
@@ -209,6 +215,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```html
      * <igx-toast [(isVisible)]="model.isVisible"></igx-toast>
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -238,7 +245,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * @deprecated Place your message in the toast content instead.
      * Sets/gets the message that will be shown by the toast.
      * ```html
-     * <igx-toast [message] = "Notification"></igx-toast>
+     * <igx-toast [message]="Notification"></igx-toast>
      * ```
      * ```typescript
      * let toastMessage = this.toast.message;
@@ -248,7 +255,7 @@ export class IgxToastComponent extends IgxToggleDirective
     @DeprecateProperty(`'message' property is deprecated.
         You can use place the message in the toast content or pass it as parameter to the show method instead.`)
     @Input()
-    public set message(value: string) {
+    public set message(value: string | OverlaySettings) {
         this.toastMessage = value;
     }
 
@@ -265,6 +272,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let toastPosition = this.toast.position;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @Input()
@@ -275,6 +283,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * let nativeElement = this.toast.element;
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public get element() {
@@ -285,12 +294,13 @@ export class IgxToastComponent extends IgxToggleDirective
      * @hidden
      * @internal
      */
-    toastMessage = '';
+    public toastMessage: string | OverlaySettings = '';
 
     /**
      * @hidden
      */
     private timeoutId: number;
+    private d$ = new Subject<boolean>();
 
     constructor(
         private _element: ElementRef,
@@ -305,68 +315,42 @@ export class IgxToastComponent extends IgxToggleDirective
      * @deprecated
      * Shows the toast.
      * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
+     *
      * ```typescript
      * this.toast.show();
      * ```
-     * @memberof IgxGridCellComponent
+     *
+     * @memberof IgxToastComponent
      */
     @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
     public show(message?: string): void {
-        clearInterval(this.timeoutId);
-
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new GlobalPositionStrategy({
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection:
-                    this.position === 'bottom'
-                        ? VerticalAlignment.Bottom
-                        : this.position === 'middle'
-                        ? VerticalAlignment.Middle
-                        : VerticalAlignment.Top,
-            }),
-            closeOnEscape: false,
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.outlet,
-        };
-
-        if (message !== undefined) {
-            this.toastMessage = message;
-        }
-
-        this.onShowing.emit(this);
-        super.open(overlaySettings);
-
-        if (this.autoHide) {
-            this.timeoutId = window.setTimeout(() => {
-                this.hide();
-            }, this.displayTime);
-        }
+        this.open(message);
     }
 
     /**
      * @deprecated
      * Hides the toast.
+     *
      * ```typescript
      * this.toast.hide();
      * ```
+     *
      * @memberof IgxToastComponent
      */
     @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
     public hide(): void {
-        clearInterval(this.timeoutId);
-        this.onHiding.emit(this);
-        super.close();
+        this.close();
     }
 
     /**
      * Shows the toast.
      * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
+     *
      * ```typescript
      * this.toast.open();
      * ```
      */
-    public open(message?) {
+    public open(message?: string | OverlaySettings) {
         clearInterval(this.timeoutId);
 
         const overlaySettings: OverlaySettings = {
@@ -389,7 +373,7 @@ export class IgxToastComponent extends IgxToggleDirective
             this.toastMessage = message;
         }
 
-        this.onShowing.emit(this);
+        this.showing.emit(this);
         super.open(overlaySettings);
 
         if (this.autoHide) {
@@ -401,13 +385,14 @@ export class IgxToastComponent extends IgxToggleDirective
 
     /**
      * Hides the toast.
+     *
      * ```typescript
      * this.toast.close();
      * ```
      */
     public close() {
         clearInterval(this.timeoutId);
-        this.onHiding.emit(this);
+        this.hiding.emit(this);
         super.close();
     }
 
@@ -416,6 +401,7 @@ export class IgxToastComponent extends IgxToggleDirective
      * ```typescript
      * this.toast.toggle();
      * ```
+     *
      * @memberof IgxToastComponent
      */
     public toggle() {
@@ -425,22 +411,22 @@ export class IgxToastComponent extends IgxToggleDirective
     /**
      * @hidden
      */
-    ngOnInit() {
+    public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
             this.isVisibleChange.emit(true);
-            this.onShown.emit(this);
+            this.shown.emit(this);
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
             this.isVisibleChange.emit(false);
-            this.onHidden.emit(this);
+            this.hidden.emit(this);
         });
     }
 
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.d$.next(true);
         this.d$.complete();
     }

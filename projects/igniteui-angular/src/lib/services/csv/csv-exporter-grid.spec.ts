@@ -49,8 +49,8 @@ describe('CSV Grid Exporter', () => {
     }));
 
     afterEach(waitForAsync(() => {
-        exporter.onColumnExport.unsubscribe();
-        exporter.onRowExport.unsubscribe();
+        exporter.columnExporting.unsubscribe();
+        exporter.rowExporting.unsubscribe();
     }));
 
     it('should export grid as displayed.', async () => {
@@ -105,7 +105,6 @@ describe('CSV Grid Exporter', () => {
 
         const grid = fix.componentInstance.grid;
         grid.columns[0].hidden = true;
-        options.ignoreColumnsOrder = true;
         options.ignoreColumnsVisibility = false;
 
         fix.detectChanges();
@@ -213,14 +212,14 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.simpleGridData, 'Name should not have been the first field!');
     });
 
-    it('should fire \'onColumnExport\' for each grid column.', async () => {
+    it('should fire \'columnExporting\' for each grid column.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
         const cols = [];
 
-        exporter.onColumnExport.subscribe((value) => {
+        exporter.columnExporting.subscribe((value) => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
@@ -235,14 +234,14 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.simpleGridData);
     });
 
-    it('should fire \'onColumnExport\' for each visible grid column.', async () => {
+    it('should fire \'columnExporting\' for each visible grid column.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
         const cols = [];
 
-        exporter.onColumnExport.subscribe((value) => {
+        exporter.columnExporting.subscribe((value) => {
             cols.push({ header: value.header, index: value.columnIndex });
         });
 
@@ -259,13 +258,13 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.gridNameJobTitle);
     });
 
-    it('should not export columns when \'onColumnExport\' is canceled.', async () => {
+    it('should not export columns when \'columnExporting\' is canceled.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
 
-        exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+        exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -273,14 +272,14 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData('');
     });
 
-    it('should fire \'onRowExport\' for each grid row.', async () => {
+    it('should fire \'rowExporting\' for each grid row.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
         const rows = [];
 
-        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+        exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
             rows.push({ data: value.rowData, index: value.rowIndex });
         });
 
@@ -293,13 +292,13 @@ describe('CSV Grid Exporter', () => {
         }
     });
 
-    it('should not export rows when \'onRowExport\' is canceled.', async () => {
+    it('should not export rows when \'rowExporting\' is canceled.', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
 
-        exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+        exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
             value.cancel = true;
         });
 
@@ -312,25 +311,21 @@ describe('CSV Grid Exporter', () => {
         fix.detectChanges();
 
         const grid = fix.componentInstance.grid;
-        grid.columns[1].formatter = ((val: string) => {
-            return val.toUpperCase();
-        });
-        grid.columns[2].formatter = ((val: string) => {
-            return val.toLowerCase();
-        });
+        grid.columns[1].formatter = ((val: string) => val.toUpperCase());
+        grid.columns[2].formatter = ((val: string) => val.toLowerCase());
         grid.cdr.detectChanges();
 
         let wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
 
-        exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+        exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
             val.skipFormatter = true;
         });
         grid.cdr.detectChanges();
         wrapper = await getExportedData(grid, options);
         wrapper.verifyData(wrapper.simpleGridData, 'Columns formatter should be skipped.');
 
-        exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+        exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
             val.skipFormatter = false;
         });
         grid.cdr.detectChanges();
@@ -338,7 +333,7 @@ describe('CSV Grid Exporter', () => {
         wrapper.verifyData(wrapper.simpleGridDataFormatted, 'Columns\' formatter should not be skipped.');
     });
 
-    it('Should honor the Advanced filters when exporting', async() => {
+    it('Should honor the Advanced filters when exporting', async () => {
         const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
         fix.detectChanges();
 
@@ -435,10 +430,10 @@ describe('CSV Grid Exporter', () => {
             wrapper.verifyData(wrapper.treeGridDataFilterSorted);
         });
 
-        it('should fire \'onRowExport\' for each tree grid row.', async () => {
+        it('should fire \'rowExporting\' for each tree grid row.', async () => {
             const rows = [];
 
-            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+            exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
                 rows.push({ data: value.rowData, index: value.rowIndex });
             });
 
@@ -451,31 +446,29 @@ describe('CSV Grid Exporter', () => {
             }
         });
 
-        it('should skip the column formatter when onColumnExporting skipFormatter is true.', async () => {
-            treeGrid.columns[3].formatter = ((val: string) => {
-                return val.toLowerCase();
-            });
-            treeGrid.columns[4].formatter = ((val: number) => {
-                return val * 12; // months
-            });
+        it('should skip the column formatter when columnExportinging skipFormatter is true.', async () => {
+            treeGrid.columns[3].formatter = ((val: string) => val.toLowerCase());
+            treeGrid.columns[4].formatter = ((val: number) =>
+                 val * 12 // months
+            );
             treeGrid.cdr.detectChanges();
             let wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = true;
             });
             wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridData, 'Columns\' formatter should be skipped.');
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = false;
             });
             wrapper = await getExportedData(treeGrid, options);
             wrapper.verifyData(wrapper.treeGridDataFormatted, 'Columns\' formatter should be applied.');
         });
 
-        it('Should honor the Advanced filters when exporting', async() => {
+        it('Should honor the Advanced filters when exporting', async () => {
             const tree = new FilteringExpressionsTree(FilteringLogic.And);
             tree.filteringOperands.push({
                 fieldName: 'Name',
@@ -499,19 +492,14 @@ describe('CSV Grid Exporter', () => {
         });
     });
 
-    function getExportedData(grid, csvOptions: IgxCsvExporterOptions) {
+    const getExportedData = (grid, csvOptions: IgxCsvExporterOptions) => {
         const result = new Promise<CSVWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new CSVWrapper(value.csvData, csvOptions.valueDelimiter);
                 resolve(wrapper);
             });
             exporter.export(grid, csvOptions);
         });
         return result;
-    }
-
-    async function exportAndVerify(component, csvOptions, expectedData, errorMessage = '') {
-        const wrapper = await getExportedData(component, csvOptions);
-        wrapper.verifyData(expectedData, errorMessage);
-    }
+    };
 });

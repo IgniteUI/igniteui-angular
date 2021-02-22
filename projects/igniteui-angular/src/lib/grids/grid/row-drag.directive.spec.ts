@@ -484,7 +484,7 @@ describe('Row Drag Tests #grid', () => {
             dragIndicatorElements = fixture.debugElement.queryAll(By.css(CSS_CLASS_DRAG_INDICATOR));
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
-        function verifyDragAndDropRowCellValues(dragRowIndex: number, dropRowIndex: number) {
+        const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
             const dragRow = dragGrid.getRowByIndex(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
 
@@ -493,7 +493,7 @@ describe('Row Drag Tests #grid', () => {
             for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
             }
-        }
+        };
         it('should drop row data in the proper grid columns', () => {
             dragIndicatorElement = dragIndicatorElements[2].nativeElement;
             rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
@@ -767,7 +767,7 @@ describe('Row Drag Tests #grid', () => {
             dragGrid.selectRange(range);
             fixture.detectChanges();
 
-            const verifyCellSelection = function () {
+            const verifyCellSelection = () => {
                 for (let index = 0; index < rowCells.length; index++) {
                     const cellSelected = index <= 2 ? true : false;
                     expect(rowCells[index].selected).toEqual(cellSelected);
@@ -814,12 +814,8 @@ describe('Row Drag Tests #grid', () => {
             const row = dragGridRows[2];
             rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
             const rowCells = row.cells.toArray();
-            const groupHeader = dragGrid.groupsRecords.find(function (element) {
-                return element.value === rowCells[2].value;
-            });
-            let groupRow = groupHeader.records.find(function (element) {
-                return element['ID'] === rowCells[1].value;
-            });
+            const groupHeader = dragGrid.groupsRecords.find(element => element.value === rowCells[2].value);
+            let groupRow = groupHeader.records.find(element => element['ID'] === rowCells[1].value);
             expect(groupHeader.records.length).toEqual(2);
             expect(groupRow).toBeDefined();
 
@@ -848,12 +844,10 @@ describe('Row Drag Tests #grid', () => {
             verifyRowDragEndEvent(dragGrid, row, rowDragDirective, false);
             expect(dropGrid.rowList.length).toEqual(1);
             expect(groupHeader.records.length).toEqual(2);
-            groupRow = groupHeader.records.find(function (element) {
-                return element['ID'] === rowCells[1].value;
-            });
+            groupRow = groupHeader.records.find(element => element['ID'] === rowCells[1].value);
             expect(groupRow).toBeDefined();
         });
-        it('should exit edit mode and commit changes on row dragging', () => {
+        it('should exit edit mode and discard changes on row dragging', () => {
             dragGrid.rowEditable = true;
             fixture.detectChanges();
 
@@ -869,6 +863,7 @@ describe('Row Drag Tests #grid', () => {
             pointerUpEvent = UIInteractions.createPointerEvent('pointerup', dropPoint);
 
             const dragCell = dragGrid.getCellByColumn(1, 'Downloads');
+            const cacheValue = dragCell.value;
             const cellElement = dragCell.nativeElement;
             let cellInput = null;
 
@@ -904,8 +899,8 @@ describe('Row Drag Tests #grid', () => {
             expect(row.grid.rowDragging).toBeFalsy();
 
             const dropCell = dropGrid.getCellByColumn(0, 'Downloads');
-            expect(dropCell.value).toEqual(newCellValue);
-            expect(dragCell.value).toEqual(newCellValue);
+            expect(dropCell.value).toEqual(cacheValue);
+            expect(dragCell.value).toEqual(cacheValue);
         });
     });
 });
@@ -1175,14 +1170,14 @@ describe('Row Drag Tests #tGrid', () => {
     `
 })
 export class IgxGridRowDraggableComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     @ViewChild('dropArea', { read: IgxDropDirective, static: true })
     public dropArea: IgxDropDirective;
+
+    public width = '800px';
+    public height = null;
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -1220,7 +1215,7 @@ export class IgxGridRowDraggableComponent extends DataParent {
             >
             <ng-template let-data igxRowDragGhost>
                 <div class="dragGhost">
-                    <igx-icon fontSet="material"></igx-icon>
+                    <igx-icon></igx-icon>
                         Moving a row!
                 </div>
             </ng-template>
@@ -1234,14 +1229,14 @@ export class IgxGridRowDraggableComponent extends DataParent {
     `
 })
 export class IgxGridRowCustomGhostDraggableComponent extends DataParent {
-    public width = '800px';
-    public height = null;
-
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
     @ViewChild('dropArea', { read: IgxDropDirective, static: true })
     public dropArea: IgxDropDirective;
+
+    public width = '800px';
+    public height = null;
 
     public enableSorting = false;
     public enableFiltering = false;
@@ -1329,12 +1324,13 @@ export class IgxGridFeaturesRowDragComponent extends DataParent {
         </div>`
 })
 export class IgxHierarchicalGridTestComponent {
-    public data;
-    newData = [];
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
     @ViewChild('hierarchicalDropGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDropGrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+    newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1367,11 +1363,12 @@ export class IgxHierarchicalGridTestComponent {
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridCustomGhostTestComponent {
-    public data;
-    newData = [];
     @ViewChild('hierarchicalDragGrid', { read: IgxHierarchicalGridComponent, static: true }) public hDragGrid: IgxHierarchicalGridComponent;
     @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true }) public rowIsland: IgxRowIslandComponent;
     @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true }) public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+    newData = [];
 
     constructor() {
         this.data = SampleTestData.generateHGridData(2, 3);
@@ -1410,87 +1407,92 @@ export class IgxTreeGridTestComponent {
 
 /**
  * Move pointer to the provided point and calls pointerdown event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
  * @returns Promise with reference to the generated event
  */
-async function pointerDown(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
+const pointerDown = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointerdown', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
     fixture.detectChanges();
     return pointerEvent;
-}
+};
 
 /**
  * Move pointer to the provided point and calls pointermove event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
  * @returns Promise with reference to the generated event
  */
-async function pointerMove(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
+const pointerMove = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointermove', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
     fixture.detectChanges();
     return pointerEvent;
-}
+};
 
 /**
  * Move pointer to the provided point and calls pointerup event over provided element
+ *
  * @param element Element to fire event on
  * @param startPoint Point on which to move the pointer to
  * @param fixture Test's ComponentFixture
  * @returns Promise with reference to the generated event
  */
-async function pointerUp(element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> {
+const pointerUp = async (element: Element, startPoint: Point, fixture: ComponentFixture<any>): Promise<PointerEvent> => {
     const pointerEvent = UIInteractions.simulatePointerEvent('pointerup', element, startPoint.x, startPoint.y);
     await wait(DEBOUNCE_TIME);
     fixture.detectChanges();
     return pointerEvent;
-}
+};
 
 /**
  * Verifies weather the onRowDragStart event has been emitted with the correct arguments
+ *
  * @param grid IgxGrid from which a row is being dragged
  * @param dragRow Grid row which is being dragged
  * @param dragDirective IgxRowDragDirective of the dragged row
  * @param timesCalled The number of times the onRowDragStart event has been emitted. Defaults to 1.
  * @param cancel Indicates weather the onRowDragStart event is cancelled. Default value is false.
  */
-function verifyRowDragStartEvent(
+const verifyRowDragStartEvent =(
     grid: IgxGridBaseDirective,
     dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     timesCalled: number = 1,
-    cancel = false) {
+    cancel = false) => {
     expect(grid.onRowDragStart.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragStart.emit).toHaveBeenCalledWith({
         dragData: dragRow,
-        dragDirective: dragDirective,
-        cancel: cancel,
+        dragDirective,
+        cancel,
         owner: grid
     });
-}
+};
 
 /**
  * Verifies weather the onRowDragEnd event has been emitted with the correct arguments
+ *
  * @param grid IgxGrid from which a row is being dragged
  * @param dragRow Grid row which is being dragged
  * @param dragDirective IgxRowDragDirective of the dragged row
  * @param timesCalled The number of times the onRowDragEnd event has been emitted. Defaults to 1.
  */
-function verifyRowDragEndEvent(
+const verifyRowDragEndEvent = (
     grid: IgxGridBaseDirective,
     dragRow: IgxRowDirective<any>,
     dragDirective: IgxRowDragDirective,
     animations: boolean,
-    timesCalled: number = 1) {
+    timesCalled: number = 1) => {
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledTimes(timesCalled);
     expect(grid.onRowDragEnd.emit).toHaveBeenCalledWith({
-        dragDirective: dragDirective,
+        dragDirective,
         dragData: dragRow,
         animation: animations,
         owner: grid
     });
-}
+};

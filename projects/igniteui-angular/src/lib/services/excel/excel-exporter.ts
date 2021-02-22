@@ -1,11 +1,11 @@
 import * as JSZip from 'jszip';
 
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IgxBaseExporter } from '../exporter-common/base-export-service';
+import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -38,21 +38,21 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
  */
 @Injectable()
 export class IgxExcelExporterService extends IgxBaseExporter {
-
     private static ZIP_OPTIONS = { compression: 'DEFLATE', type: 'base64' } as JSZip.JSZipGeneratorOptions<'base64'>;
-    private _xlsx: JSZip;
 
     /**
      * This event is emitted when the export process finishes.
      * ```typescript
-     * this.exporterService.onExportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
+     * this.exporterService.exportEnded.subscribe((args: IExcelExportEndedEventArgs) => {
      * // put event handler code here
      * });
      * ```
+     *
      * @memberof IgxExcelExporterService
      */
-    @Output()
-    public onExportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
+    public exportEnded = new EventEmitter<IExcelExportEndedEventArgs>();
+
+    private _xlsx: JSZip;
 
     private static async populateFolderAsync(folder: IExcelFolder, zip: JSZip, worksheetData: WorksheetData) {
         for (const childFolder of folder.childFolders(worksheetData)) {
@@ -71,21 +71,24 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: any[], options: IgxExcelExporterOptions): void {
-        if (this._isTreeGrid) {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
+        const level = data[0]?.level;
+
+        if (typeof level !== 'undefined') {
             let maxLevel = 0;
+
             data.forEach((r) => {
-                maxLevel = Math.max(maxLevel, r.originalRowData.level);
+                maxLevel = Math.max(maxLevel, r.level);
             });
+
             if (maxLevel > 7) {
                 throw Error('Can create an outline of up to eight levels!');
             }
         }
 
-        const worksheetData =
-            new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
+        const worksheetData = new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort);
 
-        this._xlsx = new JSZip();
+        this._xlsx = new (JSZip as any).default();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
 
@@ -93,7 +96,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         .then(() => {
             this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
                 this.saveFile(result, options.fileName);
-                this.onExportEnded.emit({ xlsx: this._xlsx });
+                this.exportEnded.emit({ xlsx: this._xlsx });
             });
         });
     }

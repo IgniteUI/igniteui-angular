@@ -18,6 +18,7 @@ import {
     IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -1759,6 +1760,48 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 'incorrect horizontal position of operator dropdown');
         }));
 
+        it('Should filter by cells formatted data when using FormattedValuesFilteringStrategy', fakeAsync(() => {
+            const formattedStrategy = new FormattedValuesFilteringStrategy(['Downloads']);
+            grid.filterStrategy = formattedStrategy;
+            const downloadsFormatter = (val: number): number => {
+                if (!val || val > 0 && val < 100) {
+                    return 1;
+                } else if (val >= 100 && val < 500) {
+                    return 2;
+                } else {
+                    return 3;
+                }
+            };
+            grid.columns[2].formatter = downloadsFormatter;
+            fix.detectChanges();
+
+            grid.openAdvancedFilteringDialog();
+            tick(200);
+            fix.detectChanges();
+
+            // Add root group.
+            GridFunctions.clickAdvancedFilteringInitialAddGroupButton(fix, 0);
+            tick(100);
+            fix.detectChanges();
+
+            // Add a new expression
+            selectColumnInEditModeExpression(fix, 2); // Select 'ProductName' column.
+            selectOperatorInEditModeExpression(fix, 0); // Select 'Contains' operator.
+            const input = GridFunctions.getAdvancedFilteringValueInput(fix).querySelector('input');
+            UIInteractions.clickAndSendInputElementValue(input, '1', fix); // Type filter value.
+
+            // Commit the populated expression.
+            GridFunctions.clickAdvancedFilteringExpressionCommitButton(fix);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickAdvancedFilteringApplyButton(fix);
+            tick(100);
+            fix.detectChanges();
+
+            const rows = GridFunctions.getRows(fix);
+            expect(rows.length).toEqual(3, 'Wrong filtered rows count');
+        }));
+
         describe('Context Menu - ', () => {
             it('Should discard added group when clicking its operator line without having a single expression.', fakeAsync(() => {
                 // Open Advanced Filtering dialog.
@@ -2474,9 +2517,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
     describe('Localization - ', () => {
         it('Should correctly change resource strings for Advanced Filtering dialog.', fakeAsync(() => {
-            let fix, grid: IgxGridComponent;
-            fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
-            grid = fix.componentInstance.grid;
+            const fix = TestBed.createComponent(IgxGridAdvancedFilteringComponent);
+            const grid: IgxGridComponent = fix.componentInstance.grid;
             grid.resourceStrings = Object.assign({}, grid.resourceStrings, {
                 igx_grid_filter_operator_and: 'My and',
                 igx_grid_filter_operator_or: 'My or',
@@ -2596,7 +2638,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Column groups - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
             grid = fix.componentInstance.grid;
@@ -2623,7 +2665,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('External - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridExternalAdvancedFilteringComponent);
             grid = fix.componentInstance.grid;
@@ -2674,7 +2716,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 
     describe('Expression tree bindings - ', () => {
-        let fix, grid: IgxGridComponent;
+        let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringBindingComponent);
             fix.detectChanges();
@@ -2703,27 +2745,27 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
     });
 });
 
-function selectColumnInEditModeExpression(fix, dropdownItemIndex: number) {
+const selectColumnInEditModeExpression = (fix, dropdownItemIndex: number) => {
     GridFunctions.clickAdvancedFilteringColumnSelect(fix);
     fix.detectChanges();
     GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
     tick();
     fix.detectChanges();
-}
+};
 
-function selectOperatorInEditModeExpression(fix, dropdownItemIndex: number) {
+const selectOperatorInEditModeExpression = (fix, dropdownItemIndex: number) => {
     GridFunctions.clickAdvancedFilteringOperatorSelect(fix);
     fix.detectChanges();
     GridFunctions.clickAdvancedFilteringSelectDropdownItem(fix, dropdownItemIndex);
     tick();
     fix.detectChanges();
-}
+};
 
 /**
  * Verifies the type of the operator line ('and' or 'or').
  * (NOTE: The 'operator' argument must be a string with a value that is either 'and' or 'or'.)
  */
-function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
+const verifyOperatorLine = (operatorLine: HTMLElement, operator: string) => {
     expect(operator === 'and' || operator === 'or').toBe(true, 'operator must be \'and\' or \'or\'');
 
     if (operator === 'and') {
@@ -2733,14 +2775,14 @@ function verifyOperatorLine(operatorLine: HTMLElement, operator: string) {
         expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS)).toBe(false, 'incorrect operator line');
         expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS)).toBe(true, 'incorrect operator line');
     }
-}
+};
 
-function verifyOperatorLineSelection(operatorLine: HTMLElement, shouldBeSelected: boolean) {
+const verifyOperatorLineSelection = (operatorLine: HTMLElement, shouldBeSelected: boolean) => {
     expect(operatorLine.classList.contains(ADVANCED_FILTERING_OPERATOR_LINE_SELECTED_CSS_CLASS))
         .toBe(shouldBeSelected, 'incorrect selection state of the operator line');
-}
+};
 
-function verifyExpressionChipContent(fix, path: number[], columnText: string, operatorText: string, valueText: string) {
+const verifyExpressionChipContent = (fix, path: number[], columnText: string, operatorText: string, valueText: string) => {
     const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
     const chipSpans = GridFunctions.sortNativeElementsHorizontally(Array.from(chip.querySelectorAll('span')));
     const columnSpan = chipSpans[0];
@@ -2749,14 +2791,14 @@ function verifyExpressionChipContent(fix, path: number[], columnText: string, op
     expect(columnSpan.innerText.toLowerCase().trim()).toBe(columnText.toLowerCase(), 'incorrect chip column');
     expect(operatorSpan.innerText.toLowerCase().trim()).toBe(operatorText.toLowerCase(), 'incorrect chip operator');
     expect(valueSpan.innerText.toLowerCase().trim()).toBe(valueText.toLowerCase(), 'incorrect chip filter value');
-}
+};
 
-function verifyExpressionChipSelection(fix, path: number[], shouldBeSelected: boolean) {
+const verifyExpressionChipSelection = (fix, path: number[], shouldBeSelected: boolean) => {
     const chip = GridFunctions.getAdvancedFilteringTreeExpressionChip(fix, path);
     verifyExpressionChipSelectionByChip(chip, shouldBeSelected);
-}
+};
 
-function verifyExpressionChipSelectionByChip(chip: HTMLElement, shouldBeSelected: boolean) {
+const verifyExpressionChipSelectionByChip = (chip: HTMLElement, shouldBeSelected: boolean) => {
     const chipItem = chip.querySelector('.igx-chip__item');
     if (shouldBeSelected) {
         expect(chipItem.classList.contains('igx-chip__item--selected')).toBe(true, 'chip is not selected');
@@ -2767,12 +2809,12 @@ function verifyExpressionChipSelectionByChip(chip: HTMLElement, shouldBeSelected
         expect(chipItem.querySelector(CHIP_SELECT_CLASS)).toBeNull();
         expect(chipItem.querySelector(CHIP_SELECT_HIDDEN_CLASS)).not.toBeNull();
     }
-}
+};
 
 /**
  * Verifies that all children (operator lines and expression chips) of the provided 'parent' are selected.
  */
-function verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean) {
+const verifyChildrenSelection = (parent: HTMLElement, shouldBeSelected: boolean) => {
     const allOperatorLines: any[] = Array.from(parent.querySelectorAll('.igx-filter-tree__line'));
     const allExpressionChips: any[] = Array.from(parent.querySelectorAll(`.${ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS}`));
     for (const operatorLine of allOperatorLines) {
@@ -2781,13 +2823,13 @@ function verifyChildrenSelection(parent: HTMLElement, shouldBeSelected: boolean)
     for (const expressionChip of allExpressionChips) {
         verifyExpressionChipSelectionByChip(expressionChip, shouldBeSelected);
     }
-}
+};
 
-function verifyEditModeExpressionInputStates(fix,
+const verifyEditModeExpressionInputStates = (fix,
                                              columnSelectEnabled: boolean,
                                              operatorSelectEnabled: boolean,
                                              valueInputEnabled: boolean,
-                                             commitButtonEnabled: boolean) {
+                                             commitButtonEnabled: boolean) => {
     // Verify the column select state.
     const columnInputGroup = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('igx-input-group');
     expect(!columnInputGroup.classList.contains('igx-input-group--disabled')).toBe(columnSelectEnabled,
@@ -2813,12 +2855,12 @@ function verifyEditModeExpressionInputStates(fix,
     // Verify close expression button is enabled.
     const closeButton = GridFunctions.getAdvancedFilteringExpressionCloseButton(fix);
     ControlsFunction.verifyButtonIsDisabled(closeButton, false);
-}
+};
 
-function verifyEditModeExpressionInputValues(fix,
+const verifyEditModeExpressionInputValues = (fix,
                                              columnText: string,
                                              operatorText: string,
-                                             valueText: string) {
+                                             valueText: string) => {
     const columnInput = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('input');
     const operatorInput = GridFunctions.getAdvancedFilteringColumnSelect(fix).querySelector('input');
     const editModeContainer = GridFunctions.getAdvancedFilteringEditModeContainer(fix);
@@ -2826,9 +2868,9 @@ function verifyEditModeExpressionInputValues(fix,
     expect(columnInput.value).toBe(columnText);
     expect(operatorInput.value).toBe(operatorText);
     expect(valueInput.value).toBe(valueText);
-}
+};
 
-function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
+const verifyElementIsInExpressionsContainerView = (fix, element: HTMLElement) => {
     const elementRect = element.getBoundingClientRect();
     const exprContainer: HTMLElement = GridFunctions.getAdvancedFilteringExpressionsContainer(fix);
     const exprContainerRect = exprContainer.getBoundingClientRect();
@@ -2836,21 +2878,21 @@ function verifyElementIsInExpressionsContainerView(fix, element: HTMLElement) {
     expect(elementRect.bottom <= exprContainerRect.bottom).toBe(true, 'bottom is not in view');
     expect(elementRect.left >= exprContainerRect.left).toBe(true, 'left is not in view');
     expect(elementRect.right <= exprContainerRect.right).toBe(true, 'right is not in view');
-}
+};
 
-function verifyContextMenuVisibility(fix, shouldBeVisible: boolean) {
+const verifyContextMenuVisibility = (fix, shouldBeVisible: boolean) => {
     const contextMenu: HTMLElement = GridFunctions.getAdvancedFilteringContextMenu(fix);
     const contextMenuRect = contextMenu.getBoundingClientRect();
     expect(contextMenu.classList.contains('igx-toggle--hidden')).toBe(!shouldBeVisible, 'incorrect context menu visibility');
     expect(contextMenuRect.width === 0 && contextMenuRect.height === 0).toBe(!shouldBeVisible, 'incorrect context menu dimensions');
-}
+};
 
 /**
  * Verifies the type of the context menu (menu for specific group or menu for combining expressions).
  * If contextual group is expected, the context menu should contain buttons for operator change, ungroup and delete.
  * If contextual group is not expected, the context menu should contain buttons for creating new group by combining expressions.
  */
-function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
+const verifyContextMenuType = (fix, shouldBeContextualGroup: boolean) => {
     const contextMenuButtons =  GridFunctions.getAdvancedFilteringContextMenuButtons(fix);
     expect(GridFunctions.getAdvancedFilteringContextMenuButtonGroup(fix) !== null).toBe(shouldBeContextualGroup);
 
@@ -2866,4 +2908,4 @@ function verifyContextMenuType(fix, shouldBeContextualGroup: boolean) {
         expect(contextMenuButtons[2].innerText.toLowerCase().trim()).toBe('create "or" group');
         expect(contextMenuButtons[3].innerText.toLowerCase().trim()).toBe('delete filters');
     }
-}
+};

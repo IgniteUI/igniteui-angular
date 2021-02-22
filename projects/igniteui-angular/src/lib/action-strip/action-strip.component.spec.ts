@@ -158,7 +158,7 @@ describe('igxActionStrip', () => {
             expect(dropDownItems.length).toBe(2);
         });
 
-        it('should close the menu when hiding action strip', async() => {
+        it('should close the menu when hiding action strip', async () => {
             fixture = TestBed.createComponent(IgxActionStripCombinedMenuTestingComponent);
             fixture.detectChanges();
             actionStrip = fixture.componentInstance.actionStrip;
@@ -206,7 +206,7 @@ class IgxActionStripTestingComponent {
 
     public flag = false;
 
-    onIconClick() {
+    public onIconClick() {
         this.flag = true;
     }
 }

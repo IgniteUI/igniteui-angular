@@ -2,6 +2,7 @@ import { Component, ElementRef, HostBinding, Input, OnInit, TemplateRef, ViewChi
 import { IgxIconService } from './icon.service';
 import { first, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 /**
  * Icon provides a way to include material icons to markup
@@ -17,32 +18,19 @@ import { Subject } from 'rxjs';
  * @remarks
  *
  * The Ignite UI Icon makes it easy for developers to include material design icons directly in their markup. The icons
- * support custom colors and can be marked as active or disabled using the `isActive` property. This will change the appearance
+ * support different icon families and can be marked as active or disabled using the `active` property. This will change the appearance
  * of the icon.
  *
  * @example
  * ```html
- * <igx-icon color="#00ff00" isActive="true">home</igx-icon>
+ * <igx-icon family="filter-icons" active="true">home</igx-icon>
  * ```
  */
-let NEXT_ID = 0;
-
 @Component({
     selector: 'igx-icon',
     templateUrl: 'icon.component.html'
 })
 export class IgxIconComponent implements OnInit, OnDestroy {
-    @ViewChild('noLigature', { read: TemplateRef, static: true })
-    private noLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
-    private explicitLigature: TemplateRef<HTMLElement>;
-
-    @ViewChild('svgImage', { read: TemplateRef, static: true })
-    private svgImage: TemplateRef<HTMLElement>;
-
-    private destroy$ = new Subject<void>();
-
     /**
      *  This allows you to change the value of `class.igx-icon`. By default it's `igx-icon`.
      *
@@ -54,6 +42,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *  This allows you to disable the `aria-hidden` attribute. By default it's applied.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon") public icon: IgxIconComponent;
@@ -68,80 +57,80 @@ export class IgxIconComponent implements OnInit, OnDestroy {
     public ariaHidden = true;
 
     /**
-     * An @Input property that sets the value of the `id` attribute.
+     * An @Input property that sets the value of the `family`. By default it's "material".
+     *
      * @example
      * ```html
-     * <igx-icon id="igx-icon-1" fontSet="material">settings</igx-icon>
+     * <igx-icon family="material">settings</igx-icon>
      * ```
      */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-icon-${NEXT_ID++}`;
-
-    /**
-     * An @Input property that sets the value of the `fontSet`. By default it's "material".
-     * @example
-     * ```html
-     * <igx-icon fontSet="material">settings</igx-icon>
-     * ```
-     */
-    @Input('fontSet')
-    public font: string;
+    @Input('family')
+    public family: string;
 
     /**
      * An @Input property that allows you to disable the `active` property. By default it's applied.
+     *
      * @example
      * ```html
-     * <igx-icon [isActive]="false">settings</igx-icon>
+     * <igx-icon [active]="false">settings</igx-icon>
      * ```
      */
-    @Input('isActive')
+    @Input('active')
     public active = true;
 
     /**
-     * An @Input property that allows you to change the `iconColor` of the icon.
+     * An @Input property that allows you to change the `color` of the icon.
+     *
+     * * @deprecated
+     *
      * @example
      * ```html
      * <igx-icon color="blue">settings</igx-icon>
      * ```
      */
+    @DeprecateProperty('`color` is deprecated.')
     @Input('color')
-    public iconColor: string;
+    public color: string;
 
     /**
-     *  An @Input property that allows you to set the `iconName` of the icon.
+     *  An @Input property that allows you to set the `name` of the icon.
+     *
      *  @example
      * ```html
-     * <igx-icon name="contains" fontSet="filter-icons"></igx-icon>
+     * <igx-icon name="contains" family="filter-icons"></igx-icon>
      * ```
      */
     @Input('name')
-    public iconName: string;
+    public name: string;
 
-    /**
-     * An ElementRef property of the `igx-icon` component.
-     */
-    public el: ElementRef;
+    @ViewChild('noLigature', { read: TemplateRef, static: true })
+    private noLigature: TemplateRef<HTMLElement>;
 
-    constructor(
-            private _el: ElementRef,
-            private iconService: IgxIconService,
-            private ref: ChangeDetectorRef) {
-        this.el = _el;
-        this.font = this.iconService.defaultFontSet;
-        this.iconService.registerFontSetAlias('material', 'material-icons');
+    @ViewChild('explicitLigature', { read: TemplateRef, static: true })
+    private explicitLigature: TemplateRef<HTMLElement>;
+
+    @ViewChild('svgImage', { read: TemplateRef, static: true })
+    private svgImage: TemplateRef<HTMLElement>;
+
+    private destroy$ = new Subject<void>();
+
+    constructor(public el: ElementRef,
+                private iconService: IgxIconService,
+                private ref: ChangeDetectorRef) {
+        this.family = this.iconService.defaultFamily;
+        this.iconService.registerFamilyAlias('material', 'material-icons');
         this.iconService.iconLoaded.pipe(
-            first(e => e.name === this.iconName && e.fontSet === this.font),
+            first(e => e.name === this.name && e.family === this.family),
             takeUntil(this.destroy$)
         )
-        .subscribe(_ => this.ref.detectChanges());
+        .subscribe(() => this.ref.detectChanges());
     }
 
     /**
      * @hidden
      * @internal
      */
-    ngOnInit() {
+    public ngOnInit() {
         this.updateIconClass();
     }
 
@@ -149,28 +138,30 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @hidden
      * @internal
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
     }
 
     /**
-     *  An accessor that returns the value of the font property.
+     *  An accessor that returns the value of the family property.
+     *
      * @example
      * ```typescript
      *  @ViewChild("MyIcon")
      * public icon: IgxIconComponent;
      * ngAfterViewInit() {
-     *    let iconFont = this.icon.getFontSet;
+     *    let iconFamily = this.icon.getFamily;
      * }
      * ```
      */
-    get getFontSet(): string {
-        return this.font;
+    public get getFamily(): string {
+        return this.family;
     }
 
     /**
      *  An accessor that returns the value of the active property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -180,12 +171,13 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getActive(): boolean {
+    public get getActive(): boolean {
         return this.active;
     }
 
     /**
      *  An accessor that returns inactive property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -196,44 +188,47 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * ```
      */
     @HostBinding('class.igx-icon--inactive')
-    get getInactive(): boolean {
+    public get getInactive(): boolean {
         return !this.active;
     }
 
     /**
-     * An accessor that returns the opposite value of the `iconColor` property.
+     * An accessor that returns the opposite value of the `color` property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
      * public icon: IgxIconComponent;
      * ngAfterViewInit() {
-     *    let iconColor = this.icon.getIconColor;
+     *    let color = this.icon.getColor;
      * }
      * ```
      */
     @HostBinding('style.color')
-    get getIconColor(): string {
-        return this.iconColor;
+    public get getColor(): string {
+        return this.color;
     }
 
     /**
      * An accessor that returns the value of the iconName property.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
      * public icon: IgxIconComponent;
      * ngAfterViewInit() {
-     *    let iconName = this.icon.getIconName;
+     *    let name = this.icon.getName;
      * }
      * ```
      */
-    get getIconName(): string {
-        return this.iconName;
+    public get getName(): string {
+        return this.name;
     }
 
     /**
      *  An accessor that returns the key of the SVG image.
-     *  The key consists of the fontSet and the iconName separated by underscore.
+     *  The key consists of the font-family and the name separated by underscore.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -243,9 +238,9 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get getSvgKey(): string {
-        if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
-            return '#' + this.iconService.getSvgIconKey(this.iconName, this.font);
+    public get getSvgKey(): string {
+        if (this.iconService.isSvgIconCached(this.name, this.family)) {
+            return '#' + this.iconService.getSvgIconKey(this.name, this.family);
         }
 
         return null;
@@ -253,6 +248,7 @@ export class IgxIconComponent implements OnInit, OnDestroy {
 
     /**
      *   An accessor that returns a TemplateRef to explicit, svg or no ligature.
+     *
      * @example
      * ```typescript
      * @ViewChild("MyIcon")
@@ -262,9 +258,9 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * }
      * ```
      */
-    get template(): TemplateRef<HTMLElement> {
-        if (this.iconName) {
-            if (this.iconService.isSvgIconCached(this.iconName, this.font)) {
+    public get template(): TemplateRef<HTMLElement> {
+        if (this.name) {
+            if (this.iconService.isSvgIconCached(this.name, this.family)) {
                 return this.svgImage;
             }
 
@@ -279,11 +275,11 @@ export class IgxIconComponent implements OnInit, OnDestroy {
      * @internal
      */
     private updateIconClass() {
-        const className = this.iconService.fontSetClassName(this.font);
+        const className = this.iconService.familyClassName(this.family);
         this.el.nativeElement.classList.add(className);
 
-        if (this.iconName && !this.iconService.isSvgIconCached(this.iconName, this.font)) {
-            this.el.nativeElement.classList.add(this.iconName);
+        if (this.name && !this.iconService.isSvgIconCached(this.name, this.family)) {
+            this.el.nativeElement.classList.add(this.name);
         }
     }
 }

@@ -1,18 +1,16 @@
 <div class="sample-column">
     <div class="density-chooser">
-        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"></igx-buttongroup>
     </div>
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <h4>Primary/Foreign key</h4>
     <igx-tree-grid #grid1 [data]="data1" primaryKey="employeeID" foreignKey="PID"
         [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
-        [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
-        exportExcelText="Export to Excel" exportCsvText="Export to CSV" [summaryCalculationMode]="summaryMode"
-        [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'"
+        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
             [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
@@ -24,7 +22,7 @@
         </ng-template>
 
         <!-- <ng-template igxRowLoadingIndicator>
-            <igx-icon fontSet="material">loop</igx-icon>
+            <igx-icon>loop</igx-icon>
         </ng-template> -->
     </igx-tree-grid>
 
@@ -57,10 +55,8 @@
     <h4>ChildData key</h4>
     <igx-tree-grid #grid2 [data]="data2" primaryKey="employeeID" childDataKey="employees"
         [loadChildrenOnDemand]="loadChildren" hasChildrenKey="hasEmployees"
-        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
-        [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
-        exportExcelText="Export to Excel" exportCsvText="Export to CSV" [summaryCalculationMode]="summaryMode"
-        [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
+        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'800px'"
+        [summaryCalculationMode]="summaryMode" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
             [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"

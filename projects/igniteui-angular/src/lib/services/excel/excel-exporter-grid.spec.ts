@@ -14,7 +14,8 @@ import {
     GridIDNameJobTitleComponent,
     ProductsComponent,
     GridIDNameJobTitleHireDataPerformanceComponent,
-    GridHireDateComponent
+    GridHireDateComponent,
+    GridExportGroupedDataComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -43,9 +44,10 @@ describe('Excel Exporter', () => {
                 GridIDNameJobTitleComponent,
                 IgxTreeGridPrimaryForeignKeyComponent,
                 ProductsComponent,
-                GridWithEmtpyColumnsComponent,
+                GridWithEmptyColumnsComponent,
                 GridIDNameJobTitleHireDataPerformanceComponent,
-                GridHireDateComponent
+                GridHireDateComponent,
+                GridExportGroupedDataComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -60,8 +62,8 @@ describe('Excel Exporter', () => {
     }));
 
     afterEach(waitForAsync(() => {
-        exporter.onColumnExport.unsubscribe();
-        exporter.onRowExport.unsubscribe();
+        exporter.columnExporting.unsubscribe();
+        exporter.rowExporting.unsubscribe();
     }));
 
     describe('', () => {
@@ -119,7 +121,6 @@ describe('Excel Exporter', () => {
 
             const grid = fix.componentInstance.grid;
             grid.columns[0].hidden = true;
-            options.ignoreColumnsOrder = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
@@ -212,9 +213,8 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.simpleGridData, 'No frozen columns should have been exported!');
         });
 
-        it('should honor all pinned columns.', async() => {
+        it('should honor all pinned columns.', async () => {
             const result = await TestMethods.createGridAndPinColumn(2, 0);
-            const fix = result.fixture;
             const grid = result.grid;
 
             const wrapper = await getExportedData(grid, options);
@@ -256,7 +256,7 @@ describe('Excel Exporter', () => {
 
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(
-                actualData.simpleGridSortByNameDesc(true), 'Descending sorted data should have been exported.');
+                actualData.simpleGridSortByNameDesc(), 'Descending sorted data should have been exported.');
 
             grid.clearSort();
             grid.sort({fieldName: 'ID',  dir: SortingDirection.Asc, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
@@ -299,7 +299,7 @@ describe('Excel Exporter', () => {
             await setRowHeightAndExport(grid, options, fix, rowHeights[4]);
         });
 
-        it('should fire \'onColumnExport\' for each grid column.', async () => {
+        it('should fire \'columnExporting\' for each grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -307,7 +307,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             const cols = [];
-            exporter.onColumnExport.subscribe((value) => {
+            exporter.columnExporting.subscribe((value) => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
@@ -321,7 +321,7 @@ describe('Excel Exporter', () => {
             expect(cols[2].index).toBe(2);
         });
 
-        it('should fire \'onColumnExport\' for each visible grid column.', async () => {
+        it('should fire \'columnExporting\' for each visible grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -329,7 +329,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             const cols = [];
-            exporter.onColumnExport.subscribe((value) => {
+            exporter.columnExporting.subscribe((value) => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
@@ -346,14 +346,14 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
         });
 
-        it('should not export columns when \'onColumnExport\' is canceled.', async () => {
+        it('should not export columns when \'columnExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
 
             const grid = fix.componentInstance.grid;
 
-            exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 value.cancel = true;
             });
 
@@ -363,7 +363,7 @@ describe('Excel Exporter', () => {
             await wrapper.verifyTemplateFilesContent();
         });
 
-        it('should fire \'onRowExport\' for each grid row.', async () => {
+        it('should fire \'rowExporting\' for each grid row.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -372,7 +372,7 @@ describe('Excel Exporter', () => {
             const data = SampleTestData.personJobData();
 
             const rows = [];
-            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+            exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
                 rows.push({ data: value.rowData, index: value.rowIndex });
             });
 
@@ -384,14 +384,14 @@ describe('Excel Exporter', () => {
             }
         });
 
-        it('should not export rows when \'onRowExport\' is canceled.', async () => {
+        it('should not export rows when \'rowExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
 
             const grid = fix.componentInstance.grid;
 
-            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+            exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
                 value.cancel = true;
             });
 
@@ -421,7 +421,7 @@ describe('Excel Exporter', () => {
             expect(sortField).toBe(sortFieldAfterExport);
         });
 
-        it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
+        it('should skip the column formatter when \'columnExporting\' skipFormatter is true', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -439,7 +439,7 @@ describe('Excel Exporter', () => {
             // Verify the exported data is formatted by default
             await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleWithFormatting);
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = true;
             });
             fix.detectChanges();
@@ -448,7 +448,7 @@ describe('Excel Exporter', () => {
             // Verify the data without formatting
             await exportAndVerify(grid, options, actualData.simpleGridData);
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = false;
             });
             grid.cdr.detectChanges();
@@ -458,7 +458,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export columns without header', async () => {
-            const fix = TestBed.createComponent(GridWithEmtpyColumnsComponent);
+            const fix = TestBed.createComponent(GridWithEmptyColumnsComponent);
             fix.detectChanges();
             await wait();
 
@@ -466,7 +466,7 @@ describe('Excel Exporter', () => {
             // Verify the data without formatting
             await exportAndVerify(grid, options, actualData.gridWithEmptyColums);
 
-            exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 if (value.columnIndex === 0 || value.columnIndex === 2) {
                     value.cancel = true;
                 }
@@ -539,6 +539,97 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(grid, options, actualData.hireDate);
         });
+
+        it('Should export grouped grid', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'Price', dir: SortingDirection.Desc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedData);
+        });
+
+        it('Should export grouped grid with collapsed rows', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.groupBy({ fieldName: 'Price', dir: SortingDirection.Desc, ignoreCase: false });
+
+            fix.detectChanges();
+
+            const groupRows = grid.groupsRowList.toArray();
+
+            grid.toggleGroup(groupRows[2].groupRow);
+            grid.toggleGroup(groupRows[3].groupRow);
+            grid.toggleGroup(groupRows[6].groupRow);
+
+            fix.detectChanges();
+
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithCollapsedRows);
+        });
+
+        it('Should export grouped grid with ignored sorting', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+            grid.sort({fieldName: 'Price', dir: SortingDirection.Desc});
+
+            options.ignoreSorting = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreSorting);
+        });
+
+        it('Should export grouped grid with ignored filtering', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+
+            grid.filter('Model', 'Model', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+
+            options.ignoreFiltering = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreFiltering);
+        });
+
+        it('Should export grouped grid with ignored grouping', async () => {
+            const fix = TestBed.createComponent(GridExportGroupedDataComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            grid.groupBy({ fieldName: 'Brand', dir: SortingDirection.Asc, ignoreCase: false });
+
+            options.ignoreGrouping = true;
+
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreGrouping);
+        });
     });
 
     describe('', () => {
@@ -607,6 +698,22 @@ describe('Excel Exporter', () => {
             await exportAndVerify(treeGrid, options, actualData.treeGridDataExpDepth(0));
         });
 
+        it('should export tree grid with ignore filtering properly.', async () => {
+            treeGrid.filter('Age', 52, IgxNumberFilteringOperand.instance().condition('greaterThan'));
+            options.ignoreFiltering = true;
+            fix.detectChanges();
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridDataIgnoreFiltering);
+        });
+
+        it('should export tree grid with ignore sorting properly.', async () => {
+            treeGrid.sort({fieldName: 'Age', dir: SortingDirection.Desc});
+            options.ignoreSorting = true;
+            fix.detectChanges();
+
+            await exportAndVerify(treeGrid, options, actualData.treeGridData);
+        });
+
         it('should throw an exception when nesting level is greater than 8.', async () => {
             const nestedData = SampleTestData.employeePrimaryForeignKeyTreeData();
             for (let i = 1; i < 9; i++) {
@@ -663,13 +770,13 @@ describe('Excel Exporter', () => {
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
 
-            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 args.skipFormatter = true;
             });
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridData);
 
-            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 args.skipFormatter = false;
             });
             treeGrid.cdr.detectChanges();
@@ -701,39 +808,34 @@ describe('Excel Exporter', () => {
         });
     });
 
-    function getExportedData(grid, exportOptions: IgxExcelExporterOptions) {
+    const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });
             exporter.export(grid, exportOptions);
         });
         return exportData;
-    }
+    };
 
-    function setColWidthAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>((resolve) => {
+    const setColWidthAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
             options.columnWidth = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridColumnWidth(value), ' Width :' + value).then(() => resolve());
             });
         });
-    }
 
-    function setRowHeightAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, value) {
-        return new Promise<void>((resolve) => {
+    const setRowHeightAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, value) => new Promise<void>((resolve) => {
             options.rowHeight = value;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
                 wrapper.verifyDataFilesContent(actualData.simpleGridRowHeight(value), ' Height :' + value).then(() => resolve());
             });
         });
-    }
 
-    function setWorksheetNameAndExport(grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) {
-        return new Promise<void>((resolve) => {
+    const setWorksheetNameAndExport = (grid, exportOptions: IgxExcelExporterOptions, fix, worksheetName) => new Promise<void>((resolve) => {
             options.worksheetName = worksheetName;
             fix.detectChanges();
             getExportedData(grid, exportOptions).then((wrapper) => {
@@ -741,9 +843,8 @@ describe('Excel Exporter', () => {
                     .then(() => resolve());
             });
         });
-    }
 
-    function createExportOptions(fileName, columnWidth?) {
+    const createExportOptions = (fileName, columnWidth?) => {
         const opts = new IgxExcelExporterOptions(fileName);
 
         // Set column width to a specific value to workaround the issue where
@@ -751,13 +852,13 @@ describe('Excel Exporter', () => {
         opts.columnWidth = columnWidth;
 
         return opts;
-    }
+    };
 
-    async function exportAndVerify(component, exportOptions, expectedData) {
+    const exportAndVerify = async (component, exportOptions, expectedData) => {
         const wrapper = await getExportedData(component, exportOptions);
         await wrapper.verifyStructure();
         await wrapper.verifyDataFilesContent(expectedData);
-    }
+    };
 });
 
 @Component({
@@ -775,8 +876,8 @@ describe('Excel Exporter', () => {
     </igx-grid>`
 })
 
-export class GridWithEmtpyColumnsComponent {
-    public data = SampleTestData.personJobDataFull();
-
+export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+
+    public data = SampleTestData.personJobDataFull();
 }

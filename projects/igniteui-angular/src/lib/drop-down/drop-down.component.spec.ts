@@ -45,7 +45,7 @@ describe('IgxDropDown ', () => {
             { value: 'Item4', index: 4 } as IgxDropDownItemComponent,
             { value: 'Item5', index: 5 } as IgxDropDownItemComponent];
         const mockSelection: {
-            [key: string]: jasmine.Spy
+            [key: string]: jasmine.Spy;
         } = jasmine.createSpyObj('IgxSelectionAPIService', ['get', 'set', 'add_items', 'select_items']);
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         mockSelection.get.and.returnValue(new Set([]));
@@ -239,7 +239,7 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.onOpened.emit).toHaveBeenCalledTimes(1);
             }));
             it('#2798 - should allow canceling of open/close through onOpening/onClosing events', fakeAsync(() => {
-                const toggle: IgxToggleDirective = (<any>dropdown).toggleDirective;
+                const toggle: IgxToggleDirective = (dropdown as any).toggleDirective;
                 const onOpeningSpy = spyOn(dropdown.onOpening, 'emit').and.callThrough();
                 const onOpenedSpy = spyOn(dropdown.onOpened, 'emit').and.callThrough();
                 spyOn(dropdown.onClosing, 'emit').and.callThrough();
@@ -556,11 +556,15 @@ describe('IgxDropDown ', () => {
                 dropdown.items[4].isHeader = true;
 
                 spyOn(dropdown, 'selectItem').and.callThrough();
-                expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+                expect(() => {
+ dropdown.selectItem(calledSelected);
+}).toThrow();
 
                 // Set non-IgxDropDownItemBaseDirective
                 expectedSelected = 7 as any;
-                expect(() => { dropdown.selectItem(calledSelected); }).toThrow();
+                expect(() => {
+ dropdown.selectItem(calledSelected);
+}).toThrow();
 
                 subscription.unsubscribe();
             }));
@@ -820,7 +824,7 @@ describe('IgxDropDown ', () => {
     });
     describe('Virtualisation tests', () => {
         let scroll: IgxForOfDirective<any>;
-        let button, items;
+        let button; let items;
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -1000,8 +1004,8 @@ describe('IgxDropDown ', () => {
                 expect(dropdown.items.length).toEqual(9);
                 expect(disabledItems.length).toEqual(3);
                 const disabledGroup = [...items.toArray()].splice(0, 3);
-                for (let i = 0; i < disabledGroup.length; i++) {
-                    expect(disabledGroup[i].disabled).toEqual(true);
+                for (const group of disabledGroup) {
+                    expect(group.disabled).toEqual(true);
                 }
             });
         });
@@ -1288,7 +1292,7 @@ class DoubleIgxDropDownComponent implements OnInit {
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (onTabItemSelected)="toggleDropDown()" tabsType="fixed">
+    <igx-tabs (tabItemSelected)="toggleDropDown()" tabsType="fixed">
         <igx-tabs-group label="Tab111111111111111111111111">
             <ng-template igxTab>
                 <div>T1</div>
@@ -1431,12 +1435,12 @@ class VirtualizedDropDownComponent {
     @ViewChildren(IgxDropDownItemComponent)
     public dropdownItems: QueryList<IgxDropDownItemComponent>;
     public items = [];
+    public itemsMaxHeight = 400;
+    public itemHeight = 40;
     constructor() {
         this.items = Array.apply(null, { length: 2000 }).map((e, i) => ({
             name: `Item ${i + 1}`,
             id: i
         }));
     }
-    public itemsMaxHeight = 400;
-    public itemHeight = 40;
 }

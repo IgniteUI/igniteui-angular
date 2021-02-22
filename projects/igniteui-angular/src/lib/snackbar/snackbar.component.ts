@@ -96,6 +96,7 @@ export class IgxSnackbarComponent {
      * ```typescript
      * let snackbarId = this.snackbar.id;
      * ```
+     *
      * @memberof IgxSnackbarComponent
      */
     @HostBinding('attr.id')
@@ -166,13 +167,14 @@ export class IgxSnackbarComponent {
     @Input() public actionText?: string;
 
     /**
-     * An event that will be emitted when the action is executed.
+     * An event that will be emitted when the action button is clicked.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
      * ```html
-     * <igx-snackbar (onAction) = "onAction($event)"></igx-snackbar>
+     * <igx-snackbar (clicked)="clickedHandler($event)"></igx-snackbar>
      * ```
      */
-    @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
+    @Output()
+    public clicked = new EventEmitter<IgxSnackbarComponent>();
 
     /**
      * An event that will be emitted when the snackbar animation starts.
@@ -196,7 +198,7 @@ export class IgxSnackbarComponent {
      * @hidden
      * @internal
      */
-    snackbarMessage = '';
+    public snackbarMessage = '';
 
     /**
      * @hidden
@@ -214,35 +216,7 @@ export class IgxSnackbarComponent {
      */
     @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
     public show(message?: string): void {
-        clearTimeout(this.timeoutId);
-        if (message !== undefined) { this.snackbarMessage = message; }
-        setTimeout(this.timeoutId);
-        this.isVisible = true;
-
-        if (this.autoHide) {
-            this.timeoutId = setTimeout(() => {
-                this.hide();
-            }, this.displayTime);
-        }
-    }
-
-    /**
-     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
-     * ```typescript
-     * this.snackbar.open();
-     * ```
-     */
-    public open(message?: string): void {
-        clearTimeout(this.timeoutId);
-        if (message !== undefined) { this.snackbarMessage = message; }
-        setTimeout(this.timeoutId);
-        this.isVisible = true;
-
-        if (this.autoHide) {
-            this.timeoutId = setTimeout(() => {
-                this.close();
-            }, this.displayTime);
-        }
+        this.open(message);
     }
 
     /**
@@ -254,8 +228,28 @@ export class IgxSnackbarComponent {
      */
     @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
     public hide(): void {
-        this.isVisible = false;
+        this.close();
+    }
+
+    /**
+     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
+     * ```typescript
+     * this.snackbar.open();
+     * ```
+     */
+    public open(message?: string): void {
         clearTimeout(this.timeoutId);
+        if (message !== undefined) {
+            this.snackbarMessage = message;
+        }
+        setTimeout(this.timeoutId);
+        this.isVisible = true;
+
+        if (this.autoHide) {
+            this.timeoutId = setTimeout(() => {
+                this.close();
+            }, this.displayTime);
+        }
     }
 
     /**
@@ -272,7 +266,7 @@ export class IgxSnackbarComponent {
      * @hidden
      */
     public triggerAction(): void {
-        this.onAction.emit(this);
+        this.clicked.emit(this);
     }
     /**
      * @hidden

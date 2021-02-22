@@ -30,7 +30,8 @@ export type GridKeydownTargetType =
 export const GridSelectionMode = mkenum({
     none: 'none',
     single: 'single',
-    multiple: 'multiple'
+    multiple: 'multiple',
+    multipleCascade: 'multipleCascade'
 });
 export type GridSelectionMode = (typeof GridSelectionMode)[keyof typeof GridSelectionMode];
 
@@ -51,6 +52,6 @@ export enum RowPinningPosition {
 }
 
 export enum GridPagingMode {
-    local,
-    remote
+    Local,
+    Remote
 }

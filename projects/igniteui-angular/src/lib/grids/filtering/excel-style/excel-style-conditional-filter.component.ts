@@ -1,8 +1,4 @@
-import {
-    Component,
-    OnDestroy,
-    ViewChild
-} from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
 import { KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
@@ -30,6 +26,18 @@ import { takeUntil } from 'rxjs/operators';
     templateUrl: './excel-style-conditional-filter.component.html'
 })
 export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
+    public customDialog: IgxExcelStyleCustomDialogComponent;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('subMenu', { read: IgxDropDownComponent })
+    public subMenu: IgxDropDownComponent;
+
     private shouldOpenSubMenu = true;
     private destroy$ = new Subject<boolean>();
 
@@ -44,18 +52,6 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('customDialog', { read: IgxExcelStyleCustomDialogComponent })
-    public customDialog: IgxExcelStyleCustomDialogComponent;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('subMenu', { read: IgxDropDownComponent })
-    public subMenu: IgxDropDownComponent;
-
     constructor(public esf: IgxGridExcelStyleFilteringComponent) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
@@ -69,7 +65,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         }
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -164,14 +160,17 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get subMenuText() {
+    public get subMenuText() {
         switch (this.esf.column.dataType) {
             case DataType.Boolean:
                 return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
             case DataType.Number:
+            case DataType.Percent:
                 return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
             case DataType.Date:
                 return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
+            case DataType.Currency:
+                return this.esf.grid.resourceStrings.igx_grid_excel_currency_filter;
             default:
                 return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;
         }
@@ -180,7 +179,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get conditions() {
+    public get conditions() {
         return this.esf.column.filters.conditionList();
     }
 }

@@ -9,22 +9,25 @@ import {
 import { foods } from './foods';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'drop-down-sample',
     templateUrl: './drop-down.sample.html',
     styleUrls: ['drop-down.sample.scss']
 })
 export class DropDownSampleComponent implements OnInit {
-    @ViewChild(IgxDropDownComponent, { static: true }) public igxDropDown: IgxDropDownComponent;
-    @ViewChild('dropdown3', { static: true }) public igxDropDownSelection: IgxDropDownComponent;
-    @ViewChild('button', { static: true }) public button: ElementRef;
+    @ViewChild(IgxDropDownComponent, { static: true })
+    private igxDropDown: IgxDropDownComponent;
+    @ViewChild('dropdown3', { static: true })
+    private igxDropDownSelection: IgxDropDownComponent;
+    @ViewChild('button', { static: true })
+    private button: ElementRef;
+    @ViewChild(IgxOverlayOutletDirective, { static: true })
+    private igxOverlayOutlet: IgxOverlayOutletDirective;
 
-    @ViewChild(IgxOverlayOutletDirective, { static: true }) public igxOverlayOutlet: IgxOverlayOutletDirective;
-
-    items: any[] = [];
+    public items: any[] = [];
     public foods = foods;
 
-    ngOnInit() {
+    public ngOnInit() {
         this.igxDropDown.height = '400px';
         this.igxDropDown.width = '180px';
 
@@ -115,9 +118,6 @@ export class DropDownSampleComponent implements OnInit {
         this.items[3]['selected'] = true;
     }
 
-    constructor() {
-    }
-
     public toggleDropDown() {
         const overlaySettings: OverlaySettings = {
             positionStrategy: new ConnectedPositioningStrategy(),
@@ -152,25 +152,25 @@ export class DropDownSampleComponent implements OnInit {
         this.igxDropDownSelection.clearSelection();
     }
 
-    onSelection(event) {
+    public onSelection(event) {
         console.log(event);
         const old = event.oldSelection;
         event.oldSelection = event.newSelection;
         event.newSelection = old;
     }
 
-    onSelectionLogger(event) {
+    public onSelectionLogger(event) {
         // event.cancel = true;
         console.log(event);
     }
 
-    onSelectionMenu(eventArgs) {
+    public onSelectionMenu(eventArgs) {
         eventArgs.cancel = true;
 
         console.log(`new selection ${eventArgs.newSelection.element.nativeElement.textContent}`);
         console.log(`old selection ${eventArgs.oldSelection ? eventArgs.oldSelection.element.nativeElement.textContent : ''}`);
     }
 
-    onOpening(event) {
+    public onOpening() {
     }
 }

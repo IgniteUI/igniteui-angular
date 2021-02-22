@@ -1,26 +1,19 @@
-import { takeUntil } from 'rxjs/operators';
 import { IgxGridActionButtonComponent } from './grid-action-button.component';
-import { Directive, Inject, Input, AfterViewInit, QueryList, ViewChildren,
-     OnInit, IterableDiffers, IterableChangeRecord, OnDestroy } from '@angular/core';
+import { Directive, Input, AfterViewInit, QueryList, ViewChildren, IterableDiffers } from '@angular/core';
 import { IgxActionStripComponent } from '../action-strip.component';
 import { IgxRowDirective } from '../../grids/row.directive';
 import { IgxIconService } from '../../icon/icon.service';
-import { Subject } from 'rxjs';
 
 @Directive({
     selector: '[igxGridActionsBase]'
 })
 export class IgxGridActionsBaseDirective implements AfterViewInit {
-    constructor(protected iconService: IgxIconService,
-        protected differs: IterableDiffers) { }
-
-    public strip: IgxActionStripComponent;
-
     @ViewChildren(IgxGridActionButtonComponent)
     public buttons: QueryList<IgxGridActionButtonComponent>;
 
     /**
      * Gets/Sets if the action buttons will be rendered as menu items. When in menu, items will be rendered with text label.
+     *
      * @example
      * ```html
      *  <igx-grid-pinning-actions [asMenuItems]='true'></igx-grid-pinning-actions>
@@ -28,39 +21,46 @@ export class IgxGridActionsBaseDirective implements AfterViewInit {
      * ```
      */
     @Input()
-    asMenuItems = false;
+    public asMenuItems = false;
+
+    public strip: IgxActionStripComponent;
 
     /**
      * @hidden
      * @internal
      */
-    get grid() {
+    public get grid() {
         return this.strip.context.grid;
     }
 
     /**
+     * Getter to be used in template
+     *
      * @hidden
      * @internal
      */
-    ngAfterViewInit() {
+    public get isRowContext(): boolean {
+        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
+    }
+
+    constructor(protected iconService: IgxIconService,
+        protected differs: IterableDiffers) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngAfterViewInit() {
         if (this.asMenuItems) {
-                this.buttons.changes.subscribe((change: QueryList<IgxGridActionButtonComponent>) => {
-                        this.strip.cdr.detectChanges();
-                });
+            this.buttons.changes.subscribe(() => {
+                this.strip.cdr.detectChanges();
+            });
         }
     }
 
     /**
-     * Getter to be used in template
-     * @hidden
-     * @internal
-     */
-    get isRowContext(): boolean {
-        return this.isRow(this.strip.context) && !this.strip.context.inEditMode;
-    }
-
-    /**
      * Check if the param is a row from a grid
+     *
      * @hidden
      * @internal
      * @param context

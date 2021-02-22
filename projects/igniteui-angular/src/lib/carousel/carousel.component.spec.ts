@@ -13,8 +13,6 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
 
-declare var Simulator: any;
-
 describe('Carousel', () => {
     configureTestSuite();
     let fixture;
@@ -466,6 +464,41 @@ describe('Carousel', () => {
         });
 
 
+        it('should apply correctly aria attributes to carousel component', () => {
+            const expectedRole = 'region';
+            const expectedRoleDescription = 'carousel';
+            const tabIndex = carousel.nativeElement.getAttribute('tabindex');
+
+            expect(tabIndex).toBeNull();
+            expect(carousel.nativeElement.getAttribute('role')).toEqual(expectedRole);
+            expect(carousel.nativeElement.getAttribute('aria-roledescription')).toEqual(expectedRoleDescription);
+
+            const indicators = carousel.nativeElement.querySelector(HelperTestFunctions.INDICATORS_BOTTOM_CLASS);
+
+            expect(indicators).toBeDefined();
+            expect(indicators.getAttribute('role')).toEqual('tablist');
+
+            const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
+            expect(tabs.length).toEqual(4);
+        });
+
+        it('should apply correctly aria attributes to slide components', () => {
+            carousel.loop = false;
+            carousel.select(carousel.get(1));
+            fixture.detectChanges();
+
+            const expectedRole = 'tabpanel';
+            const slide = carousel.slides.find(s => s.active);
+            const tabIndex = slide.nativeElement.getAttribute('tabindex');
+
+            expect(+tabIndex).toBe(0);
+            expect(slide.nativeElement.getAttribute('role')).toEqual(expectedRole);
+
+            const tabs = carousel.nativeElement.querySelectorAll('[role="tab"]');
+            const slides = carousel.nativeElement.querySelectorAll('[role="tabpanel"]');
+
+            expect(slides.length).toEqual(tabs.length);
+        });
     });
 
     describe('Templates Tests: ', () => {
@@ -885,11 +918,11 @@ class HelperTestFunctions {
         const deltaX = activeSlide.offsetWidth * deltaXOffset;
         const event = deltaXOffset < 0 ? 'panleft' : 'panright';
         const panOptions = {
-            deltaX: deltaX,
+            deltaX,
             deltaY: 0,
             duration: 100,
-            velocity: velocity,
-            preventDefault: <any>( ( e: any ) => {  })
+            velocity,
+            preventDefault: ( () => {  })
         };
 
         carouselElement.triggerEventHandler(event, panOptions);
@@ -1015,7 +1048,7 @@ class CarouselDynamicSlidesComponent {
         this.addNewSlide();
     }
 
-    addNewSlide() {
+    public addNewSlide() {
         this.slides.push(
             { text: 'Slide 1', active: false },
             { text: 'Slide 2', active: false },

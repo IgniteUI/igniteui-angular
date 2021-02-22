@@ -21,7 +21,7 @@ let NEXT_ID = 0;
  * Use it to wrap images and videos.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-media'
 })
 export class IgxCardMediaDirective {
@@ -140,7 +140,7 @@ export class IgxCardHeaderSubtitleDirective {
  * IgxCardContent is container for the card content.
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-content'
 })
 export class IgxCardContentDirective {
@@ -153,7 +153,7 @@ export class IgxCardContentDirective {
  * IgxCardFooter is container for the card footer
  */
 @Directive({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-footer'
 })
 export class IgxCardFooterDirective {
@@ -259,7 +259,7 @@ export class IgxCardComponent {
      * A getter which will return true if the card type is `outlined`.
      */
     @HostBinding('class.igx-card--outlined')
-    get isOutlinedCard() {
+    public get isOutlinedCard() {
         return this.type === IgxCardType.OUTLINED;
     }
 
@@ -288,15 +288,11 @@ export type IgxCardActionsLayout = (typeof IgxCardActionsLayout)[keyof typeof Ig
  * IgxCardActions is container for the card actions.
  */
 @Component({
-    // tslint:disable-next-line:directive-selector
+    // eslint-disable-next-line @angular-eslint/directive-selector
     selector: 'igx-card-actions',
     templateUrl: 'card-actions.component.html'
 })
 export class IgxCardActionsComponent implements OnInit, OnChanges {
-    private isVerticalSet = false;
-
-    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
-
     /**
      * An @Input property that sets the layout style of the actions.
      * By default icons and icon buttons, as well as regular buttons
@@ -327,7 +323,7 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
      * set to `justify`.
      */
     @HostBinding('class.igx-card-actions--justify')
-    get isJustifyLayout() {
+    public get isJustifyLayout() {
         return this.layout === IgxCardActionsLayout.JUSTIFY;
     }
 
@@ -348,7 +344,15 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
     @Input()
     public reverse = false;
 
-    ngOnChanges(changes: SimpleChanges) {
+    private isVerticalSet = false;
+
+    constructor(@Optional() @Inject(IgxCardComponent) public card: IgxCardComponent) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
         for (const prop in changes) {
             if (prop === 'vertical') {
                 this.isVerticalSet = true;
@@ -356,7 +360,11 @@ export class IgxCardActionsComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnInit() {
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnInit() {
         this.vertical = !this.isVerticalSet && this.card.horizontal;
     }
 }

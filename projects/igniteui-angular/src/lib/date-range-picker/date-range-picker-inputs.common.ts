@@ -47,14 +47,14 @@ export class DateRangePickerFormatPipe implements PipeTransform {
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxDateRangeInputsBaseComponent }]
 })
 export class IgxDateRangeInputsBaseComponent extends IgxInputGroupComponent {
-    @ContentChild(NgControl)
-    protected ngControl: NgControl;
-
     @ContentChild(IgxDateTimeEditorDirective)
     public dateTimeEditor: IgxDateTimeEditorDirective;
 
     @ContentChild(IgxInputDirective)
     public inputDirective: IgxInputDirective;
+
+    @ContentChild(NgControl)
+    protected ngControl: NgControl;
 
     /** @hidden @internal */
     public get nativeElement() {

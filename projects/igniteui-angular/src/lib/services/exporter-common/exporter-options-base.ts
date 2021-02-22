@@ -1,12 +1,11 @@
 export abstract class IgxExporterOptionsBase {
-    private _fileName: string;
-
     /**
      * Specifies whether hidden columns should be exported.
      * ```typescript
      * let ignoreColumnsVisibility = this.exportOptions.ignoreColumnsVisibility;
      * this.exportOptions.ignoreColumnsVisibility = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsVisibility = false;
@@ -17,6 +16,7 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreFiltering = this.exportOptions.ignoreFiltering;
      * this.exportOptions.ignoreFiltering = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreFiltering = false;
@@ -27,19 +27,36 @@ export abstract class IgxExporterOptionsBase {
      * let ignoreColumnsOrder = this.exportOptions.ignoreColumnsOrder;
      * this.exportOptions.ignoreColumnsOrder = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreColumnsOrder = false;
 
     /**
      * Specifies whether the exported data should be sorted as in the provided IgxGrid.
+     * When you export grouped data, setting ignoreSorting to true will cause
+     * the grouping to fail because it relies on the sorting of the records.
      * ```typescript
      * let ignoreSorting = this.exportOptions.ignoreSorting;
      * this.exportOptions.ignoreSorting = true;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
     public ignoreSorting = false;
+
+    /**
+     * Specifies whether the exported data should be grouped as in the provided IgxGrid.
+     * ```typescript
+     * let ignoreGrouping = this.exportOptions.ignoreGrouping;
+     * this.exportOptions.ignoreGrouping = true;
+     * ```
+     *
+     * @memberof IgxExporterOptionsBase
+     */
+    public ignoreGrouping = false;
+
+    private _fileName: string;
 
     constructor(fileName: string, protected _fileExtension: string) {
         this.setFileName(fileName);
@@ -54,9 +71,10 @@ export abstract class IgxExporterOptionsBase {
      * ```typescript
      * let fileName = this.exportOptions.fileName;
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
-    get fileName() {
+    public get fileName() {
         return this._fileName;
     }
 
@@ -65,9 +83,10 @@ export abstract class IgxExporterOptionsBase {
      * ```typescript
      * this.exportOptions.fileName = 'exportedData01';
      * ```
+     *
      * @memberof IgxExporterOptionsBase
      */
-    set fileName(value) {
+    public set fileName(value) {
         this.setFileName(value);
     }
 

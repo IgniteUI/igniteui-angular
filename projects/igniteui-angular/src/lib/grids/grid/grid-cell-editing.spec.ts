@@ -340,6 +340,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it('edit mode - exit edit mode and submit when pin/unpin unpin column', fakeAsync(/** height/width setter rAF */() => {
             let cell = grid.getCellByColumn(0, 'firstName');
+            const cacheValue = cell.value;
             const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -355,7 +356,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.crudService.cell).toBeNull();
             expect(grid.pinnedColumns.length).toBe(1);
             cell = grid.getCellByColumn(0, 'firstName');
-            expect(cell.value).toBe('Gary Martin');
+            expect(cell.value).toBe(cacheValue);
             cell = grid.getCellByColumn(1, 'firstName');
             const cellValue = cell.value;
             cell.setEditMode(true);
@@ -422,15 +423,13 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it('When cell in editMode and try to navigate with `ArrowUp` - focus should remain over the input.', (async () => {
             const verticalScroll = grid.verticalScrollContainer.getScroll();
-            let expectedScroll;
-            let cellElem;
             GridFunctions.scrollTop(grid, 1000);
             await wait(500);
             fixture.detectChanges();
 
             const testCells = grid.getColumnByName('firstName').cells;
             const cell = testCells[testCells.length - 1];
-            cellElem = cell.nativeElement;
+            const cellElem = cell.nativeElement;
 
             cellElem.dispatchEvent(new Event('focus'));
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
@@ -440,7 +439,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cell.editMode).toBeTruthy();
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-            expectedScroll = verticalScroll.scrollTop;
+            const expectedScroll = verticalScroll.scrollTop;
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', inputElem, true);
             fixture.detectChanges();
@@ -478,16 +477,14 @@ describe('IgxGrid - Cell Editing #grid', () => {
         }));
 
         it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
-            let cellElem;
             const virtRow = grid.getRowByIndex(0).virtDirRow;
-            let virtRowStyle;
 
             GridFunctions.scrollLeft(grid, 800);
             await wait(100);
             fixture.detectChanges();
 
             const testCells = fixture.debugElement.query(By.css('igx-grid-row')).queryAll(By.css('igx-grid-cell'));
-            cellElem = testCells[testCells.length - 1].nativeElement;
+            const cellElem = testCells[testCells.length - 1].nativeElement;
 
             cellElem.dispatchEvent(new Event('focus'));
             cellElem.dispatchEvent(new MouseEvent('dblclick'));
@@ -496,7 +493,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let inputElem: HTMLInputElement = document.activeElement as HTMLInputElement;
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(true);
-            virtRowStyle = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
+            const virtRowStyle = parseInt(virtRow.dc.instance._viewContainer.element.nativeElement.style.left, 10);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', inputElem, fixture);
             await wait(DEBOUNCETIME);
             fixture.detectChanges();
@@ -769,7 +766,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 e.cancel = true;
             });
             const cell = grid.getCellByColumn(0, 'fullName');
-            let cellArgs: IGridEditEventArgs;
             const initialRowData = {...cell.rowData};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -787,12 +783,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
 
-            cellArgs = {
+            const cellArgs: IGridEditEventArgs = {
                 rowID: cell.row.rowID,
                 cellID: cell.cellID,
                 rowData: initialRowData,
                 oldValue: cellValue,
-                newValue: newValue,
+                newValue,
                 cancel: true,
                 column: cell.column,
                 owner: grid,
@@ -919,7 +915,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cell = grid.getCellByColumn(0, 'Name');
             const initialValue = cell.value;
             const newValue = 'New Name';
-            let cellArgs: IGridEditDoneEventArgs;
             const updatedRowData = Object.assign({}, cell.rowData, { Name: newValue });
 
             spyOn(grid.cellEditDone, 'emit').and.callThrough();
@@ -928,12 +923,12 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(cell.value).toBe(newValue);
 
-            cellArgs = {
+            const cellArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 oldValue: initialValue,
-                newValue: newValue,
+                newValue,
                 column: cell.column,
                 owner: grid,
                 event: undefined

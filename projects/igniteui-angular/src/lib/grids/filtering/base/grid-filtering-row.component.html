@@ -4,7 +4,7 @@
         [value]="condition"
         [selected]="isConditionSelected(condition)">
         <div class="igx-grid__filtering-dropdown-items">
-            <igx-icon fontSet="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
+            <igx-icon family="imx-icons" [name]="getCondition(condition).iconName"></igx-icon>
             <span class="igx-grid__filtering-dropdown-text">{{ translateCondition(condition) }}</span>
         </div>
     </igx-drop-down-item>
@@ -17,7 +17,7 @@
                     (keydown)="onPrefixKeyDown($event)"
                     tabindex="0"
                     [igxDropDownItemNavigation]="inputGroupConditions">
-            <igx-icon fontSet="imx-icons" [name]="getIconName()"></igx-icon>
+            <igx-icon family="imx-icons" [name]="getIconName()"></igx-icon>
         </igx-prefix>
         <input
             #input
@@ -33,7 +33,7 @@
             (compositionstart)="onCompositionStart()"
             (compositionend)="onCompositionEnd()"
             (keydown)="onInputKeyDown($event)"
-            (keyup)="onInputKeyUp($event)"/>
+            (keyup)="onInputKeyUp()"/>
             <igx-suffix *ngIf="value || value === 0" >
                 <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
                 <igx-icon (keydown)="onClearKeyDown($event)" (click)="onClearClick()" tabindex="0">clear</igx-icon>
@@ -57,12 +57,12 @@
                             (click)="inputGroupPrefixClick($event)"
                             (keydown)="onPrefixKeyDown($event)"
                             [igxDropDownItemNavigation]="inputGroupConditions">
-                    <igx-icon fontSet="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+                    <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
                 </igx-prefix>
                 <input #input
                        igxInput
                        tabindex="0"
-                       (click)="expression.condition.isUnary ? noop() : openDialog(inputGroup.element.nativeElement)"
+                       (click)="expression.condition.isUnary ? null : openDialog(inputGroup.element.nativeElement)"
                        [placeholder]="placeholder"
                        autocomplete="off"
                        [value]="
@@ -95,14 +95,14 @@
                     (pointerdown)="onChipPointerdown($event, chip)"
                     (click)="onChipClick($event, item)"
                     (keydown)="onChipKeyDown($event, item)"
-                    (onRemove)="onChipRemoved($event, item)"
+                    (remove)="onChipRemoved($event, item)"
                     [selectable]="false"
                     [selected]="item.isSelected"
                     [displayDensity]="displayDensity"
                     [removable]="true">
                     <igx-icon
                         igxPrefix
-                        fontSet="imx-icons"
+                        family="imx-icons"
                         [name]="item.expression.condition.iconName">
                     </igx-icon>
                     <span>{{filteringService.getChipLabel(item.expression)}}</span>
@@ -130,10 +130,10 @@
 <div #buttonsContainer [ngClass]="isNarrowWidth ? 'igx-grid__filtering-row-editing-buttons--small' : 'igx-grid__filtering-row-editing-buttons'">
     <button [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'" igxRipple (click)="clearFiltering()" [disabled]="disabled" [tabindex]="disabled">
         <igx-icon>refresh</igx-icon>
-        {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}
+        <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_reset}}</span>
     </button>
     <button #closeButton [displayDensity]="column.grid.displayDensity" [igxButton]="isNarrowWidth ? 'icon' : 'flat'"  igxRipple (click)="close()">
         <igx-icon>close</igx-icon>
-        {{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}
+        <span>{{isNarrowWidth ? '' : filteringService.grid.resourceStrings.igx_grid_filter_row_close}}</span>
     </button>
 </div>

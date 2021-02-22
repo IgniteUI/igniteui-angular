@@ -8,12 +8,12 @@ import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
 import { GridBaseAPIService } from '../api.service';
-import { IColumnResizeEventArgs } from '../common/events';
+import { IColumnResizeEventArgs, IFilteringEventArgs } from '../common/events';
 import { GridType } from '../common/grid.interface';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { fadeIn, fadeOut } from '../../animations/main';
+import { fadeIn } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
@@ -36,6 +36,12 @@ export class ExpressionUI {
  */
 @Injectable()
 export class IgxFilteringService implements OnDestroy {
+    public isFilterRowVisible = false;
+    public filteredColumn: IgxColumnComponent = null;
+    public selectedExpression: IFilteringExpression = null;
+    public columnToMoreIconHidden = new Map<string, boolean>();
+    public activeFilterCell = 0;
+    public grid: IgxGridBaseDirective;
 
     private columnsWithComplexFilter = new Set<string>();
     private areEventsSubscribed = false;
@@ -49,17 +55,10 @@ export class IgxFilteringService implements OnDestroy {
     private column;
     private lastActiveNode;
 
-    public isFilterRowVisible = false;
-    public filteredColumn: IgxColumnComponent = null;
-    public selectedExpression: IFilteringExpression = null;
-    public columnToMoreIconHidden = new Map<string, boolean>();
-    public activeFilterCell = 0;
-    grid: IgxGridBaseDirective;
-
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
@@ -200,8 +199,30 @@ export class IgxFilteringService implements OnDestroy {
      */
     public filter(field: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
+
+        const grid = this.grid;
+
         const col = this.gridAPI.get_column_by_name(field);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
+
+        const filteringTree = grid.filteringExpressionsTree;
+        const columnFilteringExpressionsTree = grid.filteringExpressionsTree.find(field) as IFilteringExpressionsTree;
+        conditionOrExpressionTree = conditionOrExpressionTree ?? columnFilteringExpressionsTree;
+        const fieldFilterIndex = filteringTree.findIndex(field);
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
+        }
+        const newFilteringTree: FilteringExpressionsTree =
+            this.gridAPI.prepare_filtering_expression(filteringTree, field, value, conditionOrExpressionTree,
+            filteringIgnoreCase, fieldFilterIndex, true);
+
+        const eventArgs: IFilteringEventArgs = { owner: grid,
+            filteringExpressions: newFilteringTree.find(field) as FilteringExpressionsTree, cancel: false };
+        this.grid.filtering.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         if (conditionOrExpressionTree) {
             this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
@@ -210,15 +231,15 @@ export class IgxFilteringService implements OnDestroy {
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase );
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
+                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase );
             }
         }
-        const eventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
+        const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(eventArgs));
+        requestAnimationFrame(() => this.grid.onFilteringDone.emit(doneEventArgs));
     }
 
     /**
@@ -232,8 +253,18 @@ export class IgxFilteringService implements OnDestroy {
             }
         }
 
-        this.isFiltering = true;
+        const onFilteringEventArgs: IFilteringEventArgs = {
+            owner: this.grid,
+            filteringExpressions: null,
+            cancel: false };
 
+        this.grid.filtering.emit(onFilteringEventArgs);
+
+        if (onFilteringEventArgs.cancel) {
+            return;
+        }
+
+        this.isFiltering = true;
         this.gridAPI.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
@@ -256,7 +287,30 @@ export class IgxFilteringService implements OnDestroy {
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
-        this.gridAPI.filter_global(value, condition, ignoreCase);
+        if (!condition) {
+            return;
+        }
+
+        const grid = this.grid;
+        const filteringTree = grid.filteringExpressionsTree;
+        const newFilteringTree = new FilteringExpressionsTree(filteringTree.operator, filteringTree.fieldName);
+
+        for (const column of grid.columns) {
+            this.gridAPI.prepare_filtering_expression(newFilteringTree, column.field, value, condition,
+                ignoreCase || column.filteringIgnoreCase);
+        }
+
+        const eventArgs: IFilteringEventArgs = { owner: grid, filteringExpressions: newFilteringTree, cancel: false };
+        grid.filtering.emit(eventArgs);
+        if (eventArgs.cancel) {
+            return;
+        }
+
+        grid.endEdit(false);
+        if (grid.paging) {
+            grid.page = 0;
+        }
+        grid.filteringExpressionsTree = newFilteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
@@ -342,11 +396,8 @@ export class IgxFilteringService implements OnDestroy {
         const expressionsList = expressionUIList ? expressionUIList : this.getExpressions(columnId);
         const expressionsTree = new FilteringExpressionsTree(FilteringLogic.Or, columnId);
         let currAndBranch: FilteringExpressionsTree;
-        let currExpressionUI: ExpressionUI;
 
-        for (let i = 0; i < expressionsList.length; i++) {
-            currExpressionUI = expressionsList[i];
-
+        for (const currExpressionUI of expressionsList) {
             if (!currExpressionUI.expression.condition.isUnary && currExpressionUI.expression.searchVal === null) {
                 if (currExpressionUI.afterOperator === FilteringLogic.And && !currAndBranch) {
                     currAndBranch = new FilteringExpressionsTree(FilteringLogic.And, columnId);
@@ -435,6 +486,35 @@ export class IgxFilteringService implements OnDestroy {
         return this.grid.filteredData;
     }
 
+    public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
+        operator: FilteringLogic,
+        expressionsUIs: ExpressionUI[]): void {
+        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
+
+        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
+        if (expressionsUIs.length) {
+            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
+        }
+    }
+
+    public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
+        if (FilteringExpressionsTree.empty(expressionTree)) {
+            return true;
+        }
+
+        for (const expr of expressionTree.filteringOperands) {
+            if ((expr instanceof FilteringExpressionsTree)) {
+                const exprTree = expr as FilteringExpressionsTree;
+                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
         if (!expressions) {
             return false;
@@ -450,8 +530,8 @@ export class IgxFilteringService implements OnDestroy {
             }
 
             let isComplex = false;
-            for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                isComplex = isComplex || this.isFilteringTreeComplex(expressionsTree.filteringOperands[i]);
+            for (const operand of expressionsTree.filteringOperands) {
+                isComplex = isComplex || this.isFilteringTreeComplex(operand);
             }
 
             return isComplex;
@@ -477,17 +557,6 @@ export class IgxFilteringService implements OnDestroy {
         return count;
     }
 
-    public generateExpressionsList(expressions: IFilteringExpressionsTree | IFilteringExpression,
-        operator: FilteringLogic,
-        expressionsUIs: ExpressionUI[]): void {
-        this.generateExpressionsListRecursive(expressions, operator, expressionsUIs);
-
-        // The beforeOperator of the first expression and the afterOperator of the last expression should be null
-        if (expressionsUIs.length) {
-            expressionsUIs[expressionsUIs.length - 1].afterOperator = null;
-        }
-    }
-
     private generateExpressionsListRecursive(expressions: IFilteringExpressionsTree | IFilteringExpression,
         operator: FilteringLogic,
         expressionsUIs: ExpressionUI[]): void {
@@ -497,8 +566,8 @@ export class IgxFilteringService implements OnDestroy {
 
         if (expressions instanceof FilteringExpressionsTree) {
             const expressionsTree = expressions as FilteringExpressionsTree;
-            for (let i = 0; i < expressionsTree.filteringOperands.length; i++) {
-                this.generateExpressionsListRecursive(expressionsTree.filteringOperands[i], expressionsTree.operator, expressionsUIs);
+            for (const operand of expressionsTree.filteringOperands) {
+                this.generateExpressionsListRecursive(operand, expressionsTree.operator, expressionsUIs);
             }
             if (expressionsUIs.length) {
                 expressionsUIs[expressionsUIs.length - 1].afterOperator = operator;
@@ -515,27 +584,5 @@ export class IgxFilteringService implements OnDestroy {
 
             expressionsUIs.push(exprUI);
         }
-    }
-
-    public isFilteringExpressionsTreeEmpty(expressionTree: IFilteringExpressionsTree): boolean {
-        if (FilteringExpressionsTree.empty(expressionTree)) {
-            return true;
-        }
-
-        let expr: any;
-
-        for (let i = 0; i < expressionTree.filteringOperands.length; i++) {
-            expr = expressionTree.filteringOperands[i];
-
-            if ((expr instanceof FilteringExpressionsTree)) {
-                const exprTree = expr as FilteringExpressionsTree;
-                if (exprTree.filteringOperands && exprTree.filteringOperands.length) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-        return true;
     }
 }

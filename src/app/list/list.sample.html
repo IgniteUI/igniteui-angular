@@ -1,6 +1,6 @@
 <div class="sample-wrapper list-sample-component">
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <section class="sample-content">
@@ -197,7 +197,7 @@
             </igx-input-group>
 
             <div class="list-sample">
-                <igx-list [displayDensity]="density" #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler($event)">
+                <igx-list [displayDensity]="density" #declarativeList [igxFilter]="fo2" (filtering)="filteringHandler($event)" (filtered)="filteredHandler()">
                     <igx-list-item [isHeader]="true">Mildly Sweet</igx-list-item>
                     <igx-list-item><span igxListLine>Red Delicious</span></igx-list-item>
                     <igx-list-item><span igxListLine>Ambrosia</span></igx-list-item>

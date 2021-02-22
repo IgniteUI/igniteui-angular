@@ -24,7 +24,9 @@ export const DataType = mkenum({
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
-    Date: 'date'
+    Date: 'date',
+    Currency: 'currency',
+    Percent: 'percent'
 });
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
@@ -132,6 +134,7 @@ export class DataUtil {
 
     /**
      * Merges all changes from provided transactions into provided data collection
+     *
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param primaryKey Primary key of the collection, if any
@@ -167,6 +170,7 @@ export class DataUtil {
 
     /**
      * Merges all changes from provided transactions into provided hierarchical data collection
+     *
      * @param data Collection to merge
      * @param transactions Transactions to merge into data
      * @param childDataKey Data key of child collections
@@ -216,7 +220,7 @@ export class DataUtil {
     }
 
     public static parseValue(dataType: DataType, value: any): any {
-        if (dataType === DataType.Number) {
+        if (dataType === DataType.Number || dataType === DataType.Currency || dataType === DataType.Percent) {
             value = parseFloat(value);
         }
 

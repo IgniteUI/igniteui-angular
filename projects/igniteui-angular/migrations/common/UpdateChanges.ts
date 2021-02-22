@@ -9,12 +9,12 @@ import {
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, findMatches,
-    replaceMatch, createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME
+    getLanguageService, getRenamePositions, findMatches, replaceMatch,
+    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME
 } from './tsUtils';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp,
-    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage
+    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
 
@@ -28,9 +28,16 @@ export interface BoundPropertyObject {
     bindingType: InputPropertyType;
 }
 
-// tslint:disable:arrow-parens
+/* eslint-disable arrow-parens */
 export class UpdateChanges {
-    protected projectService: tss.server.ProjectService;
+    protected _projectService: tss.server.ProjectService;
+    public get projectService(): tss.server.ProjectService {
+        if (!this._projectService) {
+            this._projectService = createProjectService(this.serverHost);
+        }
+        return this._projectService;
+    }
+
     protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
@@ -41,7 +48,7 @@ export class UpdateChanges {
     protected themePropsChanges: ThemePropertyChanges;
     protected importsChanges: ImportsChanges;
     protected membersChanges: MemberChanges;
-    protected conditionFunctions: Map<string, Function> = new Map<string, Function>();
+    protected conditionFunctions: Map<string, (...args) => any> = new Map<string, (...args) => any>();
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
@@ -104,6 +111,7 @@ export class UpdateChanges {
 
     /**
      * Create a new base schematic to apply changes
+     *
      * @param rootPath Root folder for the schematic to read configs, pass __dirname
      */
     constructor(private rootPath: string, private host: Tree, private context?: SchematicContext) {
@@ -118,7 +126,6 @@ export class UpdateChanges {
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
         this.serverHost = new ServerHost(this.host);
-        this.projectService = createProjectService(this.serverHost);
     }
 
     /** Apply configured changes to the Host Tree */
@@ -127,7 +134,13 @@ export class UpdateChanges {
             && !canResolvePackage(NG_LANG_SERVICE_PACKAGE_NAME);
         if (shouldInstallPkg) {
             this.context.logger.info(`Installing temporary migration dependencies via ${this.packageManager}.`);
-            tryInstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
+            // try and get an appropriate version of the package to install
+            let targetVersion = getPackageVersion(NG_CORE_PACKAGE_NAME) || 'latest';
+            if (targetVersion.startsWith('11')) {
+                // TODO: Temporary restrict 11 LS version, till update for new module loading
+                targetVersion = '11.0.0';
+            }
+            tryInstallPackage(this.context, this.packageManager, `${NG_LANG_SERVICE_PACKAGE_NAME}@${targetVersion}`);
         }
 
         this.updateTemplateFiles();
@@ -223,7 +236,7 @@ export class UpdateChanges {
         }
     }
 
-    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.output) {
+    protected updateBindings(entryPath: string, bindChanges: BindingChanges, type = BindingType.Output) {
         let fileContent = this.host.read(entryPath).toString();
         let overwrite = false;
 
@@ -237,7 +250,7 @@ export class UpdateChanges {
             let groups = 1;
             let searchPattern;
 
-            if (type === BindingType.output) {
+            if (type === BindingType.Output) {
                 base = String.raw`\(${change.name}\)=(["'])(.*?)\1`;
                 replace = `(${change.replaceWith})=$1$2$1`;
             } else {
@@ -375,7 +388,7 @@ export class UpdateChanges {
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
         const langServ = this.getDefaultLanguageService(entryPath);
         let content = this.host.read(entryPath).toString();
-        const changes = new Set<{ change, position }>();
+        const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
             const matches = findMatches(content, change);
             for (const matchPosition of matches) {
@@ -489,7 +502,7 @@ export class UpdateChanges {
         if (this.inputChanges && this.inputChanges.changes.length) {
             // name change of input
             for (const entryPath of this.templateFiles) {
-                this.updateBindings(entryPath, this.inputChanges, BindingType.input);
+                this.updateBindings(entryPath, this.inputChanges, BindingType.Input);
             }
         }
     }
@@ -528,6 +541,6 @@ export class UpdateChanges {
 }
 
 export enum BindingType {
-    output,
-    input
+    Output,
+    Input
 }

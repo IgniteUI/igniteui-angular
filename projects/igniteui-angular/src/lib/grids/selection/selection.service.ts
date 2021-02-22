@@ -75,11 +75,11 @@ export class IgxRow {
 
     createDoneEditEventArgs(cachedRowData: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
+            this.grid.transactions.getAggregatedValue(this.id, true) : this.grid.gridAPI.getRowData(this.id);
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id,
-            rowData: rowData,
+            rowData,
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
@@ -131,14 +131,14 @@ export class IgxCell {
 
     createDoneEditEventArgs(value: any, event?: Event): IGridEditDoneEventArgs {
         const updatedData = this.grid.transactions.enabled ?
-        this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
+            this.grid.transactions.getAggregatedValue(this.id.rowID, true) : this.rowData;
         const rowData = updatedData === null ? this.grid.gridAPI.getRowData(this.id.rowID) : updatedData;
         const args: IGridEditDoneEventArgs = {
             rowID: this.id.rowID,
             cellID: this.id,
             // rowData - should be the updated/committed rowData - this effectively should be the newValue
             // the only case we use this.rowData directly, is when there is no rowEditing or transactions enabled
-            rowData: rowData,
+            rowData,
             oldValue: this.value,
             newValue: value,
             column: this.column,
@@ -228,7 +228,7 @@ export class IgxGridCRUDService {
             }
             /** Changing the reference with the new editable cell */
             const newCell = this.createCell(cell);
-            if (this.rowEditing)  {
+            if (this.rowEditing) {
                 const canceled = this.beginRowEdit(newCell, event);
                 if (!canceled) {
                     this.beginCellEdit(newCell, event);
@@ -394,12 +394,14 @@ export class IgxGridSelectionService {
     _ranges: Set<string> = new Set<string>();
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
+    indeterminateRows: Set<any> = new Set<any>();
     columnSelection: Set<string> = new Set<string>();
-    private allRowsSelected: boolean;
     /**
      * @hidden @internal
      */
     public selectedRowsChange = new Subject();
+
+    private allRowsSelected: boolean;
 
 
     /**
@@ -469,10 +471,15 @@ export class IgxGridSelectionService {
      * Single clicks | Ctrl + single clicks on cells is the usual case.
      */
     add(node: ISelectionNode, addToRange = true): void {
-        this.selection.has(node.row) ? this.selection.get(node.row).add(node.column) :
+        if (this.selection.has(node.row)) {
+            this.selection.get(node.row).add(node.column);
+        } else {
             this.selection.set(node.row, new Set<number>()).get(node.row).add(node.column);
+        }
 
-        if (addToRange) { this._ranges.add(JSON.stringify(this.generateRange(node))); }
+        if (addToRange) {
+            this._ranges.add(JSON.stringify(this.generateRange(node)));
+        }
     }
 
     /**
@@ -558,7 +565,9 @@ export class IgxGridSelectionService {
         this.keyboardState.active = true;
         this.initPointerState();
         this.keyboardState.shift = shift && !shiftTab;
-        if (!this.grid.navigation.isDataRow(node.row)) { return; }
+        if (!this.grid.navigation.isDataRow(node.row)) {
+            return;
+        }
         // Kb navigation with shift and no previous node.
         // Clear the current selection init the start node.
         if (this.keyboardState.shift && !this.keyboardState.node) {
@@ -653,8 +662,11 @@ export class IgxGridSelectionService {
             this.pointerState.node = node;
         }
 
-        this.pointerState.ctrl ? this.selectRange(node, this.pointerState, this.temp) :
+        if (this.pointerState.ctrl) {
+            this.selectRange(node, this.pointerState, this.temp);
+        } else {
             this.dragSelect(node, this.pointerState);
+        }
         return true;
     }
 
@@ -688,8 +700,11 @@ export class IgxGridSelectionService {
         const { rowStart, rowEnd, columnStart, columnEnd } = this.generateRange(node, state);
         for (let i = rowStart; i <= rowEnd; i++) {
             for (let j = columnStart as number; j <= columnEnd; j++) {
-                collection.has(i) ? collection.get(i).add(j) :
+                if (collection.has(i)) {
+                    collection.get(i).add(j);
+                } else {
                     collection.set(i, new Set<number>()).get(i).add(j);
+                }
             }
         }
     }
@@ -702,7 +717,9 @@ export class IgxGridSelectionService {
     }
 
     clear(clearAcriveEl = false): void {
-        if (clearAcriveEl) { this.activeElement = null; }
+        if (clearAcriveEl) {
+            this.activeElement = null;
+        }
         this.selection.clear();
         this.temp.clear();
         this._ranges.clear();
@@ -743,12 +760,16 @@ export class IgxGridSelectionService {
         return this.rowSelection.size ? Array.from(this.rowSelection.keys()) : [];
     }
 
+    /** Returns array of the rows in indeterminate state. */
+    getIndeterminateRows(): Array<any> {
+        return this.indeterminateRows.size ? Array.from(this.indeterminateRows.keys()) : [];
+    }
+
     /** Clears row selection, if filtering is applied clears only selected rows from filtered data. */
     clearRowSelection(event?): void {
         const removedRec = this.isFilteringApplied() ?
             this.getRowIDs(this.allData).filter(rID => this.isRowSelected(rID)) : this.getSelectedRows();
         const newSelection = this.isFilteringApplied() ? this.getSelectedRows().filter(x => !removedRec.includes(x)) : [];
-
         this.emitRowSelectionEvent(newSelection, [], removedRec, event);
     }
 
@@ -757,13 +778,16 @@ export class IgxGridSelectionService {
         const allRowIDs = this.getRowIDs(this.allData);
         const addedRows = allRowIDs.filter((rID) => !this.isRowSelected(rID));
         const newSelection = this.rowSelection.size ? this.getSelectedRows().concat(addedRows) : addedRows;
+        this.indeterminateRows.clear();
         this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, addedRows, [], event);
     }
 
     /** Select the specified row and emit event. */
     selectRowById(rowID, clearPrevSelection?, event?): void {
-        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) { return; }
+        if (!this.grid.isRowSelectable || this.isRowDeleted(rowID)) {
+            return;
+        }
         clearPrevSelection = !this.grid.isMultiRowSelectionEnabled || clearPrevSelection;
 
         const newSelection = clearPrevSelection ? [rowID] : this.getSelectedRows().indexOf(rowID) !== -1 ?
@@ -775,7 +799,9 @@ export class IgxGridSelectionService {
 
     /** Deselect the specified row and emit event. */
     deselectRow(rowID, event?): void {
-        if (!this.isRowSelected(rowID)) { return; }
+        if (!this.isRowSelected(rowID)) {
+            return;
+        }
         const newSelection = this.getSelectedRows().filter(r => r !== rowID);
         if (this.rowSelection.size && this.rowSelection.has(rowID)) {
             this.selectedRowsChange.next();
@@ -785,7 +811,9 @@ export class IgxGridSelectionService {
 
     /** Select specified rows. No event is emitted. */
     selectRowsWithNoEvent(rowIDs: any[], clearPrevSelection?): void {
-        if (clearPrevSelection) { this.rowSelection.clear(); }
+        if (clearPrevSelection) {
+            this.rowSelection.clear();
+        }
         rowIDs.forEach(rowID => this.rowSelection.add(rowID));
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
@@ -800,6 +828,10 @@ export class IgxGridSelectionService {
 
     isRowSelected(rowID): boolean {
         return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
+    }
+
+    isRowInIndeterminateState(rowID): boolean {
+        return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
     /** Select range from last selected row to the current specified row. */
@@ -822,8 +854,12 @@ export class IgxGridSelectionService {
     }
 
     areAllRowSelected(): boolean {
-        if (!this.grid.data) { return false; }
-        if (this.allRowsSelected !== undefined) { return this.allRowsSelected; }
+        if (!this.grid.data) {
+            return false;
+        }
+        if (this.allRowsSelected !== undefined) {
+            return this.allRowsSelected;
+        }
 
         const dataItemsID = this.getRowIDs(this.allData);
         return this.allRowsSelected = Math.min(this.rowSelection.size, dataItemsID.length) > 0 &&
@@ -844,19 +880,25 @@ export class IgxGridSelectionService {
 
     public emitRowSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedRows();
-        if (this.areEqualCollections(currSelection, newSelection)) { return; }
+        if (this.areEqualCollections(currSelection, newSelection)) {
+            return;
+        }
 
         const args = {
-            oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false
+            oldSelection: currSelection, newSelection,
+            added, removed, event, cancel: false
         };
         this.grid.onRowSelectionChange.emit(args);
-        if (args.cancel) { return; }
+        if (args.cancel) {
+            return;
+        }
         this.selectRowsWithNoEvent(args.newSelection, true);
     }
 
-    public getRowDataById(rowID): Object {
-        if (!this.grid.primaryKey) { return rowID; }
+    public getRowDataById(rowID): any {
+        if (!this.grid.primaryKey) {
+            return rowID;
+        }
         const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data(true)).indexOf(rowID);
         return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data(true)[rowIndex];
     }
@@ -872,6 +914,7 @@ export class IgxGridSelectionService {
     /** Clear rowSelection and update checkbox state */
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
+        this.indeterminateRows.clear();
         this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
@@ -885,20 +928,6 @@ export class IgxGridSelectionService {
             allData = this.grid.gridAPI.get_all_data(true);
         }
         return allData.filter(rData => !this.isRowDeleted(this.grid.gridAPI.get_row_id(rData)));
-    }
-
-    private areEqualCollections(first, second): boolean {
-        return first.length === second.length && new Set(first.concat(second)).size === first.length;
-    }
-
-    private isFilteringApplied(): boolean {
-        const grid = this.grid as IgxGridBaseDirective;
-        return !FilteringExpressionsTree.empty(grid.filteringExpressionsTree) ||
-            !FilteringExpressionsTree.empty(grid.advancedFilteringExpressionsTree);
-    }
-
-    private isRowDeleted(rowID): boolean {
-        return this.grid.gridAPI.row_deleted_transaction(rowID);
     }
 
     /** Returns array of the selected columns fields. */
@@ -973,8 +1002,12 @@ export class IgxGridSelectionService {
 
     /** Select specified columns. No event is emitted. */
     selectColumnsWithNoEvent(fields: string[], clearPrevSelection?): void {
-        if (clearPrevSelection) { this.columnSelection.clear(); }
-        fields.forEach(field => { this.columnSelection.add(field); });
+        if (clearPrevSelection) {
+            this.columnSelection.clear();
+        }
+        fields.forEach(field => {
+            this.columnSelection.add(field);
+        });
     }
 
     /** Deselect the specified column and emit event. */
@@ -999,14 +1032,18 @@ export class IgxGridSelectionService {
 
     public emitColumnSelectionEvent(newSelection, added, removed, event?): boolean {
         const currSelection = this.getSelectedColumns();
-        if (this.areEqualCollections(currSelection, newSelection)) { return; }
+        if (this.areEqualCollections(currSelection, newSelection)) {
+            return;
+        }
 
         const args = {
-            oldSelection: currSelection, newSelection: newSelection,
-            added: added, removed: removed, event: event, cancel: false
+            oldSelection: currSelection, newSelection,
+            added, removed, event, cancel: false
         };
         this.grid.onColumnSelectionChange.emit(args);
-        if (args.cancel) { return; }
+        if (args.cancel) {
+            return;
+        }
         this.selectColumnsWithNoEvent(args.newSelection, true);
     }
 
@@ -1014,8 +1051,21 @@ export class IgxGridSelectionService {
     public clearAllSelectedColumns(): void {
         this.columnSelection.clear();
     }
+
+    protected areEqualCollections(first, second): boolean {
+        return first.length === second.length && new Set(first.concat(second)).size === first.length;
+    }
+
+    private isFilteringApplied(): boolean {
+        const grid = this.grid as IgxGridBaseDirective;
+        return !FilteringExpressionsTree.empty(grid.filteringExpressionsTree) ||
+            !FilteringExpressionsTree.empty(grid.advancedFilteringExpressionsTree);
+    }
+
+    private isRowDeleted(rowID): boolean {
+        return this.grid.gridAPI.row_deleted_transaction(rowID);
+    }
 }
 
-export function isChromium(): boolean {
-    return (/Chrom|e?ium/g.test(navigator.userAgent) || /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
-}
+export const isChromium = (): boolean => (/Chrom|e?ium/g.test(navigator.userAgent) ||
+    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);

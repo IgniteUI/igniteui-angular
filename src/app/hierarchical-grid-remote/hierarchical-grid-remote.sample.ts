@@ -13,21 +13,20 @@ import { RemoteService } from '../shared/remote.service';
     providers: [RemoteService]
 })
 export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
+    @ViewChild('rowIsland1', { static: true })
+    private rowIsland1: IgxRowIslandComponent;
+
+    @ViewChild('hGrid', { static: true })
+    private hGrid: IgxHierarchicalGridComponent;
 
     public selectionMode;
-    remoteData = [];
-    primaryKeys = [
+    public remoteData = [];
+    public primaryKeys = [
         { name: 'CustomerID', type: 'string', level: 0 },
         { name: 'OrderID', type: 'number', level: 1 },
         { name: 'EmployeeID', type: 'number', level: 2 },
         { name: 'ProductID', type: 'number', level: 2 }
     ];
-
-    @ViewChild('rowIsland1', { static: true })
-    rowIsland1: IgxRowIslandComponent;
-
-    @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
 
     constructor(private remoteService: RemoteService) {
         remoteService.url = 'https://services.odata.org/V4/Northwind/Northwind.svc/';
@@ -63,16 +62,16 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
         });
     }
 
-    setterChange() {
+    public setterChange() {
         this.rowIsland1.rowSelection = this.rowIsland1.rowSelection === GridSelectionMode.multiple
         ? GridSelectionMode.none : GridSelectionMode.multiple;
     }
 
-    setterBindingChange() {
+    public setterBindingChange() {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
-    gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+    public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
         this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
             event.grid.data = data['value'];
             event.grid.isLoading = false;

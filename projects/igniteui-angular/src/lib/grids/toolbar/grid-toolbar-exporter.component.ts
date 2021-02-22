@@ -89,11 +89,6 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
     public filename = 'ExportedData';
 
     /**
-     * Indicates whether there is an export in progress.
-     */
-    public isExporting = false;
-
-    /**
      * Emitted when starting an export operation. Re-emitted additionally
      * by the grid itself.
      */
@@ -105,6 +100,11 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
      */
     @Output()
     public exportEnded = new EventEmitter<void>();
+
+    /**
+     * Indicates whether there is an export in progress.
+     */
+    public isExporting = false;
 
     constructor(
         @Host() protected toolbar: IgxGridToolbarComponent,
@@ -141,7 +141,7 @@ export class IgxGridToolbarExporterComponent extends BaseToolbarDirective {
             return;
         }
 
-        exporter.onExportEnded.pipe(first()).subscribe(() => {
+        exporter.exportEnded.pipe(first()).subscribe(() => {
             this.exportEnded.emit();
             this.isExporting = false;
             this.toolbar.showProgress = false;

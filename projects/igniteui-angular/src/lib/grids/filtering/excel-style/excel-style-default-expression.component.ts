@@ -19,7 +19,6 @@ import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
 import { IgxOverlayOutletDirective } from '../../../directives/toggle/toggle.directive';
 import { IgxInputDirective } from '../../../input-group/public_api';
-import { Subject } from 'rxjs';
 
 /**
  * @hidden
@@ -38,14 +37,6 @@ export interface ILogicOperatorChangedArgs extends IBaseEventArgs {
     templateUrl: './excel-style-default-expression.component.html'
 })
 export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
-    private destroy$ = new Subject<boolean>();
-
-    public dropDownOverlaySettings: OverlaySettings = {
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: true
-    };
-
     @Input()
     public column: IgxColumnComponent;
 
@@ -62,10 +53,10 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public displayDensity: DisplayDensity;
 
     @Output()
-    public onExpressionRemoved = new EventEmitter<ExpressionUI>();
+    public expressionRemoved = new EventEmitter<ExpressionUI>();
 
     @Output()
-    public onLogicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
+    public logicOperatorChanged = new EventEmitter<ILogicOperatorChangedArgs>();
 
     @ViewChild('overlayOutlet', { read: IgxOverlayOutletDirective, static: true })
     public overlayOutlet: IgxOverlayOutletDirective;
@@ -79,25 +70,33 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     @ViewChild('inputValues', { read: IgxInputDirective, static: true })
     protected inputValuesDirective: IgxInputDirective;
 
-    get isLast(): boolean {
+    public dropDownOverlaySettings: OverlaySettings = {
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
+
+    public get isLast(): boolean {
         return this.expressionsList[this.expressionsList.length - 1] === this.expressionUI;
     }
 
-    get isSingle(): boolean {
+    public get isSingle(): boolean {
         return this.expressionsList.length === 1;
     }
 
-    get conditionsPlaceholder(): string {
+    public get conditionsPlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_condition_placeholder'];
     }
 
-    get inputValuePlaceholder(): string {
+    public get inputValuePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_placeholder'];
     }
 
-    get type() {
+    public get type() {
         switch (this.column.dataType) {
             case DataType.Number:
+            case DataType.Currency:
+            case DataType.Percent:
                 return 'number';
             default:
                 return 'text';
@@ -106,7 +105,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     constructor(public cdr: ChangeDetectorRef) {}
 
-    get conditions() {
+    public get conditions() {
         return this.column.filters.conditionList();
     }
 
@@ -114,7 +113,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         return this.inputValuesDirective;
     }
 
-    ngAfterViewInit(): void {
+    public ngAfterViewInit(): void {
         this.dropDownOverlaySettings.outlet = this.overlayOutlet;
         this.dropDownOverlaySettings.target = this.dropdownConditions.inputGroup.element.nativeElement;
         this.dropDownOverlaySettings.excludeFromOutsideClick = [this.dropdownConditions.inputGroup.element.nativeElement as HTMLElement];
@@ -165,7 +164,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
             eventArgs.stopPropagation();
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
         } else {
-            this.onLogicOperatorChanged.emit({
+            this.logicOperatorChanged.emit({
                 target: this.expressionUI,
                 newValue: buttonIndex as FilteringLogic
             });
@@ -175,7 +174,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     public onLogicOperatorKeyDown(eventArgs, buttonIndex: number) {
         if (eventArgs.key === KEYS.ENTER) {
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
-            this.onLogicOperatorChanged.emit({
+            this.logicOperatorChanged.emit({
                 target: this.expressionUI,
                 newValue: buttonIndex as FilteringLogic
             });
@@ -183,7 +182,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public onRemoveButtonClick() {
-        this.onExpressionRemoved.emit(this.expressionUI);
+        this.expressionRemoved.emit(this.expressionUI);
     }
 
     public onOutletPointerDown(event) {

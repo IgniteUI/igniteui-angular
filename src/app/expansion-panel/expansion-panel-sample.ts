@@ -1,19 +1,18 @@
-import { IgxExpansionPanelComponent, growVerIn, growVerOut, scaleInVerTop, IExpansionPanelEventArgs } from 'igniteui-angular';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { IgxExpansionPanelComponent, growVerIn, growVerOut, IExpansionPanelEventArgs } from 'igniteui-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
 
 @Component({
-    // tslint:disable-next-line:component-selector
+    // eslint-disable-next-line @angular-eslint/component-selector
     selector: 'expansion-panel-sample',
     templateUrl: './expansion-panel-sample.html',
     styleUrls: ['expansion-panel-sample.scss']
 })
 export class ExpansionPanelSampleComponent implements OnInit {
     @ViewChild(IgxExpansionPanelComponent, { static: true })
-    public igxExpansionPanel: IgxExpansionPanelComponent;
-    @ViewChild('button') public button: ElementRef;
+    private igxExpansionPanel: IgxExpansionPanelComponent;
 
-    public animationSettings: { openAnimation: AnimationReferenceMetadata, closeAnimation: AnimationReferenceMetadata } = {
+    public animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata } = {
         openAnimation: useAnimation(growVerIn, { params: {
             startHeight: '0px',
             endHeight: '*',
@@ -32,15 +31,13 @@ export class ExpansionPanelSampleComponent implements OnInit {
     public iconPosition = 'right';
     private rounds = 5;
     public get currentScore(): {
-        'Player 1': number,
-        'Player 2': number
+        'Player 1': number;
+        'Player 2': number;
     } {
-        return this.data.length === 0 ? [] : this.data.reduce((a, b) => {
-            return {
+        return this.data.length === 0 ? [] : this.data.reduce((a, b) => ({
                 'Player 1': a['Player 1'] + b['Player 1'],
                 'Player 2': a['Player 2'] + b['Player 2'],
-            };
-        });
+            }));
     }
 
     public get getWinningScore(): number {
@@ -50,49 +47,47 @@ export class ExpansionPanelSampleComponent implements OnInit {
         const currentScore = this.currentScore;
         return Object.keys(currentScore).sort((a, b) => currentScore[b] - currentScore[a])[0];
     }
-    private generateScore(): void {
-        for (let i = 0; i < this.rounds; i++) {
-            this.data.push({
-                'Game': `Game ${i + 1}`,
-                'Player 1': Math.floor(Math.random() * 10) + 1,
-                'Player 2': Math.floor(Math.random() * 10) + 1
-            });
-        }
-    }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.generateScore();
     }
 
-    resetScore(event: Event) {
+    public resetScore(event: Event) {
         this.data = [];
         event.stopPropagation();
         this.generateScore();
     }
 
-    collapsed() {
+    public collapsed() {
         return this.igxExpansionPanel && this.igxExpansionPanel.collapsed;
     }
 
-    constructor() {
-    }
-
-    handleCollapsed(event) {
+    public handleCollapsed(event) {
         console.log(`I'm collapsing!`, event);
     }
-    handleExpanded(event) {
+    public handleExpanded(event) {
         console.log(`I'm expanding!`, event);
     }
-    onInteraction(event: IExpansionPanelEventArgs) {
+    public onInteraction(event: IExpansionPanelEventArgs) {
         console.log(event.owner);
         console.log(`Header's touched!`, event);
     }
 
-    templateIcon() {
+    public templateIcon() {
         this.templatedIcon = !this.templatedIcon;
     }
 
-    toggleLeftRight() {
+    public toggleLeftRight() {
         this.iconPosition = this.iconPosition === 'right' ? 'left' : 'right';
+    }
+
+    private generateScore(): void {
+        for (let i = 0; i < this.rounds; i++) {
+            this.data.push({
+                Game: `Game ${i + 1}`,
+                'Player 1': Math.floor(Math.random() * 10) + 1,
+                'Player 2': Math.floor(Math.random() * 10) + 1
+            });
+        }
     }
 }

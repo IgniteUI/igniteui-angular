@@ -9,12 +9,14 @@ import {
     Output,
     Provider,
     ViewChild,
-    ElementRef
+    ElementRef,
+    HostListener
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export const SwitchLabelPosition = mkenum({
     BEFORE: 'before',
@@ -27,7 +29,6 @@ export interface IChangeSwitchEventArgs extends IBaseEventArgs {
     switch: IgxSwitchComponent;
 }
 
-const noop = () => { };
 let nextId = 0;
 /**
  *
@@ -59,11 +60,6 @@ let nextId = 0;
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
     /**
-     * @hidden
-     * @internal
-     */
-    protected _value: any;
-    /**
      * Returns a reference to the native checkbox element.
      *
      * @example
@@ -80,7 +76,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * let labelElement =  this.switch.nativeLabel;
      * ```
      */
-    @ViewChild('label', { static: true }) public nativeLabel;
+    @ViewChild('label', { static: true })
+    public nativeLabel: ElementRef;
     /**
      * Returns reference to the label placeholder element.
      *
@@ -89,7 +86,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * let labelPlaceholder = this.switch.placeholderLabel;
      * ```
      */
-    @ViewChild('placeholderLabel', { static: true }) public placeholderLabel;
+    @ViewChild('placeholderLabel', { static: true })
+    public placeholderLabel: ElementRef;
 
     /**
      * Sets/gets the `id` of the switch component.
@@ -120,7 +118,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch [value]="switchValue"></igx-switch>
      * ```
      */
-    @Input() public value: any;
+    @Input() public value: string;
     /**
      * Sets/gets the `name` attribute of the switch component.
      *
@@ -194,18 +192,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * An event that is emitted after the switch state is changed.
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
      */
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
-    readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onTouchedCallback: () => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
-    private _onChangeCallback: (_: any) => void = noop;
+    public readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
     /**
      * Returns the class of the switch component.
      *
@@ -255,6 +244,31 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public inputId = `${this.id}-input`;
     /**
+     * @hidden
+     * @internal
+     */
+    protected _value: any;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onTouchedCallback: () => void = noop;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _onChangeCallback: (_: any) => void = noop;
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keyup', ['$event'])
+    public onKeyUp(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
+    }
+
+    /**
      * Toggles the checked state of the switch.
      *
      * @example
@@ -267,8 +281,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
             return;
         }
 
+        this.nativeCheckbox.nativeElement.focus();
+
         this.checked = !this.checked;
-        this.focused = false;
         this.change.emit({ checked: this.checked, switch: this });
         this._onChangeCallback(this.checked);
     }
@@ -276,14 +291,14 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public _onSwitchChange(event) {
+    public _onSwitchChange(event: Event) {
         event.stopPropagation();
     }
     /**
      * @hidden
      * @internal
      */
-    public _onSwitchClick(event) {
+    public _onSwitchClick(event: Event) {
         event.stopPropagation();
         this.toggle();
 
@@ -295,21 +310,14 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public _onLabelClick(event) {
+    public onLabelClick() {
         this.toggle();
     }
     /**
      * @hidden
      * @internal
      */
-    public onFocus(event) {
-        this.focused = true;
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public onBlur(event) {
+    public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
@@ -317,7 +325,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public writeValue(value) {
+    public writeValue(value: string) {
         this._value = value;
         this.checked = !!this._value;
     }
@@ -346,12 +354,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public registerOnChange(fn: (_: any) => void) { this._onChangeCallback = fn; }
+    public registerOnChange(fn: (_: any) => void) {
+ this._onChangeCallback = fn;
+}
     /**
      * @hidden
      * @internal
      */
-    public registerOnTouched(fn: () => void) { this._onTouchedCallback = fn; }
+    public registerOnTouched(fn: () => void) {
+ this._onTouchedCallback = fn;
+}
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
@@ -360,7 +372,7 @@ export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {
     multi: true
 };
 
-/* tslint:disable directive-selector */
+/* eslint-disable  @angular-eslint/directive-selector */
 @Directive({
     selector: `igx-switch[required][formControlName],
     igx-switch[required][formControl],

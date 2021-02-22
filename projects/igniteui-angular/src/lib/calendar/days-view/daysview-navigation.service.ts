@@ -18,18 +18,25 @@ export class IgxDaysViewNavigationService {
     public monthView: IgxDaysViewComponent;
     /**
      * Implements kb navigation in all MoveDirections. nextDate and nextMonthView naming convention is used for both previous/next
+     *
      * @hidden
      */
     public focusNextDate(target: HTMLElement, key: string, nextView = false) {
-        if (target.childElementCount === 0) { target = target.parentElement; }
-        if (key.indexOf('Arrow') === -1) { key = ARROW.concat(key); }
+        if (target.childElementCount === 0) {
+            target = target.parentElement;
+        }
+        if (key.indexOf('Arrow') === -1) {
+            key = ARROW.concat(key);
+        }
         const monthView = this.monthView;
         const node = monthView.dates.find((date) => date.nativeElement === target);
-        let dates = monthView.dates.toArray(),
-            day: IgxDayItemComponent, step, i, nextDate: Date;
+        let dates = monthView.dates.toArray();
+            let day: IgxDayItemComponent; let step; let i; let nextDate: Date;
         const index = dates.indexOf(node);
 
-        if (!node) { return; }
+        if (!node) {
+            return;
+        }
 
         // focus item in current month
         switch (key) {
@@ -123,15 +130,18 @@ export class IgxDaysViewNavigationService {
 
         // focus item in prev/next month, which is currently out of view
         let dayIsNextMonth: boolean; // determine what we need to check for next date - if it belongs to prev or next month
-        if (day) { dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth; }
+        if (day) {
+            dayIsNextMonth = step > 0 ? day.date.isNextMonth : day.date.isPrevMonth;
+        }
         if (monthView.changeDaysView && !nextMonthView && ((day && dayIsNextMonth) || !day)) {
             const monthAction = step > 0 ? ScrollMonth.NEXT : ScrollMonth.PREV;
-            monthView.onViewChanging.emit({monthAction: monthAction, key: key, nextDate: nextDate});
+            monthView.viewChanging.emit({monthAction, key, nextDate});
         }
     }
 
     /**
      * Focuses first focusable day in the month. Will go to next visible month, if no day in the first month is focusable
+     *
      * @hidden
      */
     public focusHomeDate() {
@@ -143,6 +153,7 @@ export class IgxDaysViewNavigationService {
 
     /**
      * Focuses last focusable day in the month. Will go to previous visible month, if no day in the first month is focusable
+     *
      * @hidden
      */
     public focusEndDate() {
@@ -160,9 +171,9 @@ export class IgxDaysViewNavigationService {
 
     private focusFirstDay(monthView: IgxDaysViewComponent): boolean {
         const dates = monthView.dates.filter(d => d.isCurrentMonth);
-        for (let i = 0; i < dates.length; i++) {
-            if (dates[i].isFocusable) {
-                dates[i].nativeElement.focus();
+        for (const date of dates) {
+            if (date.isFocusable) {
+                date.nativeElement.focus();
                 return true;
             }
         }

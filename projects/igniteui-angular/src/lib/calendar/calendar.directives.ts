@@ -2,6 +2,7 @@
  * This file contains all the directives used by the @link IgxCalendarComponent.
  * Except for the directives which are used for templating the calendar itself
  * you should generally not use them directly.
+ *
  * @preferred
  */
 import {
@@ -36,7 +37,7 @@ export class IgxCalendarYearDirective {
     public date: Date;
 
     @Output()
-    public onYearSelection = new EventEmitter<Date>();
+    public yearSelection = new EventEmitter<Date>();
 
     @HostBinding('class.igx-calendar__year')
     public get defaultCSS(): boolean {
@@ -76,7 +77,7 @@ export class IgxCalendarYearDirective {
 
     @HostListener('click')
     public onClick() {
-        this.onYearSelection.emit(this.value);
+        this.yearSelection.emit(this.value);
     }
 }
 
@@ -95,7 +96,7 @@ export class IgxCalendarMonthDirective {
     public index;
 
     @Output()
-    public onMonthSelection = new EventEmitter<Date>();
+    public monthSelection = new EventEmitter<Date>();
 
     @HostBinding('class.igx-calendar__month')
     public get defaultCSS(): boolean {
@@ -120,7 +121,7 @@ export class IgxCalendarMonthDirective {
     @HostListener('click')
     public onClick() {
         const date = new Date(this.value.getFullYear(), this.value.getMonth(), this.date.getDate());
-        this.onMonthSelection.emit(date);
+        this.monthSelection.emit(date);
     }
 }
 
@@ -155,17 +156,19 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
 
     /**
      * A callback function to be invoked when month increment/decrement starts.
+     *
      * @hidden
      */
     @Input()
-    public startScroll: (keydown?: boolean) => {};
+    public startScroll: (keydown?: boolean) => void;
 
     /**
      * A callback function to be invoked when month increment/decrement stops.
+     *
      * @hidden
      */
     @Input()
-    public stopScroll: (event: any) => {};
+    public stopScroll: (event: any) => void;
 
     /**
      * @hidden
@@ -173,6 +176,22 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     private destroy$ = new Subject<boolean>();
 
     constructor(private element: ElementRef, private zone: NgZone) { }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mousedown')
+    public onMouseDown() {
+        this.startScroll();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseup', ['$event'])
+    public onMouseUp(event: MouseEvent) {
+        this.stopScroll(event);
+    }
 
     /**
      * @hidden
@@ -211,21 +230,5 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
     public ngOnDestroy() {
         this.destroy$.next(true);
         this.destroy$.complete();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mousedown')
-    public onMouseDown() {
-        this.startScroll();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseup', ['$event'])
-    public onMouseUp(event: MouseEvent) {
-        this.stopScroll(event);
     }
 }

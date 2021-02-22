@@ -433,8 +433,8 @@ class PTOSummary extends IgxSummaryOperand {
     , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
 })
 export class IgxTreeGridRowEditingTransactionComponent {
-    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
     @ViewChild('treeGrid', { read: IgxTreeGridComponent, static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
     public paging = false;
 }
 
@@ -469,8 +469,8 @@ export class IgxTreeGridCustomSummariesComponent {
     , providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
 })
 export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
-    public data = SampleTestData.employeeAllTypesTreeData();
     @ViewChild('treeGrid', { read: IgxTreeGridComponent, static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
     public paging = false;
 }
 
@@ -485,8 +485,8 @@ export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
     </igx-tree-grid>`
 })
 export class IgxTreeGridRowPinningComponent {
-    public data = SampleTestData.employeeAllTypesTreeData();
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeAllTypesTreeData();
 }
 
 @Component({
@@ -598,7 +598,7 @@ export class IgxTreeGridLoadOnDemandComponent {
         setTimeout(() => {
             done(this.allData.filter(r => r.ParentID === parentID));
         }, 1000);
-    }
+    };
 }
 @Component({
     template: `
@@ -642,7 +642,7 @@ export class IgxTreeGridLoadOnDemandChildDataComponent {
         setTimeout(() => {
             done(this.allData.filter(r => r.ParentID === parentID));
         }, 1000);
-    }
+    };
 }
 
 @Component({
@@ -683,6 +683,13 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
         this.data = this.getChildren(-1);
     }
 
+    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
+        setTimeout(() => {
+            const children = this.getChildren(parentID);
+            done(children);
+        }, 1000);
+    };
+
     private getChildren(parentID) {
         const children = this.allData.filter(r => r.ParentID === parentID);
 
@@ -690,13 +697,6 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
             child['hasEmployees'] = this.allData.some(r => r.ParentID === child.ID);
         }
         return children;
-    }
-
-    public loadChildren = (parentID: any, done: (children: any[]) => void) => {
-        setTimeout(() => {
-            const children = this.getChildren(parentID);
-            done(children);
-        }, 1000);
     }
 }
 
@@ -758,7 +758,7 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = [];
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.treeGrid.isLoading = true;
         setTimeout(() => {
             this.data = SampleTestData.employeePrimaryForeignKeyTreeData();
@@ -802,13 +802,21 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
     public onRowCheckboxClick(event, rowContext) {
         event.stopPropagation();
         event.preventDefault();
-        rowContext.selected ? this.treeGrid.deselectRows([rowContext.rowID]) : this.treeGrid.selectRows([rowContext.rowID]);
+        if (rowContext.selected) {
+            this.treeGrid.deselectRows([rowContext.rowID]);
+        } else {
+            this.treeGrid.selectRows([rowContext.rowID]);
+        }
     }
 
     public onHeaderCheckboxClick(event, headContext) {
         event.stopPropagation();
         event.preventDefault();
-        headContext.selected ? this.treeGrid.deselectAllRows() : this.treeGrid.selectAllRows();
+        if (headContext.selected) {
+            this.treeGrid.deselectAllRows();
+        } else {
+            this.treeGrid.selectAllRows();
+        }
     }
 }
 
@@ -849,7 +857,48 @@ export class IgxTreeGridCustomExpandersTemplateComponent {
 })
 export class IgxTreeGridEditActionsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
-    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
     public actionStrip: IgxActionStripComponent;
+    public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" [rowSelection]="'multipleCascade'"
+     width="900px" height="600px" [rowEditable]="true">
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridCascadingSelectionComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
+    public data = SampleTestData.employeeSmallTreeData();
+}
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [rowSelection]="'multipleCascade'"
+    width="800px" height="600px" columnWidth="150px" primaryKey="ID">
+    <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-action-strip #actionStrip>
+        <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
+    </igx-action-strip>
+    </igx-tree-grid>
+    `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
+})
+export class IgxTreeGridCascadingSelectionTransactionComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
+    public actionStrip: IgxActionStripComponent;
+    public data = SampleTestData.employeeSmallTreeData();
 }

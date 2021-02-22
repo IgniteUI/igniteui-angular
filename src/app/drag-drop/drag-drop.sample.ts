@@ -17,69 +17,6 @@ import {
     styleUrls: ['drag-drop.sample.css']
 })
 export class DragDropSampleComponent {
-
-    public dragDir = DragDirection.BOTH;
-    public dropStrategy = IgxInsertDropStrategy;
-    public draggedElem = false;
-    public customDragged = false;
-    public customDraggedAnim = false;
-    public customDraggedAnimXY = false;
-    public ghostInDropArea = false;
-    public friendlyArea = true;
-    public draggingElem = false;
-    public dragEnteredArea = false;
-    public listNotes = [
-        { text: 'Avengers: Endgame', dragged: false },
-        { text: 'Avatar', dragged: false },
-        { text: 'Titanic', dragged: false },
-        { text: 'Star Wars: The Force Awakens', dragged: false },
-        { text: 'Avengers: Infinity War', dragged: false },
-        { text: 'Jurassic World', dragged: false },
-        { text: 'The Avengers', dragged: false }
-    ];
-    public listObserver = null;
-    public draggableElems = [
-        { value: 'Suspect 1' },
-        { value: 'Suspect 2' },
-        { value: 'Suspect 3' },
-        { value: 'Suspect 4' }];
-
-    public toggleStartPageX;
-    public toggleStartPageY;
-    private overlaySettings: OverlaySettings = {
-        positionStrategy: new GlobalPositionStrategy(),
-        scrollStrategy: new NoOpScrollStrategy(),
-        modal: false,
-        closeOnOutsideClick: true
-    };
-
-    /** List drag properties */
-    public draggedDir = null;
-    public draggedIndex = null;
-    public get newDraggedIndex() {
-        if (this.draggedIndex === null) {
-            return null;
-        }
-
-        const listNotesDirsArray = this.listNotesDirs.toArray();
-        let firstMovedIndex = null;
-        let lastMovedIndex = null;
-
-        for (let i = 0; i < listNotesDirsArray.length; i++) {
-            if (firstMovedIndex === null && listNotesDirsArray[i].data.moved) {
-                firstMovedIndex = i;
-            }
-            if (listNotesDirsArray[i].data.moved) {
-                lastMovedIndex = i;
-            }
-        }
-
-        if (firstMovedIndex === null && lastMovedIndex === null) {
-            return null;
-        }
-        return this.draggedIndex < firstMovedIndex ? lastMovedIndex : firstMovedIndex ;
-    }
-
     @ViewChild('dragNoGhostAnim', { read: IgxDragDirective, static: true })
     public dragNoGhostAnim: IgxDragDirective;
 
@@ -115,6 +52,69 @@ export class DragDropSampleComponent {
 
     @ViewChildren('listItem', { read: IgxDragDirective })
     public listNotesDirs: QueryList<IgxDragDirective>;
+
+    public dragDir = DragDirection.BOTH;
+    public dropStrategy = IgxInsertDropStrategy;
+    public draggedElem = false;
+    public customDragged = false;
+    public customDraggedAnim = false;
+    public customDraggedAnimXY = false;
+    public ghostInDropArea = false;
+    public friendlyArea = true;
+    public draggingElem = false;
+    public dragEnteredArea = false;
+    public listNotes = [
+        { text: 'Avengers: Endgame', dragged: false },
+        { text: 'Avatar', dragged: false },
+        { text: 'Titanic', dragged: false },
+        { text: 'Star Wars: The Force Awakens', dragged: false },
+        { text: 'Avengers: Infinity War', dragged: false },
+        { text: 'Jurassic World', dragged: false },
+        { text: 'The Avengers', dragged: false }
+    ];
+    public listObserver = null;
+    public draggableElems = [
+        { value: 'Suspect 1' },
+        { value: 'Suspect 2' },
+        { value: 'Suspect 3' },
+        { value: 'Suspect 4' }];
+
+    public toggleStartPageX;
+    public toggleStartPageY;
+
+    /** List drag properties */
+    public draggedDir = null;
+    public draggedIndex = null;
+    public get newDraggedIndex() {
+        if (this.draggedIndex === null) {
+            return null;
+        }
+
+        const listNotesDirsArray = this.listNotesDirs.toArray();
+        let firstMovedIndex = null;
+        let lastMovedIndex = null;
+
+        for (let i = 0; i < listNotesDirsArray.length; i++) {
+            if (firstMovedIndex === null && listNotesDirsArray[i].data.moved) {
+                firstMovedIndex = i;
+            }
+            if (listNotesDirsArray[i].data.moved) {
+                lastMovedIndex = i;
+            }
+        }
+
+        if (firstMovedIndex === null && lastMovedIndex === null) {
+            return null;
+        }
+        return this.draggedIndex < firstMovedIndex ? lastMovedIndex : firstMovedIndex ;
+    }
+
+    private overlaySettings: OverlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new NoOpScrollStrategy(),
+        modal: false,
+        closeOnOutsideClick: true
+    };
 
     constructor(private cdr: ChangeDetectorRef) {
     }
@@ -207,7 +207,7 @@ export class DragDropSampleComponent {
         });
     }
 
-    public dragGhostAnimXY(event) {
+    public dragGhostAnimXY() {
 
     }
 

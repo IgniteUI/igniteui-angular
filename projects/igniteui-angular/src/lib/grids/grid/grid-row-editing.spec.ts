@@ -947,7 +947,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on filter`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -970,7 +970,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on sort`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
             spyOn(grid, 'endEdit').and.callThrough();
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -1083,7 +1083,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
@@ -1103,7 +1103,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
@@ -1153,6 +1153,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.perPage = 7;
             fix.detectChanges();
 
+            const cacheValue = cell.value;
             let rowElement = grid.getRowByIndex(0).nativeElement;
             expect(rowElement.classList).not.toContain(ROW_EDITED_CLASS);
 
@@ -1176,16 +1177,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             // Previous page button click
             GridFunctions.navigateToPrevPage(grid.nativeElement);
             fix.detectChanges();
-            expect(cell.value).toBe('IG');
+            expect(cell.value).toBe(cacheValue);
             rowElement = grid.getRowByIndex(0).nativeElement;
             expect(rowElement.classList).not.toContain(ROW_EDITED_CLASS);
         });
 
-        it(`Paging: Should save changes when changing page while editing`, () => {
+        it(`Paging: Should discard changes when changing page while editing`, () => {
             grid.paging = true;
             grid.perPage = 7;
             fix.detectChanges();
 
+            const cacheValeue = cell.value;
             cell.setEditMode(true);
             cell.update('IG');
 
@@ -1204,7 +1206,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(cell.editMode).toBeFalsy();
-            expect(cell.value).toBe('IG');
+            expect(cell.value).toBe(cacheValeue);
         });
 
         it(`Paging: Should exit edit mode when changing the page size while editing`, () => {
@@ -1247,7 +1249,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
                 cell.setEditMode(true);
 
-                (<any>grid).crudService.cell.editValue = 'IG';
+                grid.crudService.cell.editValue = 'IG';
                 // cell.update('IG');
                 // Do not exit edit mode
                 fix.detectChanges();
@@ -1336,7 +1338,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`GroupBy: Should exit edit mode when Grouping`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
+            const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
@@ -1452,7 +1454,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(cell.editMode).toBeFalsy();
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.endEdit).toHaveBeenCalledWith(false);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
@@ -1467,7 +1469,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.endEdit).toHaveBeenCalledWith(false);
             expect(grid.endEdit).toHaveBeenCalledTimes(1);
             expect(cell.editMode).toBeFalsy();
 
@@ -1481,12 +1483,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.endEdit).toHaveBeenCalledWith(false);
             expect(grid.endEdit).toHaveBeenCalledTimes(2);
             expect(cell.editMode).toBeFalsy();
         });
 
-        it(`Resizing: Should exit edit mode when resizing a column`, fakeAsync(() => {
+        it(`Resizing: Should keep edit mode when resizing a column`, fakeAsync(() => {
             spyOn(grid, 'endEdit').and.callThrough();
 
             // put cell in edit mode
@@ -1506,14 +1508,11 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
-            expect(cell.editMode).toBeFalsy();
+            expect(grid.endEdit).toHaveBeenCalledTimes(0);
+            expect(cell.editMode).toBeTruthy();
         }));
 
         it(`Hiding: Should exit edit mode when hiding a column`, () => {
-            const gridAPI: IgxGridAPIService = (<any>grid).gridAPI;
-
             cell.setEditMode(true);
 
             fix.detectChanges();

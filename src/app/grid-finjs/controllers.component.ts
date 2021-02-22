@@ -47,9 +47,13 @@ export class ControllerComponent implements OnInit, OnDestroy {
     private selectedButton;
     private volumeChanged$;
 
+    public get buttonSelected(): number {
+        return this.selectedButton || this.selectedButton === 0 ? this.selectedButton : -1;
+    }
+
     public ngOnInit() {
         this.volumeChanged$ = this.volumeSlider.onValueChange.pipe(debounce(() => timer(200)));
-        this.volumeChanged$.subscribe(x => this.volumeChanged.emit(this.volumeSlider.value));
+        this.volumeChanged$.subscribe(() => this.volumeChanged.emit(this.volumeSlider.value));
     }
 
     public onButtonSelected(event: any) {
@@ -80,6 +84,10 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.switchChanged.emit({action, value: event.checked });
     }
 
+    public ngOnDestroy() {
+        this.volumeChanged$.unsubscribe();
+    }
+
     private disableOtherButtons(ind: number, disableButtons: boolean) {
         if (this.subscription) {
             this.subscription.unsubscribe();
@@ -88,18 +96,12 @@ export class ControllerComponent implements OnInit, OnDestroy {
         this.intervalSlider.disabled = disableButtons;
         this.selectedButton = ind;
         this.playButtons.buttons.forEach((button, index) => {
-            if (index === 2) { button.disabled = !disableButtons; } else {
+            if (index === 2) {
+                button.disabled = !disableButtons;
+            } else {
                 this.playButtons.buttons[0].disabled = disableButtons;
                 this.playButtons.buttons[1].disabled = disableButtons;
             }
         });
-    }
-
-    get buttonSelected(): number {
-        return this.selectedButton || this.selectedButton === 0 ? this.selectedButton : -1;
-    }
-
-    public ngOnDestroy() {
-        this.volumeChanged$.unsubscribe();
     }
 }

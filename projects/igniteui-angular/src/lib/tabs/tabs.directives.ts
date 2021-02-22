@@ -5,10 +5,10 @@ import {
 } from '@angular/core';
 import { IgxTabsBase } from './tabs.common';
 
-enum ButtonStyle {
-    VISIBLE = 'visible',
-    HIDDEN = 'hidden',
-    NOT_DISPLAYED = 'not_displayed'
+enum TabScrollButtonStyle {
+    Visible = 'visible',
+    Hidden = 'hidden',
+    NotDisplayed = 'not_displayed'
 }
 
 @Directive({
@@ -20,18 +20,18 @@ export class IgxRightButtonStyleDirective {
     }
 
     @HostBinding('class.igx-tabs__header-button')
-    get visibleCSS(): boolean {
-        return (this.getRightButtonStyle() === ButtonStyle.VISIBLE) ? true : false;
+    public get visibleCSS(): boolean {
+        return (this.getRightButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--hidden')
-    get hiddenCSS(): boolean {
-        return (this.getRightButtonStyle() === ButtonStyle.HIDDEN) ? true : false;
+    public get hiddenCSS(): boolean {
+        return (this.getRightButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--none')
-    get notDisplayedCSS(): boolean {
-        return (this.getRightButtonStyle() === ButtonStyle.NOT_DISPLAYED) ? true : false;
+    public get notDisplayedCSS(): boolean {
+        return (this.getRightButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
     }
 
     private getRightButtonStyle(): string {
@@ -51,13 +51,13 @@ export class IgxRightButtonStyleDirective {
 
         // Fix for IE 11, a difference is accumulated from the widths calculations.
         if (itemsContainerWidth - headerContainerWidth <= 1 && offset === 0) {
-            return ButtonStyle.NOT_DISPLAYED;
+            return TabScrollButtonStyle.NotDisplayed;
         }
 
         if (itemsContainerWidth > total) {
-            return ButtonStyle.VISIBLE;
+            return TabScrollButtonStyle.Visible;
         } else {
-            return ButtonStyle.HIDDEN;
+            return TabScrollButtonStyle.Hidden;
         }
     }
 }
@@ -71,18 +71,18 @@ export class IgxLeftButtonStyleDirective {
     }
 
     @HostBinding('class.igx-tabs__header-button')
-    get visibleCSS(): boolean {
-        return (this.getLeftButtonStyle() === ButtonStyle.VISIBLE) ? true : false;
+    public get visibleCSS(): boolean {
+        return (this.getLeftButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--hidden')
-    get hiddenCSS(): boolean {
-        return (this.getLeftButtonStyle() === ButtonStyle.HIDDEN) ? true : false;
+    public get hiddenCSS(): boolean {
+        return (this.getLeftButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
     }
 
     @HostBinding('class.igx-tabs__header-button--none')
-    get notDisplayedCSS(): boolean {
-        return (this.getLeftButtonStyle() === ButtonStyle.NOT_DISPLAYED) ? true : false;
+    public get notDisplayedCSS(): boolean {
+        return (this.getLeftButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
     }
 
     private getLeftButtonStyle(): string {
@@ -99,11 +99,11 @@ export class IgxLeftButtonStyleDirective {
         if (offset === 0) {
             // Fix for IE 11, a difference is accumulated from the widths calculations.
             if (itemsContainerWidth - headerContainerWidth <= 1) {
-                return ButtonStyle.NOT_DISPLAYED;
+                return TabScrollButtonStyle.NotDisplayed;
             }
-            return ButtonStyle.HIDDEN;
+            return TabScrollButtonStyle.Hidden;
         } else {
-            return ButtonStyle.VISIBLE;
+            return TabScrollButtonStyle.Visible;
         }
     }
 }

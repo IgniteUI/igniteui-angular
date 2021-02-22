@@ -33,15 +33,14 @@ import { GridType } from '../common/grid.interface';
 import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
+import { takeUntil } from 'rxjs/operators';
+
+export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
 export const IgxHierarchicalTransactionServiceFactory = {
     provide: IgxGridTransaction,
     useFactory: hierarchicalTransactionServiceFactory
 };
-
-export function hierarchicalTransactionServiceFactory() {
-    return new IgxTransactionService();
-}
 
 export interface IPathSegment {
     rowID: any;
@@ -50,12 +49,9 @@ export interface IPathSegment {
 
 @Directive()
 export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirective {
-    public abstract rootGrid;
-
-    public abstract expandChildren: boolean;
-
     /**
      * Gets/Sets the key indicating whether a row has children. If row has no children it does not render an expand indicator.
+     *
      * @example
      * ```html
      * <igx-hierarchical-grid #grid [data]="localData" [hasChildrenKey]="'hasEmployees'">
@@ -67,6 +63,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Gets/Sets whether the expand/collapse all button in the header should be rendered.
+     *
      * @remark
      * The default value is false.
      * @example
@@ -80,6 +77,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
+     *
      * @example
      * ```typescript
      *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
@@ -88,6 +86,13 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     @Output()
     public onDataPreLoad = new EventEmitter<IForOfState>();
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
+    public dragIndicatorIconBase: TemplateRef<any>;
 
     /**
      * @hidden
@@ -101,6 +106,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     /**
      * Gets the outlet used to attach the grid's overlays to.
+     *
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
@@ -130,12 +136,9 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public childRow: IgxChildGridRowComponent;
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
-    public dragIndicatorIconBase: TemplateRef<any>;
+    public abstract rootGrid;
+
+    public abstract expandChildren: boolean;
 
     constructor(
         public selectionService: IgxGridSelectionService,
@@ -175,7 +178,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             summaryService,
             _displayDensityOptions,
             localeId);
-        this.hgridAPI = <IgxHierarchicalGridAPIService>gridAPI;
+        this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
 
     /**
@@ -193,6 +196,19 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.columnList.reset(result);
         this.columnList.notifyOnChanges();
         this.initPinning();
+
+        const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
+        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'onColumnChange');
+        outputs.forEach(output => {
+            this.columnList.forEach(column => {
+                if (column[output.propName]) {
+                    column[output.propName].pipe(takeUntil(column.destroy$)).subscribe((args) => {
+                        const rowIslandColumn = this.parentIsland.childColumns.find(col => col.field === column.field);
+                        rowIslandColumn[output.propName].emit({ args, owner: this });
+                    });
+                }
+            });
+        });
     }
 
     protected _createColumn(col) {
@@ -211,7 +227,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         ref.changeDetectorRef.detectChanges();
         factoryGroup.inputs.forEach((input) => {
             const propName = input.propName;
-            (<any>ref.instance)[propName] = (<any>col)[propName];
+            ref.instance[propName] = col[propName];
         });
         if (col.children.length > 0) {
             const newChildren = [];
@@ -220,8 +236,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
                 newCol.parent = ref.instance;
                 newChildren.push(newCol);
             });
-            (<IgxColumnGroupComponent>ref.instance).children.reset(newChildren);
-            (<IgxColumnGroupComponent>ref.instance).children.notifyOnChanges();
+            ref.instance.children.reset(newChildren);
+            ref.instance.children.notifyOnChanges();
         }
         return ref;
     }
@@ -231,10 +247,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         const ref = this.viewRef.createComponent(factoryColumn, null, this.viewRef.injector);
         factoryColumn.inputs.forEach((input) => {
             const propName = input.propName;
-            if (!((<any>col)[propName] instanceof IgxSummaryOperand)) {
-                (<any>ref.instance)[propName] = (<any>col)[propName];
+            if (!(col[propName] instanceof IgxSummaryOperand)) {
+                ref.instance[propName] = col[propName];
             } else {
-                (<any>ref.instance)[propName] = col[propName].constructor;
+                ref.instance[propName] = col[propName].constructor;
             }
         });
         return ref;
@@ -252,7 +268,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     }
 }
 
-function flatten(arr: any[]) {
+const flatten = (arr: any[]) => {
     let result = [];
 
     arr.forEach(el => {
@@ -262,4 +278,4 @@ function flatten(arr: any[]) {
         }
     });
     return result;
-}
+};

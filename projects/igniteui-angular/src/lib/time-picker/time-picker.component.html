@@ -26,7 +26,7 @@
             (wheel)="spinOnEdit($event)"
             [disabled]="disabled" />
         <igx-suffix *ngIf="showClearButton" igxRipple (click)="clear()">
-            <igx-icon fontSet="material">clear</igx-icon>
+            <igx-icon>clear</igx-icon>
         </igx-suffix>
     </igx-input-group>
 </ng-template>
@@ -84,7 +84,7 @@
             </div>
             <div *ngIf="showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxAmPmItem]="ampm"
-                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.amPM, ampm)}"
+                [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem(timeParts.AMPM, ampm)}"
                 *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>

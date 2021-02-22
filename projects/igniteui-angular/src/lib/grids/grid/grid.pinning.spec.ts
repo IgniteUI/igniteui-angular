@@ -29,7 +29,7 @@ import {
 import { IgxGridComponent } from './grid.component';
 import { DropPosition } from '../moving/moving.service';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
-// tslint:disable: no-use-before-declare
+/* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
     configureTestSuite();
@@ -342,7 +342,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
                     column: idCol,
                     insertAtIndex: 0,
-                    isPinned: true
+                    isPinned: false,
+                    cancel: false
                 });
                 expect(idCol.visibleIndex).toEqual(0);
 
@@ -353,7 +354,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
                     column: cityCol,
                     insertAtIndex: 0,
-                    isPinned: true
+                    isPinned: false,
+                    cancel: false
                 });
                 expect(cityCol.visibleIndex).toEqual(0);
 
@@ -363,7 +365,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
                     column: idCol,
                     insertAtIndex: idColIndex,
-                    isPinned: false
+                    isPinned: true,
+                    cancel: false
                 });
                 expect(cityCol.visibleIndex).toEqual(0);
 

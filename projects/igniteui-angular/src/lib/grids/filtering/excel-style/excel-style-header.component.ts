@@ -10,8 +10,6 @@ import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filterin
     templateUrl: './excel-style-header.component.html'
 })
 export class IgxExcelStyleHeaderComponent {
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
-
     /**
      * Sets whether the column pinning icon should be shown in the header.
      * Default value is `false`.
@@ -22,7 +20,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input()
-    showPinning: boolean;
+    public showPinning: boolean;
 
     /**
      * Sets whether the column selecting icon should be shown in the header.
@@ -34,7 +32,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input()
-    showSelecting: boolean;
+    public showSelecting: boolean;
 
     /**
      * Sets whether the column hiding icon should be shown in the header.
@@ -46,5 +44,7 @@ export class IgxExcelStyleHeaderComponent {
      * ```
      */
     @Input()
-    showHiding: boolean;
+    public showHiding: boolean;
+
+    constructor(public esf: IgxGridExcelStyleFilteringComponent) { }
 }

@@ -106,23 +106,32 @@ export class IgxLayoutDirective {
     /**
      * @hidden
      */
-    @HostBinding('style.flex-wrap') get flexwrap() { return this.wrap; }
+    @HostBinding('style.flex-wrap')
+    public get flexwrap() {
+        return this.wrap;
+    }
 
     /**
      * @hidden
      */
-    @HostBinding('style.justify-content') get justifycontent() { return this.justify; }
+    @HostBinding('style.justify-content')
+    public get justifycontent() {
+        return this.justify;
+    }
 
     /**
      * @hidden
      */
-    @HostBinding('style.align-items') get align() { return this.itemAlign; }
+    @HostBinding('style.align-items')
+    public get align() {
+        return this.itemAlign;
+    }
 
     /**
      * @hidden
      */
     @HostBinding('style.flex-direction')
-    get direction() {
+    public get direction() {
         if (this.reverse) {
             return (this.dir === 'row') ? 'row-reverse' : 'column-reverse';
         }
@@ -208,7 +217,7 @@ export class IgxFlexDirective {
      * @hidden
      */
     @HostBinding('style.flex')
-    get style() {
+    public get style() {
         if (this.flex) {
             return `${this.flex}`;
         }
@@ -219,7 +228,7 @@ export class IgxFlexDirective {
      * @hidden
      */
     @HostBinding('style.order')
-    get itemorder() {
+    public get itemorder() {
         return this.order || 0;
     }
 }

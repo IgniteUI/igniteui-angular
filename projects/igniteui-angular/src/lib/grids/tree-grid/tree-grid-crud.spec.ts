@@ -825,7 +825,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             }));
 
             it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
-                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -855,8 +854,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
-                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                const cellDOM = allCells[1];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -969,8 +966,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             }));
 
             it('should be able to enter edit mode of a tree-grid column on dblclick, enter and F2', () => {
-                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                const cellDOM = allCells[0];
                 const cell = treeGrid.getCellByColumn(0, 'ID');
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -999,8 +994,6 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             });
 
             it('should be able to enter edit mode of a non-tree-grid column on dblclick, enter and F2', () => {
-                const allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
-                const cellDOM = allCells[2];
                 const cell = treeGrid.getCellByColumn(0, 'Name');
 
                 UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -1354,29 +1347,29 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
     });
 });
 
-function verifyRowsCount(fix, expectedRootRowsCount, expectedVisibleRowsCount) {
+const verifyRowsCount = (fix, expectedRootRowsCount, expectedVisibleRowsCount) => {
     const treeGrid = fix.componentInstance.treeGrid;
     expect(TreeGridFunctions.getAllRows(fix).length).toBe(expectedVisibleRowsCount, 'Incorrect DOM rows length.');
     expect(treeGrid.data.length).toBe(expectedRootRowsCount, 'Incorrect data length.');
     expect(treeGrid.dataRowList.length).toBe(expectedVisibleRowsCount, 'Incorrect dataRowList length.');
-}
+};
 
-function verifyTreeGridRecordsCount(fix, expectedRootRecordsCount, expectedFlatRecordsCount) {
+const verifyTreeGridRecordsCount = (fix, expectedRootRecordsCount, expectedFlatRecordsCount) => {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
     expect(treeGrid.rootRecords.length).toBe(expectedRootRecordsCount);
     expect(treeGrid.records.size).toBe(expectedFlatRecordsCount);
-}
+};
 
-function verifyProcessedTreeGridRecordsCount(fix, expectedProcessedRootRecordsCount, expectedProcessedFlatRecordsCount) {
+const verifyProcessedTreeGridRecordsCount = (fix, expectedProcessedRootRecordsCount, expectedProcessedFlatRecordsCount) => {
     const treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
     expect(treeGrid.processedRootRecords.length).toBe(expectedProcessedRootRecordsCount);
     expect(treeGrid.processedRecords.size).toBe(expectedProcessedFlatRecordsCount);
-}
+};
 
-function verifyCellValue(fix, rowIndex, columnKey, expectedCellValue) {
+const verifyCellValue = (fix, rowIndex, columnKey, expectedCellValue) => {
     const treeGrid = fix.componentInstance.treeGrid;
     const actualValue = TreeGridFunctions.getCellValue(fix, rowIndex, columnKey);
     const actualAPIValue = treeGrid.getRowByIndex(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
     expect(actualValue.toString()).toBe(expectedCellValue, 'incorrect cell value');
     expect(actualAPIValue.toString()).toBe(expectedCellValue, 'incorrect api cell value');
-}
+};

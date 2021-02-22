@@ -76,32 +76,32 @@
         <div class="buttons-sample">
             <div class="button-sample">
                 <button igxRipple igxButton="fab">
-                    <igx-icon fontSet="material">favorite</igx-icon>
+                    <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
                 <button igxButton="fab" igxRipple="white">
-                    <igx-icon fontSet="material">edit</igx-icon>
+                    <igx-icon>edit</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
                 <button igxButton="fab" igxRipple="white">
-                    <igx-icon fontSet="material">add</igx-icon>
+                    <igx-icon>add</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
                 <button igxButton="fab" igxRipple="white" [disabled]="true">
-                    <igx-icon fontSet="material">favorite</igx-icon>
+                    <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
                 <button igxButton="fab" [disabled]="true">
-                    <igx-icon fontSet="material">edit</igx-icon>
+                    <igx-icon>edit</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
                 <button igxButton="fab" [disabled]="true">
-                    <igx-icon fontSet="material">add</igx-icon>
+                    <igx-icon>add</igx-icon>
                 </button>
             </div>
         </div>
@@ -112,32 +112,32 @@
         <div class="buttons-sample">
             <div class="button-sample">
                 <button igxButton="icon" igxRipple igxRippleCentered="true">
-                    <igx-icon fontSet="material">search</igx-icon>
+                    <igx-icon>search</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
                 <button igxButton="icon" igxRipple="white" igxRippleCentered="true">
-                    <igx-icon fontSet="material">favorite</igx-icon>
+                    <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
                 <button igxButton="icon" igxRipple="white" igxRippleCentered="true">
-                    <igx-icon fontSet="material">more_vert</igx-icon>
+                    <igx-icon>more_vert</igx-icon>
                 </button>
             </div>
             <div class="button-sample">
                 <button igxButton="icon" igxRipple igxRippleCentered="true" [disabled]="true">
-                    <igx-icon fontSet="material">search</igx-icon>
+                    <igx-icon>search</igx-icon>
                 </button>
             </div>
             <div class="button-sample red-sox-button">
                 <button igxButton="icon" igxRipple="white" igxRippleCentered="true" [disabled]="true">
-                    <igx-icon fontSet="material">favorite</igx-icon>
+                    <igx-icon>favorite</igx-icon>
                 </button>
             </div>
             <div class="button-sample smoky-black-button">
                 <button igxButton="icon" igxRipple="white" igxRippleCentered="true" [disabled]="true">
-                    <igx-icon fontSet="material">more_vert</igx-icon>
+                    <igx-icon>more_vert</igx-icon>
                 </button>
             </div>
         </div>
@@ -147,7 +147,7 @@
     <article class="column">
         <h4 class="sample-title">Buttons based on Display Density</h4>
         <div class="density-chooser">
-            <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+            <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
         </div>
         <div class="buttons-sample">
             <div class="button-sample">
@@ -158,8 +158,8 @@
             </div>
             <div class="button-sample">
                 <button igxButton="outlined" igxRipple [displayDensity]="density">
+                    <span>Outlined</span>
                     <igx-icon>face</igx-icon>
-                    Outlined
                 </button>
             </div>
             <div class="button-sample">
@@ -168,7 +168,7 @@
             <div class="button-sample">
                 <button igxButton="raised" igxRipple [displayDensity]="density">
                     <igx-icon>face</igx-icon>
-                    Raised
+                    <span>Raised</span>
                 </button>
             </div>
             <div class="button-sample">

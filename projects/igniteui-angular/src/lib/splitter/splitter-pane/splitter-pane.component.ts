@@ -1,7 +1,9 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Represents individual resizable/collapsible panes.
+ *
  * @igxModule IgxSplitterModule
  *
  * @igxParent IgxSplitterComponent
@@ -18,49 +20,16 @@ import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from 
     templateUrl: './splitter-pane.component.html'
 })
 export class IgxSplitterPaneComponent {
-
-    private _size = 'auto';
-    private _dragSize;
-    private _collapsed = false;
-
-    /** @hidden @internal */
-    public owner;
-
     /**
-     * Gets/Sets the size of the current pane.
-     *  * @example
-     * ```html
-     * <igx-splitter>
-     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
+     * @hidden @internal
+     * Gets/Sets the 'display' property of the current pane.
      */
-    @Input()
-    get size() {
-        return this._size;
-    }
-
-    set size(value) {
-        this._size = value;
-        this.el.nativeElement.style.flex = this.flex;
-    }
-
-    /** @hidden @internal */
-    get isPercentageSize() {
-        return this.size === 'auto' || this.size.indexOf('%') !== -1;
-    }
-
-    /** @hidden @internal */
-    get dragSize() {
-        return this._dragSize;
-    }
-    set dragSize(val) {
-        this._dragSize = val;
-        this.el.nativeElement.style.flex = this.flex;
-    }
+    @HostBinding('style.display')
+    public display = 'flex';
 
     /**
      * Gets/Sets the minimum allowed size of the current pane.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -73,6 +42,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Set the maximum allowed size of the current pane.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -85,6 +55,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Gets/Sets whether pane is resizable.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -99,6 +70,7 @@ export class IgxSplitterPaneComponent {
 
     /**
      * Event fired when collapsed state of pane is changed.
+     *
      * @example
      * ```html
      * <igx-splitter>
@@ -106,22 +78,26 @@ export class IgxSplitterPaneComponent {
      * </igx-splitter>
      * ```
      */
+    @DeprecateProperty(`Deprecated. Subscribe to the 'collapsedChange' output instead.`)
     @Output()
     public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
 
+    /**
+     * Event fired when collapsed state of pane is changed.
+     *
+     * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane (collapsedChange)='paneCollapsedChange($event)'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     */
+    @Output()
+    public collapsedChange = new EventEmitter<boolean>();
 
     /** @hidden @internal */
     @HostBinding('style.order')
     public order!: number;
-
-    /**
-     *
-     * @hidden @internal
-     * Gets the host native element.
-     */
-    public get element(): any {
-        return this.el.nativeElement;
-    }
 
     /**
      * @hidden @internal
@@ -146,6 +122,51 @@ export class IgxSplitterPaneComponent {
     @HostBinding('style.max-width')
     public maxHeight = '100%';
 
+    /** @hidden @internal */
+    public owner;
+
+    /**
+     * Gets/Sets the size of the current pane.
+     *  * @example
+     * ```html
+     * <igx-splitter>
+     *  <igx-splitter-pane [size]='size'>...</igx-splitter-pane>
+     * </igx-splitter>
+     * ```
+     */
+    @Input()
+    public get size() {
+        return this._size;
+    }
+
+    public set size(value) {
+        this._size = value;
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    /** @hidden @internal */
+    public get isPercentageSize() {
+        return this.size === 'auto' || this.size.indexOf('%') !== -1;
+    }
+
+    /** @hidden @internal */
+    public get dragSize() {
+        return this._dragSize;
+    }
+    public set dragSize(val) {
+        this._dragSize = val;
+        this.el.nativeElement.style.flex = this.flex;
+    }
+
+    /**
+     *
+     * @hidden @internal
+     * Gets the host native element.
+     */
+    public get element(): any {
+        return this.el.nativeElement;
+    }
+
     /**
      * @hidden @internal
      * Gets the `flex` property of the current `IgxSplitterPaneComponent`.
@@ -159,14 +180,8 @@ export class IgxSplitterPaneComponent {
     }
 
     /**
-     * @hidden @internal
-     * Gets/Sets the 'display' property of the current pane.
-     */
-    @HostBinding('style.display')
-    public display = 'flex';
-
-    /**
      * Gets/Sets whether current pane is collapsed.
+     *
      * @example
      * ```typescript
      * const isCollapsed = pane.collapsed;
@@ -182,6 +197,29 @@ export class IgxSplitterPaneComponent {
         return this._collapsed;
     }
 
+    private _size = 'auto';
+    private _dragSize;
+    private _collapsed = false;
+
+
+    constructor(private el: ElementRef) { }
+
+    /**
+     * Toggles the collapsed state of the pane.
+     *
+     * @example
+     * ```typescript
+     * pane.toggle();
+     * ```
+     */
+    public toggle() {
+        // reset sibling sizes when pane collapse state changes.
+        this._getSiblings().forEach(sibling => sibling.size = 'auto');
+        this.collapsed = !this.collapsed;
+        this.onToggle.emit(this);
+        this.collapsedChange.emit(this.collapsed);
+    }
+
     /** @hidden @internal */
     private _getSiblings() {
         const panes = this.owner.panes.toArray();
@@ -195,20 +233,4 @@ export class IgxSplitterPaneComponent {
         }
         return siblings;
     }
-
-    /**
-     * Toggles the collapsed state of the pane.
-     * @example
-     * ```typescript
-     * pane.toggle();
-     * ```
-     */
-    public toggle() {
-        // reset sibling sizes when pane collapse state changes.
-        this._getSiblings().forEach(sibling => sibling.size = 'auto');
-        this.collapsed = !this.collapsed;
-        this.onToggle.emit(this);
-    }
-
-    constructor(private el: ElementRef) { }
 }

@@ -1,5 +1,5 @@
 import { IgxInputState } from './../directives/input/input.directive';
-import { Component, ViewChild, DebugElement, OnInit, ViewChildren, QueryList, ElementRef } from '@angular/core';
+import { Component, ViewChild, DebugElement, OnInit, ElementRef } from '@angular/core';
 import { TestBed, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, FormControl, Validators, ReactiveFormsModule, NgForm, NgControl } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -45,7 +45,7 @@ const enterKeyEvent = new KeyboardEvent('keydown', { key: 'Enter' });
 const endKeyEvent = new KeyboardEvent('keydown', { key: 'End' });
 const homeKeyEvent = new KeyboardEvent('keydown', { key: 'Home' });
 const tabKeyEvent = new KeyboardEvent('keydown', { key: 'Tab' });
-const shiftTabKeysEvent = new KeyboardEvent('keydown', { 'key': 'Tab', shiftKey: true });
+const shiftTabKeysEvent = new KeyboardEvent('keydown', { key: 'Tab', shiftKey: true });
 
 describe('igxSelect', () => {
     let fixture;
@@ -53,14 +53,14 @@ describe('igxSelect', () => {
     let inputElement: DebugElement;
     let selectList: DebugElement;
     let selectListWrapper: DebugElement;
-    const verifyFocusedItem = function (focusedItemIndex) {
+    const verifyFocusedItem = focusedItemIndex => {
         const focusedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_FOCUSED_ITEM));
         expect(focusedItems.length).toEqual(1);
         expect(selectList.children[focusedItemIndex].nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
         expect(select.focusedItem).toBe(select.items[focusedItemIndex]);
         expect(select.items[focusedItemIndex].focused).toBeTruthy();
     };
-    const verifySelectedItem = function (itemIndex) {
+    const verifySelectedItem = itemIndex => {
         expect(select.input.value).toEqual(select.items[itemIndex].value);
         expect(select.value).toEqual(select.items[itemIndex].value);
         const selectedItems = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_SELECTED_ITEM));
@@ -69,11 +69,7 @@ describe('igxSelect', () => {
         expect(select.selectedItem).toBe(select.items[itemIndex] as IgxSelectItemComponent);
         expect(select.items[itemIndex].selected).toBeTruthy();
     };
-    const verifyOpenCloseEvents = function (
-        openEventCounter = 0,
-        closeEventCounter = 0,
-        toggleCallCounter = 0
-    ) {
+    const verifyOpenCloseEvents = (openEventCounter = 0, closeEventCounter = 0, toggleCallCounter = 0) => {
         expect(select.onOpening.emit).toHaveBeenCalledTimes(openEventCounter);
         expect(select.onOpened.emit).toHaveBeenCalledTimes(openEventCounter);
         expect(select.open).toHaveBeenCalledTimes(openEventCounter);
@@ -936,7 +932,7 @@ describe('igxSelect', () => {
                 let selectedItemIndex = 5;
                 let selectedItemValue = select.items[selectedItemIndex].value;
 
-                const checkInputValue = function () {
+                const checkInputValue = () => {
                     expect(select.selectedItem.value).toEqual(selectedItemValue);
                     expect(select.value).toEqual(selectedItemValue);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(selectedItemValue);
@@ -990,7 +986,7 @@ describe('igxSelect', () => {
             it('should populate the input with the selected item text', fakeAsync(() => {
                 let selectedItemIndex = 0;
 
-                const checkInputValue = function () {
+                const checkInputValue = () => {
                     expect(select.selectedItem.text).toEqual(select.input.value);
                     expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                 };
@@ -1055,7 +1051,7 @@ describe('igxSelect', () => {
                     let focusedItem = select.items[2];
                     const navigationStep = focusedItem.index;
 
-                    const navigateDropdownItems = function (keydownEvent: KeyboardEvent) {
+                    const navigateDropdownItems = (keydownEvent: KeyboardEvent) => {
                         for (let index = 0; index < navigationStep; index++) {
                             inputElement.triggerEventHandler('keydown', keydownEvent);
                         }
@@ -1063,7 +1059,7 @@ describe('igxSelect', () => {
                         fixture.detectChanges();
                     };
 
-                    const verifyFocusedItemIsNotSelected = function () {
+                    const verifyFocusedItemIsNotSelected = () => {
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_FOCUSED_ITEM)).toBeTruthy();
                         expect(focusedItem.element.nativeElement.classList.contains(CSS_CLASS_SELECTED_ITEM)).toBeFalsy();
                         expect(select.focusedItem).toEqual(focusedItem);
@@ -1248,7 +1244,7 @@ describe('igxSelect', () => {
                     cancel: false
                 };
 
-                const navigateDropdownItems = function (selectEvent: KeyboardEvent) {
+                const navigateDropdownItems = (selectEvent: KeyboardEvent) => {
                     inputElement.triggerEventHandler('keydown', altArrowDownKeyEvent);
                     tick();
                     fixture.detectChanges();
@@ -1365,7 +1361,7 @@ describe('igxSelect', () => {
                     const groupElement = selectList.children[groupIndex];
                     const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
 
-                    const checkInputValue = function () {
+                    const checkInputValue = () => {
                         expect(select.selectedItem.text).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.text);
                     };
@@ -1410,7 +1406,7 @@ describe('igxSelect', () => {
                     // const itemElementToSelect = groupElement.children[selectedItemIndex].nativeElement;
                     const expectedInputText = 'Paris star';
 
-                    const checkInputValue = function () {
+                    const checkInputValue = () => {
                         expect(select.selectedItem.itemText).toEqual(expectedInputText);
                         expect(select.selectedItem.itemText).toEqual(select.input.value);
                         expect(inputElement.nativeElement.value.toString().trim()).toEqual(select.selectedItem.itemText);
@@ -1902,14 +1898,14 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keydown', { key: 'p' });
                     tick();
                     fixture.detectChanges();
                     inputElement.triggerEventHandler('keydown', { key: 'a' });
                     tick();
                     fixture.detectChanges();
-                    verifyFocusedItem(filteredItemsInxs[index]);
+                    verifyFocusedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -1941,11 +1937,11 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
 
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keydown', { key: 'l' });
                     tick();
                     fixture.detectChanges();
-                    verifyFocusedItem(filteredItemsInxs[index]);
+                    verifyFocusedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -1977,22 +1973,22 @@ describe('igxSelect', () => {
 
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
-                verifyFocusedItem(filteredItemsInxs[index]);
+                verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
 
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
                 tick();
                 fixture.detectChanges();
-                verifyFocusedItem(filteredItemsInxs[index]);
+                verifyFocusedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
@@ -2021,14 +2017,14 @@ describe('igxSelect', () => {
         it('should filter and select items on character key navigation when dropdown is closed',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('pa');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of filteredItemsInxs) {
                     inputElement.triggerEventHandler('keydown', { key: 'p' });
                     tick();
                     fixture.detectChanges();
                     inputElement.triggerEventHandler('keydown', { key: 'a' });
                     tick();
                     fixture.detectChanges();
-                    verifySelectedItem(filteredItemsInxs[index]);
+                    verifySelectedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -2052,11 +2048,11 @@ describe('igxSelect', () => {
         it('character key navigation when dropdown is closed should wrap selection',
             fakeAsync(() => {
                 const filteredItemsInxs = fixture.componentInstance.filterCities('l');
-                for (let index = 0; index < filteredItemsInxs.length; index++) {
+                for (const item of  filteredItemsInxs) {
                     inputElement.triggerEventHandler('keydown', { key: 'l' });
                     tick();
                     fixture.detectChanges();
-                    verifySelectedItem(filteredItemsInxs[index]);
+                    verifySelectedItem(item);
                     tick(500);
                     fixture.detectChanges();
                 }
@@ -2085,22 +2081,22 @@ describe('igxSelect', () => {
 
             // German characters
             let filteredItemsInxs = fixture.componentInstance.filterCities('ü');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'ü' });
                 tick();
                 fixture.detectChanges();
-                verifySelectedItem(filteredItemsInxs[index]);
+                verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
 
             // Ciryllic characters
             filteredItemsInxs = fixture.componentInstance.filterCities('с');
-            for (let index = 0; index < filteredItemsInxs.length; index++) {
+            for (const item of filteredItemsInxs) {
                 inputElement.triggerEventHandler('keydown', { key: 'с' });
                 tick();
                 fixture.detectChanges();
-                verifySelectedItem(filteredItemsInxs[index]);
+                verifySelectedItem(item);
                 tick(500);
                 fixture.detectChanges();
             }
@@ -2151,8 +2147,6 @@ describe('igxSelect', () => {
         const defaultItemLeftPadding = 24;
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
-        const defaultIconWidth = 24;
-        const inputGroupHeight = 50;
         const defaultTextIdent = 8;
         let visibleItems = 5;
         let hasScroll = true;
@@ -2164,19 +2158,17 @@ describe('igxSelect', () => {
         let listTop: number;
         let listBottom: number;
 
-        const negateInputPaddings = function () {
-            return (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
+        const negateInputPaddings = () => (parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingTop) -
                 parseFloat(window.getComputedStyle(inputElement.nativeElement).paddingBottom)
             ) / 2;
-        };
-        const getBoundingRectangles = function () {
+        const getBoundingRectangles = () => {
             listRect = selectList.nativeElement.getBoundingClientRect();
             inputRect = inputElement.nativeElement.getBoundingClientRect();
             selectedItemRect = select.items[selectedItemIndex].element.nativeElement.getBoundingClientRect();
             inputItemDiff = selectedItemRect.height - inputRect.height;
         };
         // Verifies that the selected item bounding rectangle is positioned over the input bounding rectangle
-        const verifySelectedItemPositioning = function (reversed = false) {
+        const verifySelectedItemPositioning = (reversed = false) => {
             expect(selectedItemRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             const expectedItemTop = reversed ? document.body.getBoundingClientRect().bottom - defaultWindowToListOffset -
                 selectedItemRect.height - negateInputPaddings() :
@@ -2191,7 +2183,7 @@ describe('igxSelect', () => {
             // Select's ddl width is based on the input's width. This introduces ~0.5px differences.
             expect(selectedItemRect.width).toBeCloseTo(selectList.nativeElement.scrollWidth, 0);
         };
-        const verifyListPositioning = function () {
+        const verifyListPositioning = () => {
             expect(listRect.left).toBeCloseTo(inputRect.left - defaultItemLeftPadding, 0);
             // check with precision of 2 digits after decimal point, as it is the meaningful portion anyways.
             expect(listRect.top).toBeCloseTo(listTop, 2);
@@ -2392,7 +2384,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 getBoundingRectangles();
             }));
-            // tslint:disable-next-line:max-line-length
+            // eslint-disable-next-line max-len
             it('should display list with selected item and all items before it and position selected item over input when last item is selected',
                 fakeAsync(() => {
                     selectedItemIndex = 9;
@@ -2411,7 +2403,7 @@ describe('igxSelect', () => {
                 }));
         });
         describe('Input with affixes positioning tests: ', () => {
-            const calculatePrefixesWidth = function () {
+            const calculatePrefixesWidth = () => {
                 let prefixesWidth = 0;
                 const prefixes = fixture.debugElement.query(By.css('igx-prefix')).children;
                 Array.from(prefixes).forEach((prefix: DebugElement) => {
@@ -2673,7 +2665,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['detectChanges']);
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const mockInjector = jasmine.createSpyObj('Injector', {
-            'get': mockNgControl
+            get: mockNgControl
         });
 
         // init
@@ -2774,8 +2766,8 @@ class IgxSelectGroupsComponent {
     @ViewChild('select', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
     public locations: {
-        continent: string,
-        capitals: string[]
+        continent: string;
+        capitals: string[];
     }[] = [
             { continent: 'Europe', capitals: ['Berlin', 'London', 'Paris'] },
             { continent: 'South America', capitals: ['Buenos Aires', 'Caracas', 'Lima'] },
@@ -2855,12 +2847,12 @@ class IgxSelectBottomComponent {
     template: `
     <igx-select #select [(ngModel)]="value" [ngStyle]="{position:'fixed', top:'20px', left: '30px'}">
     <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">favorite</igx-icon>
-            <igx-icon fontSet="material">home</igx-icon>
-            <igx-icon fontSet="material">search</igx-icon>
+            <igx-icon>favorite</igx-icon>
+            <igx-icon>home</igx-icon>
+            <igx-icon>search</igx-icon>
         </igx-prefix>
         <igx-suffix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-suffix>
     <igx-hint>I am a Hint</igx-hint>
     <igx-select-item *ngFor="let item of items" [value]="item">
@@ -2897,7 +2889,7 @@ class IgxSelectAffixComponent {
     <igx-select formControlName="optionsSelect" #selectReactive>
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
             {{ item }}
@@ -2925,22 +2917,22 @@ class IgxSelectReactiveFormComponent {
     ];
 
     public validationType = {
-        'firstName': [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
-        'password': [Validators.required, Validators.maxLength(12)],
-        'optionsSelect': [Validators.required]
+        firstName: [Validators.required, Validators.pattern('^[\\w\\s/-/(/)]{3,50}$')],
+        password: [Validators.required, Validators.maxLength(12)],
+        optionsSelect: [Validators.required]
     };
 
     constructor(fb: FormBuilder) {
         this.reactiveForm = fb.group({
-            'firstName': new FormControl('', Validators.required),
-            'password': ['', Validators.required],
-            'optionsSelect': ['', Validators.required]
+            firstName: new FormControl('', Validators.required),
+            password: ['', Validators.required],
+            optionsSelect: ['', Validators.required]
         });
     }
     onSubmitReactive() { }
 
     public removeValidators(form: FormGroup) {
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).clearValidators();
             form.get(key).updateValueAndValidity();
@@ -2948,7 +2940,7 @@ class IgxSelectReactiveFormComponent {
     }
 
     public addValidators(form: FormGroup) {
-        // tslint:disable-next-line:forin
+        // eslint-disable-next-line guard-for-in
         for (const key in form.controls) {
             form.get(key).setValidators(this.validationType[key]);
             form.get(key).updateValueAndValidity();
@@ -2975,7 +2967,7 @@ class IgxSelectReactiveFormComponent {
     <igx-select #selectInForm [(ngModel)]="model.option" [required]="isRequired" name="option">
         <label igxLabel>Sample Label</label>
         <igx-prefix igxPrefix>
-            <igx-icon fontSet="material">alarm</igx-icon>
+            <igx-icon>alarm</igx-icon>
         </igx-prefix>
         <igx-select-item *ngFor="let item of items; let inx=index" [value]="item">
             {{ item }}
@@ -3019,7 +3011,7 @@ class IgxSelectTemplateFormComponent {
         [displayDensity]="'cosy'">
             <label igxLabel>Sample Label</label>
             <igx-prefix igxPrefix>
-                <igx-icon fontSet="material">alarm</igx-icon>
+                <igx-icon>alarm</igx-icon>
             </igx-prefix>
             <igx-select-item>None</igx-select-item>
             <igx-select-item *ngFor="let item of items; let inx=index" [value]="item.field">

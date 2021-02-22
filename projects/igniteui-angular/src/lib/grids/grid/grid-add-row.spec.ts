@@ -22,7 +22,6 @@ import { IgxGridRowComponent } from './grid-row.component';
 import { takeUntil, first } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-
 describe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
         const DISPLAY_CONTAINER = 'igx-display-container';
@@ -210,7 +209,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.pinnedRecords.length).toBe(1);
             expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
         });
-        it('should navigate to added row on snackbar button click.', async() => {
+        it('should navigate to added row on snackbar button click.', async () => {
             const rows = grid.rowList.toArray();
             const dataCount = grid.data.length;
             rows[0].beginAddRow();
@@ -239,7 +238,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
         });
 
-        it('should navigate to added row on snackbar button click when row is not in current view.', async() => {
+        it('should navigate to added row on snackbar button click when row is not in current view.', async () => {
             grid.paging = true;
             grid.perPage = 5;
             fixture.detectChanges();
@@ -291,7 +290,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(typeof(cell.value)).toBe(type);
         });
 
-        it('should allow setting a different display time for snackbar', async() => {
+        it('should allow setting a different display time for snackbar', async () => {
             grid.snackbarDisplayTime = 50;
             fixture.detectChanges();
 
@@ -490,7 +489,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async() => {
+        it('Should exit add row mode and discard on clicking CANCEL button in the overlay', async () => {
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -550,7 +549,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.data.length).toBe(dataLength + 1);
         });
 
-        it('Should correctly scroll all rows after closing the add row', async() => {
+        it('Should correctly scroll all rows after closing the add row', async () => {
             grid.width = '400px';
             fixture.detectChanges();
 
@@ -608,9 +607,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             GridFunctions.navigateToLastPage(grid.nativeElement);
             fixture.detectChanges();
-            expect(grid.data.length).toBe(dataLength + 1);
-            const addedRow = grid.data[grid.data.length - 1];
-            expect(addedRow).toBe(grid.rowList.last.rowData);
+            expect(grid.data.length).toBe(dataLength);
         });
 
         it('Should save changes when changing page count', () => {
@@ -631,7 +628,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const selectList = fixture.debugElement.query(By.css('.igx-drop-down__list-scroll'));
             selectList.children[2].nativeElement.click();
             fixture.detectChanges();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
         });
     });
 
@@ -816,7 +813,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             gridContent = GridFunctions.getGridContent(fixture);
         }));
 
-        it('Should show the action strip "Show" button if added row is in collapsed group and on click should expand the group and scroll to the correct added row', () => {
+        it(`Should show the action strip "Show" button if added row is in collapsed group
+            4and on click should expand the group and scroll to the correct added row`, () => {
             grid.groupBy({
                 fieldName: 'CompanyName', dir: SortingDirection.Asc, ignoreCase: true,
                 strategy: DefaultSortingStrategy.instance()
@@ -903,7 +901,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
@@ -922,7 +920,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
 
             row.beginAddRow();
@@ -932,11 +930,11 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 2);
+            expect(grid.data.length).toBe(dataLength);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
-        it('Should exit add row mode when resizing a column', async() => {
+        it('Should exit add row mode when resizing a column', async () => {
             spyOn(grid, 'endEdit').and.callThrough();
 
             fixture.detectChanges();
@@ -963,8 +961,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.data.length).toBe(dataLength + 1);
-            expect(grid.rowEditingOverlay.collapsed).toEqual(true);
+            expect(grid.data.length).toBe(dataLength);
+            expect(grid.rowEditingOverlay.collapsed).toEqual(false);
         });
 
         it('Should exit add row mode when hiding a column', () => {

@@ -44,8 +44,6 @@ export interface ITooltipHideEventArgs extends IBaseEventArgs {
     selector: '[igxTooltipTarget]'
 })
 export class IgxTooltipTargetDirective extends IgxToggleActionDirective implements OnInit, OnDestroy {
-    private destroy$ = new Subject();
-
     /**
      * Gets/sets the amount of milliseconds that should pass before showing the tooltip.
      *
@@ -103,7 +101,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      * @hidden
      */
     @Input('igxTooltipTarget')
-    set target(target: any) {
+    public set target(target: any) {
         if (target !== null && target !== '') {
             this._target = target;
         }
@@ -112,7 +110,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    get target(): any {
+    public get target(): any {
         if (typeof this._target === 'string') {
             return this._navigationService.get(this._target);
         }
@@ -153,12 +151,12 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipShow)='tooltipShowing($event)'>Hover me</button>
+     *         (tooltipShow)='tooltipShowing($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
     @Output()
-    public onTooltipShow = new EventEmitter<ITooltipShowEventArgs>();
+    public tooltipShow = new EventEmitter<ITooltipShowEventArgs>();
 
     /**
      * Emits an event when the tooltip that is associated with this target starts hiding.
@@ -172,16 +170,109 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
      *
      * ```html
      * <button [igxTooltipTarget]="tooltipRef"
-     *         (onTooltipHide)='tooltipHiding($event)'>Hover me</button>
+     *         (tooltipHide)='tooltipHiding($event)'>Hover me</button>
      * <span #tooltipRef="tooltip" igxTooltip>Hello there, I am a tooltip!</span>
      * ```
      */
     @Output()
-    public onTooltipHide = new EventEmitter<ITooltipHideEventArgs>();
+    public tooltipHide = new EventEmitter<ITooltipHideEventArgs>();
+
+    private destroy$ = new Subject();
 
     constructor(private _element: ElementRef,
         @Optional() private _navigationService: IgxNavigationService) {
         super(_element, _navigationService);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('click')
+    public onClick() {
+        if (!this.target.collapsed) {
+            this.target.forceClose(this.mergedOverlaySettings);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseenter')
+    public onMouseEnter() {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        this.checkOutletAndOutsideClick();
+        const shouldReturn = this.preMouseEnterCheck();
+        if (shouldReturn) {
+            return;
+        }
+
+        const showingArgs = { target: this, tooltip: this.target, cancel: false };
+        this.tooltipShow.emit(showingArgs);
+
+        if (showingArgs.cancel) {
+            return;
+        }
+
+        this.target.toBeShown = true;
+        this.target.timeoutId = setTimeout(() => {
+            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
+            this.target.toBeShown = false;
+        }, this.showDelay);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('mouseleave')
+    public onMouseLeave() {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        this.checkOutletAndOutsideClick();
+        const shouldReturn = this.preMouseLeaveCheck();
+        if (shouldReturn || this.target.collapsed) {
+            return;
+        }
+
+        this.target.toBeHidden = true;
+        this.target.timeoutId = setTimeout(() => {
+            this.target.close(); // Call close() of IgxTooltipDirective
+            this.target.toBeHidden = false;
+        }, this.hideDelay);
+
+
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('touchstart')
+    public onTouchStart() {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        this.showTooltip();
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('document:touchstart', ['$event'])
+    public onDocumentTouchStart(event) {
+        if (this.tooltipDisabled) {
+            return;
+        }
+
+        if (this.nativeElement !== event.target &&
+            !this.nativeElement.contains(event.target)
+        ) {
+            this.hideTooltip();
+        }
     }
 
     /**
@@ -203,7 +294,7 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         this.target.onClosing.pipe(takeUntil(this.destroy$)).subscribe((event) => {
             const hidingArgs = { target: this, tooltip: this.target, cancel: false };
-            this.onTooltipHide.emit(hidingArgs);
+            this.tooltipHide.emit(hidingArgs);
 
             if (hidingArgs.cancel) {
                 event.cancel = true;
@@ -214,9 +305,62 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
     /**
      * @hidden
      */
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.destroy$.next();
         this.destroy$.complete();
+    }
+
+    /**
+     * Shows the tooltip by respecting the 'showDelay' property.
+     *
+     * ```typescript
+     * this.tooltipTarget.showTooltip();
+     * ```
+     */
+    public showTooltip() {
+        clearTimeout(this.target.timeoutId);
+
+        if (!this.target.collapsed) {
+            //  if close animation has started finish it, or close the tooltip with no animation
+            this.target.forceClose(this.mergedOverlaySettings);
+            this.target.toBeHidden = false;
+        }
+
+        const showingArgs = { target: this, tooltip: this.target, cancel: false };
+        this.tooltipShow.emit(showingArgs);
+
+        if (showingArgs.cancel) {
+            return;
+        }
+
+        this.target.toBeShown = true;
+        this.target.timeoutId = setTimeout(() => {
+            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
+            this.target.toBeShown = false;
+        }, this.showDelay);
+    }
+
+    /**
+     * Hides the tooltip by respecting the 'hideDelay' property.
+     *
+     * ```typescript
+     * this.tooltipTarget.hideTooltip();
+     * ```
+     */
+    public hideTooltip() {
+        if (this.target.collapsed && this.target.toBeShown) {
+            clearTimeout(this.target.timeoutId);
+        }
+
+        if (this.target.collapsed || this.target.toBeHidden) {
+            return;
+        }
+
+        this.target.toBeHidden = true;
+        this.target.timeoutId = setTimeout(() => {
+            this.target.close(); // Call close() of IgxTooltipDirective
+            this.target.toBeHidden = false;
+        }, this.hideDelay);
     }
 
     private checkOutletAndOutsideClick() {
@@ -262,150 +406,6 @@ export class IgxTooltipTargetDirective extends IgxToggleActionDirective implemen
 
         return false;
     }
-
-    /**
-     * @hidden
-     */
-    @HostListener('click')
-    public onClick() {
-        if (!this.target.collapsed) {
-            this.target.forceClose(this.mergedOverlaySettings);
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseenter')
-    public onMouseEnter() {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        this.checkOutletAndOutsideClick();
-        const shouldReturn = this.preMouseEnterCheck();
-        if (shouldReturn) {
-            return;
-        }
-
-        const showingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipShow.emit(showingArgs);
-
-        if (showingArgs.cancel) {
-            return;
-        }
-
-        this.target.toBeShown = true;
-        this.target.timeoutId = setTimeout(() => {
-            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-            this.target.toBeShown = false;
-        }, this.showDelay);
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('mouseleave')
-    public onMouseLeave() {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        this.checkOutletAndOutsideClick();
-        const shouldReturn = this.preMouseLeaveCheck();
-        if (shouldReturn || this.target.collapsed) {
-            return;
-        }
-
-        this.target.toBeHidden = true;
-        this.target.timeoutId = setTimeout(() => {
-            this.target.close(); // Call close() of IgxTooltipDirective
-            this.target.toBeHidden = false;
-        }, this.hideDelay);
-
-
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('touchstart', ['$event'])
-    public onTouchStart(event) {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        this.showTooltip();
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('document:touchstart', ['$event'])
-    public onDocumentTouchStart(event) {
-        if (this.tooltipDisabled) {
-            return;
-        }
-
-        if (this.nativeElement !== event.target &&
-            !this.nativeElement.contains(event.target)
-        ) {
-            this.hideTooltip();
-        }
-    }
-
-    /**
-     * Shows the tooltip by respecting the 'showDelay' property.
-     *
-     * ```typescript
-     * this.tooltipTarget.showTooltip();
-     * ```
-     */
-    public showTooltip() {
-        clearTimeout(this.target.timeoutId);
-
-        if (!this.target.collapsed) {
-            //  if close animation has started finish it, or close the tooltip with no animation
-            this.target.forceClose(this.mergedOverlaySettings);
-            this.target.toBeHidden = false;
-        }
-
-        const showingArgs = { target: this, tooltip: this.target, cancel: false };
-        this.onTooltipShow.emit(showingArgs);
-
-        if (showingArgs.cancel) {
-            return;
-        }
-
-        this.target.toBeShown = true;
-        this.target.timeoutId = setTimeout(() => {
-            this.target.open(this.mergedOverlaySettings); // Call open() of IgxTooltipDirective
-            this.target.toBeShown = false;
-        }, this.showDelay);
-    }
-
-    /**
-     * Hides the tooltip by respecting the 'hideDelay' property.
-     *
-     * ```typescript
-     * this.tooltipTarget.hideTooltip();
-     * ```
-     */
-    public hideTooltip() {
-        if (this.target.collapsed && this.target.toBeShown) {
-            clearTimeout(this.target.timeoutId);
-        }
-
-        if (this.target.collapsed || this.target.toBeHidden) {
-            return;
-        }
-
-        this.target.toBeHidden = true;
-        this.target.timeoutId = setTimeout(() => {
-            this.target.close(); // Call close() of IgxTooltipDirective
-            this.target.toBeHidden = false;
-        }, this.hideDelay);
-    }
 }
 
 let NEXT_ID = 0;
@@ -428,24 +428,6 @@ let NEXT_ID = 0;
     selector: '[igxTooltip]'
 })
 export class IgxTooltipDirective extends IgxToggleDirective {
-
-    /**
-     * @hidden
-     */
-    public timeoutId;
-
-    /**
-     * @hidden
-     * Returns whether close time out has started
-     */
-    public toBeHidden = false;
-
-    /**
-     * @hidden
-     * Returns whether open time out has started
-     */
-    public toBeShown = false;
-
     /**
      * @hidden
      */
@@ -504,6 +486,23 @@ export class IgxTooltipDirective extends IgxToggleDirective {
         return 'tooltip';
     }
 
+    /**
+     * @hidden
+     */
+    public timeoutId;
+
+    /**
+     * @hidden
+     * Returns whether close time out has started
+     */
+    public toBeHidden = false;
+
+    /**
+     * @hidden
+     * Returns whether open time out has started
+     */
+    public toBeShown = false;
+
     /** @hidden */
     constructor(
         elementRef: ElementRef,
@@ -517,6 +516,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is open animation in progress this method will finish is.
      * If there is no open animation in progress this method will open the toggle with no animation.
+     *
      * @param overlaySettings setting to use for opening the toggle
      */
     protected forceOpen(overlaySettings?: OverlaySettings) {
@@ -537,6 +537,7 @@ export class IgxTooltipDirective extends IgxToggleDirective {
     /**
      * If there is close animation in progress this method will finish is.
      * If there is no close animation in progress this method will close the toggle with no animation.
+     *
      * @param overlaySettings settings to use for closing the toggle
      */
     protected forceClose(overlaySettings?: OverlaySettings) {

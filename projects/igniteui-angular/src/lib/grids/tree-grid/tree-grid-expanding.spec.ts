@@ -1021,6 +1021,41 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                 TreeGridFunctions.verifyTreeRowSelectionByIndex(fix, 4, true);
                 expect(treeGrid.selectedRows).toEqual([1, 6, 10]);
             });
+
+            it('check row selection within multipleCascade selection mode when expand a row', fakeAsync(() => {
+                treeGrid.rowSelection = GridSelectionMode.multipleCascade;
+                fix.detectChanges();
+
+                treeGrid.selectRows([1]);
+                fix.detectChanges();
+
+                expect(treeGrid.selectedRows).toEqual([1]);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+
+                treeGrid.expandRow(1);
+                fix.detectChanges();
+                tick(1000);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(5);
+                expect(treeGrid.selectedRows.length).toBe(3);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+
+                treeGrid.expandRow(2);
+                fix.detectChanges();
+                tick(1000);
+                fix.detectChanges();
+
+                expect(treeGrid.rowList.length).toBe(7);
+                expect(treeGrid.selectedRows.length).toBe(5);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 1, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 2, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
+                TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 4, true, true);
+            }));
         });
 
         describe('ChildDataKey', () => {
@@ -1401,7 +1436,7 @@ describe('Custom expand/collapse template #tGrid', () => {
         treeGrid = fix.componentInstance.treeGrid;
     }));
 
-    it('should allow setting custom template for  expand/collapse icons', async() => {
+    it('should allow setting custom template for  expand/collapse icons', async () => {
         const row = treeGrid.dataRowList.toArray()[0];
         let expander =  row.nativeElement.querySelector('.igx-grid__tree-grouping-indicator');
         expect(expander.innerText).toBe('EXPANDED');
@@ -1414,7 +1449,7 @@ describe('Custom expand/collapse template #tGrid', () => {
     });
 });
 
-function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) {
+const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisibility) => {
     const disabled = 'igx-button--disabled';
     const grid = fix.componentInstance.treeGrid;
     const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
@@ -1435,4 +1470,4 @@ function verifyGridPager(fix, rowsCount, firstCellValue, pagerText, buttonsVisib
         expect(pagingButtons[2].className.includes(disabled)).toBe(buttonsVisibility[2]);
         expect(pagingButtons[3].className.includes(disabled)).toBe(buttonsVisibility[3]);
     }
-}
+};

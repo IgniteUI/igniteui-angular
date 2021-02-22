@@ -96,14 +96,6 @@ export class CarouselHammerConfig extends HammerGestureConfig {
 })
 
 export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
-    /**
-     * Returns the `role` attribute of the carousel.
-     * ```typescript
-     * let carouselRole =  this.carousel.role;
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    @HostBinding('attr.role') public role = 'region';
 
     /**
      * Sets the `id` of the carousel.
@@ -111,33 +103,30 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel id="my-first-carousel"></igx-carousel>
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('attr.id')
     @Input()
     public id = `igx-carousel-${NEXT_ID++}`;
-
     /**
-     * Returns the `aria-label` of the carousel.
-     *
+     * Returns the `role` attribute of the carousel.
      * ```typescript
-     * let carousel = this.carousel.ariaLabel;
+     * let carouselRole =  this.carousel.role;
      * ```
      *
-     */
-    @HostBinding('attr.aria-label')
-    public ariaLabel = 'carousel';
-
-    /**
-     * Returns the `tabIndex` of the carousel component.
-     * ```typescript
-     * let tabIndex =  this.carousel.tabIndex;
-     * ```
      * @memberof IgxCarouselComponent
      */
-    @HostBinding('attr.tabindex')
-    get tabIndex() {
-        return 0;
+    @HostBinding('attr.role') public role = 'region';
+
+    /** @hidden */
+    @HostBinding('attr.aria-roledescription')
+    public roleDescription = 'carousel';
+
+    /** @hidden */
+    @HostBinding('attr.aria-labelledby')
+    public get labelId() {
+        return this.showIndicatorsLabel ? `${this.id}-label` : null;
     }
 
     /**
@@ -145,6 +134,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let class =  this.carousel.cssClass;
      * ```
+     *
      * @memberof IgxCarouselComponent
      */
     @HostBinding('class.igx-carousel')
@@ -157,7 +147,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```
      */
     @HostBinding('style.touch-action')
-    get touchAction() {
+    public get touchAction() {
         return this.gesturesSupport ? 'pan-y' : 'auto';
     }
 
@@ -167,6 +157,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [loop]="false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public loop = true;
@@ -177,34 +168,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      *  <igx-carousel [pause]="false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public pause = true;
-
-    /**
-     * Returns the time `interval` in milliseconds before the slide changes.
-     * ```typescript
-     * let timeInterval = this.carousel.interval;
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    @Input()
-    get interval(): number {
-        return this._interval;
-    }
-
-    /**
-     * Sets the time `interval` in milliseconds before the slide changes.
-     * If not set, the carousel will not change `slides` automatically.
-     * ```html
-     * <igx-carousel [interval] = "1000"></igx-carousel>
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    set interval(value: number) {
-        this._interval = +value;
-        this.restartInterval();
-    }
 
     /**
      * Controls whether the carousel should render the left/right `navigation` buttons.
@@ -212,6 +179,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [navigation] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public navigation = true;
@@ -222,6 +190,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [keyboardSupport] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public keyboardSupport = true;
@@ -232,6 +201,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [gesturesSupport] = "false"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public gesturesSupport = true;
@@ -242,6 +212,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel [maximumIndicatorsCount] = "10"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Input() public maximumIndicatorsCount = 5;
@@ -253,6 +224,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * <igx-carousel indicatorsOrientation='top'>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public indicatorsOrientation: CarouselIndicatorsOrientation = CarouselIndicatorsOrientation.bottom;
@@ -264,34 +236,10 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * <igx-carousel animationType='none'>
      * <igx-carousel>
      * ```
+     *
      * @memberOf IgxSlideComponent
      */
     @Input() public animationType = CarouselAnimationType.slide;
-
-    /**
-     * An accessor that sets the resource strings.
-     * By default it uses EN resources.
-     */
-    @Input()
-    set resourceStrings(value: ICarouselResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
-     * An accessor that returns the resource strings.
-     */
-    get resourceStrings(): ICarouselResourceStrings {
-        return this._resourceStrings;
-    }
-
-    @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
-    private defaultIndicator: TemplateRef<any>;
-
-    @ViewChild('defaultNextButton', { read: TemplateRef, static: true })
-    private defaultNextButton: TemplateRef<any>;
-
-    @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
-    private defaultPrevButton: TemplateRef<any>;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -306,8 +254,8 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *  <igx-carousel #carousel>
      *      ...
      *      <ng-template igxCarouselIndicator let-slide>
-     *         <igx-icon *ngIf="slide.active"  fontSet="material">brightness_7</igx-icon>
-     *         <igx-icon *ngIf="!slide.active"  fontSet="material">brightness_5</igx-icon>
+     *         <igx-icon *ngIf="slide.active">brightness_7</igx-icon>
+     *         <igx-icon *ngIf="!slide.active">brightness_5</igx-icon>
      *      </ng-template>
      *  </igx-carousel>
      * ```
@@ -329,7 +277,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *      ...
      *      <ng-template igxCarouselNextButton let-disabled>
      *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon fontSet="material">add</igx-icon>
+     *                <igx-icon>add</igx-icon>
      *           </button>
      *      </ng-template>
      *  </igx-carousel>
@@ -352,7 +300,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      *      ...
      *      <ng-template igxCarouselPrevButton let-disabled>
      *            <button igxButton="fab" igxRipple="white" [disabled]="disabled">
-     *                <igx-icon fontSet="material">remove</igx-icon>
+     *                <igx-icon>remove</igx-icon>
      *           </button>
      *      </ng-template>
      *  </igx-carousel>
@@ -366,6 +314,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```typescript
      * let slides: QueryList<IgxSlideComponent> = this.carousel.slides;
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @ContentChildren(IgxSlideComponent)
@@ -377,6 +326,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideChanged)="onSlideChanged($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideChanged = new EventEmitter<ISlideEventArgs>();
@@ -387,6 +337,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideAdded)="onSlideAdded($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideAdded = new EventEmitter<ISlideEventArgs>();
@@ -397,6 +348,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onSlideRemoved)="onSlideRemoved($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onSlideRemoved = new EventEmitter<ISlideEventArgs>();
@@ -407,6 +359,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onCarouselPaused)="onCarouselPaused($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onCarouselPaused = new EventEmitter<IgxCarouselComponent>();
@@ -417,15 +370,29 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
      * ```html
      * <igx-carousel (onCarouselPlaying)="onCarouselPlaying($event)"></igx-carousel>
      * ```
+     *
      * @memberOf IgxCarouselComponent
      */
     @Output() public onCarouselPlaying = new EventEmitter<IgxCarouselComponent>();
 
+    @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
+    private defaultIndicator: TemplateRef<any>;
+
+    @ViewChild('defaultNextButton', { read: TemplateRef, static: true })
+    private defaultNextButton: TemplateRef<any>;
+
+    @ViewChild('defaultPrevButton', { read: TemplateRef, static: true })
+    private defaultPrevButton: TemplateRef<any>;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public stoppedByInteraction: boolean;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
     private playing: boolean;
-    private stoppedByInteraction: boolean;
     private destroyed: boolean;
     private destroy$ = new Subject<any>();
     private differ: IterableDiffer<IgxSlideComponent> | null = null;
@@ -438,16 +405,291 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     private animationPosition = 0;
     private newDuration = 0;
 
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: ICarouselResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): ICarouselResourceStrings {
+        return this._resourceStrings;
+    }
+
+    /** @hidden */
+    public get getIndicatorTemplate(): TemplateRef<any> {
+        if (this.indicatorTemplate) {
+            return this.indicatorTemplate;
+        }
+        return this.defaultIndicator;
+    }
+
+    /** @hidden */
+    public get getNextButtonTemplate(): TemplateRef<any> {
+        if (this.nextButtonTemplate) {
+            return this.nextButtonTemplate;
+        }
+        return this.defaultNextButton;
+    }
+
+    /** @hidden */
+    public get getPrevButtonTemplate(): TemplateRef<any> {
+        if (this.prevButtonTemplate) {
+            return this.prevButtonTemplate;
+        }
+        return this.defaultPrevButton;
+    }
+
+    /** @hidden */
+    public get indicatorsOrientationClass() {
+        return `igx-carousel-indicators--${this.indicatorsOrientation}`;
+    }
+
+    /** @hidden */
+    public get showIndicators(): boolean {
+        return this.total <= this.maximumIndicatorsCount && this.total > 0;
+    }
+
+    /** @hidden */
+    public get showIndicatorsLabel(): boolean {
+        return this.total > this.maximumIndicatorsCount;
+    }
+
+    /** @hidden */
+    public get getCarouselLabel() {
+        return `${this.current + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
+    }
+
+    /**
+     * Returns the total number of `slides` in the carousel.
+     * ```typescript
+     * let slideCount =  this.carousel.total;
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public get total(): number {
+        return this.slides?.length;
+    }
+
+    /**
+     * The index of the slide being currently shown.
+     * ```typescript
+     * let currentSlideNumber =  this.carousel.current;
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public get current(): number {
+        return !this.currentSlide ? 0 : this.currentSlide.index;
+    }
+
+    /**
+     * Returns a boolean indicating if the carousel is playing.
+     * ```typescript
+     * let isPlaying =  this.carousel.isPlaying;
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public get isPlaying(): boolean {
+        return this.playing;
+    }
+
+    /**
+     * Returns а boolean indicating if the carousel is destroyed.
+     * ```typescript
+     * let isDestroyed =  this.carousel.isDestroyed;
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public get isDestroyed(): boolean {
+        return this.destroyed;
+    }
+    /**
+     * Returns a reference to the carousel element in the DOM.
+     * ```typescript
+     * let nativeElement =  this.carousel.nativeElement;
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    public get nativeElement(): any {
+        return this.element.nativeElement;
+    }
+
+    /**
+     * Returns the time `interval` in milliseconds before the slide changes.
+     * ```typescript
+     * let timeInterval = this.carousel.interval;
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    @Input()
+    public get interval(): number {
+        return this._interval;
+    }
+
+    /**
+     * Sets the time `interval` in milliseconds before the slide changes.
+     * If not set, the carousel will not change `slides` automatically.
+     * ```html
+     * <igx-carousel [interval] = "1000"></igx-carousel>
+     * ```
+     *
+     * @memberof IgxCarouselComponent
+     */
+    public set interval(value: number) {
+        this._interval = +value;
+        this.restartInterval();
+    }
+
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
         private builder: AnimationBuilder, private platformUtil: PlatformUtil) {
         this.differ = this.iterableDiffers.find([]).create(null);
+    }
+
+
+    /** @hidden */
+    @HostListener('keydown.arrowright', ['$event'])
+    public onKeydownArrowRight(event) {
+        if (this.keyboardSupport) {
+            event.preventDefault();
+            this.next();
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+        }
+    }
+
+    /** @hidden */
+    @HostListener('keydown.arrowleft', ['$event'])
+    public onKeydownArrowLeft(event) {
+        if (this.keyboardSupport) {
+            event.preventDefault();
+            this.prev();
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+        }
+    }
+
+    /** @hidden */
+    @HostListener('tap', ['$event'])
+    public onTap(event) {
+        // play pause only when tap on slide
+        if (event.target && event.target.classList.contains('igx-slide')) {
+            if (this.isPlaying) {
+                if (this.pause) {
+                    this.stoppedByInteraction = true;
+                }
+                this.stop();
+            } else if (this.stoppedByInteraction) {
+                this.play();
+            }
+        }
+    }
+
+    /** @hidden */
+    @HostListener('keydown.home', ['$event'])
+    public onKeydownHome(event) {
+        if (this.keyboardSupport && this.slides.length > 0) {
+            event.preventDefault();
+            this.slides.first.active = true;
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+        }
+    }
+
+    /** @hidden */
+    @HostListener('keydown.end', ['$event'])
+    public onKeydownEnd(event) {
+        if (this.keyboardSupport && this.slides.length > 0) {
+            event.preventDefault();
+            this.slides.last.active = true;
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+        }
+    }
+
+    /** @hidden */
+    @HostListener('mouseenter')
+    public onMouseEnter() {
+        if (this.pause && this.isPlaying) {
+            this.stoppedByInteraction = true;
+        }
+        this.stop();
+    }
+
+    /** @hidden */
+    @HostListener('mouseleave')
+    public onMouseLeave() {
+        if (this.stoppedByInteraction) {
+            this.play();
+        }
+    }
+
+    /** @hidden */
+    @HostListener('panleft', ['$event'])
+    public onPanLeft(event) {
+        this.pan(event);
+    }
+
+    /** @hidden */
+    @HostListener('panright', ['$event'])
+    public onPanRight(event) {
+        this.pan(event);
+    }
+
+    /**
+     * @hidden
+     */
+    @HostListener('panend', ['$event'])
+    public onPanEnd(event) {
+        if (!this.gesturesSupport) {
+            return;
+        }
+        event.preventDefault();
+
+        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
+        const panOffset = (slideWidth / 1000);
+        const deltaX = Math.abs(event.deltaX) + panOffset < slideWidth ? Math.abs(event.deltaX) : slideWidth - panOffset;
+        const velocity = Math.abs(event.velocity);
+        this.resetSlideStyles(this.currentSlide);
+        if (this.incomingSlide) {
+            this.resetSlideStyles(this.incomingSlide);
+            if (slideWidth / 2 < deltaX || velocity > 1) {
+                this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
+                this.incomingSlide.previous = false;
+
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                    deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
+
+                if (velocity > 1) {
+                    this.newDuration = this.animationDuration / velocity;
+                }
+                this.incomingSlide.active = true;
+            } else {
+                this.currentSlide.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
+                this.previousSlide = this.incomingSlide;
+                this.previousSlide.previous = true;
+                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
+                    Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
+                this.playAnimations();
+            }
+        }
+
+        if (this.stoppedByInteraction) {
+            this.play();
+        }
     }
 
     /** @hidden */
     public ngAfterContentInit() {
         this.slides.changes
             .pipe(takeUntil(this.destroy$))
-            .subscribe((change: QueryList<IgxSlideComponent>) => { this.initSlides(change); });
+            .subscribe((change: QueryList<IgxSlideComponent>) => this.initSlides(change));
 
         this.initSlides(this.slides);
     }
@@ -459,6 +701,229 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         this.destroyed = true;
         if (this.lastInterval) {
             clearInterval(this.lastInterval);
+        }
+    }
+
+    /**
+     * Returns the slide corresponding to the provided `index` or null.
+     * ```typescript
+     * let slide1 =  this.carousel.get(1);
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public get(index: number): IgxSlideComponent {
+        return this.slides.find((slide) => slide.index === index);
+    }
+
+    /**
+     * Adds a new slide to the carousel.
+     * ```typescript
+     * this.carousel.add(newSlide);
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public add(slide: IgxSlideComponent) {
+        const newSlides = this.slides.toArray();
+        newSlides.push(slide);
+        this.slides.reset(newSlides);
+        this.slides.notifyOnChanges();
+    }
+
+    /**
+     * Removes a slide from the carousel.
+     * ```typescript
+     * this.carousel.remove(slide);
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public remove(slide: IgxSlideComponent) {
+        if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
+            const newSlides = this.slides.toArray();
+            newSlides.splice(slide.index, 1);
+            this.slides.reset(newSlides);
+            this.slides.notifyOnChanges();
+        }
+    }
+
+    /**
+     * Kicks in a transition for a given slide with a given `direction`.
+     * ```typescript
+     * this.carousel.select(this.carousel.get(2), Direction.NEXT);
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public select(slide: IgxSlideComponent, direction: Direction = Direction.NONE) {
+        if (slide && slide !== this.currentSlide) {
+            slide.direction = direction;
+            slide.active = true;
+        }
+    }
+
+    /**
+     * Transitions to the next slide in the carousel.
+     * ```typescript
+     * this.carousel.next();
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public next() {
+        const index = this.getNextIndex();
+
+        if (index === 0 && !this.loop) {
+            this.stop();
+            return;
+        }
+        return this.select(this.get(index), Direction.NEXT);
+    }
+
+    /**
+     * Transitions to the previous slide in the carousel.
+     * ```typescript
+     * this.carousel.prev();
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public prev() {
+        const index = this.getPrevIndex();
+
+        if (!this.loop && index === this.total - 1) {
+            this.stop();
+            return;
+        }
+        return this.select(this.get(index), Direction.PREV);
+    }
+
+    /**
+     * Resumes playing of the carousel if in paused state.
+     * No operation otherwise.
+     * ```typescript
+     * this.carousel.play();
+     * }
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public play() {
+        if (!this.playing) {
+            this.playing = true;
+            this.onCarouselPlaying.emit(this);
+            this.restartInterval();
+            this.stoppedByInteraction = false;
+        }
+    }
+
+    /**
+     * Stops slide transitions if the `pause` option is set to `true`.
+     * No operation otherwise.
+     * ```typescript
+     *  this.carousel.stop();
+     * }
+     * ```
+     *
+     * @memberOf IgxCarouselComponent
+     */
+    public stop() {
+        if (this.pause) {
+            this.playing = false;
+            this.onCarouselPaused.emit(this);
+            this.resetInterval();
+        }
+    }
+
+    private resetInterval() {
+        if (this.lastInterval) {
+            clearInterval(this.lastInterval);
+            this.lastInterval = null;
+        }
+    }
+
+    private restartInterval() {
+        this.resetInterval();
+
+        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
+            this.lastInterval = setInterval(() => {
+                const tick = +this.interval;
+                if (this.playing && this.total && !isNaN(tick) && tick > 0) {
+                    this.next();
+                } else {
+                    this.stop();
+                }
+            }, this.interval);
+        }
+    }
+
+    /** @hidden */
+    public get nextButtonDisabled() {
+        return !this.loop && this.current === (this.total - 1);
+    }
+
+    /** @hidden */
+    public get prevButtonDisabled() {
+        return !this.loop && this.current === 0;
+    }
+
+    private getNextIndex(): number {
+        return (this.current + 1) % this.total;
+    }
+
+    private getPrevIndex(): number {
+        return this.current - 1 < 0 ? this.total - 1 : this.current - 1;
+    }
+
+    private resetSlideStyles(slide: IgxSlideComponent) {
+        slide.nativeElement.style.transform = '';
+        slide.nativeElement.style.opacity = '';
+    }
+
+    private pan(event) {
+        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
+        const panOffset = (slideWidth / 1000);
+        const deltaX = event.deltaX;
+        const index = deltaX < 0 ? this.getNextIndex() : this.getPrevIndex();
+        const offset = deltaX < 0 ? slideWidth + deltaX : -slideWidth + deltaX;
+
+        if (!this.gesturesSupport || event.isFinal || Math.abs(deltaX) + panOffset >= slideWidth) {
+            return;
+        }
+
+        if (!this.loop && ((this.current === 0 && deltaX > 0) || (this.current === this.total - 1 && deltaX < 0))) {
+            this.incomingSlide = null;
+            return;
+        }
+
+        event.preventDefault();
+        if (this.isPlaying) {
+            this.stoppedByInteraction = true;
+            this.stop();
+        }
+
+        if (this.previousSlide && this.previousSlide.previous) {
+            this.previousSlide.previous = false;
+        }
+        this.finishAnimations();
+
+        if (this.incomingSlide) {
+            if (index !== this.incomingSlide.index) {
+                this.resetSlideStyles(this.incomingSlide);
+                this.incomingSlide.previous = false;
+                this.incomingSlide = this.get(index);
+            }
+        } else {
+            this.incomingSlide = this.get(index);
+        }
+        this.incomingSlide.previous = true;
+
+        if (this.animationType === CarouselAnimationType.fade) {
+            this.currentSlide.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
+        } else {
+            this.currentSlide.nativeElement.style.transform = `translateX(${deltaX}px)`;
+            this.incomingSlide.nativeElement.style.transform = `translateX(${offset}px)`;
         }
     }
 
@@ -625,6 +1090,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             this.slides.reduce((any, c, ind) => c.index = ind, 0); // reset slides indexes
             diff.forEachAddedItem((record: IterableChangeRecord<IgxSlideComponent>) => {
                 const slide = record.item;
+                slide.total = this.total;
                 this.onSlideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
                     this.currentSlide = slide;
@@ -650,458 +1116,12 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
             if (this.currentSlide) {
                 this.currentSlide.active = true;
                 const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
-                activeSlides.forEach(slide => { slide.active = false; });
+                activeSlides.forEach(slide => slide.active = false);
             } else if (this.total) {
                 this.slides.first.active = true;
             }
             this.play();
         });
-    }
-
-    /** @hidden */
-    public get getIndicatorTemplate(): TemplateRef<any> {
-        if (this.indicatorTemplate) {
-            return this.indicatorTemplate;
-        }
-        return this.defaultIndicator;
-    }
-
-    /** @hidden */
-    public get getNextButtonTemplate(): TemplateRef<any> {
-        if (this.nextButtonTemplate) {
-            return this.nextButtonTemplate;
-        }
-        return this.defaultNextButton;
-    }
-
-    /** @hidden */
-    public get getPrevButtonTemplate(): TemplateRef<any> {
-        if (this.prevButtonTemplate) {
-            return this.prevButtonTemplate;
-        }
-        return this.defaultPrevButton;
-    }
-
-    /** @hidden */
-    public setAriaLabel(slide) {
-        return `Item ${slide.index + 1} of ${this.total}`;
-    }
-
-    /** @hidden */
-    public get indicatorsOrientationClass() {
-        return `igx-carousel-indicators--${this.indicatorsOrientation}`;
-    }
-
-    /** @hidden */
-    public get showIndicators(): boolean {
-        return this.total <= this.maximumIndicatorsCount && this.total > 0;
-    }
-
-    /** @hidden */
-    public get showIndicatorsLabel(): boolean {
-        return this.total > this.maximumIndicatorsCount;
-    }
-
-    /** @hidden */
-    public get getCarouselLabel() {
-        return `${this.current + 1} ${this.resourceStrings.igx_carousel_of} ${this.total}`;
-    }
-
-    /**
-     * Returns the total number of `slides` in the carousel.
-     * ```typescript
-     * let slideCount =  this.carousel.total;
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public get total(): number {
-        return this.slides.length;
-    }
-
-    /**
-     * The index of the slide being currently shown.
-     * ```typescript
-     * let currentSlideNumber =  this.carousel.current;
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public get current(): number {
-        return !this.currentSlide ? 0 : this.currentSlide.index;
-    }
-
-    private getNextIndex(): number {
-        return (this.current + 1) % this.total;
-    }
-
-    private getPrevIndex(): number {
-        return this.current - 1 < 0 ? this.total - 1 : this.current - 1;
-    }
-
-    /**
-     * Returns a boolean indicating if the carousel is playing.
-     * ```typescript
-     * let isPlaying =  this.carousel.isPlaying;
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public get isPlaying(): boolean {
-        return this.playing;
-    }
-
-    /**
-     * Returns а boolean indicating if the carousel is destroyed.
-     * ```typescript
-     * let isDestroyed =  this.carousel.isDestroyed;
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public get isDestroyed(): boolean {
-        return this.destroyed;
-    }
-    /**
-     * Returns a reference to the carousel element in the DOM.
-     * ```typescript
-     * let nativeElement =  this.carousel.nativeElement;
-     * ```
-     * @memberof IgxCarouselComponent
-     */
-    get nativeElement(): any {
-        return this.element.nativeElement;
-    }
-
-    /**
-     * Returns the slide corresponding to the provided `index` or null.
-     * ```typescript
-     * let slide1 =  this.carousel.get(1);
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public get(index: number): IgxSlideComponent {
-        return this.slides.find((slide) => slide.index === index);
-    }
-
-    /**
-     * Adds a new slide to the carousel.
-     * ```typescript
-     * this.carousel.add(newSlide);
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public add(slide: IgxSlideComponent) {
-        const newSlides = this.slides.toArray();
-        newSlides.push(slide);
-        this.slides.reset(newSlides);
-        this.slides.notifyOnChanges();
-    }
-
-    /**
-     * Removes a slide from the carousel.
-     * ```typescript
-     * this.carousel.remove(slide);
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public remove(slide: IgxSlideComponent) {
-        if (slide && slide === this.get(slide.index)) { // check if the requested slide for delete is present in the carousel
-            const newSlides = this.slides.toArray();
-            newSlides.splice(slide.index, 1);
-            this.slides.reset(newSlides);
-            this.slides.notifyOnChanges();
-        }
-    }
-
-    /**
-     * Kicks in a transition for a given slide with a given `direction`.
-     * ```typescript
-     * this.carousel.select(this.carousel.get(2), Direction.NEXT);
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public select(slide: IgxSlideComponent, direction: Direction = Direction.NONE) {
-        if (slide && slide !== this.currentSlide) {
-            slide.direction = direction;
-            slide.active = true;
-        }
-    }
-
-    /**
-     * Transitions to the next slide in the carousel.
-     * ```typescript
-     * this.carousel.next();
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public next() {
-        const index = this.getNextIndex();
-
-        if (index === 0 && !this.loop) {
-            this.stop();
-            return;
-        }
-        return this.select(this.get(index), Direction.NEXT);
-    }
-
-    /**
-     * Transitions to the previous slide in the carousel.
-     * ```typescript
-     * this.carousel.prev();
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public prev() {
-        const index = this.getPrevIndex();
-
-        if (!this.loop && index === this.total - 1) {
-            this.stop();
-            return;
-        }
-        return this.select(this.get(index), Direction.PREV);
-    }
-
-    /**
-     * Resumes playing of the carousel if in paused state.
-     * No operation otherwise.
-     * ```typescript
-     * this.carousel.play();
-     * }
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public play() {
-        if (!this.playing) {
-            this.playing = true;
-            this.onCarouselPlaying.emit(this);
-            this.restartInterval();
-            this.stoppedByInteraction = false;
-        }
-    }
-
-    /**
-     * Stops slide transitions if the `pause` option is set to `true`.
-     * No operation otherwise.
-     * ```typescript
-     *  this.carousel.stop();
-     * }
-     * ```
-     * @memberOf IgxCarouselComponent
-     */
-    public stop() {
-        if (this.pause) {
-            this.playing = false;
-            this.onCarouselPaused.emit(this);
-            this.resetInterval();
-        }
-    }
-
-    private resetInterval() {
-        if (this.lastInterval) {
-            clearInterval(this.lastInterval);
-            this.lastInterval = null;
-        }
-    }
-
-    private restartInterval() {
-        this.resetInterval();
-
-        if (!isNaN(this.interval) && this.interval > 0 && this.platformUtil.isBrowser) {
-            this.lastInterval = setInterval(() => {
-                const tick = +this.interval;
-                if (this.playing && this.total && !isNaN(tick) && tick > 0) {
-                    this.next();
-                } else {
-                    this.stop();
-                }
-            }, this.interval);
-        }
-    }
-
-    /** @hidden */
-    public get nextButtonDisabled() {
-        return !this.loop && this.current === (this.total - 1);
-    }
-
-    /** @hidden */
-    public get prevButtonDisabled() {
-        return !this.loop && this.current === 0;
-    }
-
-    /** @hidden */
-    @HostListener('keydown.arrowright', ['$event'])
-    public onKeydownArrowRight(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.next();
-            requestAnimationFrame(() => this.nativeElement.focus());
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.arrowleft', ['$event'])
-    public onKeydownArrowLeft(event) {
-        if (this.keyboardSupport) {
-            event.preventDefault();
-            this.prev();
-            requestAnimationFrame(() => this.nativeElement.focus());
-        }
-    }
-
-    /** @hidden */
-    @HostListener('tap', ['$event'])
-    public onTap(event) {
-        // play pause only when tap on slide
-        if (event.target && event.target.classList.contains('igx-slide')) {
-            if (this.isPlaying) {
-                if (this.pause) {
-                    this.stoppedByInteraction = true;
-                }
-                this.stop();
-            } else if (this.stoppedByInteraction) {
-                this.play();
-            }
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.home', ['$event'])
-    public onKeydownHome(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.first.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
-        }
-    }
-
-    /** @hidden */
-    @HostListener('keydown.end', ['$event'])
-    public onKeydownEnd(event) {
-        if (this.keyboardSupport && this.slides.length > 0) {
-            event.preventDefault();
-            this.slides.last.active = true;
-            requestAnimationFrame(() => this.nativeElement.focus());
-        }
-    }
-
-    /** @hidden */
-    @HostListener('mouseenter')
-    public onMouseEnter() {
-        if (this.pause && this.isPlaying) {
-            this.stoppedByInteraction = true;
-        }
-        this.stop();
-    }
-
-    /** @hidden */
-    @HostListener('mouseleave')
-    public onMouseLeave() {
-        if (this.stoppedByInteraction) {
-            this.play();
-        }
-    }
-
-    /** @hidden */
-    @HostListener('panleft', ['$event'])
-    public onPanLeft(event) {
-        this.pan(event);
-    }
-
-    /** @hidden */
-    @HostListener('panright', ['$event'])
-    public onPanRight(event) {
-        this.pan(event);
-    }
-
-    private resetSlideStyles(slide: IgxSlideComponent) {
-        slide.nativeElement.style.transform = '';
-        slide.nativeElement.style.opacity = '';
-    }
-
-    private pan(event) {
-        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 1000);
-        const deltaX = event.deltaX;
-        const index = deltaX < 0 ? this.getNextIndex() : this.getPrevIndex();
-        const offset = deltaX < 0 ? slideWidth + deltaX : -slideWidth + deltaX;
-
-        if (!this.gesturesSupport || event.isFinal || Math.abs(deltaX) + panOffset >= slideWidth) {
-            return;
-        }
-
-        if (!this.loop && ((this.current === 0 && deltaX > 0) || (this.current === this.total - 1 && deltaX < 0))) {
-            this.incomingSlide = null;
-            return;
-        }
-
-        event.preventDefault();
-        if (this.isPlaying) {
-            this.stoppedByInteraction = true;
-            this.stop();
-        }
-
-        if (this.previousSlide && this.previousSlide.previous) {
-            this.previousSlide.previous = false;
-        }
-        this.finishAnimations();
-
-        if (this.incomingSlide) {
-            if (index !== this.incomingSlide.index) {
-                this.resetSlideStyles(this.incomingSlide);
-                this.incomingSlide.previous = false;
-                this.incomingSlide = this.get(index);
-            }
-        } else {
-            this.incomingSlide = this.get(index);
-        }
-        this.incomingSlide.previous = true;
-
-        if (this.animationType === CarouselAnimationType.fade) {
-            this.currentSlide.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
-        } else {
-            this.currentSlide.nativeElement.style.transform = `translateX(${deltaX}px)`;
-            this.incomingSlide.nativeElement.style.transform = `translateX(${offset}px)`;
-        }
-    }
-
-    /**
-     * @hidden
-     */
-    @HostListener('panend', ['$event'])
-    public onPanEnd(event) {
-        if (!this.gesturesSupport) {
-            return;
-        }
-        event.preventDefault();
-
-        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
-        const panOffset = (slideWidth / 1000);
-        const deltaX = Math.abs(event.deltaX) + panOffset < slideWidth ? Math.abs(event.deltaX) : slideWidth - panOffset;
-        const velocity = Math.abs(event.velocity);
-        this.resetSlideStyles(this.currentSlide);
-        if (this.incomingSlide) {
-            this.resetSlideStyles(this.incomingSlide);
-            if (slideWidth / 2 < deltaX || velocity > 1) {
-                this.incomingSlide.direction = event.deltaX < 0 ? Direction.NEXT : Direction.PREV;
-                this.incomingSlide.previous = false;
-
-                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
-                    deltaX / slideWidth : (slideWidth - deltaX) / slideWidth;
-
-                if (velocity > 1) {
-                    this.newDuration = this.animationDuration / velocity;
-                }
-                this.incomingSlide.active = true;
-            } else {
-                this.currentSlide.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
-                this.previousSlide = this.incomingSlide;
-                this.previousSlide.previous = true;
-                this.animationPosition = this.animationType === CarouselAnimationType.fade ?
-                    Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
-                this.playAnimations();
-            }
-        }
-
-        if (this.stoppedByInteraction) {
-            this.play();
-        }
     }
 }
 

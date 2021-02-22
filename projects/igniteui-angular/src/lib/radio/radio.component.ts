@@ -12,6 +12,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
+import { noop } from 'rxjs';
 
 export interface IChangeRadioEventArgs extends IBaseEventArgs {
     value: any;
@@ -25,7 +26,6 @@ export const RadioLabelPosition = mkenum({
 export type RadioLabelPosition = (typeof RadioLabelPosition)[keyof typeof RadioLabelPosition];
 
 let nextId = 0;
-const noop = () => { };
 /**
  * **Ignite UI for Angular Radio Button** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/radio_button.html)
@@ -56,6 +56,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let radioElement =  this.radio.nativeRadio;
      * ```
+     *
      * @memberof IgxSwitchComponent
      */
     @ViewChild('radio', { static: true })
@@ -66,20 +67,22 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let labelElement =  this.radio.nativeLabel;
      * ```
+     *
      * @memberof IgxSwitchComponent
      */
     @ViewChild('nativeLabel', { static: true })
-    public nativeLabel;
+    public nativeLabel: ElementRef;
 
     /**
      * Returns reference to the label placeholder element.
      * ```typescript
      * let labelPlaceholder =  this.radio.placeholderLabel;
      * ```
+     *
      * @memberof IgxSwitchComponent
      */
     @ViewChild('placeholderLabel', { static: true })
-    public placeholderLabel;
+    public placeholderLabel: ElementRef;
 
     /**
      * Sets/gets the `id` of the radio component.
@@ -90,6 +93,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let radioId =  this.radio.id;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @HostBinding('attr.id')
@@ -105,6 +109,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let labelId =  this.radio.labelId;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -119,6 +124,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let labelPosition =  this.radio.labelPosition;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -132,6 +138,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let value =  this.radio.value;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -145,6 +152,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let name =  this.radio.name;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -158,6 +166,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let tabIndex =  this.radio.tabindex;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -172,6 +181,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let isDisabledRipple =  this.radio.disableRipple;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -186,6 +196,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let isRequired =  this.radio.required;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input()
@@ -200,6 +211,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let ariaLabelledBy = this.radio.ariaLabelledBy;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input('aria-labelledby')
@@ -213,6 +225,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let ariaLabel =  this.radio.ariaLabel;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @Input('aria-label')
@@ -221,16 +234,19 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      * An event that is emitted after the radio `value` is changed.
      * Provides references to the `IgxRadioComponent` and the `value` property as event arguments.
+     *
      * @memberof IgxRadioComponent
      */
+    // eslint-disable-next-line @angular-eslint/no-output-native
     @Output()
-    readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+    public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
 
     /**
      * Returns the class of the radio component.
      * ```typescript
      * let radioClass = this.radio.cssClass;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio')
@@ -245,6 +261,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let isChecked =  this.radio.checked;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--checked')
@@ -260,6 +277,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let isDisabled =  this.radio.disabled;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--disabled')
@@ -275,6 +293,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * let isFocused =  this.radio.focused;
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     @HostBinding('class.igx-radio--focused')
@@ -284,7 +303,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @hidden
      */
     public inputId = `${this.id}-input`;
-
     /**
      * @hidden
      */
@@ -295,6 +313,18 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      */
     private _onChangeCallback: (_: any) => void = noop;
 
+    constructor(private cdr: ChangeDetectorRef) { }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('keyup', ['$event'])
+    public onKeyUp(event: KeyboardEvent) {
+        event.stopPropagation();
+        this.focused = true;
+    }
+
     /**
      * @hidden
      */
@@ -303,22 +333,22 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         this.select();
     }
 
-    constructor(private cdr: ChangeDetectorRef) { }
-
     /**
      * Selects the current radio button.
      * ```typescript
      * this.radio.select();
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     public select() {
+        this.nativeRadio.nativeElement.focus();
+
         if (isIE()) {
             this.nativeRadio.nativeElement.blur();
         }
 
         this.checked = true;
-        this.focused = false;
         this.change.emit({ value: this.value, radio: this });
         this._onChangeCallback(this.value);
     }
@@ -328,13 +358,13 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * ```typescript
      * this.radio.deselect();
      * ```
+     *
      * @memberof IgxRadioComponent
      */
     public deselect() {
         this.checked = false;
         this.focused = false;
         this.cdr.markForCheck();
-        this.change.emit({ value: this.value, radio: this });
     }
 
     /**
@@ -355,7 +385,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     }
 
     /** @hidden */
-    getEditElement() {
+    public getEditElement() {
         return this.nativeRadio.nativeElement;
     }
 
@@ -370,13 +400,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
             default:
                 return `${this.cssClass}__label`;
         }
-    }
-
-    /**
-     * @hidden
-     */
-    public onFocus() {
-        this.focused = true;
     }
 
     /**

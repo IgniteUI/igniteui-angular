@@ -54,18 +54,6 @@ import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
     providers: [{ provide: IGX_DROPDOWN_BASE, useExisting: IgxDropDownComponent }]
 })
 export class IgxDropDownComponent extends IgxDropDownBaseDirective implements IDropDownBase, OnChanges, AfterViewInit, OnDestroy {
-    protected destroy$ = new Subject<boolean>();
-    protected _scrollPosition: number;
-
-    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
-    protected virtDir: IgxForOfDirective<any>;
-
-    @ViewChild(IgxToggleDirective, { static: true })
-    protected toggleDirective: IgxToggleDirective;
-
-    @ViewChild('scrollContainer', { static: true })
-    protected scrollContainerRef: ElementRef;
-
     /**
      * @hidden
      * @internal
@@ -133,6 +121,15 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
      */
     @Input()
     public allowItemsFocus = false;
+
+    @ContentChild(IgxForOfDirective, { read: IgxForOfDirective })
+    protected virtDir: IgxForOfDirective<any>;
+
+    @ViewChild(IgxToggleDirective, { static: true })
+    protected toggleDirective: IgxToggleDirective;
+
+    @ViewChild('scrollContainer', { static: true })
+    protected scrollContainerRef: ElementRef;
 
     /**
      * @hidden @internal
@@ -215,6 +212,9 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
+    protected destroy$ = new Subject<boolean>();
+    protected _scrollPosition: number;
+
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
@@ -263,6 +263,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Select an item by index
+     *
      * @param index of the item to select; If the drop down uses *igxFor, pass the index in data
      */
     public setSelectedItem(index: number) {
@@ -284,6 +285,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * Navigates to the item on the specified index
      * If the data in the drop-down is virtualized, pass the index of the item in the virtualized data.
+     *
      * @param newIndex number
      */
     public navigateItem(index: number) {
@@ -295,7 +297,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             const subRequired = this.isIndexOutOfBounds(index, direction);
             this.focusedItem = {
                 value: this.virtDir.igxForOf[index],
-                index: index
+                index
             } as IgxDropDownItemBaseDirective;
             if (subRequired) {
                 this.virtDir.scrollTo(index);
@@ -316,33 +318,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         }
     }
 
-    private isIndexOutOfBounds(index: number, direction: Navigate) {
-        const virtState = this.virtDir.state;
-        const currentPosition = this.virtDir.getScroll().scrollTop;
-        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
-        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
-        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
-        const subRequired = indexOutOfChunk || scrollNeeded;
-        return subRequired;
-    }
-
-    protected skipHeader(direction: Navigate) {
-        if (!this.focusedItem) {
-            return;
-        }
-        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
-            if (direction === Navigate.Up) {
-                this.navigatePrev();
-            } else {
-                this.navigateNext();
-            }
-        }
-    }
-
     /**
      * @hidden @internal
      */
-    updateScrollPosition() {
+    public updateScrollPosition() {
         if (!this.virtDir) {
             return;
         }
@@ -354,21 +333,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const itemsInView = this.virtDir.igxForContainerSize / this.virtDir.igxForItemSize;
         targetScroll -= (itemsInView / 2 - 1) * this.virtDir.igxForItemSize;
         this.virtDir.getScroll().scrollTop = targetScroll;
-    }
-
-    protected focusItem(value: boolean) {
-        if (value || this._focusedItem) {
-            this._focusedItem.focused = value;
-        }
-    }
-
-    protected updateItemFocus() {
-        if (this.selectedItem) {
-            this.focusedItem = this.selectedItem;
-            this.focusItem(true);
-        } else if (this.allowItemsFocus) {
-            this.navigateFirst();
-        }
     }
 
     /**
@@ -438,22 +402,6 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         this.selection.clear(`${this.id}-active`);
     }
 
-    protected scrollToItem(item: IgxDropDownItemBaseDirective) {
-        const itemPosition = this.calculateScrollPosition(item);
-
-        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
-        //  to appear on screen before animation start. As a result dropdown
-        //  flickers badly. This is why we set scrollTop just a little later
-        //  allowing animation to start and prevent dropdown flickering
-        if (isIE()) {
-            setTimeout(() => {
-                this.scrollContainer.scrollTop = (itemPosition);
-            }, 1);
-        } else {
-            this.scrollContainer.scrollTop = (itemPosition);
-        }
-    }
-
     /** @hidden @internal */
     public calculateScrollPosition(item: IgxDropDownItemBaseDirective): number {
         if (!item) {
@@ -475,14 +423,14 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.id) {
             // temp workaround until fix --> https://github.com/angular/angular/issues/34992
             this.toggleDirective.id = changes.id.currentValue;
         }
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         if (this.virtDir) {
             this.virtDir.igxForItemSize = 28;
         }
@@ -496,6 +444,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Virtual scroll implementation
+     *
      * @hidden @internal
      */
     public navigateFirst() {
@@ -541,6 +490,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
 
     /**
      * Handles the `onSelection` emit and the drop down toggle when selection changes
+     *
      * @hidden
      * @internal
      * @param newSelection
@@ -613,6 +563,60 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         return selection === null
         || (this.virtDir && selection.hasOwnProperty('value') && selection.hasOwnProperty('index'))
         || (selection instanceof IgxDropDownItemComponent && !selection.isHeader);
+    }
+
+    protected scrollToItem(item: IgxDropDownItemBaseDirective) {
+        const itemPosition = this.calculateScrollPosition(item);
+
+        //  in IE11 setting sctrollTop is somehow slow and forces dropdown
+        //  to appear on screen before animation start. As a result dropdown
+        //  flickers badly. This is why we set scrollTop just a little later
+        //  allowing animation to start and prevent dropdown flickering
+        if (isIE()) {
+            setTimeout(() => {
+                this.scrollContainer.scrollTop = (itemPosition);
+            }, 1);
+        } else {
+            this.scrollContainer.scrollTop = (itemPosition);
+        }
+    }
+
+    protected focusItem(value: boolean) {
+        if (value || this._focusedItem) {
+            this._focusedItem.focused = value;
+        }
+    }
+
+    protected updateItemFocus() {
+        if (this.selectedItem) {
+            this.focusedItem = this.selectedItem;
+            this.focusItem(true);
+        } else if (this.allowItemsFocus) {
+            this.navigateFirst();
+        }
+    }
+
+    protected skipHeader(direction: Navigate) {
+        if (!this.focusedItem) {
+            return;
+        }
+        if (this.focusedItem.isHeader || this.focusedItem.disabled) {
+            if (direction === Navigate.Up) {
+                this.navigatePrev();
+            } else {
+                this.navigateNext();
+            }
+        }
+    }
+
+    private isIndexOutOfBounds(index: number, direction: Navigate) {
+        const virtState = this.virtDir.state;
+        const currentPosition = this.virtDir.getScroll().scrollTop;
+        const itemPosition = this.virtDir.getScrollForIndex(index, direction === Navigate.Down);
+        const indexOutOfChunk = index < virtState.startIndex || index > virtState.chunkSize + virtState.startIndex;
+        const scrollNeeded = direction === Navigate.Down ? currentPosition < itemPosition : currentPosition > itemPosition;
+        const subRequired = indexOutOfChunk || scrollNeeded;
+        return subRequired;
     }
 }
 

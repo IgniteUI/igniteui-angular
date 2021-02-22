@@ -184,27 +184,27 @@ class ButtonWithAttribsComponent {
     <button #raised class="raisedBtn" igxButton="raised" [displayDensity]="density">Raised</button>
     <button #outlined class="outlinedBtn" igxButton="outlined" [displayDensity]="density">Outlined</button>
     <button #fab class="fabBtn" igxButton="fab" [displayDensity]="density">
-        <igx-icon fontSet="material">favorite</igx-icon>
+        <igx-icon>favorite</igx-icon>
     </button>
     <button #icon class="iconBtn" igxButton="icon" [displayDensity]="density">
-        <igx-icon fontSet="material">search</igx-icon>
+        <igx-icon>search</igx-icon>
     </button>
     `
 })
 class ButtonsWithDisplayDensityComponent {
-    public density: DisplayDensity = DisplayDensity.comfortable;
-
     @ViewChild('flat', { read: IgxButtonDirective, static: true }) flatButton: IgxButtonDirective;
     @ViewChild('raised', { read: IgxButtonDirective, static: true }) raisedButton: IgxButtonDirective;
     @ViewChild('outlined', { read: IgxButtonDirective, static: true }) outlinedButton: IgxButtonDirective;
     @ViewChild('fab', { read: IgxButtonDirective, static: true }) fabButton: IgxButtonDirective;
     @ViewChild('icon', { read: IgxButtonDirective, static: true }) iconButton: IgxButtonDirective;
+
+    public density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 /**
  * Verifies the display density of the igxButton based on its type.
  */
-function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) {
+const verifyDisplayDensity = (buttonDirective, buttonDebugEl, buttonType, expectedDisplayDensity: DisplayDensity) => {
     let expectedButtonDensityClass = '';
 
     switch (expectedDisplayDensity) {
@@ -245,4 +245,4 @@ function verifyDisplayDensity(buttonDirective, buttonDebugEl, buttonType, expect
         }
     }
     expect(buttonDirective.displayDensity).toBe(expectedDisplayDensity);
-}
+};
