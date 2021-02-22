@@ -2,7 +2,7 @@
     "plugins": ["stylelint-scss"],
     "ignoreFiles": ["projects/igniteui-angular/src/lib/core/styles/**/*.md"],
     "rules": {
-        "at-rule-blacklist": ["debug", {
+        "at-rule-disallowed-list": ["debug", {
             "severity": "warning"
         }],
         "block-closing-brace-empty-line-before": "never",

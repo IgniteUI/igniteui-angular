@@ -74,6 +74,7 @@
     }
 }
 
+/* stylelint-disable max-nesting-depth */
 @include describe('igx-palette-vars') {
     $my-palette: igx-palette(
         $primary: red,
@@ -96,6 +97,7 @@
         }
     }
 }
+/* stylelint-enable max-nesting-depth */
 
 @include describe('Direction') {
     @include it('should return styles only when the global direction is RTL') {
@@ -130,7 +132,7 @@
     }
 }
 
-/* stylelint-disable string-quotes */
+/* stylelint-disable string-quotes, number-leading-zero */
 @include describe('Animation') {
     @include it('should produce correct syntax for animation') {
         @include assert() {
@@ -144,7 +146,7 @@
         }
     }
 }
-/* stylelint-enable string-quotes */
+/* stylelint-enable string-quotes, number-leading-zero */
 
 @include describe('Keyframes') {
     $keyframes: () !default;
@@ -165,7 +167,7 @@
                     100% {
                         opacity: 0;
                     }
-                };
+                }
             }
 
             @include expect() {
@@ -182,5 +184,4 @@
         }
     }
     /* stylelint-enable max-nesting-depth */
-
 }
