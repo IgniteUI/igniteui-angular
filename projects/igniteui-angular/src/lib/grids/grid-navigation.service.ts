@@ -35,6 +35,7 @@ export class IgxGridNavigationService {
     }
 
     public set activeNode(value: IActiveNode) {
+        // if (!value) debugger;
         this._activeNode = value;
     }
 
@@ -221,7 +222,8 @@ export class IgxGridNavigationService {
     focusTbody(event) {
         const gridRows = this.grid.verticalScrollContainer.totalItemCount ?? this.grid.dataView.length;
         if (gridRows < 1) { this.activeNode = null; return; }
-        if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
+        if (!this.activeNode || !Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
+            debugger;
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
