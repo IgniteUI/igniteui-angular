@@ -925,10 +925,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const node = this.selectionNode;
         const shouldEmitSelection = !this.selectionService.isActiveNode(node);
 
-        // if (this.cellSelectionMode === GridSelectionMode.none || this.cellSelectionMode === GridSelectionMode.single) {
-        //     this.selectionService.clear();
-        // }
-
         if (this.selectionService.primaryButton) {
             this._updateCRUDStatus(event);
 
