@@ -2681,7 +2681,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             fix.detectChanges();
             spyOn(console, 'error');
 
-            let advFilterDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
+            const advFilterDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
             const applyFilterButton: any = Array.from(advFilterDialog.querySelectorAll('button'))
                 .find((b: any) => b.innerText.toLowerCase() === 'apply');
 
