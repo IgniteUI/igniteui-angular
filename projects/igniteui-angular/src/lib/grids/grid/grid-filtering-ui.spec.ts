@@ -2958,7 +2958,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
 
-            expect(grid.columns[2].hidden).toBeTruthy();
+            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 5);
         }));
 
         it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
