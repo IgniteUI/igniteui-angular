@@ -391,7 +391,6 @@
     }
 
     %switch-ripple--focused {
-        @include animation('scale-in-out' 1s $ease-out-quad infinite);
         background: --var($theme, 'track-off-color');
         transition: background .2s $ease-out-quad;
         opacity: .12;

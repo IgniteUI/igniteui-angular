@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding, ElementRef } from '@angular/core';
+import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -11,7 +11,6 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IPagingEventArgs, IPagingDoneEventArgs } from './interfaces';
 
 @Component({
     selector: 'igx-paginator',
@@ -102,32 +101,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public perPageChange = new EventEmitter<number>();
 
     /**
-     * Emitted before paging is performed.
-     *
-     * @remarks
-     * Returns an object consisting of the old and new pages.
-     * @example
-     * ```html
-     * <igx-paginator (paging)="paging($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public paging = new EventEmitter<IPagingEventArgs>();
-
-    /**
-     * Emitted after paging is performed.
-     *
-     * @remarks
-     * Returns an object consisting of the previous and next pages.
-     * @example
-     * ```html
-     * <igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
-     * ```
-     */
-    @Output()
-    public pagingDone = new EventEmitter<IPagingDoneEventArgs>();
-
-    /**
      * Emitted after the current page is changed.
      *
      * @example
@@ -150,7 +123,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     protected _page = 0;
     protected _totalRecords: number;
-    protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
+    protected _selectOptions;
     protected _perPage = 15;
 
     private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
@@ -191,10 +164,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set page(value: number) {
-        if (value < 0 || value > this.totalPages - 1 || value === this._page) {
-            return;
-        }
-
         this._page = value;
         this.pageChange.emit(this._page);
     }
@@ -214,16 +183,12 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set perPage(value: number) {
-        if (value < 0 || value === this._perPage) {
-            return;
-        }
-
         this._perPage = Number(value);
         this.perPageChange.emit(this._perPage);
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
         this.totalPages = Math.ceil(this.totalRecords / this._perPage);
         if (this.totalPages !== 0 && this.page >= this.totalPages) {
-            this.paginate(this.totalPages - 1);
+            this.page = this.totalPages - 1;
         }
     }
 
@@ -283,19 +248,18 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * By default it uses EN resources.
      */
     @Input()
-    public set resourceStrings(value: IPaginatorResourceStrings) {
+    set resourceStrings(value: IPaginatorResourceStrings) {
         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
     }
 
     /**
      * An accessor that returns the resource strings.
      */
-    public get resourceStrings(): IPaginatorResourceStrings {
+    get resourceStrings(): IPaginatorResourceStrings {
         return this._resourceStrings;
     }
 
-    constructor(private elementRef: ElementRef,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
     }
 
@@ -305,7 +269,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * const lastPage = this.paginator.isLastPage;
      * ```
      */
-    public get isLastPage(): boolean {
+    get isLastPage(): boolean {
         return this.page + 1 >= this.totalPages;
     }
 
@@ -315,7 +279,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * const lastPage = this.paginator.isFirstPage;
      * ```
      */
-    public get isFirstPage(): boolean {
+    get isFirstPage(): boolean {
         return this.page === 0;
     }
 
@@ -323,27 +287,15 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     /**
      * Returns if the first pager buttons should be disabled
      */
-    public get isFirstPageDisabled(): boolean {
+    get isFirstPageDisabled(): boolean {
         return this.isFirstPage || !this.pagerEnabled;
     }
 
     /**
      * Returns if the last pager buttons should be disabled
      */
-    public get isLastPageDisabled(): boolean {
+    get isLastPageDisabled(): boolean {
         return this.isLastPage || !this.pagerEnabled;
-    }
-
-    /**
-     * Gets the native element.
-     *
-     * @example
-     * ```typescript
-     * const nativeEl = this.paginator.nativeElement.
-     * ```
-     */
-    public get nativeElement() {
-        return this.elementRef.nativeElement;
     }
 
     /**
@@ -366,7 +318,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
-        this.paginate(this._page + 1);
+        if (!this.isLastPage) {
+            this.page += 1;
+        }
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -377,7 +331,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
-        this.paginate(this._page - 1);
+        if (!this.isFirstPage) {
+            this.page -= 1;
+        }
     }
     /**
      * Goes to the desired page index.
@@ -389,21 +345,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1  || val === this._page) {
+        if (val < 0 || val > this.totalPages - 1) {
             return;
         }
-
-        const eventArgs: IPagingDoneEventArgs = { oldPage: this._page, newPage: val, owner: this };
-        const cancelableEventArgs: IPagingEventArgs = { ...eventArgs, cancel: false };
-        this.paging.emit(cancelableEventArgs);
-
-        if (cancelableEventArgs.cancel) {
-            return;
-        }
-
-        this.page = cancelableEventArgs.newPage;
-        eventArgs.newPage = this._page;
-        this.pagingDone.emit(eventArgs);
+        this.page = val;
     }
 
     private sortUniqueOptions(values: Array<number>, newOption: number): number[] {

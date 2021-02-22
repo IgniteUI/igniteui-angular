@@ -1513,7 +1513,6 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             const secondRow = grid.getRowByIndex(1);
             grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
@@ -1527,7 +1526,6 @@ describe('IgxGrid - Row Selection #grid', () => {
 
             // Click on a single row
             secondRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1858,7 +1856,6 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should bind selectedRows properly', () => {
             fix.componentInstance.selectedRows = [1, 2, 3];
             fix.detectChanges();
-
             expect(grid.getRowByIndex(0).selected).toBeTrue();
             expect(grid.getRowByIndex(4).selected).toBeFalse();
 

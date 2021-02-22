@@ -10,13 +10,14 @@ import {
     ColumnCellFormatterComponent,
     DynamicColumnsComponent,
     GridAddColumnComponent,
-    IgxGridCurrencyColumnComponent
+    IgxGridCurrencyColumnComponent,
+    IgxGridPercentColumnComponent
 } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import localeFR from '@angular/common/locales/fr';
 import localeJA from '@angular/common/locales/ja';
 import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
@@ -39,7 +40,8 @@ describe('IgxGrid - Column properties #grid', () => {
                 ColumnHiddenFromMarkupComponent,
                 DynamicColumnsComponent,
                 GridAddColumnComponent,
-                IgxGridCurrencyColumnComponent
+                IgxGridCurrencyColumnComponent,
+                IgxGridPercentColumnComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         })
@@ -603,6 +605,159 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('€000.000');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('€198.000');
+        }));
+
+    });
+
+    describe('Data type percent column tests', () => {
+        it('should display correctly the data when column dataType is percent', () => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            let discountColumn = grid.getColumnByName('Discount');
+
+            expect(discountColumn.cells[0].nativeElement.innerText).toEqual('27%');
+            expect(discountColumn.cells[5].nativeElement.innerText).toEqual('2.7%');
+            expect(discountColumn.cells[8].nativeElement.innerText).toEqual('12.3%');
+
+            discountColumn.pipeArgs = {
+                digitsInfo: '3.2-2',
+              };
+            fix.detectChanges();
+
+            grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            grid.clearSort();
+            fix.detectChanges();
+
+            discountColumn = grid.getColumnByName('Discount');
+            expect(discountColumn.cells[0].nativeElement.innerText).toEqual('027.00%');
+            expect(discountColumn.cells[5].nativeElement.innerText).toEqual('002.70%');
+            expect(discountColumn.cells[8].nativeElement.innerText).toEqual('012.30%');
+        });
+
+        it('should be able to change the locale runtime ', () => {
+            registerLocaleData(localeFR);
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            let discountColumn = grid.getColumnByName('Discount');
+
+            expect(discountColumn.cells[8].nativeElement.innerText).toEqual('12.3%');
+            grid.locale = 'fr-FR';
+            fix.detectChanges();
+
+            grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            grid.clearSort();
+            fix.detectChanges();
+
+            discountColumn = grid.getColumnByName('Discount');
+            expect(discountColumn.cells[8].nativeElement.innerText).toEqual('12,3 %');
+            expect(discountColumn.cells[5].nativeElement.innerText).toEqual('2,7 %');
+        });
+
+        it('should preview the percent value correctly when cell is in edit mode correctly', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            discountColumn.editable = true;
+            fix.detectChanges();
+
+            let firstCell = discountColumn.cells[0];
+
+            expect(firstCell.nativeElement.innerText).toEqual('27%');
+
+            firstCell.setEditMode(true);
+            fix.detectChanges();
+
+            let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            const prefix = firstCell.nativeElement.querySelector('igx-prefix');
+            let suffix = firstCell.nativeElement.querySelector('igx-suffix');
+            expect((input as any).value).toEqual('0.27');
+            expect(prefix).toBeNull();
+            expect((suffix as HTMLElement).innerText).toEqual('27%');
+
+            UIInteractions.clickAndSendInputElementValue(input, 0.33);
+            tick();
+            fix.detectChanges();
+
+            input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            suffix = firstCell.nativeElement.querySelector('igx-suffix');
+            expect((input as any).value).toEqual('0.33');
+            expect((suffix as HTMLElement).innerText).toEqual('33%');
+
+            grid.endEdit(true);
+            fix.detectChanges();
+
+            firstCell = discountColumn.cells[0];
+            expect(firstCell.nativeElement.innerText).toEqual('33%');
+        }));
+
+        it('should display summaries correctly for currency column', () => {
+            registerLocaleData(localeFR);
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const discountColumn = grid.getColumnByName('Discount');
+            discountColumn.hasSummary = true;
+            fix.detectChanges();
+
+            const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
+                ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['10', '-70%', '1,100%', '2,153.9%', '215.39%']);
+        });
+
+        it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs' ,fakeAsync(()=> {
+            registerLocaleData(localeFR);
+            const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const unitsColumn = grid.getColumnByName('Discount');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, unitsColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('-70%');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('2.7%');
+
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            unitsColumn.pipeArgs = {
+                digitsInfo: '3.3-3',
+                currencyCode: 'EUR',
+                display: 'symbol-narrow'
+              };
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, unitsColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('-070.000%');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('002.700%');
         }));
 
     });

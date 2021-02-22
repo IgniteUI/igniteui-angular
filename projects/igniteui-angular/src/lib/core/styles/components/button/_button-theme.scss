@@ -411,6 +411,14 @@
     ));
 }
 
+/// @access private
+@mixin _icon-w-margin($margin, $left) {
+    * + igx-icon,
+    igx-icon + *:not(igx-icon) {
+        margin-#{$left}: $margin;
+    }
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
@@ -534,6 +542,12 @@
         compact: rem(32px)
     );
 
+    $icon-in-button-margin: (
+        comfortable: rem(12px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
     $icon-in-button-size: rem(18px);
 
     $raised-shadow: map-get((
@@ -603,21 +617,34 @@
         transition: $button-transition;
         font-family: inherit;
 
-        %igx-icon-display {
+        igx-icon {
             width: $icon-in-button-size;
             height: $icon-in-button-size;
             font-size: $icon-in-button-size;
         }
+
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'comfortable'),
+            $left
+        );
     }
 
     %igx-button-display--cosy {
         padding: map-get($button-padding, 'cosy');
         min-height: map-get($button-size, 'cosy');
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'cosy'),
+            $left
+        );
     }
 
     %igx-button-display--compact {
         padding: map-get($button-padding, 'compact');
         min-height: map-get($button-size, 'compact');
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'compact'),
+            $left
+        );
     }
 
     %igx-button--flat {
@@ -625,7 +652,7 @@
         color: --var($theme, 'flat-text-color');
         border-radius: --var($theme, 'flat-border-radius');
 
-        %igx-icon-display {
+        igx-icon {
             color: --var($theme, 'flat-icon-color')
         }
 
@@ -633,7 +660,7 @@
             background: --var($theme, 'flat-hover-background');
             color: --var($theme, 'flat-hover-text-color');
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'flat-hover-icon-color');
             }
         }
@@ -645,7 +672,7 @@
             box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-shadow-color');
 
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'flat-focus-icon-color');
             }
         }
@@ -668,7 +695,7 @@
             }
         }
 
-        %igx-icon-display {
+        igx-icon {
             color: --var($theme, 'outlined-icon-color')
         }
 
@@ -676,7 +703,7 @@
             background: --var($theme, 'outlined-hover-background');
             color: --var($theme, 'outlined-hover-text-color');
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'outlined-hover-icon-color')
             }
         }
@@ -687,7 +714,7 @@
             color: --var($theme, 'outlined-focus-text-color');
             box-shadow: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color');
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'outlined-focus-icon-color')
             }
         }
@@ -696,11 +723,19 @@
     %igx-button--outlined-cosy {
         padding: map-get($outlined-button-padding, 'cosy');
         min-height: map-get($button-size, 'cosy');
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'cosy'),
+            $left
+        );
     }
 
     %igx-button--outlined-compact {
         padding: map-get($outlined-button-padding, 'compact');
         min-height: map-get($button-size, 'compact');
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'compact'),
+            $left
+        );
     }
 
     %igx-button--raised {
@@ -709,7 +744,7 @@
         box-shadow: $raised-shadow;
         border-radius: --var($theme, 'raised-border-radius');
 
-        %igx-icon-display {
+        igx-icon {
             color: --var($theme, 'raised-icon-color')
         }
 
@@ -719,7 +754,7 @@
             box-shadow: $raised-shadow--hover;
 
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'raised-hover-icon-color')
             }
         }
@@ -735,7 +770,7 @@
                 box-shadow: $raised-shadow--focus;
             }
 
-            %igx-icon-display {
+            igx-icon {
                 color: --var($theme, 'raised-focus-icon-color')
             }
         }
