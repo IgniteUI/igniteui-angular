@@ -96,4 +96,3 @@ export interface GridSVGIcon {
     name: string;
     value: string;
 }
-
