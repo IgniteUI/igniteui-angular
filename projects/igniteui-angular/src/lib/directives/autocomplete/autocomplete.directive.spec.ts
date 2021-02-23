@@ -131,7 +131,7 @@ describe('IgxAutocomplete', () => {
             fixture.detectChanges();
             expect(dropDown.collapsed).toBeTruthy();
         }));
-        it('Should close the dropdown when no items match the filter', fakeAsync(() => {
+        fit('Should close the dropdown when no items match the filter', fakeAsync(() => {
             expect((autocomplete as any).collapsed).toEqual(true);
             spyOn(autocomplete.target, 'close').and.callThrough();
             spyOn(autocomplete, 'open').and.callThrough();
