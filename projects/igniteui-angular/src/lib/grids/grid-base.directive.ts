@@ -232,9 +232,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Controls the copy behavior of the grid.
      */
     @Input()
-    public get clipboardOptions(): ClipboardOptions {
-        return this._clipboardOptions;
-    }
+    public clipboardOptions: ClipboardOptions = {
+        /**
+         * Enables/disables the copy behavior
+         */
+        enabled: true,
+        /**
+         * Include the columns headers in the clipboard output.
+         */
+        copyHeaders: true,
+        /**
+         * Apply the columns formatters (if any) on the data in the clipboard output.
+         */
+        copyFormatters: true,
+        /**
+         * The separator used for formatting the copy output. Defaults to `\t`.
+         */
+        separator: '\t'
+    };
 
     /**
      * Emitted after filtering is performed.
@@ -2932,16 +2947,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         closeOnOutsideClick: false,
         outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
-    };
-
-    /**
-     * @hidden
-     */
-    private _clipboardOptions: ClipboardOptions = {
-        enabled: true,
-        copyHeaders: true,
-        copyFormatters: true,
-        separator: '\t'
     };
 
     /**
