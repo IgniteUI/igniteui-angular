@@ -79,6 +79,16 @@ let CHIP_ID = 0;
     templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent extends DisplayDensityBase {
+    /**
+     * Returns the class of the chip component.
+     *
+     * @example
+     * ```typescript
+     * let class =  this.chip.cssClass;
+     * ```
+     */
+    @HostBinding('class.igx-chip')
+    public cssClass = 'igx-chip';
 
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
