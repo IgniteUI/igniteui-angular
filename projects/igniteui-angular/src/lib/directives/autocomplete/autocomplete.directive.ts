@@ -342,7 +342,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             } else {
                 // _shouldBeOpen flag should remain unchanged since this state change doesn't come from outside of the component
                 // (like in the case of public API or user interaction).
-                this.target.close()
+                this.target.close();
             }
         });
         this.target.onSelection.pipe(takeUntil(this.destroy$)).subscribe(this.select.bind(this));
