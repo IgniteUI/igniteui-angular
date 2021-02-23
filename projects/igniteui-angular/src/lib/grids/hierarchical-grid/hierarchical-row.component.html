@@ -1,14 +1,14 @@
 <ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
 <ng-template #defaultExpandedTemplate>
-    <igx-icon [isActive]='!added' fontSet="material">expand_more</igx-icon>
+    <igx-icon [active]='!added'>expand_more</igx-icon>
 </ng-template>
 
 <ng-template #defaultCollapsedTemplate>
-    <igx-icon [isActive]='!added' fontSet="material">chevron_right</igx-icon>
+    <igx-icon [active]='!added'>chevron_right</igx-icon>
 </ng-template>
 
 <ng-template #defaultEmptyTemplate>
-    <igx-icon fontSet="material"></igx-icon>
+    <igx-icon></igx-icon>
 </ng-template>
 
 <ng-template #addTemp>

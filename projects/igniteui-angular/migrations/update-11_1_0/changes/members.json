@@ -1,0 +1,368 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "fontSet",
+            "replaceWith": "family",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "isActive",
+            "replaceWith": "active",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "defaultFontSet",
+            "replaceWith": "defaultFamily",
+            "definedIn": [
+                "IgxIconService"
+            ]
+        },
+        {
+            "member": "registerFontSetAlias",
+            "replaceWith": "registerFamilyAlias",
+            "definedIn": [
+                "IgxIconService"
+            ]
+        },
+        {
+            "member": "fontSetClassName",
+            "replaceWith": "familyClassName",
+            "definedIn": [
+                "IgxIconService"
+            ]
+        },
+        {
+            "member": "getFontSet",
+            "replaceWith": "getFamily",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "getIconName",
+            "replaceWith": "getName",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "getIconColor",
+            "replaceWith": "getColor",
+            "definedIn": [
+                "IgxIconComponent"
+            ]
+        },
+        {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onRemove",
+            "replaceWith": "remove",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onClick",
+            "replaceWith": "chipClick",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectedChanging",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onSelectionDone",
+            "replaceWith": "selectedChanged",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onKeyDown",
+            "replaceWith": "keyDown",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onDragEnter",
+            "replaceWith": "dragEnter",
+            "definedIn": [
+                "IgxChipComponent"
+            ]
+        },
+        {
+            "member": "onReorder",
+            "replaceWith": "reorder",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selectionChange",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveStart",
+            "replaceWith": "moveStart",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onMoveEnd",
+            "replaceWith": "moveEnd",
+            "definedIn": [
+                "IgxChipsAreaComponent"
+            ]
+        },
+        {
+            "member": "onExportEnded",
+            "replaceWith": "exportEnded",
+            "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
+                "IgxBaseExporter"
+            ]
+        },
+        {
+            "member": "onSelect",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxButtonGroupComponent"
+            ]
+        },
+        {
+            "member": "onUnselect",
+            "replaceWith": "deselected",
+            "definedIn": [
+                "IgxButtonGroupComponent"
+            ]
+        },
+        {
+            "member": "onAction",
+            "replaceWith": "clicked",
+            "definedIn": [
+                "IgxSnackbarComponent"
+            ]
+        },
+        {
+            "member": "onShowing",
+            "replaceWith": "showing",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "onShown",
+            "replaceWith": "shown",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "onHiding",
+            "replaceWith": "hiding",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "onHidden",
+            "replaceWith": "hidden",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxCalendarComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onYearSelection",
+            "replaceWith": "yearSelection",
+            "definedIn": [
+                "IgxYearsViewComponent"
+            ]
+        },
+        {
+            "member": "onDateSelection",
+            "replaceWith": "dateSelection",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onViewChanging",
+            "replaceWith": "viewChanging",
+            "definedIn": [
+                "IgxDaysViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthPickerComponent"
+            ]
+        },
+        {
+            "member": "onMonthSelection",
+            "replaceWith": "monthSelection",
+            "definedIn": [
+                "IgxMonthsViewComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxMonthsViewComponent"
+            ]
+        },
+        {
+            "member": "onRowExport",
+            "replaceWith": "rowExporting",
+            "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
+                "IgxBaseExporter"
+            ]
+        },
+        {
+            "member": "onColumnExport",
+            "replaceWith": "columnExporting",
+            "definedIn": [
+                "IgxExcelExporterService",
+                "IgxCsvExporterService",
+                "IgxBaseExporter"
+            ]
+        },
+        {
+            "member": "onAction",
+            "replaceWith": "action",
+            "definedIn": [
+                "IgxNavbarComponent"
+            ]
+        },
+        {
+            "member": "onLeftPan",
+            "replaceWith": "leftPan",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onRightPan",
+            "replaceWith": "rightPan",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onPanStateChange",
+            "replaceWith": "panStateChange",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onItemClicked",
+            "replaceWith": "itemClicked",
+            "definedIn": [
+                "IgxListComponent"
+            ]
+        },
+        {
+            "member": "onTabItemSelected",
+            "replaceWith": "tabItemSelected",
+            "definedIn": [
+                "IgxTabsComponent"
+            ]
+        },
+        {
+            "member": "onTabItemDeselected",
+            "replaceWith": "tabItemDeselected",
+            "definedIn": [
+                "IgxTabsComponent"
+            ]
+        },
+        {
+            "member": "onTooltipShow",
+            "replaceWith": "tooltipShow",
+            "definedIn": [
+                "IgxTooltipTargetDirective"
+            ]
+        },
+        {
+            "member": "onTooltipHide",
+            "replaceWith": "tooltipHide",
+            "definedIn": [
+                "IgxTooltipTargetDirective"
+            ]
+        }
+    ]
+}

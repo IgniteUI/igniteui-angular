@@ -1,9 +1,9 @@
 <div class="sample-column">
     <div class="density-chooser">
-        <igx-buttongroup [values]="summaryModes" (onSelect)="selectSummaryMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="summaryModes" (selected)="selectSummaryMode($event)"></igx-buttongroup>
     </div>
     <div class="density-chooser">
-        <igx-buttongroup [values]="displayDensities" (onSelect)="selectDensity($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
     <h4>Primary/Foreign key</h4>
@@ -22,7 +22,7 @@
         </ng-template>
 
         <!-- <ng-template igxRowLoadingIndicator>
-            <igx-icon fontSet="material">loop</igx-icon>
+            <igx-icon>loop</igx-icon>
         </ng-template> -->
     </igx-tree-grid>
 

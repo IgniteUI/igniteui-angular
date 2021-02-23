@@ -1,9 +1,6 @@
-import { Component, ViewChild, AfterViewInit, PipeTransform, Pipe, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import {
-    IgxRowIslandComponent,
-    IgxHierarchicalGridComponent,
-    IGridCreatedEventArgs,
-    GridSelectionMode
+    IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { HierarchicalRemoteService } from './hierarchical-remote.service';
@@ -16,16 +13,13 @@ import { debounceTime } from 'rxjs/operators';
     providers: [RemoteService]
 })
 export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewInit {
-    @ViewChild('rowIsland1', { static: true })
-    rowIsland1: IgxRowIslandComponent;
-
     @ViewChild('hGrid', { static: true })
-    hGrid: IgxHierarchicalGridComponent;
+    private hGrid: IgxHierarchicalGridComponent;
 
     public selectionMode;
-    remoteData = [];
-    gridData = [];
-    totalCount: number;
+    public remoteData = [];
+    public gridData = [];
+    public totalCount: number;
 
     public isExpanding = false;
 
@@ -45,9 +39,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
         this.handleLoad(this.hGrid.virtualizationState);
 
         // update when row is expanded/collapsed
-        this.hGrid.expansionStatesChange.subscribe(x => {
-            this.handleLoad(this.hGrid.virtualizationState);
-        });
+        this.hGrid.expansionStatesChange.subscribe(() => this.handleLoad(this.hGrid.virtualizationState));
 
         // update on scroll
         this.hGrid.onDataPreLoad.pipe().subscribe(() => {

@@ -65,7 +65,8 @@ export class IgxRippleDirective {
      *
      * @memberof IgxRippleDirective
      */
-    @Input('igxRippleCentered') set centered(value: boolean) {
+    @Input('igxRippleCentered')
+    public set centered(value: boolean) {
         this._centered = value || this.centered;
     }
     /**
