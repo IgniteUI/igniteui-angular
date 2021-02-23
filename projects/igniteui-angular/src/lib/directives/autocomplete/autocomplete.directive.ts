@@ -248,7 +248,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     @HostListener('keydown.Tab')
     @HostListener('keydown.Shift.Tab')
     public onTab() {
-        this._shouldBeOpen = false;
         this.close();
     }
 
