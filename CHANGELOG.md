@@ -51,6 +51,21 @@ All notable changes for each version of this project will be documented in this 
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
 
+## 10.2.15
+
+### New Features
+- `IgxAutocomplete`
+    - Added an `exportAs` on the `@Directive` decorator which takes the name under which the component instance is exported in the template:
+    ```typescript
+    @Directive({
+    selector: '[igxAutocomplete]',
+    exportAs: 'igxAutocomplete'
+    ```
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
+
 ## 10.2.0
 
 ### General
