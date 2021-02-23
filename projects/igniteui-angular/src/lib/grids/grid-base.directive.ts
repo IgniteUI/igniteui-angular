@@ -6749,6 +6749,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
         }
 
+        if (this.cellSelection === GridSelectionMode.none && activeEl) {
+            selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
+        }
+
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
             row = this.paging ? row + (this.perPage * this.page) : row;
