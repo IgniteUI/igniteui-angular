@@ -694,11 +694,11 @@ export class IgxSliderComponent implements
      * }
      * ```
      * ```html
-     * <igx-slider (onValueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * <igx-slider (valueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
      */
     @Output()
-    public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
+    public valueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
     /**
      * This event is emitted at the end of every slide interaction.
@@ -708,11 +708,11 @@ export class IgxSliderComponent implements
      * }
      * ```
      * ```html
-     * <igx-slider (onValueChanged)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * <igx-slider (valueChanged)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
      */
     @Output()
-    public onValueChanged = new EventEmitter<number | IRangeSliderValue>();
+    public valueChanged = new EventEmitter<number | IRangeSliderValue>();
 
     /**
      * @hidden
@@ -813,7 +813,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
-        this.onValueChanged.emit(this.value);
+        this.valueChanged.emit(this.value);
     }
 
     /**
@@ -1016,7 +1016,7 @@ export class IgxSliderComponent implements
             this.changeThumbFocusableState(this.disabled);
         });
 
-        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(() => {
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
             this.positionHandler(null, labelFrom, this.lowerValue);
         });
@@ -1415,7 +1415,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        thumb.onThumbValueChange
+        thumb.thumbValueChange
             .pipe(takeUntil(this.unsubscriber(thumb)))
             .subscribe(value => callback(value, thumb.type));
     }
@@ -1434,7 +1434,7 @@ export class IgxSliderComponent implements
     }
 
     private emitValueChanged(oldValue: number | IRangeSliderValue) {
-        this.onValueChange.emit({ oldValue, value: this.value });
+        this.valueChange.emit({ oldValue, value: this.value });
     }
 }
 

@@ -131,6 +131,10 @@ All notable changes for each version of this project will be documented in this 
         - `onColumnExport` to `columnExporting`
         - `onRowExport` to `rowExporting`
         - `onExportEnded` to `exportEnded`
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `valueChanged`
 
 ## 11.0.4
 

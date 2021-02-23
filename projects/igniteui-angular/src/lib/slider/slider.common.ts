@@ -1,5 +1,5 @@
 import { Directive } from '@angular/core';
-import { IBaseEventArgs, mkenum } from '../core/utils';
+import { mkenum } from '../core/utils';
 
 /**
  * Template directive that allows you to set a custom template representing the lower label value of the {@link IgxSliderComponent}

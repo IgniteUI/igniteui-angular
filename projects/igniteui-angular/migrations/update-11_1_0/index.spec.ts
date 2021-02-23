@@ -631,6 +631,25 @@ export class CsvExportComponent {
         );
     });
 
+    it('should replace onValueChange and onValueChanged with valueChange and valueChanged in igx-slider', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/slider.component.html`,
+`<igx-slider
+    (onValueChange)="someHandler($event)"
+    (onValueChanged)="someHandler($event)"
+></igx-slider>`
+        );
+
+        const tree = await runner.runSchematicAsync(migrationName, {}, appTree).toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/slider.component.html')).toEqual(
+`<igx-slider
+    (valueChange)="someHandler($event)"
+    (valueChanged)="someHandler($event)"
+></igx-slider>`
+        );
+    });
+
     it('should update Excel exporter onColumnExport and onRowExport event names to columnmExporting and rowExporting', async () => {
         pending('set up tests for migrations through lang service');
         appTree.create(

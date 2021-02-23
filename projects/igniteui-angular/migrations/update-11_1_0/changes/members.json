@@ -363,6 +363,41 @@
             "definedIn": [
                 "IgxTooltipTargetDirective"
             ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxSliderComponent"
+            ]
+        },
+        {
+            "member": "onValueChanged",
+            "replaceWith": "valueChanged",
+            "definedIn": [
+                "IgxSliderComponent"
+            ]
+        },
+        {
+            "member": "onThumbValueChange",
+            "replaceWith": "thumbValueChange",
+            "definedIn": [
+                "IgxSliderThumbComponent"
+            ]
+        },
+        {
+            "member": "onHoverChange",
+            "replaceWith": "hoverChange",
+            "definedIn": [
+                "IgxSliderThumbComponent"
+            ]
+        },
+        {
+            "member": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "definedIn": [
+                "BaseProgressDirective"
+            ]
         }
     ]
 }
