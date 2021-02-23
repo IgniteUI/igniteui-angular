@@ -96,3 +96,22 @@ export interface GridSVGIcon {
     name: string;
     value: string;
 }
+
+export interface ClipboardOptions {
+    /**
+     * Enables/disables the copy behavior
+     */
+    enabled: boolean;
+    /**
+     * Include the columns headers in the clipboard output.
+     */
+    copyHeaders: boolean;
+    /**
+     * Apply the columns formatters (if any) on the data in the clipboard output.
+     */
+    copyFormatters: boolean;
+    /**
+     * The separator used for formatting the copy output. Defaults to `\t`.
+     */
+    separator: string;
+}
