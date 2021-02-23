@@ -2,6 +2,21 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.2.15
+### New Features
+- `IgxAutocomplete`
+    - Added an `exportAs` on the `@Directive` decorator which takes the name under which the component instance is exported in the template:
+    ```typescript
+    @Directive({
+    selector: '[igxAutocomplete]',
+    exportAs: 'igxAutocomplete'
+    ```
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
+})
+
 ## 10.2.9
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
