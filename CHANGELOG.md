@@ -131,6 +131,9 @@ All notable changes for each version of this project will be documented in this 
         - `onColumnExport` to `columnExporting`
         - `onRowExport` to `rowExporting`
         - `onExportEnded` to `exportEnded`
+- `IxgAutocomplete`
+    - Added `exportAs` property on the `@Directive` with a value of `IgxAutocomplete` which exports the component instance in the template.
+
 
 ## 11.0.4
 
