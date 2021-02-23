@@ -147,7 +147,7 @@ export class IgxDayItemComponent {
 
     @HostBinding('class.igx-calendar__date')
     public get defaultCSS(): boolean {
-        return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
+        return true;
     }
 
     @HostBinding('class.igx-calendar__date--disabled')
