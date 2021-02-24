@@ -599,14 +599,12 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden */
     public ngAfterViewInit(): void {
-        if (this.isDropdown) {
-            this.attachOnKeydown();
-        }
         this.subscribeToDateEditorEvents();
         this.subscribeToOverlayEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
+        this.attachOnKeydown();
         this.attachOnTouched();
 
         const subsToClicked = () => {
