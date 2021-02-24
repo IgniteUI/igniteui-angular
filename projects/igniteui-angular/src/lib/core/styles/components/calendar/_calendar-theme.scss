@@ -846,6 +846,14 @@
         margin: 0;
         min-width: 8ch;
         line-height: rem(52px);
+
+        &:first-of-type {
+            padding-#{$left}: 0;
+        }
+
+        &:last-of-type {
+            padding-#{$right}: 0;
+        }
     }
 
     %cal-value--year-current {
@@ -865,6 +873,7 @@
 
     %cal-value--month-hover {
         color: --var($theme, 'month-hover-text-color');
+        outline-width: 0;
 
         &::after {
             background: --var($theme, 'month-hover-background');
