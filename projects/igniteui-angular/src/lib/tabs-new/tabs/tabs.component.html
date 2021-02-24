@@ -1,14 +1,14 @@
 <div class="igx-tabs__header">
     <div class="igx-tabs__header-wrapper-fixed" #viewPort>
         <div #itemsContainer class="igx-tabs__header-wrapper-fluid">
-            <ng-container *ngFor="let tab of tabs; let i = index">
+            <ng-container *ngFor="let tab of items; let i = index">
                 <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
             </ng-container>
         </div>
     </div>
 </div>
 <div style="position: relative; overflow: hidden; height: inherit">
-    <ng-container *ngFor="let tab of tabs; let i = index">
+    <ng-container *ngFor="let tab of items; let i = index">
         <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
     </ng-container>
 </div>

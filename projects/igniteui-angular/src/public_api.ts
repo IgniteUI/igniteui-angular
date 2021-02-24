@@ -91,6 +91,7 @@ export * from './lib/snackbar/snackbar.component';
 export * from './lib/switch/switch.component';
 export * from './lib/tabbar/tabbar.component';
 export * from './lib/tabs/public_api';
+export * from './lib/tabs-new/public_api';
 export * from './lib/tabs-new/bottom-nav/public_api';
 export * from './lib/tabs-new/tabs/public_api';
 export * from './lib/time-picker/time-picker.component';

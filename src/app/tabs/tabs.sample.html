@@ -4,7 +4,11 @@
         <button (click)="changeSelectedIndex()">Change selectedIndex</button>
         <button (click)="changeTabSelected()">Change tab.selected</button>
 
-        <igx-tabs-new #tabsNew>
+        <igx-tabs-new
+            #tabsNew
+            (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
+            (selectedItemChange)="tabsSelectedItemChange($event)"
+        >
             <igx-tab-item-new>
                 <igx-tab-header-new [label]="'Tab 1'" [icon]="'folder'"></igx-tab-header-new>
                 <igx-tab-panel-new>

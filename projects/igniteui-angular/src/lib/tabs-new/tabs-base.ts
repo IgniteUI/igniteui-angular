@@ -2,7 +2,7 @@ import { QueryList, TemplateRef } from '@angular/core';
 
 /** @hidden */
 export abstract class IgxTabsBaseNew {
-    public tabs: QueryList<IgxTabItemNewBase>;
+    public items: QueryList<IgxTabItemNewBase>;
     public selectedIndex: number;
     public abstract selectTab(tab: IgxTabItemNewBase, selected: boolean);
 }

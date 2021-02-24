@@ -1,5 +1,5 @@
 import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import { IgxTabsNewComponent } from 'igniteui-angular';
+import { IgxTabsNewComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-sample',
@@ -10,7 +10,7 @@ import { IgxTabsNewComponent } from 'igniteui-angular';
 export class TabsSampleComponent {
 
     @ViewChild('tabsNew')
-    tabs: IgxTabsNewComponent;
+    private tabs: IgxTabsNewComponent;
 
     public data = [
         /* eslint-disable max-len */
@@ -74,12 +74,22 @@ export class TabsSampleComponent {
     }];
 
 
-    changeSelectedIndex() {
+    public changeSelectedIndex() {
         this.tabs.selectedIndex = 1;
     }
 
-    changeTabSelected() {
-        this.tabs.tabs.toArray()[1].selected = true;
+    public changeTabSelected() {
+        this.tabs.items.toArray()[1].selected = true;
+    }
+
+    public tabsSelectedIndexChanging(_args: ITabsSelectedIndexChangingEventArgs) {
+        // if (args.newIndex === 1) {
+        //     args.cancel = true;
+        // }
+    }
+
+    public tabsSelectedItemChange(_args: ITabsSelectedItemChangeEventArgs) {
+        // console.log(args);
     }
 }
 

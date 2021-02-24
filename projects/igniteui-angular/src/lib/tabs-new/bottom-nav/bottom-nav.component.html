@@ -1,6 +1,6 @@
 
 
-<ng-container *ngFor="let tab of tabs; let i = index">
+<ng-container *ngFor="let tab of items; let i = index">
     <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
 </ng-container>
 
@@ -10,7 +10,7 @@
     role="tablist"
     aria-orientation="horizontal"
 >
-    <ng-container *ngFor="let tab of tabs; let i = index">
+    <ng-container *ngFor="let tab of items; let i = index">
         <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
     </ng-container>
 </div>
