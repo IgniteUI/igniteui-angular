@@ -824,6 +824,9 @@
             display: inline-flex;
             order: -1;
             margin: rem(8px) 0;
+            width: rem(24px);
+            height: rem(24px);
+            font-size: rem(24px);
         }
 
         * + igx-icon {
@@ -855,6 +858,8 @@
     %igx-button--icon {
         width: $button-icon-width;
         height: $button-icon-width;
+        min-width: unset;
+        min-height: unset;
         font-size: $button-icon-font-size;
         padding: $button-icon-padding;
         color: --var($theme, 'icon-color');
@@ -883,27 +888,16 @@
     %igx-button--disabled {
         pointer-events: none;
         box-shadow: none;
+        color: --var($theme, 'disabled-color');
+        background: transparent;
 
-        &%igx-button--outlined,
-        &%igx-button--flat,
-        &%igx-button--raised,
-        &%igx-button--fab,
-        &%igx-button--icon {
-            color: --var($theme, 'disabled-color');
-
-            igx-icon {
-                color: inherit;
-            }
+        igx-icon {
+            color: inherit;
         }
 
         &%igx-button--raised,
         &%igx-button--fab {
             background: --var($theme, 'disabled-background');
-        }
-
-        &%igx-button--flat,
-        &%igx-button--outlined {
-            background: transparent;
         }
 
         &%igx-button--outlined {
