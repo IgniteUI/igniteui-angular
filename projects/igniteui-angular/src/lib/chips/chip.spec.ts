@@ -179,7 +179,7 @@ describe('IgxChip', () => {
             // Assert default css class is applied
             const comfortableComponents = fix.debugElement.queryAll(By.css(CHIP_CLASS));
 
-            expect(comfortableComponents.length).toEqual(7);
+            expect(comfortableComponents.length).toEqual(9);
             expect(comfortableComponents[0].nativeElement).toBe(firstComponent.nativeElement);
             expect(comfortableComponents[1].nativeElement).toBe(secondComponent.nativeElement);
         });
