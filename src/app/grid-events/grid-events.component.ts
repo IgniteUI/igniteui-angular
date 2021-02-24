@@ -1,12 +1,10 @@
-import { Component, ViewChild, ElementRef, Renderer2, OnInit } from '@angular/core';
+import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree,
     ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
-    IColumnResizeEventArgs, IColumnSelectionEventArgs, ISortingEventArgs,
+    IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
-    IColumnVisibilityChangingEventArgs,
-    IgxPaginatorComponent} from 'igniteui-angular';
-import { IPagingDoneEventArgs, IPagingEventArgs } from 'projects/igniteui-angular/src/lib/paginator/interfaces';
+    IColumnVisibilityChangingEventArgs } from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
@@ -14,10 +12,9 @@ import { data } from '../grid-cellEditing/data';
     styleUrls: ['grid-events.component.scss'],
     templateUrl: 'grid-events.component.html'
 })
-export class GridEventsComponent implements OnInit {
+export class GridEventsComponent {
 
     @ViewChild('grid1', { read: IgxGridComponent, static: true }) public grid: IgxGridComponent;
-    @ViewChild(IgxPaginatorComponent) public paginator: IgxPaginatorComponent;
     @ViewChild('logger') public logger: ElementRef;
 
     public $sorting = false;
@@ -29,16 +26,9 @@ export class GridEventsComponent implements OnInit {
     public $hiding = false;
     public $moving = false;
     public localData: any[];
-    public page = 1;
-    public perPage = 7;
-    public selectOptions = [5, 10, 15];
-    public totalCount = 10;
 
-    constructor(private renderer: Renderer2) { }
-
-    public ngOnInit() {
+    constructor(private renderer: Renderer2) {
         this.localData = data;
-        this.totalCount = data.length;
     }
 
     public filter(term) {
@@ -49,14 +39,16 @@ export class GridEventsComponent implements OnInit {
         this.grid.filterGlobal(term, IgxStringFilteringOperand.instance().condition('contains'));
     }
 
-    public onColumnMovingStart(_event: IColumnMovingStartEventArgs) {
+    public onColumnMovingStart(event: IColumnMovingStartEventArgs) {
+        console.log('event' + event);
         this.logAnEvent('=> onColumnMovingStart');
     }
     public onColumnMoving(event: IColumnMovingEventArgs) {
         event.cancel = this.$moving;
         this.logAnEvent(event.cancel ? '=> onColumnMoving cancelled' : '=> onColumnMoving');
     }
-    public onColumnMovingEnd(_event: IColumnMovingEndEventArgs) {
+    public onColumnMovingEnd(event: IColumnMovingEndEventArgs) {
+        console.log('event' + event);
         this.logAnEvent('=> onColumnMovingEnd');
     }
 
@@ -64,7 +56,8 @@ export class GridEventsComponent implements OnInit {
         event.cancel = this.$sorting;
         this.logAnEvent('=> sorting', event.cancel);
     }
-    public onSortingDone(_event: ISortingExpression) {
+    public onSortingDone(event: ISortingExpression) {
+        console.log('event' + event);
         this.logAnEvent(`=> onSortingDone`);
     }
 
@@ -72,24 +65,21 @@ export class GridEventsComponent implements OnInit {
         event.cancel = this.$filtering;
         this.logAnEvent('=> filtering', event.cancel);
     }
-    public onFilteringDone(_event: FilteringExpressionsTree) {
+    public onFilteringDone(event: FilteringExpressionsTree) {
+        console.log('event' + event);
         this.logAnEvent(`=> onFilteringDone`);
     }
-
-    public paging(event: IPagingEventArgs) {
-        event.cancel = this.$paging;
-        this.logAnEvent(`=> paging`, event.cancel);
-    }
-    public pagingDone(event: IPagingDoneEventArgs) {
-        this.logAnEvent(`=> pagingDone`);
-        this.paginator.paginate(event.newPage);
+    public onPagingDone(event: IPageEventArgs) {
+        console.log('event' + event);
+        this.logAnEvent(`=> onPagingDone`);
     }
 
     public onColumnPinning(event: IPinColumnCancellableEventArgs) {
         event.cancel = this.$pinning;
         this.logAnEvent('=> onColumnPinning', event.cancel);
     }
-    public columnPinned(_event: IPinColumnEventArgs) {
+    public columnPinned(event: IPinColumnEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> columnPinned`);
     }
 
@@ -97,11 +87,12 @@ export class GridEventsComponent implements OnInit {
         event.cancel = this.$hiding;
         this.logAnEvent('=> columnVisibilityChanging', event.cancel);
     }
-    public onColumnVisibilityChanged(_event: IColumnVisibilityChangedEventArgs) {
+    public onColumnVisibilityChanged(event: IColumnVisibilityChangedEventArgs) {
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 
-    public onColumnResized(_event: IColumnResizeEventArgs) {
+    public onColumnResized(event: IColumnResizeEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> onColumnResized`);
     }
 
@@ -129,3 +120,4 @@ export class GridEventsComponent implements OnInit {
         this.renderer.insertBefore(container, createElem, container.children[0]);
     }
 }
+

@@ -25,7 +25,8 @@ export const DataType = mkenum({
     Number: 'number',
     Boolean: 'boolean',
     Date: 'date',
-    Currency: 'currency'
+    Currency: 'currency',
+    Percent: 'percent'
 });
 export type DataType = (typeof DataType)[keyof typeof DataType];
 
@@ -219,7 +220,7 @@ export class DataUtil {
     }
 
     public static parseValue(dataType: DataType, value: any): any {
-        if (dataType === DataType.Number || dataType === DataType.Currency) {
+        if (dataType === DataType.Number || dataType === DataType.Currency || dataType === DataType.Percent) {
             value = parseFloat(value);
         }
 
