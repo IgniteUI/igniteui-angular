@@ -433,7 +433,7 @@ describe('IgxCalendar - ', () => {
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
                 const currentMonth = dom.query(By.css(HelperTestFunctions.CURRENT_MONTH_CSSCLASS));
 
-                expect(months.length).toEqual(11);
+                expect(months.length).toEqual(12);
                 expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
 
                 months[0].nativeElement.click();
@@ -448,7 +448,7 @@ describe('IgxCalendar - ', () => {
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
                 const currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
 
-                expect(years.length).toEqual(6);
+                expect(years.length).toEqual(7);
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2017');
 
                 years[0].triggerEventHandler('click', { target: years[0].nativeElement });
@@ -1669,7 +1669,7 @@ describe('IgxCalendar - ', () => {
                 const years = dom.queryAll(By.css(HelperTestFunctions.YEAR_CSSCLASS));
                 let currentYear = dom.query(By.css(HelperTestFunctions.CURRENT_YEAR_CSSCLASS));
 
-                expect(years.length).toEqual(6);
+                expect(years.length).toEqual(7);
                 expect(currentYear.nativeElement.textContent.trim()).toMatch('2017');
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', currentYear.nativeElement);
@@ -1716,7 +1716,7 @@ describe('IgxCalendar - ', () => {
                 const months = dom.queryAll(By.css(HelperTestFunctions.MONTH_CSSCLASS));
                 const currentMonth = dom.query(By.css(HelperTestFunctions.CURRENT_MONTH_CSSCLASS));
 
-                expect(months.length).toEqual(11);
+                expect(months.length).toEqual(12);
                 expect(currentMonth.nativeElement.textContent.trim()).toMatch('Jun');
 
                 UIInteractions.triggerKeyDownEvtUponElem('Home', currentMonth.nativeElement);
