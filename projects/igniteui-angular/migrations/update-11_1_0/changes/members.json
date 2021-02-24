@@ -363,6 +363,13 @@
             "definedIn": [
                 "IgxTooltipTargetDirective"
             ]
+        },
+        {
+            "member": "onColumnChange",
+            "replaceWith": "columnChange",
+            "definedIn": [
+                "IgxColumnComponent"
+            ]
         }
     ]
 }

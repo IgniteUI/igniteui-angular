@@ -198,7 +198,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.initPinning();
 
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'onColumnChange');
+        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columnList.forEach(column => {
                 if (column[output.propName]) {

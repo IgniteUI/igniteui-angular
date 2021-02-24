@@ -25,7 +25,7 @@ import { flatten } from '../../core/utils';
 export class IgxColumnGroupComponent extends IgxColumnComponent implements AfterContentInit {
 
     @ContentChildren(IgxColumnComponent, { read: IgxColumnComponent })
-    children = new QueryList<IgxColumnComponent>();
+    public children = new QueryList<IgxColumnComponent>();
 
     /**
      * Set if the column group is collapsible.
@@ -157,13 +157,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get bodyTemplate(): TemplateRef<any> {
+    public get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
     /**
      * @hidden
      */
-    set bodyTemplate(template: TemplateRef<any>) { }
+    public set bodyTemplate(template: TemplateRef<any>) { }
 
     /**
      * Allows you to define a custom template for expand/collapse indicator
@@ -181,13 +181,13 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get inlineEditorTemplate(): TemplateRef<any> {
+    public get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
     /**
      * @hidden
      */
-    set inlineEditorTemplate(template: TemplateRef<any>) { }
+    public set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
      * Gets the column group cells.
      * ```typescript
@@ -196,7 +196,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get cells(): IgxGridCellComponent[] {
+    public get cells(): IgxGridCellComponent[] {
         return [];
     }
     /**
@@ -208,7 +208,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    get hidden() {
+    public get hidden() {
         return this.allChildren.every(c => c.hidden);
     }
     /**
@@ -224,7 +224,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    set hidden(value: boolean) {
+    public set hidden(value: boolean) {
         this._hidden = value;
         this.hiddenChange.emit(this._hidden);
         if (this._hidden || !this.collapsible) {
@@ -247,7 +247,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get selected(): boolean {
+    public get selected(): boolean {
         const selectableChildren = this.allChildren.filter(c => !c.columnGroup && c.selectable && !c.hidden);
         return selectableChildren.length > 0 && selectableChildren.every(c => c.selected);
     }
@@ -260,7 +260,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (this.selectable) {
             this.children.forEach(c => {
                 c.selected = value;
@@ -277,7 +277,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
     /**
      * @hidden
      */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         /*
             @ContentChildren with descendants still returns the `parent`
             component in the query list.
@@ -308,7 +308,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get allChildren(): IgxColumnComponent[] {
+    public get allChildren(): IgxColumnComponent[] {
         return flatten(this.children.toArray());
     }
     /**
@@ -319,7 +319,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get columnGroup() {
+    public get columnGroup() {
         return true;
     }
     /**
@@ -330,7 +330,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnComponent
      */
-    get columnLayout() {
+    public get columnLayout() {
         return false;
     }
     /**
@@ -341,7 +341,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    get width() {
+    public get width() {
         const width = `${this.children.reduce((acc, val) => {
             if (val.hidden) {
                 return acc;
@@ -351,7 +351,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
         return width + 'px';
     }
 
-    set width(val) { }
+    public set width(val) { }
 
     /**
      * @hidden

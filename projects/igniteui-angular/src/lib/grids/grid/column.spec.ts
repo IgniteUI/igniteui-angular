@@ -824,8 +824,8 @@ export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    data = SampleTestData.personIDNameRegionData();
-    columns = Object.keys(this.data[0]);
+    public data = SampleTestData.personIDNameRegionData();
+    public columns = Object.keys(this.data[0]);
 }
 
 @Component({
