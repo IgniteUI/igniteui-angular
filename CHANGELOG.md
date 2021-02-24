@@ -4,12 +4,7 @@ All notable changes for each version of this project will be documented in this 
 ## 11.0.15
 ## New Features
 - `IgxAutocomplete`
-    - Added an `exportAs` on the `@Directive` decorator which takes the name under which the component instance is exported in the template:
-    ```typescript
-    @Directive({
-    selector: '[igxAutocomplete]',
-    exportAs: 'igxAutocomplete'
-    ```
+    - Exported the component instance in the template with the name `igxAutocomplete`.
 
     ```html
     <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
@@ -55,15 +50,11 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxAutocomplete`
-    - Added an `exportAs` on the `@Directive` decorator which takes the name under which the component instance is exported in the template:
-    ```typescript
-    @Directive({
-    selector: '[igxAutocomplete]',
-    exportAs: 'igxAutocomplete'
-    ```
+    - Exported the component instance in the template with the name `igxAutocomplete`.
 
     ```html
     <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ``` type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
     ```
 
 ## 10.2.0
