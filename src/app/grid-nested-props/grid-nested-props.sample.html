@@ -6,13 +6,18 @@
                 [allowFiltering]="true"
                 filterMode="excelStyleFilter"
                 allowAdvancedFiltering="true"
-                [showToolbar]="true"
-                [exportCsv]="true"
-                [exportExcel]="true"
-                exportText="Export"
-                exportExcelText="Export to Excel"
-                exportCsvText="Export to CSV"
             >
+                <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                        <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                            <span excelText>Export to Excel 👌</span>
+                            <span csvText>Export to CSV 👍</span>
+                        </igx-grid-toolbar-exporter>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
                 <igx-column *ngFor="let each of config"
                     [field]="each.field"
                     [sortable]="true"
