@@ -153,7 +153,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const data = cell.rowData;
-        mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        this.grid.nestedBinding ? mergeObjects(data, reverseMapper(cell.column.field, args.newValue)) : data[cell.column.field] = args.newValue;
         this.grid.crudService.row.data = data;
         const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
         doneArgs.rowData = data;

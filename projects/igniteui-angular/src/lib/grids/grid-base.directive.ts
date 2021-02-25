@@ -252,6 +252,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     /**
+     * Enables/disables nested properties support.
+     *
+     * @example
+     * ```html
+     * <igx-grid [id]="'igx-grid-1'" [data]="data" [nestedBinding]="true"></igx-grid>
+     * ```
+     */
+    @Input()
+    public nestedBinding = false;
+
+    /**
      * Emitted after filtering is performed.
      *
      * @remarks
