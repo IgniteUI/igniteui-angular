@@ -25,7 +25,7 @@ const IgxButtonType = mkenum({
 /**
  * Determines the Button type.
  */
-export type IgxButtonType = (typeof IgxButtonType)[keyof typeof IgxButtonType];
+export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 
 /**
  * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button.
@@ -196,9 +196,17 @@ export class IgxButtonDirective extends DisplayDensityBase {
     @Input('igxLabel')
     public set label(value: string) {
         this._label = value || this._label;
-        this._renderer.setAttribute(this.nativeElement, `aria-label`, this._label);
+        this._renderer.setAttribute(this.nativeElement, 'aria-label', this._label);
     }
 
+    /**
+     * Get the disabled state of the button;
+     *
+     * @example
+     * ```typescript
+     * const disabled = this.button.disabled;
+     * ```
+     */
     @Input()
     @HostBinding('class.igx-button--disabled')
     public get disabled() {
@@ -215,6 +223,10 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     public set disabled(val: boolean) {
         this._disabled = !!val;
+
+        if (val === true) {
+            this._renderer.setAttribute(this.nativeElement, 'disabled', 'true');
+        }
     }
 
     /**
