@@ -44,7 +44,11 @@ export function changei18n(resourceStrings: IResourceStrings) {
  */
 export function getCurrentResourceStrings(): IResourceStrings {
     return {
-            ...CurrentResourceStrings.GridResStrings,
-            ...CurrentResourceStrings.TimePickerResStrings
+        ...CurrentResourceStrings.CarouselResStrings,
+        ...CurrentResourceStrings.DateRangePickerResStrings,
+        ...CurrentResourceStrings.GridResStrings,
+        ...CurrentResourceStrings.ListResStrings,
+        ...CurrentResourceStrings.PaginatorResStrings,
+        ...CurrentResourceStrings.TimePickerResStrings
     };
 }
