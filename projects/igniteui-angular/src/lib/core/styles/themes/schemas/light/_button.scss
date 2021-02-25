@@ -1,6 +1,164 @@
 @import '../shape/button';
 @import '../elevation/button';
 
+/// @prop {Color} shadow-color [transparent] - The shadow color of the button.
+/// @prop {Color} border-color [transparent] - The outline color of the button.
+/// @prop {Color} focus-border-color [transparent] - The focused border color of the button.
+/// @prop {Color} disabled-border-color [transparent] - The disabled focused border color of the button.
+/// @prop {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of the button.
+/// @prop {Color} disabled-foreground [igx-color: ('grays', 400)] - The disabled foreground color of the button.
+$_material-base-button: (
+    variant: 'material',
+
+    shadow-color: transparent,
+
+    border-color: transparent,
+
+    focus-border-color: transparent,
+
+    disabled-border-color: transparent,
+
+    disabled-background: (
+        igx-color: ('grays', 100)
+    ),
+
+    disabled-foreground: (
+        igx-color: ('grays', 400)
+    ),
+);
+
+/// @prop {Color} background [transparent] - The background color of a flat button.
+/// @prop {Map} foreground [igx-color: ('secondary', 500)] - The idle text color of a flat button.
+/// @prop {Map} hover-background [igx-color: ('secondary', 500), rgba: .05 ] - The hover background color of a flat button.
+/// @prop {Map} hover-foreground [igx-color: ('secondary', 500)] - The hover text color of a flat button.
+/// @prop {Map} focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
+/// @prop {Map} focus-foreground [igx-color: ('secondary', 500)] - The focus text color of a flat button.
+/// @prop {Number} flat-border-radius [.2] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+$_material-flat-button: extend(
+    $_material-base-button,
+    $_flat-elevation-button,
+    $_material-shape-button,
+    (
+        background: transparent,
+
+        foreground: (
+            igx-color: ('secondary', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('secondary', 500),
+            rgba: .05
+        ),
+
+        hover-foreground: (
+            igx-color: ('secondary', 500)
+        ),
+
+        focus-background: (
+            igx-color: ('secondary', 400),
+            rgba: .12
+        ),
+
+        focus-foreground: (
+            igx-color: ('secondary', 500)
+        ),
+    )
+);
+
+/// @prop {Color} border-color [igx-color: (grays, 300)] - The outline color of the button.
+/// @prop {Color} focus-border-color [igx-color: ('grays', 300)] - The focused border color of the button.
+/// @prop {Color} disabled-border-color [igx-color: ('grays', 300)] - The disabled focused border color of the button.
+$_material-outlined-button: extend(
+    $_material-flat-button,
+    (
+        border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-border-color: (
+            igx-color: ('grays', 300)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('grays', 300)
+        ),
+    )
+);
+
+$_material-raised-button: extend(
+    $_material-base-button,
+    $_material-raised-elevation,
+    $_material-shape-button,
+    (
+        background: (
+            igx-color: ('secondary', 500)
+        ),
+
+        foreground: (
+            igx-contrast-color: ('secondary', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('secondary', 300)
+        ),
+
+        hover-foreground: (
+            igx-contrast-color: ('secondary', 300)
+        ),
+
+        focus-background: (
+            igx-color: ('secondary', 300)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('secondary', 300)
+        ),
+    )
+);
+
+$_material-fab-button: extend(
+    $_material-raised-button,
+    $_material-fab-elevation,
+    $_round-shape-button
+);
+
+$_material-icon-button: extend(
+    $_material-base-button,
+    $_material-ib-elevation,
+    $_round-shape-button,
+    (
+        background: transparent,
+
+        foreground: (
+            igx-color: ('grays', 800)
+        ),
+
+        hover-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 800)
+        ),
+
+        focus-background: (
+            igx-color: ('grays', 400)
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 800)
+        ),
+    )
+);
+
+$_material-button: (
+    flat: $_material-flat-button,
+    outlined: $_material-outlined-button,
+    raised: $_material-raised-button,
+    fab: $_material-fab-button,
+    icon: $_material-icon-button,
+);
+
 ////
 /// @group schemas
 /// @access public
@@ -10,22 +168,7 @@
 /// Generates a light button schema.
 /// @type {Map}
 /// @prop {String} button-roundness [4px]- The edge roundness (border-radius) for flat and raised buttons.
-/// @prop {Color} flat-background [transparent] - The background color of a flat button.
-/// @prop {Map} flat-text-color [igx-color: ('secondary', 500)] - The idle text color of a flat button.
-/// @prop {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .05 ] - The hover background color of a flat button.
-/// @prop {Map} flat-hover-text-color [igx-color: ('secondary', 500)] - The hover text color of a flat button.
-/// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .12] - The focus background color of a flat button.
-/// @prop {Map} flat-focus-text-color [igx-color: ('secondary', 500)] - The focus text color of a flat button.
-/// @prop {Color} flat-icon-color ["'currentColor'"] - The color of a flat button icon.
-/// @prop {Color} flat-hover-icon-color ["'currentColor'"] - The hover color of a flat button icon.
-/// @prop {Color} flat-focus-icon-color ["'currentColor'"] - The focus color of a flat button icon.
-/// @prop {Color} flat-focus-shadow [transparent] - The shadow/outline color of the flat button in its focus state.
 ///
-/// @prop {Color} flat-shadow-color [transparent] - The focus outline color of an flat button.
-/// @prop {Color} raised-shadow-color [transparent] - The shadow/outline color of the raised button in its focus state.
-/// @prop {Color} outlined-shadow-color [transparent] - The shadow/outline color of the outlined button in its focus state.
-/// @prop {Color} icon-shadow-color [transparent] - The shadow/outline color of the flat icon in its focus state.
-/// @prop {Color} fab-shadow-color [transparent] - The shadow/outline color of the fab button in its focus state.
 ///
 /// @prop {Color} outlined-background [transparent] - The background color of an outlined button
 /// @prop {Map} outlined-text-color [igx-color: ('secondary', 500)] - The idle text color of an outlined button.
@@ -38,6 +181,8 @@
 /// @prop {Color} outlined-icon-color ["'currentColor'"] - The color of a outlined button icon.
 /// @prop {Color} outlined-hover-icon-color ["'currentColor'"] - The hover color of a outlined button icon.
 /// @prop {Color} outlined-focus-icon-color ["'currentColor'"] - The focus color of a outlined button icon.
+/// @prop {Number} outlined-border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Color} outlined-shadow-color [transparent] - The shadow/outline color of the outlined button in its focus state.
 ///
 /// @prop {Map} raised-background [igx-color: ('secondary', 500)] - The background color of an raised button.
 /// @prop {Map} raised-text-color [igx-contrast-color: ('secondary', 500)] - The idle text color of a raised button.
@@ -48,6 +193,11 @@
 /// @prop {Color} raised-icon-color ["'currentColor'"] - The color of a raised button icon.
 /// @prop {Color} raised-hover-icon-color ["'currentColor'"] - The hover color of a raised button icon.
 /// @prop {Color} raised-focus-icon-color ["'currentColor'"] - The focus color of a raised button icon.
+/// @prop {Color} raised-shadow-color [transparent] - The shadow/outline color of the raised button in its focus state.
+/// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} raised-focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} raised-border-radius [.2] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @prop {Map} fab-background [igx-color: ('secondary', 500)] - The background color of a floating action button.
 /// @prop {Map} fab-text-color [igx-contrast-color: ('secondary', 500)] - The text color of a floating action button.
@@ -55,6 +205,11 @@
 /// @prop {Map} fab-hover-text-color [igx-contrast-color: ('secondary', 300)] - The hover text color of a floating action button.
 /// @prop {Map} fab-focus-background [igx-color: ('secondary', 300)] - The focus background color of floating action button.
 /// @prop {Map} fab-focus-text-color [igx-contrast-color: ('secondary', 300)] - The focus text color of a floating action button.
+/// @prop {Color} fab-shadow-color [transparent] - The shadow/outline color of the fab button in its focus state.
+/// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
+/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
 ///
 /// @prop {Map} icon-color [igx-color: ('grays', 800)] - The icon color of an icon button.
 /// @prop {Map} icon-hover-color [igx-color: ('grays', 800)] - The hover icon color of an icon button.
@@ -62,28 +217,17 @@
 /// @prop {Map} icon-hover-background [igx-color: ('grays', 100)] - The hover background color of an icon button.
 /// @prop {Map} icon-focus-color [igx-color: ('grays', 800)] - The focus icon color of an icon button.
 /// @prop {Map} icon-focus-background [igx-color: ('grays', 400] - The focus background color an icon button.
+/// @prop {Color} icon-shadow-color [transparent] - The shadow/outline color of the flat icon in its focus state.
+/// @prop {Number} icon-border-radius [1] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
+///
 /// @prop {Map} disabled-color [igx-color: ('grays', 400)] - The disabled text/icon color of a button.
 /// @prop {Map} disabled-background [igx-color: ('grays', 100)] - The disabled background color of raised, fab, or icon buttons.
 ///
-/// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} raised-focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
-/// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
-///
-/// @prop {Number} flat-border-radius [.2] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} raised-border-radius [.2] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} outlined-border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} icon-border-radius [1] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-button
 /// @requires {Map} $_default-elevation-button
 /// @see $default-palette
 $_light-button: extend(
-    $_default-shape-button,
-    $_default-elevation-button,
     (
         variant: 'material',
 
@@ -94,22 +238,12 @@ $_light-button: extend(
         ),
 
         flat-icon-color: "'currentColor'",
+
         flat-hover-icon-color: "'currentColor'",
+
         flat-focus-icon-color: "'currentColor'",
 
-        raised-icon-color: "'currentColor'",
-        raised-hover-icon-color: "'currentColor'",
-        raised-focus-icon-color: "'currentColor'",
-
-        outlined-icon-color: "'currentColor'",
-        outlined-hover-icon-color: "'currentColor'",
-        outlined-focus-icon-color: "'currentColor'",
-
         flat-shadow-color: transparent,
-        raised-shadow-color: transparent,
-        outlined-shadow-color: transparent,
-        icon-shadow-color: transparent,
-        fab-shadow-color: transparent,
 
         flat-hover-background: (
             igx-color: ('secondary', 500),
@@ -128,6 +262,47 @@ $_light-button: extend(
         flat-focus-text-color: (
             igx-color: ('secondary', 500)
         ),
+
+        raised-icon-color: "'currentColor'",
+
+        raised-hover-icon-color: "'currentColor'",
+
+        raised-focus-icon-color: "'currentColor'",
+
+        raised-shadow-color: transparent,
+
+        raised-background: (
+            igx-color: ('secondary', 500)
+        ),
+
+        raised-text-color: (
+            igx-contrast-color: ('secondary', 500)
+        ),
+
+        raised-hover-background: (
+            igx-color: ('secondary', 300)
+        ),
+
+
+        raised-hover-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
+
+        raised-focus-background: (
+            igx-color: ('secondary', 300)
+        ),
+
+        raised-focus-text-color: (
+            igx-contrast-color: ('secondary', 300)
+        ),
+
+        outlined-icon-color: "'currentColor'",
+
+        outlined-hover-icon-color: "'currentColor'",
+
+        outlined-focus-icon-color: "'currentColor'",
+
+        outlined-shadow-color: transparent,
 
         outlined-background: transparent,
 
@@ -161,31 +336,6 @@ $_light-button: extend(
             igx-color: ('grays', 300)
         ),
 
-        raised-background: (
-            igx-color: ('secondary', 500)
-        ),
-
-        raised-text-color: (
-            igx-contrast-color: ('secondary', 500)
-        ),
-
-        raised-hover-background: (
-            igx-color: ('secondary', 300)
-        ),
-
-
-        raised-hover-text-color: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        raised-focus-background: (
-            igx-color: ('secondary', 300)
-        ),
-
-        raised-focus-text-color: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
         fab-background: (
             igx-color: ('secondary', 500)
         ),
@@ -193,6 +343,8 @@ $_light-button: extend(
         fab-text-color: (
             igx-contrast-color: ('secondary', 500)
         ),
+
+        fab-shadow-color: transparent,
 
         fab-hover-background: (
             igx-color: ('secondary', 300)
@@ -209,6 +361,8 @@ $_light-button: extend(
         fab-focus-text-color: (
             igx-contrast-color: ('secondary', 300)
         ),
+
+        icon-shadow-color: transparent,
 
         icon-color: (
             igx-color: ('grays', 800)
@@ -237,6 +391,135 @@ $_light-button: extend(
         ),
 
         disabled-background: (
+            igx-color: ('grays', 100)
+        ),
+    )
+);
+
+$_fluent-base-button: extend(
+    $_material-base-button,
+    $_flat-elevation-button,
+    (
+        variant: 'fluent',
+    )
+);
+
+$_fluent-flat-button: extend(
+    $_material-flat-button,
+    $_fluent-base-button,
+    $_square-shape-button,
+    (
+        foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        hover-background: transparent,
+
+        hover-foreground: (
+            igx-color: ('primary', 500)
+        ),
+
+        focus-background:(
+            igx-color:('grays', 100)
+        ),
+
+        focus-foreground: (
+            igx-color: ('primary', 500)
+        ),
+    )
+);
+
+$_fluent-outlined-button: extend(
+    $_material-outlined-button,
+    $_fluent-base-button,
+    $_fluent-shape-button,
+    (
+        border-color: (
+            igx-color: ('grays', 800)
+        ),
+
+        foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        hover-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        focus-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 900)
+        ),
+    )
+);
+
+$_fluent-raised-button: extend(
+    $_material-raised-button,
+    $_fluent-base-button,
+    $_fluent-shape-button,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
+
+        foreground: #fff,
+
+        hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        hover-foreground: #fff,
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        focus-foreground: #fff,
+    )
+);
+
+$_fluent-fab-button: extend(
+    $_material-fab-button,
+    $_fluent-base-button,
+    $_round-shape-button,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
+
+        foreground: #fff,
+
+        hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        hover-foreground: #fff,
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        focus-foreground: #fff,
+    )
+);
+
+$_fluent-icon-button: extend(
+    $_material-icon-button,
+    $_fluent-base-button,
+    $_square-shape-button,
+    (
+        hover-background: (
+            igx-color: ('grays', 50)
+        ),
+
+        focus-background: (
             igx-color: ('grays', 100)
         ),
     )
@@ -294,111 +577,12 @@ $_light-button: extend(
 /// @requires {Map} $_light-button
 /// @requires {Map} $_fluent-shape-button
 /// @requires {Map} $_fluent-elevation-button
-$_fluent-button: extend(
-    $_light-button,
-    $_fluent-shape-button,
-    $_fluent-elevation-button,
-    (
-        variant: 'fluent',
-
-        flat-text-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        flat-icon-color:  (
-            igx-color: ('primary', 500)
-        ),
-
-        flat-hover-icon-color:  (
-            igx-color: ('primary', 500)
-        ),
-
-        flat-focus-icon-color:  (
-            igx-color: ('primary', 500)
-        ),
-
-        flat-hover-background: transparent,
-
-        flat-hover-text-color: (
-            igx-color: ('primary', 500)
-        ),
-
-        flat-focus-background:(
-            igx-color:('grays', 100)
-        ),
-
-        flat-focus-text-color: (
-            igx-color: ('primary', 500)
-        ),
-
-        outlined-outline-color: (
-            igx-color: ('grays', 800)
-        ),
-
-        outlined-text-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        outlined-hover-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        outlined-hover-text-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        outlined-focus-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        outlined-focus-text-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        raised-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        raised-text-color: #fff,
-
-        raised-hover-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        raised-hover-text-color: #fff,
-
-        raised-focus-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        raised-focus-text-color: #fff,
-
-        fab-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        fab-text-color: #fff,
-
-        fab-hover-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        fab-hover-text-color: #fff,
-
-        fab-focus-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        fab-focus-text-color: #fff,
-
-        icon-hover-background: (
-            igx-color: ('grays', 50)
-        ),
-
-        icon-focus-background: (
-            igx-color: ('grays', 100)
-        ),
-    )
+$_fluent-button: (
+    flat: $_fluent-flat-button,
+    outlined: $_fluent-outlined-button,
+    raised: $_fluent-raised-button,
+    fab: $_fluent-fab-button,
+    icon: $_fluent-icon-button,
 );
 
 /// Generates a bootstrap button schema.
