@@ -11,7 +11,8 @@ export class IgxSummaryDataPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform() {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public transform(id: string, trigger: number = 0) {
         const summaryService = this.gridAPI.grid.summaryService;
         return summaryService.calculateSummaries(
             summaryService.rootSummaryID,
