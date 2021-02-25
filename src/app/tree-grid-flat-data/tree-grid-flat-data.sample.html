@@ -8,18 +8,24 @@
     <button class="show-summary" igxButton="outlined" (click)="grid1.showSummaryOnCollapse = !grid1.showSummaryOnCollapse"> {{ grid1.showSummaryOnCollapse }}</button>
 
     <igx-tree-grid #grid1 [allowFiltering]='true' [data]="data" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
-        [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [showToolbar]="true"
-        [columnHiding]="true" [columnPinning]="true" [exportExcel]="true" [exportCsv]="true" exportText="Export"
-        exportExcelText="Export to Excel" exportCsvText="Export to CSV" [summaryCalculationMode]="summaryMode">
+        [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'800px'" [summaryCalculationMode]="summaryMode">
         <igx-column *ngFor="let c of columns" [field]="c.field" [dataType]="c.dataType" [header]="c.label"
             [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.hasSummary"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
         </igx-column>
-
-        <ng-template igxToolbarCustomContent>
-            <app-grid-search-box [grid]="grid1" [style.width]="'530px'"></app-grid-search-box>
-        </ng-template>
+        <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+            <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                    <span excelText>Export to Excel 👌</span>
+                    <span csvText>Export to CSV 👍</span>
+                </igx-grid-toolbar-exporter>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
     </igx-tree-grid>
 
     <div class="topMargin">

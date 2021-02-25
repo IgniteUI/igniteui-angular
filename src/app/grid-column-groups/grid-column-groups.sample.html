@@ -2,7 +2,14 @@
     <ng-template igxCollapsibleIndicator let-column="column" #ind >
         <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
     </ng-template>
-    <igx-grid [allowFiltering]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact" [showToolbar]="true" [allowAdvancedFiltering]="true" [columnHiding]="true" [columnPinning]="true">
+    <igx-grid [allowFiltering]="true" [pinning]="pinningConfig" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact">
+        <igx-grid-toolbar [displayDensity]="grid.displayDensity">
+            <igx-grid-toolbar-actions>
+               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-advanced-filtering></igx-grid-toolbar-advanced-filtering>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
         <igx-column [movable]="true"  [resizable]="true"  field="Missing"></igx-column>
         <igx-column-group [movable]="true" header="General Information" title="General Company Information" [collapsible]="true" [expanded]="true" [hidden]="true">
             <igx-column [movable]="true" [filterable]="false" [hidden]="true" sortable="true" resizable="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false"></igx-column>

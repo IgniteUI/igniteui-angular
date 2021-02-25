@@ -2,7 +2,13 @@
     <div igxFlex igxLayout igxLayoutDir="column">
         <div igxFlex igxLayout igxLayoutDir="column">
             <h4 class="sample-title">Grid1</h4>
-            <igx-grid #grid1 [columnPinning]='true' [paging]='true' [data]="localData" [showToolbar]='true' [autoGenerate]="false">
+            <igx-grid #grid1 [paging]='true' [data]="localData" [autoGenerate]="false">
+                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                     [header]="c.field"
                     [resizable]="true"
@@ -21,7 +27,13 @@
 
         <div igxFlex igxLayout igxLayoutDir="column">
             <h4 class="sample-title">HGrid</h4>
-            <igx-hierarchical-grid [showToolbar]='true' [data]="localData" [autoGenerate]="true" #hGrid2>
+            <igx-hierarchical-grid [data]="localData" [autoGenerate]="true" #hGrid2>
+                <igx-grid-toolbar [displayDensity]="hGrid2.displayDensity">
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" [allowFiltering]='true'>
                 </igx-row-island>
             </igx-hierarchical-grid>
