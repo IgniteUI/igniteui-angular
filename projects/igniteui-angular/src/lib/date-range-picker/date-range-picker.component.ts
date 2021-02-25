@@ -419,18 +419,18 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private _value: DateRange;
-    private overlayId: string;
+    private _overlayId: string;
     private _ngControl: NgControl;
-    private destroy$ = new Subject();
+    private _destroy$ = new Subject();
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
-    private toggleClickNotifier$ = new Subject();
+    private _toggleClickNotifier$ = new Subject();
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
-    private overlaySubFilter:
+    private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
-            filter(x => x.id === this.overlayId),
-            takeUntil(this.destroy$)
+            filter(x => x.id === this._overlayId),
+            takeUntil(this._destroy$)
         ];
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -499,9 +499,9 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
             : this.dialogOverlaySettings
             , overlaySettings);
 
-        this.overlayId = this._overlayService
+        this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, settings, this._moduleRef);
-        this._overlayService.show(this.overlayId);
+        this._overlayService.show(this._overlayId);
     }
 
     /**
@@ -516,7 +516,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
      */
     public close(): void {
         if (!this.collapsed) {
-            this._overlayService.hide(this.overlayId);
+            this._overlayService.hide(this._overlayId);
             // TODO: detach()
         }
     }
@@ -630,12 +630,12 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         this.attachOnTouched();
 
         const subsToClicked = () => {
-            this.toggleClickNotifier$.next();
+            this._toggleClickNotifier$.next();
             this.toggleComponents.forEach(toggle => {
-                toggle.clicked.pipe(takeUntil(this.toggleClickNotifier$)).subscribe(() => this.open());
+                toggle.clicked.pipe(takeUntil(this._toggleClickNotifier$)).subscribe(() => this.open());
             });
         };
-        this.toggleComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => subsToClicked());
+        this.toggleComponents.changes.pipe(takeUntil(this._destroy$)).subscribe(() => subsToClicked());
         subsToClicked();
 
         this.setRequiredToInputs();
@@ -672,15 +672,15 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-        this.toggleClickNotifier$.next();
-        this.toggleClickNotifier$.complete();
+        this._destroy$.next();
+        this._destroy$.complete();
+        this._toggleClickNotifier$.next();
+        this._toggleClickNotifier$.complete();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
-        if (this.overlayId) {
-            this._overlayService.hide(this.overlayId);
+        if (this._overlayId) {
+            this._overlayService.hide(this._overlayId);
         }
     }
 
@@ -748,7 +748,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             const args = { owner: this, cancel: false, event: eventArgs.event };
             this.opening.emit(args);
             if (args.cancel) {
@@ -760,18 +760,18 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
             this.updateCalendar();
         });
 
-        this._overlayService.onOpened.pipe(...this.overlaySubFilter).subscribe(() => {
+        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.calendar?.daysView.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.onClosing.pipe(...this.overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             this.handleClosing(eventArgs as OverlayCancelableEventArgs);
         });
 
-        this._overlayService.onClosed.pipe(...this.overlaySubFilter).subscribe(() => {
+        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
             this._collapsed = true;
-            this.overlayId = null;
+            this._overlayId = null;
             this.closed.emit({ owner: this });
         });
     }
@@ -923,7 +923,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
             const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
             if (start && end) {
                 start.dateTimeEditor.valueChange
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this._destroy$))
                     .subscribe(value => {
                         if (this.value) {
                             this.value = { start: value, end: this.value.end };
@@ -932,7 +932,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
                         }
                     });
                 end.dateTimeEditor.valueChange
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this._destroy$))
                     .subscribe(value => {
                         if (this.value) {
                             this.value = { start: this.value.start, end: value };
@@ -948,7 +948,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         if (this.hasProjectedInputs) {
             this.projectedInputs.forEach(i => {
                 fromEvent(i.dateTimeEditor.nativeElement, 'blur')
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this._destroy$))
                     .subscribe(() => {
                         if (this.collapsed) {
                             this.updateValidityOnBlur();
@@ -957,7 +957,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
             });
         } else {
             fromEvent(this.inputDirective.nativeElement, 'blur')
-                .pipe(takeUntil(this.destroy$))
+                .pipe(takeUntil(this._destroy$))
                 .subscribe(() => {
                     if (this.collapsed) {
                         this.updateValidityOnBlur();
@@ -970,7 +970,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         if (this.hasProjectedInputs) {
             this.projectedInputs.forEach(i => {
                 fromEvent(i.dateTimeEditor.nativeElement, 'focus')
-                    .pipe(takeUntil(this.destroy$))
+                    .pipe(takeUntil(this._destroy$))
                     .subscribe(() => this._focusedInput = i);
             });
         }
@@ -1038,13 +1038,13 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         this.calendar.weekStart = this.weekStart;
         this.calendar.hideOutsideDays = this.hideOutsideDays;
         this.calendar.monthsViewNumber = this.displayMonthsCount;
-        this.calendar.selected.pipe(takeUntil(this.destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
+        this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
         componentInstance.displayMonthsCount = this.displayMonthsCount;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
         componentInstance.selectionMode = CalendarSelection.RANGE;
         componentInstance.pickerActions = this.pickerActions;
-        componentInstance.calendarClose.pipe(takeUntil(this.destroy$)).subscribe(() => this.close());
+        componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
     }
 }
