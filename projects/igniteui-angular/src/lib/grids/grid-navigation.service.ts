@@ -136,7 +136,7 @@ export class IgxGridNavigationService {
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
                 this.firstVisibleNode(this.lastActiveNode.row) : this.firstVisibleNode());
-            if (shouldClearSelection) {
+            if (shouldClearSelection || (this.grid.cellSelection !== GridSelectionMode.multiple)) {
                 this.grid.clearCellSelection();
                 this.grid.navigateTo(this.activeNode.row, this.activeNode.column, (obj) => {
                     obj.target?.activate(event);
