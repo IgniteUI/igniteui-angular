@@ -164,6 +164,17 @@ export class IgxTimePickerComponent extends PickersBaseDirective
     public inputFormat: string = DatePickerUtil.DEFAULT_TIME_INPUT_FORMAT;
 
     /**
+     * Gets/Sets the interaction mode - dialog or drop down.
+     *
+     *  @example
+     * ```html
+     * <igx-time-picker mode="dialog"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public mode: InteractionMode = InteractionMode.DropDown;
+
+    /**
    * Minimum value required for the editor to remain valid.
    *
    * @remarks
@@ -265,18 +276,18 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * ```typescript
      *  @ViewChild("toast")
      * private toast: IgxToastComponent;
-     * public valueChanged(timepicker){
+     * public valueChange(timepicker){
      *     this.toast.open()
      * }
      *  //...
      *  ```
      *  ```html
-     * <igx-time-picker (valueChanged)="valueChanged($event)"></igx-time-picker>
+     * <igx-time-picker (valueChange)="valueChange($event)"></igx-time-picker>
      * <igx-toast #toast message="The value has been changed!"></igx-toast>
      * ```
      */
     @Output()
-    public valueChanged = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
+    public valueChange = new EventEmitter<IgxTimePickerValueChangedEventArgs>();
 
     /**
      * Emitted when an invalid value is being set. Returns {`timePicker`: `any`, `currentValue`: `Date`, `setThroughUI`: `boolean`}
@@ -1131,7 +1142,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             this.clear();
         } else {
             const oldValue = new Date(this.value);
-            if (this.value.getTime() === oldValue.getTime()) {
+            if (this.value.getTime() === oldValue?.getTime()) {
                 this.value = date;
             }
         }
@@ -1360,7 +1371,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
                 break;
             case KEYS.ESCAPE:
             case KEYS.ESCAPE_IE:
-                this.close();
+                this.cancelButtonClick();
                 break;
             case KEYS.SPACE:
             case KEYS.SPACE_IE:
@@ -1421,7 +1432,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
         }
 
         let minutes = currentVal.getMinutes();
-        if (currentVal.getTime() > maxVal.getTime()) {
+        if (currentVal.getTime() > maxVal?.getTime()) {
             if (this.spinLoop) {
                 minutes = minutes < minVal.getMinutes() ? 60 + minutes : minutes;
                 minVal.setMinutes(sign * minutes);
@@ -1429,7 +1440,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             } else {
                 return oldVal;
             }
-        } else if (currentVal.getTime() < minVal.getTime()) {
+        } else if (currentVal.getTime() < minVal?.getTime()) {
             if (this.spinLoop) {
                 minutes = minutes <= maxVal.getMinutes() ? minutes : minutes - 60;
                 maxVal.setMinutes(minutes);
@@ -1802,7 +1813,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
             oldValue: oldValue,
             newValue: newValue
         };
-        this.valueChanged.emit(args);
+        this.valueChange.emit(args);
     }
 
     private emitValidationFailedEvent(currentValue: Date, setThroughUI = false) {

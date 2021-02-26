@@ -6,11 +6,11 @@
             [displayFormat]="this.displayFormat"
             [placeholder]="this.placeholder"
             role="combobox" aria-haspopup="dialog"
-            [attr.aria-expanded]="!toggle.collapsed"
+            [attr.aria-expanded]="!toggleDirective.collapsed"
             [attr.aria-labelledby]="this.label?.id"
              />
 
-            <igx-prefix *ngIf="!this.toggleComponents.length" (click)="open()">
+            <igx-prefix *ngIf="!this.toggleComponents.length" (click)="toggle()">
                 <ng-container *ngTemplateOutlet="defaultToggleIcon"></ng-container>
             </igx-prefix>
     
@@ -57,7 +57,7 @@
 </ng-template>
 
 
-<div #toggle="toggle" igxToggle class="igx-time-picker"
+<div #toggleDirective="toggle" igxToggle class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': this.isVertical && !this.isDropdown}">
     <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
         <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
