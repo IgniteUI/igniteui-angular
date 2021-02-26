@@ -346,6 +346,14 @@
             }
         },
         {
+            "name": "onChange",
+            "replaceWith": "thumbChange",
+            "owner": {
+                "selector": "igx-thumb",
+                "type": "component"
+            }
+        },
+        {
             "name": "onHoverChange",
             "replaceWith": "hoverChange",
             "owner": {

@@ -60,7 +60,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public thumbValueChange = new EventEmitter<number>();
 
     @Output()
-    public onChange = new EventEmitter<any>();
+    public thumbChange = new EventEmitter<any>();
 
     @Output()
     public hoverChange = new EventEmitter<boolean>();
@@ -143,7 +143,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.onChange.emit();
+        this.thumbChange.emit();
         this.thumbValueChange.emit(increment);
     }
 

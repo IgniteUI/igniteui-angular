@@ -24,7 +24,7 @@
         <article class="sample-column" class="flex-row">
             <h4 class="sample-title">Range label slider</h4>
             <span class="outer-label">{{getLowerVal}}</span>
-            <igx-slider style="width: 60%;" #slider2 type="range" (onValueChange)="valueChange($event)"
+            <igx-slider style="width: 60%;" #slider2 type="range" (valueChange)="valueChange($event)"
                 [labels]="labels" [continuous]="true">
             </igx-slider>
             <span class="outer-label">{{getUpperVal}}</span>

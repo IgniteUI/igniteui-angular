@@ -386,6 +386,13 @@
             ]
         },
         {
+            "member": "onChange",
+            "replaceWith": "thumbChange",
+            "definedIn": [
+                "IgxSliderThumbComponent"
+            ]
+        },
+        {
             "member": "onHoverChange",
             "replaceWith": "hoverChange",
             "definedIn": [
