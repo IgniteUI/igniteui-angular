@@ -406,6 +406,186 @@ $_fluent-button: (
     icon: $_fluent-icon-button,
 );
 
+
+/// @type {Map}
+/// @requires {Map} $_material-base-button
+/// @requires {Map} $_flat-elevation-button
+/// @requires {function} extend
+$_bootstrap-base-button: extend(
+    $_material-base-button,
+    $_flat-elevation-button,
+    (
+        variant: 'bootstrap',
+
+        disabled-foreground: (
+            igx-color: ('primary', 500),
+            lighten: 20%
+        ),
+
+        disabled-background: (
+            igx-color: ('primary', 500),
+            lighten: 35%
+        ),
+    )
+);
+
+/// @type {Map}
+/// @prop {Map} foreground [igx-color: ('primary', 500)] - The idle text color of a flat button.
+/// @prop {Map} hover-foreground [igx-color: ('primary', 800)] - The hover text color of a flat button.
+/// @prop {Map} focus-foreground [igx-color: ('primary', 600)] - The focus text color of a flat button.
+/// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
+/// @prop {Map} focus-background [igx-color: ('grays', 100)] - The focus background color of a flat button.
+/// @prop {Number} border-radius [0] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-flat-button
+/// @requires {Map} $_fluent-base-button
+/// @requires {Map} $_square-shape-button
+/// @requires {function} extend
+$_bootstrap-flat-button: extend(
+    $_material-flat-button,
+    $_bootstrap-base-button,
+    (
+        foreground: (
+            igx-color: ('primary', 500)
+        ),
+
+        hover-foreground: (
+            igx-color: ('primary', 800)
+        ),
+
+        focus-foreground: (
+            igx-color: ('primary', 600)
+        ),
+
+        hover-background: transparent,
+
+        focus-background: (
+            igx-color: ('grays', 100)
+        ),
+    )
+);
+
+$_bootstrap-outlined-button: extend(
+    $_material-outlined-button,
+    $_bootstrap-base-button,
+    (
+        foreground: (
+            igx-color: ('primary', 500)
+        ),
+
+        hover-foreground: #fff,
+
+        focus-foreground: #fff,
+
+        hover-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        border-color: (
+            igx-color: ('primary', 500)
+        ),
+
+        disabled-border-color: (
+            igx-color: ('primary', 500),
+            lighten: 35%
+        ),
+
+        shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+
+$_bootstrap-raised-button: extend(
+    $_material-raised-button,
+    $_bootstrap-base-button,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        hover-foreground:  #fff,
+
+        focus-foreground: #fff,
+
+        shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+
+$_bootstrap-fab-button: extend(
+    $_material-fab-button,
+    $_bootstrap-base-button,
+    (
+        background: (
+            igx-color: ('primary', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        hover-foreground: #fff,
+
+        focus-foreground: #fff,
+
+        fab-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+
+$_bootstrap-icon-button: extend(
+    $_material-icon-button,
+    $_bootstrap-base-button,
+    $_bootstrap-shape-button,
+    (
+        hover-background: (
+            igx-color: ('primary', 500)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        icon-shadow-color: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);
+
+/// Generates a light bootstrap button schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_bootstrap-flat-button
+/// @requires {Map} $_bootstrap-outlined-button
+/// @requires {Map} $_bootstrap-raised-button
+/// @requires {Map} $_bootstrap-fab-button
+/// @requires {Map} $_bootstrap-icon-button
+$_bootstrap-button: (
+    flat: $_bootstrap-flat-button,
+    outlined: $_bootstrap-outlined-button,
+    raised: $_bootstrap-raised-button,
+    fab: $_bootstrap-fab-button,
+    icon: $_bootstrap-icon-button,
+);
+
 /// Generates a bootstrap button schema.
 /// @type {Map}
 /// @prop {Map} flat-text-color [igx-color: ('primary', 500)] - The idle text color of a flat button.
@@ -465,131 +645,163 @@ $_fluent-button: (
 /// @requires {Map} $_light-button
 /// @requires {Map} $_bootstrap-shape-button
 /// @requires {Map} $_bootstrap-elevation-button
-$_bootstrap-button: extend(
-    $_light-button,
-    $_bootstrap-shape-button,
-    $_bootstrap-elevation-button,
+//$_bootstrap-button: extend(
+//    $_light-button,
+//    $_bootstrap-shape-button,
+//    $_bootstrap-elevation-button,
+//    (
+//        variant: 'bootstrap',
+//    )
+//);
+
+
+$_indigo-base-button: extend(
+    $_material-base-button,
+    $_flat-elevation-button,
+    $_round-shape-button,
     (
-        variant: 'bootstrap',
+        variant: 'indigo-design',
+    )
+);
 
-        raised-shadow-color: (
-            igx-color: ('primary', 200)
+$_indigo-flat-button: extend(
+    $_material-flat-button,
+    $_indigo-base-button,
+    (
+        foreground: (
+            igx-color: ('grays', 700),
         ),
 
-        outlined-shadow-color: (
-            igx-color: ('primary', 200)
+        hover-foreground: (
+            igx-color: ('grays', 900),
         ),
 
-        icon-shadow-color: (
-            igx-color: ('primary', 200)
+        focus-foreground: (
+            igx-color: ('grays', 900),
         ),
 
-        fab-shadow-color: (
-            igx-color: ('primary', 200)
-        ),
+        hover-background: transparent,
 
-        flat-text-color: (
-            igx-color: ('primary', 500)
-        ),
+        focus-background: transparent,
 
-        flat-hover-background: transparent,
-
-        flat-hover-text-color: (
-            igx-color: ('primary', 800)
-        ),
-
-        flat-focus-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        flat-focus-text-color: (
-            igx-color: ('primary', 600)
-        ),
-
-        raised-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        raised-hover-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        raised-hover-text-color:  #fff,
-
-        raised-focus-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        raised-focus-text-color: #fff,
-
-        outlined-outline-color: (
-            igx-color: ('primary', 500)
-        ),
-
-        outlined-hover-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        outlined-text-color: (
-            igx-color: ('primary', 500)
-        ),
-
-        outlined-hover-text-color: #fff,
-
-        outlined-focus-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        outlined-focus-text-color: #fff,
-
-        fab-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        fab-hover-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        fab-hover-text-color: #fff,
-
-        fab-focus-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        fab-focus-text-color: #fff,
-
-        icon-color: (
-            igx-color: ('primary', 500)
-        ),
-
-        icon-hover-background: (
-            igx-color: ('primary', 500)
-        ),
-
-        icon-hover-color: #fff,
-
-        icon-focus-background: (
-            igx-color: ('primary', 600)
-        ),
-
-        icon-focus-color: #fff,
-
-        disabled-color: (
-            igx-color: ('primary', 500),
-            lighten: 20%
-        ),
-
-        disabled-background: (
-            igx-color: ('primary', 500),
-            lighten: 35%
-        ),
-
-        outlined-disabled-outline-color: (
-            igx-color: ('primary', 500),
-            lighten: 35%
+        shadow-color: (
+            igx-color: ('grays', 300),
         ),
     )
 );
+
+$_indigo-outlined-button: extend(
+    $_material-outlined-button,
+    $_indigo-base-button,
+    (
+        foreground: (
+            igx-color: ('grays', 700),
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 900),
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 900),
+        ),
+
+        background: transparent,
+
+        hover-background: (
+            igx-color: ('grays', 100)
+        ),
+
+        focus-background: transparent,
+
+        border-color: (
+            igx-color: 'grays',
+        ),
+
+        shadow-color: (
+            igx-color: ('grays', 300),
+        ),
+    )
+);
+
+$_indigo-raised-button: extend(
+    $_material-raised-button,
+    $_indigo-base-button,
+    (
+        foreground: #fff,
+
+        hover-foreground: #fff,
+
+        focus-foreground: #fff,
+
+        hover-background: (
+            igx-color: ('primary', 400)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 400)
+        ),
+
+        shadow-color: (
+            igx-color: ('primary', 200),
+        ),
+    )
+);
+
+$_indigo-fab-button: extend(
+    $_material-fab-button,
+    $_indigo-base-button,
+    (
+        foreground: #fff,
+
+        hover-foreground: #fff,
+
+        focus-foreground: #fff,
+
+        hover-background: (
+            igx-color: ('primary', 400)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 400)
+        ),
+
+        shadow-color: (
+            igx-color: ('primary', 200),
+        ),
+    )
+);
+
+$_indigo-icon-button: extend(
+    $_material-icon-button,
+    $_indigo-base-button,
+    (
+        hover-background: (
+            igx-color: ('grays', 300)
+        ),
+
+        focus-background: (
+            igx-color: ('grays', 300)
+        )
+    )
+);
+
+/// Generates a light indigo button schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_indigo-flat-button
+/// @requires {Map} $_indigo-outlined-button
+/// @requires {Map} $_indigo-raised-button
+/// @requires {Map} $_indigo-fab-button
+/// @requires {Map} $_indigo-icon-button
+$_indigo-button: (
+    flat: $_indigo-flat-button,
+    outlined: $_indigo-outlined-button,
+    raised: $_indigo-raised-button,
+    fab: $_indigo-fab-button,
+    icon: $_indigo-icon-button,
+);
+
 
 /// Generates an indigo button schema.
 /// @type {Map}
@@ -648,114 +860,10 @@ $_bootstrap-button: extend(
 /// @requires {Map} $_light-button
 /// @requires {Map} $_indigo-shape-button
 /// @requires {Map} $_indigo-elevation-button
-$_indigo-button: extend(
-    $_light-button,
-    $_indigo-shape-button,
-    $_indigo-elevation-button, (
-        variant: 'indigo-design',
-
-        flat-text-color: (
-            igx-color: ('grays', 700),
-        ),
-
-        flat-hover-text-color: (
-            igx-color: ('grays', 900),
-        ),
-
-        flat-hover-background: transparent,
-
-        flat-focus-text-color: (
-            igx-color: ('grays', 900),
-        ),
-
-        flat-focus-background: transparent,
-
-        flat-shadow-color: (
-            igx-color: ('grays', 300),
-        ),
-
-        raised-shadow-color: (
-            igx-color: ('primary', 200),
-        ),
-
-        outlined-shadow-color: (
-            igx-color: ('grays', 300),
-        ),
-
-        fab-shadow-color: (
-            igx-color: ('primary', 200),
-        ),
-
-        raised-text-color: #fff,
-
-        raised-hover-text-color: #fff,
-
-        raised-hover-background: (
-            igx-color: ('primary', 400)
-        ),
-
-        raised-focus-text-color: #fff,
-
-        raised-focus-background: (
-            igx-color: ('primary', 400)
-        ),
-
-        outlined-outline-color: (
-            igx-color: 'grays',
-        ),
-
-        outlined-text-color: (
-            igx-color: ('grays', 700),
-        ),
-
-        outlined-hover-text-color: (
-            igx-color: ('grays', 900),
-        ),
-
-        outlined-background: transparent,
-
-        outlined-hover-background: (
-            igx-color: ('grays', 100)
-        ),
-
-        outlined-focus-text-color: (
-            igx-color: ('grays', 900),
-        ),
-
-        outlined-focus-background: transparent,
-
-        fab-text-color: #fff,
-
-        fab-hover-text-color: #fff,
-
-        fab-hover-background: (
-            igx-color: ('primary', 400)
-        ),
-
-        fab-focus-text-color: #fff,
-
-        fab-focus-background: (
-            igx-color: ('primary', 400)
-        ),
-
-        icon-color: (
-            igx-color: ('grays', 600)
-        ),
-
-        icon-hover-color: (
-            igx-color: ('grays', 700)
-        ),
-
-        icon-hover-background: (
-            igx-color: ('grays', 300)
-        ),
-
-        icon-focus-color: (
-            igx-color: ('grays', 600)F
-        ),
-
-        icon-focus-background: (
-            igx-color: ('grays', 300)
-        )
-    )
-);
+//$_indigo-button: extend(
+//    $_light-button,
+//    $_indigo-shape-button,
+//    $_indigo-elevation-button, (
+//        variant: 'indigo-design',
+//    )
+//);
