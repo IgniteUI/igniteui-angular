@@ -2,6 +2,16 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.2.15
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
+})
+
 ## 10.2.9
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
