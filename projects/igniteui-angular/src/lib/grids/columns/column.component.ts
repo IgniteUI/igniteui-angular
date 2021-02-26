@@ -81,7 +81,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     set field(value: string) {
         this._field = value;
-        this.hasNestedPath = value.includes('.');
+        this.hasNestedPath = value?.includes('.');
     }
     get field(): string {
         return this._field;
