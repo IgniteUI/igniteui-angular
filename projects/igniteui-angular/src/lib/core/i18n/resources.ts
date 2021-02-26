@@ -5,6 +5,7 @@ import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from './paginat
 import { cloneValue } from '../utils';
 import { ICarouselResourceStrings, CarouselResourceStringsEN } from './carousel-resources';
 import { IListResourceStrings, ListResourceStringsEN } from './list-resources';
+
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICarouselResourceStrings,
     IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings { }
 
