@@ -65,11 +65,10 @@ export class IgxSummaryOperand {
      * @memberof IgxSummaryOperand
      */
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US'): IgxSummaryResult[] {
-        const pipe = new DecimalPipe(locale);
         return [{
             key: 'count',
             label: 'Count',
-            summaryResult: pipe.transform(IgxSummaryOperand.count(data))
+            summaryResult: IgxSummaryOperand.count(data)
         }];
     }
 }
@@ -163,26 +162,25 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const pipe = new DecimalPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.min(data)
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.max(data)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.sum(data)
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.average(data)
         });
         return result;
     }
@@ -253,16 +251,15 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const pipe = new DatePipe(locale);
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.earliest(data), pipeArgs.format, pipeArgs.timezone)
+            summaryResult: IgxDateSummaryOperand.earliest(data)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: pipe.transform(IgxDateSummaryOperand.latest(data), pipeArgs.format, pipeArgs.timezone)
+            summaryResult: IgxDateSummaryOperand.latest(data)
         });
         return result;
     }
@@ -273,27 +270,25 @@ export class IgxCurrencySummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const currencyCode = pipeArgs.currencyCode ? pipeArgs.currencyCode : getLocaleCurrencyCode(locale);
-        const pipe = new CurrencyPipe(locale, currencyCode);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.min(data)
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.max(data)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.sum(data)
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), currencyCode, pipeArgs.display, pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.average(data)
         });
         return result;
     }
@@ -304,26 +299,25 @@ export class IgxPercentSummaryOperand extends IgxSummaryOperand {
     public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
         pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
         const result = super.operate(data, allData, fieldName, locale);
-        const pipe = new PercentPipe(locale);
         result.push({
             key: 'min',
             label: 'Min',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.min(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.min(data)
         });
         result.push({
             key: 'max',
             label: 'Max',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.max(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.max(data)
         });
         result.push({
             key: 'sum',
             label: 'Sum',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.sum(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.sum(data)
         });
         result.push({
             key: 'average',
             label: 'Avg',
-            summaryResult: pipe.transform(IgxNumberSummaryOperand.average(data), pipeArgs.digitsInfo)
+            summaryResult: IgxNumberSummaryOperand.average(data)
         });
         return result;
     }

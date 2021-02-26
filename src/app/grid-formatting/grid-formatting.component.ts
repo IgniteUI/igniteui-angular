@@ -4,7 +4,7 @@ import localeFr from '@angular/common/locales/fr';
 registerLocaleData(localeFr);
 
 import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
-    IFilteringExpressionsTree, FilteringStrategy } from 'igniteui-angular';
+    IFilteringExpressionsTree, FilteringStrategy, IgxSummaryOperand } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 import { data } from '../grid-cellEditing/data';
 import { Observable } from 'rxjs';
@@ -93,6 +93,15 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
         this.gridRemote.getColumnByName('OrderDate').formatter = this.formatter;
     }
 
+    public summaryFormatter(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+        const result = summaryResult.summaryResult;
+        if(summaryOperand instanceof IgxDateSummaryOperand && summaryResult.key !== 'count' && result !== null && result !== undefined) {
+            const pipe = new DatePipe('fr-FR');
+            return pipe.transform(result,'longDate');
+        }
+        return result;
+    }
+
     public formatter(value: any): string {
         const pipe = new DatePipe('fr-FR');
         value = value !== null && value !== undefined && value !== '' ? pipe.transform(value, 'mediumDate') : 'No value!';
@@ -126,6 +135,11 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'count') {
+                const count = obj.summaryResult ? Number(obj.summaryResult) : undefined;
+                obj.summaryResult = count ? new Intl.NumberFormat('en-US').format(count) : undefined;
+                return obj;
+            }
             if (obj.key === 'earliest') {
                 const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
                 obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;

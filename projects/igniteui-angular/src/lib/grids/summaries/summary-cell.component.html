@@ -13,9 +13,9 @@
                 <span class="igx-grid-summary__label" [title]="summary.label">{{ translateSummary(summary) }}</span>
                 <span class="igx-grid-summary__result" [title]="summary.summaryResult">
                     {{
-                        (isDateSummary(summary.key) && column.formatter)
-                        ? column.formatter(summary.summaryResult)
-                        :summary.summaryResult
+                        column.summaryFormatter
+                        ? (summary | summaryFormatter:column.summaries:column.summaryFormatter)
+                        : appySummaryPipe(summary)
                     }}
                 </span>
             </div>

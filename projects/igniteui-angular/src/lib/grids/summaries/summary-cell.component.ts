@@ -1,8 +1,13 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { IgxSummaryResult } from './grid-summary';
+import { IgxCurrencySummaryOperand,
+         IgxDateSummaryOperand,
+         IgxNumberSummaryOperand,
+         IgxPercentSummaryOperand,
+         IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
+import { CurrencyPipe, DatePipe, DecimalPipe, getLocaleCurrencyCode, PercentPipe } from '@angular/common';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -100,5 +105,37 @@ export class IgxSummaryCellComponent {
 
     public translateSummary(summary: IgxSummaryResult): string {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public appySummaryPipe(summary: IgxSummaryResult): any {
+        const pipeArgs = this.column.pipeArgs;
+        const locale = this.grid.locale;
+        if (summary.key === 'count') {
+            const pipe = new DecimalPipe(locale);
+            return pipe.transform(summary.summaryResult);
+        }
+        if(this.column.summaries instanceof IgxNumberSummaryOperand) {
+            const pipe = new DecimalPipe(locale);
+            return pipe.transform(summary.summaryResult, pipeArgs.digitsInfo);
+        }
+        if(this.column.summaries instanceof IgxDateSummaryOperand) {
+            const pipe = new DatePipe(locale);
+            return pipe.transform(summary.summaryResult, pipeArgs.format, pipeArgs.timezone);
+        }
+        if(this.column.summaries instanceof IgxCurrencySummaryOperand) {
+            const currencyCode = pipeArgs.currencyCode
+                ? pipeArgs.currencyCode
+                : getLocaleCurrencyCode(locale);
+            const pipe = new CurrencyPipe(locale, currencyCode);
+            return pipe.transform(summary.summaryResult, currencyCode, pipeArgs.display, pipeArgs.digitsInfo);
+        }
+        if(this.column.summaries instanceof IgxPercentSummaryOperand) {
+            const pipe = new PercentPipe(locale);
+            return pipe.transform(summary.summaryResult, pipeArgs.digitsInfo);
+        }
+        return  summary.summaryResult;
     }
 }

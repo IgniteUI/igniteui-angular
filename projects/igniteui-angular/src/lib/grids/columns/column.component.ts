@@ -36,7 +36,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand } from '../summaries/grid-summary';
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -544,8 +544,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     cellStyles = null;
-  
-    private _formatter: (value: any) => any;
+
     /**
      * When autogenerating columns, the formatter is used to format the display of the column data
      * without modifying the underlying bound values.
@@ -570,13 +569,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    set formatter (value: any) {
-        this._formatter = value;
-        this.grid.summaryService.clearSummaryCache();
-    }
-    get formatter(): any {
-        return this._formatter;
-    }
+    formatter: (value: any) => any;
+
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => string;
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
