@@ -435,11 +435,13 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         ];
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        modal: true
+        modal: true,
+        closeOnEscape: true
     };
     private _dropDownOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
-        modal: false
+        modal: false,
+        closeOnEscape: true
     };
     private onChangeCallback: (dateRange: DateRange) => void = noop;
     private onTouchCallback: () => void = noop;
@@ -472,10 +474,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
                 if (event.altKey) {
                     this.open();
                 }
-                break;
-            case KEYS.ESCAPE:
-            case KEYS.ESCAPE_IE:
-                this.close();
                 break;
         }
     }

@@ -58,11 +58,10 @@ export class IgxCalendarContainerComponent {
         return this.vertical && this.mode === InteractionMode.Dialog;
     }
 
-    @HostListener('keydown.esc', ['$event'])
     @HostListener('keydown.alt.arrowup', ['$event'])
     public onEscape(event) {
         event.preventDefault();
-        this.emitCalendarClose();
+        this.calendarClose.emit();
     }
 
     public get buttonClass(): string {
@@ -72,15 +71,5 @@ export class IgxCalendarContainerComponent {
     /**  Returns whether the date-picker is in readonly dialog mode. */
     public get isReadonly() {
         return this.mode === InteractionMode.Dialog;
-    }
-
-    /** Emits close event for the calendar. */
-    public emitCalendarClose() {
-        this.calendarClose.emit();
-    }
-
-    /**  Emits today selection event for the calendar. */
-    public selectToday() {
-        this.todaySelection.emit();
     }
 }

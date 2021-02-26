@@ -17,7 +17,7 @@ export class IgxDatePickerTemplateDirective {
  * IgxDatePickerActionsDirective can be used to re-template the dropdown/dialog action buttons.
  */
 @Directive({
-    selector: '[igxDatePickerActions]'
+    selector: '[igxPickerActions]'
 })
 export class IgxPickerActionsDirective {
     constructor(public template: TemplateRef<any>) { }
