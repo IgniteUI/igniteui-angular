@@ -128,7 +128,7 @@ const DATA2 = [
 ];
 
 @Component({
-    template: `<igx-grid></igx-grid>`
+    template: `<igx-grid [nestedBinding]='true'></igx-grid>`
 })
 class NestedPropertiesGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
@@ -136,7 +136,7 @@ class NestedPropertiesGridComponent {
 }
 
 @Component({
-    template: `<igx-grid #grid [autoGenerate]='false'>
+    template: `<igx-grid [nestedBinding]='true' #grid [autoGenerate]='false'>
         <igx-column field='id' header='ID' dataType='number'></igx-column>
         <igx-column field='user.name.first' header='First Name' editable='true' dataType='string'></igx-column>
         <igx-column field='user.name.last' header='Last Name' editable='true' dataType='string'></igx-column>
@@ -153,7 +153,7 @@ class NestedPropertiesGrid2Component {
 }
 
 @Component({
-    template: `<igx-grid #grid [autoGenerate]='false'>
+    template: `<igx-grid [nestedBinding]='true' #grid [autoGenerate]='false'>
         <igx-column field='id' header='ID' dataType='number'></igx-column>
         <igx-column field='productName' header='Product Name' editable='true' dataType='string'></igx-column>
         <igx-column field='locations' header='Available At' [editable]='true' width='220px'>
