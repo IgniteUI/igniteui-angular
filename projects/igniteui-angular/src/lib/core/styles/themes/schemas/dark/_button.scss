@@ -100,15 +100,8 @@ $_dark-fluent-button: (
     icon: $_fluent-icon-button,
 );
 
-/// Generates a dark bootstrap button schema.
-/// @type {Map}
-/// @prop {Map} disabled-color [igx-color: ('primary', 900)] - The disabled text/icon color of a button.
-/// @prop {Map} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of raised, fab, or icon buttons.
-/// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 900), darken: 5%] - The border color of an outlined button.
-/// @requires {function} extend
-/// @requires $_bootstrap-button
-$_dark-bootstrap-button: extend(
-    $_bootstrap-button,
+$_bootstrap-base-button-dark: extend(
+    $_bootstrap-base-button,
     (
         disabled-color: (
             igx-color: ('primary', 900),
@@ -118,20 +111,36 @@ $_dark-bootstrap-button: extend(
             igx-color: ('primary', 900),
             darken: 5%
         ),
+    )
+);
 
-        outlined-disabled-outline-color: (
+$_bootstrap-outlined-button-dark: extend(
+    $_bootstrap-base-button-dark,
+    $_bootstrap-outlined-button,
+    (
+        disabled-border-color: (
             igx-color: ('primary', 900),
             darken: 5%
         ),
     )
 );
 
-/// Generates a dark indigo button schema.
+/// Generates a dark bootstrap button schema.
 /// @type {Map}
-///
+/// @prop {Map} disabled-color [igx-color: ('primary', 900)] - The disabled text/icon color of a button.
+/// @prop {Map} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 900), darken: 5%] - The border color of an outlined button.
 /// @requires {function} extend
-/// @requires $_indigo-button
-$_dark-indigo-button: extend(
-    $_indigo-button
+/// @requires $_bootstrap-button
+$_dark-bootstrap-button: (
+    flat: $_bootstrap-flat-button,
+    outlined: $_bootstrap-outlined-button-dark,
+    raised: $_bootstrap-raised-button,
+    fab: $_bootstrap-fab-button,
+    icon: $_bootstrap-icon-button,
 );
 
+/// Generates a dark indigo button schema.
+/// @type {Map}
+/// @requires $_indigo-button
+$_dark-indigo-button: $_indigo-button;
