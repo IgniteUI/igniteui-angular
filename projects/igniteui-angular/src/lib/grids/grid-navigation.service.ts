@@ -163,7 +163,6 @@ export class IgxGridNavigationService {
         if (shouldScrollIntoView) {
             this.performHorizontalScrollToCell(this.activeNode.column);
         }
-        this.grid.notifyChanges();
     }
 
     public isColumnFullyVisible(columnIndex: number) {
