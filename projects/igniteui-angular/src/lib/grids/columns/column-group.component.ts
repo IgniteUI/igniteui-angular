@@ -135,6 +135,8 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public set filters(classRef: any) { }
 
+    public set field(value: string) { }
+
     /**
      * Returns if the column group is selectable
      * ```typescript
