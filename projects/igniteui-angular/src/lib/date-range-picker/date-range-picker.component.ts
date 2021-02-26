@@ -17,8 +17,9 @@ import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, KEYS } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
 import { PickerCancelableEventArgs } from '../date-common/types';
 import { IgxPickerActionsDirective } from '../date-picker/date-picker.directives';
@@ -34,7 +35,7 @@ import {
 } from '../services/public_api';
 import {
     DateRange, IgxDateRangeEndComponent, IgxDateRangeInputsBaseComponent,
-    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent, IgxPickerToggleComponent
+    IgxDateRangeSeparatorDirective, IgxDateRangeStartComponent
 } from './date-range-picker-inputs.common';
 
 const SingleInputDatesConcatenationString = ' - ';
