@@ -252,7 +252,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     };
 
     /**
-     * Enables/disables nested properties support.
+     * Enables/disables support for binding to properties in nested data objects. E.g. <igx-column field="weight.molecular"></igx-column>
      *
      * @example
      * ```html
