@@ -2425,6 +2425,32 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(colOperands[0].nativeElement.innerText).toEqual('AND');
             expect(colIndicator.length).toEqual(0);
         }));
+
+        it('UI focusing grid\'s body content does not throw a console error after filtering. (issue 8930)', fakeAsync(() => {
+            spyOn(console, 'error');
+            GridFunctions.clickFilterCellChipUI(fix, 'ProductName');
+            fix.detectChanges();
+
+            GridFunctions.applyFilter('Jav', fix);
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            GridFunctions.applyFilter('xy', fix);
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const tBodyContent = GridFunctions.getGridContent(fix);
+            tBodyContent.triggerEventHandler('focus', null);
+
+            const filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
+            GridFunctions.removeFilterChipByIndex(1, filterUIRow);
+            tick();
+            fix.detectChanges();
+
+            tBodyContent.triggerEventHandler('focus', null);
+            tick();
+            expect(console.error).not.toHaveBeenCalled();
+        }));
     });
 
     describe(null, () => {
