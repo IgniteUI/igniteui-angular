@@ -16,15 +16,20 @@
                 [paging]="false"
                 [width]="'980px'"
                 [height]="'600px'"
-                [showToolbar]="true"
-                [columnHiding]="true"
-                [columnPinning]="true"
-                [columnSelection]="'single'"
-                [exportExcel]="true"
-                [exportCsv]="true"
-                exportText="Export"
-                exportExcelText="Export to Excel"
-                exportCsvText="Export to CSV">
+                [columnSelection]="'single'">
+                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                    <igx-grid-toolbar-actions>
+                       <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                       <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-advanced-filtering *ngIf="grid1.allowAdvancedFiltering">
+                            Really advanced filtering
+                        </igx-grid-toolbar-advanced-filtering>
+                        <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                            <span excelText>Export to Excel 👌</span>
+                            <span csvText>Export to CSV 👍</span>
+                        </igx-grid-toolbar-exporter>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.header"
                                                     [movable]="c.movable"
@@ -65,15 +70,18 @@
                 [paging]="false"
                 [width]="'980px'"
                 [height]="'600px'"
-                [showToolbar]="true"
-                [columnHiding]="true"
-                [columnPinning]="true"
-                [columnSelection]="'single'"
-                [exportExcel]="true"
-                [exportCsv]="true"
-                exportText="Export"
-                exportExcelText="Export to Excel"
-                exportCsvText="Export to CSV">
+                [columnSelection]="'single'">
+                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                    <igx-grid-toolbar-actions>
+                       <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                       <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
+                        <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                            <span excelText>Export to Excel 👌</span>
+                            <span csvText>Export to CSV 👍</span>
+                        </igx-grid-toolbar-exporter>
+                    </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.header"
                                                     [movable]="c.movable"

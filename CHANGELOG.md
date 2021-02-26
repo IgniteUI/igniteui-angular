@@ -1,7 +1,14 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 11.0.15
+## New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
 
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 ## 11.0.4
 
 ### General
@@ -38,6 +45,17 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.15
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ``` type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 
 ## 10.2.0
 

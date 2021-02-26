@@ -17,8 +17,6 @@
                 [columnSelection]="'single'"
                 [data]="data"
                 [displayDensity]="density"
-                [showToolbar]="true" [columnHiding]="true"
-                [columnPinning]='true'
                 [allowFiltering]="true"
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
@@ -28,6 +26,12 @@
                 [paging]="false"
                 [width]="'900px'"
                 >
+                <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                    <igx-grid-toolbar-actions>
+                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                        <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    </igx-grid-toolbar-actions>
+                  </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field"
                                                     [header]="c.field"
                                                     [movable]="c.movable"
@@ -44,8 +48,8 @@
                 </igx-column>
                 <igx-grid-footer>
                     <div class="references">
-                       <p>Test</p> 
-                       <p>Test2</p> 
+                       <p>Test</p>
+                       <p>Test2</p>
                     </div>
                 </igx-grid-footer>
             </igx-grid>
@@ -147,7 +151,7 @@
                     </igx-grid>
                 </section>
             </div>
-            
+
         </div>
     </div>
 </div>
