@@ -11,7 +11,7 @@
 /// @prop {Color} shadow-color [transparent] - The shadow color of the button.
 /// @prop {Color} border-color [transparent] - The outline color of the button.
 /// @prop {Color} focus-border-color [transparent] - The focused border color of the button.
-/// @prop {Color} disabled-border-color [transparent] - The disabled focused border color of the button.
+/// @prop {Color} disabled-border-color [transparent] - The disabled border color of the button.
 /// @prop {Color} disabled-background [igx-color: ('grays', 100)] - The disabled background color of the button.
 /// @prop {Color} disabled-foreground [igx-color: ('grays', 400)] - The disabled foreground color of the button.
 $_material-base-button: (
@@ -410,6 +410,8 @@ $_fluent-button: (
 /// @type {Map}
 /// @requires {Map} $_material-base-button
 /// @requires {Map} $_flat-elevation-button
+/// @prop {Color} disabled-background [igx-color: ('primary', 500), lighten: 20%] - The disabled background color of the button.
+/// @prop {Color} disabled-foreground [igx-color: ('primary', 500), lighten: 35%] - The disabled foreground color of the button.
 /// @requires {function} extend
 $_bootstrap-base-button: extend(
     $_material-base-button,

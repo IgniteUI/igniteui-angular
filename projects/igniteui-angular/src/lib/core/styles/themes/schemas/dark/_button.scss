@@ -6,7 +6,7 @@
 ////
 
 /// @type {Map}
-/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of the button.
 /// @requires {Map} $_material-base-button
 /// @requires {function} extend
 $_material-base-button-dark: extend(
@@ -100,10 +100,15 @@ $_dark-fluent-button: (
     icon: $_fluent-icon-button,
 );
 
+/// @type {Map}
+/// @prop {Color} disabled-foreground [igx-color: ('primary', 900)] - The disabled foreground color of the button.
+/// @prop {Color} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of the button.
+/// @requires {Map} $_bootstrap-base-button
+/// @requires {function} extend
 $_bootstrap-base-button-dark: extend(
     $_bootstrap-base-button,
     (
-        disabled-color: (
+        disabled-foreground: (
             igx-color: ('primary', 900),
         ),
 
@@ -114,6 +119,11 @@ $_bootstrap-base-button-dark: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Map} disabled-border-color [igx-color: ('primary', 900), darken: 5%] - The disabled border color of the button.
+/// @requires {Map} $_bootstrap-base-button-dark
+/// @requires {Map} $_bootstrap-outlined-button
+/// @requires {function} extend
 $_bootstrap-outlined-button-dark: extend(
     $_bootstrap-base-button-dark,
     $_bootstrap-outlined-button,
@@ -127,11 +137,12 @@ $_bootstrap-outlined-button-dark: extend(
 
 /// Generates a dark bootstrap button schema.
 /// @type {Map}
-/// @prop {Map} disabled-color [igx-color: ('primary', 900)] - The disabled text/icon color of a button.
-/// @prop {Map} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of raised, fab, or icon buttons.
-/// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 900), darken: 5%] - The border color of an outlined button.
-/// @requires {function} extend
-/// @requires $_bootstrap-button
+/// @requires {Map} $_bootstrap-flat-button-dark
+/// @requires {Map} $_bootstrap-outlined-button
+/// @requires {Map} $_bootstrap-raised-button
+/// @requires {Map} $_bootstrap-fab-button
+/// @requires {Map} $_bootstrap-icon-button
+/// @see $dark-bootstrap-palette
 $_dark-bootstrap-button: (
     flat: $_bootstrap-flat-button,
     outlined: $_bootstrap-outlined-button-dark,
