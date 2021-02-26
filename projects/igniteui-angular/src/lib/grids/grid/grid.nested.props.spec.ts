@@ -178,7 +178,7 @@ class NestedPropertyGridComponent {
     }
 }
 
-fdescribe('Grid - nested data source properties', () => {
+describe('Grid - nested data source properties', () => {
 
     const NAMES = 'John Jane Ivan Bianka'.split(' ');
     const AGES = [30, 23, 33, 21];
