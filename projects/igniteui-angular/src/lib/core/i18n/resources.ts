@@ -1,12 +1,12 @@
-import { DateRangePickerResourceStringsEN } from './date-range-picker-resources';
+import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from './date-range-picker-resources';
 import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
-import { PaginatorResourceStringsEN } from './paginator-resources';
+import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from './paginator-resources';
 import { cloneValue } from '../utils';
 import { ICarouselResourceStrings, CarouselResourceStringsEN } from './carousel-resources';
-import { ListResourceStringsEN } from './list-resources';
-
-export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICarouselResourceStrings  {}
+import { IListResourceStrings, ListResourceStringsEN } from './list-resources';
+export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICarouselResourceStrings,
+    IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings { }
 
 /**
  * @hidden
