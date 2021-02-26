@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs';
 
 export interface ISelectTabEventArgs extends IBaseEventArgs {
     tab: IgxTabComponent;
-    panel: IgxTabPanelComponent;
+    panel: IgxTabPanelOldComponent;
 }
 
 let NEXT_ID = 0;
@@ -56,7 +56,7 @@ export class IgxTabTemplateDirective {
  * ```
  */
 @Component({
-    selector: 'igx-bottom-nav',
+    selector: 'igx-bottom-nav-old',
     templateUrl: 'tab-bar-content.component.html',
     styles: [`
         :host {
@@ -64,7 +64,7 @@ export class IgxTabTemplateDirective {
         }
     `]
 })
-export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
+export class IgxBottomNavOldComponent implements AfterViewInit, OnDestroy {
     /**
      * Gets the `IgxTabComponent` elements in the tab bar component created based on the provided panels.
      * ```typescript
@@ -108,8 +108,8 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
      *
      * @memberof IgxBottomNavComponent
      */
-    @ContentChildren(forwardRef(() => IgxTabPanelComponent))
-    public panels: QueryList<IgxTabPanelComponent>;
+    @ContentChildren(forwardRef(() => IgxTabPanelOldComponent))
+    public panels: QueryList<IgxTabPanelOldComponent>;
 
     /**
      * Emits an event when a new tab is selected.
@@ -272,7 +272,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     private setPanelsAttributes() {
         const panelsArray = Array.from(this.panels);
         for (let index = 0; index < this.panels.length; index++) {
-            const tabPanels = panelsArray[index] as IgxTabPanelComponent;
+            const tabPanels = panelsArray[index] as IgxTabPanelOldComponent;
             tabPanels.nativeElement.setAttribute('id', this.getTabPanelId(index));
             tabPanels.nativeElement.setAttribute('aria-labelledby', this.getTabId(index));
         }
@@ -281,7 +281,7 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
-    private _deselectPanel(panel: IgxTabPanelComponent) {
+    private _deselectPanel(panel: IgxTabPanelOldComponent) {
         // Cannot deselect the selected tab - this will mean that there will be not selected tab left
         if (panel.disabled || this.selectedTab.index === panel.index) {
             return;
@@ -300,10 +300,10 @@ export class IgxBottomNavComponent implements AfterViewInit, OnDestroy {
 // ================================= IgxTabPanelComponent ======================================
 
 @Component({
-    selector: 'igx-tab-panel',
+    selector: 'igx-tab-panel-old',
     templateUrl: 'tab-panel.component.html'
 })
-export class IgxTabPanelComponent implements AfterContentInit {
+export class IgxTabPanelOldComponent implements AfterContentInit {
     /**
      * Sets/gets the `label` of the tab panel.
      * ```html
@@ -495,7 +495,7 @@ export class IgxTabPanelComponent implements AfterContentInit {
      */
     private _isSelected = false;
 
-    constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
+    constructor(private _tabBar: IgxBottomNavOldComponent, private _element: ElementRef) {
     }
 
     /**
@@ -572,7 +572,7 @@ export class IgxTabComponent {
      * @memberof IgxTabComponent
      */
     @Input()
-    public relatedPanel: IgxTabPanelComponent;
+    public relatedPanel: IgxTabPanelOldComponent;
 
     /**
      * @hidden @internal
@@ -761,7 +761,7 @@ export class IgxTabComponent {
         return this.relatedPanel ? this.relatedPanel : this;
     }
 
-    constructor(private _tabBar: IgxBottomNavComponent, private _element: ElementRef) {
+    constructor(private _tabBar: IgxBottomNavOldComponent, private _element: ElementRef) {
     }
 
     /**
@@ -800,9 +800,9 @@ export class IgxTabComponent {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxBottomNavComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
-    exports: [IgxBottomNavComponent, IgxTabPanelComponent, IgxTabComponent, IgxTabTemplateDirective],
+    declarations: [IgxBottomNavOldComponent, IgxTabPanelOldComponent, IgxTabComponent, IgxTabTemplateDirective],
+    exports: [IgxBottomNavOldComponent, IgxTabPanelOldComponent, IgxTabComponent, IgxTabTemplateDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule]
 })
-export class IgxBottomNavModule {
+export class IgxBottomNavOldModule {
 }

@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { IgxTabItemDirective } from '../tab-item.directive';
 
 @Component({
-    selector: 'igx-tab-item-new',
+    selector: 'igx-tab-item',
     templateUrl: 'tab-item.component.html',
-    providers: [{ provide: IgxTabItemDirective, useExisting: IgxTabItemNewComponent }]
+    providers: [{ provide: IgxTabItemDirective, useExisting: IgxTabItemComponent }]
 })
-export class IgxTabItemNewComponent extends IgxTabItemDirective {
+export class IgxTabItemComponent extends IgxTabItemDirective {
 
 }

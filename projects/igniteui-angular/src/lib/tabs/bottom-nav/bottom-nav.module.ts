@@ -5,23 +5,23 @@ import { IgxIconModule } from '../../icon/public_api';
 import { IgxBottomNavHeaderComponent } from './bottom-nav-header.component';
 import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
 import { IgxBottomNavPanelComponent } from './bottom-nav-panel.component';
-import { IgxBottomNavNewComponent } from './bottom-nav.component';
+import { IgxBottomNavComponent } from './bottom-nav.component';
 
 /** @hidden */
 @NgModule({
     declarations: [
-        IgxBottomNavNewComponent,
+        IgxBottomNavComponent,
         IgxBottomNavItemComponent,
         IgxBottomNavHeaderComponent,
         IgxBottomNavPanelComponent
     ],
     exports:  [
-        IgxBottomNavNewComponent,
+        IgxBottomNavComponent,
         IgxBottomNavItemComponent,
         IgxBottomNavHeaderComponent,
         IgxBottomNavPanelComponent
     ],
     imports: [CommonModule, IgxIconModule, IgxRippleModule]
 })
-export class IgxBottomNavNewModule {
+export class IgxBottomNavModule {
 }

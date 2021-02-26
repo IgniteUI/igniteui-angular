@@ -1,5 +1,5 @@
 import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
-import { IgxTabsNewComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
+import { IgxTabsComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-sample',
@@ -10,7 +10,7 @@ import { IgxTabsNewComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelected
 export class TabsSampleComponent {
 
     @ViewChild('tabsNew')
-    private tabs: IgxTabsNewComponent;
+    private tabs: IgxTabsComponent;
 
     public data = [
         /* eslint-disable max-len */

@@ -3,11 +3,11 @@ import { IgxTabsBaseNew } from '../tabs-base';
 import { IgxTabsDirective } from '../tabs.directive';
 
 @Component({
-    selector: 'igx-bottom-nav-new',
+    selector: 'igx-bottom-nav',
     templateUrl: 'bottom-nav.component.html',
-    providers: [{ provide: IgxTabsBaseNew, useExisting: IgxBottomNavNewComponent }]
+    providers: [{ provide: IgxTabsBaseNew, useExisting: IgxBottomNavComponent }]
 })
-export class IgxBottomNavNewComponent extends IgxTabsDirective {
+export class IgxBottomNavComponent extends IgxTabsDirective {
     // TODO Disable animations by default
     // public animationType: CarouselAnimationType = CarouselAnimationType.none;
 }

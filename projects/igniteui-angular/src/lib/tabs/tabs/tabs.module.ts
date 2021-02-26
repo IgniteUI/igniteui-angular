@@ -2,26 +2,26 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../../icon/public_api';
-import { IgxTabHeaderNewComponent } from './tab-header.component';
-import { IgxTabItemNewComponent } from './tab-item.component';
-import { IgxTabPanelNewComponent } from './tab-panel.component';
-import { IgxTabsNewComponent } from './tabs.component';
+import { IgxTabHeaderComponent } from './tab-header.component';
+import { IgxTabItemComponent } from './tab-item.component';
+import { IgxTabPanelComponent } from './tab-panel.component';
+import { IgxTabsComponent } from './tabs.component';
 
 /** @hidden */
 @NgModule({
     declarations: [
-        IgxTabsNewComponent,
-        IgxTabItemNewComponent,
-        IgxTabHeaderNewComponent,
-        IgxTabPanelNewComponent
+        IgxTabsComponent,
+        IgxTabItemComponent,
+        IgxTabHeaderComponent,
+        IgxTabPanelComponent
     ],
     exports:  [
-        IgxTabsNewComponent,
-        IgxTabItemNewComponent,
-        IgxTabHeaderNewComponent,
-        IgxTabPanelNewComponent
+        IgxTabsComponent,
+        IgxTabItemComponent,
+        IgxTabHeaderComponent,
+        IgxTabPanelComponent
     ],
     imports: [CommonModule, IgxIconModule, IgxRippleModule]
 })
-export class IgxTabsNewModule {
+export class IgxTabsModule {
 }

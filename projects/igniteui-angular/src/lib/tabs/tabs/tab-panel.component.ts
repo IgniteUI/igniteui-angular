@@ -3,7 +3,7 @@ import { IgxTabPanelDirective } from '../tab-panel.directive';
 import { IgxTabPanelNewBase } from '../tabs-base';
 
 @Component({
-    selector: 'igx-tab-panel-new',
+    selector: 'igx-tab-panel',
     templateUrl: 'tab-panel.component.html',
     styles: [
         `:host {
@@ -16,8 +16,8 @@ import { IgxTabPanelNewBase } from '../tabs-base';
             bottom: 0;
         }`
     ],
-    providers: [{ provide: IgxTabPanelNewBase, useExisting: IgxTabPanelNewComponent }]
+    providers: [{ provide: IgxTabPanelNewBase, useExisting: IgxTabPanelComponent }]
 })
-export class IgxTabPanelNewComponent extends IgxTabPanelDirective {
+export class IgxTabPanelComponent extends IgxTabPanelDirective {
 
 }

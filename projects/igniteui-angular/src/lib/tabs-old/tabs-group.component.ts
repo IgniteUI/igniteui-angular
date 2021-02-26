@@ -8,7 +8,7 @@ import {
     TemplateRef,
 } from '@angular/core';
 
-import { IgxTabItemComponent } from './tab-item.component';
+import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
 
@@ -112,9 +112,9 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
      * }
      * ```
      */
-    public get relatedTab(): IgxTabItemComponent {
+    public get relatedTab(): IgxTabItemOldComponent {
         if (this._tabs.tabs) {
-            return this._tabs.tabs.toArray()[this.index] as IgxTabItemComponent;
+            return this._tabs.tabs.toArray()[this.index] as IgxTabItemOldComponent;
         }
     }
 

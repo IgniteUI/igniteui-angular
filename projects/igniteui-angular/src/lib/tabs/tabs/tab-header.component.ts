@@ -2,10 +2,10 @@ import { Component, HostBinding } from '@angular/core';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 
 @Component({
-    selector: 'igx-tab-header-new',
+    selector: 'igx-tab-header',
     templateUrl: 'tab-header.component.html'
 })
-export class IgxTabHeaderNewComponent extends IgxTabHeaderDirective {
+export class IgxTabHeaderComponent extends IgxTabHeaderDirective {
     /** @hidden */
     @HostBinding('class.igx-tabs__header-menu-item--selected')
     public get provideCssClassSelected(): boolean {

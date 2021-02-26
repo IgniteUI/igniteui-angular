@@ -20,7 +20,7 @@ import { Subscription } from 'rxjs';
 import { IgxBadgeModule } from '../badge/badge.component';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxTabItemComponent } from './tab-item.component';
+import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
@@ -36,12 +36,12 @@ export type IgxTabsType = (typeof IgxTabsType)[keyof typeof IgxTabsType];
 let NEXT_TABS_ID = 0;
 
 @Component({
-    selector: 'igx-tabs',
+    selector: 'igx-tabs-old',
     templateUrl: 'tabs.component.html',
-    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
+    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsOldComponent }]
 })
 
-export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
+export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
      * ```typescript
@@ -57,8 +57,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const tabItems = this.myTabComponent.contentTabs;
      * ```
      */
-    @ContentChildren(forwardRef(() => IgxTabItemComponent))
-    public contentTabs: QueryList<IgxTabItemComponent>;
+    @ContentChildren(forwardRef(() => IgxTabItemOldComponent))
+    public contentTabs: QueryList<IgxTabItemOldComponent>;
 
     /**
      * An @Input property that sets the value of the `selectedIndex`.
@@ -193,8 +193,8 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const tabItems = this.myTabComponent.viewTabs;
      * ```
      */
-    @ViewChildren(forwardRef(() => IgxTabItemComponent))
-    public viewTabs: QueryList<IgxTabItemComponent>;
+    @ViewChildren(forwardRef(() => IgxTabItemOldComponent))
+    public viewTabs: QueryList<IgxTabItemOldComponent>;
 
     /**
      * Enables/disables the transition animation of the tabs' content. Set to `false` by default.
@@ -230,7 +230,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const tabItems = this.myTabComponent.tabs;
      * ```
      */
-    public get tabs(): QueryList<IgxTabItemComponent> {
+    public get tabs(): QueryList<IgxTabItemOldComponent> {
         if (this.hasContentTabs) {
             return this.contentTabs;
         }
@@ -328,7 +328,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
      * const selectedItem = this.myTabComponent.selectedTabItem;
      * ```
      */
-    public get selectedTabItem(): IgxTabItemComponent {
+    public get selectedTabItem(): IgxTabItemOldComponent {
         if (this.tabs && this.selectedIndex !== undefined) {
             return this.tabs.toArray()[this.selectedIndex];
         }
@@ -551,20 +551,20 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
  * @hidden
  */
 @NgModule({
-    declarations: [IgxTabsComponent,
+    declarations: [IgxTabsOldComponent,
         IgxTabsGroupComponent,
-        IgxTabItemComponent,
+        IgxTabItemOldComponent,
         IgxTabItemTemplateDirective,
         IgxRightButtonStyleDirective,
         IgxLeftButtonStyleDirective],
-    exports: [IgxTabsComponent,
+    exports: [IgxTabsOldComponent,
         IgxTabsGroupComponent,
-        IgxTabItemComponent,
+        IgxTabItemOldComponent,
         IgxTabItemTemplateDirective,
         IgxRightButtonStyleDirective,
         IgxLeftButtonStyleDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule, IgxRippleModule]
 })
 
-export class IgxTabsModule {
+export class IgxTabsOldModule {
 }

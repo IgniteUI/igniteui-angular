@@ -4,22 +4,22 @@
         <button (click)="changeSelectedIndex()">Change selectedIndex</button>
         <button (click)="changeTabSelected()">Change tab.selected</button>
 
-        <igx-tabs-new
+        <igx-tabs
             #tabsNew
             (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
             (selectedItemChange)="tabsSelectedItemChange($event)"
         >
-            <igx-tab-item-new>
-                <igx-tab-header-new [label]="'Tab 1'" [icon]="'folder'"></igx-tab-header-new>
-                <igx-tab-panel-new>
+            <igx-tab-item>
+                <igx-tab-header [label]="'Tab 1'" [icon]="'folder'"></igx-tab-header>
+                <igx-tab-panel>
                     Content 1
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel-new>
-            </igx-tab-item-new>
+                </igx-tab-panel>
+            </igx-tab-item>
 
-            <igx-tab-item-new>
-                <igx-tab-header-new [label]="'Tab 2'" [icon]="'folder'"></igx-tab-header-new>
-                <igx-tab-panel-new>
+            <igx-tab-item>
+                <igx-tab-header [label]="'Tab 2'" [icon]="'folder'"></igx-tab-header>
+                <igx-tab-panel>
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                             *ngFor="let contact of contacts">
@@ -29,28 +29,28 @@
                                 <igx-icon igxListAction>phone</igx-icon>
                         </igx-list-item>
                     </igx-list>
-                </igx-tab-panel-new>
-            </igx-tab-item-new>
+                </igx-tab-panel>
+            </igx-tab-item>
 
-            <igx-tab-item-new>
-                <igx-tab-header-new [label]="'Tab 3'"></igx-tab-header-new>
-                <igx-tab-panel-new>
+            <igx-tab-item>
+                <igx-tab-header [label]="'Tab 3'"></igx-tab-header>
+                <igx-tab-panel>
                     Content 3
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel-new>
-            </igx-tab-item-new>
+                </igx-tab-panel>
+            </igx-tab-item>
 
-            <igx-tab-item-new>
-                <igx-tab-header-new>
+            <igx-tab-item>
+                <igx-tab-header>
                     <igx-icon>folder</igx-icon>
                     Tab 4
-                </igx-tab-header-new>
-                <igx-tab-panel-new>
+                </igx-tab-header>
+                <igx-tab-panel>
                     Content 4
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel-new>
-            </igx-tab-item-new>
-        </igx-tabs-new>
+                </igx-tab-panel>
+            </igx-tab-item>
+        </igx-tabs>
 
         <!-- <igx-tabs [selectedIndex]="1">
             <igx-tabs-group label="Tab 1" icon="folder">
@@ -324,7 +324,7 @@
                 </div>
             </igx-tabs-group>
         </igx-tabs> -->
-    </div>
+    <!-- </div>
     <div>
         <h3 class="sample-title">Same size tabs</h3>
         <igx-navbar title="Contacts" actionButtonIcon="menu">
@@ -612,5 +612,5 @@
                 </div>
             </igx-tabs-group>
         </igx-tabs>
-    </div>
+    </div> -->
 </div>

@@ -1,9 +1,9 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxBottomNavComponent,
+import { IgxBottomNavOldComponent,
          IgxBottomNavModule,
          IgxTabComponent,
-         IgxTabPanelComponent } from './tabbar.component';
+         IgxTabPanelOldComponent } from './tabbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { BottomNavRoutingViewComponentsModule,
@@ -88,17 +88,17 @@ describe('IgxBottomNav', () => {
 
         it('should initialize igx-bottom-nav, igx-tab-panel and igx-tab', () => {
             fixture.detectChanges();
-            const panels: IgxTabPanelComponent[] = tabbar.panels.toArray();
+            const panels: IgxTabPanelOldComponent[] = tabbar.panels.toArray();
             const tabs: IgxTabComponent[] = tabbar.tabs.toArray();
 
             expect(tabbar).toBeDefined();
             expect(tabbar.id).toContain('igx-bottom-nav-');
-            expect(tabbar instanceof IgxBottomNavComponent).toBeTruthy();
+            expect(tabbar instanceof IgxBottomNavOldComponent).toBeTruthy();
             expect(tabbar.panels instanceof QueryList).toBeTruthy();
             expect(tabbar.panels.length).toBe(3);
 
             for (let i = 0; i < tabbar.panels.length; i++) {
-                expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
+                expect(panels[i] instanceof IgxTabPanelOldComponent).toBeTruthy();
                 expect(panels[i].relatedTab).toBe(tabs[i]);
             }
 
@@ -399,7 +399,7 @@ describe('IgxBottomNav', () => {
         </div>`
 })
 class TabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true }) public tabbar: IgxBottomNavOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 
     public tabSelectedHandler() {
@@ -438,7 +438,7 @@ class TabBarTestComponent {
         </div>`
 })
 class BottomTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true }) public tabbar: IgxBottomNavOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
@@ -469,7 +469,7 @@ class BottomTabBarTestComponent {
         </div>`
 })
 class TemplatedTabBarTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true }) public tabbar: IgxBottomNavOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
@@ -494,8 +494,8 @@ class TemplatedTabBarTestComponent {
     `
 })
 class TabBarRoutingTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNavComp: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true })
+    public bottomNavComp: IgxBottomNavOldComponent;
 }
 
 @Component({
@@ -513,8 +513,8 @@ class TabBarRoutingTestComponent {
     `
 })
 class TabBarTabsOnlyModeTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNavComp: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true })
+    public bottomNavComp: IgxBottomNavOldComponent;
 }
 
 @Component({
@@ -535,8 +535,8 @@ class TabBarTabsOnlyModeTestComponent {
     `
 })
 class BottomNavRoutingGuardTestComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true })
-    public bottomNavComp: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true })
+    public bottomNavComp: IgxBottomNavOldComponent;
 }
 
 @Component({
@@ -572,5 +572,5 @@ class BottomNavRoutingGuardTestComponent {
         `
 })
 class BottomNavTestHtmlAttributesComponent {
-    @ViewChild(IgxBottomNavComponent, { static: true }) public tabbar: IgxBottomNavComponent;
+    @ViewChild(IgxBottomNavOldComponent, { static: true }) public tabbar: IgxBottomNavOldComponent;
 }

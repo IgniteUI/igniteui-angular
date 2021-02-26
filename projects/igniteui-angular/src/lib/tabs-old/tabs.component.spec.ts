@@ -1,8 +1,8 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { IgxTabItemComponent } from './tab-item.component';
+import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
-import { IgxTabsComponent, IgxTabsModule } from './tabs.component';
+import { IgxTabsOldComponent, IgxTabsModule } from './tabs.component';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -106,10 +106,10 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             const groups: IgxTabsGroupComponent[] = tabs.groups.toArray();
-            const tabsItems: IgxTabItemComponent[] = tabs.tabs.toArray();
+            const tabsItems: IgxTabItemOldComponent[] = tabs.tabs.toArray();
 
             expect(tabs).toBeDefined();
-            expect(tabs instanceof IgxTabsComponent).toBeTruthy();
+            expect(tabs instanceof IgxTabsOldComponent).toBeTruthy();
             expect(tabs.groups instanceof QueryList).toBeTruthy();
             expect(tabs.groups.length).toBe(3);
 
@@ -122,7 +122,7 @@ describe('IgxTabs', () => {
             expect(tabs.tabs.length).toBe(3);
 
             for (let i = 0; i < tabs.tabs.length; i++) {
-                expect(tabsItems[i] instanceof IgxTabItemComponent).toBeTruthy();
+                expect(tabsItems[i] instanceof IgxTabItemOldComponent).toBeTruthy();
                 expect(tabsItems[i].relatedGroup).toBe(groups[i]);
             }
             tick();
@@ -220,8 +220,8 @@ describe('IgxTabs', () => {
             tick(100);
             fixture.detectChanges();
             const tabItems = tabs.tabs.toArray();
-            const tab1: IgxTabItemComponent = tabItems[0];
-            const tab2: IgxTabItemComponent = tabItems[1];
+            const tab1: IgxTabItemOldComponent = tabItems[0];
+            const tab2: IgxTabItemOldComponent = tabItems[1];
 
             fixture.componentInstance.tabSelectedHandler = () => { };
 
@@ -432,8 +432,8 @@ describe('IgxTabs', () => {
             fixture.detectChanges();
 
             const tabItems = tabs.tabs.toArray();
-            const tab1: IgxTabItemComponent = tabItems[0];
-            const tab3: IgxTabItemComponent = tabItems[2];
+            const tab1: IgxTabItemOldComponent = tabItems[0];
+            const tab3: IgxTabItemOldComponent = tabItems[2];
 
             tick(100);
             fixture.detectChanges();
@@ -863,7 +863,7 @@ describe('IgxTabs', () => {
         </div>`
 })
 class TabsTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 
     public tabSelectedHandler() {
@@ -879,7 +879,7 @@ class TabsTestComponent {
         </div>`
 })
 class TabsTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
     public collection: any[];
 
@@ -951,7 +951,7 @@ class TabsTest2Component {
         </div>`
 })
 class TemplatedTabsTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
 }
 
@@ -964,7 +964,7 @@ class TemplatedTabsTestComponent {
         </div>`
 })
 class TabsTestSelectedTabComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
     public collection: any[];
 
     constructor() {
@@ -1015,7 +1015,7 @@ class TabsTestCustomStylesComponent {
         `
 })
 class TabsTestBug4420Component {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1036,8 +1036,8 @@ class TabsTestBug4420Component {
     `
 })
 class TabsRoutingTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1065,8 +1065,8 @@ class TabsRoutingTestComponent {
     `
 })
 class TabsRoutingDisabledTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1085,8 +1085,8 @@ class TabsRoutingDisabledTestComponent {
     `
 })
 class TabsRoutingGuardTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1104,8 +1104,8 @@ class TabsRoutingGuardTestComponent {
     `
 })
 class TabsTabsOnlyModeTest1Component {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1123,8 +1123,8 @@ class TabsTabsOnlyModeTest1Component {
     `
 })
 class TabsTabsOnlyModeTest2Component {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1146,7 +1146,7 @@ class TabsTabsOnlyModeTest2Component {
     `
 })
 class TabsDisabledTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
 }
 
 @Component({
@@ -1179,5 +1179,5 @@ class TabsDisabledTestComponent {
         </div>`
 })
 class TabsTestHtmlAttributesComponent {
-    @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true }) public tabs: IgxTabsOldComponent;
 }

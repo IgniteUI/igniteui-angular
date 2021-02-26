@@ -19,46 +19,46 @@
 
         <br/>
 
-        <igx-tabs-new [selectedIndex]="-1">
-            <igx-tab-item-new
+        <igx-tabs [selectedIndex]="-1">
+            <igx-tab-item
                 routerLinkActive
                 #rla1="routerLinkActive"
                 [selected]="rla1.isActive"
             >
-                <igx-tab-header-new
+                <igx-tab-header
                     [label]="'Tab 1'"
                     [icon]="'folder'"
                     routerLink="/tabs-routing/view1"
                 >
-                </igx-tab-header-new>
-            </igx-tab-item-new>
+                </igx-tab-header>
+            </igx-tab-item>
 
-            <igx-tab-item-new
+            <igx-tab-item
                 routerLinkActive
                 #rla2="routerLinkActive"
                 [selected]="rla2.isActive"
             >
-                <igx-tab-header-new
+                <igx-tab-header
                     [label]="'Tab 2'"
                     [icon]="'folder'"
                     routerLink="/tabs-routing/view2"
                 >
-                </igx-tab-header-new>
-            </igx-tab-item-new>
+                </igx-tab-header>
+            </igx-tab-item>
 
-            <igx-tab-item-new
+            <igx-tab-item
                 routerLinkActive
                 #rla3="routerLinkActive"
                 [selected]="rla3.isActive"
             >
-                <igx-tab-header-new
+                <igx-tab-header
                     [label]="'Tab 3'"
                     [icon]="'folder'"
                     routerLink="/tabs-routing/view3"
                 >
-                </igx-tab-header-new>
-            </igx-tab-item-new>
-        </igx-tabs-new>
+                </igx-tab-header>
+            </igx-tab-item>
+        </igx-tabs>
 
         <!-- <igx-tabs>
             <igx-tab-item label="Tab 1" icon="folder"

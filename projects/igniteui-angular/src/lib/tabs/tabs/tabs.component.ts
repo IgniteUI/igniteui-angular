@@ -3,7 +3,7 @@ import { IgxTabsBaseNew } from '../tabs-base';
 import { IgxTabsDirective } from '../tabs.directive';
 
 @Component({
-    selector: 'igx-tabs-new',
+    selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
     styles: [
         `:host {
@@ -11,9 +11,9 @@ import { IgxTabsDirective } from '../tabs.directive';
             height: 100%;
         }`
     ],
-    providers: [{ provide: IgxTabsBaseNew, useExisting: IgxTabsNewComponent }]
+    providers: [{ provide: IgxTabsBaseNew, useExisting: IgxTabsComponent }]
 })
-export class IgxTabsNewComponent extends IgxTabsDirective {
+export class IgxTabsComponent extends IgxTabsDirective {
     /** @hidden */
     @HostBinding('attr.class')
     public get cssClass() {
