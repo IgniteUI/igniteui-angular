@@ -268,8 +268,8 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
 @Pipe({ name: 'dataMapper' })
 export class IgxGridDataMapperPipe implements PipeTransform {
 
-    transform(data: any[], field: string, _: number, val: any, nestedBinding) {
-        return nestedBinding ? resolveNestedPath(data, field) : val;
+    transform(data: any[], field: string, _: number, val: any, isNestedPath: any) {
+        return isNestedPath ? resolveNestedPath(data, field) : val;
     }
 }
 

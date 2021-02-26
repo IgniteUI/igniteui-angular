@@ -2,12 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 11.2.0
-
-### Breaking changes
-- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - Support for binding to nested properties in data object is disabled by default. Use the `
-
 ## 11.1.0
 
 ### New Features

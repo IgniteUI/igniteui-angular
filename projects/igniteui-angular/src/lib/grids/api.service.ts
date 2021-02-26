@@ -153,7 +153,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         const data = cell.rowData;
-        if (this.grid.nestedBinding) {
+        if (cell.column.hasNestedPath) {
             mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
         } else {
             data[cell.column.field] = args.newValue;
