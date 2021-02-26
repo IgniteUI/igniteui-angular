@@ -45,6 +45,11 @@ export const changei18n = (resourceStrings: IResourceStrings) => {
  * Returns current resource strings for all components
  */
 export const getCurrentResourceStrings = (): IResourceStrings => ({
-        ...CurrentResourceStrings.GridResStrings,
-        ...CurrentResourceStrings.TimePickerResStrings
+    ...CurrentResourceStrings.CalendarResStrings,
+    ...CurrentResourceStrings.CarouselResStrings,
+    ...CurrentResourceStrings.DateRangePickerResStrings,
+    ...CurrentResourceStrings.GridResStrings,
+    ...CurrentResourceStrings.ListResStrings,
+    ...CurrentResourceStrings.PaginatorResStrings,
+    ...CurrentResourceStrings.TimePickerResStrings
 });

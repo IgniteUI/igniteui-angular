@@ -16,6 +16,7 @@ import { IgxGridComponent,
 export class GridColumnPinningSampleComponent implements OnInit {
     @ViewChild('grid1', { static: true })
     grid1: IgxGridComponent;
+    public showToolbar = false;
 
     public get rightPinning() {
         return (this.pinningConfig.columns === ColumnPinningPosition.End);
