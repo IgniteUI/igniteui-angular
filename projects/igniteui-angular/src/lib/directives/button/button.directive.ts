@@ -223,10 +223,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     public set disabled(val: boolean) {
         this._disabled = !!val;
-
-        if (val === true) {
-            this._renderer.setAttribute(this.nativeElement, 'disabled', 'true');
-        }
     }
 
     /**
@@ -290,6 +286,15 @@ export class IgxButtonDirective extends DisplayDensityBase {
     @HostBinding('class.igx-button--compact')
     public get compact(): boolean {
         return this.displayDensity === DisplayDensity.compact;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.disabled')
+    public get disabledAttribute() {
+        return this._disabled ? this._disabled : null;
     }
 }
 
