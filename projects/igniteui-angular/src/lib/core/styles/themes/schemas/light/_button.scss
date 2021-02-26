@@ -435,10 +435,9 @@ $_bootstrap-base-button: extend(
 /// @prop {Map} focus-foreground [igx-color: ('primary', 600)] - The focus text color of a flat button.
 /// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
 /// @prop {Map} focus-background [igx-color: ('grays', 100)] - The focus background color of a flat button.
-/// @prop {Number} border-radius [0] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [.2] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $_material-flat-button
-/// @requires {Map} $_fluent-base-button
-/// @requires {Map} $_square-shape-button
+/// @requires {Map} $_bootstrap-base-button
 /// @requires {function} extend
 $_bootstrap-flat-button: extend(
     $_material-flat-button,
@@ -464,6 +463,19 @@ $_bootstrap-flat-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Map} foreground [igx-color: ('primary', 500)] - The idle text color of an outlined button.
+/// @prop {Color} hover-foreground [#fff] - The hover text color of an outlined button.
+/// @prop {Color} focus-foreground [#fff] - The focus text color of an outlined button.
+/// @prop {Map} hover-background [igx-color: ('primary', 500)] - The hover background color of an outlined button.
+/// @prop {Map} focus-background [igx-color: ('primary', 500)] - The focus background color of an outlined button.
+/// @prop {Map} border-color [igx-color: ('primary', 500)] - The border color of an outlined button.
+/// @prop {Map} disabled-border-color [igx-color: ('primary', 500), lighten: 35%] - The disabled focused border color of the button.
+/// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-outlined-button
+/// @requires {Map} $_bootstrap-base-button
+/// @requires {function} extend
 $_bootstrap-outlined-button: extend(
     $_material-outlined-button,
     $_bootstrap-base-button,
@@ -499,10 +511,25 @@ $_bootstrap-outlined-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Color} hover-foreground [#fff] - The hover text color of an raised button.
+/// @prop {Color} focus-foreground [#fff] - The focus text color of an raised button.
+/// @prop {Map} background [igx-color: ('primary', 500)] - The background color of a raised button.
+/// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an raised button.
+/// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an raised button.
+/// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-raised-button
+/// @requires {Map} $_bootstrap-base-button
+/// @requires {function} extend
 $_bootstrap-raised-button: extend(
     $_material-raised-button,
     $_bootstrap-base-button,
     (
+        hover-foreground:  #fff,
+
+        focus-foreground: #fff,
+
         background: (
             igx-color: ('primary', 500)
         ),
@@ -515,22 +542,30 @@ $_bootstrap-raised-button: extend(
             igx-color: ('primary', 600)
         ),
 
-        hover-foreground:  #fff,
-
-        focus-foreground: #fff,
-
         shadow-color: (
             igx-color: ('primary', 200)
         ),
     )
 );
 
+/// @type {Map}
+/// @prop {Color} background [igx-color: ('primary', 500)] - The background color of a fab button.
+/// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an fab button.
+/// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an fab button.
+/// @prop {Color} hover-foreground [#fff] - The hover text color of an fab button.
+/// @prop {Color} focus-foreground [#fff] - The focus text color of an fab button.
+/// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Number} border-radius [1] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-fab-button
+/// @requires {Map} $_bootstrap-base-button
+/// @requires {function} extend
 $_bootstrap-fab-button: extend(
     $_material-fab-button,
     $_bootstrap-base-button,
     (
         background: (
             igx-color: ('primary', 500)
+
         ),
 
         hover-background: (
@@ -545,12 +580,21 @@ $_bootstrap-fab-button: extend(
 
         focus-foreground: #fff,
 
-        fab-shadow-color: (
+        shadow-color: (
             igx-color: ('primary', 200)
         ),
     )
 );
 
+/// @type {Map}
+/// @prop {Map} hover-background [igx-color: ('primary', 500)] - The hover background color of an icon button.
+/// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an icon button.
+/// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-icon-button
+/// @requires {Map} $_bootstrap-base-button
+/// @requires {Map} $_bootstrap-shape-button
+/// @requires {function} extend
 $_bootstrap-icon-button: extend(
     $_material-icon-button,
     $_bootstrap-base-button,
@@ -564,7 +608,7 @@ $_bootstrap-icon-button: extend(
             igx-color: ('primary', 600)
         ),
 
-        icon-shadow-color: (
+        shadow-color: (
             igx-color: ('primary', 200)
         ),
     )
@@ -586,75 +630,10 @@ $_bootstrap-button: (
     icon: $_bootstrap-icon-button,
 );
 
-/// Generates a bootstrap button schema.
 /// @type {Map}
-/// @prop {Map} flat-text-color [igx-color: ('primary', 500)] - The idle text color of a flat button.
-/// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
-/// @prop {Map} flat-hover-text-color [igx-color: ('primary', 800)] - The hover text color of a flat button.
-/// @prop {Map} flat-focus-background [igx-color: ('grays', 100)] - The focus background color of a flat button.
-/// @prop {Map} flat-focus-text-color [igx-color: ('primary', 600)] - The focus text color of a flat button.
-///
-/// @prop {Map} raised-background [igx-color: ('primary', 500)] - The background color of an raised button.
-/// @prop {Map} raised-hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
-/// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
-/// @prop {Map} raised-focus-background [igx-color: ('primary', 600)] -  The focus background color of a raised button.
-/// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
-///
-/// @prop {Map} outlined-outline-color [igx-color: ('primary', 500)] - The border color of an outlined button.
-/// @prop {Map} outlined-hover-background [igx-color: ('primary', 500)] - The hover background color of an outlined button.
-/// @prop {Map} outlined-text-color [ igx-color: ('primary', 500)] - The idle text color of an outlined button.
-/// @prop {Color} outlined-hover-text-color [#fff] - The hover text color of an outlined button.
-/// @prop {Map} outlined-focus-background [igx-color: ('primary', 500)] - The focus background color of an outlined button.
-/// @prop {Color} outlined-focus-text-color [#fff] - The focus text color of an outlined button.
-///
-/// @prop {Map} fab-background [igx-color: ('primary', 500)] - The background color of a floating action button.
-/// @prop {Map} fab-hover-background [igx-color: ('primary', 600)] - The hover background color of a floating action button.
-/// @prop {Color} fab-hover-text-color [#fff] - The hover text color of a floating action button.
-/// @prop {Map} fab-focus-background [igx-color: ('primary', 600)] - The focus background color of floating action button.
-/// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
-///
-/// @prop {Map} icon-color [igx-color: ('primary', 500)] - The icon color of an icon button.
-/// @prop {Map} icon-hover-background [igx-color: ('primary', 500)] - The hover background color of an icon button.
-/// @prop {Color} icon-hover-color [#fff] - The hover icon color of an icon button.
-/// @prop {Map} icon-focus-background [igx-color: ('primary', 600)] - The focus icon color of an icon button.
-/// @prop {Color} icon-focus-color [#fff] - The focus icon color of an icon button.
-///
-/// @prop {Map} disabled-color [igx-color: ('primary', 500), lighten: 20%] - the disabled color for flat,outlined and icon buttons.
-/// @prop {Map} disabled-background [igx-color: ('primary', 500), lighten: 35%] - the disabled background color.
-/// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 500), lighten: 35%] - the border-color for outlined buttons.
-///
-/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-///
-/// @prop {Number} flat-border-radius [4px] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} raised-border-radius [4px] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} outlined-border-radius [4px] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} icon-border-radius [4px] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @prop {Color} raised-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the raised button in its focus state.
-/// @prop {Color} outlined-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the outlined button in its focus state.
-/// @prop {Color} icon-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the flat icon in its focus state.
-/// @prop {Color} fab-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the fab button in its focus state.
-///
+/// @requires {Map} $_material-base-button
+/// @requires {Map} $_flat-elevation-button
 /// @requires {function} extend
-/// @requires {Map} $_light-button
-/// @requires {Map} $_bootstrap-shape-button
-/// @requires {Map} $_bootstrap-elevation-button
-//$_bootstrap-button: extend(
-//    $_light-button,
-//    $_bootstrap-shape-button,
-//    $_bootstrap-elevation-button,
-//    (
-//        variant: 'bootstrap',
-//    )
-//);
-
-
 $_indigo-base-button: extend(
     $_material-base-button,
     $_flat-elevation-button,
@@ -664,6 +643,17 @@ $_indigo-base-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Map} foreground [igx-color: ('grays', 700)] - The idle text color of a flat button.
+/// @prop {Map} hover-foreground [ igx-color: ('grays', 900)] - The hover text color of a flat button.
+/// @prop {Map} focus-foreground [igx-color: ('grays', 900)] - The focus text color of a flat button.
+/// @prop {Color} hover-background [transparent] - The hover background color of a flat button.
+/// @prop {Color} focus-background [transparent] - The focus background color of a flat button.
+/// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The shadow color of the button.
+/// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-flat-button
+/// @requires {Map} $_indigo-base-button
+/// @requires {function} extend
 $_indigo-flat-button: extend(
     $_material-flat-button,
     $_indigo-base-button,
@@ -690,6 +680,19 @@ $_indigo-flat-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Map} foreground [igx-color: ('grays', 700)] - The idle text color of a outlined button.
+/// @prop {Map} hover-foreground [ igx-color: ('grays', 900)] - The hover text color of a outlined button.
+/// @prop {Map} focus-foreground [igx-color: ('grays', 900)] - The focus text color of a outlined button.
+/// @prop {Color} background [transparent] - The background color of a outlined button.
+/// @prop {Map} hover-background [igx-color: ('grays', 100)] - The hover background color of a outlined button.
+/// @prop {Color} focus-background [transparent] - The focus background color of a outlined button.
+/// @prop {Map} border-color [igx-color: 'grays'] - The border color of an outlined button.
+/// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The shadow color of the button.
+/// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-outlined-button
+/// @requires {Map} $_indigo-base-button
+/// @requires {function} extend
 $_indigo-outlined-button: extend(
     $_material-outlined-button,
     $_indigo-base-button,
@@ -724,6 +727,17 @@ $_indigo-outlined-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Color} foreground [#fff] - The idle text color of a raised button.
+/// @prop {Color} hover-foreground [#fff] - The hover text color of a raised button.
+/// @prop {Color} focus-foreground [#fff] - The focus text color of a raised button.
+/// @prop {Map} hover-background [igx-color: ('primary', 400)] - The hover background color of a raised button.
+/// @prop {Map} focus-background [igx-color: ('primary', 400)] - The focus background color of a raised button.
+/// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
+/// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-raised-button
+/// @requires {Map} $_indigo-base-button
+/// @requires {function} extend
 $_indigo-raised-button: extend(
     $_material-raised-button,
     $_indigo-base-button,
@@ -735,11 +749,11 @@ $_indigo-raised-button: extend(
         focus-foreground: #fff,
 
         hover-background: (
-            igx-color: ('primary', 400)
+            igx-color: ('primary', 400),
         ),
 
         focus-background: (
-            igx-color: ('primary', 400)
+            igx-color: ('primary', 400),
         ),
 
         shadow-color: (
@@ -748,6 +762,17 @@ $_indigo-raised-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Color} foreground [#fff] - The idle text color of a fab button.
+/// @prop {Color} hover-foreground [#fff] - The hover text color of a fab button.
+/// @prop {Color} focus-foreground [#fff] - The focus text color of a fab button.
+/// @prop {Map} hover-background [igx-color: ('grays', 100)] - The hover background color of a fab button.
+/// @prop {Color} focus-background [transparent] - The focus background color of a fab button.
+/// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The shadow color of the button.
+/// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-fab-button
+/// @requires {Map} $_indigo-base-button
+/// @requires {function} extend
 $_indigo-fab-button: extend(
     $_material-fab-button,
     $_indigo-base-button,
@@ -772,6 +797,13 @@ $_indigo-fab-button: extend(
     )
 );
 
+/// @type {Map}
+/// @prop {Map} hover-background [igx-color: ('grays', 300)] - The hover background color of a icon button.
+/// @prop {Map} focus-background [igx-color: ('grays', 300)] - The focus background color of a icon button.
+/// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
+/// @requires {Map} $_material-icon-button
+/// @requires {Map} $_indigo-base-button
+/// @requires {function} extend
 $_indigo-icon-button: extend(
     $_material-icon-button,
     $_indigo-base-button,
@@ -801,69 +833,3 @@ $_indigo-button: (
     fab: $_indigo-fab-button,
     icon: $_indigo-icon-button,
 );
-
-
-/// Generates an indigo button schema.
-/// @type {Map}
-///
-/// @prop {Map} flat-text-color [igx-color: ('grays', 700)] - The idle text color of a flat button.
-/// @prop {Map} flat-hover-text-color [igx-color: ('grays', 900)] - The hover text color of a flat button.
-/// @prop {Color} flat-hover-background [transparent] - The hover background color of a flat button.
-/// @prop {Map} flat-focus-background [transparent] - The focus background color of a flat button.
-/// @prop {Map} flat-focus-text-color [igx-color: ('grays', 900)] - The focus text color of a flat button.
-///
-/// @prop {Map} flat-shadow-color [igx-color: ('grays', 300)] - The shadow/outline color of the flat button in its focus state.
-/// @prop {Map} raised-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the raised button in its focus state.
-/// @prop {Map} outlined-shadow-color [igx-color: ('grays', 300)] - The shadow/outline color of the outlined button in its focus state.
-/// @prop {Map} fab-shadow-color [igx-color: ('primary', 200)] - The shadow/outline color of the fab button in its focus state.
-///
-/// @prop {Color} raised-text-color [#fff] - The idle text color of a raised button.
-/// @prop {Map} raised-hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
-/// @prop {Color} raised-hover-text-color [#fff] - The hover text color of a raised button.
-/// @prop {Map} raised-focus-background [igx-color: ('primary', 400)] -  The focus background color of a raised button.
-/// @prop {Color} raised-focus-text-color [#fff] - The focus text color of a raised button.
-///
-/// @prop {Color} outlined-background [#fff] - The background color of an outlined button
-/// @prop {Map} outlined-outline-color [igx-color: ('grays', 500)] - The border color of an outlined button.
-/// @prop {Map} outlined-hover-background [igx-color: ('grays', 100)] - The hover background color of an outlined button.
-/// @prop {Map} outlined-text-color [ igx-color: ('grays', 700)] - The idle text color of an outlined button.
-/// @prop {Map} outlined-hover-text-color [(igx-color: ('grays', 900)] - The hover text color of an outlined button.
-/// @prop {Color} outlined-focus-background [#fff] - The focus background color of an outlined button.
-/// @prop {Map} outlined-focus-text-color [(igx-color: ('grays', 900))] - The focus text color of an outlined button.
-///
-/// @prop {Map} fab-text-color [#fff] - The text color of a floating action button.
-/// @prop {Map} fab-hover-background [igx-color: ('primary', 400)] - The hover background color of a floating action button.
-/// @prop {Color} fab-hover-text-color [#fff] - The hover text color of a floating action button.
-/// @prop {Map} fab-focus-background [igx-color: ('primary', 400)] - The focus background color of floating action button.
-/// @prop {Color} fab-focus-text-color [#fff] - The focus text color of a floating action button.
-///
-/// @prop {Map} icon-color [igx-color: ('grays', 600)] - The icon color of an icon button.
-/// @prop {Map} icon-hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
-/// @prop {Color} icon-hover-color [(igx-color: ('grays', 700))] - The hover icon color of an icon button.
-/// @prop {Map} icon-focus-background [igx-color: ('grays', 300)] - The focus icon color of an icon button.
-/// @prop {Color} icon-focus-color [igx-color: ('grays', 600)] - The focus icon color of an icon button.
-///
-/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-///
-/// @prop {Number} flat-border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} raised-border-radius [1] - The border radius used for raised button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} outlined-border-radius [1] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} fab-border-radius [1] - The border radius used for fab button. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} icon-border-radius [1] - The border radius used for icon button. Can be a fraction between 0 and 1, pixels, or percent.
-///
-/// @requires {function} extend
-/// @requires {Map} $_light-button
-/// @requires {Map} $_indigo-shape-button
-/// @requires {Map} $_indigo-elevation-button
-//$_indigo-button: extend(
-//    $_light-button,
-//    $_indigo-shape-button,
-//    $_indigo-elevation-button, (
-//        variant: 'indigo-design',
-//    )
-//);
