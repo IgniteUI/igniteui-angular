@@ -2,6 +2,7 @@
 
 # Current Milestone
 
+## Milestone 16 (Due by April, 2021)
 ## Milestone 15 (Due by February, 2021)
 
 1. Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
