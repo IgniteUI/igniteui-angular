@@ -212,7 +212,7 @@ $_material-icon-button: extend(
 /// @requires {Map} $_material-raised-button
 /// @requires {Map} $_material-fab-button
 /// @requires {Map} $_material-icon-button
-/// @see $default-palette
+/// @see $light-material-palette
 $_light-button: (
     flat: $_material-flat-button,
     outlined: $_material-outlined-button,
