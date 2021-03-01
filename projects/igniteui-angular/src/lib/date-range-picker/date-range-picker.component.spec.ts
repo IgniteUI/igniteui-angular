@@ -19,6 +19,8 @@ import { IgxIconModule } from '../icon/public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { create } from 'domain';
+import { IgxPickerIconsModule } from '../date-common/public_api';
+import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -318,7 +320,9 @@ fdescribe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule
+                        NoopAnimationsModule,
+                        IgxPickerIconsModule,
+                        IgxCalendarContainerModule,
                     ]
                 })
                     .compileComponents();
@@ -737,8 +741,16 @@ fdescribe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
-                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
+                    imports: [
+                        IgxDateRangePickerModule,
+                        IgxDateTimeEditorModule,
+                        IgxPickerIconsModule,
+                        IgxCalendarContainerModule,
+                        IgxInputGroupModule,
+                        FormsModule,
+                        NoopAnimationsModule,
+                        IgxIconModule
+                    ]
                 })
                     .compileComponents();
             }));
