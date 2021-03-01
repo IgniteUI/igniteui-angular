@@ -1,7 +1,11 @@
-import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { CalendarSelection, IgxCalendarComponent } from '../../calendar/public_api';
+
+import { CommonModule } from '@angular/common';
+import { NgModule, Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
+import { CalendarSelection, IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
 import { InteractionMode } from '../../core/enums';
 import { IgxPickerActionsDirective } from '../../date-picker/date-picker.directives';
+import { IgxButtonModule } from '../../directives/button/button.directive';
+import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 
 const RANGE_PICKER_BUTTONS_CLASS = 'igx-date-range-picker-buttons';
 const DATE_PICKER_BUTTONS_CLASS = 'igx-date-picker__buttons';
@@ -73,3 +77,16 @@ export class IgxCalendarContainerComponent {
         return this.mode === InteractionMode.Dialog;
     }
 }
+
+/** @hidden @internal */
+@NgModule({
+    declarations: [IgxCalendarContainerComponent],
+    imports: [
+        CommonModule,
+        IgxButtonModule,
+        IgxRippleModule,
+        IgxCalendarModule
+    ],
+    exports: [IgxCalendarContainerComponent]
+})
+export class IgxCalendarContainerModule { }

@@ -19,6 +19,8 @@ import { IgxIconModule } from '../icon/public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { create } from 'domain';
+import { IgxPickerIconsModule } from '../date-common/public_api';
+import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -28,7 +30,6 @@ const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeri
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_TOGGLE = '.igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
@@ -318,7 +319,9 @@ fdescribe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule
+                        NoopAnimationsModule,
+                        IgxPickerIconsModule,
+                        IgxCalendarContainerModule,
                     ]
                 })
                     .compileComponents();
@@ -737,8 +740,16 @@ fdescribe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
-                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
+                    imports: [
+                        IgxDateRangePickerModule,
+                        IgxDateTimeEditorModule,
+                        IgxPickerIconsModule,
+                        IgxCalendarContainerModule,
+                        IgxInputGroupModule,
+                        FormsModule,
+                        NoopAnimationsModule,
+                        IgxIconModule
+                    ]
                 })
                     .compileComponents();
             }));
@@ -1124,12 +1135,16 @@ fdescribe('IgxDateRangePicker', () => {
                         DateRangeCustomComponent,
                         DateRangeTemplatesComponent
                     ],
-                    imports: [IgxDateRangePickerModule,
+                    imports: [
+                        IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule,
+                        IgxCalendarContainerModule,
+                        IgxPickerIconsModule
+                    ]
                 })
                     .compileComponents();
             }));
