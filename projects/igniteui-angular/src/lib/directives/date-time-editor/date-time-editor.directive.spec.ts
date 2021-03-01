@@ -107,7 +107,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditor.value.getDate()).toEqual(date);
             });
 
-            it('should correctly increment / decrement date portions with passed in spinDeltas', () => {
+            it('should correctly increment / decrement date portions with passed in spinDelta', () => {
                 inputFormat = 'dd/MM/yyyy';
                 inputDate = '12/10/2015';
                 elementRef = { nativeElement: { value: inputDate } };
@@ -115,7 +115,7 @@ describe('IgxDateTimeEditor', () => {
 
                 const date = new Date(2015, 11, 12, 14, 35, 12);
                 dateTimeEditor.value = date;
-                dateTimeEditor.spinDeltas = { date: 2, month: 2, year: 2, hour: 2, minute: 2, second: 2, ampm: 2 };
+                dateTimeEditor.spinDelta = { date: 2, month: 2, year: 2, hour: 2, minute: 2, second: 2 };
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
                 dateTimeEditor.increment();
@@ -967,7 +967,7 @@ describe('IgxDateTimeEditor', () => {
             it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
                 fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
                 fixture.detectChanges();
-                const today = new Date();
+                const today = new Date(2021, 12, 12);
                 dateTimeEditorDirective.value = today;
 
                 inputElement.triggerEventHandler('focus', {});
@@ -975,7 +975,7 @@ describe('IgxDateTimeEditor', () => {
                 dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
                 inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: -1 }));
                 fixture.detectChanges();
-                expect(dateTimeEditorDirective.value.getDate()).toEqual(new Date().getDate() - 1);
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
             }));
         });
 

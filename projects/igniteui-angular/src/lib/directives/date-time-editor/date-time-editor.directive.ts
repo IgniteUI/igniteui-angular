@@ -189,7 +189,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * ```
    */
   @Input()
-  public spinDeltas: DatePartDeltas;
+  public spinDelta: DatePartDeltas;
 
   /** @hidden @internal */
   @Input()
@@ -236,15 +236,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     year: 1,
     hour: 1,
     minute: 1,
-    second: 1,
-    ampm: 1
+    second: 1
   };
   private onTouchCallback: (...args: any[]) => void = noop;
   private onChangeCallback: (...args: any[]) => void = noop;
   private onValidatorChange: (...args: any[]) => void = noop;
 
   private get datePartDeltas(): DatePartDeltas {
-    return Object.assign({}, this._datePartDeltas, this.spinDeltas);
+    return Object.assign({}, this._datePartDeltas, this.spinDelta);
   }
 
   private get emptyMask(): string {
@@ -325,31 +324,25 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /**
    * Increment specified DatePart.
    *
-   * @param datePart The optional DatePart to increment. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param datePart The optional DatePart to increment. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param delta The optional delta to increment by. Overrides `spinDelta`.
    */
-  public increment(datePart?: DatePart, spinDeltas?: DatePartDeltas): void {
-    const deltas = Object.assign({}, this.datePartDeltas, spinDeltas);
-    const targetDatePart = this.targetDatePart;
-    if (!targetDatePart) {
-      return;
-    }
-    const newValue = this.trySpinValue(datePart, targetDatePart, deltas);
+  public increment(datePart?: DatePart, delta = 1): void {
+    const targetPart = datePart || this.targetDatePart;
+    const newValue = this.trySpinValue(targetPart, delta);
     this.updateValue(newValue);
   }
 
   /**
    * Decrement specified DatePart.
    *
-   * @param datePart The optional DatePart to decrement. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param datePart The optional DatePart to decrement. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param delta The optional delta to decrement by. Overrides `spinDelta`.
    */
-  public decrement(datePart?: DatePart, spinDeltas?: DatePartDeltas): void {
-    const deltas = Object.assign({}, this.datePartDeltas, spinDeltas);
-    const targetDatePart = this.targetDatePart;
-    if (!targetDatePart) {
-      return;
-    }
-    const newValue = this.trySpinValue(datePart, targetDatePart, deltas, true);
-    this.updateValue(newValue ? newValue : new Date());
+  public decrement(datePart?: DatePart, delta = 1): void {
+    const targetPart = datePart || this.targetDatePart;
+    const newValue = this.trySpinValue(targetPart, delta, true);
+    this.updateValue(newValue);
   }
 
   /** @hidden @internal */
@@ -579,18 +572,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return newDate;
   }
 
-  private trySpinValue(datePart: DatePart, targetDatePart: DatePart, spinDeltas: DatePartDeltas, negative = false) {
-    let newValue = null;
-    Object.keys(spinDeltas).forEach(p => {
-      if (datePart === p || targetDatePart === p) {
-        const spinValue = negative ? -Math.abs(spinDeltas[p]) : Math.abs(spinDeltas[p]);
-        newValue = datePart
-          ? this.spinValue(datePart, spinValue)
-          : this.spinValue(targetDatePart, spinValue);
-      }
-    });
-
-    return newValue || new Date();
+  private trySpinValue(datePart: DatePart, delta: number, negative = false) {
+    const spinDelta = delta !== 1 ? delta : this.datePartDeltas[datePart] || 1;
+    const spinValue = negative ? -Math.abs(spinDelta) : Math.abs(spinDelta);
+    return this.spinValue(datePart, spinValue) || new Date();
   }
 
   private updateValue(newDate: Date): void {

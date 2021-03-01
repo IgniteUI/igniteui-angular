@@ -34,5 +34,4 @@ export interface DatePartDeltas {
     hour: number;
     minute: number;
     second: number;
-    ampm: number;
 }
