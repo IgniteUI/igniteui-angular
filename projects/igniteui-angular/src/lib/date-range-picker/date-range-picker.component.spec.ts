@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement, NgModuleRef } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { InteractionMode } from '../core/enums';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,6 @@ import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_
 import { IgxIconModule } from '../icon/public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { create } from 'domain';
 import { IgxPickerIconsModule } from '../date-common/public_api';
 import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxCalendarComponent } from '../calendar/public_api';
@@ -1080,7 +1079,6 @@ describe('IgxDateRangePicker', () => {
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
                 fixture.componentInstance.mode = InteractionMode.Dialog;
                 fixture.detectChanges();
-
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
                 fixture.detectChanges();
