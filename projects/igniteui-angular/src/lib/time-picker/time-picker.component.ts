@@ -153,7 +153,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `"'hh:mm tt'"`
+     * Default is `hh:mm tt`
      *
      * @example
      * ```html
