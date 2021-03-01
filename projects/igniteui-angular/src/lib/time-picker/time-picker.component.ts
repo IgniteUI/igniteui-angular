@@ -138,7 +138,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * The format used when editable inputs are not focused.
      *
      * @remarks
-     * Uses Angular's DatePipe.
+     * Uses Angular's `DatePipe`.
      *
      * @example
      * ```html
