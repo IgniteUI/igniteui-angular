@@ -35,7 +35,8 @@ import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand } from '../summaries/grid-summary';
+import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -46,6 +47,7 @@ import {
 import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './interfaces';
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
+import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_DIGITS_INFO = '1.0-3';
@@ -733,7 +735,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    get maxWidthPx() {
+    public get maxWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
         return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
@@ -742,7 +744,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    get maxWidthPercent() {
+    public get maxWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
         return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
@@ -751,7 +753,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    get minWidthPx() {
+    public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
         return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
@@ -760,7 +762,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    get minWidthPercent() {
+    public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
         return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
@@ -802,7 +804,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get index(): number {
+    public get index(): number {
         return this.grid.columns.indexOf(this);
     }
 
@@ -846,7 +848,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             /* No grid/width available at initialization. `initPinning` in the grid
                will re-init the group (if present)
             */
-            this._unpinnedIndex = this.grid ? this.grid.columns.filter(x => !x.pinned).indexOf(this) : 0;
             this._pinned = value;
             this.pinnedChange.emit(this._pinned);
         }
@@ -962,7 +963,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get defaultMinWidth(): string {
+    public get defaultMinWidth(): string {
         if (!this.grid) {
             return '80';
         }
@@ -1398,10 +1399,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    protected _unpinnedIndex;
-    /**
-     * @hidden
-     */
     protected _pinned = false;
     /**
      * @hidden
@@ -1537,6 +1534,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 case DataType.Date:
                     this.summaries = IgxDateSummaryOperand;
                     break;
+                case DataType.Currency:
+                    this.summaries = IgxCurrencySummaryOperand;
+                    break;
+                case DataType.Percent:
+                    this.summaries = IgxPercentSummaryOperand;
+                    break;
                 default:
                     this.summaries = IgxSummaryOperand;
                     break;
@@ -1548,6 +1551,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.filters = IgxBooleanFilteringOperand.instance();
                     break;
                 case DataType.Number:
+                case DataType.Currency:
+                case DataType.Percent:
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
@@ -1730,7 +1735,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
-     * Pins the column at the provided index in the pinned area. Defaults to index `0` if not provided.
+     * Pins the column at the provided index in the pinned area.
+     * Defaults to index `0` if not provided, or to the initial index in the pinned area.
      * Returns `true` if the column is successfully pinned. Returns `false` if the column cannot be pinned.
      * Column cannot be pinned if:
      * - Is already pinned
@@ -1745,9 +1751,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public pin(index?: number): boolean {
         // TODO: Probably should the return type of the old functions
         // should be moved as a event parameter.
-        if (this.grid) {
-            this.grid.endEdit(true);
-        }
+        const grid = (this.grid as any);
         if (this._pinned) {
             return false;
         }
@@ -1756,9 +1760,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return this.topLevelParent.pin(index);
         }
 
-        const grid = (this.grid as any);
         const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index >= grid.pinnedColumns.length)) {
+        if (hasIndex && (index < 0 || index > grid.pinnedColumns.length)) {
             return false;
         }
 
@@ -1766,14 +1769,22 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return false;
         }
 
+        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
+        index = hasIndex ? index : rootPinnedCols.length;
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
+        this.grid.onColumnPinning.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        grid.endEdit(false);
+
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
-        this._unpinnedIndex = grid._unpinnedColumns.indexOf(this);
-        const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
-        index = index !== undefined ? index : rootPinnedCols.length;
-        const targetColumn = grid._pinnedColumns[index];
-        const args = { column: this, insertAtIndex: index, isPinned: true };
-        grid.onColumnPinning.emit(args);
+        // it is possible that index is the last position, so will need to find target column by [index-1]
+        const targetColumn = args.insertAtIndex === grid._pinnedColumns.length ?
+            grid._pinnedColumns[args.insertAtIndex - 1] : grid._pinnedColumns[args.insertAtIndex];
 
         if (grid._pinnedColumns.indexOf(this) === -1) {
             if (!grid.hasColumnGroups) {
@@ -1811,10 +1822,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
+        const eventArgs: IPinColumnEventArgs = { column: this, insertAtIndex: index, isPinned: true };
+        this.grid.columnPinned.emit(eventArgs);
         return true;
     }
     /**
-     * Unpins the column and place it at the provided index in the unpinned area. Defaults to index `0` if not provided.
+     * Unpins the column and place it at the provided index in the unpinned area.
+     * Defaults to index `0` if not provided, or to the initial index in the unpinned area.
      * Returns `true` if the column is successfully unpinned. Returns `false` if the column cannot be unpinned.
      * Column cannot be unpinned if:
      * - Is already unpinned
@@ -1826,9 +1840,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public unpin(index?: number): boolean {
-        if (this.grid) {
-            this.grid.endEdit(true);
-        }
+        const grid = (this.grid as any);
         if (!this._pinned) {
             return false;
         }
@@ -1836,19 +1848,35 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (this.parent && this.parent.pinned) {
             return this.topLevelParent.unpin(index);
         }
-
-        const grid = (this.grid as any);
         const hasIndex = index !== undefined;
-        if (hasIndex && (index < 0 || index >= grid._unpinnedColumns.length)) {
+        if (hasIndex && (index < 0 || index > grid._unpinnedColumns.length)) {
             return false;
         }
 
-        index = (index !== undefined ? index :
-            this._unpinnedIndex !== undefined ? this._unpinnedIndex : this.index);
+        // estimate the exact index at which column will be inserted
+        // takes into account initial unpinned index of the column
+        if (!hasIndex) {
+            const indices = grid.unpinnedColumns.map(col => col.index);
+            indices.push(this.index);
+            indices.sort((a, b) => a - b);
+            index = indices.indexOf(this.index);
+        }
+
+        const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
+        this.grid.onColumnPinning.emit(args);
+
+        if (args.cancel) {
+            return;
+        }
+
+        this.grid.endEdit(false);
+
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);
 
-        const targetColumn = grid._unpinnedColumns[index];
+        // it is possible that index is the last position, so will need to find target column by [index-1]
+        const targetColumn = args.insertAtIndex === grid._unpinnedColumns.length ?
+            grid._unpinnedColumns[args.insertAtIndex - 1] : grid._unpinnedColumns[args.insertAtIndex];
 
         if (!hasIndex) {
             grid._unpinnedColumns.splice(index, 0, this);
@@ -1856,7 +1884,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 grid._pinnedColumns.splice(grid._pinnedColumns.indexOf(this), 1);
             }
         }
-
 
         if (hasIndex) {
             grid.moveColumn(this, targetColumn);
@@ -1869,15 +1896,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         grid.reinitPinStates();
         grid.resetCaches();
 
-        const insertAtIndex = grid._unpinnedColumns.indexOf(this);
-        const args = { column: this, insertAtIndex, isPinned: false };
-        grid.onColumnPinning.emit(args);
-
         grid.notifyChanges();
         if (this.columnLayoutChild) {
             this.grid.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
         }
         this.grid.filteringService.refreshExpressions();
+
+        this.grid.columnPinned.emit({ column: this, insertAtIndex: index, isPinned: false });
 
         return true;
     }
@@ -1938,6 +1963,23 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public calcChildren(): number {
         const children = this.hidden ? 0 : 1;
         return children;
+    }
+
+    /**
+     * Toggles column vibisility and emits the respective event.
+     *
+     * @hidden
+     */
+    public toggleVisibility(value?: boolean) {
+        const newValue = value ?? !this.hidden;
+        const eventArgs: IColumnVisibilityChangingEventArgs = { column: this, newValue, cancel: false };
+        this.grid.columnVisibilityChanging.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
+        this.hidden = newValue;
+        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue });
     }
 
     /**
@@ -2191,7 +2233,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const cols = this.children.map(child => child.visibleWhenCollapsed);
         return (cols.some(c => c === true) && cols.some(c => c === false));
     }
-
 
     /**
      * @hidden

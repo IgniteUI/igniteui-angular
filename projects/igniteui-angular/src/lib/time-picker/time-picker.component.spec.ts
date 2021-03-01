@@ -2188,6 +2188,7 @@ describe('IgxTimePicker', () => {
         let toggleRef;
         let injector;
         let inputGroup: IgxInputGroupComponent;
+        let renderer2;
 
         beforeEach(() => {
             ngModel = {
@@ -2206,8 +2207,10 @@ describe('IgxTimePicker', () => {
                 onClosing: new EventEmitter<IBaseCancelableBrowserEventArgs>(),
                 element
             };
+            renderer2 = { setAttribute: () => { } };
+            spyOn(renderer2, 'setAttribute').and.callFake(() => {});
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(element, null, null, document);
+            inputGroup = new IgxInputGroupComponent(element, null, null, document, renderer2);
         });
 
         it('should initialize time picker with required correctly', () => {

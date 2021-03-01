@@ -10,6 +10,7 @@ import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
     IgxHierarchicalGridRowSelectionComponent,
+    IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
     IgxHierarchicalGridCustomSelectorsComponent,
     IgxHierarchicalGridRowSelectionNoTransactionsComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
@@ -29,6 +30,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
                 IgxHierarchicalGridRowSelectionComponent,
+                IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent,
                 IgxHierarchicalGridCustomSelectorsComponent,
                 IgxHierarchicalGridRowSelectionNoTransactionsComponent
             ],
@@ -704,8 +706,36 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 removed: []
             });
         });
+        it('should be able to select multiple rows only on checkbox click when selectRowOnClick is disabled', () => {
+            // Click first row expand button
+            hierarchicalGrid.selectRowOnClick = false;
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            firstRow.toggle();
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            // Click on the first row
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            // Click on the first row checkbox
+            GridSelectionFunctions.clickRowCheckbox(firstRow);
+            fix.detectChanges();
+            expect(hierarchicalGrid.selectedRows).toEqual(['0']);
+
+            const secondRow = hierarchicalGrid.getRowByIndex(4);
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            expect(hierarchicalGrid.selectedRows).toEqual(['0', '3']);
+        });
 
         it('should able to select multiple rows with Shift and click', () => {
+            expect(hierarchicalGrid.selectRowOnClick).toBe(true);
             // Click first row expand button
             const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
@@ -735,7 +765,42 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             }
         });
 
+        it('should NOT be able to select multiple rows with Shift and click when selectRowOnClick is disabled', () => {
+            hierarchicalGrid.selectRowOnClick = false;
+            // Click first row expand button
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            firstRow.toggle();
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            const fourthRow = hierarchicalGrid.getRowByIndex(4);
+            UIInteractions.simulateClickEvent(fourthRow.nativeElement, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowsArraySelected(
+                [firstRow, hierarchicalGrid.getRowByIndex(2), hierarchicalGrid.getRowByIndex(3), fourthRow], false);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            // Verify no rows are selected in the child grid
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            // Row Islands selectRowOnClick should be true by default
+            expect(childGrid.selectRowOnClick).toBe(true);
+
+            expect(childGrid.selectedRows).toEqual([]);
+            for (const r of childGrid.dataRowList.toArray()) {
+                GridSelectionFunctions.verifyRowSelected(r, false);
+            }
+        });
+
         it('should able to select multiple rows with Ctrl and click', () => {
+            expect(hierarchicalGrid.selectRowOnClick).toBe(true);
             // Expand first row
             const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             firstRow.toggle();
@@ -769,8 +834,68 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowSelected(childGridFirstRow);
             expect(childGrid.selectedRows).toEqual(['02']);
         });
+        it('should NOT be able to select multiple rows with Ctrl and click when selectRowOnClick is disabled', () => {
+            fix = TestBed.createComponent(IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent);
+            fix.detectChanges();
+            hierarchicalGrid = fix.componentInstance.hgrid;
+            rowIsland1 = fix.componentInstance.rowIsland;
+            rowIsland2 = fix.componentInstance.rowIsland2;
+            expect(hierarchicalGrid.selectRowOnClick).toBe(false);
+            // Expand first row
+            const firstRow = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            firstRow.toggle();
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            const fourthRow = hierarchicalGrid.getRowByIndex(4);
+            UIInteractions.simulateClickEvent(fourthRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            // Click on a row in the child grid
+            const childGrid1 = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            expect(childGrid1.selectedRows).toEqual([]);
+            // Row Islands selectRowOnClick should be true by default
+            expect(childGrid1.selectRowOnClick).toBe(true);
+
+            const childGrid1FirstRow = childGrid1.getRowByIndex(2);
+            UIInteractions.simulateClickEvent(childGrid1FirstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+            GridSelectionFunctions.verifyRowSelected(childGrid1FirstRow);
+            expect(childGrid1.selectedRows).toEqual(['02']);
+
+            // Deselect selected rows in the child grid
+            GridSelectionFunctions.clickRowCheckbox(childGrid1FirstRow);
+            fix.detectChanges();
+            GridSelectionFunctions.verifyRowSelected(childGrid1FirstRow, false);
+            expect(childGrid1.selectedRows).toEqual([]);
+
+            // Disable the selectRowOnClick of the second child -> should not be able to select on click
+            childGrid1.selectRowOnClick = false;
+
+            UIInteractions.simulateClickEvent(childGrid1FirstRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowsArraySelected([]);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+            GridSelectionFunctions.verifyRowSelected(childGrid1FirstRow, false);
+            expect(childGrid1.selectedRows).toEqual([]);
+        });
 
         it('should able to select only one row when rowSelection is single', () => {
+            expect(hierarchicalGrid.selectRowOnClick).toBe(true);
             // Expand first row
             const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
             row.toggle();
@@ -804,6 +929,58 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             GridSelectionFunctions.verifyRowSelected(firstRow);
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
             expect(childGrid.selectedRows).toEqual(['00']);
+
+            // Click on second row checkbox
+            GridSelectionFunctions.clickRowCheckbox(secondRow);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow);
+            expect(childGrid.selectedRows).toEqual(['02']);
+        });
+        it('should NOT be able to select a row with click when rowSelection is single and selectRowOnClick is disabled', () => {
+            hierarchicalGrid.selectRowOnClick = false;
+            // Expand first row
+            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            row.toggle();
+            fix.detectChanges();
+
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+            UIInteractions.simulateClickEvent(row.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(row, false);
+            expect(hierarchicalGrid.selectedRows).toEqual([]);
+
+            // Click on a row in the child grid
+            const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
+            childGrid.selectRowOnClick = false;
+            expect(childGrid.selectedRows).toEqual([]);
+
+            const firstRow = childGrid.getRowByIndex(0);
+            const secondRow = childGrid.getRowByIndex(2);
+
+            UIInteractions.simulateClickEvent(firstRow.nativeElement);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            expect(childGrid.selectedRows).toEqual([]);
+
+            // Click on second row holding Ctrl
+            UIInteractions.simulateClickEvent(secondRow.nativeElement, false, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            expect(childGrid.selectedRows).toEqual([]);
+
+            // Click on first row holding Shift key
+            UIInteractions.simulateClickEvent(firstRow.nativeElement, true);
+            fix.detectChanges();
+
+            GridSelectionFunctions.verifyRowSelected(firstRow, false);
+            GridSelectionFunctions.verifyRowSelected(secondRow, false);
+            expect(childGrid.selectedRows).toEqual([]);
 
             // Click on second row checkbox
             GridSelectionFunctions.clickRowCheckbox(secondRow);
@@ -1091,6 +1268,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland1.rowSelection = GridSelectionMode.multiple;
             fix.componentInstance.selectedRows = ['0', '2', '3'];
             fix.detectChanges();
+
             expect(hierarchicalGrid.getRowByKey('0').selected).toBeTrue();
             expect(hierarchicalGrid.getRowByKey('1').selected).toBeFalse();
 

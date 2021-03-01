@@ -62,8 +62,8 @@ describe('Excel Exporter', () => {
     }));
 
     afterEach(waitForAsync(() => {
-        exporter.onColumnExport.unsubscribe();
-        exporter.onRowExport.unsubscribe();
+        exporter.columnExporting.unsubscribe();
+        exporter.rowExporting.unsubscribe();
     }));
 
     describe('', () => {
@@ -121,7 +121,6 @@ describe('Excel Exporter', () => {
 
             const grid = fix.componentInstance.grid;
             grid.columns[0].hidden = true;
-            options.ignoreColumnsOrder = true;
             options.ignoreColumnsVisibility = false;
             fix.detectChanges();
 
@@ -216,7 +215,6 @@ describe('Excel Exporter', () => {
 
         it('should honor all pinned columns.', async () => {
             const result = await TestMethods.createGridAndPinColumn(2, 0);
-            const fix = result.fixture;
             const grid = result.grid;
 
             const wrapper = await getExportedData(grid, options);
@@ -301,7 +299,7 @@ describe('Excel Exporter', () => {
             await setRowHeightAndExport(grid, options, fix, rowHeights[4]);
         });
 
-        it('should fire \'onColumnExport\' for each grid column.', async () => {
+        it('should fire \'columnExporting\' for each grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -309,7 +307,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             const cols = [];
-            exporter.onColumnExport.subscribe((value) => {
+            exporter.columnExporting.subscribe((value) => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
@@ -323,7 +321,7 @@ describe('Excel Exporter', () => {
             expect(cols[2].index).toBe(2);
         });
 
-        it('should fire \'onColumnExport\' for each visible grid column.', async () => {
+        it('should fire \'columnExporting\' for each visible grid column.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -331,7 +329,7 @@ describe('Excel Exporter', () => {
             const grid = fix.componentInstance.grid;
 
             const cols = [];
-            exporter.onColumnExport.subscribe((value) => {
+            exporter.columnExporting.subscribe((value) => {
                 cols.push({ header: value.header, index: value.columnIndex });
             });
 
@@ -348,14 +346,14 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.simpleGridNameJobTitle);
         });
 
-        it('should not export columns when \'onColumnExport\' is canceled.', async () => {
+        it('should not export columns when \'columnExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
 
             const grid = fix.componentInstance.grid;
 
-            exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 value.cancel = true;
             });
 
@@ -365,7 +363,7 @@ describe('Excel Exporter', () => {
             await wrapper.verifyTemplateFilesContent();
         });
 
-        it('should fire \'onRowExport\' for each grid row.', async () => {
+        it('should fire \'rowExporting\' for each grid row.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -374,7 +372,7 @@ describe('Excel Exporter', () => {
             const data = SampleTestData.personJobData();
 
             const rows = [];
-            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+            exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
                 rows.push({ data: value.rowData, index: value.rowIndex });
             });
 
@@ -386,14 +384,14 @@ describe('Excel Exporter', () => {
             }
         });
 
-        it('should not export rows when \'onRowExport\' is canceled.', async () => {
+        it('should not export rows when \'rowExporting\' is canceled.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
 
             const grid = fix.componentInstance.grid;
 
-            exporter.onRowExport.subscribe((value: IRowExportingEventArgs) => {
+            exporter.rowExporting.subscribe((value: IRowExportingEventArgs) => {
                 value.cancel = true;
             });
 
@@ -423,7 +421,7 @@ describe('Excel Exporter', () => {
             expect(sortField).toBe(sortFieldAfterExport);
         });
 
-        it('should skip the column formatter when \'onColumnExport\' skipFormatter is true', async () => {
+        it('should skip the column formatter when \'columnExporting\' skipFormatter is true', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
             await wait();
@@ -441,7 +439,7 @@ describe('Excel Exporter', () => {
             // Verify the exported data is formatted by default
             await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleWithFormatting);
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = true;
             });
             fix.detectChanges();
@@ -450,7 +448,7 @@ describe('Excel Exporter', () => {
             // Verify the data without formatting
             await exportAndVerify(grid, options, actualData.simpleGridData);
 
-            exporter.onColumnExport.subscribe((val: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((val: IColumnExportingEventArgs) => {
                 val.skipFormatter = false;
             });
             grid.cdr.detectChanges();
@@ -468,7 +466,7 @@ describe('Excel Exporter', () => {
             // Verify the data without formatting
             await exportAndVerify(grid, options, actualData.gridWithEmptyColums);
 
-            exporter.onColumnExport.subscribe((value: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
                 if (value.columnIndex === 0 || value.columnIndex === 2) {
                     value.cancel = true;
                 }
@@ -772,13 +770,13 @@ describe('Excel Exporter', () => {
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridDataFormatted);
 
-            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 args.skipFormatter = true;
             });
             treeGrid.cdr.detectChanges();
             await exportAndVerify(treeGrid, options, actualData.treeGridData);
 
-            exporter.onColumnExport.subscribe((args: IColumnExportingEventArgs) => {
+            exporter.columnExporting.subscribe((args: IColumnExportingEventArgs) => {
                 args.skipFormatter = false;
             });
             treeGrid.cdr.detectChanges();
@@ -812,7 +810,7 @@ describe('Excel Exporter', () => {
 
     const getExportedData = (grid, exportOptions: IgxExcelExporterOptions) => {
         const exportData = new Promise<JSZipWrapper>((resolve) => {
-            exporter.onExportEnded.pipe(first()).subscribe((value) => {
+            exporter.exportEnded.pipe(first()).subscribe((value) => {
                 const wrapper = new JSZipWrapper(value.xlsx);
                 resolve(wrapper);
             });

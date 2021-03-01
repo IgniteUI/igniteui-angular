@@ -167,13 +167,14 @@ export class IgxSnackbarComponent {
     @Input() public actionText?: string;
 
     /**
-     * An event that will be emitted when the action is executed.
+     * An event that will be emitted when the action button is clicked.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
      * ```html
-     * <igx-snackbar (onAction) = "onAction($event)"></igx-snackbar>
+     * <igx-snackbar (clicked)="clickedHandler($event)"></igx-snackbar>
      * ```
      */
-    @Output() public onAction = new EventEmitter<IgxSnackbarComponent>();
+    @Output()
+    public clicked = new EventEmitter<IgxSnackbarComponent>();
 
     /**
      * An event that will be emitted when the snackbar animation starts.
@@ -265,7 +266,7 @@ export class IgxSnackbarComponent {
      * @hidden
      */
     public triggerAction(): void {
-        this.onAction.emit(this);
+        this.clicked.emit(this);
     }
     /**
      * @hidden

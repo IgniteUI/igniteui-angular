@@ -1,13 +1,6 @@
 <div class="dark-grid">
-    <igx-grid #grid1 [data]="remoteData | async" [height]="'500px'" [width]="'100%'" [autoGenerate]='false'
-        (onDataPreLoad)="handlePreLoad()" [clipboardOptions]="clipboardOptions" [primaryKey]="'ProductID'"
-        (onSortingDone)="processData(true)">
-        <igx-column [field]="'ProductID'"></igx-column>
-        <igx-column [field]="'ProductName'" [editable]="true"></igx-column>
-        <igx-column [field]="'SupplierID'" [editable]="true"></igx-column>
-        <igx-column [field]="'CategoryID'" [editable]="true"></igx-column>
-        <igx-column [field]="'UnitPrice'" [editable]="true"></igx-column>
-        <igx-column [field]="'ReorderLevel'" [editable]="true"></igx-column>
+    <igx-grid #grid1 [data]="remoteData | async" [height]="'500px'" [width]="'100%'" [autoGenerate]='true'
+        [clipboardOptions]="clipboardOptions" (onDataPreLoad)="handlePreLoad()"
+    (onSortingDone)="processData(true)">
     </igx-grid>
-    <button igxButton (click)="a()">Change Data</button>
 </div>

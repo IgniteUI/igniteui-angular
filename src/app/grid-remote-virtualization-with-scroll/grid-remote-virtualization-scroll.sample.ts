@@ -1,13 +1,12 @@
 import { Component, ViewChild, ChangeDetectorRef, OnInit, AfterViewInit } from '@angular/core';
 import { IgxGridComponent } from 'igniteui-angular';
 import { debounceTime } from 'rxjs/operators';
-import { RemoteService } from '../shared/remote.service';
 import { RemoteVirtService } from '../shared/remoteProductsData.service';
 
 @Component({
     selector: 'app-grid-remote-virtualization-scroll',
     templateUrl: 'grid-remote-virtualization-scroll.sample.html',
-    providers: [RemoteVirtService, RemoteService]
+    providers: [RemoteVirtService]
 })
 
 export class GridVirtualizationScrollSampleComponent implements OnInit, AfterViewInit {
@@ -25,11 +24,7 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
         copyFormatters: true,
         separator: '\t'
     };
-    constructor(
-        private remoteService: RemoteVirtService,
-        private rs: RemoteService,
-        public cdr: ChangeDetectorRef
-    ) { }
+    constructor(private remoteService: RemoteVirtService, public cdr: ChangeDetectorRef) { }
 
     public ngOnInit(): void {
         this.remoteData = this.remoteService.data;
@@ -62,10 +57,5 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
             this.grid.sortingExpressions[0], reset, () => {
                 this.cdr.detectChanges();
             });
-    }
-
-    public a(): void {
-        this.remoteData = this.rs.remoteData;
-        this.remoteData = this.remoteService.data;
     }
 }
