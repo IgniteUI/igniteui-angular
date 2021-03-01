@@ -21,6 +21,7 @@ import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { create } from 'domain';
 import { IgxPickerIconsModule } from '../date-common/public_api';
 import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IgxCalendarComponent } from '../calendar/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -36,8 +37,8 @@ const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 
-fdescribe('IgxDateRangePicker', () => {
-    xdescribe('Unit tests: ', () => {
+describe('IgxDateRangePicker', () => {
+    describe('Unit tests: ', () => {
         let mockElement: any;
         let mockElementRef: any;
         let mockFactoryResolver: any;
@@ -50,15 +51,27 @@ fdescribe('IgxDateRangePicker', () => {
         let mockInjector;
         let ngModuleRef: any;
         const elementRef = { nativeElement: null };
-        // const calendar = new IgxCalendarComponent();
+        const calendar = new IgxCalendarComponent();
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
         beforeEach(() => {
+            mockFactoryResolver = {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                resolveComponentFactory: (c: any) => ({
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    create: (i: any) => ({
+                        hostView: '',
+                        location: mockElementRef,
+                        changeDetectorRef: { detectChanges: () => { } },
+                        destroy: () => { }
+                    })
+                })
+            };
             ngModuleRef = ({
                 injector: (...args: any[]) => { },
-                componentFactoryResolver: () => mockFactoryResolver,
+                componentFactoryResolver: mockFactoryResolver,
                 instance: () => { },
                 destroy: () => { },
                 onDestroy: (fn: any) => { }
@@ -80,18 +93,6 @@ fdescribe('IgxDateRangePicker', () => {
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
             mockElementRef = { nativeElement: mockElement };
-            mockFactoryResolver = {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                resolveComponentFactory: (c: any) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                    create: (i: any) => ({
-                        hostView: '',
-                        location: mockElementRef,
-                        changeDetectorRef: { detectChanges: () => { } },
-                        destroy: () => { }
-                    })
-                })
-            };
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
             mockInjector = jasmine.createSpyObj('Injector', {
@@ -245,14 +246,18 @@ fdescribe('IgxDateRangePicker', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, ngModuleRef, overlay);
             dateRange.ngOnInit();
 
-            // dateRange.calendar = calendar;
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
             dateRange.open({
                 closeOnOutsideClick: true,
                 modal: false,
-                target: dateRange.element.nativeElement
+                target: dateRange.element.nativeElement,
+                positionStrategy: new AutoPositionStrategy({
+                    openAnimation: null,
+                    closeAnimation: null
+                })
             });
             spyOn(dateRange.calendar, 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
@@ -267,7 +272,7 @@ fdescribe('IgxDateRangePicker', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            // dateRange.calendar = calendar;
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
