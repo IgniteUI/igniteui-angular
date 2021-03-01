@@ -563,7 +563,9 @@ $_bootstrap-fab-button: extend(
 
 /// @type {Map}
 /// @prop {Map} hover-background [igx-color: ('primary', 500)] - The hover background color of an icon button.
+/// @prop {Map} hover-foreground [igx-contrast-color: ('primary', 600)] - The hover text color of an icon button.
 /// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an icon button.
+/// @prop {Map} focus-foreground [igx-contrast-color: ('primary', 600)] - The focus text color of an icon button.
 /// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
 /// @prop {Number} border-radius [.2] - The border radius used for outlined button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $_material-icon-button
@@ -579,8 +581,16 @@ $_bootstrap-icon-button: extend(
             igx-color: ('primary', 500)
         ),
 
+        hover-foreground: (
+            igx-contrast-color: ('primary', 600)
+        ),
+
         focus-background: (
             igx-color: ('primary', 600)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('primary', 600)
         ),
 
         shadow-color: (
