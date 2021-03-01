@@ -1,6 +1,6 @@
 <div class="igx-calendar__body">
     <div class="igx-calendar__body-column" (wheel)="scroll($event)" (pan)="pan($event)">
-        <span
+        <span class="igx-calendar__year"
             [igxCalendarYear]="year"
             [date]="date"
             (yearSelection)="selectYear($event)"
