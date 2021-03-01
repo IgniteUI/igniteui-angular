@@ -9,12 +9,12 @@ import {
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, findMatches,
-    replaceMatch, createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME
+    getLanguageService, getRenamePositions, findMatches, replaceMatch,
+    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME
 } from './tsUtils';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp,
-    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage
+    getPackageManager, canResolvePackage, tryInstallPackage, tryUninstallPackage, getPackageVersion
 } from './util';
 import { ServerHost } from './ServerHost';
 
@@ -30,7 +30,14 @@ export interface BoundPropertyObject {
 
 /* eslint-disable arrow-parens */
 export class UpdateChanges {
-    protected projectService: tss.server.ProjectService;
+    protected _projectService: tss.server.ProjectService;
+    public get projectService(): tss.server.ProjectService {
+        if (!this._projectService) {
+            this._projectService = createProjectService(this.serverHost);
+        }
+        return this._projectService;
+    }
+
     protected serverHost: ServerHost;
     protected workspace: WorkspaceSchema;
     protected sourcePaths: string[];
@@ -119,7 +126,6 @@ export class UpdateChanges {
         this.importsChanges = this.loadConfig('imports.json');
         this.membersChanges = this.loadConfig('members.json');
         this.serverHost = new ServerHost(this.host);
-        this.projectService = createProjectService(this.serverHost);
     }
 
     /** Apply configured changes to the Host Tree */
@@ -128,7 +134,13 @@ export class UpdateChanges {
             && !canResolvePackage(NG_LANG_SERVICE_PACKAGE_NAME);
         if (shouldInstallPkg) {
             this.context.logger.info(`Installing temporary migration dependencies via ${this.packageManager}.`);
-            tryInstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
+            // try and get an appropriate version of the package to install
+            let targetVersion = getPackageVersion(NG_CORE_PACKAGE_NAME) || 'latest';
+            if (targetVersion.startsWith('11')) {
+                // TODO: Temporary restrict 11 LS version, till update for new module loading
+                targetVersion = '11.0.0';
+            }
+            tryInstallPackage(this.context, this.packageManager, `${NG_LANG_SERVICE_PACKAGE_NAME}@${targetVersion}`);
         }
 
         this.updateTemplateFiles();
