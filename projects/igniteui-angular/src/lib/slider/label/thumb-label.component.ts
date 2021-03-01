@@ -32,29 +32,41 @@ export class IgxThumbLabelComponent {
     public thumb: IgxSliderThumbComponent;
 
 
-    @HostBinding('class.igx-slider__label-from')
+    @HostBinding('class.igx-slider-from')
     public get thumbFromClass() {
         return this.type === SliderHandle.FROM;
     }
 
-    @HostBinding('class.igx-slider__label-to')
+    @HostBinding('class.igx-slider-to')
     public get thumbToClass() {
         return this.type === SliderHandle.TO;
     }
 
-    @HostBinding('class.igx-slider__label-from--active')
+    @HostBinding('class.igx-slider-from--active')
     public get thumbFromActiveClass() {
         return this.type === SliderHandle.FROM && this.active;
     }
 
-    @HostBinding('class.igx-slider__label-to--active')
+    @HostBinding('class.igx-slider-to--active')
     public get thumbToActiveClass() {
         return this.type === SliderHandle.TO && this.active;
     }
 
-    @HostBinding('class.igx-slider__label--pressed')
-    public get labelPressedClass() {
-        return this.thumb?.thumbPressedClass;
+    @HostBinding('class.igx-slider-from--pressed')
+    public get labelFromPressedClass() {
+        return this.thumb?.thumbFromPressedClass;
+    }
+
+    @HostBinding('class.igx-slider-to--pressed')
+    public get labelToPressedClass() {
+        return this.thumb?.thumbToPressedClass;
+    }
+
+    public get getLabelClass() {
+        return {
+            'igx-slider-from__label': this.type === SliderHandle.FROM,
+            'igx-slider-to__label': this.type === SliderHandle.TO
+        };
     }
 
     private _active: boolean;
