@@ -3,6 +3,22 @@
 # Current Milestone
 
 ## Milestone 16 (Due by April, 2021)
+
+1. Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
+2. Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
+3. Switch thumb templatable and add indeterminate state [#8949](https://github.com/IgniteUI/igniteui-angular/issues/8949)
+4. IgxDateTimeEditor should support spin delta [#7169](https://github.com/IgniteUI/igniteui-angular/issues/7169)
+5. Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
+6. Export Hierarchical Grid to Excel [#5848](https://github.com/IgniteUI/igniteui-angular/issues/5848)
+7. Tree component [#7475](https://github.com/IgniteUI/igniteui-angular/issues/7475)
+8. IgxDatePicker refactoring [#6483](https://github.com/IgniteUI/igniteui-angular/issues/6483)
+9. IgxTimePicker refactoring [#6482](https://github.com/IgniteUI/igniteui-angular/issues/6482)
+10. abs and Bottom Nav Components Refactoring [#8793](https://github.com/IgniteUI/igniteui-angular/issues/8793)
+11. Datetime and Time column types [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
+12. Add detach method to IgxOverlay [#6063](https://github.com/IgniteUI/igniteui-angular/issues/6063)
+
+## Going down the road
+
 ## Milestone 15 (Due by February, 2021)
 
 1. Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
@@ -16,11 +32,6 @@
 9. **[DONE]** Carousel accessibility improvements [#8202](https://github.com/IgniteUI/igniteui-angular/issues/8202)
 10. Datetime or Time in avaliable type of column [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
 
-## Going down the road
-
-1. Date & Time Picker Refactoring
-2. Tabs and Bottom Nav Components Refactoring
-3. Tree component
 
 ## Milestone 14 (Released November 11th, 2020)
 
