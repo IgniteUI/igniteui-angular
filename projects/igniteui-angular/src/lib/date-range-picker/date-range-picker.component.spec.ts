@@ -30,7 +30,6 @@ const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeri
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_TOGGLE = '.igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
@@ -1136,12 +1135,16 @@ fdescribe('IgxDateRangePicker', () => {
                         DateRangeCustomComponent,
                         DateRangeTemplatesComponent
                     ],
-                    imports: [IgxDateRangePickerModule,
+                    imports: [
+                        IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule,
+                        IgxCalendarContainerModule,
+                        IgxPickerIconsModule
+                    ]
                 })
                     .compileComponents();
             }));

@@ -1380,8 +1380,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         componentInstance.todayButtonLabel = this.todayButtonLabel;
         componentInstance.pickerActions = this.datePickerActionsDirective;
 
-        // componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
-        // componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
+        componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
+        componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
     }
 
     // Focus a date, after the calendar appearance into DOM.
