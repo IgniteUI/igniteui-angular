@@ -1,6 +1,5 @@
 <div class="dark-grid">
-    <igx-grid #grid1 [data]="remoteData | async" [height]="'500px'" [width]="'100%'" [autoGenerate]='true'
-        [clipboardOptions]="clipboardOptions" (onDataPreLoad)="handlePreLoad()"
+    <igx-grid #grid1 [data]="remoteData | async" [height]="'500px'" [width]="'100%'" [autoGenerate]='true' (onDataPreLoad)="handlePreLoad()" [clipboardOptions]="clipboardOptions"
     (onSortingDone)="processData(true)">
     </igx-grid>
 </div>

@@ -210,7 +210,6 @@ export class IgxGridCRUDService {
     }
 
     public enterEditMode(cell, event?: Event) {
-        console.log('enter', new Date());
         if (this.isInCompositionMode) {
             return;
         }

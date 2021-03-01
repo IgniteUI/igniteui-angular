@@ -264,7 +264,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
-    private dataSetTroughVirtualization = false;
 
     /**
      * Gets/Sets the array of data that populates the `IgxGridComponent`.
@@ -280,12 +279,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set data(value: any[]) {
-        console.log('data set', this.dataSetTroughVirtualization);
-        if (!this.dataSetTroughVirtualization) {
-            this.endEdit(false);
-            // this.crudService.endEditMode();
-            this.dataSetTroughVirtualization = false;
-        }
+        this.crudService.endEditMode();
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -1030,9 +1024,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        console.log('data loading', event);
-        this.dataSetTroughVirtualization = (this.navigation as any).forOfDir().isRemote;
-        console.log('is remote in data loading: ', this.dataSetTroughVirtualization);
         this.onDataPreLoad.emit(event);
     }
 
