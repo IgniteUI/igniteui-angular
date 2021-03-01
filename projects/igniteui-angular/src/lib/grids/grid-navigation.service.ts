@@ -131,7 +131,7 @@ export class IgxGridNavigationService {
         if (gridRows < 1) {
             this.activeNode = null; return;
         }
-        if (!Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
+        if (!this.activeNode || !Object.keys(this.activeNode).length || this.activeNode.row < 0 || this.activeNode.row > gridRows - 1) {
             const hasLastActiveNode = Object.keys(this.lastActiveNode).length;
             const shouldClearSelection = hasLastActiveNode && (this.lastActiveNode.row < 0 || this.lastActiveNode.row > gridRows - 1);
             this.setActiveNode(this.lastActiveNode.row >= 0 && this.lastActiveNode.row < gridRows ?
@@ -163,7 +163,6 @@ export class IgxGridNavigationService {
         if (shouldScrollIntoView) {
             this.performHorizontalScrollToCell(this.activeNode.column);
         }
-        this.grid.notifyChanges();
     }
 
     public isColumnFullyVisible(columnIndex: number) {
