@@ -20,6 +20,7 @@
 
     <!-- <igx-week-number-item *ngIf="showWeekNumbers">{{getWeekNumber(week[0].date)}}</igx-week-number-item> -->
     <igx-day-item
+        class="igx-calendar__date"
         *ngFor="let day of week; trackBy: dateTracker"
         [attr.aria-selected]="isSelected(day)"
         role="gridcell"
