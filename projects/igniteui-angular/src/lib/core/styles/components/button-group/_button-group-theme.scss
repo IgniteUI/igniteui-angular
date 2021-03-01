@@ -244,7 +244,7 @@
         &:focus {
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
-            z-index: 1;
+            z-index: 2;
         }
 
         &:focus {
