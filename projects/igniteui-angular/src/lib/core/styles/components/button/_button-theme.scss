@@ -11,20 +11,35 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Color} $background [null] - The background color of the button.
+/// @param {Color} $foreground [null] - The text color of the button.
+/// @param {Color} $hover-background [null] - The hover background color of the button.
+/// @param {Color} $hover-foreground [null] - The hover text color of the button.
+/// @param {Color} $focus-background [null] - The focus background color of the button.
+/// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Number} $border-radius [null] - The border radius of the button.
+/// @param {Color} $border-color [null] - The border color of the button.
+/// @param {Color} $shadow-color [null] - The shadow color of the button.
+/// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
+/// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
+/// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $disabled-background [null] - The disabled background color of the button.
+/// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
+/// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
+/// @requires $elevations
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: igx-button-theme(
-///     $raised-text-color: white,
-///     $raised-background: black
+///     $foreground: white,
+///     $background: black
 ///   );
 ///   // Pass the theme to the igx-button component mixin
 ///   @include igx-button($my-button-theme);
@@ -377,6 +392,7 @@
             width: $icon-in-button-size;
             height: $icon-in-button-size;
             font-size: $icon-in-button-size;
+            color: inherit;
         }
 
         @include _icon-w-margin(
@@ -410,17 +426,9 @@
         color: --var($flat-theme, 'foreground');
         border-radius: --var($flat-theme, 'border-radius');
 
-        igx-icon {
-            color: inherit;
-        }
-
         &:hover {
             background: --var($flat-theme, 'hover-background');
             color: --var($flat-theme, 'hover-foreground');
-
-            igx-icon {
-                color: inherit;
-            }
         }
 
         &:focus,
@@ -428,11 +436,6 @@
             background: --var($flat-theme, 'focus-background');
             color: --var($flat-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) --var($flat-theme, 'shadow-color');
-
-
-            igx-icon {
-                color: inherit;
-            }
         }
     }
 
@@ -455,17 +458,9 @@
             }
         }
 
-        igx-icon {
-            color: inherit;
-        }
-
         &:hover {
             background: --var($outlined-theme, 'hover-background');
             color: --var($outlined-theme, 'hover-foreground');
-
-            igx-icon {
-                color: inherit;
-            }
         }
 
         &:focus,
@@ -473,10 +468,6 @@
             background: --var($outlined-theme, 'focus-background');
             color: --var($outlined-theme, 'focus-foreground');
             box-shadow: 0 0 0 rem(3px) --var($outlined-theme, 'shadow-color');
-
-            igx-icon {
-                color: inherit;
-            }
         }
     }
 
@@ -506,19 +497,10 @@
         box-shadow: $raised-shadow;
         border-radius: --var($raised-theme, 'border-radius');
 
-        igx-icon {
-            color: inherit;
-        }
-
         &:hover {
             color: --var($raised-theme, 'hover-foreground');
             background: --var($raised-theme, 'hover-background');
             box-shadow: $raised-shadow--hover;
-
-
-            igx-icon {
-                color: inherit;
-            }
         }
 
         &:focus,
@@ -530,10 +512,6 @@
                 box-shadow: 0 0 0 rem(3px) --var($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
-            }
-
-            igx-icon {
-                color: inherit;
             }
         }
     }
@@ -658,10 +636,6 @@
         box-shadow: none;
         color: --var($flat-theme, 'disabled-foreground');
         background: transparent;
-
-        igx-icon {
-            color: inherit;
-        }
 
         &%igx-button--raised,
         &%igx-button--fab {

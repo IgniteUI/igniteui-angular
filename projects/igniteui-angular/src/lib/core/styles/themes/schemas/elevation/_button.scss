@@ -45,11 +45,11 @@ $_material-ib-elevation: (
 );
 
 /// @type Map
-/// @alias $_flat-button
-/// @requires {Map} $_flat-button
+/// @see $_flat-elevation-button
+/// @requires $_flat-elevation-button
 $_bootstrap-elevation-button: $_flat-elevation-button;
 
 /// @type Map
-/// @alias $_flat-button
-/// @requires {Map} $_flat-button
+/// @see $_flat-elevation-button
+/// @requires $_flat-elevation-button
 $_indigo-elevation-button: $_flat-elevation-button;
