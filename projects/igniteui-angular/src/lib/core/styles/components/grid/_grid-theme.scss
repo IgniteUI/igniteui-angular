@@ -260,7 +260,7 @@
         $ghost-header-text-color: text-contrast($ghost-header-background);
     }
 
-    @if $header-background and alpha($header-background) < 1 {
+    @if $header-background and type-of($header-background) == 'color' and alpha($header-background) < 1 {
         $header-background: to-opaque($header-background, igx-color($palette, 'surface'));
     }
 
@@ -286,7 +286,7 @@
         $row-odd-background: $content-background;
     }
 
-    @if $row-odd-background and alpha($row-odd-background) != 1 {
+    @if $row-odd-background and type-of($row-odd-background) == 'color' and alpha($row-odd-background) != 1 {
         $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
 
         $row-odd-background: to-opaque($row-odd-background, $cbg);
@@ -300,7 +300,7 @@
         $row-even-background: $content-background;
     }
 
-    @if $row-even-background and alpha($row-even-background) != 1 {
+    @if $row-even-background and type-of($row-even-background) == 'color' and alpha($row-even-background) != 1 {
         $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
 
         $row-even-background: to-opaque($row-even-background, $cbg);
