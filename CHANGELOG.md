@@ -1,6 +1,13 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 12.0.0
+
+### Themes:
+- Breaking Changes:
+    - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
+
 ## 11.1.1
 
 ### New Features
@@ -10,7 +17,6 @@ All notable changes for each version of this project will be documented in this 
     ```html
     <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
     ```
-
 ## 11.1.0
 
 ### New Features
