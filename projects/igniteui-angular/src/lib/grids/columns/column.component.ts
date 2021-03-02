@@ -79,7 +79,14 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public field: string;
+    set field(value: string) {
+        this._field = value;
+        this.hasNestedPath = value?.includes('.');
+    }
+    get field(): string {
+        return this._field;
+    }
+
     /**
      * Sets/gets the `header` value.
      * ```typescript
@@ -1351,6 +1358,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public widthSetByUser: boolean;
 
     /**
+     * @hidden
+     */
+    public hasNestedPath: boolean;
+
+    /**
      * Returns the filteringExpressionsTree of the column.
      * ```typescript
      * let tree =  this.column.filteringExpressionsTree;
@@ -1483,6 +1495,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return this.field !== undefined && this.grid !== undefined && this.field === this.grid.primaryKey;
     }
 
+    private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
 
