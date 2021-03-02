@@ -1474,6 +1474,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe
     ],
+    entryComponents: [IgxCalendarContainerComponent],
     exports: [
         IgxDatePickerComponent,
         IgxDatePickerTemplateDirective,
