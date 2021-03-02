@@ -12,17 +12,14 @@
     @extend %igx-icon-display !optional;
 
     @include m(inactive) {
-        @extend %igx-icon-display !optional;
         @extend %igx-icon--inactive !optional;
     }
 
     @include m(success) {
-        @extend %igx-icon-display !optional;
         @extend %igx-icon--success !optional;
     }
 
     @include m(error) {
-        @extend %igx-icon-display !optional;
         @extend %igx-icon--error !optional;
     }
 }
