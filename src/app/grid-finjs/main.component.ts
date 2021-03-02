@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { FinancialData } from '../shared/financialData';
 import { ControllerComponent } from './controllers.component';
 import { GridFinJSComponent } from './grid-finjs.component';
@@ -23,8 +23,7 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     private subscription$;
     private _timer;
 
-    constructor(private elRef: ElementRef) {
-    }
+    constructor() { }
 
     public ngAfterViewInit() {
         // this.subscription$ = this.localService.records.subscribe(x => {
@@ -58,19 +57,20 @@ export class MainComponent implements AfterViewInit, OnDestroy {
     }
 
     public onVolumeChanged(volume: any) {
+        this.finGrid.grid.deselectAllRows();
         this.finGrid.finService.getFinancialData(volume);
     }
 
     public onPlayAction(event: any) {
         switch (event.action) {
             case 'playAll': {
-                const currData = this.finGrid.data;
-                this._timer = setInterval(() => this.tickerAllPrices(currData), this.controller.frequency);
+                const currData = this.finGrid.grid.filteredSortedData ?? this.finGrid.data;
+                this._timer = setInterval(() => this.finGrid.finService.updateAllPriceValues(currData), this.controller.frequency);
                 break;
             }
             case 'playRandom': {
                 const currData = this.finGrid.data;
-                this._timer = setInterval(() => this.ticker(currData), this.controller.frequency);
+                this._timer = setInterval(() => this.finGrid.finService.updateRandomPriceValues(currData), this.controller.frequency);
                 break;
             }
             case 'stop': {
@@ -104,14 +104,6 @@ export class MainComponent implements AfterViewInit, OnDestroy {
         if (this.subscription$) {
             this.subscription$.unsubscribe();
         }
-    }
-
-    private ticker(data: any) {
-        this.finGrid.data = FinancialData.updateRandomPrices(data);
-    }
-
-    private tickerAllPrices(data: any) {
-        this.finGrid.data = FinancialData.updateAllPrices(data);
     }
 
     /**
