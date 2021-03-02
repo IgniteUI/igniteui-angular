@@ -1,6 +1,16 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+## 11.1.1
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
+
 ## 11.1.0
 
 ### New Features
@@ -20,10 +30,19 @@ All notable changes for each version of this project will be documented in this 
     - Support for `currency` type columns is added in the grid.
     - Support for `percent` type columns is added in the grid.
     - Added support for filtering based on the formatted cell values using the `FormattedValuesFilteringStrategy` for `IgxGrid`/`IgxHierarchicalGrid` and `TreeGridFormattedValuesFilteringStrategy` for `IgxTreeGrid`.
-- `IgxPaginator`
-    - `paging` and `pagingDone` events are now emitted.
+    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
+    - **Behavioral Change** -
+    - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
+    - `Column pinning`, `Column moving`, `paging` interactions now discard the editing value, instead of committing it.
+    - `Column Resizing` now does not exit edit mode.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
+- `igxSplitter` now has the following additional outputs: 
+    - `resizeStart` - Emits when pane resizing starts.
+    - `resizing`- Emits while panes are being resized.
+    - `resizeEnd` - Emits when pane resizing ends.
+
+    All emit with the two panes affected by the resize operation as arguments.
 
 ### General
 - **Breaking Change** - Many outputs are renamed with the introduction of new rules in Ignite UI for Angular's naming convention. Please, ensure that when you update to 11.1 you do so through
@@ -99,12 +118,6 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxHierarchicalGrid`, `IgxTreeGrid`
     - Added new property `selectRowOnClick` that determines whether clicking over a row will change its selection state or not. Set to `true` by default.
     - `GridPagingMode` enum members rename - `local` to `Local` and `remote` to `Remote`. Example:  `GridPagingMode.Local`.
-    - The following new events are introduced: `sorting`, `filtering`, `columnPinned`, `columnVisibilityChanging`.
-    - **Behavioral Change** -
-        - `onColumnPinning` to emit `IPinColumnCancellableEventArgs` instead of `IPinColumnEventArgs`.
-    - **Breaking Change**:
-        - `onPagingDone` output is removed. Use the `paging` and `pagingDone` outputs exposed by the `IgxPaginator`.
-        - `page`, `perPage`, `paginate`, `nextPage`, `previousPage` and `totalPages` in the grids are deprecated and will be removed. Use the corresponding `IgxPaginator` outputs/inputs. When using an external paginator, take care to provide the corresponding slice of data. See [`Paging with Custom Template`](https://www.infragistics.com/products/ignite-ui-angular/angular/components/grid/paging#remote-paging-with-custom-template)
 - IgxButton
     - IgxIcon(s) placed in a button now include margin if there are one or more sibling elements to give them some breathing room. The amount of margin applied depends on the display density of the button.
 - `IgxListComponent`
@@ -128,6 +141,16 @@ All notable changes for each version of this project will be documented in this 
         - `onColumnExport` to `columnExporting`
         - `onRowExport` to `rowExporting`
         - `onExportEnded` to `exportEnded`
+
+## 11.0.15
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 
 ## 11.0.4
 
@@ -165,6 +188,16 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.15
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 
 ## 10.2.0
 

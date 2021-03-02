@@ -2,7 +2,8 @@
     <igx-switch (change)='this.$sorting = !this.$sorting' style="padding-left: 20px">cancel sorting</igx-switch>
     <igx-switch (change)='this.$filtering = !this.$filtering' style="padding-left: 20px">cancel filtering</igx-switch>
     <igx-switch (change)='this.$pinning = !this.$pinning' style="padding-left: 20px">cancel pinning</igx-switch>
-    <igx-switch (change)='this.$paging = !this.$paging' style="padding-left: 20px">cancel paging</igx-switch>
+    <igx-switch (change)='this.$resizing = !this.$resizing' style="padding-left: 20px">cancel resizing</igx-switch>
+    <igx-switch (change)='this.$onColumnSelectionChange = !this.$onColumnSelectionChange' style="padding-left: 20px">cancel onColumnSelectionChange</igx-switch>
     <igx-switch (change)='this.$hiding = !this.$hiding' style="padding-left: 20px">cancel hiding</igx-switch>
 </div>
 <igx-input-group>
@@ -19,11 +20,11 @@
             <button (click)="addFormatter()">Use formatter function for OrderDate col</button> -->
             <igx-grid #grid1
                 width="900px" height="550px"
-                [data]="localData | pagingPipe:page:perPage"
+                [data]="localData"
                 displayDensity="compact"
                 [primaryKey]="'ProductID'"
                 [allowFiltering]="true" [filterMode]="'excelStyleFilter'"
-                [paging]="true" [paginationTemplate]="customPager"
+                [paging]="true"
                 columnSelection="single"
                 (onColumnMovingStart)="onColumnMovingStart($event)"
                 (onColumnMoving)="onColumnMoving($event)"
@@ -32,6 +33,7 @@
                 (onSortingDone)="onSortingDone($event)"
                 (filtering)="onFiltering($event)"
                 (onFilteringDone)="onFilteringDone($event)"
+                (onPagingDone)="onPagingDone($event)"
                 (onColumnPinning)="onColumnPinning($event)"
                 (columnPinned)="columnPinned($event)"
                 (columnVisibilityChanging)="columnVisibilityChanging($event)"
@@ -46,7 +48,7 @@
                         <igx-grid-toolbar-advanced-filtering>Really advanced filtering</igx-grid-toolbar-advanced-filtering>
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
-            
+
                 <igx-column field="ProductID" width="130px" [dataType]="'number'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
                 </igx-column>
                 <igx-column field="ProductName" width="200px" [dataType]="'string'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
@@ -67,7 +69,10 @@
             <div class="logContainer">
                 <div class="highlight">
                     <span>Events execution sequence</span>
-                    <button class="clearBtn" igxButton="flat" (click)="clearLog()"><igx-icon>clear</igx-icon>Clear log</button>
+                    <button class="clearBtn" igxButton="flat" (click)="clearLog()">
+                        <igx-icon>clear</igx-icon>
+                        <span>Clear log</span>
+                    </button>
                 </div>
                 <hr />
                 <div #logger class="logger"></div>
@@ -75,15 +80,3 @@
         </div>
     </div>
 </div>
-
-<ng-template #customPager let-api>
-    <igx-paginator #paginator
-        [totalRecords]="totalCount"
-        [(page)]="page"
-        [(perPage)]="perPage"
-        [selectOptions]="selectOptions"
-        [displayDensity]="grid1.displayDensity"
-        (paging)="paging($event)"
-        (pagingDone)="pagingDone($event)">
-    </igx-paginator>
-</ng-template>
