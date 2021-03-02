@@ -206,7 +206,7 @@ describe('IgxDateRangePicker', () => {
             fixture.detectChanges();
         };
 
-        describe('Single Input', () => {
+        xdescribe('Single Input', () => {
             let singleInputElement: DebugElement;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
@@ -667,7 +667,7 @@ describe('IgxDateRangePicker', () => {
             }));
         });
 
-        describe('Two Inputs', () => {
+        xdescribe('Two Inputs', () => {
             let startInput: DebugElement;
             let endInput: DebugElement;
             configureTestSuite();

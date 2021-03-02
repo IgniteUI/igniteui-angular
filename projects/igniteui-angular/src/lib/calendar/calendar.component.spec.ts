@@ -16,7 +16,7 @@ import { HelperTestFunctions } from './calendar-helper-utils';
 import { IgxCalendarView } from './month-picker-base';
 import { IViewDateChangeEventArgs } from './calendar-base';
 
-describe('IgxCalendar - ', () => {
+xdescribe('IgxCalendar - ', () => {
 
     it('Should create proper calendar model', () => {
         const calendar = new Calendar();
