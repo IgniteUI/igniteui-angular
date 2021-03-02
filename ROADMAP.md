@@ -19,6 +19,10 @@
 
 ## Going down the road
 
+1. Accordion
+2. Scheduler component
+3. Grid Cell Merging
+
 ## Milestone 15 (Due by February, 2021)
 
 1. Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
