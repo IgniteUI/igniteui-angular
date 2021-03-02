@@ -23,6 +23,8 @@
 2. Scheduler component
 3. Grid Cell Merging
 
+# Previous Milestone
+
 ## Milestone 15 (Due by February, 2021)
 
 1. Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
@@ -35,7 +37,6 @@
 8. **[DONE]** Introduce selectRowOnClick property that determines whether a row will be selected on click [#8633](https://github.com/IgniteUI/igniteui-angular/issues/8633)
 9. **[DONE]** Carousel accessibility improvements [#8202](https://github.com/IgniteUI/igniteui-angular/issues/8202)
 10. Datetime or Time in avaliable type of column [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
-
 
 ## Milestone 14 (Released November 11th, 2020)
 
