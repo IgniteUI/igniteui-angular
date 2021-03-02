@@ -12,6 +12,20 @@ import {
     Inject
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
+import { mkenum } from '../../core/utils';
+
+const IgxButtonType = mkenum({
+    Flat: 'flat',
+    Raised: 'raised',
+    Outlined: 'outlined',
+    Icon: 'icon',
+    FAB: 'fab'
+});
+
+/**
+ * Determines the Button type.
+ */
+export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 
 /**
  * The Button directive provides the Ignite UI Button functionality to every component that's intended to be used as a button.
@@ -45,7 +59,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton="flat" [selected]="button.selected"></button>
      * ```
      */
-    @Input() public selected = false;
+    @Input()
+    public selected = false;
 
     /**
      * Called when the button is clicked.
@@ -69,19 +84,20 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @hidden
      * @internal
      */
-    private _type: string;
+    @HostBinding('class.igx-button')
+    public _cssClass = 'igx-button';
 
     /**
      * @hidden
      * @internal
      */
-    private _defaultType = 'flat';
+    public _disabled = false;
 
     /**
      * @hidden
      * @internal
      */
-    private _cssClassPrefix = 'igx-button';
+    private _type: IgxButtonType;
 
     /**
      * @hidden
@@ -101,15 +117,21 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     private _backgroundColor: string;
 
+    constructor(
+        public element: ElementRef,
+        private _renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
+    ) {
+        super(_displayDensityOptions);
+    }
+
     /**
      * @hidden
      * @internal
      */
-    private _disabled: boolean;
-
-    constructor(public element: ElementRef, private _renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(_displayDensityOptions);
+    @HostListener('click', ['$event'])
+    public onClick(ev: MouseEvent) {
+        this.buttonClick.emit(ev);
     }
 
     /**
@@ -128,12 +150,10 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * ```
      */
     @Input('igxButton')
-    public set type(value: string) {
-        const newValue = value ? value : this._defaultType;
-        if (this._type !== newValue) {
-            this._renderer.removeClass(this.nativeElement, `${this._cssClassPrefix}--${this._type}`);
-            this._type = newValue;
-            this._renderer.addClass(this.nativeElement, `${this._cssClassPrefix}--${this._type}`);
+    public set type(type: IgxButtonType) {
+        const t = type ? type : IgxButtonType.Flat;
+        if (this._type !== t) {
+            this._type = t;
         }
     }
 
@@ -142,7 +162,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      * ```html
-     * <button igxButton="gradient" igxButtonColor="blue"></button>
+     * <button igxButton igxButtonColor="orange"></button>
      * ```
      */
     @Input('igxButtonColor')
@@ -156,7 +176,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton="raised" igxButtonBackground="red"></button>
+     * <button igxButton igxButtonBackground="red"></button>
      * ```
      */
     @Input('igxButtonBackground')
@@ -176,7 +196,21 @@ export class IgxButtonDirective extends DisplayDensityBase {
     @Input('igxLabel')
     public set label(value: string) {
         this._label = value || this._label;
-        this._renderer.setAttribute(this.nativeElement, `aria-label`, this._label);
+        this._renderer.setAttribute(this.nativeElement, 'aria-label', this._label);
+    }
+
+    /**
+     * Get the disabled state of the button;
+     *
+     * @example
+     * ```typescript
+     * const disabled = this.button.disabled;
+     * ```
+     */
+    @Input()
+    @HostBinding('class.igx-button--disabled')
+    public get disabled() {
+        return this._disabled;
     }
 
     /**
@@ -187,15 +221,53 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * <button igxButton= "fab" [disabled]="true"></button>
      * ```
      */
-    @Input()
-    public set disabled(val) {
-        val = !!val;
-        this._disabled = val;
-        if (val) {
-            this._renderer.addClass(this.nativeElement, `${this._cssClassPrefix}--disabled`);
-        } else {
-            this._renderer.removeClass(this.nativeElement, `${this._cssClassPrefix}--disabled`);
-        }
+    public set disabled(val: boolean) {
+        this._disabled = !!val;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--flat')
+    public get flat(): boolean {
+        return this._type === IgxButtonType.Flat;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--raised')
+    public get raised(): boolean {
+        return this._type === IgxButtonType.Raised;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--outlined')
+    public get outlined(): boolean {
+        return this._type === IgxButtonType.Outlined;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--icon')
+    public get icon(): boolean {
+        return this._type === IgxButtonType.Icon;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-button--fab')
+    public get fab(): boolean {
+        return this._type === IgxButtonType.FAB;
     }
 
     /**
@@ -203,9 +275,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     @HostBinding('class.igx-button--cosy')
-    public get cssClassCosy(): boolean {
-        return (this._type === 'flat' || this._type === 'raised') &&
-            this.displayDensity === DisplayDensity.cosy;
+    public get cosy(): boolean {
+        return this.displayDensity === DisplayDensity.cosy;
     }
 
     /**
@@ -213,45 +284,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     @HostBinding('class.igx-button--compact')
-    public get cssClassCompact(): boolean {
-        return (this._type === 'flat' || this._type === 'raised') &&
-            this.displayDensity === DisplayDensity.compact;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--outlined-cosy')
-    public get cssClassCosyOutlined(): boolean {
-        return this._type === 'outlined' && this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--outlined-compact')
-    public get cssClassCompactOutlined(): boolean {
-        return this._type === 'outlined' && this.displayDensity === DisplayDensity.compact;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--fab-cosy')
-    public get cssClassCosyFab(): boolean {
-        return this._type === 'fab' && this.displayDensity === DisplayDensity.cosy;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostBinding('class.igx-button--fab-compact')
-    public get cssClassCompactFab(): boolean {
-        return this._type === 'fab' && this.displayDensity === DisplayDensity.compact;
+    public get compact(): boolean {
+        return this.displayDensity === DisplayDensity.compact;
     }
 
     /**
@@ -262,22 +296,14 @@ export class IgxButtonDirective extends DisplayDensityBase {
     public get disabledAttribute() {
         return this._disabled ? this._disabled : null;
     }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('click', ['$event'])
-    public onClick(ev) {
-        this.buttonClick.emit(ev);
-    }
 }
 
 /**
+ *
  * @hidden
  */
 @NgModule({
     declarations: [IgxButtonDirective],
     exports: [IgxButtonDirective]
 })
-export class IgxButtonModule { }
+export class IgxButtonModule {}

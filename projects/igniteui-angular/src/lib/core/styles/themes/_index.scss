@@ -141,17 +141,10 @@
     @if not(index($exclude, 'igx-button')) {
         @include igx-button(igx-button-theme(
             $schema: $schema,
-            $flat-border-radius: $roundness,
-            $raised-border-radius: $roundness,
-            $outlined-border-radius: $roundness,
-            $fab-border-radius: $roundness,
-            $icon-border-radius: $roundness,
-            $raised-resting-shadow: if($elevation == false, none, null),
-            $raised-hover-shadow: if($elevation == false, none, null),
-            $raised-focus-shadow: if($elevation == false, none, null),
-            $fab-resting-shadow: if($elevation == false, none, null),
-            $fab-hover-shadow: if($elevation == false, none, null),
-            $fab-focus-shadow: if($elevation == false, none, null),
+            $border-radius: $roundness,
+            $resting-shadow: if($elevation == false, none, null),
+            $hover-shadow: if($elevation == false, none, null),
+            $focus-shadow: if($elevation == false, none, null),
         ));
     }
 

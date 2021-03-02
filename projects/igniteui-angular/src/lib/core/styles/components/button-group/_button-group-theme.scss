@@ -219,12 +219,8 @@
         z-index: 0;
         transition: $transition;
 
-        &%igx-button--flat {
+        &[igxButton] {
             border-radius: 0;
-        }
-
-        %igx-icon-display {
-            color: currentColor;
         }
 
         &:not(:nth-child(0)) {
@@ -241,21 +237,17 @@
             border-bottom-#{$right}-radius: --var($theme, 'border-radius');
         }
 
-        &%igx-button--disabled {
-            color: --var($theme, 'disabled-text-color') !important;
-            background: --var($theme, 'disabled-background-color') !important;
+        &[igxButton][disabled='true'] {
+            color: --var($theme, 'disabled-text-color');
+            background: --var($theme, 'disabled-background-color');
             border-color: --var($theme, 'item-disabled-border');
         }
 
         &:hover,
         &:focus {
-            %igx-icon-display {
-                color: currentColor;
-            }
-
             color: --var($theme, 'item-hover-text-color');
             background: --var($theme, 'item-hover-background');
-            z-index: 1;
+            z-index: 2;
         }
 
         &:focus {
@@ -305,7 +297,7 @@
             }
         }
 
-        &%igx-button--disabled {
+        &[igxButton][disabled='true'] {
             position: relative;
 
             &::before {
