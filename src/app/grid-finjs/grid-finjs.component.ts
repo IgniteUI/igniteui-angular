@@ -1,5 +1,4 @@
 import {
-    AfterViewInit,
     Component,
     EventEmitter,
     OnDestroy,
@@ -19,7 +18,7 @@ import { LocalService } from '../shared/local.service';
     styleUrls: ['./grid-finjs.component.scss'],
     templateUrl: './grid-finjs.component.html'
 })
-export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
+export class GridFinJSComponent implements OnInit, OnDestroy {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     @Output() public selectedDataChanged = new EventEmitter<any>();
@@ -27,10 +26,10 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() public chartColumnKeyDown = new EventEmitter<any>();
 
     public data = [];
-    public multiCellSelection: { data: any[] } = { data: [] };
     public selectionMode = 'multiple';
     public contracts = Contract;
     public regions = REGIONS;
+    public columnFormat = { digitsInfo: '1.3-3'};
     public showToolbar = true;
     public volume = 1000;
     public frequency = 500;
@@ -63,11 +62,6 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
             strategy: DefaultSortingStrategy.instance()
         }
         ];
-    }
-
-    public ngAfterViewInit() {
-        this.grid.hideGroupedColumns = true;
-        this.grid.reflow();
     }
 
     public ngOnDestroy() {
@@ -128,19 +122,6 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
             }
             ];
         }
-    }
-
-    /** Grid Formatters */
-    public formatNumber(value: number) {
-        return value.toFixed(2);
-    }
-
-    public percentage(value: number) {
-        return value.toFixed(2) + '%';
-    }
-
-    public formatCurrency(value: number) {
-        return '$' + value.toFixed(3);
     }
 
     /** Grid CellStyles and CellClasses */

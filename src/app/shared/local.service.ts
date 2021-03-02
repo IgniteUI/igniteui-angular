@@ -27,4 +27,14 @@ export class LocalService {
     public getFinancialData(count: number = 10) {
         this._records.next(FinancialData.generateData(count));
     }
+
+    public updateAllPriceValues(data) {
+        const newData = FinancialData.updateAllPrices(data);
+        this._records.next(newData);
+    }
+
+    public updateRandomPriceValues(data) {
+        const newData = FinancialData.updateRandomPrices(data);
+        this._records.next(newData);
+    }
 }
