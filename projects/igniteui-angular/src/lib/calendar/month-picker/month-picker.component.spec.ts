@@ -48,7 +48,7 @@ describe('IgxMonthPicker', () => {
         const months = dom.queryAll(By.css('.igx-calendar__month'));
         const current = dom.query(By.css('.igx-calendar__month--current'));
 
-        expect(months.length).toEqual(11);
+        expect(months.length).toEqual(12);
         expect(current.nativeElement.textContent.trim()).toMatch('Feb');
 
         dom.queryAll(By.css('.igx-calendar-picker__date'))[0].nativeElement.click();
@@ -57,7 +57,7 @@ describe('IgxMonthPicker', () => {
         const years = dom.queryAll(By.css('.igx-calendar__year'));
         const currentYear = dom.query(By.css('.igx-calendar__year--current'));
 
-        expect(years.length).toEqual(6);
+        expect(years.length).toEqual(7);
         expect(currentYear.nativeElement.textContent.trim()).toMatch('2019');
     });
 
@@ -144,7 +144,7 @@ describe('IgxMonthPicker', () => {
         monthPicker.formatOptions = formatOptions;
         fixture.detectChanges();
 
-        const march = dom.queryAll(By.css('.igx-calendar__month'))[1];
+        const march = dom.queryAll(By.css('.igx-calendar__month'))[2];
 
         expect(monthPicker.formatOptions).toEqual(jasmine.objectContaining(Object.assign(defaultOptions, formatOptions)));
         expect(monthPicker.formatViews).toEqual(jasmine.objectContaining(Object.assign(defaultViews, formatViews)));
@@ -170,7 +170,7 @@ describe('IgxMonthPicker', () => {
         fixture.detectChanges();
 
         const yearBtn = dom.query(By.css('.igx-calendar-picker__date'));
-        const month = dom.queryAll(By.css('.igx-calendar__month'))[1];
+        const month = dom.queryAll(By.css('.igx-calendar__month'))[2];
 
         expect(yearBtn.nativeElement.textContent.trim()).toMatch('2019');
         expect(month.nativeElement.textContent.trim()).toMatch('Mär');
@@ -187,7 +187,7 @@ describe('IgxMonthPicker', () => {
 
         spyOn(monthPicker.selected, 'emit');
 
-        months[1].nativeElement.click();
+        months[2].nativeElement.click();
         fixture.detectChanges();
 
         const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
@@ -427,7 +427,7 @@ describe('IgxMonthPicker', () => {
         const months = dom.queryAll(By.css('.igx-calendar__month'));
         const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
 
-        expect(months.length).toEqual(11);
+        expect(months.length).toEqual(12);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');
 
         UIInteractions.triggerKeyDownEvtUponElem('Home' , currentMonth.nativeElement );
