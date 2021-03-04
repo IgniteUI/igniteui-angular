@@ -119,7 +119,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public displayedListData: FilterListItem[];
+    public displayedListData: FilterListItem[] = [];
 
     /**
      * @hidden @internal
