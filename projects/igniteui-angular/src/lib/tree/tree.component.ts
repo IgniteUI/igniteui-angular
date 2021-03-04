@@ -108,28 +108,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public collapseAll(nodes: IgxTreeNode<any>[]) { }
 
     /**
-     * Select all nodes if the nodes collection is empty. Otherwise, select the nodes in the nodes collection.
-     *
-     * @example
-     * ```typescript
-     *  const arr = [
-     *      this.tree.nodes.toArray()[0],
-     *      this.tree.nodes.toArray()[1]
-     *  ];
-     *  this.tree.selectAll(arr, true);
-     * ```
-     * @param nodes: IgxTreeNodeComponent<any>[]
-     * @param clearPrevSelection: boolean; if true clears the current selection
-     */
-    public selectAll(nodes?: IgxTreeNodeComponent<any>[], clearPrevSelection = false) {
-        if (nodes) {
-            this.selectionService.selectAllNodes(nodes, clearPrevSelection);
-        } else {
-            this.selectionService.selectAllNodes();
-        }
-    }
-
-    /**
      * Deselect all nodes if the nodes collection is empty. Otherwise, deselect the nodes in the nodes collection.
      *
      * @example
@@ -143,11 +121,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      * @param nodes: IgxTreeNodeComponent<any>[]
      */
     public deselectAll(nodes?: IgxTreeNodeComponent<any>[]) {
-        if (nodes) {
-            this.selectionService.deselectAllNodes(nodes);
-        } else {
-            this.selectionService.deselectAllNodes();
-        }
+        this.selectionService.deselectNodesWithNoEvent(nodes);
+    }
+
+    public isNodeSelected(node: IgxTreeNodeComponent<any>): boolean {
+        return this.selectionService.isNodeSelected(node);
     }
 
     public findNodes<T>(searchTerm: T, comparer?: IgxTreeSearchResolver): IgxTreeNode<T>[] | null {

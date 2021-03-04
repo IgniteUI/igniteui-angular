@@ -19,21 +19,24 @@
     </div>
 </div>
 
-<button igxButton (click)="selectAll()">Select</button>
-<button igxButton (click)="tree1.selection = tree1.selection === 'None' ? 'BiState' : 'None'">
-    {{ tree1.selection}}
-</button>
+<button igxButton (click)="selectSpecific()">Select specific</button>
+<button igxButton (click)="selectAll()">Select all</button>
+<button igxButton (click)="deselectSpecific()">Deselect specific</button>
+<button igxButton (click)="deselectAll()">Deselect all</button>
+<button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
+<button igxButton (click)="changeNodeData()">Change Node Data</button>
+<igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
 
 <div class="row">
     <div class="column tree-container">
         <p>IgxTree</p>
         <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
             [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
-            <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
+            <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
                 {{ node.CompanyName }}
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
+                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
                     {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
+                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
                         {{ leafchild.CompanyName }}
                     </igx-tree-node>
                 </igx-tree-node>
