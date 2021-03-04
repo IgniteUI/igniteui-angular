@@ -53,7 +53,7 @@ const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
-describe('IgxGrid - Filtering Row UI actions #grid', () => {
+xdescribe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
