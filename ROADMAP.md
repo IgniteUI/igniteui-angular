@@ -19,7 +19,7 @@
 
 ## Going down the road
 
-1. Accordion
+1. Accordion component
 2. Scheduler component
 3. Grid Cell Merging
 
