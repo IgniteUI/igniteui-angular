@@ -71,9 +71,6 @@ $_igx-slider-thumbs: 'from' 'to';
         @extend %igx-slider-thumbs-container !optional;
     }
 
-    @include e(thumb, $m: hovered) {
-        @extend %igx-slider-thumb__dot--active !optional;
-    }
 
     @include e(track-steps) {
         @extend %igx-slider-track-steps !optional;
@@ -133,22 +130,22 @@ $_igx-slider-thumbs: 'from' 'to';
         }
     }
 
-    @include b(igx-slider-#{$t}) {
+    @include b(igx-slider-thumb-label-#{$t}) {
         @extend %igx-label-display !optional;
 
-        @include e(label) {
-            @extend %igx-slider__label !optional;
+        @include e(container) {
+            @extend %igx-slider-thumb-label__container !optional;
         }
 
         @include m(pressed) {
-            @include e(label){
-                @extend %igx-slider__label--pressed !optional;
+            @include e(container){
+                @extend %igx-slider-thumb-label__container--pressed !optional;
             }
         }
 
         @include m(active) {
-            @include e(label){
-                @extend %igx-slider__label--active !optional;
+            @include e(container){
+                @extend %igx-slider-thumb-label__container--active !optional;
             }
         }
     }

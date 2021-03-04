@@ -456,7 +456,7 @@
         margin: 0 auto;
     }
 
-    %igx-slider__label {
+    %igx-slider-thumb-label__container {
         position: relative;
         display: flex;
         align-items: center;
@@ -571,11 +571,11 @@
         }
     }
 
-    %igx-slider__label--active {
+    %igx-slider-thumb-label__container--active {
         opacity: 1;
     }
 
-    %igx-slider__label--pressed {
+    %igx-slider-thumb-label__container--pressed {
         z-index: 1;
     }
 }
@@ -597,7 +597,7 @@
     $ticks-label: map-get($categories, 'ticks-label');
     $thumb-label: map-get($categories, 'thumb-label');
 
-    %igx-slider__label {
+    %igx-slider-thumb-label__container {
         @include igx-type-style($type-scale, $thumb-label)
     }
 
