@@ -2031,7 +2031,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(headerChip.length).toBe(1);
         }));
 
-        it('Should commit the input and new chip after focus out and should edit chip without creating new one.', fakeAsync(() => {
+        xit('Should commit the input and new chip after focus out and should edit chip without creating new one.', fakeAsync(() => {
             // Click date filter chip to show filter row.
             const dateFilterCellChip = GridFunctions.getFilterChipsForColumn('ReleaseDate', fix)[0];
             dateFilterCellChip.nativeElement.click();
