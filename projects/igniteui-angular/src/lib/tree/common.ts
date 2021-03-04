@@ -21,7 +21,6 @@ export interface IgxTree {
     nodeCollapsed: EventEmitter<ITreeNodeToggledEventArgs>;
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
-    selectAll(node?: IgxTreeNode<any>[], clearPrevSelection?: boolean): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
     findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
@@ -35,6 +34,7 @@ export interface IgxTreeNode<T> {
     level: number;
     data: T;
     children: QueryList<IgxTreeNode<any>> | null;
+    selectedChange: EventEmitter<boolean>;
 }
 
 // Events
