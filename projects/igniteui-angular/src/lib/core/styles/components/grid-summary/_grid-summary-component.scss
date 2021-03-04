@@ -35,6 +35,11 @@
         @extend %igx-grid-summary--pinned-first !optional;
     }
 
+    // TODO check if we need to implement styling for .igx-grid-summary--empty selector
+    @include m(empty) {
+        @extend %igx-grid-summary--empty !optional;
+    }
+
     @include m(fw) {
         @extend %grid-summary--fixed-width !optional;
     }
