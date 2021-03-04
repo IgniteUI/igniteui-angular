@@ -19,10 +19,10 @@
     </div>
 </div>
 
-<button igxButton (click)="selectAll()">Select</button>
-<button igxButton (click)="tree1.selection = tree1.selection === 'None' ? 'BiState' : 'None'">
-    {{ tree1.selection}}
-</button>
+<button igxButton (click)="selectSpecific()">Select specific</button>
+<button igxButton (click)="selectAll()">Select all</button>
+<button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
+<igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
 
 <div class="row">
     <div class="column tree-container">

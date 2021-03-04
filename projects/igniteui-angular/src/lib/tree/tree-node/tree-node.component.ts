@@ -107,6 +107,13 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.tree.selection !== IGX_TREE_SELECTION_TYPE.None;
     }
 
+    /**
+     * @hidden
+     */
+    public get indeterminate(): boolean {
+        return this.selectionService.isNodeIndeterminate(this);
+    }
+
     public get level(): number {
         return this.parentNode ? this.parentNode.level + 1 : 0;
     }
@@ -118,9 +125,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public set selected(val: boolean) {
         if (val) {
-            this.selectionService.selectNode(this);
+            // this.selectionService.selectNode(this);
+            this.selectionService.selectNodesWithNoEvent([this]);
         } else {
-            this.selectionService.deselectNode(this);
+            // this.selectionService.deselectNode(this);
+            this.selectionService.deselectNodesWithNoEvent([this]);
         }
     }
 

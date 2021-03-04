@@ -15,11 +15,27 @@ export class TreeSampleComponent {
     @ViewChild('tree1', { read: IgxTreeComponent })
     public tree: IgxTreeComponent;
 
+    public selectionModes = [];
+
+    public selectionMode = 'None';
+
     public animationDuration = 400;
 
     public data = HIERARCHICAL_SAMPLE_DATA;
 
     public singleBranchExpand = false;
+
+    constructor(){
+        this.selectionModes = [
+            { label: 'None', selectMode: 'None', selected: this.selectionMode === 'None', togglable: true },
+            { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },
+            { label: 'Cascade', selectMode: 'Cascading', selected: this.selectionMode === 'Cascading', togglable: true }
+        ];
+    }
+
+    public selectCellSelectionMode(args) {
+        this.tree.selection = this.selectionModes[args.index].selectMode;
+    }
 
     public get animationSettings() {
         return {
@@ -36,7 +52,7 @@ export class TreeSampleComponent {
         };
     }
 
-    public selectAll() {
+    public selectSpecific() {
         const arr = [
             this.tree.nodes.toArray()[0],
             this.tree.nodes.toArray()[14],
@@ -44,11 +60,22 @@ export class TreeSampleComponent {
             this.tree.nodes.toArray()[4]
         ];
 
-        this.tree.selectAll(arr, true);
+        this.tree.selectAll(arr);
+    }
+
+    public selectAll() {
+        this.tree.selectAll();
+    }
+
+    public changeNodeSelectionState() {
+        this.tree.nodes.toArray()[8].selected = !this.tree.nodes.toArray()[8].selected;
     }
 
     public nodeSelection(event) {
         console.log(event);
+        if(event.newSelection.find(x => x.id === 'igxTreeNode_1')){
+            //event.newSelection = [...event.newSelection, this.tree.nodes.toArray()[0]];
+        }
     }
 
     public customSearch(term: string) {

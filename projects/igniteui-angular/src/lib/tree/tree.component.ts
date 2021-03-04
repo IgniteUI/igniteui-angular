@@ -121,12 +121,13 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      * @param nodes: IgxTreeNodeComponent<any>[]
      * @param clearPrevSelection: boolean; if true clears the current selection
      */
-    public selectAll(nodes?: IgxTreeNodeComponent<any>[], clearPrevSelection = false) {
-        if (nodes) {
-            this.selectionService.selectAllNodes(nodes, clearPrevSelection);
-        } else {
-            this.selectionService.selectAllNodes();
-        }
+    public selectAll(nodes?: IgxTreeNodeComponent<any>[], clearPrevSelection?: boolean) {
+        // if (nodes) {
+        //     this.selectionService.selectAllNodes(nodes, clearPrevSelection);
+        // } else {
+        //     this.selectionService.selectAllNodes();
+        // }
+        this.selectionService.selectNodesWithNoEvent(nodes, clearPrevSelection);
     }
 
     /**
@@ -148,6 +149,10 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         } else {
             this.selectionService.deselectAllNodes();
         }
+    }
+
+    public isNodeSelected(node: IgxTreeNodeComponent<any>): boolean {
+        return this.selectionService.isNodeSelected(node);
     }
 
     public findNodes<T>(searchTerm: T, comparer?: IgxTreeSearchResolver): IgxTreeNode<T>[] | null {
