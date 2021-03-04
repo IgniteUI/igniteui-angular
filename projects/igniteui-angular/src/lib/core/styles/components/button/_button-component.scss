@@ -21,27 +21,24 @@
 
     // FLAT BUTTON
     @include m(flat) {
-        @extend %igx-button-display !optional;
         @extend %igx-button--flat !optional;
     }
 
     // RAISED BUTTON
     @include m(raised) {
-        @extend %igx-button-display !optional;
         @extend %igx-button--raised !optional;
     }
 
     // OUTLINED BUTTON
     @include m(outlined) {
-        @extend %igx-button-display !optional;
         @extend %igx-button--outlined !optional;
     }
 
-    @include mx(outlined-cosy, outlined) {
+    @include mx(cosy, outlined) {
         @extend %igx-button--outlined-cosy !optional;
     }
 
-    @include mx(outlined-compact, outlined) {
+    @include mx(compact, outlined) {
         @extend %igx-button--outlined-compact !optional;
     }
 
@@ -51,11 +48,11 @@
         @extend %igx-button--fab !optional;
     }
 
-    @include mx(fab-cosy, fab) {
+    @include mx(cosy, fab) {
         @extend %igx-button--fab-cosy !optional;
     }
 
-    @include mx(fab-compact, fab) {
+    @include mx(compact, fab) {
         @extend %igx-button--fab-compact !optional;
     }
 
