@@ -37,7 +37,6 @@
 
     @include e(body-row, 'wrap') {
         @extend %cal-row-display !optional;
-
         @extend %cal-row-display--wrap !optional;
     }
 
@@ -116,6 +115,7 @@
     }
 
     @include e(date, 'special') {
+        @extend %cal-value !optional;
         @extend %cal-value--special !optional;
     }
 
@@ -181,6 +181,7 @@
     }
 
     @include e(month) {
+        @extend %cal-value !optional;
         @extend %cal-value--month !optional;
 
         &:hover,
@@ -190,6 +191,8 @@
     }
 
     @include e(month, 'current') {
+        @extend %cal-value !optional;
+        @extend %cal-value--month !optional;
         @extend %cal-value--month-current !optional;
 
         &:hover,
