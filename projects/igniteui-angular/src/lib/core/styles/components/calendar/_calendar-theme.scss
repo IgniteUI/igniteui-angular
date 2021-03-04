@@ -867,6 +867,7 @@
 
     %cal-value--month-hover {
         color: --var($theme, 'month-hover-text-color');
+        outline-width: 0;
 
         &::after {
             background: --var($theme, 'month-hover-background');
