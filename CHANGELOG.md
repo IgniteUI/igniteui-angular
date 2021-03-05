@@ -1,6 +1,22 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 12.0.0
+
+### Themes:
+- Breaking Changes:
+    - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
+
+## 11.1.1
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 ## 11.1.0
 
 ### New Features
@@ -132,6 +148,16 @@ All notable changes for each version of this project will be documented in this 
         - `onRowExport` to `rowExporting`
         - `onExportEnded` to `exportEnded`
 
+## 11.0.15
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
+
 ## 11.0.4
 
 ### General
@@ -168,6 +194,16 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.15
+
+### New Features
+- `IgxAutocomplete`
+    - Exported the component instance in the template with the name `igxAutocomplete`.
+
+    ```html
+    <input type="text" [igxAutocomplete]="townsPanel" #autocompleteRef="igxAutocomplete"/>
+    ```
 
 ## 10.2.0
 
