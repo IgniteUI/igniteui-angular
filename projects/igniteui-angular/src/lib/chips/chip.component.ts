@@ -79,7 +79,6 @@ let CHIP_ID = 0;
     templateUrl: 'chip.component.html'
 })
 export class IgxChipComponent extends DisplayDensityBase {
-
     /**
      * An @Input property that sets the value of `id` attribute. If not provided it will be automatically generated.
      *
@@ -404,10 +403,17 @@ export class IgxChipComponent extends DisplayDensityBase {
     @HostBinding('attr.class')
     public get hostClass(): string {
         const classes = [this.getComponentDensityClass('igx-chip')];
+
+        // Add the base class first for each density
+        if (!classes.includes('igx-chip')) {
+            classes.unshift('igx-chip');
+        }
+
         classes.push(this.disabled ? 'igx-chip--disabled' : '');
+
         // The custom classes should be at the end.
         classes.push(this.class);
-        return classes.join(' ');
+        return classes.join(' ').toString().trim();
     }
 
     /**
