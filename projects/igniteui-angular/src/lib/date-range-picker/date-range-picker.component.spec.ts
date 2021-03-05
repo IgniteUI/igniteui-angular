@@ -228,7 +228,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
+                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
                 singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
             }));
@@ -690,7 +690,7 @@ describe('IgxDateRangePicker', () => {
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
+                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
             });
 
             const verifyDateRange = () => {
