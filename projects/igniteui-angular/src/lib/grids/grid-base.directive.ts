@@ -5588,6 +5588,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.extractDataFromColumnsSelection(source, formatters, headers);
     }
 
+
+    public combineSelectedCellAndColumnData(columnData: any[], formatters = false, headers = false) {
+        // const source = this.filteredSortedData ? this.filteredSortedData : this.data;
+        const source = this.filteredSortedData;
+        return this.extractDataFromSelection(source, formatters, headers, columnData);
+    }
+
     /**
      * @hidden @internal
      */
@@ -5615,8 +5622,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let result;
 
         if (event.code === 'KeyC' && event.ctrlKey && event.currentTarget.className === 'igx-grid__thead-wrapper') {
-            data = columnData;
-            result = this.prepareCopyData(event, data);
+            if (selectedData.length) {
+                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
+                    this.clipboardOptions.copyHeaders);
+                result = this.prepareCopyData(event, data[0], data[1]);
+            } else {
+                data = columnData;
+                result = this.prepareCopyData(event, data);
+            }
 
             if (isIE()) {
                 (window as any).clipboardData.setData('Text', result);
@@ -5627,19 +5640,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         } else {
             if (selectedColumns.length) {
-                const collection = [];
-                const columnKeys = ExportUtilities.getKeysFromData(columnData);
-                selectedData.forEach(cellValue => {
-                    const cellKey = Object.keys(cellValue);
-                    if (!columnKeys.includes(cellKey[0])) {
-                        collection.push(cellValue);
-                    }
-                });
-                data = [...collection, ...columnData];
+                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
+                    this.clipboardOptions.copyHeaders);
+                result = this.prepareCopyData(event, data[0], data[1]);
             } else {
                 data = selectedData;
+                result = this.prepareCopyData(event, data);
             }
-            result = this.prepareCopyData(event, data);
 
             if (isIE()) {
                 (window as any).clipboardData.setData('Text', result);
@@ -5652,7 +5659,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public prepareCopyData(event, data) {
+    public prepareCopyData(event, data, keys?) {
         const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
@@ -5661,7 +5668,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
-        let result = transformer.prepareData();
+        let result = keys ? transformer.prepareData(keys) : transformer.prepareData();
+        // let result = transformer.prepareData();
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
@@ -6773,10 +6781,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 .sort((a, b) => a.index - b.index);
     }
 
-    protected extractDataFromSelection(source: any[], formatters = false, headers = false): any[] {
+    protected extractDataFromSelection(source: any[], formatters = false, headers = false, columnData?: any[]): any[] {
         let columnsArray: IgxColumnComponent[];
         let record = {};
-        const selectedData = [];
+        let selectedData = [];
+        let keys = [];
+        const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
@@ -6789,6 +6799,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (this.cellSelection === GridSelectionMode.none && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
+        }
+
+        if (columnData) {
+            selectedData = columnData;
         }
 
         // eslint-disable-next-line prefer-const
@@ -6807,15 +6821,40 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                         const value = source[row].ghostRecord ?
                             resolveNestedPath(source[row].recordRef, col.field) : resolveNestedPath(source[row], col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value) : value;
+                        if (columnData) {
+                            record[key] = record[key].concat(row);
+                        }
                     }
                 });
             }
             if (Object.keys(record).length) {
-                selectedData.push(record);
+                if (columnData) {
+                    keys = Object.keys(columnData[0]);
+                    for (const [key, value] of Object.entries(record)) {
+                        if (!keys.includes(key)) {
+                            keys.push(key);
+                        }
+                        let c: any = value;
+                        const rowNumber = c.substr(c.length - 1);
+                        c = c.slice(0, c.length - 1);
+                        record[key] = c;
+                        const mergedObj = Object.assign(selectedData[rowNumber], record);
+                        selectedData[rowNumber] = mergedObj;
+                    }
+                } else {
+                    selectedData.push(record);
+                }
             }
             record = {};
         }
-        return selectedData;
+
+        if (keys.length) {
+            keysAndData.push(selectedData);
+            keysAndData.push(keys);
+            return keysAndData;
+        } else {
+            return selectedData;
+        }
     }
 
     protected getSelectableColumnsAt(index) {
