@@ -125,6 +125,7 @@
     $label-floated-disabled-background: null
 ) {
     $name: 'igx-input-group';
+    $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
     $input-group-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -193,6 +194,7 @@
     @return extend($theme, (
         palette: $palette,
         name: $name,
+        selector: $selector,
 
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
