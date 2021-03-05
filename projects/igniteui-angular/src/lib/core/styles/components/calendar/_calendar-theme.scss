@@ -128,6 +128,7 @@
     $week-number-background: null,
 ) {
     $name: 'igx-calendar';
+    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
     $calendar-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -269,6 +270,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,

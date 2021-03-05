@@ -88,6 +88,7 @@
     $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
+    $selector: 'igx-chip, .igx-chip__ghost';
     $chip-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -197,6 +198,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         border-radius: $border-radius,
 
