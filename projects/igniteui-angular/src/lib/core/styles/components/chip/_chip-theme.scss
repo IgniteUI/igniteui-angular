@@ -418,7 +418,7 @@
         + [igxPrefix] {
             margin-#{$left}: rem(4px);
 
-            &%igx-avatar-display {
+            igx-avatar {
                 max-height: 100%;
                 max-width: 100%;
                 margin-#{$left}: $chip-avatar-inset!important;
