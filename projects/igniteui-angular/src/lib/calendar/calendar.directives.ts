@@ -39,6 +39,12 @@ export class IgxCalendarYearDirective {
     @Output()
     public yearSelection = new EventEmitter<Date>();
 
+    @HostBinding('class.igx-calendar__year')
+    public get defaultCSS(): boolean {
+        return !this.isCurrentYear;
+    }
+
+
     @HostBinding('class.igx-calendar__year--current')
     public get currentCSS(): boolean {
         return this.isCurrentYear;
@@ -92,6 +98,12 @@ export class IgxCalendarMonthDirective {
 
     @Output()
     public monthSelection = new EventEmitter<Date>();
+
+    @HostBinding('class.igx-calendar__month')
+    public get defaultCSS(): boolean {
+        return !this.isCurrentMonth;
+    }
+
 
     @HostBinding('class.igx-calendar__month--current')
     public get currentCSS(): boolean {
