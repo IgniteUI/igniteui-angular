@@ -5,79 +5,110 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-
-/// Generates a dark button schema.
 /// @type {Map}
-/// @prop {Map} flat-hover-background [igx-color: ('secondary', 500), rgba: .12 ] - The hover background color of a flat button.
-/// @prop {Map} flat-focus-background [igx-color: ('secondary', 400), rgba: .24] - The focus background color of a flat button.
-/// @prop {Map} icon-hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
-/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of raised, fab, or icon buttons.
+/// @prop {Map} disabled-background [igx-color: ('grays', 200)] - The disabled background color of the button.
+/// @requires {Map} $_material-base-button
 /// @requires {function} extend
-/// @requires $_light-button
-/// @see $default-palette
-$_dark-button: extend(
-    $_light-button,
+$_material-base-button-dark: extend(
+    $_material-base-button,
     (
-        flat-hover-background: (
-            igx-color: ('secondary', 500),
-            rgba: .12
-        ),
-
-        flat-focus-background: (
-            igx-color: ('secondary', 400),
-            rgba: .24
-        ),
-
-        icon-hover-background: (
-            igx-color: ('grays', 300)
-        ),
-
         disabled-background: (
             igx-color: ('grays', 200)
         )
     )
 );
 
-/// Generates a dark fluent button schema.
 /// @type {Map}
-/// @prop {Map} flat-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button.
-/// @prop {Map} flat-hover-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button on hover.
-/// @prop {Map} flat-focus-icon-color [igx-color: ('primary', 200)] - The icon color of a flat button on focus.
-/// @prop {Map} flat-hover-text-color [igx-color: ('primary', 200)] - The text color of a flat button on hover.
+/// @prop {Map} hover-background [igx-color: ('secondary', 500), rgba: .12 ] - The hover background color of a flat button.
+/// @prop {Map} focus-background [igx-color: ('secondary', 400), rgba: .24] - The focus background color of a flat button.
+/// @requires {Map} $_material-base-button-dark
+/// @requires {Map} $_material-flat-button
 /// @requires {function} extend
-/// @requires $_fluent-button
-$_dark-fluent-button: extend(
-    $_fluent-button,
+$_material-flat-button-dark: extend(
+    $_material-base-button-dark,
+    $_material-flat-button,
     (
-        flat-icon-color:  (
-            igx-color: ('primary', 200)
+        hover-background: (
+            igx-color: ('secondary', 500),
+            rgba: .12
         ),
 
-        flat-hover-icon-color:  (
-            igx-color: ('primary', 200)
+        focus-background: (
+            igx-color: ('secondary', 400),
+            rgba: .24
         ),
+    )
+);
 
-        flat-focus-icon-color:  (
-            igx-color: ('primary', 200)
+/// @type {Map}
+/// @prop {Map} hover-background [igx-color: ('grays', 300)] - The hover background color of an icon button.
+/// @requires {Map} $_material-base-button-dark
+/// @requires {Map} $_material-icon-button
+/// @requires {function} extend
+$_material-icon-button-dark: extend(
+    $_material-base-button-dark,
+    $_material-icon-button,
+    (
+        hover-background: (
+            igx-color: ('grays', 300)
         ),
+    )
+);
 
-        flat-hover-text-color: (
+/// Generates a dark material button schema.
+/// @type {Map}
+/// @requires {Map} $_material-flat-button-dark
+/// @requires {Map} $_material-outlined-button
+/// @requires {Map} $_material-raised-button
+/// @requires {Map} $_material-fab-button
+/// @requires {Map} $_material-icon-button-dark
+/// @see $dark-material-palette
+$_dark-button: (
+    flat: $_material-flat-button-dark,
+    outlined: $_material-outlined-button,
+    raised: $_material-raised-button,
+    fab: $_material-fab-button,
+    icon: $_material-icon-button-dark,
+);
+
+/// @prop {Map} hover-foreground [igx-color: ('primary', 200)] - The text color of a flat button on hover.
+/// @requires {Map} $_fluent-flat-button
+/// @requires {function} extend
+$_fluent-flat-button-dark: extend(
+    $_fluent-flat-button,
+    (
+        hover-foreground: (
             igx-color: ('primary', 200)
         ),
     )
 );
 
-/// Generates a dark bootstrap button schema.
+/// Generates a dark fluent button schema.
 /// @type {Map}
-/// @prop {Map} disabled-color [igx-color: ('primary', 900)] - The disabled text/icon color of a button.
-/// @prop {Map} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of raised, fab, or icon buttons.
-/// @prop {Map} outlined-disabled-outline-color [igx-color: ('primary', 900), darken: 5%] - The border color of an outlined button.
+/// @requires {Map} $_fluent-flat-button-dark
+/// @requires {Map} $_fluent-outlined-button
+/// @requires {Map} $_fluent-raised-button
+/// @requires {Map} $_fluent-fab-button
+/// @requires {Map} $_fluent-icon-button
+/// @see $dark-fluent-word-palette
+/// @see $dark-fluent-excel-palette
+$_dark-fluent-button: (
+    flat: $_fluent-flat-button-dark,
+    outlined: $_fluent-outlined-button,
+    raised: $_fluent-raised-button,
+    fab: $_fluent-fab-button,
+    icon: $_fluent-icon-button,
+);
+
+/// @type {Map}
+/// @prop {Color} disabled-foreground [igx-color: ('primary', 900)] - The disabled foreground color of the button.
+/// @prop {Color} disabled-background [igx-color: ('primary', 900), darken: 5%] - The disabled background color of the button.
+/// @requires {Map} $_bootstrap-base-button
 /// @requires {function} extend
-/// @requires $_bootstrap-button
-$_dark-bootstrap-button: extend(
-    $_bootstrap-button,
+$_bootstrap-base-button-dark: extend(
+    $_bootstrap-base-button,
     (
-        disabled-color: (
+        disabled-foreground: (
             igx-color: ('primary', 900),
         ),
 
@@ -85,20 +116,42 @@ $_dark-bootstrap-button: extend(
             igx-color: ('primary', 900),
             darken: 5%
         ),
+    )
+);
 
-        outlined-disabled-outline-color: (
+/// @type {Map}
+/// @prop {Map} disabled-border-color [igx-color: ('primary', 900), darken: 5%] - The disabled border color of the button.
+/// @requires {Map} $_bootstrap-base-button-dark
+/// @requires {Map} $_bootstrap-outlined-button
+/// @requires {function} extend
+$_bootstrap-outlined-button-dark: extend(
+    $_bootstrap-base-button-dark,
+    $_bootstrap-outlined-button,
+    (
+        disabled-border-color: (
             igx-color: ('primary', 900),
             darken: 5%
         ),
     )
 );
 
-/// Generates a dark indigo button schema.
+/// Generates a dark bootstrap button schema.
 /// @type {Map}
-///
-/// @requires {function} extend
-/// @requires $_indigo-button
-$_dark-indigo-button: extend(
-    $_indigo-button
+/// @requires {Map} $_bootstrap-flat-button
+/// @requires {Map} $_bootstrap-outlined-button
+/// @requires {Map} $_bootstrap-raised-button
+/// @requires {Map} $_bootstrap-fab-button
+/// @requires {Map} $_bootstrap-icon-button
+/// @see $dark-bootstrap-palette
+$_dark-bootstrap-button: (
+    flat: $_bootstrap-flat-button,
+    outlined: $_bootstrap-outlined-button-dark,
+    raised: $_bootstrap-raised-button,
+    fab: $_bootstrap-fab-button,
+    icon: $_bootstrap-icon-button,
 );
 
+/// Generates a dark indigo button schema.
+/// @type {Map}
+/// @requires $_indigo-button
+$_dark-indigo-button: $_indigo-button;
