@@ -15,12 +15,7 @@
         @extend %igx-group-item !optional;
     }
 
-    @include e(button-text) {
-        @extend %igx-button-group__button-text !optional;
-    }
-
     @include e(item, $m: selected) {
-        @extend %igx-group-item !optional;
         @extend %igx-group-item-selected !optional;
     }
 
@@ -28,19 +23,15 @@
         @extend %igx-group-item-content !optional;
     }
 
-    @include m(vertical) {
+    @include e(button-text) {
+        @extend %igx-button-group__button-text !optional;
+    }
 
-        @extend %igx-group-display !optional;
+    @include m(vertical) {
         @extend %igx-group-vertical !optional;
 
         @include e(item) {
-            @extend %igx-group-item !optional;
             @extend %igx-group-item-vertical !optional;
-        }
-
-        @include e(item, $m: selected) {
-            @extend %igx-group-item !optional;
-            @extend %igx-group-item-selected !optional;
         }
     }
 }
