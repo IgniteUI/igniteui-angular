@@ -6822,7 +6822,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                             resolveNestedPath(source[row].recordRef, col.field) : resolveNestedPath(source[row], col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value) : value;
                         if (columnData) {
-                            record[key] = record[key].concat(row);
+                            record[key] = record[key].concat('recordRow-' + row);
                         }
                     }
                 });
@@ -6835,8 +6835,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                             keys.push(key);
                         }
                         let c: any = value;
-                        const rowNumber = c.substr(c.length - 1);
-                        c = c.slice(0, c.length - 1);
+                        const rowNumber = +c.split('recordRow-')[1];
+                        c = c.split('recordRow-')[0];
                         record[key] = c;
                         const mergedObj = Object.assign(selectedData[rowNumber], record);
                         selectedData[rowNumber] = mergedObj;
