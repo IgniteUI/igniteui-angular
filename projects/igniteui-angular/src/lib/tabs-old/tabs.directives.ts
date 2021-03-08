@@ -3,7 +3,7 @@ import {
     HostBinding,
     TemplateRef
 } from '@angular/core';
-import { IgxTabsBase } from './tabs.common';
+import { IgxTabsBaseOld } from './tabs.common';
 
 enum TabScrollButtonStyle {
     Visible = 'visible',
@@ -16,7 +16,7 @@ enum TabScrollButtonStyle {
 })
 
 export class IgxRightButtonStyleDirective {
-    constructor(public tabs: IgxTabsBase) {
+    constructor(public tabs: IgxTabsBaseOld) {
     }
 
     @HostBinding('class.igx-tabs__header-button')
@@ -67,7 +67,7 @@ export class IgxRightButtonStyleDirective {
 })
 
 export class IgxLeftButtonStyleDirective {
-    constructor(public tabs: IgxTabsBase) {
+    constructor(public tabs: IgxTabsBaseOld) {
     }
 
     @HostBinding('class.igx-tabs__header-button')

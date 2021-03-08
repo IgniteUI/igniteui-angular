@@ -1,14 +1,14 @@
 import { QueryList, TemplateRef } from '@angular/core';
 
 /** @hidden */
-export abstract class IgxTabsBaseNew {
-    public items: QueryList<IgxTabItemNewBase>;
+export abstract class IgxTabsBase {
+    public items: QueryList<IgxTabItemBase>;
     public selectedIndex: number;
-    public abstract selectTab(tab: IgxTabItemNewBase, selected: boolean);
+    public abstract selectTab(tab: IgxTabItemBase, selected: boolean);
 }
 
 /** @hidden */
-export abstract class IgxTabItemNewBase {
+export abstract class IgxTabItemBase {
     public disabled: boolean;
     public selected: boolean;
     public headerTemplate: TemplateRef<any>;
@@ -16,11 +16,11 @@ export abstract class IgxTabItemNewBase {
 }
 
 /** @hidden */
-export abstract class IgxTabHeaderNewBase {
+export abstract class IgxTabHeaderBase {
 }
 
 /** @hidden */
-export abstract class IgxTabPanelNewBase {
+export abstract class IgxTabPanelBase {
     public nativeElement: HTMLElement;
 }
 

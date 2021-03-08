@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { IgxTabsBaseNew } from '../tabs-base';
+import { IgxTabsBase } from '../tabs-base';
 import { IgxTabsDirective } from '../tabs.directive';
 
 @Component({
@@ -11,7 +11,7 @@ import { IgxTabsDirective } from '../tabs.directive';
             height: 100%;
         }`
     ],
-    providers: [{ provide: IgxTabsBaseNew, useExisting: IgxTabsComponent }]
+    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
 })
 export class IgxTabsComponent extends IgxTabsDirective {
     /** @hidden */

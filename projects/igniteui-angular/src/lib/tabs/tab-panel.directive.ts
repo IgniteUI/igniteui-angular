@@ -1,9 +1,9 @@
 import { Directive, ElementRef } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelNewBase } from './tabs-base';
+import { IgxTabPanelBase } from './tabs-base';
 
 @Directive()
-export abstract class IgxTabPanelDirective implements IgxTabPanelNewBase {
+export abstract class IgxTabPanelDirective implements IgxTabPanelBase {
     /** @hidden */
     constructor(public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }

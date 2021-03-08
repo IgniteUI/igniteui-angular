@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IgxTabPanelDirective } from '../tab-panel.directive';
-import { IgxTabPanelNewBase } from '../tabs-base';
+import { IgxTabPanelBase } from '../tabs-base';
 
 @Component({
     selector: 'igx-bottom-nav-panel',
@@ -16,7 +16,7 @@ import { IgxTabPanelNewBase } from '../tabs-base';
             bottom: 0;
         }`
     ],
-    providers: [{ provide: IgxTabPanelNewBase, useExisting: IgxBottomNavPanelComponent }]
+    providers: [{ provide: IgxTabPanelBase, useExisting: IgxBottomNavPanelComponent }]
 })
 export class IgxBottomNavPanelComponent extends IgxTabPanelDirective {
 

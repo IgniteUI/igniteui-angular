@@ -10,7 +10,7 @@ import {
 
 import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
-import { IgxTabsBase, IgxTabsGroupBase } from './tabs.common';
+import { IgxTabsBaseOld, IgxTabsGroupBase } from './tabs.common';
 
 @Component({
     selector: 'igx-tabs-group',
@@ -98,7 +98,7 @@ export class IgxTabsGroupComponent extends IgxTabsGroupBase implements AfterCont
     private _tabTemplate: TemplateRef<any>;
     private _isSelected = false;
 
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef) {
+    constructor(private _tabs: IgxTabsBaseOld, private _element: ElementRef) {
         super();
     }
 

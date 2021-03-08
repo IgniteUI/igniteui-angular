@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { KEYS } from '../core/utils';
 import { IgxTabsGroupComponent } from './tabs-group.component';
-import { IgxTabItemBase, IgxTabsBase } from './tabs.common';
+import { IgxTabItemBaseOld, IgxTabsBaseOld } from './tabs.common';
 import { IgxTabItemTemplateDirective } from './tabs.directives';
 import ResizeObserver from 'resize-observer-polyfill';
 
@@ -22,7 +22,7 @@ import ResizeObserver from 'resize-observer-polyfill';
     templateUrl: 'tab-item.component.html'
 })
 
-export class IgxTabItemOldComponent extends IgxTabItemBase implements AfterViewInit, OnDestroy {
+export class IgxTabItemOldComponent extends IgxTabItemBaseOld implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      * Set to true when the tab item is automatically generated from the IgxTabsComponent when tab groups are defined.
@@ -123,7 +123,7 @@ export class IgxTabItemOldComponent extends IgxTabItemBase implements AfterViewI
     private _disabled = false;
     private _resizeObserver: ResizeObserver;
 
-    constructor(private _tabs: IgxTabsBase, private _element: ElementRef, private _ngZone: NgZone) {
+    constructor(private _tabs: IgxTabsBaseOld, private _element: ElementRef, private _ngZone: NgZone) {
         super();
         this._nativeTabItem = _element;
     }

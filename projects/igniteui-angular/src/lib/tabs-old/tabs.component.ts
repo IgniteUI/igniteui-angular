@@ -23,7 +23,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
 import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
-import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
+import { IgxTabsBaseOld, IgxTabItemBaseOld } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
 import { mkenum, PlatformUtil } from '../core/utils';
 
@@ -38,10 +38,10 @@ let NEXT_TABS_ID = 0;
 @Component({
     selector: 'igx-tabs-old',
     templateUrl: 'tabs.component.html',
-    providers: [{ provide: IgxTabsBase, useExisting: IgxTabsOldComponent }]
+    providers: [{ provide: IgxTabsBaseOld, useExisting: IgxTabsOldComponent }]
 })
 
-export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
+export class IgxTabsOldComponent implements IgxTabsBaseOld, AfterViewInit, OnDestroy {
     /**
      * Provides an observable collection of all `IgxTabsGroupComponent`s.
      * ```typescript
@@ -381,7 +381,7 @@ export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestro
     /**
      * @hidden
      */
-    public performSelectionChange(newTab: IgxTabItemBase): void {
+    public performSelectionChange(newTab: IgxTabItemBaseOld): void {
         const oldTab = this.selectedTabItem;
         if (oldTab) {
             this.performDeselection(oldTab);
@@ -413,7 +413,7 @@ export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestro
      * @hidden
      */
     // animation for the new panel/group (not needed for tab only mode)
-    public transformContentAnimation(tab: IgxTabItemBase, duration: number): void {
+    public transformContentAnimation(tab: IgxTabItemBaseOld, duration: number): void {
         const contentOffset = this.tabsContainer.nativeElement.offsetWidth * tab.index;
         this.contentsContainer.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
         this.contentsContainer.nativeElement.style.transform = `translate(${-contentOffset}px)`;
@@ -491,7 +491,7 @@ export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestro
         }
     }
 
-    private performDeselection(oldTab: IgxTabItemBase): void {
+    private performDeselection(oldTab: IgxTabItemBaseOld): void {
         oldTab.setSelectedInternal(false);
         const oldTabRelatedGroup = this.groups.toArray()[oldTab.index];
         if (oldTabRelatedGroup) {
@@ -501,7 +501,7 @@ export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestro
         this.tabItemDeselected.emit({ tab: oldTab, group: oldTabRelatedGroup });
     }
 
-    private performSelection(newTab: IgxTabItemBase): void {
+    private performSelection(newTab: IgxTabItemBaseOld): void {
         newTab.setSelectedInternal(true);
         this._selectedIndex = newTab.index;
 
@@ -528,7 +528,7 @@ export class IgxTabsOldComponent implements IgxTabsBase, AfterViewInit, OnDestro
         });
     }
 
-    private bringNewTabIntoView(newTab: IgxTabItemBase): void {
+    private bringNewTabIntoView(newTab: IgxTabItemBaseOld): void {
         const tabNativeElement = newTab.nativeTabItem.nativeElement;
 
         // Scroll left if there is need

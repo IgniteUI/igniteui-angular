@@ -3,7 +3,7 @@ import { AfterViewInit, ContentChildren, Directive, EventEmitter, Input, Output,
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelNewBase, IgxTabsBaseNew } from './tabs-base';
+import { IgxTabPanelBase, IgxTabsBase } from './tabs-base';
 
 export interface ITabsBaseEventArgs extends IBaseEventArgs {
     readonly owner: IgxTabsDirective;
@@ -21,7 +21,7 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 }
 
 @Directive()
-export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBaseNew, AfterViewInit {
+export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit {
 
     @Input()
     public get selectedIndex(): number {
@@ -79,8 +79,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     /** @hidden */
-    @ContentChildren(IgxTabPanelNewBase, { descendants: true })
-    public panels: QueryList<IgxTabPanelNewBase>;
+    @ContentChildren(IgxTabPanelBase, { descendants: true })
+    public panels: QueryList<IgxTabPanelBase>;
 
     protected currentSlide: IgxTabItemDirective;
     protected previousSlide: IgxTabItemDirective;
