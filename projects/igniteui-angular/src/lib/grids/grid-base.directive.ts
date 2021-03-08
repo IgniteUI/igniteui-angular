@@ -6822,6 +6822,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                             resolveNestedPath(source[row].recordRef, col.field) : resolveNestedPath(source[row], col.field);
                         record[key] = formatters && col.formatter ? col.formatter(value) : value;
                         if (columnData) {
+                            if (!record[key]) {
+                                record[key] = '';
+                            }
                             record[key] = record[key].concat('recordRow-' + row);
                         }
                     }
