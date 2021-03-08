@@ -1,11 +1,1 @@
-<div #contentDiv>
-    <ng-content></ng-content>
-</div>
-
-<ng-container *ngIf="contentDiv.children.length === 0">
-    <div *ngIf="icon" class="igx-tabs__header-menu-item-icon">
-        <igx-icon fontSet="material">{{icon}}</igx-icon>
-    </div>
-    <div *ngIf="label" class="igx-tabs__item-label">{{label}}</div>
-</ng-container>
-
+<ng-content></ng-content>

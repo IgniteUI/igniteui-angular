@@ -59,7 +59,10 @@
 
             <igx-bottom-nav>
                 <igx-bottom-nav-item>
-                    <igx-bottom-nav-header [label]="'Tab1'" [icon]="'phone'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                        <span igxBottomNavHeaderLabel>Tab 1</span>
+                    </igx-bottom-nav-header>
                     <igx-bottom-nav-panel>
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item [isHeader]="true">History</igx-list-item>
@@ -75,7 +78,10 @@
                 </igx-bottom-nav-item>
 
                 <igx-bottom-nav-item>
-                    <igx-bottom-nav-header [label]="'Tab 2'"></igx-bottom-nav-header>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                        <span igxBottomNavHeaderLabel>Tab 1</span>
+                    </igx-bottom-nav-header>
                     <igx-bottom-nav-panel>
                         Content 2
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.

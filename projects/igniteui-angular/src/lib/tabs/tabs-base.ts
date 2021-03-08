@@ -17,8 +17,6 @@ export abstract class IgxTabItemNewBase {
 
 /** @hidden */
 export abstract class IgxTabHeaderNewBase {
-    public label: string;
-    public icon: string;
 }
 
 /** @hidden */

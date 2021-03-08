@@ -10,7 +10,10 @@
             (selectedItemChange)="tabsSelectedItemChange($event)"
         >
             <igx-tab-item>
-                <igx-tab-header [label]="'Tab 1'" [icon]="'folder'"></igx-tab-header>
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>Tab 1</span>
+                </igx-tab-header>
                 <igx-tab-panel>
                     Content 1
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
@@ -18,7 +21,10 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header [label]="'Tab 2'" [icon]="'folder'"></igx-tab-header>
+                <igx-tab-header>
+                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                    <span igxTabHeaderLabel>Tab 2</span>
+                </igx-tab-header>
                 <igx-tab-panel>
                     <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                         <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
@@ -33,7 +39,9 @@
             </igx-tab-item>
 
             <igx-tab-item>
-                <igx-tab-header [label]="'Tab 3'"></igx-tab-header>
+                <igx-tab-header>
+                    Tab 3
+                </igx-tab-header>
                 <igx-tab-panel>
                     Content 3
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
