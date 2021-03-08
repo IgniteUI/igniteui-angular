@@ -4,7 +4,9 @@ import {
     OnDestroy, Input, Inject, ViewChild, TemplateRef, AfterViewInit, QueryList, ContentChildren, Optional, SkipSelf,
     HostBinding,
     ElementRef,
-    ChangeDetectorRef
+    ChangeDetectorRef,
+    Output,
+    EventEmitter
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -56,6 +58,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     @Input()
     public expandIndicator: TemplateRef<any>;
+
+    @Output()
+    public selectedChange = new EventEmitter<boolean>();
 
     // TODO: bind to active state when keynav is implemented
     @HostBinding('class.igx-tree-node--active')
@@ -125,10 +130,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public set selected(val: boolean) {
         if (val) {
-            // this.selectionService.selectNode(this);
             this.selectionService.selectNodesWithNoEvent([this]);
         } else {
-            // this.selectionService.deselectNode(this);
             this.selectionService.deselectNodesWithNoEvent([this]);
         }
     }

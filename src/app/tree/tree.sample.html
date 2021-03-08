@@ -21,6 +21,8 @@
 
 <button igxButton (click)="selectSpecific()">Select specific</button>
 <button igxButton (click)="selectAll()">Select all</button>
+<button igxButton (click)="deselectSpecific()">Deselect specific</button>
+<button igxButton (click)="deselectAll()">Deselect all</button>
 <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
 <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
 

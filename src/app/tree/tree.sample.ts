@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { growVerIn, growVerOut } from 'igniteui-angular';
 import { IgxTreeSearchResolver } from 'projects/igniteui-angular/src/lib/tree/common';
 import { IgxTreeNodeComponent } from 'projects/igniteui-angular/src/lib/tree/tree-node/tree-node.component';
@@ -11,7 +11,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss']
 })
-export class TreeSampleComponent {
+export class TreeSampleComponent implements AfterViewInit {
     @ViewChild('tree1', { read: IgxTreeComponent })
     public tree: IgxTreeComponent;
 
@@ -25,12 +25,19 @@ export class TreeSampleComponent {
 
     public singleBranchExpand = false;
 
-    constructor(){
+    constructor() {
         this.selectionModes = [
             { label: 'None', selectMode: 'None', selected: this.selectionMode === 'None', togglable: true },
             { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },
             { label: 'Cascade', selectMode: 'Cascading', selected: this.selectionMode === 'Cascading', togglable: true }
         ];
+    }
+    public ngAfterViewInit() {
+        this.tree.nodes.toArray().forEach(node => {
+            node.selectedChange.subscribe((ev) => {
+                console.log(ev);
+            });
+        });
     }
 
     public selectCellSelectionMode(args) {
@@ -53,18 +60,27 @@ export class TreeSampleComponent {
     }
 
     public selectSpecific() {
+        this.tree.nodes.toArray()[0].selected = true;
+        this.tree.nodes.toArray()[14].selected = true;
+        this.tree.nodes.toArray()[1].selected = true;
+        this.tree.nodes.toArray()[4].selected = true;
+    }
+
+    public selectAll() {
+        this.tree.nodes.toArray().forEach(node => node.selected = true);
+    }
+
+    public deselectSpecific(){
         const arr = [
             this.tree.nodes.toArray()[0],
             this.tree.nodes.toArray()[14],
             this.tree.nodes.toArray()[1],
             this.tree.nodes.toArray()[4]
         ];
-
-        this.tree.selectAll(arr);
+        this.tree.deselectAll(arr);
     }
-
-    public selectAll() {
-        this.tree.selectAll();
+    public deselectAll() {
+        this.tree.deselectAll();
     }
 
     public changeNodeSelectionState() {
@@ -73,7 +89,7 @@ export class TreeSampleComponent {
 
     public nodeSelection(event) {
         console.log(event);
-        if(event.newSelection.find(x => x.id === 'igxTreeNode_1')){
+        if (event.newSelection.find(x => x.id === 'igxTreeNode_1')) {
             //event.newSelection = [...event.newSelection, this.tree.nodes.toArray()[0]];
         }
     }
