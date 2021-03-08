@@ -3,7 +3,7 @@ import { AfterViewInit, ContentChildren, Directive, EventEmitter, Input, Output,
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelBase, IgxTabsBase } from './tabs-base';
+import { IgxTabPanelBase, IgxTabsBase } from './tabs.base';
 
 export interface ITabsBaseEventArgs extends IBaseEventArgs {
     readonly owner: IgxTabsDirective;

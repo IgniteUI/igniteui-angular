@@ -1,6 +1,6 @@
 import { Directive, ElementRef } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelBase } from './tabs-base';
+import { IgxTabPanelBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabPanelDirective implements IgxTabPanelBase {

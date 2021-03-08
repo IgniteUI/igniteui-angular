@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IgxTabPanelDirective } from '../tab-panel.directive';
-import { IgxTabPanelBase } from '../tabs-base';
+import { IgxTabPanelBase } from '../tabs.base';
 
 @Component({
     selector: 'igx-tab-panel',

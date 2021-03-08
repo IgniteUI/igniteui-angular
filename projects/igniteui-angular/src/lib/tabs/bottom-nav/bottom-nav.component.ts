@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IgxTabsBase } from '../tabs-base';
+import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 
 @Component({

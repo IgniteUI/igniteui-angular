@@ -1,7 +1,7 @@
 
 import { Directive, HostListener } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabHeaderBase, IgxTabsBase } from './tabs-base';
+import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
