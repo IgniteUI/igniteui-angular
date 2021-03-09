@@ -622,7 +622,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[1].width).toEqual('195px');
         }));
 
-        fit('should autoresize templated column on double click.', fakeAsync(() => {
+        it('should autoresize templated column on double click.', fakeAsync(() => {
             grid.onColumnResized.subscribe(event => {
                 console.log('event.newWidth is: ' + event.newWidth);
                 console.log('event.column.width is: ' + event.column.width);
@@ -678,7 +678,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
 
-        fit('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
             const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
 
