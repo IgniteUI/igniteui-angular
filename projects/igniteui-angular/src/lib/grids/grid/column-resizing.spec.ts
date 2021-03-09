@@ -12,6 +12,7 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { getNodeSizeViaRange } from '../../core/utils';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
@@ -621,13 +622,13 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[1].width).toEqual('195px');
         }));
 
-        it('should autoresize templated column on double click.', fakeAsync(() => {
+        fit('should autoresize templated column on double click.', fakeAsync(() => {
             grid.onColumnResized.subscribe(event => {
                 console.log('event.newWidth is: ' + event.newWidth);
                 console.log('event.column.width is: ' + event.column.width);
                 console.log('event.column.grid.columns[5].field is: ' + event.column.grid.columns[5].field);
                 console.log('event.column.grid.columns[5].width is: ' + event.column.grid.columns[5].width);
-                expect(event.column.width).toEqual(event.newWidth);
+                expect(event.column.width).toEqual('89px');
                 expect(event.column.grid.columns[5].field).toEqual(event.column.field);
             });
             const headers = GridFunctions.getColumnHeaders(fixture);
@@ -677,16 +678,27 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
 
-        it('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        fit('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
             const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
-            let autoSize = column.getAutoSize();
-            console.log('autoSize is: ' + autoSize);
+
+            const range = grid.document.createRange();
+            const headerWidth = Math.max(...Array.from(column.headerCell.elementRef.nativeElement.children[0].children)
+                .map((child) => getNodeSizeViaRange(range, child)));
+            const headerStyle = grid.document.defaultView.getComputedStyle(column.headerCell.elementRef.nativeElement);
+            const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
+                parseFloat(headerStyle.borderRightWidth);
+
+            const headerGroupStyle = grid.document.defaultView.getComputedStyle(column.headerGroup.element.nativeElement);
+            const borderSize = parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth);
+            const headerCellWidths = { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
+            let width: any = Math.ceil(headerCellWidths.width + headerCellWidths.padding);
+            width = width + 'px';
+
             column.autosize();
             fixture.detectChanges();
-            autoSize = column.getAutoSize();
             console.log('column.width: ' + column.width);
-            console.log('autoSize is: ' + autoSize);
+            console.log('autoSize is: ' + width);
             expect(column.width).toEqual('89px');
         }));
     });
