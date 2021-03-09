@@ -61,6 +61,15 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
     }
 
+    @Input()
+    public get disableAnimation() {
+        return this._disableAnimation;
+    }
+
+    public set disableAnimation(value: boolean) {
+        this._disableAnimation = value;
+    }
+
     @Output()
     public selectedIndexChange = new EventEmitter<number>();
 
@@ -82,6 +91,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     @ContentChildren(IgxTabPanelBase, { descendants: true })
     public panels: QueryList<IgxTabPanelBase>;
 
+    protected _disableAnimation = false;
     protected currentSlide: IgxTabItemDirective;
     protected previousSlide: IgxTabItemDirective;
 
@@ -173,6 +183,10 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
+        if (this.disableAnimation) {
+            return;
+        }
+
         if (this.hasPanels && this._selectedIndex >= 0) {
             const slide = this.items.toArray()[this._selectedIndex];
             slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;

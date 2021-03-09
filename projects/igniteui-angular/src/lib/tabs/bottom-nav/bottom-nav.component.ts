@@ -8,6 +8,5 @@ import { IgxTabsDirective } from '../tabs.directive';
     providers: [{ provide: IgxTabsBase, useExisting: IgxBottomNavComponent }]
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
-    // TODO Disable animations by default
-    // public animationType: CarouselAnimationType = CarouselAnimationType.none;
+    protected _disableAnimation = true;
 }
