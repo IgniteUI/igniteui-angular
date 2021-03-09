@@ -41,7 +41,7 @@ export class IgxCalendarYearDirective {
 
     @HostBinding('class.igx-calendar__year')
     public get defaultCSS(): boolean {
-        return true;
+        return !this.isCurrentYear;
     }
 
     @HostBinding('class.igx-calendar__year--current')
@@ -100,7 +100,7 @@ export class IgxCalendarMonthDirective {
 
     @HostBinding('class.igx-calendar__month')
     public get defaultCSS(): boolean {
-        return true;
+        return !this.isCurrentMonth;
     }
 
     @HostBinding('class.igx-calendar__month--current')

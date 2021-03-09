@@ -112,7 +112,7 @@ export class HelperTestFunctions {
 
     public static getMonthViewDates(fixture, monthsViewNumber: number) {
         const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.CURRENT_MONTH_DATES);
+        return month.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
     }
 
     public static getMonthViewInactiveDates(fixture, monthsViewNumber: number) {
