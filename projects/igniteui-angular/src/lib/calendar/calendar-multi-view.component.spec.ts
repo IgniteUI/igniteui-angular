@@ -9,7 +9,7 @@ import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date
 import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
-fdescribe('Multi-View Calendar - ', () => {
+describe('Multi-View Calendar - ', () => {
     let fixture; let calendar;
     configureTestSuite();
 
