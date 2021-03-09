@@ -144,6 +144,10 @@ export class IgxDayItemComponent {
 
         return isDateInRanges(this.date.date, this.specialDates);
     }
+    @HostBinding('class.igx-calendar__date')
+    public get defaultCSS(): boolean {
+        return this.date.isCurrentMonth && !(this.isWeekend && this.selected);
+    }
 
     @HostBinding('class.igx-calendar__date--disabled')
     public get isDisabledCSS(): boolean {

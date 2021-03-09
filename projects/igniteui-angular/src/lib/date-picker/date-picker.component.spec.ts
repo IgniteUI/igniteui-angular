@@ -664,7 +664,7 @@ describe('IgxDatePicker', () => {
         expect(document.activeElement).toEqual(todayDate.nativeElement);
     }));
 
-    it('#3595 - Should be able to change year', fakeAsync(() => {
+    xit('#3595 - Should be able to change year', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.detectChanges();
 
@@ -689,7 +689,7 @@ describe('IgxDatePicker', () => {
         expect((year as HTMLElement).innerText).toBe(expectedResult);
     }));
 
-    it('#3595 - Should be able to change month', fakeAsync(() => {
+    xit('#3595 - Should be able to change month', fakeAsync(() => {
         const fixture = TestBed.createComponent(IgxDatePickerTestComponent);
         fixture.componentInstance.datePicker.value = new Date(2019, 2, 10);
         tick(300);
