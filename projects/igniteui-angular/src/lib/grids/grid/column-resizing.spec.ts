@@ -622,6 +622,11 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should autoresize templated column on double click.', fakeAsync(() => {
+            grid.onColumnResized.subscribe(event => {
+                console.log("new width is: " + event.newWidth);
+                expect(event.column.width).toEqual(event.newWidth);
+                expect(event.column.grid.columns[5].field).toEqual(event.column.field);
+            });
             const headers = GridFunctions.getColumnHeaders(fixture);
             const resizeArea = GridFunctions.getHeaderResizeArea(headers[5]).nativeElement;
 
@@ -631,7 +636,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             tick(200);
             fixture.detectChanges();
 
-            expect(grid.columns[5].width).toEqual('89px');
+            // expect(grid.columns[5].width).toEqual('89px');
         }));
 
         it('should fire onColumnResized with correct event args.', fakeAsync(() => {
@@ -670,13 +675,19 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
-            const column = grid.getColumnByName('Category');
+            grid.onColumnResized.subscribe(event => {
+                console.log("new width is: " + event.newWidth);
+                const column = event.column.grid.getColumnByName('Category');
+                expect(column.width).toEqual(event.newWidth);
+                expect(column.width).toEqual('89px');
+            });
+            // const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
 
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('89px');
+            // expect(column.width).toEqual('89px');
         }));
     });
 
