@@ -683,7 +683,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             });
             // const column = grid.getColumnByName('Category');
             // expect(column.width).toEqual('150px');
-
+            const column = grid.getColumnByName('Category');
             column.autosize();
             fixture.detectChanges();
 
