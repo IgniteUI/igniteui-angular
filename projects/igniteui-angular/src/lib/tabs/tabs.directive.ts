@@ -139,6 +139,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         return this.currentSlide.panelComponent.nativeElement;
     }
 
+    protected scrollTabHeaderIntoView() {
+    }
+
     private get hasPanels() {
         return this.panels && this.panels.length;
     }
@@ -164,6 +167,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
 
         if (this._selectedIndex !== oldSelectedIndex) {
+            this.scrollTabHeaderIntoView();
             this.triggerPanelAnimations(oldSelectedIndex);
         }
     }

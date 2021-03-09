@@ -66,6 +66,25 @@ export class IgxTabsComponent extends IgxTabsDirective {
         this.scroll(true);
     }
 
+    protected scrollTabHeaderIntoView() {
+        const tabItems = this.items.toArray();
+        const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
+
+        // Scroll left if there is need
+        if (tabHeaderNativeElement.offsetLeft < this.offset) {
+            this.scrollElement(tabHeaderNativeElement, false);
+        }
+
+        // Scroll right if there is need
+        const viewPortOffsetWidth = this.viewPort.nativeElement.offsetWidth;
+        const delta = (tabHeaderNativeElement.offsetLeft + tabHeaderNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
+
+        // Fix for IE 11, a difference is accumulated from the widths calculations
+        if (delta > 1) {
+            this.scrollElement(tabHeaderNativeElement, true);
+        }
+    }
+
     private scroll(scrollRight: boolean): void {
         const tabsArray = this.items.toArray();
         for (const tab of tabsArray) {
