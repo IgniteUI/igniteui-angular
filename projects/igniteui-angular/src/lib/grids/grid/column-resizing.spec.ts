@@ -623,7 +623,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         it('should autoresize templated column on double click.', fakeAsync(() => {
             grid.onColumnResized.subscribe(event => {
-                console.log('new width is: ' + event.newWidth);
+                console.log('event.newWidth is: ' + event.newWidth);
+                console.log('event.column.width is: ' + event.column.width);
+                console.log('event.column.grid.columns[5].field is: ' + event.column.grid.columns[5].field);
+                console.log('event.column.grid.columns[5].width is: ' + event.column.grid.columns[5].width);
                 expect(event.column.width).toEqual(event.newWidth);
                 expect(event.column.grid.columns[5].field).toEqual(event.column.field);
             });
@@ -675,19 +678,16 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
-            grid.onColumnResized.subscribe(event => {
-                console.log('new width is: ' + event.newWidth);
-                const column = event.column.grid.getColumnByName('Category');
-                expect(column.width).toEqual(event.newWidth);
-                expect(column.width).toEqual('89px');
-            });
-            // const column = grid.getColumnByName('Category');
-            // expect(column.width).toEqual('150px');
             const column = grid.getColumnByName('Category');
+            expect(column.width).toEqual('150px');
+            let autoSize = column.getAutoSize();
+            console.log('autoSize is: ' + autoSize);
             column.autosize();
             fixture.detectChanges();
-
-            // expect(column.width).toEqual('89px');
+            autoSize = column.getAutoSize();
+            console.log('column.width: ' + column.width);
+            console.log('autoSize is: ' + autoSize);
+            expect(column.width).toEqual('89px');
         }));
     });
 
