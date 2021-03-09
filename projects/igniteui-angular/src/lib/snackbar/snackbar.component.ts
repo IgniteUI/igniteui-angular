@@ -103,8 +103,6 @@ export class IgxSnackbarComponent {
     @Input()
     public id = `igx-snackbar-${NEXT_ID++}`;
 
-    public ariaLiveValue = 'polite';
-
     /**
      * Sets/gets the `aria-live` attr of the snackbar message.
      * If not set, the `aria-live` will be `polite`;
@@ -221,6 +219,8 @@ export class IgxSnackbarComponent {
      * @internal
      */
     public snackbarMessage = '';
+    public ariaLiveValue = 'polite';
+
 
     /**
      * @hidden
