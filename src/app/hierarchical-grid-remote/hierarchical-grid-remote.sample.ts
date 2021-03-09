@@ -72,6 +72,7 @@ export class HierarchicalGridRemoteSampleComponent implements AfterViewInit {
     }
 
     public gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+        event.grid.isLoading = true;
         this.remoteService.getData({ parentID: event.parentID, level: rowIsland.level, key: rowIsland.key }, (data) => {
             event.grid.data = data['value'];
             event.grid.isLoading = false;
