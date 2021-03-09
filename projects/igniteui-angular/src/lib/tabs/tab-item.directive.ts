@@ -1,9 +1,14 @@
 import { ContentChild, Directive, Input, TemplateRef, ViewChild } from '@angular/core';
 import { Direction, IgxSlideComponentBase } from '../carousel/carousel-base';
-import { IgxTabItemBase, IgxTabPanelBase, IgxTabsBase } from './tabs.base';
+import { IgxTabHeaderBase, IgxTabItemBase, IgxTabPanelBase, IgxTabsBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideComponentBase {
+
+    /** @hidden */
+    @ContentChild(IgxTabHeaderBase)
+    public headerComponent: IgxTabHeaderBase;
+
     /** @hidden */
     @ContentChild(IgxTabPanelBase)
     public panelComponent: IgxTabPanelBase;
@@ -33,8 +38,6 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
 
     public set selected(value: boolean) {
         if (this._selected !== value) {
-            console.log(`selected: ${value}`);
-
             this._selected = value;
             this.tabs.selectTab(this, this._selected);
         }

@@ -1,64 +1,210 @@
 <div class="items-wrapper">
     <div class="column-span">
-        <h3 class="sample-title">Different size tabs</h3>
-        <button (click)="changeSelectedIndex()">Change selectedIndex</button>
-        <button (click)="changeTabSelected()">Change tab.selected</button>
+        <div>
+            <h3 class="sample-title">Different size tabs</h3>
+            <button [igxButton]="'outlined'" class="action-button" (click)="changeSelectedIndex()">Change selected index</button>
+            <button [igxButton]="'outlined'" class="action-button" (click)="changeTabSelected()">Change tab.selected</button>
 
-        <igx-tabs
-            #tabsNew
-            (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
-            (selectedItemChange)="tabsSelectedItemChange($event)"
-        >
-            <igx-tab-item>
-                <igx-tab-header>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 1</span>
-                </igx-tab-header>
-                <igx-tab-panel>
-                    Content 1
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel>
-            </igx-tab-item>
+            <igx-tabs
+                style="height: 400px;"
+                #tabsNew
+                (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
+                (selectedItemChange)="tabsSelectedItemChange($event)"
+            >
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 1</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 1
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
 
-            <igx-tab-item>
-                <igx-tab-header>
-                    <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                    <span igxTabHeaderLabel>Tab 2</span>
-                </igx-tab-header>
-                <igx-tab-panel>
-                    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
-                            *ngFor="let contact of contacts">
-                                <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
-                                <p igxListLineTitle>{{contact.text}}</p>
-                                <span igxListLineSubTitle>{{contact.phone}}</span>
-                                <igx-icon igxListAction>phone</igx-icon>
-                        </igx-list-item>
-                    </igx-list>
-                </igx-tab-panel>
-            </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 2</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                *ngFor="let contact of contacts">
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                    <p igxListLineTitle>{{contact.text}}</p>
+                                    <span igxListLineSubTitle>{{contact.phone}}</span>
+                                    <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-tab-panel>
+                </igx-tab-item>
 
-            <igx-tab-item>
-                <igx-tab-header>
-                    Tab 3
-                </igx-tab-header>
-                <igx-tab-panel>
-                    Content 3
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel>
-            </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 3 Lorem ipsum dolor
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 3
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
 
-            <igx-tab-item>
-                <igx-tab-header>
-                    <igx-icon>folder</igx-icon>
-                    Tab 4
-                </igx-tab-header>
-                <igx-tab-panel>
-                    Content 4
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                </igx-tab-panel>
-            </igx-tab-item>
-        </igx-tabs>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 4
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 4
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+        <div>
+            <h3 class="sample-title">Same size tabs</h3>
+            <igx-tabs style="height: 400px;" [headerSizing]="'fluid'">
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 1</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 1
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 2</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                *ngFor="let contact of contacts">
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                    <p igxListLineTitle>{{contact.text}}</p>
+                                    <span igxListLineSubTitle>{{contact.phone}}</span>
+                                    <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 3 Lorem ipsum dolor
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 3
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 4
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 4
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+
+        <div>
+            <h3 class="sample-title">Tabs with scroll</h3>
+            <igx-tabs style="height: 400px;" [headerSizing]="'fluid'">
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 1</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 1
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 2</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
+                                *ngFor="let contact of contacts">
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                    <p igxListLineTitle>{{contact.text}}</p>
+                                    <span igxListLineSubTitle>{{contact.phone}}</span>
+                                    <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 3 Lorem ipsum dolor
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 3
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 4
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 4
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 5
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 5
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 6
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 6
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon>folder</igx-icon>
+                        Tab 7
+                    </igx-tab-header>
+                    <igx-tab-panel>
+                        Content 7
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-tab-panel>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+
 
         <!-- <igx-tabs [selectedIndex]="1">
             <igx-tabs-group label="Tab 1" icon="folder">

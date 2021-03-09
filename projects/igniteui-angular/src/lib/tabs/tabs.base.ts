@@ -17,6 +17,7 @@ export abstract class IgxTabItemBase {
 
 /** @hidden */
 export abstract class IgxTabHeaderBase {
+    public nativeElement: HTMLElement;
 }
 
 /** @hidden */

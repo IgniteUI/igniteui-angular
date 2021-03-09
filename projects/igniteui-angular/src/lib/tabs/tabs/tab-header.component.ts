@@ -1,9 +1,11 @@
 import { Component, HostBinding } from '@angular/core';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
+import { IgxTabHeaderBase } from '../tabs.base';
 
 @Component({
     selector: 'igx-tab-header',
-    templateUrl: 'tab-header.component.html'
+    templateUrl: 'tab-header.component.html',
+    providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }]
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective {
     /** @hidden */

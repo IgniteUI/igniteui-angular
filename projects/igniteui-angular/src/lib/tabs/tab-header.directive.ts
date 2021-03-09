@@ -1,5 +1,5 @@
 
-import { Directive, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 
@@ -7,7 +7,7 @@ import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
 
     /** @hidden */
-    constructor(private _tabs: IgxTabsBase, public tab: IgxTabItemDirective) {
+    constructor(private _tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }
 
     /** @hidden */
@@ -15,4 +15,9 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     public onClick() {
         this._tabs.selectTab(this.tab, true);
     }
+
+    /** @hidden */
+    public get nativeElement(): HTMLElement {
+        return this.elementRef.nativeElement;
+    };
 }
