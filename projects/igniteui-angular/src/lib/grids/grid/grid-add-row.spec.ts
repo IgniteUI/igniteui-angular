@@ -318,10 +318,10 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             endTransition();
 
-            let addRow = grid.getRowByIndex(1);
+            const addRow = grid.getRowByIndex(1);
             expect(addRow.addRow).toBeTrue();
 
-            expect(GridFunctions.getRowEditingBannerText(fixture)).toEqual("Adding Row");
+            expect(GridFunctions.getRowEditingBannerText(fixture)).toEqual('Adding Row');
         });
     });
 
