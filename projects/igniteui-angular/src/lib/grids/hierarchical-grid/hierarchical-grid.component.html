@@ -280,7 +280,7 @@
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { endRowEdit: endEdit.bind(this), row: this.crudService.row }">
+                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { endEdit: endEdit.bind(this), row: this.crudService.row }">
             </ng-container>
         </div>
     </div>

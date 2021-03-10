@@ -2311,6 +2311,12 @@ export class MRLTestComponent {
     <igx-action-strip #actionStrip>
         <igx-grid-editing-actions [addRow]='true'></igx-grid-editing-actions>
     </igx-action-strip>
+
+    <ng-template igxRowEditText let-row="row">
+        <div *ngIf="row?.isAddRow">
+            Adding Row
+        </div>
+    </ng-template>
 </igx-grid>
 `
 })
