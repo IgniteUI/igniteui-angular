@@ -45,6 +45,7 @@
         "readme": "none"
     },
     "angularCompilerOptions": {
-        "generateDeepReexports": true
+        "generateDeepReexports": true,
+        "strictTemplates": true
     }
 }

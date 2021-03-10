@@ -19,7 +19,7 @@ export class VirtualForSampleComponent implements OnInit {
     @ViewChild('virtDirRemote', { read: IgxForOfDirective, static: true })
     private virtDirRemote: IgxForOfDirective<any>;
 
-    public alignment = ButtonGroupAlignment.vertical;
+    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public search1: string;
     public data = [];
     public remoteData: any;

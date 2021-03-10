@@ -2,7 +2,7 @@
     <article class="sample-column">
         <h4 class="sample-title">Animations categories</h4>
         <div>
-            <igx-list (onItemClicked)="categoryItemClicked($event)">
+            <igx-list (itemClicked)="categoryItemClicked($event)">
                 <igx-list-item
                     igxRipple
                     *ngFor="let category of animationsCategories"
@@ -15,7 +15,7 @@
     <article class="sample-column">
         <h4 class="sample-title">Animations</h4>
         <div>
-            <igx-list (onItemClicked)="playAnimation($event)">
+            <igx-list (itemClicked)="playAnimation($event)">
                 <igx-list-item igxRipple *ngFor="let animation of animations">
                     <p>{{ animation.name }}</p>
                 </igx-list-item>

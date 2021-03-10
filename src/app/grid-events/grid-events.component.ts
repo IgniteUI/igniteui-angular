@@ -1,10 +1,11 @@
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { IgxGridComponent, FilteringExpressionsTree,
+import { IgxGridComponent,
     ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
-    IColumnVisibilityChangingEventArgs } from 'igniteui-angular';
+    IColumnVisibilityChangingEventArgs,
+    IFilteringExpressionsTree} from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
@@ -56,7 +57,7 @@ export class GridEventsComponent {
         event.cancel = this.$sorting;
         this.logAnEvent('=> sorting', event.cancel);
     }
-    public onSortingDone(event: ISortingExpression) {
+    public onSortingDone(event: ISortingExpression | ISortingExpression []) {
         console.log('event' + event);
         this.logAnEvent(`=> onSortingDone`);
     }
@@ -65,7 +66,7 @@ export class GridEventsComponent {
         event.cancel = this.$filtering;
         this.logAnEvent('=> filtering', event.cancel);
     }
-    public onFilteringDone(event: FilteringExpressionsTree) {
+    public onFilteringDone(event: IFilteringExpressionsTree) {
         console.log('event' + event);
         this.logAnEvent(`=> onFilteringDone`);
     }
@@ -87,7 +88,7 @@ export class GridEventsComponent {
         event.cancel = this.$hiding;
         this.logAnEvent('=> columnVisibilityChanging', event.cancel);
     }
-    public onColumnVisibilityChanged(event: IColumnVisibilityChangedEventArgs) {
+    public onColumnVisibilityChanged() {
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 
