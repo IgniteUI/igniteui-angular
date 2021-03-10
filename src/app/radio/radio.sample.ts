@@ -34,7 +34,7 @@ export class RadioSampleComponent implements AfterContentInit {
     public newPerson: Person;
     public personKirk: Person = new Person('Kirk', this.seasons[1]);
     public personKirkForm: FormGroup;
-    public alignment = RadioGroupAlignment.vertical;
+    public alignment: RadioGroupAlignment = RadioGroupAlignment.vertical;
 
     constructor(private _formBuilder: FormBuilder) {
         this._createPersonKirkForm();

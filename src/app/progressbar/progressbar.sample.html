@@ -2,7 +2,7 @@
     <article class="linear-samples sample-column">
         <h4 class="sample-title">Linear progress bar</h4>
         <div class="linear-container">
-            <igx-linear-bar [striped]="false" [value]="currentValue" max="100">
+            <igx-linear-bar [striped]="false" [value]="currentValue" [max]="100">
             </igx-linear-bar>
         </div>
 
@@ -35,17 +35,17 @@
     <article class="linear-samples sample-column">
         <h4 class="sample-title">Striped linear progress bar</h4>
         <div class="linear-container">
-            <igx-linear-bar striped="true" [value]="currentValue">
+            <igx-linear-bar [striped]="true" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="success" striped="true" [value]="currentValue">
+            <igx-linear-bar type="success" [striped]="true" [value]="currentValue">
             </igx-linear-bar>
         </div>
 
         <div class="linear-container">
-            <igx-linear-bar type="danger" striped="true" [value]="currentValue">
+            <igx-linear-bar type="danger" [striped]="true" [value]="currentValue">
             </igx-linear-bar>
         </div>
 

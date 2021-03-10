@@ -17,8 +17,8 @@ class Task {
     templateUrl: 'slider.sample.html'
 })
 export class SliderSampleComponent {
-    public labelOrientaion = TickLabelsOrientation.Horizontal;
-    public ticksOrientation = TicksOrientation.Bottom;
+    public labelOrientaion: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
+    public ticksOrientation: TicksOrientation = TicksOrientation.Bottom;
     public primaryTickLabels = true;
     public secondaryTickLabels = true;
     public sliderType: IgxSliderType = IgxSliderType.RANGE;

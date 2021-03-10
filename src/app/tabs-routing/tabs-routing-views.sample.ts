@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
             <igx-list-item [isHeader]="true">History</igx-list-item>
             <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *ngFor="let contact of contacts">
-                <igx-avatar [src]="contact.avatar" roundShape="true" igxListThumbnail></igx-avatar>
+                <igx-avatar [src]="contact.avatar" [roundShape]="true" igxListThumbnail></igx-avatar>
                 <h4 igxListLineTitle>{{contact.text}}</h4>
                 <p igxListLineSubTitle>{{contact.phone}}</p>
                 <igx-icon igxListAction>phone</igx-icon>
