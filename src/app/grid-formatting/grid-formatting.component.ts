@@ -90,6 +90,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
 
     public addFormatter() {
         this.gridLocal.getColumnByName('OrderDate').formatter = this.formatter;
+        this.gridLocal.getColumnByName('OrderDate').summaryFormatter = this.summaryFormatter;
         this.gridRemote.getColumnByName('OrderDate').formatter = this.formatter;
     }
 
@@ -97,7 +98,7 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
         const result = summaryResult.summaryResult;
         if(summaryOperand instanceof IgxDateSummaryOperand && summaryResult.key !== 'count' && result !== null && result !== undefined) {
             const pipe = new DatePipe('fr-FR');
-            return pipe.transform(result,'longDate');
+            return pipe.transform(result,'mediumDate');
         }
         return result;
     }

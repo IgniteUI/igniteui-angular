@@ -1,6 +1,3 @@
-import { DecimalPipe, DatePipe, CurrencyPipe, getLocaleCurrencyCode, PercentPipe } from '@angular/common';
-import { IColumnPipeArgs } from '../columns/interfaces';
-
 export interface ISummaryExpression {
     fieldName: string;
     customSummary?: any;
@@ -64,7 +61,7 @@ export class IgxSummaryOperand {
      *
      * @memberof IgxSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US'): IgxSummaryResult[] {
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
         return [{
             key: 'count',
             label: 'Count',
@@ -159,9 +156,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxNumberSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
-        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName, locale);
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName);
         result.push({
             key: 'min',
             label: 'Min',
@@ -248,9 +244,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *
      * @memberof IgxDateSummaryOperand
      */
-    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string, locale: string = 'en-US',
-        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName, locale);
+    public operate(data: any[] = [], allData: any[] = [],  fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName);
         result.push({
             key: 'earliest',
             label: 'Earliest',
@@ -267,9 +262,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
 
 export class IgxCurrencySummaryOperand extends IgxSummaryOperand {
 
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
-        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName, locale);
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName);
         result.push({
             key: 'min',
             label: 'Min',
@@ -296,9 +290,8 @@ export class IgxCurrencySummaryOperand extends IgxSummaryOperand {
 
 export class IgxPercentSummaryOperand extends IgxSummaryOperand {
 
-    public operate(data: any[] = [], allData: any[] = [], fieldName?: string, locale: string = 'en-US',
-        pipeArgs: IColumnPipeArgs = {}): IgxSummaryResult[] {
-        const result = super.operate(data, allData, fieldName, locale);
+    public operate(data: any[] = [], allData: any[] = [], fieldName?: string): IgxSummaryResult[] {
+        const result = super.operate(data, allData, fieldName);
         result.push({
             key: 'min',
             label: 'Min',

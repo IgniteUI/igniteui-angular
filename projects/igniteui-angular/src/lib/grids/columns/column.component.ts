@@ -574,7 +574,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => string;
+    summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.

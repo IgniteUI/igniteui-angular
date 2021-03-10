@@ -7,7 +7,8 @@ import { IgxCurrencySummaryOperand,
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
-import { CurrencyPipe, DatePipe, DecimalPipe, getLocaleCurrencyCode, PercentPipe } from '@angular/common';
+import { getLocaleCurrencyCode } from '@angular/common';
+import { IColumnPipeArgs } from '../columns/interfaces';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -31,6 +32,12 @@ export class IgxSummaryCellComponent {
 
     @Input()
     public density;
+
+    @Input()
+    public pipeArgs: IColumnPipeArgs;
+
+    @Input()
+    public summaryFormatter: any;
 
     /** @hidden */
     @Input()
@@ -99,8 +106,9 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden @internal
      */
-    public isDateSummary(summaryKey: string): boolean {
-        return summaryKey === 'latest' || summaryKey === 'earliest';
+    public get currencyCode(): string {
+        return this.column.pipeArgs.currencyCode ?
+            this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale);
     }
 
     public translateSummary(summary: IgxSummaryResult): string {
@@ -110,32 +118,44 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden @internal
      */
-    public appySummaryPipe(summary: IgxSummaryResult): any {
-        const pipeArgs = this.column.pipeArgs;
-        const locale = this.grid.locale;
-        if (summary.key === 'count') {
-            const pipe = new DecimalPipe(locale);
-            return pipe.transform(summary.summaryResult);
+    public isNumberOperand(): boolean {
+        const summaries = this.column.summaries;
+        if (summaries && summaries.constructor === IgxNumberSummaryOperand) {
+            return true;
         }
-        if(this.column.summaries instanceof IgxNumberSummaryOperand) {
-            const pipe = new DecimalPipe(locale);
-            return pipe.transform(summary.summaryResult, pipeArgs.digitsInfo);
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isDateOperand(): boolean {
+        const summaries = this.column.summaries;
+        if (summaries && summaries.constructor === IgxDateSummaryOperand) {
+            return true;
         }
-        if(this.column.summaries instanceof IgxDateSummaryOperand) {
-            const pipe = new DatePipe(locale);
-            return pipe.transform(summary.summaryResult, pipeArgs.format, pipeArgs.timezone);
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isCurrencyOperand(): boolean {
+        const summaries = this.column.summaries;
+        if (summaries && summaries.constructor === IgxCurrencySummaryOperand) {
+            return true;
         }
-        if(this.column.summaries instanceof IgxCurrencySummaryOperand) {
-            const currencyCode = pipeArgs.currencyCode
-                ? pipeArgs.currencyCode
-                : getLocaleCurrencyCode(locale);
-            const pipe = new CurrencyPipe(locale, currencyCode);
-            return pipe.transform(summary.summaryResult, currencyCode, pipeArgs.display, pipeArgs.digitsInfo);
+        return false;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isPercentOperand(): boolean {
+        const summaries = this.column.summaries;
+        if (summaries && summaries.constructor === IgxPercentSummaryOperand) {
+            return true;
         }
-        if(this.column.summaries instanceof IgxPercentSummaryOperand) {
-            const pipe = new PercentPipe(locale);
-            return pipe.transform(summary.summaryResult, pipeArgs.digitsInfo);
-        }
-        return  summary.summaryResult;
+        return false;
     }
 }

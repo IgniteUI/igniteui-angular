@@ -196,14 +196,14 @@ describe('IgxGrid - Summaries #grid', () => {
                 fixture.detectChanges();
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20,000', '39,004', '3,900.4', '6']);
+                    ['10', '0', '20000', '39004', '3900.4', '6']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Earliest'], ['5/17/1990']);
 
                 grid.getCellByColumn(4, 'InStock').update(true);
                 fixture.detectChanges();
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg', 'Items InStock'],
-                    ['10', '0', '20,000', '39,004', '3,900.4', '7']);
+                    ['10', '0', '20000', '39004', '3900.4', '7']);
 
                 grid.filter('UnitsInStock', 0, IgxNumberFilteringOperand.instance().condition('equals'));
                 fixture.detectChanges();
@@ -354,14 +354,14 @@ describe('IgxGrid - Summaries #grid', () => {
                 const summaryClass = fix.componentInstance.numberSummary;
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['UnitsInStock']));
-                expect(summaries[0].summaryResult).toBe('10');
-                expect(summaries[1].summaryResult).toBe('0');
-                expect(summaries[2].summaryResult).toBe('20,000');
-                expect(summaries[3].summaryResult).toBe('39,004');
-                expect(summaries[4].summaryResult).toBe('3,900.4');
+                expect(summaries[0].summaryResult).toBe(10);
+                expect(summaries[1].summaryResult).toBe(0);
+                expect(summaries[2].summaryResult).toBe(20000);
+                expect(summaries[3].summaryResult).toBe(39004);
+                expect(summaries[4].summaryResult).toBe(3900.4);
 
                 const emptySummaries = summaryClass.operate();
-                expect(emptySummaries[0].summaryResult).toBe('0');
+                expect(emptySummaries[0].summaryResult).toBe(0);
                 expect(typeof emptySummaries[1].summaryResult).not.toEqual(undefined);
                 expect(typeof emptySummaries[2].summaryResult).not.toEqual(undefined);
                 expect(typeof emptySummaries[3].summaryResult).not.toEqual(undefined);
@@ -372,25 +372,26 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(typeof emptySummaries[3].summaryResult).not.toEqual(null);
                 expect(typeof emptySummaries[4].summaryResult).not.toEqual(null);
 
-                expect(emptySummaries[1].summaryResult === '0').toBeTruthy();
-                expect(emptySummaries[2].summaryResult === '0').toBeTruthy();
-                expect(emptySummaries[3].summaryResult === '0').toBeTruthy();
-                expect(emptySummaries[4].summaryResult === '0').toBeTruthy();
+                expect(emptySummaries[1].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[2].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[3].summaryResult === 0).toBeTruthy();
+                expect(emptySummaries[4].summaryResult === 0).toBeTruthy();
             });
 
 
             it('should calculate summaries for \'date\' dataType or return if no data is provided', () => {
                 const summaryClass = fix.componentInstance.dateSummary;
+                const pipe = new DatePipe('en-US');
 
                 const summaries = summaryClass.operate(fix.componentInstance.data.map((x) => x['OrderDate']));
-                expect(summaries[0].summaryResult).toBe('10');
-                expect(summaries[1].summaryResult.trim()).toBe('May 17, 1990');
-                expect(summaries[2].summaryResult.trim()).toBe('Dec 25, 2025');
+                expect(summaries[0].summaryResult).toBe(10);
+                expect(pipe.transform(summaries[1].summaryResult, 'mediumDate')).toBe('May 17, 1990');
+                expect(pipe.transform(summaries[2].summaryResult, 'mediumDate')).toBe('Dec 25, 2025');
 
                 const emptySummaries = summaryClass.operate([]);
-                expect(emptySummaries[0].summaryResult).toBe('0');
-                expect(emptySummaries[1].summaryResult).toBe(null);
-                expect(emptySummaries[2].summaryResult).toBe(null);
+                expect(emptySummaries[0].summaryResult).toBe(0);
+                expect(emptySummaries[1].summaryResult).toBe(undefined);
+                expect(emptySummaries[2].summaryResult).toBe(undefined);
             });
 
             it('should display summaries for \'date\' dataType based on column formatter', () => {
@@ -411,9 +412,9 @@ describe('IgxGrid - Summaries #grid', () => {
                     return result;
                 });
                 fix.detectChanges();
-                //TODO veliry the summaries are updated after summaryFormatter is applied
-                // GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
-                //     ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
+
+                GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
+                    ['Count', 'Earliest', 'Latest'], ['10', '17 mai 1990', '25 déc. 2025']);
             });
 
             it('should calc tfoot height according number of summary functions', () => {
