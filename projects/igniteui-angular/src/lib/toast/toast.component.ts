@@ -156,11 +156,20 @@ export class IgxToastComponent extends IgxToggleDirective
     public role = 'alert';
 
     /**
-     * @hidden
-     * @internal
+     * Sets/gets the `aria-live` attribute.
+     * If not set, `aria-live` will have value `"polite"`.
+     * ```html
+     * <igx-toast [ariaLive] = "'polite'"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastAriaLive = this.toast.ariaLive;
+     * ```
+     *
+     * @memberof IgxToastComponent
      */
     @HostBinding('attr.aria-live')
-    public ariaLiveValue = 'polite';
+    @Input()
+    public ariaLive = 'polite';
 
     /**
      * Sets/gets whether the toast will be hidden after the `displayTime` is over.
@@ -269,27 +278,6 @@ export class IgxToastComponent extends IgxToggleDirective
 
     public get message() {
         return this.toastMessage;
-    }
-
-    /**
-     * Sets/gets the `aria-live` attribute of the toast message container.
-     * If not set, the `aria-live` will have value `polite`.
-     * ```html
-     * <igx-toast [ariaLive]="'polite'"></igx-toast>
-     * ```
-     * ```typescript
-     * let toastAriaLive = this.toast.ariaLive;
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @Input()
-    public get ariaLive() {
-        return this.ariaLiveValue;
-    }
-
-    public set ariaLive(value: string) {
-        this.ariaLiveValue = value;
     }
 
     /**
