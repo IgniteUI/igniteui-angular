@@ -68,7 +68,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify Advanced Filtering button in toolbar is not visible.
             advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(advFilterButton !== null && advFilterButton !== undefined).toBe(false, 'Adv.Filter button is visible.');
+            expect(advFilterButton !== null && advFilterButton === undefined).toBe(false, 'Adv.Filter button is visible.');
 
             grid.allowAdvancedFiltering = true;
             fix.detectChanges();
@@ -2766,7 +2766,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
 
             // Verify no filtered data
             expect(grid.filteredData).toBe(null);
-            expect(grid.rowList.length).toBe(8);
+            expect(grid.rowList.length).toBe(9);
         }));
     });
 });
