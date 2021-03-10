@@ -370,7 +370,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      * @internal
      */
-    public ariaChecked() {
+    public get ariaChecked() {
        if (this.indeterminate) {
            return 'mixed';
        } else {
