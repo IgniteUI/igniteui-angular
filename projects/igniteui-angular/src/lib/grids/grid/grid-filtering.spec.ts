@@ -1081,7 +1081,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
         expect(grid.filteringExpressionsTree).toBe(fix.componentInstance.filterTree);
 
         // Verify no filtered data
-        expect(grid.rowList.length).toEqual(8);
+        expect(grid.rowList.length).toEqual(9);
         expect(grid.filteringExpressionsTree.filteringOperands.length).toEqual(0);
     }));
 });

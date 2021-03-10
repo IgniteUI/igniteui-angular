@@ -56,7 +56,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             header = GridFunctions.getColumnHeader('OnPTO', fix);
-            expect(header).toBeDefined();
+            expect(header).toBeUndefined();
             GridFunctions.verifyHeaderIsFocused(header.parent);
         });
 
