@@ -54,7 +54,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
  *
  * Example:
  * ```html
- * <button (click)="toast.show()">Show notification</button>
+ * <button (click)="toast.open()">Show notification</button>
  * <igx-toast #toast
  *           message="Notification displayed"
  *           displayTime="1000">
@@ -151,8 +151,16 @@ export class IgxToastComponent extends IgxToggleDirective
      *
      * @memberof IgxToastComponent
      */
+    @HostBinding('attr.role')
     @Input()
     public role = 'alert';
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('attr.aria-live')
+    public ariaLiveValue = 'polite';
 
     /**
      * Sets/gets whether the toast will be hidden after the `displayTime` is over.
@@ -261,6 +269,27 @@ export class IgxToastComponent extends IgxToggleDirective
 
     public get message() {
         return this.toastMessage;
+    }
+
+    /**
+     * Sets/gets the `aria-live` attribute of the toast message container.
+     * If not set, the `aria-live` will have value `polite`.
+     * ```html
+     * <igx-toast [ariaLive]="'polite'"></igx-toast>
+     * ```
+     * ```typescript
+     * let toastAriaLive = this.toast.ariaLive;
+     * ```
+     *
+     * @memberof IgxToastComponent
+     */
+    @Input()
+    public get ariaLive() {
+        return this.ariaLiveValue;
+    }
+
+    public set ariaLive(value: string) {
+        this.ariaLiveValue = value;
     }
 
     /**
