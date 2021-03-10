@@ -633,7 +633,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             GridFunctions.verifyGroupIsExpanded(fixture, countryInf, true, true);
-            GridFunctions.verifyColumnIsHidden(countryCol, true, 122);
+            GridFunctions.verifyColumnIsHidden(countryCol, true, 12);
         });
     });
 });
