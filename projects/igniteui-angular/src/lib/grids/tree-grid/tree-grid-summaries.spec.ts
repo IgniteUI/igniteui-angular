@@ -17,7 +17,7 @@ import { GridSummaryFunctions, GridFunctions } from '../../test-utils/grid-funct
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { DebugElement } from '@angular/core';
 
-fdescribe('IgxTreeGrid - Summaries #tGrid', () => {
+describe('IgxTreeGrid - Summaries #tGrid', () => {
     configureTestSuite();
     const DEBOUNCETIME = 30;
 
