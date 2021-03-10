@@ -230,17 +230,18 @@
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
-    <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
+    <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
+                *ngTemplateOutlet="rowEditText ? rowEditText : !this.crudService.row?.isAddRow ? defaultRowEditText: null;
+                context: { rowChangesCount: rowChangesCount, row: this.crudService.row}">
             </ng-container>
         </span>
     </div>
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
+                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { endRowEdit: endEdit.bind(this), row: this.crudService.row }">
             </ng-container>
         </div>
     </div>
