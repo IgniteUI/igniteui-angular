@@ -47,6 +47,7 @@ export class IgxTreeSelectionService {
 
     public clearNodesSelection(): void {
         this.nodeSelection.clear();
+        this.indeterminateNodes.clear();
     }
 
     public isNodeSelected(node: IgxTreeNode<any>): boolean {
@@ -280,10 +281,10 @@ export class IgxTreeSelectionService {
     private get_all_children(node: IgxTreeNode<any>): any[] {
         const children = [];
         if (node && node.children && node.children.length) {
-            for (const child of node.children) {
+            node.children.forEach((child) => {
                 children.push(...this.get_all_children(child));
                 children.push(child);
-            }
+            });
         }
         return children;
 
