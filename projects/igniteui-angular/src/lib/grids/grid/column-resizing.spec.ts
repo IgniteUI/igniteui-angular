@@ -685,13 +685,14 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             const range = grid.document.createRange();
             const headerWidth = Math.max(...Array.from(column.headerCell.elementRef.nativeElement.children[0].children)
                 .map((child) => getNodeSizeViaRange(range, child)));
-            console.log('headerWidth is: ' + headerWidth[0]);
+            console.log('headerWidth is: ' + headerWidth);
             const headerStyle = grid.document.defaultView.getComputedStyle(column.headerCell.elementRef.nativeElement);
             const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
                 parseFloat(headerStyle.borderRightWidth);
-
+            console.log('headerPadding is: ' + headerPadding);
             const headerGroupStyle = grid.document.defaultView.getComputedStyle(column.headerGroup.element.nativeElement);
             const borderSize = parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth);
+            console.log('borderSize is: ' + borderSize);
             const headerCellWidths = { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
             let width: any = Math.ceil(headerCellWidths.width + headerCellWidths.padding);
             width = width + 'px';
