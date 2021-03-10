@@ -29,7 +29,6 @@ describe('IgxRadio', () => {
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
-        const testInstance = fixture.componentInstance;
         const radioInstance = fixture.componentInstance.radio;
         fixture.detectChanges();
 
@@ -245,7 +244,7 @@ class RequiredRadioComponent {
 })
 class RadioExternalLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
-    label = 'My Label';
+    public label = 'My Label';
 }
 
 @Component({
@@ -253,5 +252,5 @@ class RadioExternalLabelComponent {
 })
 class RadioInvisibleLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
-    label = 'Invisible Label';
+    public label = 'Invisible Label';
 }

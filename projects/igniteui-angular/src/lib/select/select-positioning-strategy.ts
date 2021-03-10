@@ -30,7 +30,11 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     }
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+    public position(contentElement: HTMLElement,
+                    size: Size,
+                    document?: Document,
+                    initialCall?: boolean,
+                    target?: Point | HTMLElement): void {
         this.select.scrollContainer.scrollTop = 0;
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
