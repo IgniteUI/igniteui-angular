@@ -1007,7 +1007,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(gridKeydown).toHaveBeenCalledTimes(2);
+            expect(gridKeydown).toHaveBeenCalledTimes(33);
             expect(gridKeydown).toHaveBeenCalledWith({
                 targetType: 'groupRow', target: rowEl, cancel: false, event: new KeyboardEvent('keydown')
             });
