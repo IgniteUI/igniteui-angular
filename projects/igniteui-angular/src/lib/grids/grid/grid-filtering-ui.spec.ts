@@ -48,6 +48,7 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { time } from 'node:console';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -2773,7 +2774,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             .compileComponents();
     }));
 
-    describe(null, () => {
+    fdescribe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -3442,9 +3443,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(downloadsCol.pinned).toBe(true);
         }));
 
-        it('Should filter and clear the excel search component correctly', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
-
+        it('Should filter and clear the excel search component correctly', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
@@ -3452,8 +3454,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type string in search box.
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'ignite', fix);
-            tick(100);
             fix.detectChanges();
+            await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(4, 'incorrect rendered list items count');
@@ -3466,12 +3468,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
-            tick(100);
-        }));
+        });
 
-        it('Should enable/disable the apply button correctly.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
-
+        it('Should enable/disable the apply button correctly.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
             // Verify there are filtered-in results and that apply button is enabled.
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix);
             let applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
@@ -3481,11 +3483,11 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Verify the apply button is disabled when all items are unchecked (when unchecking 'Select All').
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkbox[0].click(); // Select All
-            tick();
             fix.detectChanges();
+            await wait(100);
             applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix);
             ControlsFunction.verifyButtonIsDisabled(applyButton);
-        }));
+        });
 
         it('display density is properly applied on the excel style filtering component', fakeAsync(() => {
             const column = grid.columns.find((c) => c.field === 'ProductName');
@@ -3829,8 +3831,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(displayContainerRect.bottom <= listRect.bottom).toBe(true, 'displayContainer ends below list');
         }));
 
-        it('Should not treat \'Select All\' as a search result.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
+        it('Should not treat \'Select All\' as a search result.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
+            fix.detectChanges();
+            await wait(100);
 
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix, excelMenu);
@@ -3839,15 +3843,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6);
 
             UIInteractions.clickAndSendInputElementValue(input, 'a', fix);
-            tick(100);
+            await wait(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(5);
 
             UIInteractions.clickAndSendInputElementValue(input, 'al', fix);
-            tick(100);
+            await wait(100);
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(0);
-        }));
+        });
 
         it('Column formatter should skip the \'SelectAll\' list item', fakeAsync(() => {
             grid.columns[4].formatter = (val: Date) => new Intl.DateTimeFormat('bg-BG').format(val);
@@ -4638,8 +4642,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
         }));
 
-        it('Should correctly update all \'SelectAll\' checkbox when not a single item is checked.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
+        it('Should correctly update all \'SelectAll\' checkbox when not a single item is checked.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Released');
+            fix.detectChanges();
+            await wait(100);
 
             const visibleListItems = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             expect(visibleListItems.length).toBe(4);
@@ -4661,7 +4667,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Verify 'Select All' checkbox is unchecked.
             ControlsFunction.verifyCheckboxState(visibleListItems[0].parentElement, false);
-        }));
+        });
 
         it('Should open custom filter dropdown when pressing \'Enter\' on custom filter cascade button.', fakeAsync(() => {
             grid.width = '700px';
@@ -4843,29 +4849,29 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
+        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', async () => {
             const column = grid.getColumnByName('AnotherField');
             expect(column.filteringIgnoreCase).toBeTrue();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
-            tick(100);
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
             fix.detectChanges();
+            await wait(100);
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
 
             expect(listItems.length).toBe(3, 'incorrect rendered list items count');
             expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-        }));
+        });
 
-        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
+        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', async () => {
             const column = grid.getColumnByName('AnotherField');
             column.filteringIgnoreCase = false;
             expect(column.filteringIgnoreCase).toBeFalse();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
-            tick(100);
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
             fix.detectChanges();
+            await wait(100);
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
@@ -4874,7 +4880,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
             expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
             expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
-        }));
+        });
 
         it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
             // Open excel style filtering dialog.
