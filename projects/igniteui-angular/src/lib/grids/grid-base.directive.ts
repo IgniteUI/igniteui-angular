@@ -6832,7 +6832,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             if (Object.keys(record).length) {
                 if (columnData) {
-                    keys = Object.keys(columnData[0]);
+                    if (!keys.length){
+                        keys = Object.keys(columnData[0]);
+                    }
                     for (const [key, value] of Object.entries(record)) {
                         if (!keys.includes(key)) {
                             keys.push(key);
