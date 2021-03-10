@@ -8,36 +8,23 @@
 
 /// Generates a light avatar schema.
 /// @type {Map}
-/// @property {Map} icon-background [igx-color: ('grays', 400)]- The background color used for avatars of type icon.
-/// @property {Map} icon-color [igx-color: ('grays', 800)] - The icon color used for avatars of type icon.
-/// @property {Map} initials-background [igx-color: ('grays', 400)] - The background color used for avatars of type initials.
-/// @property {Map} initials-color [igx-color: ('grays', 800)] - The text color used for avatars of type initials.
-/// @property {Color} image-background [transparent] - The background color used for avatars of type image.
-/// @prop {Number} border-radius-round [1] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [0] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Map} background [igx-color: ('grays', 400)]- The background color of the avatar.
+/// @prop {Map} color [igx-color: ('grays', 800)] - The text/icon color of the avatar.
+/// @prop {Number} border-radius [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} size - The size of the avatar.
 /// @requires {function} extend
 /// @requires {Map} $_default-shape-avatar
 /// @see $default-palette
 $_light-avatar: extend(
-    $_default-shape-avatar,
+    $_square-shape-avatar,
     (
-        icon-background: (
+        background: (
             igx-color: ('grays', 400)
         ),
 
-        icon-color: (
+        color: (
             igx-color: ('grays', 800)
         ),
-
-        initials-background: (
-            igx-color: ('grays', 400)
-        ),
-
-        initials-color: (
-            igx-color: ('grays', 800)
-        ),
-
-        image-background: transparent
     )
 );
 
@@ -45,12 +32,16 @@ $_light-avatar: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires {Map} $_light-avatar
-$_fluent-avatar: extend($_light-avatar);
+$_fluent-avatar: extend(
+    $_light-avatar,
+    (
+        variant: 'fluent',
+    )
+);
 
 /// Generates a bootstrap avatar schema.
 /// @type {Map}
-/// @prop {Number} border-radius-round [1] - The border radius used for round avatar. Can be a fraction between 0 and 1, pixels, or percent.
-/// @prop {Number} border-radius-square [.25] - The border radius used for square avatar. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} border-radius [.25] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
 /// @requires {Map} $_light-avatar
 /// @requires {Map} $_bootstrap-shape-avatar

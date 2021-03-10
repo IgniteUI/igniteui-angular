@@ -1,0 +1,330 @@
+{
+    "$schema": "../../common/schema/theme-props.schema.json",
+    "changes": [
+        {
+            "name": "$border-radius-round",
+            "replaceWith": "$border-radius",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$border-radius-square",
+            "replaceWith": "$border-radius",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$initials-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$initials-color",
+            "replaceWith": "$color",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$icon-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$icon-color",
+            "replaceWith": "$color",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$image-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$flat-border-radius",
+            "replaceWith": "$border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-border-radius",
+            "replaceWith": "$border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-border-radius",
+            "replaceWith": "$border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-border-radius",
+            "replaceWith": "$border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-border-radius",
+            "replaceWith": "$border-radius",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-shadow-color",
+            "replaceWith": "$shadow-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-shadow-color",
+            "replaceWith": "$shadow-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-shadow-color",
+            "replaceWith": "$shadow-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-shadow-color",
+            "replaceWith": "$shadow-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-shadow-color",
+            "replaceWith": "$shadow-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-background",
+            "replaceWith": "$background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-focus-background",
+            "replaceWith": "$focus-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-background",
+            "replaceWith": "$background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-focus-background",
+            "replaceWith": "$focus-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-background",
+            "replaceWith": "$background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-focus-background",
+            "replaceWith": "$focus-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-background",
+            "replaceWith": "$background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-focus-background",
+            "replaceWith": "$focus-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-background",
+            "replaceWith": "$background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-hover-background",
+            "replaceWith": "$hover-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-focus-background",
+            "replaceWith": "$focus-background",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-text-color",
+            "replaceWith": "$foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-hover-text-color",
+            "replaceWith": "$hover-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-focus-text-color",
+            "replaceWith": "$focus-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-text-color",
+            "replaceWith": "$foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-hover-text-color",
+            "replaceWith": "$hover-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-focus-text-color",
+            "replaceWith": "$focus-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-text-color",
+            "replaceWith": "$foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-hover-text-color",
+            "replaceWith": "$hover-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-focus-text-color",
+            "replaceWith": "$focus-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-text-color",
+            "replaceWith": "$foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-hover-text-color",
+            "replaceWith": "$hover-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-focus-text-color",
+            "replaceWith": "$focus-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-color",
+            "replaceWith": "$foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-hover-color",
+            "replaceWith": "$hover-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$icon-focus-color",
+            "replaceWith": "$focus-foreground",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-hover-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$flat-focus-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-hover-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-focus-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-hover-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-focus-icon-color",
+            "remove": true,
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-resting-shadow",
+            "replaceWith": "$resting-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-hover-shadow",
+            "replaceWith": "$hover-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$raised-focus-shadow",
+            "replaceWith": "$focus-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-resting-shadow",
+            "replaceWith": "$resting-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-hover-shadow",
+            "replaceWith": "$hover-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$fab-focus-shadow",
+            "replaceWith": "$focus-shadow",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-outline-color",
+            "replaceWith": "$border-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$outlined-disabled-outline-color",
+            "replaceWith": "$disabled-border-color",
+            "owner": "igx-button-theme"
+        },
+        {
+            "name": "$disabled-text-color",
+            "replaceWith": "$disabled-foreground",
+            "owner": "igx-button-theme"
+        }
+    ]
+}
