@@ -5971,7 +5971,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
 
         expect(grid.filteredData).toEqual([
             {
-                ID: 7, Name: { FirstName: 'Debra', LastName: 'Morton' },
+                ID: 111, Name: { FirstName: 'Debra', LastName: 'Morton' },
                 JobTitle: 'Associate Software Developer', Company: 'Company B'
             },
             { ID: 10, Name: { FirstName: 'Eduardo', LastName: 'Ramirez' }, JobTitle: 'Manager', Company: 'Company E' }]);
