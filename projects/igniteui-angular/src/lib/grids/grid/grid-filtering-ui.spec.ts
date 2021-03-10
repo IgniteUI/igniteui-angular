@@ -2774,7 +2774,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             .compileComponents();
     }));
 
-    fdescribe(null, () => {
+    describe(null, () => {
         let fix: ComponentFixture<IgxGridFilteringComponent>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
