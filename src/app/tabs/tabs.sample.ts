@@ -12,6 +12,8 @@ export class TabsSampleComponent {
     @ViewChild('tabsNew')
     private tabs: IgxTabsComponent;
 
+    public tab2Label = 'Tab 2';
+
     public data = [
         /* eslint-disable max-len */
         { ID: 'ALFKI', CompanyName: 'Alfreds Futterkiste', ContactName: 'Maria Anders', ContactTitle: 'Sales Representative', Address: 'Obere Str. 57', City: 'Berlin', Region: null, PostalCode: '12209', Country: 'Germany', Phone: '030-0074321', Fax: '030-0076545' },
@@ -76,6 +78,10 @@ export class TabsSampleComponent {
 
     public changeSelectedIndex() {
         this.tabs.selectedIndex = 1;
+    }
+
+    public renameTab2() {
+        this.tab2Label = 'Tab 2 Extra Long Header';
     }
 
     public changeTabSelected() {

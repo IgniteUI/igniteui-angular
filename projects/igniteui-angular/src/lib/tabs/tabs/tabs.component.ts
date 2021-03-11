@@ -39,6 +39,10 @@ export class IgxTabsComponent extends IgxTabsDirective {
     public itemsContainer: ElementRef;
 
     /** @hidden */
+    @ViewChild('selectedIndicator')
+    public selectedIndicator: ElementRef;
+
+    /** @hidden */
     @HostBinding('class.igx-tabs')
     public defaultClass = true;
 
@@ -66,22 +70,53 @@ export class IgxTabsComponent extends IgxTabsDirective {
         this.scroll(true);
     }
 
-    protected scrollTabHeaderIntoView() {
-        const tabItems = this.items.toArray();
-        const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
-
-        // Scroll left if there is need
-        if (tabHeaderNativeElement.offsetLeft < this.offset) {
-            this.scrollElement(tabHeaderNativeElement, false);
+    /** @hidden */
+    public realignSelectedIndicator() {
+        if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
+            const tabItems = this.items.toArray();
+            const header = tabItems[this.selectedIndex].headerComponent.nativeElement;
+            this.alignSelectedIndicator(header, 0);
         }
+    }
 
-        // Scroll right if there is need
-        const viewPortOffsetWidth = this.viewPort.nativeElement.offsetWidth;
-        const delta = (tabHeaderNativeElement.offsetLeft + tabHeaderNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
+    /** @hidden */
+    protected scrollTabHeaderIntoView() {
+        if (this.selectedIndex >= 0) {
+            const tabItems = this.items.toArray();
+            const tabHeaderNativeElement = tabItems[this.selectedIndex].headerComponent.nativeElement;
 
-        // Fix for IE 11, a difference is accumulated from the widths calculations
-        if (delta > 1) {
-            this.scrollElement(tabHeaderNativeElement, true);
+            // Scroll left if there is need
+            if (tabHeaderNativeElement.offsetLeft < this.offset) {
+                this.scrollElement(tabHeaderNativeElement, false);
+            }
+
+            // Scroll right if there is need
+            const viewPortOffsetWidth = this.viewPort.nativeElement.offsetWidth;
+            const delta = (tabHeaderNativeElement.offsetLeft + tabHeaderNativeElement.offsetWidth) - (viewPortOffsetWidth + this.offset);
+
+            // Fix for IE 11, a difference is accumulated from the widths calculations
+            if (delta > 1) {
+                this.scrollElement(tabHeaderNativeElement, true);
+            }
+
+            this.alignSelectedIndicator(tabHeaderNativeElement);
+        } else {
+            this.hideSelectedIndicator();
+        }
+    }
+
+    private alignSelectedIndicator(element: HTMLElement, duration = 0.3): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'visible';
+            this.selectedIndicator.nativeElement.style.transitionDuration = duration > 0 ? `${duration}s` : 'initial';
+            this.selectedIndicator.nativeElement.style.width = `${element.offsetWidth}px`;
+            this.selectedIndicator.nativeElement.style.transform = `translate(${element.offsetLeft}px)`;
+        }
+    }
+
+    private hideSelectedIndicator(): void {
+        if (this.selectedIndicator) {
+            this.selectedIndicator.nativeElement.style.visibility = 'hidden';
         }
     }
 

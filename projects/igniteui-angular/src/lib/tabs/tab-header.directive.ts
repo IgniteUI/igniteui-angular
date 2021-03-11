@@ -7,13 +7,13 @@ import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
 
     /** @hidden */
-    constructor(private _tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
+    constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }
 
     /** @hidden */
     @HostListener('click')
     public onClick() {
-        this._tabs.selectTab(this.tab, true);
+        this.tabs.selectTab(this.tab, true);
     }
 
     /** @hidden */

@@ -4,10 +4,12 @@
             <h3 class="sample-title">Different size tabs</h3>
             <button [igxButton]="'outlined'" class="action-button" (click)="changeSelectedIndex()">Change selected index</button>
             <button [igxButton]="'outlined'" class="action-button" (click)="changeTabSelected()">Change tab.selected</button>
+            <button [igxButton]="'outlined'" class="action-button" (click)="renameTab2()">Rename Tab 2</button>
 
             <igx-tabs
                 style="height: 400px;"
                 #tabsNew
+                [selectedIndex]="2"
                 (selectedIndexChanging)="tabsSelectedIndexChanging($event)"
                 (selectedItemChange)="tabsSelectedItemChange($event)"
             >
@@ -25,7 +27,7 @@
                 <igx-tab-item>
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                        <span igxTabHeaderLabel>Tab 2</span>
+                        <span igxTabHeaderLabel>{{tab2Label}}</span>
                     </igx-tab-header>
                     <igx-tab-panel>
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
@@ -50,10 +52,10 @@
                     </igx-tab-panel>
                 </igx-tab-item>
 
-                <igx-tab-item>
+                <igx-tab-item [disabled]="true">
                     <igx-tab-header>
-                        <igx-icon>folder</igx-icon>
-                        Tab 4
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 4 Disabled</span>
                     </igx-tab-header>
                     <igx-tab-panel>
                         Content 4

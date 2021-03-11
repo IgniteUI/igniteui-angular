@@ -119,7 +119,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
         // Use promise to avoid expression changed after check error
         Promise.resolve().then(() => {
-            this.updateSelectedTabs(-1);
+            this.updateSelectedTabs(null);
         });
     }
 

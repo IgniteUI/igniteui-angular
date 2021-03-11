@@ -13,6 +13,12 @@
             <ng-container *ngFor="let tab of items; let i = index">
                 <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
             </ng-container>
+            <div
+                #selectedIndicator
+                *ngIf="items.length > 0"
+                class="igx-tabs__header-menu-item-indicator"
+            >
+            </div>
         </div>
     </div>
     <button
