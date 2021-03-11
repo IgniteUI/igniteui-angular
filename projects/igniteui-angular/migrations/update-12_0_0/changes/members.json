@@ -19,7 +19,14 @@
             "member": "onProgressChanged",
             "replaceWith": "progressChanged",
             "definedIn": [
-                "BaseProgressDirective"
+                "IgxLinearProgressBarComponent"
+            ]
+        },
+        {
+            "member": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "definedIn": [
+                "IgxCircularProgressBarComponent"
             ]
         }
     ]
