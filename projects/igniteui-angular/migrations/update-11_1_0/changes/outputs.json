@@ -320,46 +320,6 @@
                 "selector": "igx-chip",
                 "type": "component"
             }
-        },
-        {
-            "name": "onValueChange",
-            "replaceWith": "valueChange",
-            "owner": {
-                "selector": "igx-slider",
-                "type": "component"
-            }
-        },
-        {
-            "name": "onValueChanged",
-            "replaceWith": "valueChanged",
-            "owner": {
-                "selector": "igx-slider",
-                "type": "component"
-            }
-        },
-        {
-            "name": "onThumbValueChange",
-            "replaceWith": "thumbValueChange",
-            "owner": {
-                "selector": "igx-thumb",
-                "type": "component"
-            }
-        },
-        {
-            "name": "onChange",
-            "replaceWith": "thumbChange",
-            "owner": {
-                "selector": "igx-thumb",
-                "type": "component"
-            }
-        },
-        {
-            "name": "onHoverChange",
-            "replaceWith": "hoverChange",
-            "owner": {
-                "selector": "igx-thumb",
-                "type": "component"
-            }
         }
     ]
 }

@@ -1,0 +1,21 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChanged",
+            "replaceWith": "valueChanged",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        }
+    ]
+}
