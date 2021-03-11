@@ -226,9 +226,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return this.maskParser.applyMask(null, this.maskOptions);
   }
 
-  /**
-  * @hidden @internal
-  */
+  /** @hidden @internal */
   public get targetDatePart(): DatePart {
     if (this.document.activeElement === this.nativeElement) {
       return this._inputDateParts

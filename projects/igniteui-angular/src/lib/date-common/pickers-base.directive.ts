@@ -228,7 +228,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
         this.locale = this.locale || this._localeId;
     }
 
-    public abstract select(value: Date | DateRange): void;
+    public abstract select(value: Date | string): void;
     public abstract open(settings?: OverlaySettings): void;
     public abstract toggle(settings?: OverlaySettings): void;
     public abstract close(): void;
