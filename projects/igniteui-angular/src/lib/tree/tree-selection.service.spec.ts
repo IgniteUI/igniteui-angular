@@ -84,7 +84,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(selectionSet.size).toBe(0);
         });
 
-        // ok
         it('Should handle selection based on tree.selection', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
             const mockNode = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
@@ -137,7 +136,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             }
         });
 
-        // ok
         it('Should deselect nodes', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
             const mockNode1 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
@@ -171,7 +169,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockNode1.selectedChange.emit).toHaveBeenCalledWith(false);
         });
 
-        // ok
         it('Should be able to deselect all nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
             for (const node of allNodes.slice(0, 3)) {
@@ -190,7 +187,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should be able to deselect range of nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
             for (const node of allNodes.slice(0, 3)) {
@@ -211,8 +207,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-
-        // ok
         it('Should be able to select multiple nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
             for (const node of allNodes.slice(0, 3)) {
@@ -232,7 +226,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should be able to clear selection when adding multiple nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
 
@@ -254,7 +247,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should add newly selected nodes to the existing selection', () => {
             selectionService.selectNode(mockTree.nodes.first);
 
@@ -289,7 +281,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(selectionService.isNodeSelected(allNodes[1])).toBeTruthy();
         });
 
-        // ok
         it('Should be able to select a range of nodes', () => {
             selectionService.selectNode(allNodes[3]);
 
@@ -322,7 +313,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
 
-        // ok
         it('Should be able to select a range of nodes in reverse order', () => {
             selectionService.selectNode(allNodes[8]);
 
@@ -354,39 +344,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             };
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
-
-        // it('Should be able to select a range of nodes in reverse order - Cascade Mode', () => {
-        //     selectionService.selectNode(allNodes[8]);
-
-        //     // only seventh and eighth node are selected
-        //     expect(selectionService.isNodeSelected(allNodes[7])).toBeTruthy();
-        //     expect(selectionService.isNodeSelected(allNodes[8])).toBeTruthy();
-        //     for (let i = 0; i < allNodes.length; i++) {
-        //         if (i !== 7 && i !== 8) {
-        //             expect(selectionService.isNodeSelected(allNodes[i])).toBeFalsy();
-        //         }
-        //     }
-
-        //     // select all nodes from eight to third
-        //     selectionService.selectMultipleNodes(allNodes[3]);
-        //     allNodes.forEach((node, index) => {
-        //         if (index >= 3 && index <= 8) {
-        //             expect(selectionService.isNodeSelected(node)).toBeTruthy();
-        //         } else if (index > 8) {
-        //             expect(selectionService.isNodeSelected(node)).toBeFalsy();
-        //         }
-        //     });
-        //     expect(selectionService.isNodeSelected(allNodes[2])).toBeFalsy();
-        //     expect(selectionService.isNodeSelected(allNodes[9])).toBeFalsy();
-        //     expect(selectionService.isNodeInIndeterminateState(allNodes[0])).toBeTruthy();
-        //     expect(selectionService.isNodeInIndeterminateState(allNodes[1])).toBeTruthy();
-
-        //     const expected: ITreeNodeSelectionEvent = {
-        //         oldSelection: [allNodes[7], allNodes[8]], newSelection: allNodes.slice(3, 9),
-        //         added: allNodes.slice(3, 7), removed: [], event: undefined, cancel: false
-        //     };
-        //     expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
-        // });
     });
 
     describe('IgxTreeSelectionService - Cascading', () => {
@@ -397,7 +354,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             selectionService.register(mockTree);
         });
 
-        // ok
         it('Should deselect nodes', () => {
             selectionService.deselectNode(allNodes[1]);
             for (const node of allNodes.slice(1, 4)) {
@@ -433,7 +389,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
 
-        // ok
         it('Should be able to deselect range of nodes', () => {
             selectionService.selectNodesWithNoEvent([allNodes[1], allNodes[4]]);
             for (const node of allNodes.slice(0, 7)) {
@@ -457,7 +412,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should be able to select multiple nodes', () => {
             selectionService.selectNodesWithNoEvent([allNodes[1], allNodes[8]]);
 
@@ -473,7 +427,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should be able to clear selection when adding multiple nodes', () => {
             selectionService.selectNodesWithNoEvent([allNodes[1]], true);
 
@@ -499,7 +452,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
-        // ok
         it('Should add newly selected nodes to the existing selection', () => {
             selectionService.selectNode(allNodes[1]);
 
@@ -537,7 +489,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(2);
         });
 
-        // ok
         it('Should be able to select a range of nodes', () => {
             selectionService.selectNode(allNodes[3]);
             expect(selectionService.isNodeSelected(allNodes[3])).toBeTruthy();
@@ -564,6 +515,46 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
             expect(selectionService.isNodeIndeterminate(allNodes[0])).toBeTruthy();
             expect(selectionService.isNodeIndeterminate(allNodes[1])).toBeTruthy();
+        });
+
+        it('Should be able to select a range of nodes in reverse order', () => {
+            selectionService.selectNode(allNodes[8]);
+
+            // only seventh and eighth node are selected
+            expect(selectionService.isNodeSelected(allNodes[7])).toBeTruthy();
+            expect(selectionService.isNodeSelected(allNodes[8])).toBeTruthy();
+            expect(allNodes[7].selectedChange.emit).toHaveBeenCalled();
+            expect(allNodes[7].selectedChange.emit).toHaveBeenCalledWith(true);
+            expect(allNodes[8].selectedChange.emit).toHaveBeenCalled();
+            expect(allNodes[8].selectedChange.emit).toHaveBeenCalledWith(true);
+            expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(1);
+
+            for (let i = 0; i < allNodes.length; i++) {
+                if (i !== 7 && i !== 8) {
+                    expect(selectionService.isNodeSelected(allNodes[i])).toBeFalsy();
+                }
+            }
+
+            // select all nodes from eight to second
+            selectionService.selectMultipleNodes(allNodes[2]);
+            allNodes.forEach((node, index) => {
+                if (index <= 8) {
+                    expect(selectionService.isNodeSelected(node)).toBeTruthy();
+                    if (index < 7) {
+                        expect(node.selectedChange.emit).toHaveBeenCalled();
+                        expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
+                    }
+                } else {
+                    expect(selectionService.isNodeSelected(node)).toBeFalsy();
+                }
+            });
+
+            const expected: ITreeNodeSelectionEvent = {
+                oldSelection: [allNodes[8], allNodes[7]],
+                newSelection: [allNodes[8], allNodes[7], ...allNodes.slice(2, 7), allNodes[1], allNodes[0]],
+                added: [...allNodes.slice(2, 7), allNodes[1], allNodes[0]], removed: [], event: undefined, cancel: false
+            };
+            expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
     });
 });

@@ -1,9 +1,8 @@
 import { By } from '@angular/platform-browser';
 
-export const TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-tree-node__select-marker';
+export const TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-tree-node__select';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const TREE_NODE_CSS_CLASS = 'igx-tree-node';
-const CHECKBOX_CSS_CLASS = 'igx-checkbox';
 
 export class TreeFunctions {
 

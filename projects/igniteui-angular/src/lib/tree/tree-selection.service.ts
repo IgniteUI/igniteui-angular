@@ -123,10 +123,6 @@ export class IgxTreeSelectionService {
         this.selectNodesWithNoEvent(args.newSelection, true);
     }
 
-    private get allNodes() {
-        return this.tree.nodes;
-    }
-
     private areEqualCollections(first: IgxTreeNode<any>[], second: IgxTreeNode<any>[]): boolean {
         return first.length === second.length && new Set(first.concat(second)).size === first.length;
     }
@@ -287,7 +283,6 @@ export class IgxTreeSelectionService {
             });
         }
         return children;
-
     }
 
     /**

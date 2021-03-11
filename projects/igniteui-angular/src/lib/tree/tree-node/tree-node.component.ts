@@ -129,9 +129,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public set selected(val: boolean) {
-        if (val) {
+        if (val && !this.selectionService.isNodeSelected(this)) {
             this.selectionService.selectNodesWithNoEvent([this]);
-        } else {
+        }
+        if (!val && this.selectionService.isNodeSelected(this)) {
             this.selectionService.deselectNodesWithNoEvent([this]);
         }
     }

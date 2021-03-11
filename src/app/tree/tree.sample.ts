@@ -12,7 +12,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     styleUrls: ['tree.sample.scss']
 })
 export class TreeSampleComponent implements AfterViewInit {
-    @ViewChild('tree1', { read: IgxTreeComponent })
+    @ViewChild('tree1', { static: true })
     public tree: IgxTreeComponent;
 
     public selectionModes = [];
@@ -21,7 +21,7 @@ export class TreeSampleComponent implements AfterViewInit {
 
     public animationDuration = 400;
 
-    public data = HIERARCHICAL_SAMPLE_DATA;
+    public data;
 
     public singleBranchExpand = false;
 
@@ -31,6 +31,8 @@ export class TreeSampleComponent implements AfterViewInit {
             { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },
             { label: 'Cascade', selectMode: 'Cascading', selected: this.selectionMode === 'Cascading', togglable: true }
         ];
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+        this.mapData(this.data);
     }
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
@@ -99,6 +101,14 @@ export class TreeSampleComponent implements AfterViewInit {
         console.log(searchResult);
     }
 
+    private mapData(data: any[]) {
+        data.forEach(x => {
+            x.selected = false;
+            if(x.hasOwnProperty('ChildCompanies') && x.ChildCompanies.length) {
+                this.mapData(x.ChildCompanies);
+            }
+        });
+    }
     private containsComparer: IgxTreeSearchResolver =
         (term: any, node: IgxTreeNodeComponent<any>) => node.data?.ID?.toLowerCase()?.indexOf(term.toLowerCase()) > -1;
 }

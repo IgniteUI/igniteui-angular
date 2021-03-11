@@ -322,70 +322,26 @@ describe('IgxTree - Selection', () => {
             (tree.nodes as any) = mockQuery;
         });
 
-        // it('Should be able to select all nodes', () => {
-        //     spyOn(selectionService, 'selectAllNodes').and.callThrough();
-
-        //     tree.selectAll();
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalledWith();
-        // });
-
-        // it('Should be able to select multiple nodes', () => {
-        //     spyOn(selectionService, 'selectAllNodes').and.callThrough();
-
-        //     tree.selectAll([mockNodes[0], mockNodes[3]]);
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalledWith([mockNodes[0], mockNodes[3]], false);
-        // });
-
-        // it('Should be able to select multiple nodes and clear previous selection', () => {
-        //     spyOn(selectionService, 'selectAllNodes').and.callThrough();
-
-        //     tree.selectAll([mockNodes[1]]);
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalledWith([mockNodes[1]], false);
-        //     tree.selectAll([mockNodes[0], mockNodes[3]], true);
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-        //     expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalledWith([mockNodes[0], mockNodes[3]], true);
-        // });
-
         it('Should be able to deselect all nodes', () => {
-            //spyOn(selectionService, 'selectAllNodes').and.callThrough();
-            //spyOn(selectionService, 'deselectAllNodes').and.callThrough();
             spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
 
             tree.nodes.forEach(node => node.selected = true);
 
-            // tree.selectAll();
-            // expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-            // expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalledWith();
-
             tree.deselectAll();
-            // expect((tree as any).selectionService.deselectAllNodes).toHaveBeenCalled();
-            // expect((tree as any).selectionService.deselectAllNodes).toHaveBeenCalledWith();
             expect((tree as any).selectionService.deselectNodesWithNoEvent).toHaveBeenCalled();
             expect((tree as any).selectionService.deselectNodesWithNoEvent).toHaveBeenCalledWith(undefined);
         });
 
         it('Should be able to deselect multiple nodes', () => {
-            // spyOn(selectionService, 'selectAllNodes').and.callThrough();
-            // spyOn(selectionService, 'deselectAllNodes').and.callThrough();
             spyOn(selectionService, 'deselectNodesWithNoEvent').and.callThrough();
 
             tree.nodes.toArray()[0].selected = true;
             tree.nodes.toArray()[1].selected = true;
 
-            // tree.selectAll([mockNodes[0], mockNodes[1], mockNodes[3]]);
-            // expect((tree as any).selectionService.selectAllNodes).toHaveBeenCalled();
-            // expect((tree as any).selectionService.selectAllNodes)
-            //     .toHaveBeenCalledWith([mockNodes[0], mockNodes[1], mockNodes[3]], false);
-
             tree.deselectAll([tree.nodes.toArray()[0], tree.nodes.toArray()[1]]);
             expect((tree as any).selectionService.deselectNodesWithNoEvent).toHaveBeenCalled();
             expect((tree as any).selectionService.deselectNodesWithNoEvent)
                 .toHaveBeenCalledWith([tree.nodes.toArray()[0], tree.nodes.toArray()[1]]);
-            // expect((tree as any).selectionService.deselectAllNodes).toHaveBeenCalled();
-            // expect((tree as any).selectionService.deselectAllNodes).toHaveBeenCalledWith([mockNodes[0], mockNodes[1]]);
         });
     });
 
@@ -424,6 +380,15 @@ describe('IgxTree - Selection', () => {
             expect(isSelected).toBeFalse();
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeSelected).toHaveBeenCalledWith(node);
+        });
+
+        it('Should call isNodeIndeterminate when node`s indeterminate getter is invoked', () => {
+            spyOn(selectionService, 'isNodeIndeterminate').and.callThrough();
+            const isIndeterminate = node.indeterminate;
+
+            expect(isIndeterminate).toBeFalse();
+            expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalled();
+            expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalledWith(node);
         });
     });
 });
