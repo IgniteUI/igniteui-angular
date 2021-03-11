@@ -141,7 +141,7 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.name.first' header='First Name' editable='true' dataType='string'></igx-column>
         <igx-column field='user.name.last' header='Last Name' editable='true' dataType='string'></igx-column>
         <igx-column field='user.email' header='E-Mail' editable='true' dataType='string'></igx-column>
-        <igx-column field='user.age' header='Age' [sortable]='true' editable='true' dataType='number'></igx-column>
+        <igx-column field='user.age' header='Age' [sortable]="true" editable='true' dataType='number'></igx-column>
         <igx-column field='user.address.zip' header='ZIP' editable='true' dataType='number'></igx-column>
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>

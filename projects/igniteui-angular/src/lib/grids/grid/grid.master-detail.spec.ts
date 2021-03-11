@@ -1189,7 +1189,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
 @Component({
     template: `
-        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
+        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true"
         [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>

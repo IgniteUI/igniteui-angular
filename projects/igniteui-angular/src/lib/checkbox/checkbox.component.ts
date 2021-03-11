@@ -59,6 +59,8 @@ let nextId = 0;
     templateUrl: 'checkbox.component.html'
 })
 export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * An event that is emitted after the checkbox state is changed.
      * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
@@ -191,13 +193,19 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      *
      * @example
      * ```html
-     * <igx-checkbox [required] = "true"></igx-checkbox>
+     * <igx-checkbox required></igx-checkbox>
      * ```
      * ```typescript
      * let isRequired =  this.checkbox.required;
      * ```
      */
-    @Input() public required = false;
+     @Input()
+     public get required(): boolean {
+         return this._required;
+     }
+     public set required(value: boolean) {
+         this._required = (value as any === '') || value;
+     }
     /**
      * Sets/gets the `aria-labelledby` attribute.
      * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
@@ -285,7 +293,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      *
      * @example
      * ```html
-     * <igx-checkbox [disabled] = "true"></igx-checkbox>
+     * <igx-checkbox disabled></igx-checkbox>
      * ```
      * ```typescript
      * let isDisabled = this.checkbox.disabled;
@@ -293,7 +301,12 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     @HostBinding('class.igx-checkbox--disabled')
     @Input()
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+    }
     /**
      * Sets/gets whether the checkbox is readonly.
      * Default value is `false`.
@@ -328,6 +341,16 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      */
     protected _value: string;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _disabled = false;
     /**
      * @hidden
      */

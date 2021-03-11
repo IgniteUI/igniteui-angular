@@ -36,7 +36,7 @@ more complex component.
 
 Setting a centered ripple effect with custom color.
 ```html
-<span igxButton="raised" igxRipple="#e41c77" igxRippleCentered="true">
+<span igxButton="raised" igxRipple="#e41c77" [igxRippleCentered]="true">
     <i class="material-icons">edit</i>
 </span>
 ```

@@ -22,7 +22,7 @@
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
     </igx-column>
-    <igx-column width="200px" field="OrderDate" header="Unbound column" [filterable]="true" [hasSummary]="true" sortable="true">
+    <igx-column width="200px" field="OrderDate" header="Unbound column" [filterable]="true" [hasSummary]="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val>
             {{ cell.rowData.UnitsInStock }}
         </ng-template>

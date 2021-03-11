@@ -10,22 +10,22 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
         <igx-column-layout field='group1'>
-            <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [groupable]='true' ></igx-column>
+            <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [groupable]="true" ></igx-column>
         </igx-column-layout>
         <igx-column-layout field='group2'>
-            <igx-column editable="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName"></igx-column>
+            <igx-column [editable]="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName"></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" ></igx-column>
             <igx-column [rowStart]="2" [colStart]="2" field="ContactTitle"></igx-column>
             <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="Address"></igx-column>
         </igx-column-layout>
         <igx-column-layout>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" [rowEnd]="3" field="City"></igx-column>
-            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" [movable]="false" sortable="true" field="Region"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" [movable]="false" [sortable]="true" field="Region"></igx-column>
         </igx-column-layout>
         <igx-column-layout>
             <igx-column [rowStart]="1" [colStart]="1" field="Country"></igx-column>
-            <igx-column [rowStart]="1" [colStart]="2" [movable]="false" sortable="true" field="Phone"></igx-column>
-            <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" [rowEnd]="4" [movable]="false" sortable="true" field="Fax"></igx-column>
+            <igx-column [rowStart]="1" [colStart]="2" [movable]="false" [sortable]="true" field="Phone"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="1" [colEnd]="3" [rowEnd]="4" [movable]="false" [sortable]="true" field="Fax"></igx-column>
         </igx-column-layout>
     </igx-grid>
 </section>

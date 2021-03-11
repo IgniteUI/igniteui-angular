@@ -15,7 +15,7 @@
             <igx-switch (change)='onRowChange()' style="padding-left: 10px"> Bottom Row Pinning toggle</igx-switch>
             <igx-switch (change)='onChange()' style="padding-left: 10px"> Right Column Pinning toggle</igx-switch>
         </div>
-        <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]='true' [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
+        <igx-grid [rowEditable]="true" [igxGridState]="options" [allowFiltering]="true" [primaryKey]='"ID"' [pinning]="pinningConfig" [paging]="true"
             #grid1 [data]="data" [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
             <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
                 <app-grid-search-box [grid]="grid1" [style.width]="'400px'"></app-grid-search-box>
@@ -52,8 +52,8 @@
     <br/>
     <div class="sample-column">
         <div>igxHierarchicalGrid</div>
-        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true'
-            [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" [rowSelection]="true" >
+        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]="true"
+            [showExpandAll]='true' [data]="hierarchicalData" [pinning]="pinningConfig" rowSelection="multiple" >
             <igx-grid-toolbar [displayDensity]="hGrid.displayDensity">
                 <app-grid-search-box [grid]="hGrid" [style.width]="'400px'"></app-grid-search-box>
                 <igx-grid-toolbar-actions>
@@ -75,16 +75,16 @@
             </igx-column>
             <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' >
             </igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='true'  [allowFiltering]='true'  >
-                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='true' [allowFiltering]='true'></igx-row-island>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" rowSelection="multiple"  [allowFiltering]="true"  >
+                <igx-row-island [key]="'childData'" [autoGenerate]="true" rowSelection="multiple" [allowFiltering]="true"></igx-row-island>
             </igx-row-island>
-            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]="true"></igx-row-island>
         </igx-hierarchical-grid>
     </div>
 
     <div class="sample-column">
         <div>igxTreeGrid</div>
-        <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
+        <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]="true" [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
         [width]="'900px'" [height]="'800px'">
         <igx-grid-toolbar [displayDensity]="treegrid.displayDensity">
             <app-grid-search-box [grid]="treegrid" [style.width]="'450px'"></app-grid-search-box>

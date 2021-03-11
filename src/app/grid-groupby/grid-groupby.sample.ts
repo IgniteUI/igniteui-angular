@@ -3,7 +3,7 @@ import { Component, ViewChild, OnInit, Inject } from '@angular/core';
 
 import {
     IgxGridComponent, SortingDirection, ISortingExpression,
-    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition
+    DefaultSortingStrategy, DisplayDensity, IDisplayDensityOptions, DisplayDensityToken, GridSummaryPosition, GridSummaryCalculationMode
 } from 'igniteui-angular';
 
 @Component({
@@ -21,10 +21,10 @@ export class GridGroupBySampleComponent implements OnInit {
     public expState = [];
     public columns: Array<any>;
     public groupingExpressions: Array<ISortingExpression>;
-    public summaryMode = 'rootLevelOnly';
+    public summaryMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootLevelOnly;
     public summaryModes = [];
     public selectionModes: any[];
-    public position = GridSummaryPosition.top;
+    public position: GridSummaryPosition = GridSummaryPosition.top;
 
     private _density: DisplayDensity = DisplayDensity.cosy;
 

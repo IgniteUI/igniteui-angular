@@ -1,7 +1,7 @@
 <div class="wrapper">
     <igx-grid #grid1 [data]="data" [width]="'820px'" [height]="'700px'" [autoGenerate]='false' >
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]='true' [movable]='true' [groupable]='true' [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
+            [hidden]='c.hidden' [sortable]="true" [movable]='true' [groupable]="true" [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
         <!-- <igx-column-layout field='group2'>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'"></igx-column>

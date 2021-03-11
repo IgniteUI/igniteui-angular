@@ -60,6 +60,7 @@ let nextId = 0;
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
     private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Returns a reference to the native checkbox element.
      *
@@ -167,7 +168,13 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch required></igx-switch>
      * ```
      */
-    @Input() public required = false;
+     @Input()
+     public get required(): boolean {
+         return this._required;
+     }
+     public set required(value: boolean) {
+         this._required = (value as any === '') || value;
+     }
     /**
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
@@ -223,11 +230,17 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      *
      * @example
      * ```html
-     * <igx-switch [disabled]="true"><igx-switch>
+     * <igx-switch disabled><igx-switch>
      * ```
      */
     @HostBinding('class.igx-switch--disabled')
-    @Input() public disabled = false;
+    @Input()
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+    }
     /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
@@ -249,6 +262,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     protected _value: any;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _disabled = false;
     /**
      * @hidden
      * @internal
@@ -356,15 +379,15 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     public registerOnChange(fn: (_: any) => void) {
- this._onChangeCallback = fn;
-}
+        this._onChangeCallback = fn;
+    }
     /**
      * @hidden
      * @internal
      */
     public registerOnTouched(fn: () => void) {
- this._onTouchedCallback = fn;
-}
+        this._onTouchedCallback = fn;
+    }
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {

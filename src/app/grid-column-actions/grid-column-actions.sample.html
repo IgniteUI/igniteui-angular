@@ -7,9 +7,9 @@
             </igx-grid-toolbar-actions>
           </igx-grid-toolbar>
         <igx-column-group header="General Information" title="General Company Information" >
-            <igx-column [field]='"Missing"' [groupable]='true'></igx-column>
+            <igx-column [field]='"Missing"' [groupable]="true"></igx-column>
         </igx-column-group>
-        <igx-column *ngFor="let c of columns" [groupable]='true' [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
+        <igx-column *ngFor="let c of columns" [groupable]="true" [editable] = true [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned'
             [hidden]='c.hidden'>
         </igx-column>
     </igx-grid>

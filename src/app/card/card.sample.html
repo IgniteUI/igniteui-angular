@@ -128,7 +128,7 @@
 
             <igx-card-actions>
                 <button igxButton igxRipple>Read More</button>
-                <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
+                <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[0].icons">
                     <igx-icon>{{icon}}</igx-icon>
                 </span>
             </igx-card-actions>
@@ -164,7 +164,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--start">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[5].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[5].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -191,7 +191,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--start">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[6].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[6].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -211,7 +211,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--end">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[1].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[1].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -234,7 +234,7 @@
             <igx-divider type="dashed" [middle]="true" inset="16px"></igx-divider>
 
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true">
+                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple [igxRippleCentered]="true">
                     <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
                 </button>
             </igx-card-actions>
@@ -247,7 +247,7 @@
         <igx-card type="outlined" [horizontal]="true">
 
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true" >
+                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple [igxRippleCentered]="true" >
                     <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
                 </button>
             </igx-card-actions>

@@ -14,20 +14,20 @@
     <ng-template igxExcelStyleHiding></ng-template>
     <ng-template igxExcelStylePinning></ng-template> -->
 
-    <igx-column [field]="'ID'" [hidden]='true'></igx-column>
-    <igx-column [field]="'Category'" [width]="'120px'" [groupable]='true' [sortable]='true'></igx-column>
-    <igx-column [field]="'Type'" [width]="'100px'" [groupable]='true' [sortable]='true' [filterable]='false'>
+    <igx-column [field]="'ID'" [hidden]="true"></igx-column>
+    <igx-column [field]="'Category'" [width]="'120px'" [groupable]="true" [sortable]="true"></igx-column>
+    <igx-column [field]="'Type'" [width]="'100px'" [groupable]="true" [sortable]="true" [filterable]='false'>
     </igx-column>
-    <igx-column [field]="'Contract'" [width]="'110px'" [groupable]='true' [sortable]='true' [editable]='true'>
+    <igx-column [field]="'Contract'" [width]="'110px'" [groupable]="true" [sortable]="true" [editable]='true'>
         <ng-template igxCellEditor let-cell="cell" let-value>
             <igx-select [placeholder]="value" [(ngModel)]="cell.editValue" [igxFocus]="true">
                 <igx-select-item *ngFor="let c of contracts" [value]="c">{{ c }}</igx-select-item>
             </igx-select>
         </ng-template>
     </igx-column>
-    <igx-column [field]="'Settlement'" [width]="'100px'" [groupable]='true' [sortable]='true'></igx-column>
-    <igx-column [field]="'Country'" [width]="'100px'" [groupable]='true' [sortable]='true' [editable]='true'></igx-column>
-    <igx-column [field]="'Region'" [width]="'110px'" [groupable]='true' [sortable]='true' [editable]='true'>
+    <igx-column [field]="'Settlement'" [width]="'100px'" [groupable]="true" [sortable]="true"></igx-column>
+    <igx-column [field]="'Country'" [width]="'100px'" [groupable]="true" [sortable]="true" [editable]='true'></igx-column>
+    <igx-column [field]="'Region'" [width]="'110px'" [groupable]="true" [sortable]="true" [editable]='true'>
         <ng-template igxCellEditor let-cell="cell" let-value>
             <igx-select [placeholder]="value" [(ngModel)]="cell.editValue" [igxFocus]="true">
                 <igx-select-item *ngFor="let r of regions" [value]="r.Region">{{ r.Region }}</igx-select-item>
@@ -47,7 +47,7 @@
     </igx-column>
     <igx-column [field]="'Chart'" [width]="'60px'" [hidden]="false" [filterable]='false'>
         <ng-template igxCell let-cell="cell" class="center-text">
-            <button class="button-icon" igxButton="icon" igxRippleCentered="true" tabindex="-1">
+            <button class="button-icon" igxButton="icon" igxRipple [igxRippleCentered]="true" tabindex="-1">
                 <igx-icon>insert_chart_outlined</igx-icon>
             </button>
         </ng-template>

@@ -14,19 +14,19 @@
             <igx-column [groupable]="true" [rowStart]="1" [colStart]="1" [rowEnd]="4" field="ID" [width]="'20%'" [resizable]='true' [minWidth]="'10%'" [maxWidth]="'30%'"></igx-column>
         </igx-column-layout>
         <igx-column-layout field='group2'>
-            <igx-column editable="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'" [resizable]='true'></igx-column>
+            <igx-column [editable]="true" [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName" [width]="'300px'" [resizable]='true'></igx-column>
             <igx-column [rowStart]="2" [colStart]="1" field="ContactName" [width]="'100px'" [resizable]='true'></igx-column>
             <igx-column [rowStart]="2" [colStart]="2" field="ContactTitle" [width]="'200px'" [resizable]='true'></igx-column>
             <igx-column [rowStart]="3" [colStart]="1" [colEnd]="3" field="Address" [width]="'300px'" [resizable]='true'></igx-column>
         </igx-column-layout>
         <igx-column-layout>
             <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" [rowEnd]="3" field="City" [width]="'300px'"></igx-column>
-            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" [movable]="false" sortable="true" field="Region" [width]='"300px"'></igx-column>
+            <igx-column [rowStart]="3" [colStart]="1"  [colEnd]="3" [movable]="false" [sortable]="true" field="Region" [width]='"300px"'></igx-column>
         </igx-column-layout>
         <igx-column-layout>
-            <igx-column [rowStart]="1" [width]="'10%'" [resizable]='true' [colStart]="1" field="Country" [groupable]='true'></igx-column>
-            <igx-column [rowStart]="1" [width]="'10%'" [resizable]='true' [colStart]="2" [movable]="false" sortable="true" field="Phone"></igx-column>
-            <igx-column [rowStart]="2" [resizable]='true' [colStart]="1" [colEnd]="3" [rowEnd]="4" [movable]="false" sortable="true" field="Fax"></igx-column>
+            <igx-column [rowStart]="1" [width]="'10%'" [resizable]='true' [colStart]="1" field="Country" [groupable]="true"></igx-column>
+            <igx-column [rowStart]="1" [width]="'10%'" [resizable]='true' [colStart]="2" [movable]="false" [sortable]="true" field="Phone"></igx-column>
+            <igx-column [rowStart]="2" [resizable]='true' [colStart]="1" [colEnd]="3" [rowEnd]="4" [movable]="false" [sortable]="true" field="Fax"></igx-column>
         </igx-column-layout>
         <igx-action-strip #actionstrip>
             <igx-grid-pinning-actions></igx-grid-pinning-actions>

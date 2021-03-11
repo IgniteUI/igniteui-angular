@@ -154,10 +154,10 @@
             </igx-column>
             <igx-column [field]="'Discontinued'">
                 <ng-template igxHeader let-column="column">
-                    <p style="color: crimson"></p>
+                    <p style="color: crimson">{{column.field}}</p>
                 </ng-template>
                 <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid2.updateCell(ri, column?.field, $event.checkbox.checked)"></igx-checkbox>
+                    <igx-checkbox [checked]="item" (change)="grid2.updateCell($event.checkbox.checked, ri, column?.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
         </igx-grid>
@@ -180,7 +180,7 @@
             <button igxButton="flat" (click)="export()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Grid</button>
             <button igxButton="flat" (click)="exportFilteredGrid()" igxButtonColor="#FBB13C" igxButtonBackground="#340068" igxRipple="#FBB13C">Export Cheese Products Report</button>
             <br>
-            <input class="igx-form-group__input--search" type="text" placeholder="Search Grid" (input)="onSearchChange($event.target.value)" (keydown)="onSearch($event)" />
+            <input class="igx-form-group__input--search" #searchInput type="text" placeholder="Search Grid" (input)="onSearchChange(searchInput.value)" (keydown)="onSearch($event)" />
         </div>
         <div class="cards-container" hidden>
             <div class="toggle-group" style="min-width: 250px;">
@@ -196,10 +196,10 @@
             <igx-column [sortable]="true" [field]="'UnitsInStock'" [header]="'Units in Stock'"></igx-column>
             <igx-column [field]="'Discontinued'" [sortable]="true" [hidden]="true">
                 <ng-template igxHeader let-column="column">
-                    <p style="color: crimson"></p>
+                    <p style="color: crimson">{{column.field</p>
                 </ng-template>
                 <ng-template igxCell let-item="item" let-ri="rowIndex" let-column="column">
-                    <igx-checkbox [checked]="item" (change)="grid3.updateCell(ri, column?.field, $event.checkbox.checked)"></igx-checkbox>
+                    <igx-checkbox [checked]="item" (change)="grid3.updateCell($event.checkbox.checked, ri, column?.field)"></igx-checkbox>
                 </ng-template>
             </igx-column>
         </igx-grid>
@@ -210,7 +210,7 @@
 
 <igx-toast #toast></igx-toast>
 <div style="width: calc(100% - 242px); display: flex; position: fixed; bottom: 0; justify-content: center">
-    <igx-snackbar #snax [autoHide]="true" displayTime="2500" style="width: 50%;" message="Row was deleted" actionText="Undo"
+    <igx-snackbar #snax [autoHide]="true" [displayTime]="2500" style="width: 50%;" message="Row was deleted" actionText="Undo"
         (onAction)="restore()">
     </igx-snackbar>
 </div>
