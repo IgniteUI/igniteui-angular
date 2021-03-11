@@ -320,14 +320,6 @@
                 "selector": "igx-chip",
                 "type": "component"
             }
-        },
-        {
-            "name": "onColumnChange",
-            "replaceWith": "columnChange",
-            "owner": {
-                "selector": "igx-column",
-                "type": "component"
-            }
         }
     ]
 }
