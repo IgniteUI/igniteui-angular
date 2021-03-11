@@ -8,6 +8,18 @@ All notable changes for each version of this project will be documented in this 
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
 
+### General:
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `valueChanged`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+
 ## 11.1.1
 
 ### New Features
@@ -147,10 +159,6 @@ All notable changes for each version of this project will be documented in this 
         - `onColumnExport` to `columnExporting`
         - `onRowExport` to `rowExporting`
         - `onExportEnded` to `exportEnded`
-- `IgxSliderComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onValueChange` to `valueChange`
-        - `onValueChanged` to `valueChanged`
 
 ## 11.0.15
 
