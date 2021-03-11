@@ -6,9 +6,8 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxDateTimeEditor`
-    - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning
-    - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion, 
-    it defaults to `1` and if set values present in `spinDelta` are ignored
+    - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
+    - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
 
 ## 11.1.1
 
