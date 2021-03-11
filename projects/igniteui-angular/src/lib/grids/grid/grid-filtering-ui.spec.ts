@@ -3672,7 +3672,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(3, 'incorrect rendered list items count');
             expect(listItems[0].innerText).toBe('Select all search results');
-            expect(listItems[2].innerText).toBe('false');
+            expect(listItems[2].innerText).toBe('False');
         }));
 
         it('should scroll items in search list correctly', (async () => {
@@ -4005,7 +4005,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', 'false', 'true'],
+                ['Select All', '(Blanks)', 'False', 'True'],
                 [true, true, true, true]);
 
             toggleExcelStyleFilteringItems(fix, true, 3);
@@ -4016,7 +4016,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', 'false', 'true'],
+                ['Select All', '(Blanks)', 'False', 'True'],
                 [null, true, true, false]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'Downloads');
@@ -4042,7 +4042,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
             fix.detectChanges();
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', 'false', 'true'],
+                ['Select All', '(Blanks)', 'False', 'True'],
                 [null, true, true, false]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
