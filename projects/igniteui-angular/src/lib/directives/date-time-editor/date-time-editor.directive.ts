@@ -325,6 +325,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    */
   public increment(datePart?: DatePart, delta?: number): void {
     const targetPart = datePart || this.targetDatePart;
+    if (!targetPart) {
+      return;
+    }
     const newValue = this.trySpinValue(targetPart, delta);
     this.updateValue(newValue);
   }
@@ -337,6 +340,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    */
   public decrement(datePart?: DatePart, delta?: number): void {
     const targetPart = datePart || this.targetDatePart;
+    if (!targetPart) {
+      return;
+    }
     const newValue = this.trySpinValue(targetPart, delta, true);
     this.updateValue(newValue);
   }
