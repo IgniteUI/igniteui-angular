@@ -130,7 +130,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * The format used when editable input is not focused. Defaults to the `inputFormat` if not set.
      *
      * @remarks
-     * Uses Angular's DatePipe.
+     * Uses Angular's `DatePipe`.
      *
      * @example
      * ```html
@@ -145,7 +145,7 @@ export class IgxTimePickerComponent extends PickersBaseDirective
      * The expected user input format and placeholder.
      *
      * @remarks
-     * Default is `"'hh:mm tt'"`
+     * Default is `hh:mm tt`
      *
      * @example
      * ```html
