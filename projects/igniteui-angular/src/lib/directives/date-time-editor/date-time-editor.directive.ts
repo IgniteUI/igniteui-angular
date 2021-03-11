@@ -180,12 +180,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /**
-   * Set spin delta values used to increment or decrement the editor's date on spin actions.
-   * By default all delta values are set to `1`.
+   * Delta values used to increment or decrement each editor date part on spin actions.
+   * All values default to `1`.
    *
    * @example
    * ```html
-   * <input igxDateTimeEditor [spinDeltas]="mySpinDeltas">
+   * <input igxDateTimeEditor [spinDeltas]="{date: 5, minute: 30}">
    * ```
    */
   @Input()
@@ -323,7 +323,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * @param datePart The optional DatePart to increment. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
    * @param delta The optional delta to increment by. Overrides `spinDelta`.
    */
-  public increment(datePart?: DatePart, delta = 1): void {
+  public increment(datePart?: DatePart, delta?: number): void {
     const targetPart = datePart || this.targetDatePart;
     const newValue = this.trySpinValue(targetPart, delta);
     this.updateValue(newValue);
@@ -335,7 +335,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * @param datePart The optional DatePart to decrement. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
    * @param delta The optional delta to decrement by. Overrides `spinDelta`.
    */
-  public decrement(datePart?: DatePart, delta = 1): void {
+  public decrement(datePart?: DatePart, delta?: number): void {
     const targetPart = datePart || this.targetDatePart;
     const newValue = this.trySpinValue(targetPart, delta, true);
     this.updateValue(newValue);
@@ -567,9 +567,12 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return newDate;
   }
 
-  private trySpinValue(datePart: DatePart, delta: number, negative = false) {
-    const spinDelta = delta !== 1 ? delta : this.datePartDeltas[datePart] || 1;
-    const spinValue = negative ? -Math.abs(spinDelta) : Math.abs(spinDelta);
+  private trySpinValue(datePart: DatePart, delta?: number, negative = false) {
+    if (!delta) {
+      // default to 1 if a delta is set to 0 or any other falsy value
+      delta = this.datePartDeltas[datePart] || 1;
+    }
+    const spinValue = negative ? -Math.abs(delta) : Math.abs(delta);
     return this.spinValue(datePart, spinValue) || new Date();
   }
 
