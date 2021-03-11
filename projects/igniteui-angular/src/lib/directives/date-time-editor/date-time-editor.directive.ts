@@ -191,14 +191,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Input()
   public spinDelta: DatePartDeltas;
 
-  /** @hidden @internal */
-  @Input()
-  public preventSpinOnWheel = false;
-
-  /** @hidden @internal */
-  @Input()
-  public suppressFocus = false;
-
   /**
    * Emitted when the editor's value has changed.
    *
@@ -291,7 +283,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   @HostListener('wheel', ['$event'])
   public onWheel(event: WheelEvent) {
-    if (this.preventSpinOnWheel) {
+    if (!this._isFocused) {
       return;
     }
     event.preventDefault();
@@ -439,9 +431,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onFocus(): void {
-    if (this.suppressFocus) {
-      return;
-    }
     this._isFocused = true;
     this.onTouchCallback();
     this.updateMask();
