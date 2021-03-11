@@ -189,6 +189,10 @@
         }
 
         [igxButton='icon'] {
+            igx-icon {
+                color: --var($theme, 'color');
+            }
+
             @if $variant == 'indigo-design' {
                 border-radius: --var($theme, 'actions-border-radius');
             }
