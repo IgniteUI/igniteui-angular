@@ -5623,9 +5623,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (event.code === 'KeyC' && event.ctrlKey && event.currentTarget.className === 'igx-grid__thead-wrapper') {
             if (selectedData.length) {
-                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                    this.clipboardOptions.copyHeaders);
-                result = this.prepareCopyData(event, data[0], data[1]);
+                if (columnData.length === 0) {
+                    result = this.prepareCopyData(event, selectedData);
+                } else {
+                    data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
+                        this.clipboardOptions.copyHeaders);
+                    result = this.prepareCopyData(event, data[0], data[1]);
+                }
             } else {
                 data = columnData;
                 result = this.prepareCopyData(event, data);
@@ -6832,7 +6836,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             if (Object.keys(record).length) {
                 if (columnData) {
-                    if (!keys.length){
+                    if (!keys.length) {
                         keys = Object.keys(columnData[0]);
                     }
                     for (const [key, value] of Object.entries(record)) {
