@@ -54,8 +54,8 @@
                             </span>
                             <span #resizeHandleBottom class="resizerBottom"
                                 (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"
-                                (pointermove)="pointerMoveResizeBottom($event, gridCell, rowIndex, colIndex)"
-                                (pointerup)="pointerUpResizeBottom($event, gridCell, rowIndex, colIndex)">
+                                (pointermove)="pointerMoveResizeBottom($event, rowIndex)"
+                                (pointerup)="pointerUpResizeBottom(rowIndex)">
                             </span>
                         </ng-container>
                     </div>
