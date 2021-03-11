@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IgxGridComponent,
-    ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
+    ISortingExpression, IPinColumnEventArgs,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
