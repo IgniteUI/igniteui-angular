@@ -4,18 +4,32 @@
     padding-left: 16px;
 }
 
-.igx-tree-node__header {
+.igx-tree-node__wrapper {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    user-select: none;
+    flex-direction: column;
+}
 
-    .igx-tree-node__indicators {
-        display: flex;
-        flex-direction: row;
-        align-items: flex-end;
-        padding-right: 8px;
-    }
+.igx-tree-node__header, .igx-tree-node__content {
+    display: flex;
+    align-items: center;
+}
+
+.igx-tree-node__header-buffer {
+    height: 4px;
+    width: 100%;
+
+}
+
+.igx-tree-node__header, .igx-tree-node__indicator {
+    line-height: 12px;
+}
+
+.igx-tree-node__indicator {
+    padding: 0px 2px;
+}
+
+.igx-tree-node__select {
+    padding-right: 8px;
 }
 
 .igx-tree-node__group {

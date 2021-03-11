@@ -35,9 +35,6 @@
                     {{ child.CompanyName }}
                     <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
                         {{ leafchild.CompanyName }}
-                        <igx-combo>
-
-                        </igx-combo>
                     </igx-tree-node>
                 </igx-tree-node>
             </igx-tree-node>

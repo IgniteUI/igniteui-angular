@@ -57,6 +57,18 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Input()
     public expandIndicator: TemplateRef<any>;
 
+    // TODO: bind to active state when keynav is implemented
+    @HostBinding('class.igx-tree-node--active')
+    public get active() {
+        return false;
+    }
+
+    // TODO: bind to disabled state when node is dragged
+    @HostBinding('class.igx-tree-node--disabled')
+    public get disabled() {
+        return false;
+    }
+
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
