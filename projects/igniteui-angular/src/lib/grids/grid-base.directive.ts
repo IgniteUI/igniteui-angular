@@ -6825,7 +6825,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                             if (!record[key]) {
                                 record[key] = '';
                             }
-                            record[key] = record[key].concat('recordRow-' + row);
+                            record[key] = record[key].toString().concat('recordRow-' + row);
                         }
                     }
                 });
