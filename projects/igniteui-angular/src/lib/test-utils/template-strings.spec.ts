@@ -415,12 +415,12 @@ export class ColumnDefinitions {
                 [pinned]="true" field="Missing"></igx-column>
     <igx-column-group [movable]="true" [pinned]="false" header="General Information">
         <igx-column [movable]="true" filterable="true" [sortable]="true"
-                resizable="true" field="CompanyName"></igx-column>
+                [resizable]="true" field="CompanyName"></igx-column>
         <igx-column-group [movable]="true" header="Person Details">
             <igx-column [movable]="true" [pinned]="false" filterable="true"
-                [sortable]="true" resizable="true" field="ContactName"></igx-column>
+                [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
             <igx-column [movable]="true" [hasSummary]="true" filterable="true"
-                [sortable]="true" resizable="true" field="ContactTitle"></igx-column>
+                [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
         </igx-column-group>
     </igx-column-group>
     <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
