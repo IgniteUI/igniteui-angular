@@ -5098,6 +5098,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should display the default True and False resource strings in the search list for boolean column.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
             flush();
+            fix.detectChanges();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
@@ -5113,6 +5114,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickApplyExcelStyleFiltering(fix);
             flush();
+            fix.detectChanges();
 
             expect(grid.filteredData.length).toEqual(5);
         }));
@@ -5124,6 +5126,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
             flush();
+            fix.detectChanges();
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
