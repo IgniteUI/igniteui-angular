@@ -5,7 +5,7 @@
     <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)" style="display: block; width: 500px"></igx-buttongroup>
 </div>
 <igx-grid #grid1 [filterMode]="'excelStyleFilter'" locale="fr-FR" [data]="data" [primaryKey]="'ProductID'" [rowEditable]="true" [displayDensity]="density" width="800px" height="550px" [paging]="true" [rowSelection]="selectionMode">
-    <igx-column field="OrderDate"  width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true" [movable]="true">
+    <igx-column field="OrderDate"  width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [editable]="true" [resizable]="true" [movable]="true">
                 <!-- <ng-template igxCell let-cell="cell" let-val>
                     {{val | date}}
                 </ng-template> -->
