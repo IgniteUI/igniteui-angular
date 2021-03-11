@@ -5204,6 +5204,44 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const cellValues = GridFunctions.getColumnCells(fix, 'ProductName').map(c => c.nativeElement.innerText).sort();
             expect(cellValues).toEqual(['Web', 'Web']);
         });
+
+        it('Should display the default True and False resource strings in the search list for boolean column.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
+            flush();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems[2].innerText).toBe('False', 'incorrect list item label');
+            expect(listItems[3].innerText).toBe('True', 'incorrect list item label');
+
+            const checkboxes = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
+            checkboxes[3].click();
+            tick();
+            fix.detectChanges();
+
+            GridFunctions.clickApplyExcelStyleFiltering(fix);
+            flush();
+
+            expect(grid.filteredData.length).toEqual(5);
+        }));
+
+        it('Should display the custom resource strings when specified in the search list for boolean column.', fakeAsync(() => {
+            grid.resourceStrings.igx_grid_filter_false = 'No';
+            grid.resourceStrings.igx_grid_filter_true = 'Yes';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
+            flush();
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+
+            expect(listItems.length).toBe(4, 'incorrect rendered list items count');
+            expect(listItems[2].innerText).toBe('No', 'incorrect list item label');
+            expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
+        }));
     });
 
     describe('Templates: ', () => {
