@@ -14,7 +14,7 @@ Supporting directives and components:
 ```html
 <igx-card>
     <igx-card-header>
-        <igx-avatar src="https://upload.wikimedia.org/wikipedia/commons/4/49/Elon_Musk_2015.jpg" roundShape="true"></igx-avatar>
+        <igx-avatar src="https://upload.wikimedia.org/wikipedia/commons/4/49/Elon_Musk_2015.jpg" [roundShape]="true"></igx-avatar>
         <h4 igxCardHeaderTitle>Elon Musk</h4>
         <h5 igxCardHeaderSubtitle>Entrepreneur</h5>
     </igx-card-header>

@@ -3006,7 +3006,7 @@ class IgxSelectTemplateFormComponent {
     template: `
         <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
         <igx-select #headerFooterSelect
-        [required]="true"
+        required
         [placeholder]="'Pick One'"
         [(ngModel)]="value"
         [displayDensity]="'cosy'">

@@ -16,7 +16,7 @@
                 <igx-list-item [isHeader]="true">Contacts</igx-list-item>
                 <div class="virtualized-items" [style.height]="'500px'" [style.overflow]="'hidden'" [style.position]="'relative'">
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '56px'">
-                        <igx-avatar igxListThumbnail [src]="item.avatar" roundShape="true"></igx-avatar>
+                        <igx-avatar igxListThumbnail [src]="item.avatar" [roundShape]="true"></igx-avatar>
                         <span igxListLine igxListLineTitle>{{item.text}}</span>
                         <igx-icon igxListAction [class.favorite]="item.favorite">star</igx-icon>
                     </igx-list-item>

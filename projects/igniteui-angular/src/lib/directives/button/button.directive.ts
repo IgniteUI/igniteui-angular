@@ -50,6 +50,8 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
     selector: '[igxButton]'
 })
 export class IgxButtonDirective extends DisplayDensityBase {
+    private static ngAcceptInputType_type: IgxButtonType | '';
+
     /**
      * Gets or sets whether the button is selected.
      * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.

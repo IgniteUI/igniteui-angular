@@ -32,7 +32,7 @@
 <section class="sample-content">
     <article class="sample-column">
         <h4 class="sample-title">Radio group without data model (Vertical Alignment)</h4>
-        <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" [required]="true" (change)="onRadioChange($event)" [alignment]="alignment">
+        <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required (change)="onRadioChange($event)" [alignment]="alignment">
             <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
                 {{item}}
             </igx-radio>
@@ -46,7 +46,7 @@
         Disabled = '{{radioGroup.disabled}}'<br>
         Required = '{{radioGroup.required}}'<br>
         SelectedValue = '{{selectedValue}}'<br>
-        <button igxButton="raised" type="button" (click)="onBtnClick()" style="width: 200px">Select 'Baz'</button>
+        <button igxButton type="button" (click)="onBtnClick()" style="width: 200px">Select 'Baz'</button>
     </article>
     <article class="sample-column">
         <h4 class="sample-title">Radio group in template-driven form</h4>
@@ -65,7 +65,7 @@
             </div>
 
             {{diagnostic}}<br>
-            <button igxButton="raised" type="submit" [disabled]="!personBobForm.form.valid" style="width: 200px">Submit</button>
+            <button igxButton type="submit" [disabled]="!personBobForm.form.valid" style="width: 200px">Submit</button>
         </form>
     </article>
     <article class="sample-column">
@@ -81,7 +81,7 @@
                     </igx-radio>
                 </igx-radio-group>
             <br>
-            <button igxButton="raised" type="button" (click)="onUpdateBtnClick()" style="width: 200px">Update model</button>
+            <button igxButton type="button" (click)="onUpdateBtnClick()" style="width: 200px">Update model</button>
         </form>
         <p>Form value: {{ personKirkForm.value | json }}</p>
         <p>Model value: {{ personKirk | json }}</p>

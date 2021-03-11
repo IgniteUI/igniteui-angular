@@ -213,7 +213,7 @@ class SwitchSimpleComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch [required]="true">Required</igx-switch>`
+    template: `<igx-switch #switch required>Required</igx-switch>`
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;

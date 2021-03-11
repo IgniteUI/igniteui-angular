@@ -62,6 +62,8 @@ export enum IgxInputState {
     exportAs: 'igxInput',
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -176,7 +178,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @example
      * ```html
      * <input-group>
-     *  <input igxInput #igxInput [required]="true">
+     *  <input igxInput #igxInput required>
      * </input-group>
      * ```
      */

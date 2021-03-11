@@ -230,7 +230,7 @@ class DisabledRadioComponent {
     <igx-radio #radios *ngFor="let item of ['Foo', 'Bar']"
         [value]="item"
         [(ngModel)]="Foo"
-        [required]="true">
+        required>
         {{item}}
     </igx-radio>`
 })

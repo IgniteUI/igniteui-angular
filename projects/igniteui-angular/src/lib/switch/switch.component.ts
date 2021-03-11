@@ -59,6 +59,7 @@ let nextId = 0;
     templateUrl: 'switch.component.html'
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
+    private static ngAcceptInputType_required: boolean | '';
     /**
      * Returns a reference to the native checkbox element.
      *
@@ -118,7 +119,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch [value]="switchValue"></igx-switch>
      * ```
      */
-    @Input() public value: string;
+    @Input() public value: any;
     /**
      * Sets/gets the `name` attribute of the switch component.
      *
@@ -163,7 +164,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      *
      * @example
      * ```html
-     * <igx-switch [required]="true"></igx-switch>
+     * <igx-switch required></igx-switch>
      * ```
      */
     @Input() public required = false;

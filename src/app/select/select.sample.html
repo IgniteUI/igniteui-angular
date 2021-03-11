@@ -5,7 +5,7 @@
         <button igxButton="raised" (click)="btnRemoveBr()">- white space</button>
     </div>
     <igx-select #displayDensitySelect
-    [required]="true"
+    required
     [placeholder]="'Pick One'"
     [(ngModel)]="value"
     [ngModelOptions]="{updateOn: 'blur'}" #selectModel="ngModel"
@@ -155,8 +155,8 @@
 
                 <div class="output">Valid: {{model.valid}}</div>
             </div>
-            <button igxButton="raised" (click)="selectBanana()">Select Banana</button>
-            <button igxButton="raised" (click)="setToNull()">Set To Null</button>
+            <button igxButton (click)="selectBanana()">Select Banana</button>
+            <button igxButton (click)="setToNull()">Set To Null</button>
         </form>
     </section>
 </div>

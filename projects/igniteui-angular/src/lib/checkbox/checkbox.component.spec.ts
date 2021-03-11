@@ -293,7 +293,7 @@ class CheckboxIndeterminateComponent {
 }
 
 @Component({
-    template: `<igx-checkbox #cb [required]="true">Required</igx-checkbox>`
+    template: `<igx-checkbox #cb required>Required</igx-checkbox>`
 })
 class CheckboxRequiredComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;

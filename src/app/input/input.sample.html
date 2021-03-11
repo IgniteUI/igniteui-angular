@@ -6,7 +6,7 @@
             <h4 class="form-title igx-typography__overline">Personal Info</h4>
 
             <igx-input-group>
-                <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled="disabled"/>
+                <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled />
                 <label igxLabel for="firstName">First Name</label>
             </igx-input-group>
 
@@ -67,7 +67,7 @@
                 <igx-list-item [isHeader]="true">Delete Contacts</igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/22.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/22.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Alicia Keys</span>
                     <igx-checkbox igxListAction
                                   [(ngModel)]="user.registered"
@@ -77,37 +77,37 @@
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/8.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/8.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Petar Vasilev</span>
                     <igx-checkbox igxListAction [(ngModel)]="user2.registered" [disableRipple]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan (disabled)</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan (readonly)</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [readonly]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user2.registered" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [indeterminate]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [indeterminate]="true" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
