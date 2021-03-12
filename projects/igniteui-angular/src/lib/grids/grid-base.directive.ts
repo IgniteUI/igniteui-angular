@@ -140,8 +140,7 @@ import {
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IPinColumnCancellableEventArgs,
-    IColumnResizingEventArgs
+    IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -156,7 +155,6 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { ExportUtilities } from '../services/exporter-common/export-utilities';
 
 let FAKE_ROW_ID = -1;
 
@@ -5590,7 +5588,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     public combineSelectedCellAndColumnData(columnData: any[], formatters = false, headers = false) {
-        // const source = this.filteredSortedData ? this.filteredSortedData : this.data;
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers, columnData);
     }
@@ -5673,7 +5670,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
         let result = keys ? transformer.prepareData(keys) : transformer.prepareData();
-        // let result = transformer.prepareData();
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
