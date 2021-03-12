@@ -312,7 +312,7 @@ export class IgxColumnFormatterPipe implements PipeTransform {
 export class IgxSummaryFormatterPipe implements PipeTransform {
 
     transform(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand,
-        summaryFormatter: (s: IgxSummaryResult, o: IgxSummaryOperand) => string) {
+        summaryFormatter: (s: IgxSummaryResult, o: IgxSummaryOperand) => any) {
         return summaryFormatter(summaryResult, summaryOperand);
     }
 }

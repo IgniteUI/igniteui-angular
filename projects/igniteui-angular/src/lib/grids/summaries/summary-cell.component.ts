@@ -9,6 +9,7 @@ import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
 import { IColumnPipeArgs } from '../columns/interfaces';
+import { IgxColumnFormatterPipe } from '../common/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +38,7 @@ export class IgxSummaryCellComponent {
     public pipeArgs: IColumnPipeArgs;
 
     @Input()
-    public summaryFormatter: any;
+    public summaryFormatter: IgxColumnFormatterPipe;
 
     /** @hidden */
     @Input()
@@ -108,7 +109,7 @@ export class IgxSummaryCellComponent {
      */
     public get currencyCode(): string {
         return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale);
+            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
     }
 
     public translateSummary(summary: IgxSummaryResult): string {
@@ -119,43 +120,27 @@ export class IgxSummaryCellComponent {
      * @hidden @internal
      */
     public isNumberOperand(): boolean {
-        const summaries = this.column.summaries;
-        if (summaries && summaries.constructor === IgxNumberSummaryOperand) {
-            return true;
-        }
-        return false;
+        return this.column.summaries?.constructor === IgxNumberSummaryOperand;
     }
 
     /**
      * @hidden @internal
      */
     public isDateOperand(): boolean {
-        const summaries = this.column.summaries;
-        if (summaries && summaries.constructor === IgxDateSummaryOperand) {
-            return true;
-        }
-        return false;
+        return this.column.summaries?.constructor === IgxDateSummaryOperand;
     }
 
     /**
      * @hidden @internal
      */
     public isCurrencyOperand(): boolean {
-        const summaries = this.column.summaries;
-        if (summaries && summaries.constructor === IgxCurrencySummaryOperand) {
-            return true;
-        }
-        return false;
+        return this.column.summaries?.constructor === IgxCurrencySummaryOperand;
     }
 
     /**
      * @hidden @internal
      */
     public isPercentOperand(): boolean {
-        const summaries = this.column.summaries;
-        if (summaries && summaries.constructor === IgxPercentSummaryOperand) {
-            return true;
-        }
-        return false;
+        return this.column.summaries?.constructor === IgxPercentSummaryOperand;
     }
 }

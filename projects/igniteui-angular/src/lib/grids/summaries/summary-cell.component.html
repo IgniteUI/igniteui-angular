@@ -24,7 +24,7 @@
                         : (isPercentOperand() && summary.key !== 'count')
                         ? (summary.summaryResult | percent:column.pipeArgs.digitsInfo:grid.locale)
                         : (summary.key === 'count' && (isNumberOperand() || isDateOperand() || isCurrencyOperand() || isPercentOperand()))
-                        ? (summary.summaryResult | number)
+                        ? (summary.summaryResult | number:undefined:grid.locale)
                         : summary.summaryResult
                     }}
                 </span>
