@@ -6,7 +6,7 @@ import { IgxAvatarModule } from '../../avatar/avatar.component';
 import { Calendar } from '../../calendar/public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule, IColumnResizeEventArgs } from './public_api';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { GridTemplateStrings, ColumnDefinitions } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec';
@@ -621,7 +621,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[1].width).toEqual('195px');
         }));
 
-        it('should autoresize templated column on double click.', fakeAsync(() => {
+        it('should autoresize templated column on double click.', async () => {
             const headers = GridFunctions.getColumnHeaders(fixture);
             const resizeArea = GridFunctions.getHeaderResizeArea(headers[5]).nativeElement;
 
@@ -629,10 +629,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
             fixture.detectChanges();
-            tick(200);
+            await wait(200);
 
             expect(grid.columns[5].width).toEqual('89px');
-        }));
+        });
 
         it('should fire onColumnResized with correct event args.', fakeAsync(() => {
             const resizingSpy = spyOn<any>(grid.onColumnResized, 'emit').and.callThrough();
@@ -669,16 +669,16 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
 
-        it('should autosize templated column programmatically.', fakeAsync(() => {
+        it('should autosize templated column programmatically.', async () => {
             const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
 
             column.autosize();
             fixture.detectChanges();
-            tick(200);
+            await wait(200);
 
             expect(column.width).toEqual('89px');
-        }));
+        });
     });
 
     describe('Multi Column Headers tests: ', () => {
