@@ -41,11 +41,9 @@ export class IgxCalendarContainerComponent {
     @Input()
     public displayMonthsCount: number;
 
-    /** @hidden @internal */
     @Output()
     public calendarClose = new EventEmitter();
 
-    /** @hidden @internal */
     @Output()
     public todaySelection = new EventEmitter();
 

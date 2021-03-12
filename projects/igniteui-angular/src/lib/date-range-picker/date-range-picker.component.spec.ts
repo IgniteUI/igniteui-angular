@@ -18,7 +18,7 @@ import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_
 import { IgxIconModule } from '../icon/public_api';
 import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { IgxPickerIconsModule } from '../date-common/public_api';
+import { IgxPickersCommonModule } from '../date-common/public_api';
 import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxCalendarComponent } from '../calendar/public_api';
 
@@ -324,7 +324,7 @@ describe('IgxDateRangePicker', () => {
                         IgxIconModule,
                         FormsModule,
                         NoopAnimationsModule,
-                        IgxPickerIconsModule,
+                        IgxPickersCommonModule,
                         IgxCalendarContainerModule,
                     ]
                 })
@@ -747,7 +747,7 @@ describe('IgxDateRangePicker', () => {
                     imports: [
                         IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
-                        IgxPickerIconsModule,
+                        IgxPickersCommonModule,
                         IgxCalendarContainerModule,
                         IgxInputGroupModule,
                         FormsModule,
@@ -1146,7 +1146,7 @@ describe('IgxDateRangePicker', () => {
                         FormsModule,
                         NoopAnimationsModule,
                         IgxCalendarContainerModule,
-                        IgxPickerIconsModule
+                        IgxPickersCommonModule
                     ]
                 })
                     .compileComponents();

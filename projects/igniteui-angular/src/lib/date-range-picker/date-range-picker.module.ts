@@ -13,10 +13,10 @@ import {
     IgxDateRangeInputsBaseComponent
 } from './date-range-picker-inputs.common';
 import { IgxDateTimeEditorModule } from '../directives/date-time-editor/public_api';
-import { IgxPickerIconsModule } from '../date-common/picker-icons.common';
+import { IgxPickersCommonModule } from '../date-common/picker-icons.common';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 
-/** @hidden @internal */
+/** @hidden */
 @NgModule({
     declarations: [
         IgxDateRangePickerComponent,
@@ -34,7 +34,7 @@ import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../da
         IgxToggleModule,
         IgxCalendarModule,
         IgxInputGroupModule,
-        IgxPickerIconsModule,
+        IgxPickersCommonModule,
         IgxDateTimeEditorModule,
         IgxCalendarContainerModule
     ],
