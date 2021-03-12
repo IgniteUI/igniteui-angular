@@ -238,8 +238,8 @@ export const getNodeSizeViaRange = (range: Range, node: any): number => {
         node.style.overflow = 'visible';
     }
 
-    range.selectNodeContents(node);
-    const width = range.getBoundingClientRect().width;
+   // range.selectNodeContents(node);
+    const width = node.getBoundingClientRect().width;
 
     if (!isFirefox()) {
         // we need that hack - otherwise content won't be measured correctly in IE/Edge
