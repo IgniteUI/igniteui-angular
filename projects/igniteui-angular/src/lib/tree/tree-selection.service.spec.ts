@@ -17,6 +17,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
     const mockQuery3: any = {};
     const mockQuery4: any = {};
     const mockQuery5: any = {};
+
     beforeEach(() => {
         selectionService = new IgxTreeSelectionService();
         mockNodesLevel1 = createNodeSpies(null, [mockQuery2, mockQuery3], 3);
@@ -40,7 +41,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
         Object.assign(mockQuery3, createQueryListSpies(mockNodesLevel2_2));
         Object.assign(mockQuery4, createQueryListSpies(mockNodesLevel3_1));
         Object.assign(mockQuery5, createQueryListSpies(mockNodesLevel3_2));
-
     });
 
     describe('IgxTreeSelectionService - BiState & None', () => {
@@ -73,11 +73,13 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
 
             selectionSet.add(mockNode1);
+
             expect(selectionService.isNodeSelected(mockNode1)).toBeTruthy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
             expect(selectionSet.size).toBe(1);
 
             selectionService.clearNodesSelection();
+
             expect(selectionService.isNodeSelected(mockNode1)).toBeFalsy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
             expect(selectionSet.clear).toHaveBeenCalled();
@@ -89,7 +91,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             const mockNode = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
 
             // None
-
             (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>).and.returnValue(IGX_TREE_SELECTION_TYPE.None);
             selectionService.selectNode(mockNode);
             expect(selectionService.isNodeSelected(mockNode)).toBeFalsy();
@@ -97,7 +98,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockNode.selectedChange.emit).not.toHaveBeenCalled();
 
             // BiState
-
             (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
                 .and.returnValue(IGX_TREE_SELECTION_TYPE.BiState);
             let expected: ITreeNodeSelectionEvent = {
@@ -106,6 +106,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             };
 
             selectionService.selectNode(mockNode);
+
             expect(selectionService.isNodeSelected(mockNode)).toBeTruthy();
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(1);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
@@ -113,8 +114,8 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockNode.selectedChange.emit).toHaveBeenCalledWith(true);
 
             // Cascading
-
             selectionService.deselectNode(mockNode);
+
             (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>)
                 .and.returnValue(IGX_TREE_SELECTION_TYPE.Cascading);
             selectionService.selectNode(allNodes[1]);
@@ -142,6 +143,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             const mockNode2 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
 
             selectionService.deselectNode(mockNode1);
+
             expect(selectionService.isNodeSelected(mockNode1)).toBeFalsy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
@@ -149,6 +151,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // mark a node as selected
             selectionService.selectNode(mockNode1);
+
             expect(selectionService.isNodeSelected(mockNode1)).toBeTruthy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(1);
@@ -161,6 +164,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
                 removed: [mockNode1], added: [], event: undefined, cancel: false
             };
             selectionService.deselectNode(mockNode1);
+
             expect(selectionService.isNodeSelected(mockNode1)).toBeFalsy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(2);
@@ -179,6 +183,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
 
             selectionService.deselectNodesWithNoEvent();
+
             for (const node of allNodes.slice(0, 3)) {
                 expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -189,6 +194,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
         it('Should be able to deselect range of nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
+
             for (const node of allNodes.slice(0, 3)) {
                 expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -209,6 +215,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
         it('Should be able to select multiple nodes', () => {
             selectionService.selectNodesWithNoEvent(allNodes.slice(0, 3));
+
             for (const node of allNodes.slice(0, 3)) {
                 expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -272,11 +279,11 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             };
 
             selectionService.selectNode(mockTree.nodes.toArray()[1]);
+
             expect(mockTree.nodes.toArray()[1].selectedChange.emit).toHaveBeenCalled();
             expect(mockTree.nodes.toArray()[1].selectedChange.emit).toHaveBeenCalledWith(true);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(2);
-
             expect(selectionService.isNodeSelected(allNodes[0])).toBeTruthy();
             expect(selectionService.isNodeSelected(allNodes[1])).toBeTruthy();
         });
@@ -296,6 +303,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // select all nodes from third to eighth
             selectionService.selectMultipleNodes(allNodes[8]);
+
             allNodes.forEach((node, index) => {
                 if (index >= 3 && index <= 8) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
@@ -328,6 +336,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // select all nodes from eighth to second
             selectionService.selectMultipleNodes(allNodes[2]);
+
             allNodes.forEach((node, index) => {
                 if (index >= 2 && index <= 8) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
@@ -356,6 +365,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
         it('Should deselect nodes', () => {
             selectionService.deselectNode(allNodes[1]);
+
             for (const node of allNodes.slice(1, 4)) {
                 expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 expect(node.selectedChange.emit).not.toHaveBeenCalled();
@@ -364,6 +374,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // mark a node as selected
             selectionService.selectNode(allNodes[1]);
+
             for (const node of allNodes.slice(1, 4)) {
                 expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -373,12 +384,13 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(allNodes[0].selectedChange.emit).not.toHaveBeenCalled();
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledTimes(1);
 
-            // deselect node
             const expected: ITreeNodeSelectionEvent = {
                 newSelection: [], oldSelection: [allNodes[1], allNodes[2], allNodes[3]],
                 removed: [allNodes[1], allNodes[2], allNodes[3]], added: [], event: undefined, cancel: false
             };
+            // deselect node
             selectionService.deselectNode(allNodes[1]);
+
             for (const node of allNodes.slice(1, 4)) {
                 expect(selectionService.isNodeSelected(node)).toBeFalsy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -391,6 +403,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
         it('Should be able to deselect range of nodes', () => {
             selectionService.selectNodesWithNoEvent([allNodes[1], allNodes[4]]);
+
             for (const node of allNodes.slice(0, 7)) {
                 expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -448,7 +461,6 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             expect(selectionService.isNodeIndeterminate(allNodes[0])).toBeTruthy();
             expect(selectionService.isNodeIndeterminate(allNodes[1])).toBeTruthy();
             expect(selectionService.isNodeSelected(allNodes[2])).toBeFalsy();
-
             expect(mockTree.nodeSelection.emit).not.toHaveBeenCalled();
         });
 
@@ -478,6 +490,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             };
 
             selectionService.selectNode(allNodes[5]);
+
             for (const node of allNodes.slice(1, 4)) {
                 expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 expect(node.selectedChange.emit).toHaveBeenCalled();
@@ -495,12 +508,13 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // select all nodes from first to eighth
             selectionService.selectMultipleNodes(allNodes[8]);
+
             allNodes.forEach((node, index) => {
                 if (index >= 4 && index <= 8) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                     expect(node.selectedChange.emit).toHaveBeenCalled();
                     expect(node.selectedChange.emit).toHaveBeenCalledWith(true);
-                } else if (index === 3 ){
+                } else if (index === 3) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
                 } else {
                     expect(selectionService.isNodeSelected(node)).toBeFalsy();
@@ -537,6 +551,7 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
             // select all nodes from eight to second
             selectionService.selectMultipleNodes(allNodes[2]);
+
             allNodes.forEach((node, index) => {
                 if (index <= 8) {
                     expect(selectionService.isNodeSelected(node)).toBeTruthy();
@@ -574,7 +589,6 @@ const createQueryListSpies = nodes => {
     Object.defineProperty(mockQuery, 'last', { value: nodes[nodes.length - 1], enumerable: true });
     Object.defineProperty(mockQuery, 'length', { value: nodes.length, enumerable: true });
     mockQuery.toArray.and.returnValue(nodes);
-    // does not work with ...and.callFake(mockNodes.filter);
     mockQuery.filter.and.callFake((cb) => nodes.filter(cb));
     mockQuery.forEach.and.callFake((cb) => nodes.forEach(cb));
     return mockQuery;

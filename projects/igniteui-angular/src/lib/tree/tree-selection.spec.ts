@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { Component, EventEmitter, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, QueryList, ViewChild } from '@angular/core';
 import { IgxTreeComponent, IgxTreeModule } from './tree.component';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -16,7 +16,8 @@ describe('IgxTree - Selection', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                IgxTreeSimpleComponent
+                IgxTreeSimpleComponent,
+                IgxTreeSelectionSampleComponent
             ],
             imports: [IgxTreeModule, NoopAnimationsModule]
         }).compileComponents();
@@ -195,6 +196,7 @@ describe('IgxTree - Selection', () => {
             expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.Cascading);
             TreeFunctions.clickNodeCheckbox(tree.nodes.toArray()[10]);
             fix.detectChanges();
+
             for (let i = 10; i < 14; i++) {
                 TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i]);
             }
@@ -202,6 +204,7 @@ describe('IgxTree - Selection', () => {
 
             tree.selection = IGX_TREE_SELECTION_TYPE.None;
             fix.detectChanges();
+
             expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.None);
             for (let i = 10; i < 14; i++) {
                 TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false, false);
@@ -213,6 +216,7 @@ describe('IgxTree - Selection', () => {
             expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.Cascading);
             TreeFunctions.clickNodeCheckbox(tree.nodes.toArray()[10]);
             fix.detectChanges();
+
             for (let i = 10; i < 14; i++) {
                 TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i]);
             }
@@ -220,6 +224,7 @@ describe('IgxTree - Selection', () => {
 
             tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
             fix.detectChanges();
+
             expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.BiState);
             for (let i = 10; i < 14; i++) {
                 TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false);
@@ -244,12 +249,7 @@ describe('IgxTree - Selection', () => {
         });
 
         it('Should select multiple nodes with Shift + Click', () => {
-            // tree.nodes.toArray()[0].expanded = true;
-            // fix.detectChanges();
             const firstNode = tree.nodes.toArray()[10];
-
-            // tree.nodes.toArray()[14].expanded = true;
-            // fix.detectChanges();
             const secondNode = tree.nodes.toArray()[15];
 
             const mockEvent = new MouseEvent('click', { shiftKey: true });
@@ -294,16 +294,258 @@ describe('IgxTree - Selection', () => {
             fix.detectChanges();
 
             TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
-            for(let i = 10; i < 18; i++){
-                if(i !== 14) {
+            for (let i = 10; i < 18; i++) {
+                if (i !== 14) {
                     TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i]);
-                } else{
+                } else {
                     TreeFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false, true, true);
                 }
             }
         });
     });
 
+    describe('UI Interaction - Two-Way Binding', () => {
+        let fix;
+        let tree: IgxTreeComponent;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(IgxTreeSelectionSampleComponent);
+            fix.detectChanges();
+            tree = fix.componentInstance.tree;
+            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+            fix.detectChanges();
+        }));
+
+        it('Should correctly represent the node`s selection state on click', () => {
+            const firstNode = tree.nodes.toArray()[0];
+            firstNode.expanded = true;
+            fix.detectChanges();
+            const secondNode = tree.nodes.toArray()[1];
+            secondNode.expanded = true;
+            fix.detectChanges();
+            const thirdNode = tree.nodes.toArray()[2];
+
+            TreeFunctions.clickNodeCheckbox(thirdNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            TreeFunctions.clickNodeCheckbox(firstNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            TreeFunctions.clickNodeCheckbox(thirdNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, false);
+        });
+
+        it('Should correctly represent the node`s selection state when changing node`s selected property', () => {
+            const firstNode = tree.nodes.toArray()[0];
+            const secondNode = tree.nodes.toArray()[1];
+            const thirdNode = tree.nodes.toArray()[2];
+            thirdNode.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            firstNode.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            thirdNode.selected = false;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, false);
+        });
+
+        it('Should correctly represent the node`s selection state when changing data selected property', () => {
+            const firstNode = tree.nodes.toArray()[0];
+            const secondNode = tree.nodes.toArray()[1];
+            const thirdNode = tree.nodes.toArray()[2];
+            thirdNode.data.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            firstNode.data.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            thirdNode.data.selected = false;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false);
+            TreeFunctions.verifyNodeSelected(thirdNode, false);
+        });
+
+        it('Should correctly represent the node`s selection state on click in Cascading mode', () => {
+            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            fix.detectChanges();
+
+            const firstNode = tree.nodes.toArray()[0];
+            firstNode.expanded = true;
+            fix.detectChanges();
+            const secondNode = tree.nodes.toArray()[1];
+            secondNode.expanded = true;
+            fix.detectChanges();
+            const thirdNode = tree.nodes.toArray()[2];
+
+            TreeFunctions.clickNodeCheckbox(thirdNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true, true, false);
+
+            TreeFunctions.clickNodeCheckbox(firstNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeTruthy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            TreeFunctions.clickNodeCheckbox(thirdNode);
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, false, true, false);
+        });
+
+        it('Should correctly represent the node`s selection state when changing node`s selected property in Cascading mode', () => {
+            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            fix.detectChanges();
+
+            const firstNode = tree.nodes.toArray()[0];
+            const secondNode = tree.nodes.toArray()[1];
+            const thirdNode = tree.nodes.toArray()[2];
+            thirdNode.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true, true, false);
+
+            firstNode.selected = true;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeTruthy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            thirdNode.selected = false;
+            fix.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, false, true, false);
+        });
+
+        it('Should correctly represent the node`s selection state when changing data selected property in Cascading mode', () => {
+            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            fix.detectChanges();
+
+            const firstNode = tree.nodes.toArray()[0];
+            const secondNode = tree.nodes.toArray()[1];
+            const thirdNode = tree.nodes.toArray()[2];
+
+            thirdNode.data.selected = true;
+            fix.componentInstance.cdr.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true, true, false);
+
+            firstNode.data.selected = true;
+            fix.componentInstance.cdr.detectChanges();
+
+            expect(firstNode.data.selected).toBeTruthy();
+            expect(secondNode.data.selected).toBeTruthy();
+            expect(thirdNode.data.selected).toBeTruthy();
+            TreeFunctions.verifyNodeSelected(firstNode, true);
+            TreeFunctions.verifyNodeSelected(secondNode, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, true);
+
+            thirdNode.data.selected = false;
+            fix.componentInstance.cdr.detectChanges();
+
+            expect(firstNode.data.selected).toBeFalsy();
+            expect(secondNode.data.selected).toBeFalsy();
+            expect(thirdNode.data.selected).toBeFalsy();
+            TreeFunctions.verifyNodeSelected(firstNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(secondNode, false, true, true);
+            TreeFunctions.verifyNodeSelected(thirdNode, false, true, false);
+        });
+    });
 
     describe('IgxTree - API Tests', () => {
         let mockNodes: IgxTreeNodeComponent<any>[];
@@ -411,6 +653,38 @@ describe('IgxTree - Selection', () => {
 export class IgxTreeSimpleComponent {
     @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
     public data = HIERARCHICAL_SAMPLE_DATA;
+}
+
+@Component({
+    template: `
+    <igx-tree #tree1 class="medium">
+            <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
+                {{ node.CompanyName }}
+                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
+                    {{ child.CompanyName }}
+                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
+                        {{ leafchild.CompanyName }}
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree>
+    `
+})
+export class IgxTreeSelectionSampleComponent {
+    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
+    public data;
+    constructor(public cdr: ChangeDetectorRef) {
+        this.data = HIERARCHICAL_SAMPLE_DATA;
+        this.mapData(this.data);
+    }
+    private mapData(data: any[]) {
+        data.forEach(x => {
+            x.selected = false;
+            if (x.hasOwnProperty('ChildCompanies') && x.ChildCompanies.length) {
+                this.mapData(x.ChildCompanies);
+            }
+        });
+    }
 }
 
 const createNodeSpies = (count?: number): IgxTreeNodeComponent<any>[] => {

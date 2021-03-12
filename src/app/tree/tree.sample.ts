@@ -1,5 +1,5 @@
 import { useAnimation } from '@angular/animations';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { growVerIn, growVerOut } from 'igniteui-angular';
 import { IgxTreeSearchResolver } from 'projects/igniteui-angular/src/lib/tree/common';
 import { IgxTreeNodeComponent } from 'projects/igniteui-angular/src/lib/tree/tree-node/tree-node.component';
@@ -25,7 +25,7 @@ export class TreeSampleComponent implements AfterViewInit {
 
     public singleBranchExpand = false;
 
-    constructor() {
+    constructor(private cdr: ChangeDetectorRef) {
         this.selectionModes = [
             { label: 'None', selectMode: 'None', selected: this.selectionMode === 'None', togglable: true },
             { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },
@@ -34,6 +34,7 @@ export class TreeSampleComponent implements AfterViewInit {
         this.data = HIERARCHICAL_SAMPLE_DATA;
         this.mapData(this.data);
     }
+
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
             node.selectedChange.subscribe((ev) => {
@@ -72,7 +73,7 @@ export class TreeSampleComponent implements AfterViewInit {
         this.tree.nodes.toArray().forEach(node => node.selected = true);
     }
 
-    public deselectSpecific(){
+    public deselectSpecific() {
         const arr = [
             this.tree.nodes.toArray()[0],
             this.tree.nodes.toArray()[14],
@@ -81,12 +82,18 @@ export class TreeSampleComponent implements AfterViewInit {
         ];
         this.tree.deselectAll(arr);
     }
+
     public deselectAll() {
         this.tree.deselectAll();
     }
 
     public changeNodeSelectionState() {
         this.tree.nodes.toArray()[8].selected = !this.tree.nodes.toArray()[8].selected;
+    }
+
+    public changeNodeData() {
+        this.tree.nodes.toArray()[8].data.selected = !this.tree.nodes.toArray()[8].data.selected;
+        this.cdr.detectChanges();
     }
 
     public nodeSelection(event) {
@@ -104,11 +111,12 @@ export class TreeSampleComponent implements AfterViewInit {
     private mapData(data: any[]) {
         data.forEach(x => {
             x.selected = false;
-            if(x.hasOwnProperty('ChildCompanies') && x.ChildCompanies.length) {
+            if (x.hasOwnProperty('ChildCompanies') && x.ChildCompanies.length) {
                 this.mapData(x.ChildCompanies);
             }
         });
     }
+
     private containsComparer: IgxTreeSearchResolver =
         (term: any, node: IgxTreeNodeComponent<any>) => node.data?.ID?.toLowerCase()?.indexOf(term.toLowerCase()) > -1;
 }
