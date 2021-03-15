@@ -74,7 +74,6 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', () => {
             grid.primaryKey = null;
-            expect(false).toBeTruthy();
             grid.rowEditable = false;
             fix.detectChanges();
 

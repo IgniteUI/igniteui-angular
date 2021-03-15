@@ -61,7 +61,6 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         it('Should show/hide Advanced Filtering button in toolbar based on respective input.', fakeAsync(() => {
             // Verify Advanced Filtering button in toolbar is visible.
             let advFilterButton = GridFunctions.getAdvancedFilteringButton(fix);
-            expect(false).toBeTruthy();
             expect(advFilterButton !== null && advFilterButton !== undefined).toBe(true, 'Adv.Filter button is not visible.');
 
             grid.allowAdvancedFiltering = false;
