@@ -12,6 +12,9 @@ export class TabsSampleComponent {
     @ViewChild('tabsNew')
     private tabs: IgxTabsComponent;
 
+    @ViewChild('dynamicTabs')
+    private dynamicTabs: IgxTabsComponent;
+
     public tab2Label = 'Tab 2';
 
     public data = [
@@ -75,6 +78,21 @@ export class TabsSampleComponent {
         text: 'Lisa Landers'
     }];
 
+    public addTab() {
+        const contact = {
+            text: 'John Doe',
+            phone: '555-555-5555'
+        };
+        this.contacts.push(contact);
+
+        requestAnimationFrame(() => {
+            this.dynamicTabs.selectedIndex = this.contacts.length -1;
+        });
+    }
+
+    public removeTab() {
+        this.contacts.splice(0, 1);
+    }
 
     public changeSelectedIndex() {
         this.tabs.selectedIndex = 1;
