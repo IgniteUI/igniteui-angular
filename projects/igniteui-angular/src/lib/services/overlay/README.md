@@ -91,11 +91,13 @@ this.overlay.show(component, overlaySettings);
 
 | Name            | Description                                                                     | Parameters      |
 |-----------------|---------------------------------------------------------------------------------|-----------------|
-|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |element, overlaySettings? |
+|attach           | Generates Id. Provide this Id when call `show(id, settings?)` method   |element, overlaySettings? |
 |attach           | Generates Id. Provide this Id when call `show(id, settings?)` method |component, overlaySettings?, moduleRef? |
 |show             | Shows the provided component on the overlay                                  |id, overlaySettings?|
-|hide             | Remove the provided native element of for the component with provided id        |id               |
-|hideAll          | Remove the all native elements and hides the overlay                            |-                |
+|hide             | Hides the component with the ID provided as a parameter                         |id               |
+|hideAll          | Hides all the components and the overlay                                        |-                |
+|detach           | Remove overlay with the provided id                                             |id               |
+|detachAll        | Remove all the overlays                                                         |-                |
 |reposition       | Repositions the native element of the component with provided id                |id               |
 |setOffset        | Offsets the content along the corresponding axis by the provided amount       |id, deltaX, deltaY |
 
