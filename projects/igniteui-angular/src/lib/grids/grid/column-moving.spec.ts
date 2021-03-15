@@ -19,7 +19,7 @@ import { IgxGridComponent } from './grid.component';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxColumnComponent } from '../tree-grid/public_api';
 
-describe('IgxGrid - Column Moving #grid', () => {
+xdescribe('IgxGrid - Column Moving #grid', () => {
     configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
