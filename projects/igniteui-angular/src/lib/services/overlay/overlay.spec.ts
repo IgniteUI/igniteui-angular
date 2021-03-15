@@ -10,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { TestBed, fakeAsync, tick, inject, waitForAsync } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxOverlayService } from './overlay';
 import { IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './../../directives/toggle/toggle.directive';
@@ -220,17 +220,34 @@ describe('igxOverlay', () => {
         beforeEach(() => {
             mockElement = {
                 style: { visibility: '', cursor: '', transitionDuration: '' },
+                children: [],
                 classList: { add: () => { }, remove: () => { } },
-                appendChild: () => { },
-                removeChild: () => { },
+                appendChild(element: any) {
+                    this.children.push(element);
+                },
+                removeChild(element: any) {
+                    const index = this.children.indexOf(element);
+                    if (index !== -1) {
+                        this.children.splice(index, 1);
+                    }
+                },
                 addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
                 removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
                 getBoundingClientRect: () => ({ width: 10, height: 10 }),
-                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
-                contains: () => { }
+                insertBefore(newChild: HTMLDivElement, refChild: Node) {
+                    let refIndex = this.children.indexOf(refChild);
+                    if (refIndex === -1) {
+                        refIndex = 0;
+                    }
+                    this.children.splice(refIndex, 0, newChild);
+                },
+                contains(element: any) {
+                    return this.children.indexOf(element) !== -1;
+                }
             };
             mockElement.parent = mockElement;
             mockElement.parentElement = mockElement;
+            mockElement.parentNode = mockElement;
             mockElementRef = { nativeElement: mockElement };
             mockFactoryResolver = {
                 resolveComponentFactory: (c: any) => ({
@@ -247,11 +264,34 @@ describe('igxOverlay', () => {
             mockAnimationBuilder = {};
             mockDocument = {
                 body: mockElement,
+                listeners: { },
                 defaultView: mockElement,
+                // this is used be able to properly invoke rxjs `fromEvent` operator, which, turns out
+                // just adds an event listener to the element and emits accordingly
+                dispatchEvent(event: KeyboardEvent) {
+                    const type = event.type;
+                    if (this.listeners[type]) {
+                        this.listeners[type].forEach(listener => {
+                            listener(event);
+                        });
+                    }
+                },
                 createElement: () => mockElement,
                 appendChild: () => { },
-                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+                addEventListener(type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) {
+                    if (!this.listeners[type]) {
+                        this.listeners[type] = [];
+                    }
+                    this.listeners[type].push(listener);
+                },
+                removeEventListener(type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) {
+                    if (this.listeners[type]) {
+                        const index = this.listeners[type].indexOf(listener);
+                        if (index !== -1) {
+                            this.listeners[type].splice(index, 1);
+                        }
+                    }
+                }
             };
             mockNgZone = {};
             mockPlatformUtil = { isIOS: false };
@@ -284,6 +324,40 @@ describe('igxOverlay', () => {
 
             overlay.hide(id);
             expect(mockDocument.body.style.cursor).toEqual('initialCursorValue');
+        });
+
+        it('Should clear listener for escape key when overlay settings have outlet specified', () => {
+            const mockOverlaySettings: OverlaySettings = {
+                modal: false,
+                closeOnEscape: true,
+                outlet: mockElement,
+                positionStrategy: new GlobalPositionStrategy({ openAnimation: null, closeAnimation: null })
+            };
+            const id = overlay.attach(mockElementRef, mockOverlaySettings);
+
+            // show the overlay
+            overlay.show(id);
+
+            // expect escape listener to be added to document
+            expect(mockDocument.listeners['keydown'].length > 0).toBeTruthy();
+            const keydownListener = mockDocument.listeners['keydown'][0];
+
+            spyOn(overlay, 'hide').and.callThrough();
+            spyOn(mockDocument, 'removeEventListener').and.callThrough();
+
+            mockDocument.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+
+            // expect hide to have been called
+            expect(overlay.hide).toHaveBeenCalledTimes(1);
+            expect(mockDocument.removeEventListener).toHaveBeenCalled();
+
+            // the keydown listener is now removed
+            expect(mockDocument.removeEventListener).toHaveBeenCalledWith('keydown', keydownListener, undefined);
+
+            // fire event again, expecting hide NOT to be fired again
+            mockDocument.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+            expect(overlay.hide).toHaveBeenCalledTimes(1);
+            expect(mockDocument.listeners['keydown'].length).toBe(0);
         });
     });
 
