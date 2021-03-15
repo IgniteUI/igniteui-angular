@@ -1,7 +1,7 @@
 sudo: required
 dist: xenial
 addons:
-  chrome: beta
+  chrome: stable
 services:
   - xvfb
 language: node_js
