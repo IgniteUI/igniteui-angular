@@ -1366,7 +1366,7 @@ describe('IgxGrid - Column Moving #grid', () => {
         }));
     });
 
-    xdescribe('', () => {
+    describe('', () => {
         // configureTestSuite();
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
             fixture = TestBed.createComponent(MultiColumnHeadersComponent);

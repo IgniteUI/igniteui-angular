@@ -19,7 +19,7 @@ import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingCompone
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
-describe('IgxGrid - Filtering actions #grid', () => {
+xdescribe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -1040,7 +1040,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
     }));
 });
 
-describe('IgxGrid - Filtering expression tree bindings #grid', () => {
+xdescribe('IgxGrid - Filtering expression tree bindings #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({

@@ -680,7 +680,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
     });
 
-    xdescribe('Multi Column Headers tests: ', () => {
+    describe('Multi Column Headers tests: ', () => {
         let fixture: ComponentFixture<any>;
         let grid: IgxGridComponent;
 

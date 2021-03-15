@@ -30,7 +30,7 @@ const ADVANCED_FILTERING_EXPRESSION_ITEM_CLASS = 'igx-filter-tree__expression-it
 const CHIP_SELECT_CLASS = '.igx-chip__select';
 const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
-describe('IgxGrid - Advanced Filtering #grid - ', () => {
+xdescribe('IgxGrid - Advanced Filtering #grid - ', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -2641,7 +2641,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    xdescribe('Column groups - ', () => {
+    describe('Column groups - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);
