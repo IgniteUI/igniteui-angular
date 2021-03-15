@@ -1,6 +1,6 @@
 <div class="igx-snackbar" *ngIf="isVisible" (@slideInOut.start)="snackbarAnimationStarted($event)" (@slideInOut.done)="snackbarAnimationDone($event)"
     [@slideInOut]="isVisible">
-    <div [attr.aria-live]="ariaLiveValue" class="igx-snackbar__message" [@fadeInOut]="isVisible">
+    <div class="igx-snackbar__message" [@fadeInOut]="isVisible">
         {{ snackbarMessage }}
         <ng-content></ng-content>
     </div>

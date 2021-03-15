@@ -116,12 +116,8 @@ export class IgxSnackbarComponent {
      * @memberof IgxSnackbarComponent
      */
     @Input()
-    public set ariaLive(value: string) {
-        this.ariaLiveValue = value;
-    }
-    public get ariaLive() {
-        return this.ariaLiveValue;
-    }
+    @HostBinding('attr.aria-live')
+    public ariaLive = 'polite';
 
     /**
      * Sets/gets the `message` attribute.
@@ -219,13 +215,6 @@ export class IgxSnackbarComponent {
      * @internal
      */
     public snackbarMessage = '';
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public ariaLiveValue = 'polite';
-
 
     /**
      * @hidden
