@@ -2754,6 +2754,10 @@
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
+
+        button {
+            transition: none;
+        }
     }
 
     %igx-grid__filtering-row-editing-buttons--small {
