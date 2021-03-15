@@ -669,7 +669,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                     filterListItem.isFiltered = true;
                 }
                 filterListItem.value = element;
-                filterListItem.label = element;
+                filterListItem.label = element ?
+                    this.grid.resourceStrings.igx_grid_filter_true :
+                    this.grid.resourceStrings.igx_grid_filter_false;
                 filterListItem.indeterminate = false;
                 this.listData.push(filterListItem);
             } else {
