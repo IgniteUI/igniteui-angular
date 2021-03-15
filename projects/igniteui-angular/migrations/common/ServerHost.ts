@@ -3,9 +3,9 @@ import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
 export class ServerHost implements ts.server.ServerHost {
-    readonly args: string[];
-    readonly newLine: string;
-    readonly useCaseSensitiveFileNames: boolean;
+    public readonly args: string[];
+    public readonly newLine: string;
+    public readonly useCaseSensitiveFileNames: boolean;
 
     constructor(private host: Tree) {
         this.args = ts.sys.args;
