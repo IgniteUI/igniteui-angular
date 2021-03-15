@@ -174,7 +174,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             this._scrollToX(step);
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             this._smoothWheelScrollY(scrollDeltaY);
-            this.preventParentScroll(evt, true);
+            const nextTop = this._startY + scrollDeltaY * scrollStep;
+            this.preventParentScroll(evt, true, nextTop);
         }
     }
 
@@ -182,8 +183,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * @hidden
      * When there is still room to scroll up/down prevent the parent elements from scrolling too.
      */
-    protected preventParentScroll(evt, preventDefault) {
-        const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
+    protected preventParentScroll(evt, preventDefault, nextTop = 0) {
+        const curScrollTop = nextTop === 0 ? this.IgxScrollInertiaScrollContainer.scrollTop : nextTop;
         const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
             this.IgxScrollInertiaScrollContainer.offsetHeight;
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
