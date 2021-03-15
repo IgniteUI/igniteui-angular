@@ -13,7 +13,7 @@ import { MultiColumnHeadersComponent } from '../../test-utils/grid-samples.spec'
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-describe('IgxGrid - Deferred Column Resizing #grid', () => {
+xdescribe('IgxGrid - Deferred Column Resizing #grid', () => {
     configureTestSuite();
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
