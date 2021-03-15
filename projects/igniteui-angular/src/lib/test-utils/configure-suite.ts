@@ -1,5 +1,6 @@
 import { TestBed, getTestBed, ComponentFixture } from '@angular/core/testing';
 import { resizeObserverIgnoreError } from './helper-utils.spec';
+import { UIInteractions } from './ui-interactions.spec';
 
 /**
  * Per https://github.com/angular/angular/issues/12409#issuecomment-391087831
@@ -47,6 +48,7 @@ export const configureTestSuite = () => {
   });
 
   afterAll(() => {
+    UIInteractions.clearOverlay();
     clearStyles();
     TestBed.resetTestingModule = originReset;
     TestBed.resetTestingModule();
