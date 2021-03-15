@@ -17,12 +17,16 @@ export class CharSeparatedValueData {
         this.setDelimiter(valueDelimiter);
     }
 
-    public prepareData() {
+    public prepareData(key?: any[]) {
         if (!this._data || this._data.length === 0) {
             return '';
         }
-
-        const keys = ExportUtilities.getKeysFromData(this._data);
+        let keys = [];
+        if (key){
+            keys = key;
+        }else {
+            keys = ExportUtilities.getKeysFromData(this._data);
+        }
 
         if (keys.length === 0) {
             return '';
