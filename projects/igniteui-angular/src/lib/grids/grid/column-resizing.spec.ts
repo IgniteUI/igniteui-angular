@@ -621,7 +621,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[1].width).toEqual('195px');
         }));
 
-        it('should autoresize templated column on double click.', async () => {
+        it('should autoresize templated column on double click.', fakeAsync(() => {
             const headers = GridFunctions.getColumnHeaders(fixture);
             const resizeArea = GridFunctions.getHeaderResizeArea(headers[5]).nativeElement;
 
@@ -629,10 +629,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             UIInteractions.simulateMouseEvent('dblclick', resizeArea, 0, 0);
             fixture.detectChanges();
-            await wait(200);
+            tick(200);
 
             expect(grid.columns[5].width).toEqual('89px');
-        });
+        }));
 
         it('should fire onColumnResized with correct event args.', fakeAsync(() => {
             const resizingSpy = spyOn<any>(grid.onColumnResized, 'emit').and.callThrough();
@@ -669,16 +669,16 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
 
-        it('should autosize templated column programmatically.', async () => {
+        it('should autosize templated column programmatically.', fakeAsync(() => {
             const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
 
             column.autosize();
             fixture.detectChanges();
-            await wait(200);
+            tick(200);
 
             expect(column.width).toEqual('89px');
-        });
+        }));
     });
 
     describe('Multi Column Headers tests: ', () => {
