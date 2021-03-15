@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, Renderer2 } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree,
-    ISortingExpression, IPinColumnEventArgs, IColumnVisibilityChangedEventArgs,
+    ISortingExpression, IPinColumnEventArgs,
     IColumnResizeEventArgs, IColumnSelectionEventArgs, IPageEventArgs, ISortingEventArgs,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
@@ -87,7 +87,7 @@ export class GridEventsComponent {
         event.cancel = this.$hiding;
         this.logAnEvent('=> columnVisibilityChanging', event.cancel);
     }
-    public onColumnVisibilityChanged(event: IColumnVisibilityChangedEventArgs) {
+    public onColumnVisibilityChanged() {
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 
