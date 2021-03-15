@@ -13,7 +13,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 
-describe('IgxGrid - multi-column headers #grid', () => {
+xdescribe('IgxGrid - multi-column headers #grid', () => {
     configureTestSuite();
     let contactInf;
     let countryInf;
