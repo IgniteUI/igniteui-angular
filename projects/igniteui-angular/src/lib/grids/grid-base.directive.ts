@@ -140,8 +140,7 @@ import {
     IFilteringEventArgs,
     IColumnVisibilityChangedEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IPinColumnCancellableEventArgs,
-    IColumnResizingEventArgs
+    IPinColumnCancellableEventArgs
 } from './common/events';
 import { IgxAdvancedFilteringDialogComponent } from './filtering/advanced-filtering/advanced-filtering-dialog.component';
 import { GridType } from './common/grid.interface';
@@ -156,7 +155,6 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { ExportUtilities } from '../services/exporter-common/export-utilities';
 
 let FAKE_ROW_ID = -1;
 
@@ -5590,7 +5588,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
 
     public combineSelectedCellAndColumnData(columnData: any[], formatters = false, headers = false) {
-        // const source = this.filteredSortedData ? this.filteredSortedData : this.data;
         const source = this.filteredSortedData;
         return this.extractDataFromSelection(source, formatters, headers, columnData);
     }
@@ -5623,9 +5620,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         if (event.code === 'KeyC' && event.ctrlKey && event.currentTarget.className === 'igx-grid__thead-wrapper') {
             if (selectedData.length) {
-                data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
-                    this.clipboardOptions.copyHeaders);
-                result = this.prepareCopyData(event, data[0], data[1]);
+                if (columnData.length === 0) {
+                    result = this.prepareCopyData(event, selectedData);
+                } else {
+                    data = this.combineSelectedCellAndColumnData(columnData, this.clipboardOptions.copyFormatters,
+                        this.clipboardOptions.copyHeaders);
+                    result = this.prepareCopyData(event, data[0], data[1]);
+                }
             } else {
                 data = columnData;
                 result = this.prepareCopyData(event, data);
@@ -5669,7 +5670,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const transformer = new CharSeparatedValueData(ev.data, this.clipboardOptions.separator);
         let result = keys ? transformer.prepareData(keys) : transformer.prepareData();
-        // let result = transformer.prepareData();
 
         if (!this.clipboardOptions.copyHeaders) {
             result = result.substring(result.indexOf('\n') + 1);
@@ -6832,7 +6832,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             if (Object.keys(record).length) {
                 if (columnData) {
-                    if (!keys.length){
+                    if (!keys.length) {
                         keys = Object.keys(columnData[0]);
                     }
                     for (const [key, value] of Object.entries(record)) {
