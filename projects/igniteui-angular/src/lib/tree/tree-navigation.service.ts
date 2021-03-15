@@ -15,6 +15,7 @@ export class IgxTreeNavigationService {
     public set activeNode(value: IgxTreeNode<any>) {
         this.lastActiveNode = this._activeNode;
         this._activeNode = value;
+        (this.lastActiveNode as any).cdr.detectChanges();
     }
 
     public register(tree: IgxTree) {

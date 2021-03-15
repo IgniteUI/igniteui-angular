@@ -6,7 +6,8 @@ import {
     ElementRef,
     ChangeDetectorRef,
     Output,
-    EventEmitter
+    EventEmitter,
+    NgZone
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -102,6 +103,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
+        protected zone: NgZone,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
@@ -185,7 +187,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngOnInit() {
-        this.nativeElement.addEventListener('pointerdown', this.pointerdown);
+        this.zone.runOutsideAngular(() => {
+            this.nativeElement.addEventListener('pointerdown', this.pointerdown);
+        });
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
                 this.tree.nodeExpanded.emit({ owner: this.tree, node: this });
@@ -205,9 +209,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     public pointerdown = (event: PointerEvent) => {
         event.stopPropagation();
-        event.preventDefault();
         this.navService.activeNode = this;
-        this.nativeElement.focus();
+        // this.nativeElement.focus();
+        this.cdr.detectChanges();
     };
 
     public ngAfterViewInit() {
