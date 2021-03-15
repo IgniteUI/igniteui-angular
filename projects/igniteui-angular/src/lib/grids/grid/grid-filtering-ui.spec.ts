@@ -48,7 +48,6 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
-import { time } from 'node:console';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
