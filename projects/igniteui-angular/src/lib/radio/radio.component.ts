@@ -142,7 +142,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     @Input()
-    public value: any;
+    public value: string;
 
     /**
      * Sets/gets the `name` attribute of the radio component.
@@ -323,6 +323,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
+        this.select();
     }
 
     /**
@@ -374,7 +375,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * this.radio.writeValue('radioButtonValue');
      * ```
      */
-    public writeValue(value: any) {
+    public writeValue(value: string) {
         this.value = this.value || value;
 
         if (value === this.value) {
