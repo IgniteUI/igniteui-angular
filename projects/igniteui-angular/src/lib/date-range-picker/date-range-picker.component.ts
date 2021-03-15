@@ -9,7 +9,7 @@ import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
-import { fromEvent, MonoTypeOperatorFunction, noop, Subject, Subscription } from 'rxjs';
+import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subject, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
@@ -19,10 +19,9 @@ import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IBaseCancelableBrowserEventArgs, KEYS } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
-import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
 import { PickerCancelableEventArgs } from '../date-common/types';
-import { IgxPickerActionsDirective } from '../date-picker/date-picker.directives';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -290,15 +289,15 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     public outlet: IgxOverlayOutletDirective | ElementRef<any>;
 
     /**
-     * Emitted when a range is selected.
+     * Emitted when the picker's value changes. Used for two-way binding.
      *
      * @example
      * ```html
-     * <igx-date-range-picker (selected)="handleSelected($event)"></igx-date-range-picker>
+     * <igx-date-picker [(value)]="date"></igx-date-picker>
      * ```
      */
     @Output()
-    public selected = new EventEmitter<DateRange>();
+    public valueChange = new EventEmitter<DateRange>();
 
     /** @hidden @internal */
     @HostBinding('class.igx-date-range-picker')
@@ -380,6 +379,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     public set value(value: DateRange) {
         this.updateValue(value);
         this.onChangeCallback(value);
+        this.valueChange.emit(value);
     }
 
     /** @hidden @internal */
@@ -392,14 +392,12 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         return this.getComponentDensityClass('igx-date-range-picker__label');
     }
 
-    /** @hidden @internal */
-    public get isDropdown() {
-        return this.mode === InteractionMode.DropDown;
+    private get calendar(): IgxCalendarComponent {
+        return this._calendar;
     }
 
-    /** @hidden @internal */
-    public get calendar(): IgxCalendarComponent {
-        return this._calendar;
+    private get isDropdown() {
+        return this.mode === InteractionMode.DropDown;
     }
 
     private get dropdownOverlaySettings(): OverlaySettings {
@@ -431,7 +429,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     private _overlaySubFilter:
         [MonoTypeOperatorFunction<OverlayEventArgs>, MonoTypeOperatorFunction<OverlayEventArgs | OverlayCancelableEventArgs>] = [
             filter(x => x.id === this._overlayId),
-            takeUntil(this._destroy$)
+            takeUntil(merge(this._destroy$, this.closed))
         ];
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
@@ -455,7 +453,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
-        this.locale = this.locale || this._localeId;
     }
 
     /** @hidden @internal */
@@ -500,6 +497,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
         this._overlayId = this._overlayService
             .attach(IgxCalendarContainerComponent, settings, this._moduleRef);
+        this.subscribeToOverlayEvents();
         this._overlayService.show(this._overlayId);
     }
 
@@ -622,7 +620,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     /** @hidden */
     public ngAfterViewInit(): void {
         this.subscribeToDateEditorEvents();
-        this.subscribeToOverlayEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
@@ -684,22 +681,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     /** @hidden @internal */
-    public handleSelection(selectionData: Date[]): void {
-        const oldValue = this.value;
-        const newValue = this.extractRange(selectionData);
-        const args: PickerCancelableEventArgs = { owner: this, cancel: false, oldValue, newValue };
-        this.selecting.emit(args);
-        if (args.cancel) {
-            return;
-        }
-        this.value = newValue;
-        this.selected.emit(this.value);
-        if (this.isDropdown && selectionData?.length > 1) {
-            this.close();
-        }
-    }
-
-    /** @hidden @internal */
     public getEditElement() {
         return this.inputDirective.nativeElement;
     }
@@ -718,6 +699,19 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         }
         this.setRequiredToInputs();
     };
+
+    private handleSelection(selectionData: Date[]): void {
+        const oldValue = this.value;
+        const newValue = this.extractRange(selectionData);
+        const args: PickerCancelableEventArgs = { owner: this, cancel: false, oldValue, newValue };
+        if (args.cancel) {
+            return;
+        }
+        this.value = newValue;
+        if (this.isDropdown && selectionData?.length > 1) {
+            this.close();
+        }
+    }
 
     private handleClosing(event: IBaseCancelableBrowserEventArgs): void {
         if (this.value && !this.value.start && !this.value.end) {
@@ -749,8 +743,10 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     private subscribeToOverlayEvents() {
         this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             const args = { owner: this, cancel: false, event: eventArgs.event };
+            const overlayEvent = eventArgs as OverlayCancelableEventArgs;
             this.opening.emit(args);
             if (args.cancel) {
+                overlayEvent.cancel = true;
                 return;
             }
 
@@ -1040,9 +1036,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         this.calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date[]) => this.handleSelection(ev));
 
         componentInstance.mode = this.mode;
-        componentInstance.displayMonthsCount = this.displayMonthsCount;
         componentInstance.closeButtonLabel = !this.isDropdown ? this.doneButtonText : null;
-        componentInstance.selectionMode = CalendarSelection.RANGE;
         componentInstance.pickerActions = this.pickerActions;
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
     }

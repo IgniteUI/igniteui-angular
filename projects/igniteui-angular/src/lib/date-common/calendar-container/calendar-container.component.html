@@ -1,5 +1,5 @@
 <ng-template #defaultPickerActions>
-    <div *ngIf="this.closeButtonLabel || this.todayButtonLabel" [ngClass]="this.buttonClass">
+    <div *ngIf="this.closeButtonLabel || this.todayButtonLabel" class="igx-date-picker__buttons">
         <button #closeButton *ngIf="this.closeButtonLabel" igxButton="flat" igxRipple
             (click)="this.calendarClose.emit()">
             {{ this.closeButtonLabel }}
@@ -11,7 +11,7 @@
     </div>
 </ng-template>
 
-<igx-calendar #calendar></igx-calendar>
+<igx-calendar></igx-calendar>
 <ng-container *ngTemplateOutlet="this.pickerActions 
     ? this.pickerActions.template 
     : defaultPickerActions">

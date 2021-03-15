@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter, HostListener, NgModule } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener, NgModule, Directive, TemplateRef } from '@angular/core';
 
 /**
  * Templates the default toggle icon in the picker.
@@ -47,16 +47,27 @@ export class IgxPickerToggleComponent {
 })
 export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
 
+/** IgxDatePickerActionsDirective can be used to re-template the dropdown/dialog action buttons. */
+@Directive({
+    selector: '[igxPickerActions]'
+})
+export class IgxPickerActionsDirective {
+    constructor(public template: TemplateRef<any>) { }
+}
+
+
 /** @hidden */
 @NgModule({
     declarations: [
         IgxPickerToggleComponent,
-        IgxPickerClearComponent
+        IgxPickerClearComponent,
+        IgxPickerActionsDirective
     ],
     imports: [CommonModule],
     exports: [
         IgxPickerToggleComponent,
-        IgxPickerClearComponent
+        IgxPickerClearComponent,
+        IgxPickerActionsDirective
     ]
 })
 export class IgxPickersCommonModule { }

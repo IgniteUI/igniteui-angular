@@ -64,11 +64,12 @@ import {
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
 import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
-import { IgxDatePickerTemplateDirective, IgxPickerActionsDirective } from './date-picker.directives';
+import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 
 let NEXT_ID = 0;
 
@@ -1469,7 +1470,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 @NgModule({
     declarations: [
         IgxDatePickerComponent,
-        IgxPickerActionsDirective,
         IgxDatePickerTemplateDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe
@@ -1478,7 +1478,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     exports: [
         IgxDatePickerComponent,
         IgxDatePickerTemplateDirective,
-        IgxPickerActionsDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe,
         IgxInputGroupModule,

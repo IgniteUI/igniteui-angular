@@ -4,7 +4,7 @@
             <div class="range-sample-column">
                 <h5>Without forms</h5>
                 <p>Default range picker</p>
-                <igx-date-range-picker [mode]="'dialog'"></igx-date-range-picker>
+                <igx-date-range-picker mode="dialog"></igx-date-range-picker>
 
                 <p>Drop down single input with custom suffix</p>
                 <igx-date-range-picker>
@@ -16,8 +16,8 @@
                 <p>Dialog two inputs with prefix</p>
                 <igx-date-range-picker
                     [value]="range"
-                    [minValue]="'2000/10/1'"
-                    [maxValue]="'some invalid value'"
+                    minValue="2000/10/1"
+                    maxValue="some invalid value"
                 >
                     <igx-date-range-start>
                         <input igxInput igxDateTimeEditor type="text">
@@ -35,12 +35,12 @@
                 <h5>Template-driven form</h5>
                 <form>
                     <p>Single template with initial value</p>
-                    <igx-date-range-picker name="dp1" [(ngModel)]="range1" required [mode]="'dialog'">
+                    <igx-date-range-picker name="dp1" [(ngModel)]="range1" required mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template without initial value</p>
-                    <igx-date-range-picker name="dp2" [(ngModel)]="range2" required [mode]="'dialog'">
+                    <igx-date-range-picker name="dp2" [(ngModel)]="range2" required mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
@@ -121,12 +121,12 @@
                 </div>
                 <form [formGroup]="reactiveForm">
                     <p>Single template with initial value</p>
-                    <igx-date-range-picker formControlName="dp1" [mode]="'dialog'">
+                    <igx-date-range-picker formControlName="dp1" mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template without initial value</p>
-                    <igx-date-range-picker formControlName="dp2" [mode]="'dialog'">
+                    <igx-date-range-picker formControlName="dp2" mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 

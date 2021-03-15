@@ -55,11 +55,10 @@ describe('IgxDateRangePicker', () => {
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
+        /* eslint-disable @typescript-eslint/no-unused-vars */
         beforeEach(() => {
             mockFactoryResolver = {
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 resolveComponentFactory: (c: any) => ({
-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
                     create: (i: any) => ({
                         hostView: '',
                         location: mockElementRef,
@@ -80,12 +79,9 @@ describe('IgxDateRangePicker', () => {
                 classList: { add: () => { }, remove: () => { } },
                 appendChild: () => { },
                 removeChild: () => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
                 getBoundingClientRect: () => ({ width: 10, height: 10 }),
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
                 contains: () => { }
             };
@@ -137,6 +133,7 @@ describe('IgxDateRangePicker', () => {
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
         });
+        /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
             // dateRange.calendar = calendar;
@@ -155,10 +152,10 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.value.end).toEqual(startDate);
         });
 
-        it('should emit rangeSelected on selection', () => {
+        it('should emit valueChange on selection', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
             // dateRange.calendar = calendar;
-            spyOn(dateRange.selected, 'emit');
+            spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
             const endDate = new Date(2017, 11, 22);
 
@@ -166,16 +163,16 @@ describe('IgxDateRangePicker', () => {
             dateRange.select(startDate, endDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(endDate);
-            expect(dateRange.selected.emit).toHaveBeenCalledTimes(1);
-            expect(dateRange.selected.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(1);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
 
             // select startDate only
             startDate = new Date(2024, 12, 15);
             dateRange.select(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
-            expect(dateRange.selected.emit).toHaveBeenCalledTimes(2);
-            expect(dateRange.selected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(2);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
         it('should correctly implement interface methods - ControlValueAccessor', () => {
@@ -186,7 +183,7 @@ describe('IgxDateRangePicker', () => {
             const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null, null, null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRangePicker, 'handleSelection').and.callThrough();
+            spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
 
             // writeValue
             expect(dateRangePicker.value).toBeUndefined();
@@ -198,15 +195,15 @@ describe('IgxDateRangePicker', () => {
             dateRangePicker.value = rangeUpdate;
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
 
-            dateRangePicker.handleSelection([range.start]);
-            expect(dateRangePicker.handleSelection).toHaveBeenCalledWith([range.start]);
-            expect(dateRangePicker.handleSelection).toHaveBeenCalledTimes(1);
+            (dateRangePicker as any).handleSelection([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledWith([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledTimes(1);
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-            dateRangePicker.handleSelection([range.start]);
+            (dateRangePicker as any).handleSelection([range.start]);
             (dateRangePicker as any).updateValidityOnBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
@@ -258,13 +255,13 @@ describe('IgxDateRangePicker', () => {
                     closeAnimation: null
                 })
             });
-            spyOn(dateRange.calendar, 'deselectDate').and.returnValue(null);
+            spyOn((dateRange as any), 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
-            expect(dateRange.calendar.disabledDates.length).toEqual(2);
-            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
-            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
+            expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
         }));
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
@@ -275,13 +272,13 @@ describe('IgxDateRangePicker', () => {
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
-            spyOn(dateRange.calendar, 'deselectDate').and.returnValue(null);
+            spyOn((dateRange as any).calendar, 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
-            expect(dateRange.calendar.disabledDates.length).toEqual(2);
-            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
-            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
+            expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
         }));
     });
 
@@ -949,7 +946,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.open();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(0);
+                    const rangePicker = fixture.componentInstance.dateRange;
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(0);
 
                     calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                     UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar);
@@ -963,7 +961,7 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.open();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(7);
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(7);
                     flush();
                 }));
             });
