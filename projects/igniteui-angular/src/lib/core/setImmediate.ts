@@ -35,7 +35,9 @@ const run = (id) => {
 
 const listener = (event) => run(event.data);
 
-export const setImmediate = (cb: () => void, ...args) => {
+// Use function instead of arrow function to workaround an issue in codesandbox
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function setImmediate(cb: () => void, ...args) {
     if (window.setImmediate) {
         return window.setImmediate(cb);
     }
@@ -53,12 +55,13 @@ export const setImmediate = (cb: () => void, ...args) => {
     window.postMessage(counter + '', windowLocation.protocol + '//' + windowLocation.host);
 
     return counter;
-};
+}
 
-export const clearImmediate = (id: any) => {
+// eslint-disable-next-line prefer-arrow/prefer-arrow-functions
+export function clearImmediate(id: any) {
     if (window.clearImmediate) {
         return window.clearImmediate(id);
     }
 
     delete queue[id];
-};
+}
