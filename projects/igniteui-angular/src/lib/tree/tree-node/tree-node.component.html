@@ -30,7 +30,7 @@
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
             </ng-container>
         </div>
-        <div class="igx-tree-node__header">
+        <div class="igx-tree-node__header" [ngClass]="{'igx-tree-node--active' : this.active}">
             <div *ngIf="showSelectors"
                 class="igx-tree-node__indicator igx-tree-node__select"
                 (pointerdown)="$event.preventDefault()"
@@ -47,7 +47,7 @@
 </ng-template>
 
 <ng-template #dragTemplate>
-    <!-- Drag drop goes here 
+    <!-- Drag drop goes here
         igxDrop
         #dropRef="drop"
         [igxNodeDrag]="this"

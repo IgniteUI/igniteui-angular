@@ -14,6 +14,7 @@ import {
     IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
 } from './common';
+import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
@@ -39,6 +40,7 @@ export class IgxTreeExpandIndicatorDirective {
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,
+        IgxTreeNavigationService,
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
@@ -99,9 +101,13 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
 
-    constructor(private selectionService: IgxTreeSelectionService, private treeService: IgxTreeService) {
+    constructor(
+        private selectionService: IgxTreeSelectionService,
+        private treeService: IgxTreeService,
+        private navService: IgxTreeNavigationService) {
         this.selectionService.register(this);
         this.treeService.register(this);
+        this.navService.register(this);
     }
 
     public expandAll(nodes: IgxTreeNode<any>[]) { }

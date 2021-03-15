@@ -14,6 +14,7 @@ import {
     IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
     IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IGX_TREE_SELECTION_TYPE
 } from '../common';
+import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
 
@@ -62,10 +63,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Output()
     public selectedChange = new EventEmitter<boolean>();
 
-    // TODO: bind to active state when keynav is implemented
-    @HostBinding('class.igx-tree-node--active')
+    // // TODO: bind to active state when keynav is implemented
+    // @HostBinding('class.igx-tree-node--active')
     public get active() {
-        return false;
+        console.log(this.navService.isActiveNode(this));
+        return this.navService.isActiveNode(this);;
     }
 
     // TODO: bind to disabled state when node is dragged
@@ -97,12 +99,17 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
         protected selectionService: IgxTreeSelectionService,
         protected treeService: IgxTreeService,
+        protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
         super(builder);
+    }
+
+    public get isFocusable(): boolean {
+        return this.parentNode.expanded;
     }
 
     /**
@@ -178,6 +185,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngOnInit() {
+        this.nativeElement.addEventListener('pointerdown', this.pointerdown);
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
                 this.tree.nodeExpanded.emit({ owner: this.tree, node: this });
@@ -189,6 +197,18 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
             this.cdr.markForCheck();
         });
     }
+
+    /**
+     *
+     * @hidden
+     * @internal
+     */
+    public pointerdown = (event: PointerEvent) => {
+        event.stopPropagation();
+        event.preventDefault();
+        this.navService.activeNode = this;
+        this.nativeElement.focus();
+    };
 
     public ngAfterViewInit() {
     }

@@ -24,6 +24,10 @@
     line-height: 12px;
 }
 
+.igx-tree-node--active {
+    border: 1px solid white !important;
+}
+
 .igx-tree-node__indicator {
     padding: 0px 2px;
 }
