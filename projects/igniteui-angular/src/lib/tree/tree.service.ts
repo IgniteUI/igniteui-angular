@@ -5,10 +5,12 @@ import { IgxTree, IgxTreeNode } from './common';
 @Injectable()
 export class IgxTreeService {
     public expandedNodes: Set<string> = new Set<string>();
+    public collapsingNodes: Set<string> = new Set<string>();
     private tree: IgxTree;
 
     public expand(node: IgxTreeNode<any>): void {
         this.expandedNodes.add(node.id);
+        this.collapsingNodes.delete(node.id);
         if (this.tree.singleBranchExpand) {
             this.tree.findNodes(node, this.siblingComparer)?.forEach(e => {
                 e.expanded = false;
@@ -16,7 +18,12 @@ export class IgxTreeService {
         }
     }
 
+    public collapsing(id: string) {
+        this.collapsingNodes.add(id);
+    }
+
     public collapse(id: string): void {
+        this.collapsingNodes.delete(id);
         this.expandedNodes.delete(id);
     }
 

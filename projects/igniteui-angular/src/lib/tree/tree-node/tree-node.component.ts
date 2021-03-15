@@ -6,7 +6,8 @@ import {
     ElementRef,
     ChangeDetectorRef,
     Output,
-    EventEmitter
+    EventEmitter,
+    NgZone
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -14,6 +15,7 @@ import {
     IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
     IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IGX_TREE_SELECTION_TYPE
 } from '../common';
+import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
@@ -46,6 +48,22 @@ let nodeId = 0;
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, AfterViewInit, OnDestroy {
     @Input()
     public data: T;
+
+    // TO DO: return different tab index depending on anchor child
+    public set tabIndex(val: number) {
+        this._tabIndex = val;
+    }
+
+    public get tabIndex(): number {
+        if (this._tabIndex === null) {
+            if (this.tree.nodes?.first === this) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        return this._tabIndex;
+    }
 
     public set animationSettings(val: ToggleAnimationSettings) { }
 
@@ -108,9 +126,15 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     // TODO: bind to active state when keynav is implemented
     /** @hidden @internal */
-    @HostBinding('class.igx-tree-node--active')
+    // @HostBinding('class.igx-tree-node--active')
     public get active() {
-        return false;
+        //console.log(this.navService.isActiveNode(this));
+        return this.navService.isActiveNode(this);;
+    }
+
+    public get focused() {
+        //console.log(this.navService.isActiveNode(this));
+        return this.navService.isFocusedNode(this);;
     }
 
     // TODO: bind to disabled state when node is dragged
@@ -157,21 +181,29 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @ViewChild('childrenContainer', { read: ElementRef })
     private childrenContainer: ElementRef;
 
+    @ViewChild('ghostTemplate', { read: ElementRef })
+    private header: ElementRef;
+
     // TODO: this should probably be dropped from the API
     /**
      * The unique ID of the node
      */
     public id = `igxTreeNode_${nodeId++}`;
+    public isRendered = false;
 
     /** @hidden @internal */
     private _resourceStrings = CurrentResourceStrings.TreeResStrings;
+
+    private _tabIndex = null;
 
     constructor(
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
         protected selectionService: IgxTreeSelectionService,
         protected treeService: IgxTreeService,
+        protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
+        protected zone: NgZone,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {
@@ -310,13 +342,16 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngAfterViewInit() {
+        this.isRendered = true;
     }
 
     /**
      * @hidden @internal
      */
     public onSelectorClick(event) {
-        event.stopPropagation();
+        // event.stopPropagation();
+        event.preventDefault();
+        // this.navService.handleFocusedAndActiveNode(this);
         if (event.shiftKey) {
             this.selectionService.selectMultipleNodes(this, event);
             return;
@@ -326,6 +361,22 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         } else {
             this.selectionService.selectNode(this, event);
         }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public expandNode() {
+        this.expanded = !this.expanded;
+        this.navService.handleFocusedAndActiveNode(this);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onPointerDown(event) {
+        event.stopPropagation();
+        this.navService.handleFocusedAndActiveNode(this);
     }
 
     public ngOnDestroy() {
@@ -345,6 +396,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.tree.nodeExpanding.emit(args);
         if (!args.cancel) {
             this.treeService.expand(this);
+            if (this.isRendered) {
+                this.navService.setVisibleChildren();
+            }
             this.cdr.detectChanges();
             this.playOpenAnimation(
                 this.childrenContainer
@@ -364,6 +418,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         };
         this.tree.nodeCollapsing.emit(args);
         if (!args.cancel) {
+            this.treeService.collapsing(this.id);
+            if (this.isRendered) {
+                this.navService.setVisibleChildren();
+            }
             this.playCloseAnimation(
                 this.childrenContainer
             );

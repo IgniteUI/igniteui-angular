@@ -1,6 +1,7 @@
 import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxTreeNavigationService } from './tree-navigation.service';
 
 // Component interfaces
 
@@ -15,14 +16,21 @@ export interface IgxTree {
     selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
+    activeNode: IgxTreeNode<any>;
+    navService: IgxTreeNavigationService;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;
     nodeCollapsing: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeCollapsed: EventEmitter<ITreeNodeToggledEventArgs>;
+    treeKeydown: EventEmitter<ITreeKeydownEventArgs>;
+    activeNodeChange: EventEmitter<IgxTreeNode<any>>;
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
+    clearActiveNode(): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
+    getPreviousNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
+    getNextNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 
@@ -63,6 +71,12 @@ export interface ITreeNodeTogglingEventArgs extends IBaseEventArgs, IBaseCancela
 
 export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
     node: IgxTreeNode<any>;
+}
+
+export interface ITreeKeydownEventArgs extends IBaseEventArgs {
+    target: IgxTreeNode<any>;
+    event: Event;
+    cancel: boolean;
 }
 
 // Enums

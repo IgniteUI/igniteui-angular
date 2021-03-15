@@ -17,12 +17,14 @@
 </ng-template>
 
 <ng-template #defaultSelect let-item>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate">
+    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" tabindex="-1">
     </igx-checkbox>
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__wrapper" [ngClass]="{'igx-tree-node__wrapper--selected': selected}">
+    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" [ngClass]="{
+            'igx-tree-node__wrapper--selected': selected,
+            'igx-tree-node__wrapper--active' : this.active}" (pointerdown)="onPointerDown($event)">
         <div aria-hidden="true">
             <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
         </div>
@@ -30,7 +32,7 @@
         <!-- Expand/Collapse indicator -->
         <span [ngClass]="{ 'igx-tree-node__indicator--hidden': !children?.length }"
             class="igx-tree-node__indicator"
-            (click)="expanded = !expanded"
+            (click)="expandNode()"
         >
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
@@ -47,7 +49,9 @@
 
         <div class="igx-tree-node__content">
             <!-- Ghost content -->
-            <ng-content></ng-content>
+            <div #test [ngClass]="{'igx-tree-node--focused' : this.focused, 'igx-tree-node--active' : this.active}" (pointerdown)="onPointerDown($event)">
+                <ng-content></ng-content>
+            </div>
         </div>
 
         <!--  Buffer element for 'move after' when D&D is implemented-->

@@ -19,33 +19,48 @@
     </div>
 </div>
 
-<button igxButton (click)="selectSpecific()">Select specific</button>
-<button igxButton (click)="selectAll()">Select all</button>
-<button igxButton (click)="deselectSpecific()">Deselect specific</button>
-<button igxButton (click)="deselectAll()">Deselect all</button>
-<button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
-<button igxButton (click)="changeNodeData()">Change Node Data</button>
-<igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
+    <div igxLayout igxLayoutDir="column">
+        <div class="btn-holder" igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+            <button igxButton (click)="selectSpecific()">Select specific</button>
+            <button igxButton (click)="selectAll()">Select all</button>
+            <button igxButton (click)="deselectSpecific()">Deselect specific</button>
+            <button igxButton (click)="deselectAll()">Deselect all</button>
+            <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
+            <button igxButton (click)="changeNodeData()">Change Node Data</button>
+            <button igxButton (click)="getNodes()">Nodes</button>
+            <button igxButton (click)="activatedNode = null">Clear Active Node</button>
+        </div>
 
-<div class="row">
-    <div class="column tree-container">
-        <p>IgxTree (templated with icon and text)</p>
-        <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand"
-            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
-            <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
-                <div class="sample-template-center">
-                    <igx-icon>computer</igx-icon>
-                    <span class="sample-ellipsis">{{ node.CompanyName }}</span>
-                </div>
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
-                    {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
-                        {{ leafchild.CompanyName }}
+        <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
+
+        <div igxLayout igxLayoutDir="row">
+            <div igxLayout igxLayoutDir="column" class="tree-container">
+                <p>IgxTree (templated with icon and text)</p>
+                <div style="height: 300px; overflow: scroll;">
+                <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand" [animationSettings]="animationSettings"
+                    (nodeSelection)="nodeSelection($event)" (treeKeydown)="keydown($event)"
+                    [(activeNode)]="activatedNode" (activeNodeChange)="activeNodeChanged($event)">
+                    <igx-tree-node #test [data]="{ID: 'test'}">asd</igx-tree-node>
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
+                        <div class="sample-template-center">
+                            <!-- <a href="www.google.com">test</a> -->
+                            <igx-icon>computer</igx-icon>
+                            <span class="sample-ellipsis">{{ node.CompanyName }}</span>
+                        </div>
+                        <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child"
+                            [(selected)]="child.selected">
+                            {{ child.CompanyName }}
+                            <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild"
+                                [(selected)]="leafchild.selected">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        </igx-tree-node>
                     </igx-tree-node>
                 </igx-tree-node>
             </igx-tree-node>
         </igx-tree>
     </div>
+            </div>
 
 
     <div class="column tree-container">
@@ -62,4 +77,6 @@
             </igx-tree-node>
         </igx-tree>
     </div>
+
+    <button igxButton>TEST</button>
 </div>
