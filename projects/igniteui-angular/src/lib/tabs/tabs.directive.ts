@@ -1,5 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, ContentChildren, Directive, EventEmitter, Input, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, EventEmitter, Input, OnDestroy, Output, QueryList } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
@@ -21,7 +22,7 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 }
 
 @Directive()
-export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit {
+export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
     @Input()
     public get selectedIndex(): number {
@@ -47,17 +48,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             }
 
             this.updateSelectedTabs(oldIndex);
-
-            if (this._selectedIndex !== oldIndex) {
-                if (this.items) {
-                    const tabs = this.items.toArray();
-                    this.selectedItemChange.emit({
-                        owner: this,
-                        newItem: newIndex >= 0 && newIndex < tabs.length ? tabs[newIndex] : null,
-                        oldItem: oldIndex >= 0 && oldIndex < tabs.length ? tabs[oldIndex] : null
-                    });
-                }
-            }
         }
     }
 
@@ -96,6 +86,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected previousSlide: IgxTabItemDirective;
 
     private _selectedIndex = -1;
+    private _itemChanges$: Subscription;
 
     /** @hidden */
     constructor(builder: AnimationBuilder) {
@@ -119,9 +110,21 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
         // Use promise to avoid expression changed after check error
         Promise.resolve().then(() => {
-            this.updateSelectedTabs(null);
+            this.updateSelectedTabs(null, false);
+        });
+
+        this._itemChanges$ = this.items.changes.subscribe(() => {
+            this.onItemChanges();
         });
     }
+
+    /** @hidden */
+    public ngOnDestroy(): void {
+        if (this._itemChanges$) {
+            this._itemChanges$.unsubscribe();
+        }
+    }
+
 
     /** @hidden */
     public selectTab(tab: IgxTabItemDirective, selected: boolean): void {
@@ -141,14 +144,17 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
     }
 
+    /** @hidden */
     protected getPreviousElement(): HTMLElement {
         return this.previousSlide.panelComponent.nativeElement;
     }
 
+    /** @hidden */
     protected getCurrentElement(): HTMLElement {
         return this.currentSlide.panelComponent.nativeElement;
     }
 
+    /** @hidden */
     protected scrollTabHeaderIntoView() {
     }
 
@@ -156,29 +162,71 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         return this.panels && this.panels.length;
     }
 
-    private updateSelectedTabs(oldSelectedIndex: number) {
+    private updateSelectedTabs(oldSelectedIndex: number, raiseEvent = true) {
         if (!this.items) {
             return;
         }
 
         const tabs = this.items.toArray();
+        let newTab: IgxTabItemDirective;
+        const oldTab = this.currentSlide;
 
-        if (this.items) {
-            // First select the new tab
-            if (this._selectedIndex >= 0 && this._selectedIndex < tabs.length) {
-                tabs[this._selectedIndex].selected = true;
-            }
-            // Then unselect the other tabs
-            this.items.forEach((tab, i) => {
-                if (i !== this._selectedIndex) {
-                    tab.selected = false;
-                }
-            });
+        // First select the new tab
+        if (this._selectedIndex >= 0 && this._selectedIndex < tabs.length) {
+            newTab = tabs[this._selectedIndex];
+            newTab.selected = true;
         }
+        // Then unselect the other tabs
+        tabs.forEach((tab, i) => {
+            if (i !== this._selectedIndex) {
+                tab.selected = false;
+            }
+        });
 
         if (this._selectedIndex !== oldSelectedIndex) {
             this.scrollTabHeaderIntoView();
             this.triggerPanelAnimations(oldSelectedIndex);
+
+            if (raiseEvent && newTab !== oldTab) {
+                this.selectedItemChange.emit({
+                    owner: this,
+                    newItem: newTab,
+                    oldItem: oldTab
+                });
+            }
+        }
+    }
+
+    private onItemChanges() {
+        const tabs = this.items.toArray();
+
+        if (this.selectedIndex >= 0 && this.selectedIndex < tabs.length) {
+
+            // Check if there is selected tab
+            let selectedIndex = -1;
+            this.items.some((tab, i) => {
+                if (tab.selected) {
+                    selectedIndex = i;
+                }
+                return tab.selected;
+            });
+
+            if (selectedIndex >= 0) {
+                // Select the same tab that was previously selected
+                Promise.resolve().then(() => {
+                    this.selectedIndex = selectedIndex;
+                });
+            } else {
+                // Select the tab on the same index the previous selected tab was
+                Promise.resolve().then(() => {
+                    this.updateSelectedTabs(null);
+                });
+            }
+        } else if (this.selectedIndex >= tabs.length) {
+            // Select the last tab
+            Promise.resolve().then(() => {
+                this.selectedIndex = tabs.length - 1;
+            });
         }
     }
 
@@ -188,10 +236,12 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
 
         if (this.hasPanels && this._selectedIndex >= 0) {
-            const slide = this.items.toArray()[this._selectedIndex];
-            slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
+            const tabs = this.items.toArray();
+            const slide = tabs[this._selectedIndex];
 
-            if (this.currentSlide) {
+            if (this.currentSlide && !this.currentSlide.selected) {
+                slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
+
                 if (this.previousSlide && this.previousSlide.previous) {
                     this.previousSlide.previous = false;
                 }
