@@ -21,10 +21,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     public inertiaStep = 1.5;
 
     @Input()
-    public smoothingStep = 1;
+    public smoothingStep = 1.5;
 
     @Input()
-    public smoothingDuration = 1;
+    public smoothingDuration = 0.5;
 
     @Input()
     public swipeToleranceX = 20;
