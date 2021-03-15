@@ -21,6 +21,12 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     public inertiaStep = 1.5;
 
     @Input()
+    public smoothingStep = 1;
+
+    @Input()
+    public smoothingDuration = 1;
+
+    @Input()
     public swipeToleranceX = 20;
 
     @Input()
@@ -33,6 +39,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     public inertiaDuration = 0.5;
 
     private _touchInertiaAnimID;
+    private _wheelInertiaAnimID;
     private _startX;
     private _startY;
     private _touchStartX;
@@ -151,6 +158,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             const deltaScaledY = evt.deltaY * (evt.deltaMode === 0 ? this.firefoxDeltaMultiplier : 1);
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
+
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
             this._scrollToX(
                 this._startX + scrollDeltaX * scrollStep
@@ -165,9 +173,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             const step = this._startX + scrollDeltaY * scrollStep;
             this._scrollToX(step);
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
-            this._scrollToY(
-                this._startY + scrollDeltaY * scrollStep
-            );
+            this._wheelInertiaInit(scrollDeltaY);
             this.preventParentScroll(evt, true);
         }
     }
@@ -419,6 +425,28 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
 
         return false;
+    }
+
+    protected _wheelInertiaInit(deltaY) {
+        this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
+        this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
+        const smoothingStep = this.smoothingStep;
+        const smoothingDuration = this.smoothingDuration;
+
+        let x = -1;
+        const inertiaWheelStep = () => {
+            if (x > 1) {
+                cancelAnimationFrame(this._wheelInertiaAnimID);
+                return;
+            }
+            this._nextY += ((-3 * x * x + 3) * deltaY * 2) * smoothingStep;
+            this._scrollTo(this._nextX, this._nextY);
+
+            //continue the inertia
+            x += 0.08 * (1 / smoothingDuration);
+            this._wheelInertiaAnimID = requestAnimationFrame(inertiaWheelStep);
+        };
+        this._wheelInertiaAnimID = requestAnimationFrame(inertiaWheelStep);
     }
 
     protected _inertiaInit(speedX, speedY) {
