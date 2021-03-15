@@ -19,7 +19,7 @@ import { IgxGridFilteringComponent, CustomFilter, IgxGridFilteringBindingCompone
 import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
-xdescribe('IgxGrid - Filtering actions #grid', () => {
+describe('IgxGrid - Filtering actions #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({

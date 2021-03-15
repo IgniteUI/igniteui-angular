@@ -2641,7 +2641,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
         }));
     });
 
-    describe('Column groups - ', () => {
+    xdescribe('Column groups - ', () => {
         let fix; let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxGridAdvancedFilteringColumnGroupComponent);

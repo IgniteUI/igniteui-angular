@@ -2513,7 +2513,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
     });
 
-    describe(null, () => {
+    xdescribe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
@@ -5716,7 +5716,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
     });
 
-    describe(null, () => {
+    xdescribe(null, () => {
         let fix: ComponentFixture<any>;
         let grid: IgxGridComponent;
         beforeEach(fakeAsync(() => {
