@@ -1,5 +1,5 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, ContentChildren, Directive, EventEmitter, Input, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, EventEmitter, HostBinding, Input, Output, QueryList } from '@angular/core';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
@@ -20,8 +20,19 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
     readonly newItem: IgxTabItemDirective;
 }
 
+/**
+ * @hidden
+ */
+let NEXT_TAB_ID = 0;
+
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit {
+
+    /**
+     * @hidden
+     */
+    @HostBinding('attr.role')
+    public role = 'tablist';
 
     @Input()
     public get selectedIndex(): number {
@@ -94,6 +105,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected _disableAnimation = false;
     protected currentSlide: IgxTabItemDirective;
     protected previousSlide: IgxTabItemDirective;
+    protected componentName: string;
 
     private _selectedIndex = -1;
 
@@ -121,6 +133,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         Promise.resolve().then(() => {
             this.updateSelectedTabs(null);
         });
+
+        this.setAttributes(this.componentName);
     }
 
     /** @hidden */
@@ -152,6 +166,23 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected scrollTabHeaderIntoView() {
     }
 
+    private setAttributes(igxName: string) {
+        this.items.forEach(item => {
+            this.setHeaderAttribute(item, 'aria-selected', item.selected ? 'true' : 'false');
+            this.setHeaderAttribute(item, 'aria-label', `${igxName}-tabitem-${NEXT_TAB_ID}`);
+            this.setHeaderAttribute(item, 'aria-controls', `${igxName}-tabpanel-${NEXT_TAB_ID}`);
+            this.setPanelAttribute(item, 'aria-labelledby', `${igxName}-tabitem-${NEXT_TAB_ID++}`);
+        });
+    }
+
+    private setHeaderAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        item.headerComponent.nativeElement.setAttribute(attrName, value);
+    }
+
+    private setPanelAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        item.panelComponent.nativeElement.setAttribute(attrName, value);
+    }
+
     private get hasPanels() {
         return this.panels && this.panels.length;
     }
@@ -179,6 +210,17 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         if (this._selectedIndex !== oldSelectedIndex) {
             this.scrollTabHeaderIntoView();
             this.triggerPanelAnimations(oldSelectedIndex);
+
+            if (this._selectedIndex >= 0) {
+                const itemsArray = this.items.toArray();
+                itemsArray.forEach(i => {
+                    this.setHeaderAttribute(i, 'aria-selected', 'false');
+                    this.setHeaderAttribute(i, 'tabindex', '-1');
+                });
+                this.setHeaderAttribute(itemsArray[this._selectedIndex], 'aria-selected', 'true');
+                this.setHeaderAttribute(itemsArray[this._selectedIndex], 'tabindex', '0');
+
+            }
         }
     }
 

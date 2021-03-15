@@ -58,7 +58,9 @@ export class IgxTabsComponent extends IgxTabsDirective {
     }
 
     /**  @hidden */
-     public offset = 0;
+    public offset = 0;
+
+    protected componentName = 'igx-tabs';
 
     /** @hidden */
     public scrollLeft() {
@@ -72,7 +74,7 @@ export class IgxTabsComponent extends IgxTabsDirective {
 
     /** @hidden */
     public realignSelectedIndicator() {
-        if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
             const tabItems = this.items.toArray();
             const header = tabItems[this.selectedIndex].headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
