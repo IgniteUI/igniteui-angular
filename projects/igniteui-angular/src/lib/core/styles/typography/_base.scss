@@ -79,9 +79,11 @@
     $body-2: (),
     $button: (),
     $caption: (),
-    $overline: ()
+    $overline: (),
+    $_meta: ()
 ) {
     $default-scale: (
+        _meta: (variant: 'material'),
         h1: igx-type-style(
             $font-size: rem(96px),
             $font-weight: 300,
@@ -202,7 +204,8 @@
         body-2: extend(map-get($default-scale, 'body-2'), $body-2),
         button: extend(map-get($default-scale, 'button'), $button),
         caption: extend(map-get($default-scale, 'caption'), $caption),
-        overline: extend(map-get($default-scale, 'overline'), $overline)
+        overline: extend(map-get($default-scale, 'overline'), $overline),
+        _meta: extend(map-get($default-scale, '_meta'), $_meta)
     );
 }
 

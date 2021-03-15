@@ -106,7 +106,6 @@
 
     $_igx-enhanced-accessibility: $enhanced-accessibility !global;
 
-    @include igx-typography();
     @include igx-vhelper();
 
     @if $print-layout == true {

@@ -1,4 +1,7 @@
+$_igx-fluent-ff: "'Open Sans', Helvetica, Arial, sans-serif";
+
 $fluent_h1: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(68px),
     $font-weight: 700,
     $line-height: rem(76px),
@@ -8,6 +11,7 @@ $fluent_h1: igx-type-style(
 );
 
 $fluent_h2: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(42px),
     $font-weight: 700,
     $line-height: rem(52px),
@@ -17,6 +21,7 @@ $fluent_h2: igx-type-style(
 );
 
 $fluent_h3: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(32px),
     $font-weight: 600,
     $line-height: rem(40px),
@@ -26,6 +31,7 @@ $fluent_h3: igx-type-style(
 );
 
 $fluent_h4: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(28px),
     $font-weight: 400,
     $line-height: rem(36px),
@@ -35,6 +41,7 @@ $fluent_h4: igx-type-style(
 );
 
 $fluent_h5: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(20px),
     $font-weight: 400,
     $line-height: rem(28px),
@@ -44,6 +51,7 @@ $fluent_h5: igx-type-style(
 );
 
 $fluent_h6: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(18px),
     $font-weight: 400,
     $line-height: rem(22px),
@@ -53,6 +61,7 @@ $fluent_h6: igx-type-style(
 );
 
 $fluent_body-1: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(16px),
     $font-weight: 400,
     $line-height: rem(22px),
@@ -62,6 +71,7 @@ $fluent_body-1: igx-type-style(
 );
 
 $fluent_body-2: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(14px),
     $font-weight: 400,
     $line-height: rem(20px),
@@ -71,6 +81,7 @@ $fluent_body-2: igx-type-style(
 );
 
 $fluent_subtitle-1: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(12px),
     $font-weight: 400,
     $line-height: rem(16px),
@@ -80,6 +91,7 @@ $fluent_subtitle-1: igx-type-style(
 );
 
 $fluent_subtitle-2: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(14px),
     $font-weight: 400,
     $line-height: rem(16px),
@@ -89,6 +101,7 @@ $fluent_subtitle-2: igx-type-style(
 );
 
 $fluent_button: igx-type-style(
+    $font-family: $_igx-fluent-ff,
     $font-size: rem(14px),
     $font-weight: 600,
     $line-height: rem(14px),
@@ -98,6 +111,7 @@ $fluent_button: igx-type-style(
 );
 
 $fluent-type-scale: igx-type-scale(
+    $_meta: (variant: 'fluent'),
     $h1: $fluent_h1,
     $h2: $fluent_h2,
     $h3: $fluent_h3,

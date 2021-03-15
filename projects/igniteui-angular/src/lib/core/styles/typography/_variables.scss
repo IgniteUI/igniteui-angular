@@ -86,3 +86,7 @@
 /// @prop {String} overline.text-transform [uppercase]
 /// @requires igx-type-scale
 $default-type-scale: igx-type-scale() !default;
+
+/// @alias defalut-type-scale
+/// @see $default-type-scale
+$material-type-scale: $default-type-scale;
