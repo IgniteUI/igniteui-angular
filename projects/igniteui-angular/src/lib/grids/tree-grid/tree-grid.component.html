@@ -257,7 +257,7 @@
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [readonly]="true"
-            disableRipple="true"
+            [disableRipple]="true"
             [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
             [aria-label]="headSelectorBaseAriaLabel"
             #headerCheckbox>
