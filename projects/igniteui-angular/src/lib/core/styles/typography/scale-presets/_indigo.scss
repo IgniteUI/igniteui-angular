@@ -119,6 +119,7 @@ $indigo_overline: igx-type-style(
 );
 
 $indigo-type-scale: igx-type-scale(
+    $_meta: (variant: 'indigo'),
     $h1: $indigo_h1,
     $h2: $indigo_h2,
     $h3: $indigo_h3,
