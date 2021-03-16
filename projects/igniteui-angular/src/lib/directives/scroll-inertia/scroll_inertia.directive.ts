@@ -39,7 +39,6 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     public inertiaDuration = 0.5;
 
     private _touchInertiaAnimID;
-    private _wheelInertiaAnimID;
     private _startX;
     private _startY;
     private _touchStartX;
@@ -435,9 +434,10 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     protected _smoothWheelScrollY(deltaY) {
         this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
         let x = -1;
+        let wheelInertialAnimation = null;
         const inertiaWheelStep = () => {
             if (x > 1) {
-                cancelAnimationFrame(this._wheelInertiaAnimID);
+                cancelAnimationFrame(wheelInertialAnimation);
                 return;
             }
             this._nextY += ((-3 * x * x + 3) * deltaY * 2) * this.smoothingStep;
@@ -445,9 +445,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
             //continue the inertia
             x += 0.08 * (1 / this.smoothingDuration);
-            this._wheelInertiaAnimID = requestAnimationFrame(inertiaWheelStep);
+            wheelInertialAnimation = requestAnimationFrame(inertiaWheelStep);
         };
-        this._wheelInertiaAnimID = requestAnimationFrame(inertiaWheelStep);
+        wheelInertialAnimation = requestAnimationFrame(inertiaWheelStep);
     }
 
     protected _inertiaInit(speedX, speedY) {
