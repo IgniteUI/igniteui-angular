@@ -122,12 +122,18 @@
     }
 
     @if ($_variant == 'indigo') {
+        @include igx-calendar-typography($type-scale);
+
         @include igx-card-typography($indigo-type-scale, $categories: (
             title: 'h5',
             title-small: 'subtitle-2',
             subtitle: 'subtitle-2',
             content: 'body-2'
         ));
+
+        @include igx-dialog-typography($type-scale);
+        @include igx-drop-down-typography($type-scale);
+        @include igx-list-typography($type-scale);
     }
 }
 
@@ -136,10 +142,10 @@
 /// are based on the passed type scale. If omitted the
 /// default-type-scale will be used.
 /// @access public
-/// @param {String} $font-family ["'Titillium Web', sans-serif"] - The font family to be used across all typographic elements.
+/// @param {String} $font-family [$igx-material-typeface] - The font family to be used across all typographic elements.
 /// @param {Map} $type-scale [$default-type-scale] - A type scale map as produced by igx-type-scale.
 @mixin igx-typography(
-    $font-family: "'Titillium Web', sans-serif",
+    $font-family: $igx-material-typeface,
     $type-scale: $default-type-scale,
 ) {
     @if(is-root()) {

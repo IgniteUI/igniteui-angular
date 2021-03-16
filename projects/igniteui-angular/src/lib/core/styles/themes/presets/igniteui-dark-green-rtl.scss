@@ -5,5 +5,5 @@
 }
 
 @include igx-core($direction: rtl);
-@include igx-typography($type-scale: $material-type-scale);
+@include igx-typography($font-family: $igx-material-typeface, $type-scale: $material-type-scale);
 @include igx-dark-theme($dark-green-palette);

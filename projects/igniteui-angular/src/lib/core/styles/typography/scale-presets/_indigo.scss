@@ -1,7 +1,4 @@
-$_igx-indigo-ff: "'Nunito Sans', sans-serif";
-
 $indigo_h1: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(96px),
     $font-weight: 200,
     $line-height: rem(112px),
@@ -12,7 +9,6 @@ $indigo_h1: igx-type-style(
 );
 
 $indigo_h2: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(60px),
     $font-weight: 200,
     $line-height: rem(72px),
@@ -23,7 +19,6 @@ $indigo_h2: igx-type-style(
 );
 
 $indigo_h3: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(48px),
     $font-weight: 200,
     $line-height: rem(56px),
@@ -33,7 +28,6 @@ $indigo_h3: igx-type-style(
 );
 
 $indigo_h4: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(36px),
     $font-weight: 200,
     $line-height: rem(42px),
@@ -43,7 +37,6 @@ $indigo_h4: igx-type-style(
 );
 
 $indigo_h5: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(24px),
     $font-weight: 200,
     $line-height: rem(28px),
@@ -53,7 +46,6 @@ $indigo_h5: igx-type-style(
 );
 
 $indigo_h6: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(20px),
     $font-weight: 600,
     $line-height: rem(26px),
@@ -63,7 +55,6 @@ $indigo_h6: igx-type-style(
 );
 
 $indigo_body-1: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(16px),
     $font-weight: 400,
     $line-height: rem(20px),
@@ -73,7 +64,6 @@ $indigo_body-1: igx-type-style(
 );
 
 $indigo_body-2: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(14px),
     $font-weight: 400,
     $line-height: rem(20px),
@@ -83,7 +73,6 @@ $indigo_body-2: igx-type-style(
 );
 
 $indigo_subtitle-1: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(16px),
     $font-weight: 600,
     $line-height: rem(22px),
@@ -93,7 +82,6 @@ $indigo_subtitle-1: igx-type-style(
 );
 
 $indigo_subtitle-2: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(14px),
     $font-weight: 700,
     $line-height: rem(20px),
@@ -103,7 +91,6 @@ $indigo_subtitle-2: igx-type-style(
 );
 
 $indigo_button: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(12px),
     $font-weight: 700,
     $line-height: normal,
@@ -113,7 +100,6 @@ $indigo_button: igx-type-style(
 );
 
 $indigo_caption: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(12px),
     $font-weight: 400,
     $line-height: rem(16px),
@@ -123,7 +109,6 @@ $indigo_caption: igx-type-style(
 );
 
 $indigo_overline: igx-type-style(
-    $font-family: $_igx-indigo-ff,
     $font-size: rem(10px),
     $font-weight: 700,
     $line-height: rem(14px),

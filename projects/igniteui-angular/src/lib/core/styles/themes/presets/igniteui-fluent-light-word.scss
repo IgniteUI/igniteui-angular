@@ -5,5 +5,5 @@
 }
 
 @include igx-core();
-@include igx-typography($type-scale: $fluent-type-scale);
+@include igx-typography($font-family: $igx-fluent-typeface, $type-scale: $fluent-type-scale);
 @include igx-fluent-light-theme($light-fluent-word-palette);
