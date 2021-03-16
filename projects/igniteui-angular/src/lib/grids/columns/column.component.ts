@@ -571,10 +571,36 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input()
     formatter: (value: any) => any;
 
+    /**
+     * The summaryFormatter is used to format the display of the column summaries.
+     *
+     * In this example, we check to see if the column name is OrderDate, and then provide a method as the summaryFormatter
+     * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
+     *
+     * ```typescript
+     * onColumnInit(column: IgxColumnComponent) {
+     *   if (column.field == "OrderDate") {
+     *     column.summaryFormatter = this.summaryFormat;
+     *   }
+     * }
+     *
+     * summaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+     *   const result = summary.summaryResult;
+     *   if(summaryResult.key !== 'count' && result !== null && result !== undefined) {
+     *      const pipe = new DatePipe('fr-FR');
+     *      return pipe.transform(result,'mediumDate');
+     *   }
+     *   return result;
+     * }
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
     summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.

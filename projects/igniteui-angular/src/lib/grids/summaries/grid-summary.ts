@@ -135,9 +135,8 @@ export class IgxNumberSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
-     *     pipeArgs.digitsInfo = '1.1-2';
-     *     const result = super.operate(data, allData, fieldName, locale, pipeArgs);
+     *   public operate(data: any[], allData: any[], fieldName: string): IgxSummaryResult[] {
+     *     const result = super.operate(data, allData, fieldName);
      *     result.push({
      *       key: "avg",
      *       label: "Avg",
@@ -225,12 +224,8 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
      *   constructor() {
      *     super();
      *   }
-     *   public operate(data: any[], allData: any[], fieldName: string, locale: string, pipeArgs: IColumnPipeArgs): IgxSummaryResult[] {
-     *     pipeArgs = {
-     *        format: 'longDate',
-     *        timezone: 'UTC'
-     *     };
-     *     const result = super.operate(data, allData, fieldName, locale, pipeArgs);
+     *   public operate(data: any[], allData: any[], fieldName: string): IgxSummaryResult[] {
+     *     const result = super.operate(data, allData, fieldName);
      *     result.push({
      *       key: "deadline",
      *       label: "Deadline Date",
