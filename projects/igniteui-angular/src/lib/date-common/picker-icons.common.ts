@@ -4,6 +4,8 @@ import { Component, Output, EventEmitter, HostListener, NgModule, Directive, Tem
 /**
  * Templates the default toggle icon in the picker.
  *
+ * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ *
  * @example
  * ```html
  * <igx-date-range-picker>
@@ -32,6 +34,8 @@ export class IgxPickerToggleComponent {
 /**
  * Templates the default clear icon in the picker.
  *
+ * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ *
  * @example
  * ```html
  * <igx-date-picker>
@@ -47,7 +51,12 @@ export class IgxPickerToggleComponent {
 })
 export class IgxPickerClearComponent extends IgxPickerToggleComponent { }
 
-/** IgxDatePickerActionsDirective can be used to re-template the dropdown/dialog action buttons. */
+/**
+ * IgxPickerActionsDirective can be used to re-template the dropdown/dialog action buttons.
+ *
+ * @remarks Can be applied to IgxDatePickerComponent, IgxTimePickerComponent, IgxDateRangePickerComponent
+ *
+ */
 @Directive({
     selector: '[igxPickerActions]'
 })

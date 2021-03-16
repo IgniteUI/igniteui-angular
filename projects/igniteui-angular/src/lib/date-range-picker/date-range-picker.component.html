@@ -25,7 +25,7 @@
 
 <ng-template #defTemplate>
     <igx-input-group (click)="this.open()">
-        <!-- if there's no label, use the placeholder will be used as one -->
+        <!-- only set mask placeholder when empty, otherwise input group might use it as label if none is set -->
         <input #singleInput igxInput type="text" readonly [placeholder]="this.value ? '' : singleInputFormat"
             role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!this.collapsed"
             [attr.aria-labelledby]="this.label?.id"

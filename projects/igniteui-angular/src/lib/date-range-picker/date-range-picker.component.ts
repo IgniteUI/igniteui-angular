@@ -21,7 +21,6 @@ import { IBaseCancelableBrowserEventArgs, KEYS } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
-import { PickerCancelableEventArgs } from '../date-common/types';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -281,7 +280,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
      * ```html
      * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
      * //..
-     * <igx-date-picker [outlet]="outlet"></igx-date-picker>
+     * <igx-date-range-picker [outlet]="outlet"></igx-date-range-picker>
      * //..
      * ```
      */
@@ -293,7 +292,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
      *
      * @example
      * ```html
-     * <igx-date-picker [(value)]="date"></igx-date-picker>
+     * <igx-date-range-picker [(value)]="date"></igx-date-range-picker>
      * ```
      */
     @Output()
@@ -371,12 +370,12 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
      * this.dateRangePicker.value = newValue;
      * ```
      */
-    public get value(): DateRange {
+    public get value(): DateRange | null {
         return this._value;
     }
 
     @Input()
-    public set value(value: DateRange) {
+    public set value(value: DateRange | null) {
         this.updateValue(value);
         this.onChangeCallback(value);
         this.valueChange.emit(value);
@@ -417,7 +416,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
         return false;
     }
 
-    private _value: DateRange;
+    private _value: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;
     private _destroy$ = new Subject();
@@ -701,11 +700,9 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     };
 
     private handleSelection(selectionData: Date[]): void {
-        const oldValue = this.value;
-        const newValue = this.extractRange(selectionData);
-        const args: PickerCancelableEventArgs = { owner: this, cancel: false, oldValue, newValue };
-        if (args.cancel) {
-            return;
+        let newValue = this.extractRange(selectionData);
+        if (!newValue.start && !newValue.end) {
+            newValue = null;
         }
         this.value = newValue;
         if (this.isDropdown && selectionData?.length > 1) {
@@ -714,10 +711,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private handleClosing(event: IBaseCancelableBrowserEventArgs): void {
-        if (this.value && !this.value.start && !this.value.end) {
-            this.value = null;
-        }
-
         const args = { owner: this, cancel: event.cancel, event: event.event };
         this.closing.emit(args);
         event.cancel = args.cancel;
@@ -907,7 +900,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     private extractRange(selection: Date[]): DateRange {
         return {
-            start: selection[0],
+            start: selection[0] || null,
             end: selection.length > 0 ? selection[selection.length - 1] : null
         };
     }

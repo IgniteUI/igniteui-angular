@@ -199,7 +199,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
         return this._collapsed;
     }
 
-    public abstract valueChange: EventEmitter<any>;
+    public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
