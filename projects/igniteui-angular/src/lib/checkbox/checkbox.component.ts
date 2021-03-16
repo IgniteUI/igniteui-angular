@@ -47,7 +47,7 @@ let nextId = 0;
  *
  * @example
  * ```html
- * <igx-checkbox checked="true">
+ * <igx-checkbox [checked]="true">
  *   simple checkbox
  * </igx-checkbox>
  * ```

@@ -61,7 +61,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public resizeHeight = 0;
     public selectionMode;
 
-    public columnsList = [
+    public columnsList: {key: string; field: string; hide?: boolean} [] = [
         { key: 'ContactName', field: 'Contact name'},
         { key: 'ContactTitle', field: 'Contact title'},
         { key: 'CompanyName', field: 'Company name'},

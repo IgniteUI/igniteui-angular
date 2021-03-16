@@ -1,13 +1,19 @@
 import { Component } from '@angular/core';
 import { DataType } from 'igniteui-angular';
 
+interface GridConfig {
+    field: string;
+    type: DataType;
+    groupable?: boolean;
+}
+
 @Component({
     selector: 'app-grid-nested-props',
     templateUrl: 'grid-nested-props.sample.html'
 })
 export class GridNestedPropsSampleComponent {
     public data = [];
-    public config = [
+    public config: GridConfig [] = [
         { field: 'id', type: DataType.Number },
         { field: 'padding.left', type: DataType.Number },
         { field: 'padding.top', type: DataType.Number },
