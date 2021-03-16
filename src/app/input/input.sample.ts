@@ -52,10 +52,10 @@ export class InputSampleComponent {
         console.log(event);
     }
 
-    public onChange(value: string) {
-        if(this.selected !== value) {
+    public onChange(value: IChangeRadioEventArgs) {
+        if(this.selected !== value.value) {
             console.log('changed radio selection');
-            this.selected = value;
+            this.selected = value.value;
         }
     }
 
