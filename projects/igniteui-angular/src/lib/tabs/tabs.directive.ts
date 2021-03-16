@@ -1,8 +1,9 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, ContentChildren, Directive, EventEmitter, HostBinding, Input, OnDestroy, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter, HostListener,
+            HostBinding, Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
-import { IBaseEventArgs } from '../core/utils';
+import { IBaseEventArgs, KEYS } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabPanelBase, IgxTabsBase } from './tabs.base';
 
@@ -97,11 +98,62 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected previousSlide: IgxTabItemDirective;
     protected componentName: string;
 
+    @HostListener('keydown', ['$event'])
+    public keyDown(event: KeyboardEvent) {
+        let unsupportedKey = false;
+        const previousIndex = this._selectedIndex;
+        const hasDisabledItems = this.items.some((item) => item.disabled);
+        switch (event.key) {
+            case KEYS.RIGHT_ARROW:
+            case KEYS.RIGHT_ARROW_IE:
+                this._selectedIndex = this._selectedIndex === this.items.length - 1 ? 0 : this._selectedIndex + 1;
+                while (hasDisabledItems && this.items.toArray()[this._selectedIndex].disabled &&
+                    this._selectedIndex < this.items.length) {
+                        this._selectedIndex = this._selectedIndex === this.items.length - 1 ? 0 : this._selectedIndex + 1;
+                }
+                break;
+            case KEYS.LEFT_ARROW:
+            case KEYS.LEFT_ARROW_IE:
+                this._selectedIndex = this._selectedIndex === 0 ? this.items.length - 1 : this._selectedIndex - 1;
+                while (hasDisabledItems && this.items.toArray()[this._selectedIndex].disabled &&
+                    this._selectedIndex > 0) {
+                        this._selectedIndex = this._selectedIndex === 0 ? this.items.length - 1 : this._selectedIndex - 1;
+                }
+                break;
+            case KEYS.HOME:
+                event.preventDefault();
+                this._selectedIndex = 0;
+                while (this.items.toArray()[this._selectedIndex].disabled &&
+                        this._selectedIndex < this.items.length) {
+                            this._selectedIndex = this._selectedIndex === this.items.length - 1 ? 0 : this._selectedIndex + 1;
+                }
+                break;
+            case KEYS.END:
+                event.preventDefault();
+                this._selectedIndex = this.items.length - 1;
+                while (hasDisabledItems && this.items.toArray()[this._selectedIndex].disabled &&
+                    this._selectedIndex > 0) {
+                        this._selectedIndex = this._selectedIndex === 0 ? this.items.length - 1 : this._selectedIndex - 1;
+                }
+                break;
+            case KEYS.TAB:
+                this.currentSlide.panelComponent.nativeElement.focus();
+                break;
+            default:
+                event.preventDefault();
+                unsupportedKey = true;
+                break;
+        }
+        if (!unsupportedKey) {
+            this.updateSelectedTabs(previousIndex, true);
+        }
+    }
+
     private _selectedIndex = -1;
     private _itemChanges$: Subscription;
 
     /** @hidden */
-    constructor(builder: AnimationBuilder) {
+    constructor(public element: ElementRef, builder: AnimationBuilder) {
         super(builder);
     }
 
@@ -130,6 +182,13 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         });
 
         this.setAttributes(this.componentName);
+    }
+
+    /**
+     * Returns the underlying DOM element.
+     */
+    public get nativeElement() {
+        return this.element.nativeElement;
     }
 
     /** @hidden */
