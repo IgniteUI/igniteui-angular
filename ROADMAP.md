@@ -6,7 +6,7 @@
 
 1. Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
 2. Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
-3. Switch thumb templatable and add indeterminate state [#8949](https://github.com/IgniteUI/igniteui-angular/issues/8949)
+3. **[DONE]** Switch thumb templatable and add indeterminate state [#8949](https://github.com/IgniteUI/igniteui-angular/issues/8949)
 4. IgxDateTimeEditor should support spin delta [#7169](https://github.com/IgniteUI/igniteui-angular/issues/7169)
 5. Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
 6. Export Hierarchical Grid to Excel [#5848](https://github.com/IgniteUI/igniteui-angular/issues/5848)
@@ -22,21 +22,22 @@
 1. Accordion component
 2. Scheduler component
 3. Grid Cell Merging
+4. Global palette values for components
 
 # Previous Milestone
 
 ## Milestone 15 (Due by February, 2021)
 
-1. Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
+1. **[DONE]** Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
 2. **[DONE]** Support changing theme dynamically on Input Group [#8619](https://github.com/IgniteUI/igniteui-angular/issues/8619)
 3. **[DONE]** Icon inputs should have same names in code and view files [#8769](https://github.com/IgniteUI/igniteui-angular/issues/8769)
 4. **[DONE]** Key + scroll for horizontal scroll in igx-grid [#6566](https://github.com/IgniteUI/igniteui-angular/issues/6566)
 5. **[DONE]** Export Excel current igx-grid ordered by Group By [#5927](https://github.com/IgniteUI/igniteui-angular/issues/5927)
-6. Auto select children in tree grid [#8040](https://github.com/IgniteUI/igniteui-angular/issues/8040)
-7. Currency and Percent type of a Column [#8331](https://github.com/IgniteUI/igniteui-angular/issues/8331)
+6. **[DONE]** Auto select children in tree grid [#8040](https://github.com/IgniteUI/igniteui-angular/issues/8040)
+7. **[DONE]** Currency and Percent type of a Column [#8331](https://github.com/IgniteUI/igniteui-angular/issues/8331)
 8. **[DONE]** Introduce selectRowOnClick property that determines whether a row will be selected on click [#8633](https://github.com/IgniteUI/igniteui-angular/issues/8633)
 9. **[DONE]** Carousel accessibility improvements [#8202](https://github.com/IgniteUI/igniteui-angular/issues/8202)
-10. Datetime or Time in avaliable type of column [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
+10. **[DONE]** Datetime or Time in avaliable type of column [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
 
 ## Milestone 14 (Released November 11th, 2020)
 
