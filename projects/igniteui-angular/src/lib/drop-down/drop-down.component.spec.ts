@@ -6,7 +6,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';

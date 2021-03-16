@@ -1,9 +1,9 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxBottomNavOldComponent,
-         IgxBottomNavModule,
          IgxTabComponent,
          IgxTabPanelOldComponent } from './tabbar.component';
+import { IgxBottomNavModule } from '../tabs/bottom-nav/bottom-nav.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { BottomNavRoutingViewComponentsModule,

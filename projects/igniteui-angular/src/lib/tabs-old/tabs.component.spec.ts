@@ -2,8 +2,8 @@ import { Component, QueryList, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemOldComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
-import { IgxTabsOldComponent, IgxTabsModule } from './tabs.component';
-
+import { IgxTabsOldComponent } from './tabs.component';
+import { IgxTabsModule } from '../tabs/tabs/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxDropDownModule } from '../drop-down/public_api';

@@ -19,7 +19,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
+import { IgxTabsModule, IgxTabsComponent } from '../../tabs/tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
