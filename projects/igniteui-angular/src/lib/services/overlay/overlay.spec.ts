@@ -2,7 +2,6 @@ import {
     ApplicationRef,
     Component,
     ComponentRef,
-    DebugElement,
     ElementRef,
     HostBinding,
     Inject,
@@ -11,7 +10,7 @@ import {
     ViewEncapsulation
 } from '@angular/core';
 import { fakeAsync, inject, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
@@ -238,8 +237,8 @@ describe('igxOverlay', () => {
                         this.children.splice(index, 1);
                     }
                 },
-                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
-                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                addEventListener: () => { },
+                removeEventListener: () => { },
                 getBoundingClientRect: () => ({ width: 10, height: 10 }),
                 insertBefore(newChild: HTMLDivElement, refChild: Node) {
                     let refIndex = this.children.indexOf(refChild);

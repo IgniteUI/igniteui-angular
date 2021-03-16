@@ -1,5 +1,5 @@
 import { fadeIn, fadeOut } from '../../../animations/main';
-import { HorizontalAlignment, PositionSettings, Size, Util, VerticalAlignment } from './../utilities';
+import { HorizontalAlignment, PositionSettings, Util, VerticalAlignment } from './../utilities';
 import { IPositionStrategy } from './IPositionStrategy';
 
 /**
