@@ -78,10 +78,31 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.items.toArray()[this.selectedIndex] : null;
     }
 
+    /**
+     * Returns the underlying DOM element.
+     */
+     public get nativeElement() {
+        return this.element.nativeElement;
+    }
+
     /** @hidden */
     @ContentChildren(IgxTabPanelBase, { descendants: true })
     public panels: QueryList<IgxTabPanelBase>;
 
+    protected _disableAnimation = false;
+    protected currentSlide: IgxTabItemDirective;
+    protected previousSlide: IgxTabItemDirective;
+    protected nextSlide: IgxTabItemDirective;
+
+    private _selectedIndex = -1;
+    private _itemChanges$: Subscription;
+
+    /** @hidden */
+    constructor(public element: ElementRef, builder: AnimationBuilder) {
+        super(builder);
+    }
+
+    /** @hidden */
     @HostListener('keydown', ['$event'])
     public keyDown(event: KeyboardEvent) {
         let unsupportedKey = false;
@@ -133,19 +154,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
     }
 
-    private _selectedIndex = -1;
-    private _itemChanges$: Subscription;
-
-    protected _disableAnimation = false;
-    protected currentSlide: IgxTabItemDirective;
-    protected previousSlide: IgxTabItemDirective;
-    protected nextSlide: IgxTabItemDirective;
-
-    /** @hidden */
-    constructor(public element: ElementRef, builder: AnimationBuilder) {
-        super(builder);
-    }
-
     /** @hidden */
     public ngAfterViewInit(): void {
         if (this._selectedIndex === -1) {
@@ -171,20 +179,12 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         });
     }
 
-    /**
-     * Returns the underlying DOM element.
-     */
-    public get nativeElement() {
-        return this.element.nativeElement;
-    }
-
     /** @hidden */
     public ngOnDestroy(): void {
         if (this._itemChanges$) {
             this._itemChanges$.unsubscribe();
         }
     }
-
 
     /** @hidden */
     public selectTab(tab: IgxTabItemDirective, selected: boolean): void {
