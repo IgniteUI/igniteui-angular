@@ -21,6 +21,11 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
         this.tabs.selectTab(this.tab, true);
     }
 
+    @HostBinding('attr.tabindex')
+    public get tabIndex() {
+        return this.tab.selected ? 0 : -1;
+    }
+
     /** @hidden */
     public get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
