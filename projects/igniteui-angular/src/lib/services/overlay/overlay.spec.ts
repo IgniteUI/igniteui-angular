@@ -183,7 +183,7 @@ const formatString = (inputString: string, formatters: any[]) => {
     return inputString;
 };
 
-fdescribe('igxOverlay', () => {
+describe('igxOverlay', () => {
     const formatters = [
         { pattern: /:\s/g, replacement: ':' },
         { pattern: /red;/, replacement: 'red' }
