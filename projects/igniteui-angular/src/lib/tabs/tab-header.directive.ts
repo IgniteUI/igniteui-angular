@@ -9,7 +9,7 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
 
     /** @hidden */
     @HostBinding('attr.role')
-    public role = 'tabitem';
+    public role = 'tab';
 
     /** @hidden */
     constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
