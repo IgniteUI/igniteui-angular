@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
+    public selected: string;
+
     public user = {
         comment: '',
         firstName: 'John',
@@ -51,5 +53,6 @@ export class InputSampleComponent {
 
     public onChange(event) {
         console.log(event);
+        this.selected = event.value;
     }
 }

@@ -114,4 +114,12 @@
             </igx-list>
         </div>
     </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Radio w/ ngModel</h4>
+
+        <igx-radio [ngModel]="selected" (change)="onChange($event)" value="option1">Option 1</igx-radio>
+        <igx-radio [ngModel]="selected" (change)="onChange($event)" value="option2">Option 2</igx-radio>
+        <igx-radio [ngModel]="selected" (change)="onChange($event)" value="option3" disabled="true">Option 3</igx-radio>
+    </article>
 </section>
