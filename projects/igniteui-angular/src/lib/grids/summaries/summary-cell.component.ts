@@ -3,13 +3,13 @@ import { IgxCurrencySummaryOperand,
          IgxDateSummaryOperand,
          IgxNumberSummaryOperand,
          IgxPercentSummaryOperand,
+         IgxSummaryOperand,
          IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
 import { IColumnPipeArgs } from '../columns/interfaces';
-import { IgxColumnFormatterPipe } from '../common/pipes';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,7 +38,7 @@ export class IgxSummaryCellComponent {
     public pipeArgs: IColumnPipeArgs;
 
     @Input()
-    public summaryFormatter: IgxColumnFormatterPipe;
+    public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
 
     /** @hidden */
     @Input()
