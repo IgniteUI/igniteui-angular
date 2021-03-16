@@ -40,13 +40,14 @@
 
 /// @access private
 @mixin _igx-typography-styles($font-family, $type-scale) {
+    $_variant: map-get(map-get($type-scale, '_meta'), 'variant');
+
     font-family: unquote($font-family);
     font-size: $browser-context;
     line-height: $browser-line-height;
     font-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    $_variant: map-get(map-get($type-scale, '_meta'), 'variant');
 
     // Call the individual component styles with the type scale
     @include _excel-filtering-typography($type-scale);
@@ -95,32 +96,32 @@
             header-date: 'h4',
             weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
             picker-date: 'subtitle-1',
-            content: 'body-1'
+            content: 'body-1',
         ));
 
         @include igx-card-typography($type-scale, $categories: (
             title: 'h5',
             title-small: 'subtitle-2',
             subtitle: 'body-1',
-            content: 'body-1'
+            content: 'body-1',
         ));
 
         @include igx-dialog-typography($type-scale, $categories: (
             title: 'h5',
-            content: 'body-1'
+            content: 'body-1',
         ));
 
         @include igx-drop-down-typography($type-scale, $categories: (
             header: 'subtitle-1',
             item: 'subtitle-1',
-            select-item: 'subtitle-1'
+            select-item: 'subtitle-1',
         ));
 
         @include igx-list-typography($type-scale, $categories: (
             item: 'body-2',
             title: 'body-1',
             subtitle: 'subtitle-1',
-            header: 'overline'
+            header: 'overline',
         ));
     }
 
@@ -131,7 +132,7 @@
             title: 'h5',
             title-small: 'subtitle-2',
             subtitle: 'subtitle-2',
-            content: 'body-2'
+            content: 'body-2',
         ));
 
         @include igx-dialog-typography($type-scale);
@@ -140,16 +141,19 @@
     }
 }
 
-/// Adds typography styles for h1-h6, paragraph and creates
-/// custom typography class selectors. The produces styles
-/// are based on the passed type scale. If omitted the
-/// default-type-scale will be used.
+/// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
+/// The produces styles are based on the passed typeface and type scale.
+/// If omitted the $material-typeface and $material-type-scale will be used.
 /// @access public
-/// @param {String} $font-family [$igx-material-typeface] - The font family to be used across all typographic elements.
-/// @param {Map} $type-scale [$default-type-scale] - A type scale map as produced by igx-type-scale.
+/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
+/// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by igx-type-scale.
+/// @requires $material-typeface
+/// @requires $material-type-scale
+/// @see $material-typeface
+/// @see $material-type-scale
 @mixin igx-typography(
-    $font-family: $igx-material-typeface,
-    $type-scale: $default-type-scale,
+    $font-family: $material-typeface,
+    $type-scale: $material-type-scale,
 ) {
     @if(is-root()) {
         // Use the BEM notation to create a link
@@ -167,7 +171,7 @@
                 h4: 'h4',
                 h5: 'h5',
                 h6: 'h6',
-                body-1: 'p'
+                body-1: 'p',
             );
 
             /* stylelint-disable max-nesting-depth */
