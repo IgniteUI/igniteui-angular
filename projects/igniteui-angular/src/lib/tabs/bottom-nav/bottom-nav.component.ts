@@ -9,4 +9,5 @@ import { IgxTabsDirective } from '../tabs.directive';
 })
 export class IgxBottomNavComponent extends IgxTabsDirective {
     protected _disableAnimation = true;
+    protected componentName = 'igx-bottom-nav';
 }

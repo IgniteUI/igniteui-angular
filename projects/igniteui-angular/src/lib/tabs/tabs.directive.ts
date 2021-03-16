@@ -22,6 +22,9 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
     readonly newItem: IgxTabItemDirective;
 }
 
+/** @hidden */
+let NEXT_TAB_ID = 0;
+
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
@@ -93,6 +96,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected currentSlide: IgxTabItemDirective;
     protected previousSlide: IgxTabItemDirective;
     protected nextSlide: IgxTabItemDirective;
+    protected componentName: string;
 
     private _selectedIndex = -1;
     private _itemChanges$: Subscription;
@@ -125,6 +129,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         this._itemChanges$ = this.items.changes.subscribe(() => {
             this.onItemChanges();
         });
+
+        this.setAttributes(this.componentName);
     }
 
     /** @hidden */
@@ -164,6 +170,26 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     /** @hidden */
     protected scrollTabHeaderIntoView() {
+    }
+
+    private setAttributes(igxName: string) {
+        this.items.forEach(item => {
+            this.setHeaderAttribute(item, 'aria-label', `${igxName}-tabitem-${NEXT_TAB_ID}`);
+            this.setHeaderAttribute(item, 'aria-controls', `${igxName}-tabpanel-${NEXT_TAB_ID}`);
+            this.setPanelAttribute(item, 'aria-labelledby', `${igxName}-tabitem-${NEXT_TAB_ID++}`);
+        });
+    }
+
+    private setHeaderAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        if (!item.headerComponent.nativeElement.getAttribute(attrName)) {
+            item.headerComponent.nativeElement.setAttribute(attrName, value);
+        }
+    }
+
+    private setPanelAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        if (!item.panelComponent.nativeElement.getAttribute(attrName)) {
+            item.panelComponent.nativeElement.setAttribute(attrName, value);
+        }
     }
 
     private get hasPanels() {
@@ -207,6 +233,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private onItemChanges() {
         const tabs = this.items.toArray();
+        this.setAttributes(this.componentName);
 
         if (this.selectedIndex >= 0 && this.selectedIndex < tabs.length) {
 

@@ -60,6 +60,8 @@ export class IgxTabsComponent extends IgxTabsDirective {
     /**  @hidden */
      public offset = 0;
 
+    protected componentName = 'igx-tabs';
+
     /** @hidden */
     public scrollLeft() {
         this.scroll(false);
