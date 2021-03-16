@@ -26,9 +26,9 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     @HostListener('keydown', ['$event'])
     public keyDown(event: KeyboardEvent) {
         let unsupportedKey = false;
-        const previousIndex = this.tabs.selectedIndex;
-        let newIndex = previousIndex;
         const itemsArray = this.tabs.items.toArray();
+        const previousIndex = itemsArray.indexOf(this.tab);
+        let newIndex = previousIndex;
         const hasDisabledItems = itemsArray.some((item) => item.disabled);
         switch (event.key) {
             case KEYS.RIGHT_ARROW:
@@ -41,7 +41,7 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
             case KEYS.LEFT_ARROW:
             case KEYS.LEFT_ARROW_IE:
                 newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
-                while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex > 0) {
+                while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex >= 0) {
                     newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
                 }
                 break;
@@ -61,11 +61,19 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
                 break;
             case KEYS.TAB:
                 break;
+            case KEYS.ENTER:
+            case KEYS.SPACE:
+            case KEYS.SPACE_IE:
+                event.preventDefault();
+                this.nativeElement.click();
+                unsupportedKey = true;
+                break;
             default:
                 event.preventDefault();
                 unsupportedKey = true;
                 break;
         }
+
         if (!unsupportedKey) {
             (itemsArray[newIndex] as IgxTabItemDirective).headerComponent.nativeElement.focus();
             if (this.tab.panelComponent) {
