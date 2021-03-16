@@ -174,7 +174,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private setAttributes(igxName: string) {
         this.items.forEach(item => {
-            this.setHeaderAttribute(item, 'aria-selected', item.selected ? 'true' : 'false');
             this.setHeaderAttribute(item, 'aria-label', `${igxName}-tabitem-${NEXT_TAB_ID}`);
             this.setHeaderAttribute(item, 'aria-controls', `${igxName}-tabpanel-${NEXT_TAB_ID}`);
             this.setPanelAttribute(item, 'aria-labelledby', `${igxName}-tabitem-${NEXT_TAB_ID++}`);
@@ -217,17 +216,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         if (this._selectedIndex !== oldSelectedIndex) {
             this.scrollTabHeaderIntoView();
             this.triggerPanelAnimations(oldSelectedIndex);
-
-            if (this._selectedIndex >= 0) {
-                const itemsArray = this.items.toArray();
-                itemsArray.forEach(i => {
-                    this.setHeaderAttribute(i, 'aria-selected', 'false');
-                    this.setHeaderAttribute(i, 'tabindex', '-1');
-                });
-                this.setHeaderAttribute(itemsArray[this._selectedIndex], 'aria-selected', 'true');
-                this.setHeaderAttribute(itemsArray[this._selectedIndex], 'tabindex', '0');
-
-            }
 
             if (raiseEvent && newTab !== oldTab) {
                 this.selectedItemChange.emit({

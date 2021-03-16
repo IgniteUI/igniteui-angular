@@ -11,6 +11,17 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
      */
     @HostBinding('attr.role')
     public role = 'tab';
+
+    @HostBinding('attr.tabindex')
+    public get tabIndex() {
+        return this.tab.selected ? 0 : -1;
+    }
+
+    @HostBinding('attr.aria-selected')
+    public get ariaSelected() {
+        return this.tab.selected ? 'true' : 'false';
+    }
+
     /** @hidden */
     constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }
