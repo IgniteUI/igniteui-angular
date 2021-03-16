@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-input-sample',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core';
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
+    public selected: string;
+
     public user = {
         comment: '',
         firstName: 'John',
@@ -45,11 +48,22 @@ export class InputSampleComponent {
         disabled: true
     }];
 
-    public onClick(event) {
+    public onClick(event: MouseEvent) {
         console.log(event);
     }
 
-    public onChange(event) {
+    public onChange(value: string) {
+        if(this.selected !== value) {
+            console.log('changed radio selection');
+            this.selected = value;
+        }
+    }
+
+    public onRadioChanged(event: IChangeRadioEventArgs) {
         console.log(event);
+    }
+
+    public selectSecond() {
+        this.selected = 'option2';
     }
 }
