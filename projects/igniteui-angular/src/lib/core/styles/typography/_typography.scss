@@ -78,7 +78,8 @@
     @include igx-toast-typography($type-scale);
     @include igx-tooltip-typography($type-scale);
 
-    @if ($_variant == 'material') {
+    // Add theme type-scale specific quirks
+    @if ($_variant == 'material' or $_variant == 'fluent') {
         @include igx-calendar-typography($type-scale);
         @include igx-card-typography($type-scale);
         @include igx-dialog-typography($type-scale);
@@ -87,33 +88,35 @@
     }
 
     @if ($_variant == 'bootstrap') {
-        @include igx-calendar-typography($bootstrap-type-scale, $categories: (
+        $calendar-labels: map-get($type-scale, 'calendar-labels');
+
+        @include igx-calendar-typography($type-scale, $categories: (
             header-year: 'subtitle-1',
             header-date: 'h4',
-            weekday-label: 'calendar-labels',
+            weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
             picker-date: 'subtitle-1',
             content: 'body-1'
         ));
 
-        @include igx-card-typography($bootstrap-type-scale, $categories: (
+        @include igx-card-typography($type-scale, $categories: (
             title: 'h5',
             title-small: 'subtitle-2',
             subtitle: 'body-1',
             content: 'body-1'
         ));
 
-        @include igx-dialog-typography($bootstrap-type-scale, $categories: (
+        @include igx-dialog-typography($type-scale, $categories: (
             title: 'h5',
             content: 'body-1'
         ));
 
-        @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
+        @include igx-drop-down-typography($type-scale, $categories: (
             header: 'subtitle-1',
             item: 'subtitle-1',
             select-item: 'subtitle-1'
         ));
 
-        @include igx-list-typography($bootstrap-type-scale, $categories: (
+        @include igx-list-typography($type-scale, $categories: (
             item: 'body-2',
             title: 'body-1',
             subtitle: 'subtitle-1',
@@ -124,7 +127,7 @@
     @if ($_variant == 'indigo') {
         @include igx-calendar-typography($type-scale);
 
-        @include igx-card-typography($indigo-type-scale, $categories: (
+        @include igx-card-typography($type-scale, $categories: (
             title: 'h5',
             title-small: 'subtitle-2',
             subtitle: 'subtitle-2',

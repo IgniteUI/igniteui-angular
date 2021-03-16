@@ -89,9 +89,16 @@ $default-type-scale: igx-type-scale() !default;
 
 /// @alias defalut-type-scale
 /// @see $default-type-scale
-$material-type-scale: $default-type-scale;
+$material-type-scale: $default-type-scale !default;
 
-$igx-material-typeface: "'Titillium Web', sans-serif";
-$igx-fluent-typeface: "'Open Sans', Helvetica, Arial, sans-serif";
-$igx-bootstrap-typeface: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
-$igx-indigo-typeface: "'Nunito Sans', sans-serif";
+/// Material Typeface
+$material-typeface: "'Titillium Web', sans-serif" !default;
+
+/// Fluent Typeface
+$fluent-typeface: "'Open Sans', Helvetica, Arial, sans-serif" !default;
+
+/// Bootstrap Typeface
+$bootstrap-typeface: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'" !default;
+
+/// Indigo Typeface
+$indigo-typeface: "'Nunito Sans', sans-serif" !default;
