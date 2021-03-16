@@ -317,11 +317,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
             this.nativeRadio.nativeElement.blur();
         }
 
-        if(this.focused) {
+        if (this.focused) {
             this.focused = false;
         }
 
-        if(!this.checked) {
+        if (!this.checked) {
             this.checked = true;
             this.change.emit({ value: this.value, radio: this });
             this._onChangeCallback(this.value);
