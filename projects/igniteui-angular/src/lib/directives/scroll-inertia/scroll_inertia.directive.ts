@@ -173,8 +173,12 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             const step = this._startX + scrollDeltaY * scrollStep;
             this._scrollToX(step);
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
-            this._smoothWheelScrollY(scrollDeltaY);
             const nextTop = this._startY + scrollDeltaY * scrollStep;
+            if (this.smoothingDuration === 0) {
+                this._scrollToY(nextTop);
+            } else {
+                this._smoothWheelScrollY(scrollDeltaY);
+            }
             this.preventParentScroll(evt, true, nextTop);
         }
     }

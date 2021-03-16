@@ -90,12 +90,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
-    it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', async () => {
+    it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
+        scrollInertiaDir.smoothingDuration = 0;
         const evt = {wheelDeltaY: -240, preventDefault: () => {}};
         scrollInertiaDir.onWheel(evt);
-        await wait(500);
-        expect(scrollContainerMock.scrollTop).toBeCloseTo(2 * scrollInertiaDir.smoothingStep * scrollInertiaDir.wheelStep, 0);
+        expect(scrollContainerMock.scrollTop).toEqual(2 * scrollInertiaDir.wheelStep);
     });
 
     it('should change scroll left for related scrollbar if onWheel is executed with wheelDeltaX.', () => {
@@ -107,12 +107,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     });
 
     // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
-    it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', async () => {
+    it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
+        scrollInertiaDir.smoothingDuration = 0;
         const evt = {deltaY: 1, preventDefault: () => {}};
         scrollInertiaDir.onWheel(evt);
-        await wait(500);
-        expect(scrollContainerMock.scrollTop).toBeCloseTo(scrollInertiaDir.smoothingStep * scrollInertiaDir.wheelStep, 0);
+        expect(scrollContainerMock.scrollTop).toEqual(scrollInertiaDir.wheelStep);
     });
 
     it('should change scroll left for related scrollbar if onWheel is executed with deltaX.', () => {

@@ -404,11 +404,11 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should scroll to wheel event correctly', async () => {
+            fix.componentInstance.parentVirtDir.dc.instance._scrollInertia.smoothingDuration = 0;
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             fix.detectChanges();
-            await wait(500);
-            fix.detectChanges();
+            await wait();
 
             const firstInnerDisplayContainer = displayContainer.children[0].querySelector(DISPLAY_CONTAINER);
             expect(firstInnerDisplayContainer).not.toBeNull();
