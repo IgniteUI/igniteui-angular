@@ -5618,7 +5618,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let data = [];
         let result;
 
-        if (event.code === 'KeyC' && event.ctrlKey && event.currentTarget.className === 'igx-grid__thead-wrapper') {
+        if (event.code === 'KeyC' && (event.ctrlKey || event.metaKey) && event.currentTarget.className === 'igx-grid__thead-wrapper') {
             if (selectedData.length) {
                 if (columnData.length === 0) {
                     result = this.prepareCopyData(event, selectedData);
