@@ -11,7 +11,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
-describe('IgxTree - Selection', () => {
+describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
