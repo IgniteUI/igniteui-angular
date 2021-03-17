@@ -3,9 +3,35 @@
     flex-flow: row;
 }
 
-.column {
+.sample-template-center {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+
+    > * {
+        margin-right: 8px;
+
+        &:last-of-type {
+            margin-right: 8px
+        }
+
+        [dir='rtl'] {
+            margin-left: 8px;
+            margin-right: 0;
+
+            &:last-of-type {
+                margin-left: 8px;
+                margin-right: 0;
+            }
+        }
+    }
+}
+
+.sample-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    align-items: center;
 }
 
 .tree-container {
@@ -14,6 +40,7 @@
 
 .controls {
     padding: 40px;
+
     .row {
         border: 2px solid#d1d1d1;
         padding: 12px;

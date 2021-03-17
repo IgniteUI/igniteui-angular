@@ -22,32 +22,40 @@
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__content">
-        <div [ngClass]="{ hidden: !children?.length }"
+    <div #ghostTemplate class="igx-tree-node__wrapper" [ngClass]="{'igx-tree-node__wrapper--selected': selected}">
+        <div aria-hidden="true">
+            <span aria-hidden="true" class="igx-tree-node__spacer"></span>
+        </div>
+
+        <!-- Expand/Collapse indicator -->
+        <span [ngClass]="{ 'igx-tree-node__indicator--hidden': !children?.length }"
             class="igx-tree-node__indicator igx-tree-node__expand"
             (click)="expanded = !expanded"
         >
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
             </ng-container>
+        </span>
+
+        <!-- Item selection -->
+        <div class="igx-tree-node__select" *ngIf="showSelectors"
+             (pointerdown)="$event.preventDefault()"
+             (click)="onSelectorClick($event)"
+        >
+            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
+            </ng-container>
         </div>
-        <div class="igx-tree-node__header">
-            <div *ngIf="showSelectors"
-                class="igx-tree-node__indicator igx-tree-node__select"
-                (pointerdown)="$event.preventDefault()"
-                (click)="onSelectorClick($event)"
-            >
-                <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
-                </ng-container>
-            </div>
+
+        <div class="igx-tree-node__content">
+            <!-- Ghost content -->
             <ng-content></ng-content>
+            <!-- Buffer element for 'move after' when D&D is implemented -->
+            <!-- <div class="igx-tree-node__insert-indicator"></div>-->
         </div>
     </div>
-    <!-- Buffer element for 'move after' when D&D is implemented -->
-    <div class="igx-tree-node__header-buffer"></div>
 </ng-template>
 
 <ng-template #dragTemplate>
-    <!-- Drag drop goes here 
+    <!-- Drag drop goes here
         igxDrop
         #dropRef="drop"
         [igxNodeDrag]="this"

@@ -26,11 +26,14 @@
 
 <div class="row">
     <div class="column tree-container">
-        <p>IgxTree</p>
-        <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
+        <p>IgxTree (templated with icon and text)</p>
+        <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand"
             [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
             <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
-                {{ node.CompanyName }}
+                <div class="sample-template-center">
+                    <igx-icon>computer</igx-icon>
+                    <span class="sample-ellipsis">{{ node.CompanyName }}</span>
+                </div>
                 <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
                     {{ child.CompanyName }}
                     <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
@@ -44,7 +47,7 @@
 
     <div class="column tree-container">
         <p>IgxTree 2: The Branchening</p>
-        <igx-tree class="medium">
+        <igx-tree>
             <igx-tree-node *ngFor="let node of data" [data]="node">
                 {{ node.CompanyName }}
                 <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">

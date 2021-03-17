@@ -36,7 +36,6 @@ let nodeId = 0;
 @Component({
     selector: 'igx-tree-node',
     templateUrl: 'tree-node.component.html',
-    styleUrls: ['tree-node.component.scss'],
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ]

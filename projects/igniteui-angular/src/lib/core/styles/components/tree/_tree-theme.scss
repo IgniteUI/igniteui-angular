@@ -1,0 +1,267 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Returns a map containing all style properties related to the theming the tree component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} background [null] - The background color used for the tree node.
+/// @param {Color} background-hover [null] - The background color on hover used for the tree node.
+/// @param {Color} background-selected [null] - The background color in selected state used for the tree node.
+/// @param {Color} background-selected-hover [null] - The background color on hover in selected state used for the tree node.
+/// @param {Color} color [null] - The color used for the tree node content.
+/// @param {Color} color-hover [null] - The hover color used for the tree node content.
+/// @param {Color} color-selected [null] - The color used for the content of the selected tree node.
+/// @param {Color} color-selected-hover [null] - The hover color used for the content of the selected tree node.
+/// @param {Color} tree-indicator-color [null] - The color used for the tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-hover [null] - The hover color used for the tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-selected [null] - The color used for the selected tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-selected-hover [null] - The hover color used for the selected tree node expand/collapse indicator.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+/// @requires text-contrast
+///
+/// @example scss Change the tree background
+///   $my-tree-theme: igx-tree-theme($background: magenta);
+///   // Pass the theme to the igx-tree component mixin
+///   @include igx-tree($my-tree-theme);
+@function igx-tree-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+
+    $background: null,
+    $background-hover: null,
+    $background-selected: null,
+    $background-selected-hover: null,
+    $background-disabled: null,
+
+    $color: null,
+    $color-hover: null,
+    $color-selected: null,
+    $color-selected-hover: null,
+    $color-disabled: null,
+
+    // TODO document this ones its available.
+    $drop-indicator-color: null,
+
+    $tree-indicator-color: null,
+    $tree-indicator-color-hover: null,
+    $tree-indicator-color-selected: null,
+    $tree-indicator-color-selected-hover: null,
+    $tree-indicator-disabled: null,
+) {
+    $name: 'igx-tree';
+    $tree-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $tree-schema: map-get($schema, $name);
+    } @else {
+        $tree-schema: $schema;
+    }
+
+    $theme: apply-palette($tree-schema, $palette);
+
+    @if not($color) and $background {
+        $color: text-contrast($background);
+    }
+
+    @if not($color-hover) and $background-hover {
+        $color-hover: text-contrast($background-hover);
+    }
+
+    @if not($color-selected) and $background-selected {
+        $color-selected: text-contrast($background-selected);
+    }
+
+    @if not($tree-indicator-color) and $background {
+        $tree-indicator-color: text-contrast($background);
+    }
+
+    @if not($tree-indicator-color-selected) and $background-selected {
+        $tree-indicator-color-selected: text-contrast($background-selected);
+    }
+
+    @return extend($theme, (
+        name: $name,
+        palette: $default-palette,
+
+        background: $background,
+        background-hover: $background-hover,
+        background-selected: $background-selected,
+        background-selected-hover: $background-selected-hover,
+        background-disabled: $background-disabled,
+
+        color: $color,
+        color-hover: $color-hover,
+        color-selected: $color-selected,
+        color-selected-hover: $color-selected-hover,
+        color-disabled: $color-disabled,
+
+        drop-indicator-color: $drop-indicator-color,
+
+        tree-indicator-color: $tree-indicator-color,
+        tree-indicator-color-hover: $tree-indicator-color-hover,
+        tree-indicator-color-selected: $tree-indicator-color-selected,
+        tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
+        tree-indicator-disabled: $tree-indicator-disabled,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+@mixin igx-tree($theme) {
+    @include igx-root-css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    $node-indent: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    $node-height: (
+        comfortable: rem(50px),
+        cosy: rem(40px),
+        compact: rem(32px)
+    );
+
+    %tree-node,
+    %tree-node-wrapper,
+    %tree-node-indicator,
+    %tree-node-content,
+    %tree-node-select {
+        display: flex;
+    }
+
+    %tree-node-display {
+        flex-direction: column;
+        justify-content: center;
+    }
+    %tree-node-wrapper,
+    %tree-node-indicator,
+    %tree-node-select {
+        align-items: center;
+    }
+
+    %tree-node-indicator,
+    %tree-node-select {
+        margin-#{$right}: rem(8px);
+    }
+
+    %tree-node-indicator--hidden {
+        visibility: hidden;
+    }
+
+    %tree-node {
+        flex-direction: column;
+    }
+
+    %tree-node-wrapper {
+        min-height: map-get($node-height, 'comfortable');
+        padding-#{$right}: map-get($node-indent, 'comfortable');
+        background: --var($theme, 'background');
+        color: --var($theme, 'color');
+
+        &:hover,
+        &:focus {
+            color: --var($theme, 'color-hover');
+            background: --var($theme, 'background-hover');
+        }
+
+        &:focus {
+            outline-color: transparent;
+        }
+
+        &--cosy {
+            min-height: map-get($node-height, 'cosy');
+
+            %tree-node-spacer {
+                width: map-get($node-indent, 'cosy')
+            }
+        }
+
+        &--compact {
+            min-height: map-get($node-height, 'compact');
+
+            %tree-node-spacer {
+                width: map-get($node-indent, 'compact')
+            }
+        }
+    }
+
+    %tree-node-wrapper--selected {
+        background: --var($theme, 'background-selected');
+        color: --var($theme, 'color-selected');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-selected');
+
+            &:hover {
+                color: --var($theme, 'tree-indicator-color-selected-hover');
+            }
+        }
+
+        &:focus,
+        &:hover {
+            background: --var($theme, 'background-selected-hover');
+            color: --var($theme, 'color-selected-hover');
+        }
+    }
+
+    %tree-node-spacer {
+        display: inline-block;
+        width: map-get($node-indent, 'comfortable');
+    }
+
+    %tree-node-content {
+        display: block;
+        position: relative;
+        align-items: center;
+        flex: 1;
+        @include ellipsis();
+    }
+
+    %tree-node-indicator {
+        justify-content: center;
+        cursor: pointer;
+
+        color: --var($theme, 'tree-indicator-color');
+
+        &:hover,
+        &:focus, {
+            color: --var($theme, 'tree-indicator-color-hover');
+        }
+    }
+
+    %tree-node-group {
+        overflow: hidden;
+    }
+}
+
+/// Adds typography styles for the igx-tree component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-switch-typography(
+    $type-scale,
+    $categories: (label: 'body-2')
+) {
+    $text: map-get($categories, 'label');
+
+    %tree-node-content {
+        @include igx-type-style($type-scale, $text)
+    }
+}
+
+
