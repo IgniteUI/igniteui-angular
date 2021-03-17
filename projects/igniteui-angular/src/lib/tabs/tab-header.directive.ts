@@ -15,12 +15,6 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     }
 
     /** @hidden */
-    @HostListener('click')
-    public onClick() {
-        this.tabs.selectTab(this.tab, true);
-    }
-
-    /** @hidden */
     @HostBinding('attr.tabindex')
     public get tabIndex() {
         return this.tab.selected ? 0 : -1;
@@ -29,7 +23,19 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     /** @hidden */
     @HostBinding('attr.aria-selected')
     public get ariaSelected() {
-        return this.tab.selected ? 'true' : 'false';
+        return this.tab.selected;
+    }
+
+    /** @hidden */
+    @HostBinding('attr.aria-disabled')
+    public get ariaDisabled() {
+        return this.tab.disabled;
+    }
+
+    /** @hidden */
+    @HostListener('click')
+    public onClick() {
+        this.tabs.selectTab(this.tab, true);
     }
 
     /** @hidden */

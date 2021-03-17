@@ -23,9 +23,6 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
     readonly newItem: IgxTabItemDirective;
 }
 
-/** @hidden */
-let NEXT_TAB_ID = 0;
-
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
@@ -89,10 +86,15 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     @ContentChildren(IgxTabPanelBase, { descendants: true })
     public panels: QueryList<IgxTabPanelBase>;
 
+    /** @hidden */
     protected _disableAnimation = false;
+    /** @hidden */
     protected currentSlide: IgxTabItemDirective;
+    /** @hidden */
     protected previousSlide: IgxTabItemDirective;
+    /** @hidden */
     protected nextSlide: IgxTabItemDirective;
+    /** @hidden */
     protected componentName: string;
 
     private _selectedIndex = -1;
@@ -171,9 +173,10 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private setAttributes() {
         this.items.forEach(item => {
-            if (!item.headerComponent.nativeElement.getAttribute('id')) {
-                const tabHeaderId = `${this.componentName}-tabitem-${NEXT_TAB_ID}`;
-                const tabPanelId = `${this.componentName}-tabpanel-${NEXT_TAB_ID++}`;
+            if (item.panelComponent && !item.headerComponent.nativeElement.getAttribute('id')) {
+                const id = this.getNextTabId();
+                const tabHeaderId = `${this.componentName}-header-${id}`;
+                const tabPanelId = `${this.componentName}-panel-${id}`;
 
                 this.setHeaderAttribute(item, 'id', tabHeaderId);
                 this.setHeaderAttribute(item, 'aria-controls', tabPanelId);
@@ -289,4 +292,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             }
         }
     }
+
+    /** @hidden */
+    protected abstract getNextTabId();
 }

@@ -3,12 +3,14 @@ import { mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 
-
 export const IgxTabsHeaderSizing = mkenum({
     fixed: 'fluid',
     contentfit: 'contentfit'
 });
 export type IgxTabsHeaderSizing = (typeof IgxTabsHeaderSizing)[keyof typeof IgxTabsHeaderSizing];
+
+/** @hidden */
+let NEXT_TAB_ID = 0;
 
 @Component({
     selector: 'igx-tabs',
@@ -60,6 +62,7 @@ export class IgxTabsComponent extends IgxTabsDirective {
     /**  @hidden */
      public offset = 0;
 
+    /** @hidden */
     protected componentName = 'igx-tabs';
 
     /** @hidden */
@@ -105,6 +108,11 @@ export class IgxTabsComponent extends IgxTabsDirective {
         } else {
             this.hideSelectedIndicator();
         }
+    }
+
+    /** @hidden */
+    protected getNextTabId() {
+        return NEXT_TAB_ID++;
     }
 
     private alignSelectedIndicator(element: HTMLElement, duration = 0.3): void {
