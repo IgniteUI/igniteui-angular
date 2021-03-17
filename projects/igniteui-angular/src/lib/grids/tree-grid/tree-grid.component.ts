@@ -27,7 +27,7 @@ import {
 import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
@@ -62,7 +62,6 @@ let NEXT_ID = 0;
     templateUrl: 'tree-grid.component.html',
     providers: [
         IgxGridSelectionService,
-        IgxGridCRUDService,
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: GridBaseAPIService, useClass: IgxTreeGridAPIService },
@@ -93,6 +92,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set id(value: string) {
         this._id = value;
     }
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'grid';
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -133,8 +138,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *       ID: 1,
      *       Name: "A"
      * }];
-     * ```
-     * @memberof IgxTreeGridComponent
+     * @hidden @internal
      */
     set filteredData(value) {
         this._filteredData = value;
