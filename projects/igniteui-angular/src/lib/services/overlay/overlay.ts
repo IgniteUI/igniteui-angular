@@ -691,9 +691,11 @@ export class IgxOverlayService implements OnDestroy {
         this._overlayInfos.splice(index, 1);
 
         // this._overlayElement.parentElement check just for tests that manually delete the element
-        if (this._overlayInfos.length === 0 && this._overlayElement && this._overlayElement.parentElement) {
-            this._overlayElement.parentElement.removeChild(this._overlayElement);
-            this._overlayElement = null;
+        if (this._overlayInfos.length === 0) {
+            if (this._overlayElement && this._overlayElement.parentElement) {
+                this._overlayElement.parentElement.removeChild(this._overlayElement);
+                this._overlayElement = null;
+            }
             this.removeCloseOnEscapeListener();
         }
     }
