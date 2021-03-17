@@ -19,7 +19,6 @@
             | filterActionColumns:filterCriteria:pipeTrigger
             | sortActionColumns:columnDisplayOrder:pipeTrigger;"
         class="igx-column-actions__columns-item"
-        [readonly]="true"
         (change)="toggleColumn($event, column)"
         [checked]="actionsDirective.columnChecked(column)"
         [style.margin-left.px]="column.level * indentation">
