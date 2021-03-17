@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { IChangeRadioEventArgs } from 'igniteui-angular';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-input-sample',
     styleUrls: ['input.sample.css'],
     templateUrl: 'input.sample.html'
 })
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
-    public selected: string;
+    public selected = 'option1';
 
     public user = {
         comment: '',
@@ -52,11 +53,8 @@ export class InputSampleComponent {
         console.log(event);
     }
 
-    public onChange(value: IChangeRadioEventArgs) {
-        if(this.selected !== value.value) {
-            console.log('changed radio selection');
-            this.selected = value.value;
-        }
+    public onChange(value: string) {
+        console.log(value);
     }
 
     public onRadioChanged(event: IChangeRadioEventArgs) {
