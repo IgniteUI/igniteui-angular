@@ -10,7 +10,8 @@ import {
     Output,
     Provider,
     ViewChild,
-    ElementRef
+    ElementRef,
+    ChangeDetectorRef
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -286,7 +287,18 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     @HostBinding('class.igx-checkbox--checked')
     @Input()
-    public checked = false;
+    public set checked(value: boolean) {
+        if(this._checked !== value) {
+            this._checked = value;
+            this.change.emit({ checked: this._checked, checkbox: this });
+            this._onChangeCallback(this._checked);
+            this.cdr.markForCheck();
+        }
+    }
+    public get checked() {
+        return this._checked;
+    }
+
     /**
      * Sets/gets whether the checkbox is disabled.
      * Default value is `false`.
@@ -363,6 +375,15 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      * @internal
      */
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _checked = false;
+
+    constructor(private cdr: ChangeDetectorRef) {}
+
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
@@ -401,8 +422,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
         this.indeterminate = false;
         this.checked = !this.checked;
-        this.change.emit({ checked: this.checked, checkbox: this });
-        this._onChangeCallback(this.checked);
     }
 
     /**
