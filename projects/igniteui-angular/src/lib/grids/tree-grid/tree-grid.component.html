@@ -63,7 +63,7 @@
 </div>
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant" (keydown)="navigation.handleNavigation($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)" role="rowgroup" (onDragStop)="selectionService.dragMode = $event"
         (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
@@ -115,15 +115,15 @@
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null"></ng-container>
         <ng-template #record_template let-rowIndex="index" let-disabledRow="disabled" let-rowData let-isAddRow="addRow">
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
+            <igx-tree-grid-row role="row" [attr.aria-activedescendant]="activeDescendant" [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [disabled]="disabledRow" [addRow]="isAddRow" #row>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData let-isAddRow="addRow">
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [addRow]="isAddRow" #row #pinnedRow>
+            <igx-tree-grid-row role="row" [attr.aria-activedescendant]="activeDescendant" [gridID]="id" [index]="rowIndex" [treeRow]="rowData" [addRow]="isAddRow" #row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
-            <igx-grid-summary-row [gridID]="id" [summaries]="rowData.summaries"
+            <igx-grid-summary-row role="row" [attr.aria-activedescendant]="activeDescendant" [gridID]="id" [summaries]="rowData.summaries"
                 [firstCellIndentation]="rowData.cellIndentation" [index]="rowIndex"
                 class="igx-grid__summaries--body" #summaryRow>
             </igx-grid-summary-row>
@@ -147,9 +147,9 @@
     </div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot>
     <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
-        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
+        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row" [attr.aria-activedescendant]="activeDescendant"
         [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
         class="igx-grid__summaries" #summaryRow>
     </igx-grid-summary-row>
