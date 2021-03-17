@@ -368,6 +368,28 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         event.stopPropagation();
         this.focused = true;
     }
+    /** @hidden @internal */
+    @HostListener('click', ['$event'])
+    public _onCheckboxClick(event: Event) {
+        // Since the original checkbox is hidden and the label
+        // is used for styling and to change the checked state of the checkbox,
+        // we need to prevent the checkbox click event from bubbling up
+        // as it gets triggered on label click
+        event.stopPropagation();
+
+        if (this.readonly) {
+            // readonly prevents the component from changing state (see toggle() method).
+            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
+            // Prevent the native change so the input remains in sync
+            event.preventDefault();
+        }
+
+        this.toggle();
+
+        if (isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
+    }
     /**
      * If `disabled` is `false`, switches the `checked` state.
      *
@@ -406,37 +428,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // We have to stop the original checkbox change event
         // from bubbling up since we emit our own change event
         event.stopPropagation();
-    }
-
-    /** @hidden @internal */
-    public _onCheckboxClick(event: Event) {
-        // Since the original checkbox is hidden and the label
-        // is used for styling and to change the checked state of the checkbox,
-        // we need to prevent the checkbox click event from bubbling up
-        // as it gets triggered on label click
-        event.stopPropagation();
-
-        if (this.readonly) {
-            // readonly prevents the component from changing state (see toggle() method).
-            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
-            // Prevent the native change so the input remains in sync
-            event.preventDefault();
-        }
-
-        this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
-    }
-
-    /** @hidden @internal */
-    public _onLabelClick() {
-        // We use a span element as a placeholder label
-        // in place of the native label, we need to emit
-        // the change event separately here alongside
-        // the click event emitted on click
-        this.toggle();
     }
 
     /** @hidden @internal */

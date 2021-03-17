@@ -12,7 +12,6 @@
     [attr.aria-labelledby]="ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
     (change)="_onCheckboxChange($event)"
-    (click)="_onCheckboxClick($event)"
     (blur)="onBlur()" />
 
 <div
@@ -35,7 +34,6 @@
 
 <span #placeholderLabel
     [class]="labelClass"
-    [id]="labelId"
-    (click)="_onLabelClick()">
+    [id]="labelId">
     <ng-content></ng-content>
 </span>
