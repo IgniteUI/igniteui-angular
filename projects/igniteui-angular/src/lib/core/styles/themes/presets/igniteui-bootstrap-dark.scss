@@ -5,4 +5,5 @@
 }
 
 @include igx-core();
+@include igx-typography($font-family: $bootstrap-typeface, $type-scale: $bootstrap-type-scale);
 @include igx-bootstrap-dark-theme($dark-bootstrap-palette);
