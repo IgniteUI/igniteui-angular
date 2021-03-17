@@ -84,13 +84,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             this.items.toArray()[this.selectedIndex] : null;
     }
 
-    /**
-     * Returns the underlying DOM element.
-     */
-     public get nativeElement() {
-        return this.element.nativeElement;
-    }
-
     /** @hidden */
     @ContentChildren(IgxTabPanelBase, { descendants: true })
     public panels: QueryList<IgxTabPanelBase>;
@@ -105,7 +98,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     private _itemChanges$: Subscription;
 
     /** @hidden */
-    constructor(public element: ElementRef, builder: AnimationBuilder) {
+    constructor(builder: AnimationBuilder) {
         super(builder);
     }
 
