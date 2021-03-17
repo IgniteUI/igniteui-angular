@@ -2,7 +2,7 @@ import { EventEmitter } from '@angular/core';
 import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './common';
 import { IgxTreeSelectionService } from './tree-selection.service';
 
-describe('IgxTreeSelectionService - Unit Tests', () => {
+describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
     let selectionService: IgxTreeSelectionService;
     let mockEmitter: EventEmitter<ITreeNodeSelectionEvent>;
     let mockTree: IgxTree;
