@@ -1,5 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, ContentChildren, Directive, EventEmitter,
+    HostBinding,
     Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
@@ -24,6 +25,9 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
+
+    @HostBinding('attr.role')
+    public role = 'tabs';
 
     @Input()
     public get selectedIndex(): number {
@@ -82,10 +86,16 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     @ContentChildren(IgxTabPanelBase, { descendants: true })
     public panels: QueryList<IgxTabPanelBase>;
 
+    /** @hidden */
     protected _disableAnimation = false;
+    /** @hidden */
     protected currentSlide: IgxTabItemDirective;
+    /** @hidden */
     protected previousSlide: IgxTabItemDirective;
+    /** @hidden */
     protected nextSlide: IgxTabItemDirective;
+    /** @hidden */
+    protected componentName: string;
 
     private _selectedIndex = -1;
     private _itemChanges$: Subscription;
@@ -118,6 +128,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         this._itemChanges$ = this.items.changes.subscribe(() => {
             this.onItemChanges();
         });
+
+        this.setAttributes();
     }
 
     /** @hidden */
@@ -157,6 +169,29 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     /** @hidden */
     protected scrollTabHeaderIntoView() {
+    }
+
+    private setAttributes() {
+        this.items.forEach(item => {
+            if (item.panelComponent && !item.headerComponent.nativeElement.getAttribute('id')) {
+                const id = this.getNextTabId();
+                const tabHeaderId = `${this.componentName}-header-${id}`;
+                const tabPanelId = `${this.componentName}-panel-${id}`;
+
+                this.setHeaderAttribute(item, 'id', tabHeaderId);
+                this.setHeaderAttribute(item, 'aria-controls', tabPanelId);
+                this.setPanelAttribute(item, 'id', tabPanelId);
+                this.setPanelAttribute(item, 'aria-labelledby', tabHeaderId);
+            }
+        });
+    }
+
+    private setHeaderAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        item.headerComponent.nativeElement.setAttribute(attrName, value);
+    }
+
+    private setPanelAttribute(item: IgxTabItemDirective, attrName: string, value: string) {
+        item.panelComponent.nativeElement.setAttribute(attrName, value);
     }
 
     private get hasPanels() {
@@ -200,6 +235,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private onItemChanges() {
         const tabs = this.items.toArray();
+        this.setAttributes();
 
         if (this.selectedIndex >= 0 && this.selectedIndex < tabs.length) {
 
@@ -256,4 +292,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             }
         }
     }
+
+    /** @hidden */
+    protected abstract getNextTabId();
 }
