@@ -87,12 +87,12 @@ describe('Scroll Inertia Directive - Scrolling', () => {
         };
         scrollInertiaDir = new IgxTestScrollInertiaDirective(null, mockZone);
         scrollInertiaDir.IgxScrollInertiaScrollContainer = scrollContainerMock;
+        scrollInertiaDir.smoothingDuration = 0;
     });
 
     // Unit test for wheel - wheelDelataY/wheelDeltaX supported on Chrome, Safari, Opera.
     it('should change scroll top for related scrollbar if onWheel is executed with wheelDeltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        scrollInertiaDir.smoothingDuration = 0;
         const evt = {wheelDeltaY: -240, preventDefault: () => {}};
         scrollInertiaDir.onWheel(evt);
         expect(scrollContainerMock.scrollTop).toEqual(2 * scrollInertiaDir.wheelStep);
@@ -109,7 +109,6 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     // Unit tests for wheel on other browsers that don't provide wheelDelta - use deltaX and deltaY.
     it('should change scroll top for related scrollbar if onWheel is executed with deltaY.', () => {
         scrollInertiaDir.IgxScrollInertiaDirection = 'vertical';
-        scrollInertiaDir.smoothingDuration = 0;
         const evt = {deltaY: 1, preventDefault: () => {}};
         scrollInertiaDir.onWheel(evt);
         expect(scrollContainerMock.scrollTop).toEqual(scrollInertiaDir.wheelStep);

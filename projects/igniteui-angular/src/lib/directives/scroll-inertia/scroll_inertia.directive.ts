@@ -125,6 +125,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
         const minWheelStep = 1 / this.wheelStep;
+        const smoothing = this.smoothingDuration !== 0 && !isIE();
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -159,24 +160,30 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
 
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
-            this._scrollToX(
-                this._startX + scrollDeltaX * scrollStep
-            );
-            const curScrollLeft = this.IgxScrollInertiaScrollContainer.scrollLeft;
+            const nextLeft = this._startX + scrollDeltaX * scrollStep;
+            if (!smoothing) {
+                this._scrollToX(nextLeft);
+            } else {
+                this._smoothWheelScroll(scrollDeltaX);
+            }
             const maxScrollLeft = parseInt(this.IgxScrollInertiaScrollContainer.children[0].style.width, 10);
-            if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
+            if (0 < nextLeft && nextLeft < maxScrollLeft) {
                 // Prevent navigating through pages when scrolling on Mac
                 evt.preventDefault();
             }
         } else if (evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'horizontal') {
-            const step = this._startX + scrollDeltaY * scrollStep;
-            this._scrollToX(step);
+            if (!smoothing) {
+                const step = this._startX + scrollDeltaY * scrollStep;
+                this._scrollToX(step);
+            } else {
+                this._smoothWheelScroll(scrollDeltaY);
+            }
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
             const nextTop = this._startY + scrollDeltaY * scrollStep;
-            if (this.smoothingDuration === 0 || isIE()) {
+            if (!smoothing) {
                 this._scrollToY(nextTop);
             } else {
-                this._smoothWheelScrollY(scrollDeltaY);
+                this._smoothWheelScroll(scrollDeltaY);
             }
             this.preventParentScroll(evt, true, nextTop);
         }
@@ -431,8 +438,9 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         return false;
     }
 
-    protected _smoothWheelScrollY(deltaY) {
+    protected _smoothWheelScroll(delta) {
         this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
+        this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         let x = -1;
         let wheelInertialAnimation = null;
         const inertiaWheelStep = () => {
@@ -440,9 +448,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
                 cancelAnimationFrame(wheelInertialAnimation);
                 return;
             }
-            this._nextY += ((-3 * x * x + 3) * deltaY * 2) * this.smoothingStep;
-            this._scrollToY(this._nextY);
-
+            const nextScroll = ((-3 * x * x + 3) * delta * 2) * this.smoothingStep;
+            if (this.IgxScrollInertiaDirection === 'vertical') {
+                this._nextY += nextScroll;
+                this._scrollToY(this._nextY);
+            } else {
+                this._nextX += nextScroll;
+                this._scrollToX(this._nextX);
+            }
             //continue the inertia
             x += 0.08 * (1 / this.smoothingDuration);
             wheelInertialAnimation = requestAnimationFrame(inertiaWheelStep);
