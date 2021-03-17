@@ -252,6 +252,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [(selected)]="model.isSelected">
      * ```
      */
+    @HostBinding('attr.aria-selected')
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
