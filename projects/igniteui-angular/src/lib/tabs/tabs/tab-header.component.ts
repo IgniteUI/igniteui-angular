@@ -32,11 +32,6 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         return (!this.tab.disabled && !this.tab.selected);
     }
 
-    @HostBinding('attr.tabindex')
-    public get tabIndex() {
-        return this.tab.selected ? 0 : -1;
-    }
-
     /** @hidden */
     constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef, private ngZone: NgZone) {
         super(tabs, tab, elementRef);
@@ -53,7 +48,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         switch (event.key) {
             case KEYS.RIGHT_ARROW:
             case KEYS.RIGHT_ARROW_IE:
-            newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
+                newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
                 while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                     newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
                 }
@@ -79,23 +74,28 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
                     newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
                 }
                 break;
-            case KEYS.TAB:
-                break;
             case KEYS.ENTER:
+                if (!this.tab.panelComponent) {
+                    this.nativeElement.click();
+                }
+                unsupportedKey = true;
+                break;
             case KEYS.SPACE:
             case KEYS.SPACE_IE:
                 event.preventDefault();
-                this.nativeElement.click();
+
+                if (!this.tab.panelComponent) {
+                    this.nativeElement.click();
+                }
                 unsupportedKey = true;
                 break;
             default:
-                event.preventDefault();
                 unsupportedKey = true;
                 break;
         }
 
         if (!unsupportedKey) {
-            (itemsArray[newIndex] as IgxTabItemDirective).headerComponent.nativeElement.focus();
+            itemsArray[newIndex].headerComponent.nativeElement.focus();
             if (this.tab.panelComponent) {
                 this.tabs.selectedIndex = newIndex;
             }

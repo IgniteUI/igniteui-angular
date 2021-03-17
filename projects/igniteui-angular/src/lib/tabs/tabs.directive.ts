@@ -1,6 +1,6 @@
 import { AnimationBuilder } from '@angular/animations';
-import { AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
-            Input, OnDestroy, Output, QueryList } from '@angular/core';
+import { AfterViewInit, ContentChildren, Directive, EventEmitter,
+    Input, OnDestroy, Output, QueryList } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';

@@ -13,6 +13,8 @@ export abstract class IgxTabItemBase {
     public selected: boolean;
     public headerTemplate: TemplateRef<any>;
     public panelTemplate: TemplateRef<any>;
+    public headerComponent: IgxTabHeaderBase;
+    public panelComponent: IgxTabPanelBase;
 }
 
 /** @hidden */
