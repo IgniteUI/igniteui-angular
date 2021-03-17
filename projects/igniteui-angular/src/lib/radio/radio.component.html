@@ -12,7 +12,6 @@
     (blur)="onBlur()" />
 
 <label #nativeLabel class="igx-radio__composite" igxRipple
-    (click)="_clicked($event)"
     igxRippleTarget=".igx-radio__ripple"
     [igxRippleDisabled]="disableRipple"
     [igxRippleCentered]="true"
@@ -22,7 +21,6 @@
 </label>
 
 <span #placeholderLabel
-    (click)="_clicked($event)"
     [id]="labelId"
     [class]="labelClass">
     <ng-content></ng-content>

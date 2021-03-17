@@ -351,6 +351,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      * @hidden
      */
+    @HostListener('click', ['$event'])
     public _clicked(event: MouseEvent) {
         event.stopPropagation();
         this.select();

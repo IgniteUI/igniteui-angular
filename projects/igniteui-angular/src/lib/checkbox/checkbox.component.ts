@@ -376,13 +376,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // we need to prevent the checkbox click event from bubbling up
         // as it gets triggered on label click
         event.stopPropagation();
-
-        if (this.readonly) {
-            // readonly prevents the component from changing state (see toggle() method).
-            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
-            // Prevent the native change so the input remains in sync
-            event.preventDefault();
-        }
+        event.preventDefault();
 
         this.toggle();
 

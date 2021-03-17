@@ -10,7 +10,6 @@
     [attr.aria-labelledby]="ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
     (change)="_onSwitchChange($event)"
-    (click)="_onSwitchClick($event)"
     (blur)="onBlur()" />
 
 <label #label class ="igx-switch__composite" [for]="inputId"
@@ -26,7 +25,6 @@
 
 <span #placeholderLabel
     [class]="labelClass"
-    [id]="labelId"
-    (click)="onLabelClick()">
+    [id]="labelId">
     <ng-content></ng-content>
 </span>

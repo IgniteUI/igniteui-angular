@@ -291,6 +291,21 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         event.stopPropagation();
         this.focused = true;
     }
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostListener('click', ['$event'])
+    public _onSwitchClick(event: Event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        this.toggle();
+
+        if (isIE()) {
+            this.nativeCheckbox.nativeElement.blur();
+        }
+    }
 
     /**
      * Toggles the checked state of the switch.
@@ -317,25 +332,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public _onSwitchChange(event: Event) {
         event.stopPropagation();
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public _onSwitchClick(event: Event) {
-        event.stopPropagation();
-        this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public onLabelClick() {
-        this.toggle();
     }
     /**
      * @hidden
