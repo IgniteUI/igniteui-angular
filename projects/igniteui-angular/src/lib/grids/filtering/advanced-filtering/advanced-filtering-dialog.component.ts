@@ -20,6 +20,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
+import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
@@ -325,8 +326,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get displayDensity() {
-        return this.grid.displayDensity;
+    public get displayDensity(): DisplayDensity {
+        return this.grid.displayDensity as DisplayDensity;
     }
 
     /**

@@ -2885,7 +2885,7 @@ class IgxComboSampleComponent {
      */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public density = DisplayDensity.cosy;
+    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items = [];
     public initData = [];
