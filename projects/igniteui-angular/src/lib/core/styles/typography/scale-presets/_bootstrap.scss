@@ -123,6 +123,7 @@ $bootstrap_weekday: igx-type-style(
 );
 
 $_bootstrap-scale: igx-type-scale(
+    $_meta: (variant: 'bootstrap'),
     $h1: $bootstrap_h1,
     $h2: $bootstrap_h2,
     $h3: $bootstrap_h3,
@@ -140,4 +141,4 @@ $_bootstrap-scale: igx-type-scale(
 
 $bootstrap-type-scale: extend($_bootstrap-scale, (
     calendar-labels: $bootstrap_weekday,
-))
+));
