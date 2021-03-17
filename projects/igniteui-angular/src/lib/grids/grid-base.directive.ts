@@ -2251,7 +2251,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
 
-        if (!Object.keys(activeElem).length) {
+        if (!!activeElem && !Object.keys(activeElem).length) {
             return this.id;
         }
 
