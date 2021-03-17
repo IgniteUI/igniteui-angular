@@ -311,7 +311,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.addRowSnackbar.isVisible).toBe(false);
         });
 
-        fit('Should set templated banner text when adding row', () => {
+        it('Should set templated banner text when adding row', () => {
             const rows = grid.rowList.toArray();
             rows[0].beginAddRow();
             fixture.detectChanges();
