@@ -1,0 +1,57 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@include b(igx-tree) {
+    display: block;
+}
+
+@include b(igx-tree-node) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %tree-node !optional;
+
+    @include e(wrapper) {
+        @extend %tree-node-wrapper !optional;
+    }
+
+    @include e(content) {
+        @extend %tree-node-content !optional;
+    }
+
+    @include e(content-inner) {
+        @extend %tree-node-content-inner !optional;
+    }
+
+    @for $level from 1 through 10 {
+        @include e(wrapper, $m: level-#{$level} ) {
+            @extend %tree-node-wrapper--level-#{$level} !optional;
+        }
+    }
+
+    @include e(indicator) {
+        @extend %tree-node-indicator !optional;
+    }
+
+    @include e(text) {
+        @extend %tree-node-text !optional;
+    }
+
+    @include e(select) {
+        @extend %tree-node-select !optional;
+    }
+
+    @include e(group) {
+        @extend %tree-node-group !optional;
+    }
+
+    @include e(insert-indicator) {
+        @extend %tree-node-insert-indicator !optional;
+    }
+}
+

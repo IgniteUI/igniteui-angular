@@ -4,7 +4,7 @@ import {
     OnDestroy, Input, Inject, ViewChild, TemplateRef, AfterViewInit, QueryList, ContentChildren, Optional, SkipSelf,
     HostBinding,
     ElementRef,
-    ChangeDetectorRef
+    ChangeDetectorRef, HostListener
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -36,7 +36,6 @@ let nodeId = 0;
 @Component({
     selector: 'igx-tree-node',
     templateUrl: 'tree-node.component.html',
-    styleUrls: ['tree-node.component.scss'],
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ]

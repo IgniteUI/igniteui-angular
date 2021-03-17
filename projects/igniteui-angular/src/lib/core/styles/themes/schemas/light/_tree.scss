@@ -1,0 +1,42 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light tree schema.
+/// @type {Map}
+///
+///
+/// @requires {function} extend
+/// @see $default-palette
+$_light-tree: extend(
+    (
+
+    )
+);
+
+/// Generates a light fluent tree schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires {Map} $_light-tree
+$_fluent-tree: extend(
+    $_light-tree,
+);
+
+/// Generates a bootstrap tree schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tree
+$_bootstrap-tree: extend(
+    $_light-tree,
+);
+
+/// Generates an indigo tree schema.
+/// @type {Map}
+///
+/// @requires {function} extend
+/// @requires {Map} $_light-tree
+$_indigo-tree: extend(
+    $_light-tree,
+);

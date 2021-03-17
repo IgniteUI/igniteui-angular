@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { growVerIn, growVerOut } from '../animations/grow';
@@ -35,7 +35,6 @@ export class IgxTreeExpandIndicatorDirective {
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
-    styleUrls: ['tree.component.scss'],
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,
@@ -43,6 +42,9 @@ export class IgxTreeExpandIndicatorDirective {
     ]
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+
+    @HostBinding('class.igx-tree')
+    public cssClass = 'igx-tree';
 
     /**
      * Gets/Sets tree selection mode

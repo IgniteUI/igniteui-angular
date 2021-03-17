@@ -1,0 +1,199 @@
+////
+/// @group themes
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Returns a map containing all style properties related to the theming the tree component.
+/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+///
+/// @param {Color} $background [null] - The background color of the tree.
+/// @param {Color} $text-color [null] - The text color of the tree.
+///
+/// @param {border-radius} $border-radius [null] - The border radius used for the tree component.
+///
+/// @requires $default-palette
+/// @requires $light-schema
+/// @requires apply-palette
+/// @requires extend
+/// @requires text-contrast
+/// @requires round-borders
+///
+/// @example scss Change the tree background
+///   $my-tree-theme: igx-tree-theme($background: magenta);
+///   // Pass the theme to the igx-tree component mixin
+///   @include igx-tree($my-checkbox-theme);
+@function igx-tree-theme(
+    $palette: $default-palette,
+    $schema: $light-schema,
+    $border-radius: null,
+) {
+    $name: 'igx-tree';
+    $tree-schema: ();
+
+    @if map-has-key($schema, $name) {
+        $tree-schema: map-get($schema, $name);
+    } @else {
+        $tree-schema: $schema;
+    }
+
+    $theme: apply-palette($tree-schema, $palette);
+
+    $border-radius: round-borders(
+        if($border-radius, $border-radius, map-get($tree-schema, 'border-radius')), 0, 16px
+    );
+
+    @return extend($theme, (
+        name: $name,
+        palette: $default-palette,
+    ));
+}
+
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-root-css-vars
+/// @requires --var
+@mixin igx-tree($theme) {
+    @include igx-root-css-vars($theme);
+
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    $node-indent: (
+        comfortable: rem(24px),
+        cosy: rem(16px),
+        compact: rem(12px)
+    );
+
+    %tree-node,
+    %tree-node-wrapper,
+    %tree-node-indicator,
+    %tree-node-content,
+    %tree-node-select {
+        display: flex;
+    }
+
+    %tree-node-display {
+        flex-direction: column;
+        justify-content: center;
+    }
+    %tree-node-wrapper,
+    %tree-node-indicator,
+    %tree-node-select {
+        align-items: center;
+    }
+
+    %tree-node-indicator,
+    %tree-node-select {
+        margin-#{$right}: rem(8px);
+    }
+
+    %tree-node {
+        flex-direction: column;
+    }
+
+    %tree-node-wrapper {
+        min-height: rem(50px);
+        padding-#{$right}: map-get($node-indent, 'comfortable');
+
+
+        &:hover {
+            background: #333;
+        }
+
+
+        @for $level from 1 through 10 {
+            $level-indent: calc(#{$level} * #{map-get($node-indent, 'comfortable')});
+
+            &%tree-node-wrapper--level-#{$level} {
+                padding-#{$left}: $level-indent;
+            }
+        }
+
+
+        &--cosy {
+            min-height: rem(40px);
+
+            @for $level from 1 through 10 {
+                $level-indent: calc(#{$level} * #{map-get($node-indent, 'cosy')});
+
+                &%tree-node-wrapper--level-#{$level} {
+                    padding-#{$left}: $level-indent;
+                }
+            }
+        }
+
+        &--compact {
+            min-height: rem(32px);
+            @for $level from 1 through 10 {
+                $level-indent: calc(#{$level} * #{map-get($node-indent, 'compact')});
+
+                &%tree-node-wrapper--level-#{$level} {
+                    padding-#{$left}: $level-indent;
+                }
+            }
+        }
+    }
+
+
+    %tree-node-content {
+        position: relative;
+        align-items: center;
+        flex: 1;
+        @include ellipsis();
+    }
+
+    %tree-node-content-inner {
+        position: relative;
+        flex: 1;
+        align-items: center;
+        @include ellipsis();
+    }
+
+    %tree-node-indicator {
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    %tree-node-insert-indicator {
+        position: absolute;
+        width: 100%;
+        bottom: 0;
+        height: 1px;
+        background: red;
+
+        &::after,
+        &::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+
+        &::before {
+            border-style: solid;
+            border-width: 2px 0 2px 2px;
+            border-color: transparent transparent transparent red;
+            top: -2px;
+            left: 0;
+        }
+
+        &::after {
+            border-style: solid;
+            border-width: 2px 2px 2px 0;
+            border-color: transparent red transparent transparent;
+            top: -2px;
+            right: 0;
+        }
+    }
+
+    %tree-node-group {
+        overflow: hidden;
+    }
+
+    .hidden {
+        visibility: hidden;
+    }
+}
+
+
