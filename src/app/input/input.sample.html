@@ -32,7 +32,7 @@
 
             <div class="radio-group">
                 <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
-                    (change)="onChange($event)">{{item}}</igx-radio>
+                    (change)="onRadioChanged($event)">{{item}}</igx-radio>
                 <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
             </div>
 
