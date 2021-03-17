@@ -66,6 +66,7 @@ import {
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/public_api';
 import {
+    IgxRowAddTextDirective,
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective,
     IgxRowEditTextDirective,
@@ -1128,11 +1129,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
+
     /**
      * @hidden @internal
      */
     @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
     public rowEditText: TemplateRef<any>;
+
+      /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
+    public rowAddText: TemplateRef<any>;
 
     /**
      * @hidden @internal

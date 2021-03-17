@@ -310,6 +310,19 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             expect(grid.addRowSnackbar.isVisible).toBe(false);
         });
+
+        fit('Should set templated banner text when adding row', () => {
+            const rows = grid.rowList.toArray();
+            rows[0].beginAddRow();
+            fixture.detectChanges();
+
+            endTransition();
+
+            const addRow = grid.getRowByIndex(1);
+            expect(addRow.addRow).toBeTrue();
+
+            expect(GridFunctions.getRowEditingBannerText(fixture)).toEqual('Adding Row');
+        });
     });
 
     describe('Add row events tests:', () => {
