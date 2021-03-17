@@ -7,6 +7,10 @@ import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
 
     /** @hidden */
+    @HostBinding('attr.role')
+    public role = 'tab';
+
+    /** @hidden */
     constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }
 
@@ -14,6 +18,18 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     @HostBinding('attr.tabindex')
     public get tabIndex() {
         return this.tab.selected ? 0 : -1;
+    }
+
+    /** @hidden */
+    @HostBinding('attr.aria-selected')
+    public get ariaSelected() {
+        return this.tab.selected;
+    }
+
+    /** @hidden */
+    @HostBinding('attr.aria-disabled')
+    public get ariaDisabled() {
+        return this.tab.disabled;
     }
 
     /** @hidden */

@@ -9,7 +9,7 @@
         <igx-icon>navigate_before</igx-icon>
     </button>
     <div #viewPort class="igx-tabs__header-wrapper-fixed">
-        <div #itemsContainer class="igx-tabs__header-wrapper-fluid">
+        <div #itemsContainer class="igx-tabs__header-wrapper-fluid" role="tablist">
             <ng-container *ngFor="let tab of items; let i = index">
                 <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
             </ng-container>
