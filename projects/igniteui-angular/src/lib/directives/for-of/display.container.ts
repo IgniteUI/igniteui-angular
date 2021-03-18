@@ -5,6 +5,7 @@ import {
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
+import { IgxScrollInertiaDirective } from '../scroll-inertia/scroll_inertia.directive';
 
 @Component({
     selector: 'igx-display-container',
@@ -20,6 +21,9 @@ import {
 export class DisplayContainerComponent {
     @ViewChild('display_container', { read: ViewContainerRef, static: true })
     public _vcr;
+
+    @ViewChild('display_container', { read: IgxScrollInertiaDirective, static: true })
+    public _scrollInertia: IgxScrollInertiaDirective;
 
     @HostBinding('class')
     public cssClass = 'igx-display-container';
