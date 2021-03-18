@@ -731,7 +731,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public handleSelection(selectionData: Date[]): void {
+    public handleSelection(selectionData: Date | Date[]): void {
+        // range picker always uses selection="range"
+        selectionData = selectionData as Date[];
         this.value = this.extractRange(selectionData);
         this.rangeSelected.emit(this.value);
         if (this.mode === InteractionMode.DropDown && selectionData?.length > 1) {
