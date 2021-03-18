@@ -19,7 +19,7 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
+import { IgxTabsOldModule, IgxTabsOldComponent } from '../../tabs-old/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
@@ -1969,7 +1969,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridInsideIgxTabsComponent
                 ],
                 imports: [
-                    NoopAnimationsModule, IgxGridModule, IgxTabsModule]
+                    NoopAnimationsModule, IgxGridModule, IgxTabsOldModule]
             }).compileComponents();
         }));
 
@@ -2184,7 +2184,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 imports: [
                     NoopAnimationsModule,
                     IgxGridModule,
-                    IgxTabsModule
+                    IgxTabsOldModule
                 ]
             }).compileComponents();
         }));
@@ -2843,8 +2843,8 @@ export class IgxGridInsideIgxTabsComponent {
     public grid5: IgxGridComponent;
     @ViewChild('grid6', { read: IgxGridComponent, static: true })
     public grid6: IgxGridComponent;
-    @ViewChild(IgxTabsComponent, { read: IgxTabsComponent, static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { read: IgxTabsOldComponent, static: true })
+    public tabs: IgxTabsOldComponent;
 
     public columns = [
         { field: 'id', width: 100 },

@@ -6,7 +6,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { IgxTabsOldComponent, IgxTabsOldModule } from '../tabs-old/tabs.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -757,7 +757,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsModule,
+                        IgxTabsOldModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -951,7 +951,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsModule,
+                        IgxTabsOldModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -1159,7 +1159,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsModule,
+                        IgxTabsOldModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -1321,8 +1321,8 @@ class DoubleIgxDropDownComponent implements OnInit {
     </igx-drop-down>`
 })
 class IgxDropDownAnchorTestComponent {
-    @ViewChild(IgxTabsComponent, { static: true })
-    public tabs: IgxTabsComponent;
+    @ViewChild(IgxTabsOldComponent, { static: true })
+    public tabs: IgxTabsOldComponent;
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 

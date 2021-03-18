@@ -1,7 +1,7 @@
 import { Component, QueryList, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxBottomNavOldComponent,
-         IgxBottomNavModule,
+         IgxBottomNavOldModule,
          IgxTabComponent,
          IgxTabPanelOldComponent } from './tabbar.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -35,7 +35,7 @@ describe('IgxBottomNav', () => {
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TemplatedTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent],
-            imports: [IgxBottomNavModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
+            imports: [IgxBottomNavOldModule, BottomNavRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [BottomNavRoutingTestGuard]
         }).compileComponents();
     }));
