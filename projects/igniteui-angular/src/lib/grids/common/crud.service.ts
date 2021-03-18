@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective } from '../grid/public_api';
+import { first } from 'rxjs/operators';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
 import { GridType } from './grid.interface';
 
 export class IgxRow {
@@ -109,6 +110,13 @@ export class IgxGridCRUDService {
     public cell: IgxCell | null = null;
     public row: IgxRow | null = null;
     public isInCompositionMode = false;
+
+
+    /**
+     * @hidden @interal
+     * TODO: Consider changing the modifier to protected or private.
+     */
+    public addRowParent = null;
 
     private _cellEditingBlocked = false;
     private _rowEditingBlocked = false;
@@ -352,7 +360,7 @@ export class IgxGridCRUDService {
         }
 
         if (row?.isAddRow) {
-            canceled = this.grid.endAdd(commit, event);
+            canceled = this.endAdd(commit, event);
             return canceled;
         }
 
@@ -381,4 +389,75 @@ export class IgxGridCRUDService {
         return false;
     }
 
+
+    public endAdd(commit = true, event?: Event) {
+        const row = this.row;
+        const cell = this.cell;
+        const cachedRowData = { ...row.data };
+        let cancelable = false;
+        if (!row && !cell) {
+            return;
+        }
+        if (commit) {
+            this.grid.onRowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
+                const rowData = args.data;
+                const pinnedIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowData[this.primaryKey]);
+                // A check whether the row is in the current view
+                const viewIndex = pinnedIndex !== -1 ? pinnedIndex : this._findRecordIndexInView(rowData);
+                const dataIndex = this.grid.filteredSortedData.findIndex(data => data[this.primaryKey] === rowData[this.primaryKey]);
+                const isInView = viewIndex !== -1 && !this.grid.navigation.shouldPerformVerticalScroll(viewIndex, 0);
+                const showIndex = isInView ? -1 : dataIndex;
+                this.grid.showSnackbarFor(showIndex);
+            });
+            cancelable = this.grid.gridAPI.submit_add_value(event);
+            if (!cancelable) {
+                const args = row.createEditEventArgs(true, event);
+                this.grid.rowEdit.emit(args);
+                if (args.cancel) {
+                    return args.cancel;
+                }
+                const parentId = this._getAddRowParentRecordId();
+                this.grid.gridAPI.addRowToData(row.data, parentId);
+                const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
+                this.grid.rowEditDone.emit(doneArgs);
+                this.grid.gridAPI.crudService.endRowEdit();
+                if (this.addRowParent.isPinned) {
+                    this.grid.pinRow(row.id);
+                }
+            }
+            this.addRowParent = null;
+            this.grid.cancelAddMode = cancelable;
+        } else {
+            this.grid.gridAPI.crudService.exitCellEdit(event);
+            this.grid.cancelAddMode = true;
+        }
+        this.grid.gridAPI.crudService.endRowEdit();
+        this.grid.closeRowEditingOverlay();
+        this.grid.pipeTriggerNotifier.next();
+        if (!this.grid.cancelAddMode) {
+            this.grid.cdr.detectChanges();
+            this.grid.onRowAdded.emit({ data: row.data });
+        }
+        const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData, event);
+        this.grid.rowEditExit.emit(nonCancelableArgs);
+        return this.grid.cancelAddMode;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * TODO: consider changing modifier
+     */
+    public _getAddRowParentRecordId() {
+        return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     * TODO: consider changing modifier
+     */
+    public _findRecordIndexInView(rec) {
+        return this.grid.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
+    }
 }

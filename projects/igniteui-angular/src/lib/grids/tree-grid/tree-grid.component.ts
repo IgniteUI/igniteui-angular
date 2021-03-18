@@ -645,10 +645,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @internal
      */
     protected _getParentRecordId() {
-        if (this.addRowParent.asChild) {
-            return super._getParentRecordId();
-        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
-            const spawnedForRecord = this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
+        if (this.gridAPI.crudService.addRowParent.asChild) {
+            return this.gridAPI.crudService._getAddRowParentRecordId();
+        } else if (this.gridAPI.crudService.addRowParent.rowID !== null && this.gridAPI.crudService.addRowParent.rowID !== undefined) {
+            const spawnedForRecord = this._gridAPI.get_rec_by_id(this.gridAPI.crudService.addRowParent.rowID);
             return spawnedForRecord?.parent?.rowID;
         }
     }
