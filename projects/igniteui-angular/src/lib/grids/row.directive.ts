@@ -15,7 +15,7 @@ import {
     AfterViewInit,
     OnDestroy
 } from '@angular/core';
-import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
+import { IChangeCheckboxEventArgs, IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './columns/column.component';
@@ -445,6 +445,17 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             this.selectionService.deselectRow(this.rowID, event);
         } else {
             this.selectionService.selectRowById(this.rowID, false, event);
+        }
+    }
+
+    /**
+     * @hidden
+     */
+    public onRowSelectorChange(event: IChangeCheckboxEventArgs) {
+        if (event.checked) {
+            this.selectionService.selectRowById(this.rowID, false, event);
+        } else {
+            this.selectionService.deselectRow(this.rowID, event);
         }
     }
 

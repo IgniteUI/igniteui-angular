@@ -86,11 +86,11 @@
         <igx-checkbox
             [tabindex]="-1"
             [checked]="selected"
-            [readonly]="true"
             [disabled]="deleted"
             [disableRipple]="true"
             [disableTransitions]="grid.disableTransitions"
-            [aria-label]="rowCheckboxAriaLabel">
+            [aria-label]="rowCheckboxAriaLabel"
+            (change)="onRowSelectorChange($event)">
         </igx-checkbox>
     </div>
 </ng-template>

@@ -57,8 +57,10 @@ export class IgxColumnPinningDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public toggleColumn(column: IgxColumnComponent) {
-        column.pinned = !column.pinned;
+    public toggleColumn(column: IgxColumnComponent, state: boolean) {
+        if (column.pinned !== state) {
+            column.pinned = state;
+        }
     }
 
     public get allUnchecked() {
