@@ -17,7 +17,7 @@
 </ng-template>
 
 <ng-template #defaultSelect let-item>
-    <igx-checkbox [checked]="selected" [readonly]="true">
+    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate">
     </igx-checkbox>
 </ng-template>
 
@@ -32,7 +32,7 @@
             class="igx-tree-node__indicator igx-tree-node__expand"
             (click)="expanded = !expanded"
         >
-            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
+            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
         </span>
 
@@ -41,7 +41,7 @@
              (pointerdown)="$event.preventDefault()"
              (click)="onSelectorClick($event)"
         >
-            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
+            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: { $implicit: expanded }">
             </ng-container>
         </div>
 

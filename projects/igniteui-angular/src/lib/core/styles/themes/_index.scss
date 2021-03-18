@@ -595,11 +595,6 @@
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
 
-    @include igx-typography(
-        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale,
-    );
-
     @include igx-theme(
         $palette: igx-palette(
             $primary,
@@ -629,11 +624,6 @@
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
-
-    @include igx-typography(
-        $font-family: "'Open Sans', Helvetica, Arial, sans-serif",
-        $type-scale: $fluent-type-scale
-    );
 
     @include igx-theme(
         $palette: igx-palette(
@@ -666,38 +656,6 @@
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
 
-    @include igx-typography(
-        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        $type-scale: $bootstrap-type-scale
-    );
-
-    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
-        weekday-labels: 'calendar-labels',
-        card-title: 'card-title',
-    ));
-
-    @include igx-card-typography($bootstrap-type-scale, $categories: (
-        title: 'h5',
-        subtitle: 'body-1',
-        content: 'body-1'
-    ));
-
-    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
-        title: 'h5',
-    ));
-
-    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
-        header: 'subtitle-1',
-        item: 'subtitle-1',
-        select-item: 'subtitle-1'
-    ));
-
-    @include igx-list-typography($bootstrap-type-scale, $categories: (
-        item: 'body-2',
-        title: 'body-1',
-        subtitle: 'subtitle-1'
-    ));
-
     @include igx-theme(
         $palette: igx-palette(
             $primary,
@@ -727,32 +685,6 @@
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
-
-    @include igx-typography(
-        $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
-        $type-scale: $bootstrap-type-scale
-    );
-
-    @include igx-calendar-typography($bootstrap-type-scale, $categories: (
-        weekday-labels: 'calendar-labels',
-        card-title: 'card-title',
-    ));
-
-    @include igx-card-typography($bootstrap-type-scale, $categories: (
-        title: 'h5',
-        subtitle: 'body-1',
-        content: 'body-1'
-    ));
-
-    @include igx-dialog-typography($bootstrap-type-scale, $categories: (
-        title: 'h5',
-    ));
-
-    @include igx-drop-down-typography($bootstrap-type-scale, $categories: (
-        header: 'subtitle-1',
-        item: 'subtitle-1',
-        select-item: 'subtitle-1'
-    ));
 
     @include igx-theme(
         $palette: igx-palette(
@@ -784,15 +716,6 @@
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
 
-    @include igx-typography(
-        $font-family: "'Nunito Sans', sans-serif",
-        $type-scale: $indigo-type-scale
-    );
-
-    @include igx-card-typography($indigo-type-scale, $categories: (
-        title: 'h5'
-    ));
-
     @include igx-theme(
         $palette: igx-palette(
             $primary,
@@ -822,15 +745,6 @@
     $primary: igx-color($palette, 'primary');
     $secondary: igx-color($palette, 'secondary');
     $surface: igx-color($palette, 'surface');
-
-    @include igx-typography(
-        $font-family: "'Nunito Sans', sans-serif",
-        $type-scale: $indigo-type-scale
-    );
-
-    @include igx-card-typography($indigo-type-scale, $categories: (
-        title: 'h5',
-    ));
 
     @include igx-theme(
         $palette: igx-palette(

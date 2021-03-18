@@ -1,62 +1,72 @@
-<div class="column controls meduim">
-    <div class="row">
-        <igx-input-group class="medium">
+<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+    <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutItemAlign="center" class="controls">
+        <igx-input-group>
             <label igxLabel for="time">Animation Duration</label>
             <input igxInput [(ngModel)]="animationDuration" name="time" type="number">
         </igx-input-group>
+
+        <div igxLayout igxLayoutDir="row">
+            <igx-input-group type="search">
+                <label igxLabel for="search">Search By Key</label>
+                <input #searchCriteria igxInput name="search" type="text">
+            </igx-input-group>
+
+            <button igxButton="outlined" (click)="customSearch(searchCriteria.value)">Log node</button>
+        </div>
+
+        <div>
+            <label for="branchExpand"></label>
+            <igx-switch name="branchExpand" [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
+        </div>
     </div>
 
-    <div class="row">
-        <igx-input-group class="medium" type="search">
-            <label igxLabel for="search">Search By Key</label>
-            <input #searchCriteria igxInput name="search" type="text">
-        </igx-input-group>
-        <button igxButton (click)="customSearch(searchCriteria.value)">Log node</button>
-    </div>
-    <div class="row">
-        <label for="branchExpand"></label>
-        <igx-switch name="branchExpand" [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
-    </div>
-</div>
+    <div igxLayout igxLayoutDir="column">
+        <div class="btn-holder" igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+            <button igxButton (click)="selectSpecific()">Select specific</button>
+            <button igxButton (click)="selectAll()">Select all</button>
+            <button igxButton (click)="deselectSpecific()">Deselect specific</button>
+            <button igxButton (click)="deselectAll()">Deselect all</button>
+            <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
+            <button igxButton (click)="changeNodeData()">Change Node Data</button>
+        </div>
 
-<button igxButton (click)="selectAll()">Select</button>
-<button igxButton (click)="tree1.selection = tree1.selection === 'None' ? 'BiState' : 'None'">
-    {{ tree1.selection}}
-</button>
+        <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
 
-<div class="row">
-    <div class="column tree-container">
-        <p>IgxTree (templated with icon and text)</p>
-        <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand"
-            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
-            <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
-                <div class="sample-template-center">
-                    <igx-icon>computer</igx-icon>
-                    <span class="sample-ellipsis">{{ node.CompanyName }}</span>
-                </div>
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
-                    {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                        {{ leafchild.CompanyName }}
+        <div igxLayout igxLayoutDir="row">
+            <div igxLayout igxLayoutDir="column" class="tree-container">
+                <p>IgxTree (templated with icon and text)</p>
+                <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand"
+                          [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
+                        <div class="sample-template-center">
+                            <igx-icon>computer</igx-icon>
+                            <span class="sample-ellipsis">{{ node.CompanyName }}</span>
+                        </div>
+                        <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
+                            {{ child.CompanyName }}
+                            <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        </igx-tree-node>
                     </igx-tree-node>
-                </igx-tree-node>
-            </igx-tree-node>
-        </igx-tree>
-    </div>
+                </igx-tree>
+            </div>
 
 
-    <div class="column tree-container">
-        <p>IgxTree 2: The Branchening</p>
-        <igx-tree>
-            <igx-tree-node *ngFor="let node of data" [data]="node">
-                {{ node.CompanyName }}
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
-                    {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                        {{ leafchild.CompanyName }}
+            <div igxLayout igxLayoutDir="column" class="tree-container">
+                <p>IgxTree 2: The Branchening</p>
+                <igx-tree>
+                    <igx-tree-node *ngFor="let node of data" [data]="node">
+                        {{ node.CompanyName }}
+                        <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
+                            {{ child.CompanyName }}
+                            <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        </igx-tree-node>
                     </igx-tree-node>
-                </igx-tree-node>
-            </igx-tree-node>
-        </igx-tree>
+                </igx-tree>
+            </div>
+        </div>
     </div>
 </div>
