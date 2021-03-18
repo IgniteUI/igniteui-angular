@@ -8,12 +8,6 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-// import { TabsRoutingViewComponentsModule,
-//     TabsRoutingView1Component,
-//     TabsRoutingView2Component,
-//     TabsRoutingView3Component,
-//     TabsRoutingView4Component,
-//     TabsRoutingView5Component } from './tabs-routing-view-components.spec';
 import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
 import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent, TabsRoutingTestComponent,
     TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsTest2Component, TabsTestBug4420Component, TabsTestComponent,
@@ -21,7 +15,6 @@ import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutin
     TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-// import { IgxTabHeaderComponent } from './tab-header.component';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxTabPanelComponent } from './tab-panel.component';
 import { TabsRoutingViewComponentsModule,
@@ -81,27 +74,23 @@ fdescribe('IgxTabs', () => {
             const igxTabs = document.querySelectorAll('igx-tabs');
             expect(igxTabs.length).toBe(2);
 
-            const startTabsIndex = parseInt(igxTabs[0].id.replace('igx-tabs-', ''), 10);
-            for (let tabIndex = startTabsIndex; tabIndex < startTabsIndex + 2; tabIndex++) {
-                const tab = igxTabs[tabIndex - startTabsIndex];
-                expect(tab.id).toEqual(`igx-tabs-${tabIndex}`);
-
-                const tabHeaders = tab.querySelectorAll('igx-tab-item');
-                const tabContents = tab.querySelectorAll('igx-tabs-group');
+            igxTabs.forEach((tab, i) => {
+                const tabHeaders = tab.querySelectorAll('igx-tab-header');
+                const tabPanels = tab.querySelectorAll('igx-tab-panel');
                 expect(tabHeaders.length).toBe(3);
-                expect(tabContents.length).toBe(3);
+                expect(tabPanels.length).toBe(3);
 
                 for (let itemIndex = 0; itemIndex < 3; itemIndex++) {
-                    const headerId = `igx-tab-item-${tabIndex}-${itemIndex}`;
-                    const contentId = `igx-tabs-group-${tabIndex}-${itemIndex}`;
+                    const headerId = `igx-tabs-header-${itemIndex + 3 * i}`;
+                    const panelId = `igx-tabs-panel-${itemIndex + 3 * i}`;
 
                     expect(tabHeaders[itemIndex].id).toEqual(headerId);
-                    expect(tabHeaders[itemIndex].getAttribute('aria-controls')).toEqual(contentId);
+                    expect(tabPanels[itemIndex].id).toEqual(panelId);
 
-                    expect(tabContents[itemIndex].id).toEqual(contentId);
-                    expect(tabContents[itemIndex].getAttribute('aria-labelledby')).toEqual(headerId);
+                    expect(tabHeaders[itemIndex].getAttribute('aria-controls')).toEqual(panelId);
+                    expect(tabPanels[itemIndex].getAttribute('aria-labelledby')).toEqual(headerId);
                 }
-            }
+            });
         }));
     });
 
@@ -114,7 +103,7 @@ fdescribe('IgxTabs', () => {
             tabs = fixture.componentInstance.tabs;
         }));
 
-        it('should initialize igx-tabs, igx-tabs-group and igx-tab-item', fakeAsync(() => {
+        it('should initialize igx-tabs, igx-tab-panel and igx-tab-item', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
 
@@ -127,11 +116,10 @@ fdescribe('IgxTabs', () => {
             expect(tabs.panels.length).toBe(3);
 
             for (let i = 0; i < tabs.panels.length; i++) {
-                expect(panels[i] instanceof IgxTabItemComponent).toBeTruthy();
+                expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
                 expect(panels[i].tab).toBe(tabsItems[i]);
             }
 
-            expect(tabs.tabs instanceof QueryList).toBeTruthy();
             expect(tabs.items.length).toBe(3);
 
             for (let i = 0; i < tabs.items.length; i++) {
@@ -146,11 +134,6 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(0);
-
-            fixture.componentInstance.tabSelectedHandler = () => {
-                expect(tabs.selectedIndex).toBe(0);
-                expect(tabs.selectedItem).toBe(tabItems[0]);
-            };
 
             tick(100);
             fixture.detectChanges();
@@ -167,68 +150,23 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             const tabItems = tabs.items.toArray();
-            const groups = tabs.panels.toArray();
+            const tabHeaders = tabItems.map(item => item.headerComponent);
+            const tabHeaderElements = tabHeaders.map(item => item.nativeElement);
 
-            for (let i = 0; i < tabItems.length; i++) {
-                expect(groups[i].label).toBe('Tab ' + (i + 1));
-                expect(groups[i].icon).toBe(icons[i]);
+            for (let i = 0; i < tabHeaderElements.length; i++) {
+                const headerDiv = tabHeaderElements[i].firstChild;
+                expect(headerDiv.firstChild.localName).toBe('igx-icon');
+                expect(headerDiv.firstChild.innerText).toBe(icons[i]);
+                expect(headerDiv.lastChild.localName).toBe('span');
+                expect(headerDiv.lastChild.innerText).toBe('Tab ' + (i + 1));
             }
             tick();
         }));
-
-        it('should set/get properties on panels through tabs', () => {
-            const iconValues = ['library_music', 'video_library', 'library_books'];
-            const labelValues = ['Tab1', 'Tab2', 'Tab3'];
-            const disabledValues = [true, false, true];
-
-            fixture.detectChanges();
-
-            const tabItems = tabs.items.toArray();
-            const groups = tabs.panels.toArray();
-
-            for (let i = 0; i < tabItems.length; i++) {
-                tabItems[i].icon = iconValues[i];
-                tabItems[i].label = labelValues[i];
-                tabItems[i].disabled = disabledValues[i];
-                fixture.detectChanges();
-                expect(groups[i].icon).toBe(iconValues[i]);
-                expect(groups[i].label).toBe(labelValues[i]);
-                expect(groups[i].disabled).toBe(disabledValues[i]);
-            }
-        });
-
-        it('should set/get selection on panels through tabs', () => {
-            fixture.detectChanges();
-
-            const tabItems = tabs.items.toArray();
-            const groups = tabs.panels.toArray();
-
-            tabItems[0].selected = true;
-            expect(groups[0].selected).toBe(true);
-            expect(groups[1].selected).toBe(false);
-            expect(groups[2].selected).toBe(false);
-
-            tabItems[1].selected = true;
-            fixture.detectChanges();
-            expect(groups[0].selected).toBe(false);
-            expect(groups[1].selected).toBe(true);
-            expect(groups[2].selected).toBe(false);
-
-            tabItems[2].selected = true;
-            fixture.detectChanges();
-            expect(groups[0].selected).toBe(false);
-            expect(groups[1].selected).toBe(false);
-            expect(groups[2].selected).toBe(true);
-        });
 
         it('should select/deselect tabs', fakeAsync(() => {
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(0);
-            fixture.componentInstance.tabSelectedHandler = () => {
-                expect(tabs.selectedIndex).toBe(0);
-                expect(tabs.selectedItem).toBe(tab1);
-            };
 
             tick(100);
             fixture.detectChanges();
@@ -236,9 +174,6 @@ fdescribe('IgxTabs', () => {
             const tab1: IgxTabItemComponent = tabItems[0];
             const tab2: IgxTabItemComponent = tabItems[1];
 
-            fixture.componentInstance.tabSelectedHandler = () => { };
-
-            // tab2.select();
             tab2.selected = true;
 
             tick(100);
@@ -249,7 +184,6 @@ fdescribe('IgxTabs', () => {
             expect(tab2.selected).toBeTruthy();
             expect(tab1.selected).toBeFalsy();
 
-            // tab1.select();
             tab1.selected = true;
 
             tick(100);
@@ -260,50 +194,49 @@ fdescribe('IgxTabs', () => {
             expect(tab1.selected).toBeTruthy();
             expect(tab2.selected).toBeFalsy();
 
-            // select disabled tab
-            // tab2.relatedGroup.disabled = true;
-
+            // Disabled tab is selectable programmatically
+            tab2.disabled = true;
             tick(100);
             fixture.detectChanges();
 
-            // tab2.select();
             tab2.selected = true;
 
             tick(100);
             fixture.detectChanges();
 
-            expect(tabs.selectedIndex).toBe(0);
-            expect(tabs.selectedItem).toBe(tab1);
-            expect(tab1.selected).toBeTruthy();
-            expect(tab2.selected).toBeFalsy();
+            expect(tabs.selectedIndex).toBe(1);
+            expect(tabs.selectedItem).toBe(tab2);
+            expect(tab2.selected).toBeTruthy();
+            expect(tab1.selected).toBeFalsy();
         }));
 
         it('should select next/previous tab when pressing right/left arrow', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
+            const headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.focus();
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headers[0].focus();
+            headers[0].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            tabs.items.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headers[1].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            tabs.items.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headers[2].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
 
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headers[0].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            tabs.items.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headers[2].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
@@ -312,14 +245,15 @@ fdescribe('IgxTabs', () => {
         it('should select first/last tab when pressing home/end button', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
+            const headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.focus();
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
+            headers[0].focus();
+            headers[0].dispatchEvent(KEY_END_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            tabs.items.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            headers[2].dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
@@ -351,17 +285,18 @@ fdescribe('IgxTabs', () => {
         it('should select tab on click', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
+            const headers = tabs.items.map(item => item.headerComponent.nativeElement);
 
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '400px';
             tick(100);
             fixture.detectChanges();
 
-            tabs.items.toArray()[2].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+            headers[2].dispatchEvent(new Event('click', { bubbles: true }));
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(2);
 
-            tabs.items.toArray()[0].nativeTabItem.nativeElement.dispatchEvent(new Event('click', { bubbles: true }));
+            headers[0].dispatchEvent(new Event('click', { bubbles: true }));
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(0);
@@ -372,41 +307,42 @@ fdescribe('IgxTabs', () => {
             tabs = fixture.componentInstance.tabs;
             tick(100);
             fixture.detectChanges();
+            const headerElements = tabs.items.map(item => item.headerComponent.nativeElement);
 
-            tabs.items.toArray()[1].nativeTabItem.nativeElement.click();
-            tabs.items.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].click();
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            tabs.items.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[3].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            tabs.items.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            tabs.items.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[3].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
 
-            tabs.items.toArray()[1].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
+            headerElements[1].dispatchEvent(KEY_END_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(3);
 
-            tabs.items.toArray()[3].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            headerElements[3].dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabs.selectedIndex).toBe(1);
         }));
     });
 
-    describe('IgxTabs Component with Custom Template', () => {
+    describe('IgxTabs Component with custom content in headers', () => {
         let fixture;
         let tabs;
 
@@ -415,11 +351,16 @@ fdescribe('IgxTabs', () => {
             tabs = fixture.componentInstance.tabs;
         }));
 
-        it('should initialize igx-tab custom template', fakeAsync(() => {
+        it('should initialize igx-tab-header with custom content', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
             expect(tabs.items.length).toBe(3);
-            tabs.items.forEach((tabItem) => expect(tabItem.relatedGroup.customTabTemplate).toBeDefined());
+            const headerDivs = tabs.items.map(item => item.headerComponent.nativeElement.firstChild); //Get header's div containers
+
+            headerDivs.forEach((header, i) => {
+                expect(header.firstChild.innerText).toBe(`T${i + 1}`);
+                expect(header.lastChild.innerText).toBe(`Tab ${i + 1}`);
+            });
             tick();
         }));
 
@@ -436,14 +377,14 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.selectedItem).toBe(tabsItems[2]);
-            expect(tabs.selectedItem.relatedGroup.label).toBe('Tab 3');
+            expect(tabs.selectedItem.headerComponent.nativeElement.firstChild.lastChild.innerText).toBe('Tab 3');
         }));
 
     });
 
     describe('IgxTabs Miscellaneous Tests', () => {
 
-        it('check select selection when tabs collection is modified', fakeAsync(() => {
+        it('check selection when tabs collection is modified', fakeAsync(() => {
             const fixture = TestBed.createComponent(TabsTest2Component);
             const tabs = fixture.componentInstance.tabs;
             fixture.detectChanges();
@@ -452,26 +393,17 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             const tabItems = tabs.items.toArray();
-            // const tab1: IgxTabItemComponent = tabItems[0];
             const tab3: IgxTabItemComponent = tabItems[2];
 
             tick(100);
             fixture.detectChanges();
-
             expect(tabs.selectedIndex).toBe(0);
-            // expect(tabs.selectedItem).toBe(tab1.index);
 
-            fixture.componentInstance.tabSelectedHandler = () => { };
-
-            // tab3.select();
             tab3.selected = true;
-
             tick(200);
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(2);
-            expect(tabs.selectedItem).toBe(tab3);
-            expect(tab3.selected).toBeTruthy();
 
             fixture.componentInstance.resetCollectionFourTabs();
             fixture.detectChanges();
@@ -501,7 +433,7 @@ fdescribe('IgxTabs', () => {
             tick(100);
             fixture.detectChanges();
             expect(tabs.panels.length).toBe(0);
-            expect(tabs.selectedItem).toBe(undefined);
+            expect(tabs.selectedItem).toBe(null);
         }));
 
         it('should select third tab by default', fakeAsync(() => {
@@ -521,25 +453,6 @@ fdescribe('IgxTabs', () => {
             expect(tabs.selectedIndicator.nativeElement.style.transform).toBe('translate(180px)');
         }));
 
-        it('should apply custom css style to tabs and tabs groups', fakeAsync(() => {
-            const fixture = TestBed.createComponent(TabsTestCustomStylesComponent);
-            tick(100);
-            fixture.detectChanges();
-
-            const tabsDomElement = document.getElementsByClassName('igx-tabs')[0];
-            expect(tabsDomElement.classList.length).toEqual(2);
-            expect(tabsDomElement.classList.contains('tabsClass')).toBeTruthy();
-
-            const tabsGroupsDomElement = document.getElementsByClassName('igx-tabs__group');
-
-            expect(tabsGroupsDomElement.length).toEqual(2);
-            expect(tabsGroupsDomElement[0].classList.length).toBe(2);
-            expect(tabsGroupsDomElement[0].classList.contains('groupClass')).toBeTruthy();
-
-            expect(tabsGroupsDomElement[1].classList.length).toBe(1);
-            expect(tabsGroupsDomElement[1].classList.contains('groupClass')).toBeFalsy();
-        }));
-
         it('tabs in drop down, bug #4420 - check selection indicator width', fakeAsync(() => {
             const fixture = TestBed.createComponent(TabsTestBug4420Component);
             const dom = fixture.debugElement;
@@ -553,8 +466,8 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(1);
-            const selectedGroup = document.getElementsByClassName('igx-tabs__group')[1] as HTMLElement;
-            expect(selectedGroup.innerText.trim()).toEqual('Tab content 2');
+            const selectedPanel = document.getElementsByTagName('igx-tab-panel')[1] as HTMLElement;
+            expect(selectedPanel.innerText.trim()).toEqual('Tab content 2');
             const indicator = dom.query(By.css('.igx-tabs__header-menu-item-indicator'));
             expect(indicator.nativeElement.style.width).toBe('90px');
         }));
@@ -566,7 +479,8 @@ fdescribe('IgxTabs', () => {
         let location;
         let fixture;
         let tabsComp;
-        let theTabs;
+        let headerElements;
+        let tabItems;
 
         beforeEach(waitForAsync(() => {
             router = TestBed.inject(Router);
@@ -574,194 +488,193 @@ fdescribe('IgxTabs', () => {
             fixture = TestBed.createComponent(TabsRoutingTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
-            theTabs = tabsComp.contentTabs.toArray();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
         }));
 
         it('should navigate to the correct URL when clicking on tab buttons', fakeAsync(() => {
-            fixture.ngZone.run(() => {
- router.initialNavigation();
-});
+            fixture.ngZone.run(() => router.initialNavigation());
             tick();
             expect(location.path()).toBe('/');
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(theTabs[2].nativeTabItem);
-});
+                UIInteractions.simulateClickAndSelectEvent(headerElements[2]);
+            });
             tick();
             expect(location.path()).toBe('/view3');
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem);
-});
+                UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
+            });
             tick();
             expect(location.path()).toBe('/view2');
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem);
-});
+                UIInteractions.simulateClickAndSelectEvent(headerElements[0]);
+            });
             tick();
             expect(location.path()).toBe('/view1');
         }));
 
         it('should select the correct tab button/panel when navigating an URL', fakeAsync(() => {
-            fixture.ngZone.run(() => {
- router.initialNavigation();
-});
+            fixture.ngZone.run(() => router.initialNavigation());
             tick();
             expect(location.path()).toBe('/');
 
             fixture.ngZone.run(() => {
- router.navigate(['/view3']);
-});
+                router.navigate(['/view3']);
+            });
             tick();
             expect(location.path()).toBe('/view3');
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
-            expect(theTabs[2].selected).toBe(true);
-            expect(theTabs[0].selected).toBe(false);
-            expect(theTabs[1].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(false);
 
             fixture.ngZone.run(() => {
- router.navigate(['/view2']);
-});
+                router.navigate(['/view2']);
+            });
             tick();
             expect(location.path()).toBe('/view2');
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(1);
-            expect(theTabs[1].selected).toBe(true);
-            expect(theTabs[0].selected).toBe(false);
-            expect(theTabs[2].selected).toBe(false);
+            expect(tabItems[1].selected).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
 
             fixture.ngZone.run(() => {
- router.navigate(['/view1']);
-});
+                router.navigate(['/view1']);
+            });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(theTabs[0].selected).toBe(true);
-            expect(theTabs[1].selected).toBe(false);
-            expect(theTabs[2].selected).toBe(false);
+            expect(tabItems[0].selected).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
+            expect(tabItems[2].selected).toBe(false);
         }));
 
         it('should focus next/previous tab when pressing right/left arrow', fakeAsync(() => {
-            theTabs[0].nativeTabItem.nativeElement.click();
+            headerElements[0].click();
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[0].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[1]);
 
-            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[2]);
 
-            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[2].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[0]);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[0].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[2]);
 
-            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[2].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[1]);
         }));
 
         it('should focus first/last tab when pressing home/end button', fakeAsync(() => {
-            theTabs[0].nativeTabItem.nativeElement.click();
+            headerElements[0].click();
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_END_EVENT);
+            headerElements[0].dispatchEvent(KEY_END_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[2]);
 
-            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            headerElements[2].dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[0]);
         }));
 
         it('should select focused tabs on enter/space', fakeAsync(() => {
-            theTabs[0].nativeTabItem.nativeElement.click();
+            headerElements[0].click();
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[0].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[2]);
 
-            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_ENTER_EVENT);
+            headerElements[2].dispatchEvent(KEY_ENTER_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
-            expect(document.activeElement).toBe(theTabs[2].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[2]);
 
-            theTabs[2].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            headerElements[2].dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(2);
-            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[0]);
 
-            theTabs[0].nativeTabItem.nativeElement.dispatchEvent(KEY_SPACE_EVENT);
+            headerElements[0].dispatchEvent(KEY_SPACE_EVENT);
             tick(200);
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(document.activeElement).toBe(theTabs[0].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[0]);
         }));
 
         it('should not focus disabled tabs when navigating with keyboard', fakeAsync(() => {
             fixture = TestBed.createComponent(TabsRoutingDisabledTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
-            theTabs = tabsComp.contentTabs.toArray();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
 
-            theTabs[1].nativeTabItem.nativeElement.click();
+            headerElements[1].click();
             tick(200);
             fixture.detectChanges();
 
-            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_RIGHT_EVENT);
+            headerElements[1].dispatchEvent(KEY_RIGHT_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[3]);
 
-            theTabs[3].nativeTabItem.nativeElement.dispatchEvent(KEY_HOME_EVENT);
+            headerElements[3].dispatchEvent(KEY_HOME_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(document.activeElement).toBe(theTabs[1].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[1]);
 
-            theTabs[1].nativeTabItem.nativeElement.dispatchEvent(KEY_LEFT_EVENT);
+            headerElements[1].dispatchEvent(KEY_LEFT_EVENT);
             tick(200);
             fixture.detectChanges();
-            expect(document.activeElement).toBe(theTabs[3].nativeTabItem.nativeElement);
+            expect(document.activeElement).toBe(headerElements[3]);
         }));
 
         it('should not navigate to an URL blocked by activate guard', fakeAsync(() => {
             fixture = TestBed.createComponent(TabsRoutingGuardTestComponent);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
-            theTabs = tabsComp.contentTabs.toArray();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
 
             fixture.ngZone.run(() => {
  router.initialNavigation();
@@ -770,24 +683,24 @@ fdescribe('IgxTabs', () => {
             expect(location.path()).toBe('/');
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(theTabs[0].nativeTabItem);
+ UIInteractions.simulateClickAndSelectEvent(headerElements[0]);
 });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(theTabs[0].selected).toBe(true);
-            expect(theTabs[1].selected).toBe(false);
+            expect(tabItems[0].selected).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
 
             fixture.ngZone.run(() => {
- UIInteractions.simulateClickAndSelectEvent(theTabs[1].nativeTabItem);
+ UIInteractions.simulateClickAndSelectEvent(headerElements[1]);
 });
             tick();
             expect(location.path()).toBe('/view1');
             fixture.detectChanges();
             expect(tabsComp.selectedIndex).toBe(0);
-            expect(theTabs[0].selected).toBe(true);
-            expect(theTabs[1].selected).toBe(false);
+            expect(tabItems[0].selected).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
         }));
 
     });
@@ -795,29 +708,31 @@ fdescribe('IgxTabs', () => {
     describe('Tabs-only Mode With Initial Selection Set on TabItems Tests', () => {
         let fixture;
         let tabsComp;
-        let theTabs;
+        let tabItems;
+        let headerElements;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest1Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
-            theTabs = tabsComp.tabs.toArray();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
         }));
 
         it('should retain the correct initial selection set by the isSelected property', () => {
-            expect(theTabs[0].selected).toBe(false);
-            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(headerElements[0].classList.contains(tabItemNormalCssClass)).toBe(true);
 
-            expect(theTabs[1].selected).toBe(true);
-            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
+            expect(tabItems[1].selected).toBe(true);
+            expect(headerElements[1].classList.contains(tabItemSelectedCssClass)).toBe(true);
 
-            expect(theTabs[2].selected).toBe(false);
-            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+            expect(tabItems[2].selected).toBe(false);
+            expect(headerElements[2].classList.contains(tabItemNormalCssClass)).toBe(true);
         });
 
         it('should hide the selection indicator when no tab item is selected', () => {
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('visible');
-            theTabs[1].selected = false;
+            tabItems[1].selected = false;
             fixture.detectChanges();
             expect(tabsComp.selectedIndicator.nativeElement.style.visibility).toBe('hidden');
         });
@@ -826,26 +741,28 @@ fdescribe('IgxTabs', () => {
     describe('Tabs-only Mode With Initial Selection Set on Tabs Component Tests', () => {
         let fixture;
         let tabsComp;
-        let theTabs;
+        let tabItems;
+        let headerElements;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTabsOnlyModeTest2Component);
             tabsComp = fixture.componentInstance.tabs;
             fixture.detectChanges();
-            theTabs = tabsComp.tabs.toArray();
+            tabItems = tabsComp.items.toArray();
+            headerElements = tabItems.map(item => item.headerComponent.nativeElement);
         }));
 
         it('should retain the correct initial selection set by the selectedIndex property', () => {
             fixture.detectChanges();
 
-            expect(theTabs[0].selected).toBe(false);
-            expect(theTabs[0].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+            expect(tabItems[0].selected).toBe(false);
+            expect(headerElements[0].classList.contains(tabItemNormalCssClass)).toBe(true);
 
-            expect(theTabs[1].selected).toBe(false);
-            expect(theTabs[1].nativeTabItem.nativeElement.classList.contains(tabItemNormalCssClass)).toBe(true);
+            expect(tabItems[1].selected).toBe(false);
+            expect(headerElements[1].classList.contains(tabItemNormalCssClass)).toBe(true);
 
-            expect(theTabs[2].selected).toBe(true);
-            expect(theTabs[2].nativeTabItem.nativeElement.classList.contains(tabItemSelectedCssClass)).toBe(true);
+            expect(tabItems[2].selected).toBe(true);
+            expect(headerElements[2].classList.contains(tabItemSelectedCssClass)).toBe(true);
         });
 
     });

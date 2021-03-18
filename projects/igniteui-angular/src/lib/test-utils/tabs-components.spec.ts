@@ -41,7 +41,7 @@ export class BasicTabsComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
+            <igx-tabs>
                 <igx-tab-item>
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon>library_music</igx-icon>
@@ -81,18 +81,15 @@ export class BasicTabsComponent {
 export class TabsTestComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
     @ViewChild('wrapperDiv', { static: true }) public wrapperDiv: any;
-
-    public tabSelectedHandler() {
-    }
 }
 
 @Component({
     template: `
         <div #wrapperDiv style="display: flex;">
             <igx-tabs>
-            <!-- (onTabSelected)="tabSelectedHandler()"> -->
                 <igx-tab-item *ngFor="let tab of collection">
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
             </igx-tabs>
         </div>`
@@ -104,9 +101,6 @@ export class TabsTest2Component {
 
     constructor() {
         this.resetCollectionThreeTabs();
-    }
-
-    public tabSelectedHandler() {
     }
 
     public resetCollectionOneTab() {
@@ -147,26 +141,35 @@ export class TabsTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-        <!-- <igx-tabs type="fixed">
-            <igx-tab-item label="Tab111111111111111111111111">
-                <ng-template igxTab>
+        <igx-tabs type="fixed">
+            <igx-tab-item>
+                <igx-tab-header>
                     <div>T1</div>
-                 </ng-template>
-                 <h1>Tab 1 Content</h1>
+                    <span igxTabHeaderLabel>Tab 1</span>
+                </igx-tab-header>
+                <igx-tab-panel>
+                    <h1>Tab 1 Content</h1>
+                </igx-tab-panel>
               </igx-tab-item>
-            <igx-tab-item label="Tab 2">
-                <ng-template igxTab>
+            <igx-tab-item>
+                <igx-tab-header>
                     <div>T2</div>
-                </ng-template>
-                <h1>Tab 2 Content</h1>
+                    <span igxTabHeaderLabel>Tab 2</span>
+                </igx-tab-header>
+                <igx-tab-panel>
+                    <h1>Tab 2 Content</h1>
+                </igx-tab-panel>
             </igx-tab-item>
-            <igx-tab-item label="Tab 3">
-                <ng-template igxTab>
+            <igx-tab-item>
+                <igx-tab-header>
                     <div>T3</div>
-                </ng-template>
-                <h1>Tab 3 Content</h1>
+                    <span igxTabHeaderLabel>Tab 3</span>
+                </igx-tab-header>
+                <igx-tab-panel>
+                    <h1>Tab 3 Content</h1>
+                </igx-tab-panel>
             </igx-tab-item>
-        </igx-tabs> -->
+        </igx-tabs>
         </div>`
 })
 export class TemplatedTabsTestComponent {
@@ -202,9 +205,9 @@ export class TabsTestSelectedTabComponent {
 @Component({
     template:`
         <igx-tabs class="tabsClass">
-            <igx-tab-item class="groupClass">
+            <igx-tab-item>
                 <igx-tab-header><span igxTabHeaderLabel>Tab1</span></igx-tab-header>
-                <igx-tab-panel>Content 1</igx-tab-panel>
+                <igx-tab-panel class="groupClass">Content 1</igx-tab-panel>
             </igx-tab-item>
             <igx-tab-item>
                 <igx-tab-header><span igxTabHeaderLabel>Tab2</span></igx-tab-header>
@@ -243,14 +246,14 @@ export class TabsTestBug4420Component {
     template: `
         <div #wrapperDiv>
             <igx-tabs>
-                <igx-tab-item routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive">
+                    <igx-tab-header routerLink="/view1"><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [selected]="rla2.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla2="routerLinkActive" [selected]="rla2.isActive">
+                    <igx-tab-header routerLink="/view2"><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [selected]="rla3.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla3="routerLinkActive" [selected]="rla3.isActive">
+                    <igx-tab-header routerLink="/view3"><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
                 </igx-tab-item>
             </igx-tabs>
             <div>
@@ -268,23 +271,23 @@ export class TabsRoutingTestComponent {
     template: `
         <div #wrapperDiv>
             <igx-tabs>
-                <igx-tab-item routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive"
+                <igx-tab-item routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive"
                     [disabled]="true">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
+                    <igx-tab-header routerLink="/view1"><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [selected]="rla2.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla2="routerLinkActive" [selected]="rla2.isActive">
+                    <igx-tab-header routerLink="/view2"><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [selected]="rla3.isActive"
+                <igx-tab-item routerLinkActive #rla3="routerLinkActive" [selected]="rla3.isActive"
                     [disabled]="true">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
+                    <igx-tab-header routerLink="/view3"><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view4" routerLinkActive #rla4="routerLinkActive" [selected]="rla4.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 4</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla4="routerLinkActive" [selected]="rla4.isActive">
+                    <igx-tab-header routerLink="/view4"><span igxTabHeaderLabel>Tab 4</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view5" routerLinkActive #rla5="routerLinkActive" [selected]="rla5.isActive"
+                <igx-tab-item routerLinkActive #rla5="routerLinkActive" [selected]="rla5.isActive"
                     [disabled]="true">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 5</span></igx-tab-header>
+                    <igx-tab-header routerLink="/view5"><span igxTabHeaderLabel>Tab 5</span></igx-tab-header>
                 </igx-tab-item>
             </igx-tabs>
             <div>
@@ -302,11 +305,11 @@ export class TabsRoutingDisabledTestComponent {
     template: `
         <div #wrapperDiv>
             <igx-tabs>
-                <igx-tab-item routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive">
+                    <igx-tab-header routerLink="/view1"><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
                 </igx-tab-item>
-                <igx-tab-item routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [selected]="rlaX.isActive">
-                    <igx-tab-header><span igxTabHeaderLabel>Tab X</span></igx-tab-header>
+                <igx-tab-item routerLinkActive #rlaX="routerLinkActive" [selected]="rlaX.isActive">
+                    <igx-tab-header routerLink="/view5"><span igxTabHeaderLabel>Tab X</span></igx-tab-header>
                 </igx-tab-item>
             </igx-tabs>
             <div>
@@ -370,18 +373,23 @@ export class TabsTabsOnlyModeTest2Component {
             <igx-tabs>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
                 <igx-tab-item [selected]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 4</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 5</span></igx-tab-header>
+                    <igx-tab-panel></igx-tab-panel>
                 </igx-tab-item>
             </igx-tabs>
         </div>
