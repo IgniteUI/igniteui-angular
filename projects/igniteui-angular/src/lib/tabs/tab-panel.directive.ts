@@ -18,6 +18,11 @@ export abstract class IgxTabPanelDirective implements IgxTabPanelBase {
         return this.tab.selected ? 0 : -1;
     }
 
+    @HostBinding('style.z-index')
+    public get zIndex() {
+        return this.tab.selected ? 'auto' : -1;
+    }
+
     /** @hidden */
     public get nativeElement(): HTMLElement {
         return this.elementRef.nativeElement;
