@@ -10,14 +10,21 @@
 /// @prop {Map} background-hover [igx-color: ('grays', 100)] - The background color on hover used for the tree node.
 /// @prop {Map} background-selected [igx-color: ('secondary', 200)] - The background color in selected state used for the tree node.
 /// @prop {Map} background-selected-hover [igx-color: ('secondary', 300)] - The background color on hover in selected state used for the tree node.
+/// @prop {Map} background-disabled [igx-color: ('secondary', 300)] - The background color in disabled state used for the tree node.
+/// @prop {Map} background-active [igx-color: ('secondary', 200)] - The background color in active state used for the tree node.
 /// @prop {Map} color [igx-contrast-color: ('surface')] - The color used for the tree node content.
 /// @prop {Map} color-hover [igx-contrast-color: ('grays', 100)] - The hover color used for the tree node content.
 /// @prop {Map} color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the content of the selected tree node.
 /// @prop {Map} color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the content of the selected tree node.
+/// @prop {Map} color-disabled [igx-contrast-color: ('secondary', 300)] - The color used for the content of the disabled tree node.
+/// @prop {Map} color-active [igx-contrast-color: ('secondary', 200)] - The color used for the content in active state of the tree node.
 /// @prop {Map} tree-indicator-color [igx-contrast-color: ('surface')] - The color used for the tree node expand/collapse indicator.
 /// @prop {Map} tree-indicator-color-hover [igx-color: ('primary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the selected tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the selected tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the tree node expand/collapse indicator in selected state.
+/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the tree node expand/collapse indicator in selected state.
+/// @prop {Map} tree-indicator-color-active [igx-color: ('grays', 500)] - The  color used for the tree node expand/collapse indicator in active state.
+/// @prop {Map} tree-indicator-color-disabled [igx-color: ('grays', 500)] - The  color used for the tree node expand/collapse indicator in disabled state.
+/// @prop {Map} drop-indicator-color [igx-color: ('secondary'] - The color used for the drop aria indicator.
 ///
 /// @requires {function} extend
 /// @see $default-palette
@@ -37,6 +44,14 @@ $_light-tree: extend(
             igx-color: ('secondary', 200)
         ),
 
+        background-active: (
+            igx-color: ('secondary', 200)
+        ),
+
+        background-disabled: (
+            igx-color: ('surface')
+        ),
+
         background-selected-hover: (
             igx-color: ('secondary', 300)
         ),
@@ -51,6 +66,14 @@ $_light-tree: extend(
 
         color-selected: (
             igx-contrast-color: ('secondary', 200)
+        ),
+
+        color-active: (
+            igx-contrast-color: ('secondary', 200)
+        ),
+
+        color-disabled: (
+            igx-color: ('grays', 500)
         ),
 
         color-selected-hover: (
@@ -73,7 +96,14 @@ $_light-tree: extend(
             igx-contrast-color: ('secondary', 300)
         ),
 
-        // TODO document this ones its available.
+        tree-indicator-color-active: (
+            igx-contrast-color: ('secondary', 200)
+        ),
+
+        tree-indicator-color-disabled: (
+            igx-color: ('grays', 500)
+        ),
+
         drop-indicator-color: (
             igx-color: ('secondary')
         ),
@@ -88,8 +118,8 @@ $_light-tree: extend(
 /// @prop {Map} color-selected [igx-contrast-color: ('grays', 200)] - The color used for the content of the selected tree node.
 /// @prop {Map} color-selected-hover [igx-color: ('secondary')] - The hover color used for the content of the selected tree node.
 /// @prop {Map} tree-indicator-color-hover [igx-color: ('secondary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 100)] - The color used for the selected tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('grays', 200)] - The hover color used for the selected tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 100)] - The color used for the tree node expand/collapse indicator in selected state..
+/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('grays', 200)] - The hover color used for the tree node expand/collapse indicator in selected state.
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
 $_fluent-tree: extend(
@@ -138,8 +168,8 @@ $_fluent-tree: extend(
 /// @prop {Map} background-selected-hover [igx-color: ('primary', 700)] - The background color on hover in selected state used for the tree node.
 /// @prop {Map} color-selected [igx-contrast-color: ('primary', 600)] - The color used for the content of the selected tree node.
 /// @prop {Map} color-selected-hover [igx-contrast-color: ('primary', 700)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('primary', 600)] - The color used for the selected tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('primary', 700)] - The hover color used for the selected tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('primary', 600)] - The color used for the tree node expand/collapse indicator in selected state.
+/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('primary', 700)] - The hover color used for the tree node expand/collapse indicator in selected state.
 /// @requires {function} extend
 /// @requires $_light-tree
 $_bootstrap-tree: extend(
@@ -181,8 +211,8 @@ $_bootstrap-tree: extend(
 /// @prop {Map} color-hover [igx-contrast-color: ('secondary', 100)] - The hover color used for the tree node content.
 /// @prop {Map} color-selected [igx-contrast-color: ('secondary')] - The color used for the content of the selected tree node.
 /// @prop {Map} color-selected-hover [igx-contrast-color: ('secondary', 400)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary')] - The color used for the selected tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 400)] - The hover color used for the selected tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary')] - The color used for the tree node expand/collapse indicator in selected state.
+/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 400)] - The hover color used for the tree node expand/collapse indicator in selected state.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
