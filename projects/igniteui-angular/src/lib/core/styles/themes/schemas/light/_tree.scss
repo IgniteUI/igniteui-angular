@@ -12,7 +12,47 @@
 /// @see $default-palette
 $_light-tree: extend(
     (
+        background: transparent,
 
+        background-hover: (
+            igx-color: ('grays', 100)
+        ),
+
+        background-selected: (
+            igx-color: ('secondary', 200)
+        ),
+
+        background-selected-focused: (
+            igx-color: ('secondary', 300)
+        ),
+
+        color: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-selected: (
+            igx-color: ('grays', 900)
+        ),
+
+        drop-indicator-color: (
+            igx-color: ('secondary')
+        ),
+
+        tree-indicator-color: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-hover: (
+            igx-color: ('primary')
+        ),
+
+        tree-indicator-color-selected: (
+            igx-color: ('grays', 900)
+        ),
     )
 );
 

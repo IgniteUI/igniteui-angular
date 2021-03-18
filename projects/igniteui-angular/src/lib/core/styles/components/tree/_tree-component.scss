@@ -20,26 +20,24 @@
         @extend %tree-node-wrapper !optional;
     }
 
+    @include e(wrapper, $m: selected) {
+        @extend %tree-node-wrapper--selected !optional;
+    }
+
     @include e(content) {
         @extend %tree-node-content !optional;
     }
 
-    @include e(content-inner) {
-        @extend %tree-node-content-inner !optional;
-    }
-
-    @for $level from 1 through 10 {
-        @include e(wrapper, $m: level-#{$level} ) {
-            @extend %tree-node-wrapper--level-#{$level} !optional;
-        }
+    @include e(spacer) {
+        @extend %tree-node-spacer !optional;
     }
 
     @include e(indicator) {
         @extend %tree-node-indicator !optional;
     }
 
-    @include e(text) {
-        @extend %tree-node-text !optional;
+    @include e(indicator, $m: hidden) {
+        @extend %tree-node-indicator--hidden !optional;
     }
 
     @include e(select) {
@@ -48,10 +46,6 @@
 
     @include e(group) {
         @extend %tree-node-group !optional;
-    }
-
-    @include e(insert-indicator) {
-        @extend %tree-node-insert-indicator !optional;
     }
 }
 

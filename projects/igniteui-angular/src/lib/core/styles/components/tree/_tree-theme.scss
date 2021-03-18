@@ -23,11 +23,25 @@
 /// @example scss Change the tree background
 ///   $my-tree-theme: igx-tree-theme($background: magenta);
 ///   // Pass the theme to the igx-tree component mixin
-///   @include igx-tree($my-checkbox-theme);
+///   @include igx-tree($my-tree-theme);
 @function igx-tree-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-    $border-radius: null,
+
+    $background: null,
+    $background-hover: null,
+    $background-selected: null,
+    $background-selected-focused: null,
+
+    $color: null,
+    $color-hover: null,
+    $color-selected: null,
+
+    $drop-indicator-color: null,
+
+    $tree-indicator-color: null,
+    $tree-indicator-color-hover: null,
+    $tree-indicator-color-selected: null,
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -40,13 +54,24 @@
 
     $theme: apply-palette($tree-schema, $palette);
 
-    $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($tree-schema, 'border-radius')), 0, 16px
-    );
-
     @return extend($theme, (
         name: $name,
         palette: $default-palette,
+
+        background: $background,
+        background-hover: $background-hover,
+        background-selected: $background-selected,
+        background-selected-focused: $background-selected-focused,
+
+        color: $color,
+        color-hover: $color-hover,
+        color-selected: $color-selected,
+
+        drop-indicator-color: $drop-indicator-color,
+
+        tree-indicator-color: $tree-indicator-color,
+        tree-indicator-color-hover: $tree-indicator-color-hover,
+        tree-indicator-color-selected: $tree-indicator-color-selected,
     ));
 }
 
@@ -88,6 +113,10 @@
         margin-#{$right}: rem(8px);
     }
 
+    %tree-node-indicator--hidden {
+        visibility: hidden;
+    }
+
     %tree-node {
         flex-direction: column;
     }
@@ -95,104 +124,75 @@
     %tree-node-wrapper {
         min-height: rem(50px);
         padding-#{$right}: map-get($node-indent, 'comfortable');
+        background: --var($theme, 'background');
+        color: --var($theme, 'color');
 
-
-        &:hover {
-            background: #333;
+        &:hover,
+        &:focus {
+            background: --var($theme, 'background-hover');
         }
 
-
-        @for $level from 1 through 10 {
-            $level-indent: calc(#{$level} * #{map-get($node-indent, 'comfortable')});
-
-            &%tree-node-wrapper--level-#{$level} {
-                padding-#{$left}: $level-indent;
-            }
+        &:focus {
+            outline-color: transparent;
         }
-
 
         &--cosy {
             min-height: rem(40px);
 
-            @for $level from 1 through 10 {
-                $level-indent: calc(#{$level} * #{map-get($node-indent, 'cosy')});
-
-                &%tree-node-wrapper--level-#{$level} {
-                    padding-#{$left}: $level-indent;
-                }
+            %tree-node-spacer {
+                width: map-get($node-indent, 'cosy')
             }
         }
 
         &--compact {
             min-height: rem(32px);
-            @for $level from 1 through 10 {
-                $level-indent: calc(#{$level} * #{map-get($node-indent, 'compact')});
 
-                &%tree-node-wrapper--level-#{$level} {
-                    padding-#{$left}: $level-indent;
+            %tree-node-spacer {
+                width: map-get($node-indent, 'compact')
+            }
+        }
+
+        &--selected {
+            background: --var($theme, 'background-selected');
+
+            &:focus,
+            &:hover {
+                background: --var($theme, 'background-selected');
+
+                %tree-node-indicator {
+                    color: --var($theme, 'tree-indicator-color-selected');
                 }
             }
         }
     }
 
-
-    %tree-node-content {
-        position: relative;
-        align-items: center;
-        flex: 1;
-        @include ellipsis();
+    %tree-node-spacer {
+        display: inline-block;
+        width: map-get($node-indent, 'comfortable');
     }
 
-    %tree-node-content-inner {
+    %tree-node-content {
+        display: block;
         position: relative;
-        flex: 1;
         align-items: center;
+        flex: 1;
         @include ellipsis();
     }
 
     %tree-node-indicator {
         justify-content: center;
         cursor: pointer;
-    }
 
-    %tree-node-insert-indicator {
-        position: absolute;
-        width: 100%;
-        bottom: 0;
-        height: 1px;
-        background: red;
+        color: --var($theme, 'tree-indicator-color');
 
-        &::after,
-        &::before {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 0;
-        }
-
-        &::before {
-            border-style: solid;
-            border-width: 2px 0 2px 2px;
-            border-color: transparent transparent transparent red;
-            top: -2px;
-            left: 0;
-        }
-
-        &::after {
-            border-style: solid;
-            border-width: 2px 2px 2px 0;
-            border-color: transparent red transparent transparent;
-            top: -2px;
-            right: 0;
+        &:hover,
+        &:focus, {
+            color: --var($theme, 'tree-indicator-color-hover');
         }
     }
 
     %tree-node-group {
         overflow: hidden;
-    }
-
-    .hidden {
-        visibility: hidden;
     }
 }
 
