@@ -164,7 +164,9 @@ export class ColumnDefinitions {
         <igx-column [field]="'Category'" [width]="'150px'" [resizable]="true" dataType="string">
             <ng-template igxCell igxHeader>
                 <div>
-                    <igx-avatar initials="JS"></igx-avatar>
+                    <div style="width: 40px; min-width: 40px; min-height: 40px; background-color: gray;">
+                        JS
+                    </div> 
                 </div>
             </ng-template>
         </igx-column>

@@ -669,7 +669,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(resizingSpy).toHaveBeenCalledWith(resizingArgs);
         }));
 
-        it('should autosize templated column programmatically.', fakeAsync(/** height/width setter rAF */() => {
+        it('should autosize templated column programmatically.', () => {
             const column = grid.getColumnByName('Category');
             expect(column.width).toEqual('150px');
 
@@ -677,7 +677,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             fixture.detectChanges();
 
             expect(column.width).toEqual('89px');
-        }));
+        });
     });
 
     describe('Multi Column Headers tests: ', () => {
