@@ -291,6 +291,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
     public set checked(value: boolean) {
         if(this._checked !== value) {
+            this.indeterminate = false;
             this._checked = value;
             this.change.emit({ checked: this._checked, checkbox: this });
             this._onChangeCallback(this._checked);
@@ -417,7 +418,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
         this.nativeCheckbox.nativeElement.focus();
 
-        this.indeterminate = false;
         this.checked = !this.checked;
     }
 
@@ -448,7 +448,9 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
     /** @hidden @internal */
     public writeValue(value: boolean) {
-        this.checked = !!value;
+        if (typeof value === 'boolean') {
+            this.checked = value;
+        }
     }
 
     /** @hidden @internal */

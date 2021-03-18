@@ -112,32 +112,64 @@ describe('IgxCheckbox', () => {
         expect(labelStyles.order).toEqual('-1');
     });
 
-    it('Indeterminate state', () => {
+    it('Indeterminate state', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
         const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
-        testInstance.subscribed = true;
+
+        // Before any changes indeterminate should be true
         fixture.detectChanges();
-
+        expect(checkboxInstance.indeterminate).toBe(true);
         expect(nativeCheckbox.indeterminate).toBe(true);
-        expect(nativeCheckbox.checked).toBe(false);
 
-        // Should not update
+        testInstance.subscribed = true;
+
+        fixture.detectChanges();
+        tick();
+        // First change detection should update our checkbox state and indeterminate state should be changed
+        expect(checkboxInstance.checked).toBe(true);
+        expect(checkboxInstance.indeterminate).toBe(false);
+
+        // Second change detection should update native checkbox state
+        fixture.detectChanges();
+        tick();
+        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(nativeCheckbox.checked).toBe(true);
+
+        // Should not change the state
         nativeCheckbox.dispatchEvent(new Event('change'));
         fixture.detectChanges();
 
-        expect(nativeCheckbox.indeterminate).toBe(true);
-        expect(nativeCheckbox.checked).toBe(false);
+        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(checkboxInstance.checked).toBe(true);
+        expect(nativeCheckbox.checked).toBe(true);
 
-        // Should update on click
+        // Should update the state on click
         nativeLabel.click();
         fixture.detectChanges();
 
         expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(checkboxInstance.checked).toBe(false);
+        expect(nativeCheckbox.checked).toBe(false);
+
+        // Should update the state again on click
+        nativeLabel.click();
+        fixture.detectChanges();
+
+        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(checkboxInstance.checked).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
-    });
+
+        // Should be able to set indeterminate again
+        checkboxInstance.indeterminate = true;
+        fixture.detectChanges();
+
+        expect(nativeCheckbox.indeterminate).toBe(true);
+        expect(checkboxInstance.checked).toBe(true);
+        expect(nativeCheckbox.checked).toBe(true);
+    }));
 
     it('Disabled state', () => {
         const fixture = TestBed.createComponent(CheckboxDisabledComponent);
@@ -308,7 +340,6 @@ class CheckboxRequiredComponent {
 @Component({
     template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
-                                [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-checkbox>`})
 class CheckboxDisabledComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
