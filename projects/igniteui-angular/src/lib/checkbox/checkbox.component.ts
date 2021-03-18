@@ -10,8 +10,7 @@ import {
     Output,
     Provider,
     ViewChild,
-    ElementRef,
-    ChangeDetectorRef
+    ElementRef
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -292,7 +291,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             this._checked = value;
             this.change.emit({ checked: this._checked, checkbox: this });
             this._onChangeCallback(this._checked);
-            this.cdr.markForCheck();
         }
     }
     public get checked() {
@@ -382,7 +380,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     private _checked = false;
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor() {}
 
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
@@ -450,9 +448,8 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
 
     /** @hidden @internal */
-    public writeValue(value: string) {
-        this._value = value;
-        this.checked = !!this._value;
+    public writeValue(value: boolean) {
+        this.checked = value;
     }
 
     /** @hidden @internal */

@@ -51,9 +51,14 @@
                 <igx-list-item *ngFor="let item of settings">
                     <igx-icon igxListThumbnail>{{item.icon}}</igx-icon>
                     <h1 igxListLineTitle>{{item.name}}</h1>
-                    <igx-switch igxListAction labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
-                        {{item.active ? 'ON': 'OFF'}}
-                    </igx-switch>
+                    <div igxListAction>
+                        <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
+                            {{item.active ? 'ON': 'OFF'}}
+                        </igx-switch>
+                        <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
+                            {{item.active ? 'ON': 'OFF'}}
+                        </igx-switch>
+                    </div>
                 </igx-list-item>
             </igx-list>
         </div>

@@ -223,7 +223,17 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      */
     @HostBinding('class.igx-switch--checked')
-    @Input() public checked = false;
+    @Input()
+    public set checked(value: boolean) {
+        if(this._checked !== value) {
+            this._checked = value;
+            this.change.emit({ checked: this.checked, switch: this });
+            this._onChangeCallback(this.checked);
+        }
+    }
+    public get checked() {
+        return this._checked;
+    }
     /**
      * Sets/gets the `disabled` attribute.
      * Default value is `false`.
@@ -262,6 +272,11 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     protected _value: any;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _checked = false;
     /**
      * @hidden
      * @internal
@@ -323,8 +338,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this.nativeCheckbox.nativeElement.focus();
 
         this.checked = !this.checked;
-        this.change.emit({ checked: this.checked, switch: this });
-        this._onChangeCallback(this.checked);
     }
     /**
      * @hidden
@@ -345,9 +358,8 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public writeValue(value: string) {
-        this._value = value;
-        this.checked = !!this._value;
+    public writeValue(value: boolean) {
+        this.checked = value;
     }
     /**
      * @hidden
