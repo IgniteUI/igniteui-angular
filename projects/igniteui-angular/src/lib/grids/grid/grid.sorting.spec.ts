@@ -13,11 +13,10 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
-    configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
 
         TestBed.configureTestingModule({
             declarations: [
@@ -26,7 +25,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 GridWithPrimaryKeyComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {

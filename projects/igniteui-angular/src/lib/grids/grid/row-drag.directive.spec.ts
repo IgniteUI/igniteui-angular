@@ -57,8 +57,7 @@ describe('Row Drag Tests #grid', () => {
             let rows: IgxGridRowComponent[];
             let dragRows: DebugElement[];
             let rowToDrag: IgxGridRowComponent;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            configureTestSuite((() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxGridRowDraggableComponent
@@ -68,7 +67,7 @@ describe('Row Drag Tests #grid', () => {
                         NoopAnimationsModule,
                         IgxGridModule
                     ]
-                }).compileComponents();
+                })
             }));
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
@@ -409,8 +408,7 @@ describe('Row Drag Tests #grid', () => {
             let grid: IgxGridComponent;
             let rows: IgxGridRowComponent[];
             let dragRows: DebugElement[];
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
+            configureTestSuite((() => {
                 TestBed.configureTestingModule({
                     declarations: [
                         IgxGridRowCustomGhostDraggableComponent
@@ -420,7 +418,7 @@ describe('Row Drag Tests #grid', () => {
                         NoopAnimationsModule,
                         IgxGridModule
                     ]
-                }).compileComponents();
+                })
             }));
             it('should correctly create custom ghost element', () => {
                 fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
@@ -461,8 +459,7 @@ describe('Row Drag Tests #grid', () => {
         let dragGridRows: IgxGridRowComponent[];
         let dropGridRows: IgxGridRowComponent[];
         let dragRows: DebugElement[];
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridFeaturesRowDragComponent
@@ -472,7 +469,7 @@ describe('Row Drag Tests #grid', () => {
                     NoopAnimationsModule,
                     IgxGridModule
                 ]
-            }).compileComponents();
+            })
         }));
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
@@ -920,8 +917,7 @@ describe('Row Drag Tests #hGrid', () => {
     let dragGrid: IgxHierarchicalGridComponent;
     let dragRows: DebugElement[];
     let pointerMoveToDropEvent: PointerEvent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestComponent,
@@ -933,7 +929,7 @@ describe('Row Drag Tests #hGrid', () => {
                 IgxGridModule,
                 IgxHierarchicalGridModule
             ]
-        }).compileComponents();
+        })
     }));
     it('should be able to drag row on every hierarchical level', fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
@@ -1071,8 +1067,7 @@ describe('Row Drag Tests #tGrid', () => {
     let dragGrid: IgxTreeGridComponent;
     let dragRows: DebugElement[];
     let pointerMoveToDropEvent: PointerEvent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxTreeGridTestComponent
@@ -1083,7 +1078,7 @@ describe('Row Drag Tests #tGrid', () => {
                 IgxGridModule,
                 IgxTreeGridModule
             ]
-        }).compileComponents();
+        })
     }));
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxTreeGridTestComponent);

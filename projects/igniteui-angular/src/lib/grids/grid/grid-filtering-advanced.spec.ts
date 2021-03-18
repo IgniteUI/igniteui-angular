@@ -31,8 +31,7 @@ const CHIP_SELECT_CLASS = '.igx-chip__select';
 const CHIP_SELECT_HIDDEN_CLASS = '.igx-chip__select--hidden';
 
 describe('IgxGrid - Advanced Filtering #grid - ', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridAdvancedFilteringColumnGroupComponent,
@@ -45,7 +44,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxHierarchicalGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('General tests - ', () => {

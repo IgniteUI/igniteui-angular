@@ -20,8 +20,7 @@ import { ExpressionUI } from '../filtering/grid-filtering.service';
 import { NoopFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 describe('IgxGrid - Filtering actions #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent
@@ -30,7 +29,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule]
         })
-            .compileComponents();
+           
     }));
 
     let fix; let grid;
@@ -1041,8 +1040,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering expression tree bindings #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringBindingComponent
@@ -1051,7 +1049,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule]
         })
-            .compileComponents();
+
     }));
 
     let fix; let grid: IgxGridComponent;

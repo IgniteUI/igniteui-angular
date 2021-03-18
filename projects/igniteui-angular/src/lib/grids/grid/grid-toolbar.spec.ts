@@ -25,9 +25,7 @@ const DATA = [
 ];
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultToolbarComponent,
@@ -42,7 +40,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxCsvExporterService
             ]
         })
-        .compileComponents();
+
     }));
 
     describe('Basic Tests - ', () => {

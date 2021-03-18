@@ -27,9 +27,7 @@ const SCROLL_DEBOUNCETIME = 100;
 
 
 describe('IgxGrid - Row Selection #grid', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 RowSelectionComponent,
@@ -45,7 +43,7 @@ describe('IgxGrid - Row Selection #grid', () => {
                 IgxGridModule,
                 IgxGridSelectionModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe('Base tests', () => {

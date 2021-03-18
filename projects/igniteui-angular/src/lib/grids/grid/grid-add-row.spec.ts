@@ -36,8 +36,7 @@ describe('IgxGrid - Row Adding #grid', () => {
           const endEvent = new AnimationEvent('animationend');
           animationElem.dispatchEvent(endEvent);
     };
-    configureTestSuite();
-    beforeAll( waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxAddRowComponent,
@@ -49,7 +48,7 @@ describe('IgxGrid - Row Adding #grid', () => {
                 NoopAnimationsModule,
                 IgxActionStripModule,
                 IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('General tests', () => {

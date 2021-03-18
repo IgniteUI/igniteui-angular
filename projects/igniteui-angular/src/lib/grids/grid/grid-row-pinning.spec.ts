@@ -22,11 +22,11 @@ describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const DEBOUNCE_TIME = 60;
-    configureTestSuite();
+
     let fix;
     let grid: IgxGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,
@@ -38,7 +38,7 @@ describe('Row Pinning #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe('', () => {

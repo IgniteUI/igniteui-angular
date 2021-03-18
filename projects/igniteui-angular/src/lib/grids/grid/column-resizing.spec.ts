@@ -14,10 +14,10 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
-    configureTestSuite();
+
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ResizableColumnsComponent,
@@ -33,7 +33,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe('Base tests: ', () => {

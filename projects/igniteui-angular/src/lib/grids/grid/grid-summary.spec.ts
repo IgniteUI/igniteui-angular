@@ -29,7 +29,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - Summaries #grid', () => {
-    configureTestSuite();
+
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
     const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -37,7 +37,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
@@ -48,7 +48,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByTransactionsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     describe('Base tests: ', () => {

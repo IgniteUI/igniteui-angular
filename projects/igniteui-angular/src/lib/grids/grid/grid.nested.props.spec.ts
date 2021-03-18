@@ -207,13 +207,11 @@ describe('Grid - nested data source properties', () => {
             fixture.detectChanges();
         };
 
-        configureTestSuite();
-
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [NestedPropertiesGridComponent],
                 imports: [IgxGridModule, NoopAnimationsModule]
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(() => {
@@ -342,13 +340,11 @@ describe('Grid nested data advanced editing', () => {
         fixture.detectChanges();
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [NestedPropertiesGrid2Component],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {
@@ -503,14 +499,12 @@ describe('Edit cell with data of type Array', () => {
         fixture.detectChanges();
     };
 
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [NestedPropertyGridComponent],
             imports: [IgxGridModule, IgxComboModule, FormsModule, IgxToggleModule,
                 ReactiveFormsModule, IgxFocusModule, IgxInputGroupModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {

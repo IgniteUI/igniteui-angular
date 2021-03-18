@@ -20,14 +20,13 @@ describe('IgxGrid - Cell component #grid', () => {
         let cellElem: DebugElement;
         let firstCell: IgxGridCellComponent;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -147,15 +146,14 @@ describe('IgxGrid - Cell component #grid', () => {
         let fix;
         let grid: IgxGridComponent;
 
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
                 providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(() => {
@@ -265,14 +263,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('iOS tests', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         it('Should not attach doubletap handler for non-iOS', fakeAsync(/** height/width setter rAF */() => {
@@ -325,14 +322,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('No column widths', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoColumnWidthGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule]
-            }).compileComponents();
+            })
         }));
 
         it('should not make last column width 0 when no column width is set', fakeAsync(/** height/width setter rAF */() => {
@@ -347,14 +343,13 @@ describe('IgxGrid - Cell component #grid', () => {
     });
 
     describe('Cells styles', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     ConditionalCellStyleTestComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule]
-            }).compileComponents();
+            })
         }));
 
         it('should be able to conditionally style cells', fakeAsync(() => {

@@ -28,18 +28,18 @@ const selectedData = () => ([
 ]);
 
 describe('IgxGrid - Column Selection #grid', () => {
-    configureTestSuite();
+
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
                 ColumnSelectionGroupTestComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     describe('Base tests: ', () => {

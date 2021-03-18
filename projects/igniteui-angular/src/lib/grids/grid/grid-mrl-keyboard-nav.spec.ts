@@ -21,14 +21,13 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule],
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {
@@ -2442,14 +2441,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {

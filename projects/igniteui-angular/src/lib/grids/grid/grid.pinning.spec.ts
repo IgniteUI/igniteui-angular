@@ -32,10 +32,10 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
 describe('IgxGrid - Column Pinning #grid', () => {
-    configureTestSuite();
+
     const DEBOUNCETIME = 30;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 PinningComponent,
@@ -46,13 +46,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('To Start', () => {
 
         describe('Initially pinned columns', () => {
-            configureTestSuite();
+
             let fix;
             let grid: IgxGridComponent;
             beforeEach(fakeAsync(() => {
@@ -263,7 +263,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('Features', () => {
-            configureTestSuite();
+
             let fix;
             let grid: IgxGridComponent;
 
@@ -320,7 +320,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('', () => {
-            configureTestSuite();
+
             let fix;
             let grid: IgxGridComponent;
 
@@ -477,7 +477,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
         const pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.End };
 
         describe('', () => {
-            configureTestSuite();
 
             beforeEach(fakeAsync(() => {
                 fix = TestBed.createComponent(PinOnInitAndSelectionComponent);
@@ -671,7 +670,6 @@ describe('IgxGrid - Column Pinning #grid', () => {
         });
 
         describe('MRL/MCH', () => {
-            configureTestSuite();
             it('should correctly pin column groups to end.', fakeAsync(() => {
 
                 fix = TestBed.createComponent(MultiColumnHeadersWithGroupingComponent);

@@ -14,7 +14,7 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 
 describe('Column Hiding UI #grid', () => {
-    configureTestSuite();
+
 
     let fix: ComponentFixture<ColumnHidingTestComponent>;
     let grid: IgxGridComponent;
@@ -25,7 +25,7 @@ describe('Column Hiding UI #grid', () => {
     const verifyColumnIsHidden = GridFunctions.verifyColumnIsHidden;
     const getColumnHidingButton = GridFunctions.getColumnHidingButton;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnHidingTestComponent,
@@ -35,7 +35,7 @@ describe('Column Hiding UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe('', () => {

@@ -18,8 +18,7 @@ const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {
     const DEBOUNCETIME = 60;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent,
@@ -29,7 +28,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        })
     }));
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {

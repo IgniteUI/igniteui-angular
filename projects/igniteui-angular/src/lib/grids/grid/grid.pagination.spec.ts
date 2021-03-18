@@ -32,16 +32,14 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
 };
 
 describe('IgxGrid - Grid Paging #grid', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 PagingComponent,
                 GridWithUndefinedDataComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     let fix;

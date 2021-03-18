@@ -54,8 +54,7 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -69,7 +68,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe(null, () => {
@@ -2753,8 +2752,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2770,7 +2768,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule]
         })
-            .compileComponents();
+          
     }));
 
     describe(null, () => {
@@ -5910,8 +5908,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent
@@ -5919,7 +5916,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {

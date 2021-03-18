@@ -28,11 +28,9 @@ const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
 
 /* eslint-disable max-len */
 describe('IgxGrid - multi-column headers #grid', () => {
-    configureTestSuite();
-
     let fixture; let grid: IgxGridComponent; let componentInstance;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 OneGroupOneColGridComponent,
@@ -53,7 +51,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        })
     }));
 
     describe('Initialization and rendering tests: ', () => {

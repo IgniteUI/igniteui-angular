@@ -23,8 +23,7 @@ const CELL_CLASS_IN_EDIT_MODE = 'igx-grid__td--editing';
 const EDITED_CELL_CSS_CLASS = 'igx-grid__td--edited';
 
 describe('IgxGrid - Cell Editing #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 CellEditingTestComponent,
@@ -33,7 +32,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
                 SelectionWithTransactionsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('Base Tests', () => {

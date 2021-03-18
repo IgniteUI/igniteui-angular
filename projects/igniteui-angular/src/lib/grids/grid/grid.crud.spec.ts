@@ -12,19 +12,19 @@ import { first } from 'rxjs/operators';
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxGrid - CRUD operations #grid', () => {
-    configureTestSuite();
+
 
     let fix;
     let grid;
     let data;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     beforeEach(fakeAsync(() => {

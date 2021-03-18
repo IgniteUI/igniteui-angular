@@ -26,14 +26,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: DebugElement;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     SelectionWithScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -708,14 +707,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: DebugElement;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     MRLTestComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -910,14 +908,13 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridHeader: DebugElement;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     ColumnGroupsNavigationTestComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {

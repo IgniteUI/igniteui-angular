@@ -21,9 +21,7 @@ import { DebugElement } from '@angular/core';
 import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - Cell selection #grid', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 SelectionWithScrollsComponent,
@@ -32,7 +30,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 CellSelectionSingleComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('Base', () => {

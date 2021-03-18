@@ -30,8 +30,7 @@ describe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridMasterDetailComponent,
@@ -39,7 +38,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 MRLMasterDetailComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        })
     }));
 
     describe('Basic', () => {

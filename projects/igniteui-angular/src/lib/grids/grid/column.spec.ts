@@ -24,12 +24,11 @@ import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column properties #grid', () => {
-    configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
@@ -45,7 +44,7 @@ describe('IgxGrid - Column properties #grid', () => {
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
         })
-            .compileComponents();
+           
     }));
 
     it('should correctly initialize column templates', () => {

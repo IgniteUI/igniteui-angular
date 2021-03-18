@@ -29,14 +29,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -214,14 +213,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     VirtualGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -668,14 +666,13 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
     });
 
     describe('Group By navigation ', () => {
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
+        configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
                     IgxGridGroupByComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            }).compileComponents();
+            })
         }));
 
         let fix;

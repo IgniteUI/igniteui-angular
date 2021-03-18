@@ -38,8 +38,7 @@ const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridRowEditingComponent,
@@ -52,7 +51,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        })
     }));
 
     describe('General tests', () => {
