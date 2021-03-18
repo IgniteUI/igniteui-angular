@@ -135,11 +135,15 @@
 ///   );
 /// @requires {mixin} gen-color-class
 @mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
-    @each $palette-name, $sub-palette in $palette {
-        @each $variant, $color in $sub-palette {
-            @if type-of($color) != 'map' {
-                @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
-                    #{$prop}: $color;
+    @each $name, $color in $palette {
+        @each $variant, $value in $color {
+            @if type-of($value) != 'map' {
+                @include gen-color-class($name, $variant, $prefix, $suffix) {
+                    @if legacy() {
+                        #{$prop}: igx-color($palette, $color: $name, $variant: $variant);
+                    } @else {
+                        #{$prop}: igx-color($color: $name, $variant: $variant);
+                    }
                 }
             }
         }
@@ -158,9 +162,23 @@
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
-        @each $palette-name, $sub-palette in $palette {
-            @each $variant, $color in $sub-palette {
-                --igx-#{$palette-name}-#{$variant}: #{$color};
+        @each $name, $color in $palette {
+            @each $variant, $value in $color {
+                @if($variant == 500) {
+                    --igx-#{$name}-h: #{round(hue($value))};
+                    --igx-#{$name}-s: #{round(saturation($value))};
+                    --igx-#{$name}-l: #{round(lightness($value))};
+
+                    @if $name != 'grays' {
+                        --igx-#{$name}-a: #{alpha($value)};
+                    }
+                }
+
+                @if not(str-index(#{$variant}, 'contrast')) {
+                    --igx-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant)};
+                } @else {
+                    --igx-#{$name}-#{$variant}: #{$value};
+                }
             }
         }
     }

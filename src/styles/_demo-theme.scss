@@ -13,7 +13,6 @@ body {
 @include igx-typography($font-family: $typeface, $type-scale: $type-scale);
 @include igx-theme($palette: $palette, $schema: $schema, $legacy-support: $legacy-support);
 
-
 .nav-header {
     @if luminance($igx-background-color) < .5 {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);

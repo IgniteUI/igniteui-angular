@@ -108,6 +108,83 @@
     }
 }
 
+@function gen-hsla-color($name, $variant) {
+    $h: var(--igx-#{$name}-h);
+    $s: var(--igx-#{$name}-s);
+    $l: var(--igx-#{$name}-l);
+    $a: var(--igx-#{$name}-a);
+
+    @if ($variant == 50) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .02)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * 1.78), #{$a})};
+        }
+    } @else if ($variant == 100) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .04)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} / 1.25), calc(#{$l} * 1.66), #{$a})};
+        }
+    } @else if ($variant == 200) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .08)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * .64), calc(#{$l} * 1.43), #{$a})};
+        }
+    } @else if ($variant == 300) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .12)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * .73), calc(#{$l} * 1.19), #{$a})};
+        }
+    } @else if ($variant == 400) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .26)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * .875), calc(#{$l} * 1.08), #{$a})};
+        }
+    } @else if ($variant == 500) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .38)};
+        } @else {
+            @return #{hsla($h, $s, $l, $a)};
+        }
+    } @else if ($variant == 600) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .54)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * 1.26), calc(#{$l} * .89), #{$a})};
+        }
+    } @else if ($variant == 700) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .62)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * 1.52), calc(#{$l} * .81), #{$a})};
+        }
+    } @else if ($variant == 800) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .74)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * 1.5), calc(#{$l} * .73), #{$a})};
+        }
+    } @else if ($variant == 900) {
+        @if $name == 'grays' {
+            @return #{hsla($h, $s, $l, .87)};
+        } @else {
+            @return #{hsla($h, calc(#{$s} * 1.34), calc(#{$l} * .64), #{$a})};
+        }
+    } @else if ($variant == 'A100') {
+        @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * 1.34), #{$a})};
+    } @else if ($variant == 'A200') {
+        @return #{hsla($h, calc(#{$s} * 1.22), calc(#{$l} * 1.16), #{$a})};
+    } @else if ($variant == 'A400') {
+        @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * .91), #{$a})};
+    } @else if ($variant == 'A700') {
+        @return #{hsla($h, calc(#{$s} * 1.22), calc(#{$l} * .65), #{$a})};
+    }
+}
+
 /// Generates a Material-like color palette for a single color.
 /// @access private
 /// @group Palettes
