@@ -24,7 +24,7 @@
 <ng-template #headerTemplate>
     <div #ghostTemplate class="igx-tree-node__wrapper" [ngClass]="{'igx-tree-node__wrapper--selected': selected}">
         <div aria-hidden="true">
-            <span aria-hidden="true" class="igx-tree-node__spacer"></span>
+            <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
         </div>
 
         <!-- Expand/Collapse indicator -->
