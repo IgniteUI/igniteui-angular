@@ -105,7 +105,7 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
      *
      */
      @HostBinding('attr.aria-label')
-     public ariaLabel = 'chips-area';
+     public ariaLabel = 'chip area';
 
     /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
