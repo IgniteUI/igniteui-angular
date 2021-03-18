@@ -9,6 +9,8 @@ import {
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabPanelComponent } from './tab-panel.component';
 import { IgxTabsComponent } from './tabs.component';
+import { IgxPrefixModule } from '../../directives/prefix/prefix.directive';
+import { IgxSuffixModule } from '../../directives/suffix/suffix.directive';
 
 /** @hidden */
 @NgModule({
@@ -28,9 +30,11 @@ import { IgxTabsComponent } from './tabs.component';
         IgxTabHeaderComponent,
         IgxTabPanelComponent,
         IgxTabHeaderLabelDirective,
-        IgxTabHeaderIconDirective
+        IgxTabHeaderIconDirective,
+        IgxPrefixModule,
+        IgxSuffixModule
     ],
-    imports: [CommonModule, IgxIconModule, IgxRippleModule]
+    imports: [CommonModule, IgxIconModule, IgxRippleModule, IgxPrefixModule, IgxSuffixModule]
 })
 export class IgxTabsModule {
 }

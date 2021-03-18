@@ -210,16 +210,22 @@
         <div>
             <h3 class="sample-title">Add/Remove Tabs</h3>
             <button [igxButton]="'outlined'" class="action-button" (click)="addTab()">Add Tab</button>
-            <button [igxButton]="'outlined'" class="action-button" (click)="removeTab()">Remove Tab</button>
 
             <igx-tabs
                 #dynamicTabs
                 style="height: 400px;"
             >
-                <igx-tab-item *ngFor="let contact of contacts">
+                <igx-tab-item *ngFor="let contact of contacts; index as i">
                     <igx-tab-header>
-                        <igx-icon igxTabHeaderIcon>person</igx-icon>
+                        <igx-icon igxTabHeaderIcon igxPrefix>person</igx-icon>
                         <span igxTabHeaderLabel>{{contact.text}}</span>
+                        <button
+                            igxButton="icon"
+                            igxSuffix
+                            (click)="closeTab(i)"
+                        >
+                            <igx-icon>close</igx-icon>
+                        </button>
                     </igx-tab-header>
                     <igx-tab-panel>
                         Phone: {{contact.phone}}

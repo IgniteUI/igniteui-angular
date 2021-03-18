@@ -90,8 +90,8 @@ export class TabsSampleComponent {
         });
     }
 
-    public removeTab() {
-        this.contacts.splice(0, 1);
+    public closeTab(i: number) {
+        this.contacts.splice(i, 1);
     }
 
     public changeSelectedIndex() {
