@@ -401,6 +401,7 @@
 @function --var($map, $key, $fallback: null) {
     $igx-legacy-support: if(global-variable-exists('igx-legacy-support'), $igx-legacy-support, false);
     $css-var: str-slice(#{map-get($map, $key)}, 1, 3) == 'var';
+    $name: map-get($map, 'name');
 
     @if map-has-key($map, $key) {
         @if $igx-legacy-support == false {
@@ -408,9 +409,9 @@
                 @return map-get($map, $key);
             }
             @if not($fallback) {
-                @return var(--#{map-get($map, 'name')}-#{$key})
+                @return if($name, var(--#{map-get($map, 'name')}-#{$key}), var(--#{$key}));
             }
-            @return var(--#{map-get($map, 'name')}-#{$key}, #{$fallback})
+            @return if($name, var(--#{map-get($map, 'name')}-#{$key}, #{$fallback}), var(--#{$key}, #{$fallback}));
         } @else {
             @return map-get($map, $key);
         }
