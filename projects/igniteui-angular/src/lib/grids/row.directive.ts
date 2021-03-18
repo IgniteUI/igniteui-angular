@@ -21,7 +21,8 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
+import { IgxGridSelectionService } from './selection/selection.service';
+import { IgxRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
@@ -313,7 +314,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.crudService.row;
+            const editRowState = this.gridAPI.crudService.row;
             return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
@@ -389,7 +390,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     constructor(
         public gridAPI: GridBaseAPIService<T>,
-        public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
@@ -458,7 +458,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public update(value: any) {
-        const crudService = this.crudService;
+        const crudService = this.gridAPI.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }

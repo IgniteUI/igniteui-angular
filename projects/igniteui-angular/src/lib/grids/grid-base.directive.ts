@@ -85,11 +85,13 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import {
     IgxGridSelectionService,
     GridSelectionRange,
-    IgxGridCRUDService,
-    IgxRow,
-    IgxCell,
     isChromium
 } from './selection/selection.service';
+import {
+    IgxRow,
+    IgxCell
+}
+from './common/crud.service';
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
@@ -2218,7 +2220,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        const editRowState = this.crudService.row;
+        const editRowState = this.gridAPI.crudService.row;
         return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
     }
 
@@ -2970,7 +2972,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public get rowChangesCount() {
-        if (!this.crudService.row) {
+        if (!this.gridAPI.crudService.row) {
             return 0;
         }
         const f = (obj: any) => {
@@ -2978,7 +2980,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             Object.keys(obj).forEach(key => isObject(obj[key]) ? changes += f(obj[key]) : changes++);
             return changes;
         };
-        const rowChanges = this.transactions.getAggregatedValue(this.crudService.row.id, false);
+        const rowChanges = this.transactions.getAggregatedValue(this.gridAPI.crudService.row.id, false);
         return rowChanges ? f(rowChanges) : 0;
     }
 
@@ -3065,7 +3067,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        public crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
@@ -3253,7 +3254,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public _setupServices() {
         this.gridAPI.grid = this;
-        this.crudService.grid = this;
+        this.gridAPI.crudService.grid = this;
         this.selectionService.grid = this;
         this.navigation.grid = this;
         this.filteringService.grid = this;
@@ -3266,13 +3267,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (this.selectionService.dragMode && isIE()) {
                 return;
             }
-            if (!this.crudService.cell &&
+            if (!this.gridAPI.crudService.cell &&
                 !!this.navigation.activeNode &&
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                     || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
+                !(this.rowEditable && this.gridAPI.crudService.rowEditingBlocked && this.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
@@ -4376,7 +4377,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const cell = row.cells.find(c => c.editable);
             if (cell) {
                 this.gridAPI.submit_value(event);
-                this.crudService.enterEditMode(cell, event);
+                this.gridAPI.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
         });
@@ -4457,11 +4458,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
                 const args = this.gridAPI.update_cell(cell, value);
 
-                if (this.crudService.cell && this.crudService.sameCell(cell)) {
+                if (this.gridAPI.crudService.cell && this.gridAPI.crudService.sameCell(cell)) {
                     if (args.cancel) {
                         return;
                     }
-                    this.crudService.exitCellEdit();
+                    this.gridAPI.crudService.exitCellEdit();
                 }
                 this.cdr.detectChanges();
             }
@@ -4486,9 +4487,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
-            const editableCell = this.crudService.cell;
+            const editableCell = this.gridAPI.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.crudService.exitCellEdit();
+                this.gridAPI.crudService.exitCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -5637,7 +5638,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return;
             }
             navigator.clipboard.writeText(result).then().catch(e => console.error(e));
-        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
+        } else if (!this.clipboardOptions.enabled || this.gridAPI.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
             return;
         } else {
             if (selectedColumns.length) {
@@ -5964,7 +5965,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         }
 
-        this.crudService.endRowEdit();
+        this.gridAPI.crudService.endRowEdit();
 
         const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue, event);
         this.rowEditExit.emit(nonCancelableArgs);
@@ -5984,8 +5985,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param commit
      */
     public endEdit(commit = true, event?: Event) {
-        const row = this.crudService.row;
-        const cell = this.crudService.cell;
+        const row = this.gridAPI.crudService.row;
+        const cell = this.gridAPI.crudService.cell;
         let canceled = false;
         // TODO: Merge the crudService with with BaseAPI service
         if (!row && !cell) {
@@ -6003,11 +6004,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return true;
             }
         } else {
-            this.crudService.exitCellEdit(event);
+            this.gridAPI.crudService.exitCellEdit(event);
         }
 
-        canceled = this.crudService.exitRowEdit(commit, event);
-        this.crudService.rowEditingBlocked = canceled;
+        canceled = this.gridAPI.crudService.exitRowEdit(commit, event);
+        this.gridAPI.crudService.rowEditingBlocked = canceled;
         if (canceled) {
             return true;
         }
@@ -6023,8 +6024,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public endAdd(commit = true, event?: Event) {
-        const row = this.crudService.row;
-        const cell = this.crudService.cell;
+        const row = this.gridAPI.crudService.row;
+        const cell = this.gridAPI.crudService.cell;
         const cachedRowData = { ...row.data };
         let cancelable = false;
         if (!row && !cell) {
@@ -6052,7 +6053,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.gridAPI.addRowToData(row.data, parentId);
                 const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
                 this.rowEditDone.emit(doneArgs);
-                this.crudService.endRowEdit();
+                this.gridAPI.crudService.endRowEdit();
                 if (this.addRowParent.isPinned) {
                     this.pinRow(row.id);
                 }
@@ -6060,10 +6061,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.addRowParent = null;
             this.cancelAddMode = cancelable;
         } else {
-            this.crudService.exitCellEdit(event);
+            this.gridAPI.crudService.exitCellEdit(event);
             this.cancelAddMode = true;
         }
-        this.crudService.endRowEdit();
+        this.gridAPI.crudService.endRowEdit();
         this.closeRowEditingOverlay();
         this._pipeTrigger++;
         if (!this.cancelAddMode) {

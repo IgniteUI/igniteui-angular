@@ -315,7 +315,7 @@
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
-    <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
+    <div class="igx-banner__message" *ngIf="!this.gridAPI.crudService.row?.isAddRow">
         <span class="igx-banner__text">
             <ng-container
                 *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
