@@ -5,9 +5,9 @@
 @import 'mixins';
 @import 'app-layout';
 
-$palette: $default-palette;
-$schema: $light-schema;
-$typography: $default-type-scale;
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
+$typography: $indigo-type-scale;
 
 /* autoprefixer grid: on */
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
