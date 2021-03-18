@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, ElementRef
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { growVerIn, growVerOut } from '../animations/grow';
@@ -102,12 +102,17 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
 
     constructor(
+        public navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private navService: IgxTreeNavigationService) {
+        private element: ElementRef<HTMLElement>) {
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
+    }
+
+    public get nativeElement() {
+        return this.element.nativeElement;
     }
 
     public expandAll(nodes: IgxTreeNode<any>[]) { }
@@ -137,6 +142,24 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public findNodes<T>(searchTerm: T, comparer?: IgxTreeSearchResolver): IgxTreeNode<T>[] | null {
         const compareFunc = comparer || this._comparer;
         return this.nodes.filter(e => compareFunc(searchTerm, e));
+    }
+
+    public getPreviousNode(node: IgxTreeNodeComponent<any>) {
+        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => n.isFocusable);
+        const nodeIndex = visibleChildren.indexOf(node);
+        if (nodeIndex > 0) {
+            return visibleChildren[nodeIndex - 1];
+        }
+        return node;
+    }
+
+    public getNextNode(node: IgxTreeNodeComponent<any>) {
+        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => n.isFocusable);
+        const nodeIndex = visibleChildren.indexOf(node);
+        if (nodeIndex < visibleChildren.length - 1) {
+            return visibleChildren[nodeIndex + 1];
+        }
+        return node;
     }
 
     public ngOnInit() { }

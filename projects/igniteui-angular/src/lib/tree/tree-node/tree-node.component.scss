@@ -24,8 +24,17 @@
     line-height: 12px;
 }
 
-.igx-tree-node--active {
+.igx-tree-node--focused {
     border: 1px solid white !important;
+}
+
+.igx-tree-node--active {
+    background-color: rgb(199, 33, 149) !important;
+}
+
+.test:focus {
+    background-color: red;
+    outline: none;
 }
 
 .igx-tree-node__indicator {

@@ -22,6 +22,8 @@ export interface IgxTree {
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
+    getPreviousNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
+    getNextNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 
@@ -34,6 +36,7 @@ export interface IgxTreeNode<T> {
     level: number;
     data: T;
     children: QueryList<IgxTreeNode<any>> | null;
+    isFocusable: boolean;
     selectedChange: EventEmitter<boolean>;
 }
 

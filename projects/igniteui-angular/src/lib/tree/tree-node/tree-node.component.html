@@ -17,20 +17,20 @@
 </ng-template>
 
 <ng-template #defaultSelect let-item>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate">
+    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" tabindex="-1">
     </igx-checkbox>
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__content">
+    <div #ghostTemplate class="igx-tree-node__content" >
         <div [ngClass]="{ hidden: !children?.length }"
             class="igx-tree-node__indicator igx-tree-node__expand"
-            (click)="expanded = !expanded"
+            (click)="expandNode()"
         >
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
             </ng-container>
         </div>
-        <div class="igx-tree-node__header" [ngClass]="{'igx-tree-node--active' : this.active}">
+        <div class="igx-tree-node__header">
             <div *ngIf="showSelectors"
                 class="igx-tree-node__indicator igx-tree-node__select"
                 (pointerdown)="$event.preventDefault()"
@@ -39,7 +39,9 @@
                 <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
                 </ng-container>
             </div>
-            <ng-content></ng-content>
+            <div #test [ngClass]="{'igx-tree-node--focused' : this.focused, 'igx-tree-node--active' : this.active}" (pointerdown)="onPointerDown($event)">
+                <ng-content></ng-content>
+            </div>
         </div>
     </div>
     <!-- Buffer element for 'move after' when D&D is implemented -->

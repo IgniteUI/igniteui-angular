@@ -108,6 +108,10 @@ export class TreeSampleComponent implements AfterViewInit {
         console.log(searchResult);
     }
 
+    public getNodes(){
+        this.tree.getNextNode(this.tree.nodes.toArray()[0]);
+    }
+
     private mapData(data: any[]) {
         data.forEach(x => {
             x.selected = false;
