@@ -87,9 +87,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
+    // TODO: Public API should expose array or null, not query list
     @ContentChildren(IGX_TREE_NODE_COMPONENT, { read: IGX_TREE_NODE_COMPONENT })
-    private _children: QueryList<IgxTreeNode<any>>;
+    public children: QueryList<IgxTreeNode<any>>;
 
+    // TODO: Expose in public API instead of `children` query list
     /**
      * Return the child nodes of the node (if any)
      *
@@ -101,8 +103,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * const children: IgxTreeNode<any>[] = node.children;
      * ```
      */
-    public get children(): IgxTreeNode<any>[] {
-        return this._children?.length ? this._children.toArray() : null;
+    public get _children(): IgxTreeNode<any>[] {
+        return this.children?.length ? this.children.toArray() : null;
     }
 
     @ViewChild('defaultSelect', { read: TemplateRef, static: true })

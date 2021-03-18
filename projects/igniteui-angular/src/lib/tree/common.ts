@@ -23,7 +23,7 @@ export interface IgxTree {
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
-    findNodes<T>(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
+    findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 
 // Item interfaces
@@ -34,7 +34,7 @@ export interface IgxTreeNode<T> {
     selected: boolean | null;
     level: number;
     data: T;
-    children: IgxTreeNode<any>[] | null;
+    children: QueryList<IgxTreeNode<any>> | null;
     selectedChange: EventEmitter<boolean>;
 }
 

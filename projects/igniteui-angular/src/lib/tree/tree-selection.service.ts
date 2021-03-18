@@ -251,7 +251,7 @@ export class IgxTreeSelectionService {
      * Handle the selection state of a given node based the selection states of its direct children
      */
     private handleNodeSelectionState(node: IgxTreeNode<any>) {
-        const nodesArray = (node && node.children) ? node.children : [];
+        const nodesArray = (node && node.children) ? node.children.toArray() : [];
         if (nodesArray.length) {
             if (nodesArray.every(n => this.nodesToBeSelected.has(n))) {
                 this.nodesToBeSelected.add(node);
