@@ -8,17 +8,24 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $background [null] - The background color of the tree.
-/// @param {Color} $text-color [null] - The text color of the tree.
-///
-/// @param {border-radius} $border-radius [null] - The border radius used for the tree component.
+/// @param {Color} background [null] - The background color used for the tree node.
+/// @param {Color} background-hover [null] - The background color on hover used for the tree node.
+/// @param {Color} background-selected [null] - The background color in selected state used for the tree node.
+/// @param {Color} background-selected-hover [null] - The background color on hover in selected state used for the tree node.
+/// @param {Color} color [null] - The color used for the tree node content.
+/// @param {Color} color-hover [null] - The hover color used for the tree node content.
+/// @param {Color} color-selected [null] - The color used for the content of the selected tree node.
+/// @param {Color} color-selected-hover [null] - The hover color used for the content of the selected tree node.
+/// @param {Color} tree-indicator-color [null] - The color used for the tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-hover [null] - The hover color used for the tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-selected [null] - The color used for the selected tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-selected-hover [null] - The hover color used for the selected tree node expand/collapse indicator.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires round-borders
 ///
 /// @example scss Change the tree background
 ///   $my-tree-theme: igx-tree-theme($background: magenta);
@@ -31,17 +38,23 @@
     $background: null,
     $background-hover: null,
     $background-selected: null,
-    $background-selected-focused: null,
+    $background-selected-hover: null,
+    $background-disabled: null,
 
     $color: null,
     $color-hover: null,
     $color-selected: null,
+    $color-selected-hover: null,
+    $color-disabled: null,
 
+    // TODO document this ones its available.
     $drop-indicator-color: null,
 
     $tree-indicator-color: null,
     $tree-indicator-color-hover: null,
     $tree-indicator-color-selected: null,
+    $tree-indicator-color-selected-hover: null,
+    $tree-indicator-disabled: null,
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -54,6 +67,26 @@
 
     $theme: apply-palette($tree-schema, $palette);
 
+    @if not($color) and $background {
+        $color: text-contrast($background);
+    }
+
+    @if not($color-hover) and $background-hover {
+        $color-hover: text-contrast($background-hover);
+    }
+
+    @if not($color-selected) and $background-selected {
+        $color-selected: text-contrast($background-selected);
+    }
+
+    @if not($tree-indicator-color) and $background {
+        $tree-indicator-color: text-contrast($background);
+    }
+
+    @if not($tree-indicator-color-selected) and $background-selected {
+        $tree-indicator-color-selected: text-contrast($background-selected);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $default-palette,
@@ -61,17 +94,22 @@
         background: $background,
         background-hover: $background-hover,
         background-selected: $background-selected,
-        background-selected-focused: $background-selected-focused,
+        background-selected-hover: $background-selected-hover,
+        background-disabled: $background-disabled,
 
         color: $color,
         color-hover: $color-hover,
         color-selected: $color-selected,
+        color-selected-hover: $color-selected-hover,
+        color-disabled: $color-disabled,
 
         drop-indicator-color: $drop-indicator-color,
 
         tree-indicator-color: $tree-indicator-color,
         tree-indicator-color-hover: $tree-indicator-color-hover,
         tree-indicator-color-selected: $tree-indicator-color-selected,
+        tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
+        tree-indicator-disabled: $tree-indicator-disabled,
     ));
 }
 
@@ -135,6 +173,7 @@
 
         &:hover,
         &:focus {
+            color: --var($theme, 'color-hover');
             background: --var($theme, 'background-hover');
         }
 
@@ -161,14 +200,20 @@
 
     %tree-node-wrapper--selected {
         background: --var($theme, 'background-selected');
+        color: --var($theme, 'color-selected');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-selected');
+
+            &:hover {
+                color: --var($theme, 'tree-indicator-color-selected-hover');
+            }
+        }
 
         &:focus,
         &:hover {
-            background: --var($theme, 'background-selected-focused');
-
-            %tree-node-indicator {
-                color: --var($theme, 'tree-indicator-color-selected');
-            }
+            background: --var($theme, 'background-selected-hover');
+            color: --var($theme, 'color-selected-hover');
         }
     }
 
@@ -199,6 +244,23 @@
 
     %tree-node-group {
         overflow: hidden;
+    }
+}
+
+/// Adds typography styles for the igx-tree component.
+/// Uses the 'subtitle-1' category from the typographic scale.
+/// @group typography
+/// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
+/// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
+/// @requires {mixin} igx-type-style
+@mixin igx-switch-typography(
+    $type-scale,
+    $categories: (label: 'body-2')
+) {
+    $text: map-get($categories, 'label');
+
+    %tree-node-content {
+        @include igx-type-style($type-scale, $text)
     }
 }
 
