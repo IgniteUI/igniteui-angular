@@ -4,6 +4,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 
 // Component interfaces
 
+/** Comparer function that can be used when searching through IgxTreeNode<any>[] */
 export type IgxTreeSearchResolver = (data: any, node: IgxTreeNode<any>) => boolean;
 export interface IgxTree {
     id: string;
@@ -22,7 +23,7 @@ export interface IgxTree {
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
-    findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
+    findNodes<T>(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 
 // Item interfaces
@@ -33,7 +34,7 @@ export interface IgxTreeNode<T> {
     selected: boolean | null;
     level: number;
     data: T;
-    children: QueryList<IgxTreeNode<any>> | null;
+    children: IgxTreeNode<any>[] | null;
     selectedChange: EventEmitter<boolean>;
 }
 

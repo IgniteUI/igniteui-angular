@@ -52,32 +52,58 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.tree.animationSettings;
     }
 
-    @Input()
-    public selectMarker: TemplateRef<any>;
-
-    @Input()
-    public expandIndicator: TemplateRef<any>;
-
+    /**
+     * Emitted when the node's `selected` property changes.
+     *
+     * ```html
+     * <igx-tree>
+     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="data.selected">
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * node.selectedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node selection changed to ", e))
+     * ```
+     */
     @Output()
     public selectedChange = new EventEmitter<boolean>();
 
     // TODO: bind to active state when keynav is implemented
+    /** @hidden @internal */
     @HostBinding('class.igx-tree-node--active')
     public get active() {
         return false;
     }
 
     // TODO: bind to disabled state when node is dragged
+    /** @hidden @internal */
     @HostBinding('class.igx-tree-node--disabled')
     public get disabled() {
         return false;
     }
 
+    /** @hidden @internal */
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
 
     @ContentChildren(IGX_TREE_NODE_COMPONENT, { read: IGX_TREE_NODE_COMPONENT })
-    public children: QueryList<IgxTreeNode<any>>;
+    private _children: QueryList<IgxTreeNode<any>>;
+
+    /**
+     * Return the child nodes of the node (if any)
+     *
+     * @remark
+     * Returns `null` if node does not have children
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * const children: IgxTreeNode<any>[] = node.children;
+     * ```
+     */
+    public get children(): IgxTreeNode<any>[] {
+        return this._children?.length ? this._children.toArray() : null;
+    }
 
     @ViewChild('defaultSelect', { read: TemplateRef, static: true })
     private _defaultSelectMarker: TemplateRef<any>;
@@ -88,8 +114,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @ViewChild('childrenContainer', { read: ElementRef })
     private childrenContainer: ElementRef;
 
-    public inEdit = false;
-
+    // TODO: this should probably be dropped from the API
+    /**
+     * The unique ID of the node
+     */
     public id = `igxTreeNode_${nodeId++}`;
 
     constructor(
@@ -112,16 +140,49 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get indeterminate(): boolean {
         return this.selectionService.isNodeIndeterminate(this);
     }
 
+    /** The depth of the node, relative to the root
+     *
+     * ```html
+     * <igx-tree>
+     *  ...
+     *  <igx-tree-node #node>
+     *      My level is {{ node.level }}
+     *  </igx-tree-node>
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[12])[0];
+     * const level: number = node.level;
+     * ```
+     */
     public get level(): number {
         return this.parentNode ? this.parentNode.level + 1 : 0;
     }
 
+    /** Get/set whether the node is selected. Supporst two-way binding.
+     *
+     * ```html
+     * <igx-tree>
+     *  ...
+     *  <igx-tree-node *ngFor="let node of data" [(selected)]="node.selected">
+     *      {{ node.label }}
+     *  </igx-tree-node>
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * const selected = node.selected;
+     * node.selected = true;
+     * ```
+     */
     @Input()
     public get selected(): boolean {
         return this.selectionService.isNodeSelected(this);
@@ -136,6 +197,23 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         }
     }
 
+    /** Get/set whether the node is expanded
+     *
+     * ```html
+     * <igx-tree>
+     *  ...
+     *  <igx-tree-node *ngFor="let node of data" [expanded]="node.name === this.expandedNode">
+     *      {{ node.label }}
+     *  </igx-tree-node>
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * const expanded = node.expanded;
+     * node.expanded = true;
+     * ```
+     */
     @Input()
     public get expanded() {
         return this.treeService.isExpanded(this.id);
@@ -149,18 +227,14 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         }
     }
 
+    /** @hidden @internal */
     public get selectMarkerTemplate(): TemplateRef<any> {
-        return this.selectMarker ? this.selectMarker : this._defaultSelectMarker;
+        return this.tree?.selectMarker ? this.tree.selectMarker : this._defaultSelectMarker;
     }
 
+    /** @hidden @internal */
     public get expandIndicatorTemplate(): TemplateRef<any> {
-        return this.expandIndicator ? this.expandIndicator : this._defaultExpandIndicatorTemplate;
-    }
-
-    public get templateContext(): any {
-        return {
-            $implicit: this
-        };
+        return this.tree?.expandIndicator ? this.tree.expandIndicator : this._defaultExpandIndicatorTemplate;
     }
 
     /**

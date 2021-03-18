@@ -32,7 +32,7 @@
             class="igx-tree-node__indicator igx-tree-node__expand"
             (click)="expanded = !expanded"
         >
-            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
+            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
         </span>
 
