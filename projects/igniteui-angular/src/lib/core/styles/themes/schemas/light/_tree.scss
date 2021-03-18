@@ -12,7 +12,9 @@
 /// @see $default-palette
 $_light-tree: extend(
     (
-        background: transparent,
+        background: (
+            igx-color: ('surface')
+        ),
 
         background-hover: (
             igx-color: ('grays', 100)
@@ -38,10 +40,6 @@ $_light-tree: extend(
             igx-color: ('grays', 900)
         ),
 
-        drop-indicator-color: (
-            igx-color: ('secondary')
-        ),
-
         tree-indicator-color: (
             igx-color: ('grays', 900)
         ),
@@ -52,6 +50,10 @@ $_light-tree: extend(
 
         tree-indicator-color-selected: (
             igx-color: ('grays', 900)
+        ),
+
+        drop-indicator-color: (
+            igx-color: ('secondary')
         ),
     )
 );

@@ -4,7 +4,7 @@ import {
     OnDestroy, Input, Inject, ViewChild, TemplateRef, AfterViewInit, QueryList, ContentChildren, Optional, SkipSelf,
     HostBinding,
     ElementRef,
-    ChangeDetectorRef, HostListener
+    ChangeDetectorRef
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
