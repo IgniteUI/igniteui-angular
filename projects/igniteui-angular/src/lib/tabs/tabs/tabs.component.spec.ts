@@ -100,6 +100,7 @@ fdescribe('IgxTabs', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTestComponent);
+            fixture.detectChanges();
             tabs = fixture.componentInstance.tabs;
         }));
 
