@@ -67,7 +67,6 @@ export interface GridType extends IGridDataBindable {
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
 
-    endEdit(commit: boolean, event?: Event): void;
     getColumnByName(name: string): any;
     sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     clearSort(name?: string): void;

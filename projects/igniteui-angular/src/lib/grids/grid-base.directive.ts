@@ -1483,7 +1483,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
         this.page = 0;
-        this.endEdit(false);
+        this.gridAPI.crudService.endEdit(false);
         this.notifyChanges();
     }
 
@@ -1969,7 +1969,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set summaryCalculationMode(value: GridSummaryCalculationMode) {
         this._summaryCalculationMode = value;
         if (!this._init) {
-            this.endEdit(false);
+            this.gridAPI.crudService.endEdit(false);
             this.summaryService.resetSummaryHeight();
             this.notifyChanges(true);
         }
@@ -3313,11 +3313,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.onPagingDone.pipe(destructor).subscribe(() => {
-            this.endEdit(false);
+            this.gridAPI.crudService.endEdit(false);
             this.selectionService.clear(true);
         });
 
-        this.onColumnMovingEnd.pipe(destructor).subscribe(() => this.endEdit(false));
+        this.onColumnMovingEnd.pipe(destructor).subscribe(() => this.gridAPI.crudService.endEdit(false));
 
         this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
@@ -3385,7 +3385,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.onDensityChanged.pipe(destructor).subscribe(() => {
-            this.endEdit(false);
+            this.gridAPI.crudService.endEdit(false);
             this.summaryService.summaryHeight = 0;
             this.notifyChanges(true);
         });
@@ -4343,7 +4343,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
             return;
         }
-        this.endEdit(true, event);
+        this.gridAPI.crudService.endEdit(true, event);
         this.cancelAddMode = false;
         const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
         const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
@@ -4394,7 +4394,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public addRow(data: any): void {
         // commit pending states prior to adding a row
-        this.endEdit(true);
+        this.gridAPI.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
@@ -4557,7 +4557,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
 
-        this.endEdit(false);
+        this.gridAPI.crudService.endEdit(false);
         if (expression instanceof Array) {
             this.gridAPI.sort_multiple(expression);
         } else {
@@ -4687,7 +4687,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public refreshGridState(args?) {
-        this.endEdit(true);
+        this.gridAPI.crudService.endEdit(true);
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
         this.cdr.detectChanges();
@@ -4753,7 +4753,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         };
         this.onRowPinning.emit(eventArgs);
 
-        this.endEdit(false);
+        this.gridAPI.crudService.endEdit(false);
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
@@ -4786,7 +4786,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row
         };
         this.onRowPinning.emit(eventArgs);
-        this.endEdit(false);
+        this.gridAPI.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
         this._pipeTrigger++;
         if (this.gridAPI.grid) {
@@ -5972,57 +5972,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.closeRowEditingOverlay();
     }
 
-    // TODO: Refactor
-    /**
-     * Finishes the row transactions on the current row.
-     *
-     * @remarks
-     * If `commit === true`, passes them from the pending state to the data (or transaction service)
-     * @example
-     * ```html
-     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
-     * ```
-     * @param commit
-     */
-    public endEdit(commit = true, event?: Event) {
-        const row = this.gridAPI.crudService.row;
-        const cell = this.gridAPI.crudService.cell;
-        let canceled = false;
-        // TODO: Merge the crudService with with BaseAPI service
-        if (!row && !cell) {
-            return;
-        }
-
-        if (row?.isAddRow) {
-            canceled = this.endAdd(commit, event);
-            return canceled;
-        }
-
-        if (commit) {
-            canceled = this.gridAPI.submit_value(event);
-            if (canceled) {
-                return true;
-            }
-        } else {
-            this.gridAPI.crudService.exitCellEdit(event);
-        }
-
-        canceled = this.gridAPI.crudService.exitRowEdit(commit, event);
-        this.gridAPI.crudService.rowEditingBlocked = canceled;
-        if (canceled) {
-            return true;
-        }
-
-        const activeCell = this.selectionService.activeElement;
-        if (event && activeCell) {
-            const rowIndex = activeCell.row;
-            const visibleColIndex = activeCell.layout ? activeCell.layout.columnVisibleIndex : activeCell.column;
-            this.navigateTo(rowIndex, visibleColIndex);
-        }
-
-        return false;
-    }
-
     public endAdd(commit = true, event?: Event) {
         const row = this.gridAPI.crudService.row;
         const cell = this.gridAPI.crudService.cell;
@@ -6081,7 +6030,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public endRowEdit(commit = true, event?: Event) {
-        const canceled = this.endEdit(commit, event);
+        const canceled = this.gridAPI.crudService.endEdit(commit, event);
 
         if (canceled) {
             return true;
@@ -7205,7 +7154,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (endEdit) {
-            this.endEdit(false);
+            this.gridAPI.crudService.endEdit(false);
         }
 
         if (!text) {

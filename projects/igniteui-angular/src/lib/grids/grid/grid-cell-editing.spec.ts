@@ -779,7 +779,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const newValue = 'new value';
             cell.editValue = newValue;
 
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
 
 

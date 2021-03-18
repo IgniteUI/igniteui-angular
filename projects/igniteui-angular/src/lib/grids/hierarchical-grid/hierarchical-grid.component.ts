@@ -36,6 +36,7 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
+import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
 
@@ -49,6 +50,7 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
+        IgxGridCRUDService,
         IgxGridSelectionService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },

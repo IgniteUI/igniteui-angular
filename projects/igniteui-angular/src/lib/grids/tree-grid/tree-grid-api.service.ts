@@ -61,7 +61,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         grid.expansionStates = expandedStates;
 
         if (grid.rowEditable) {
-            grid.endEdit(false);
+            grid.gridAPI.crudService.endEdit(false);
         }
     }
 

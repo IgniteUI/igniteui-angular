@@ -66,7 +66,7 @@ describe('igxGridEditingActions #grid ', () => {
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             // grid actions should not showing when the row is in edit mode #
             expect(deleteIcon).toBeUndefined();
-            grid.endEdit();
+            grid.gridAPI.crudService.endEdit();
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
@@ -102,7 +102,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(row.inEditMode).toBeTrue();
 
-            grid.endEdit();
+            grid.gridAPI.crudService.endEdit();
             fixture.detectChanges();
             actionStrip.menu.open();
             fixture.detectChanges();

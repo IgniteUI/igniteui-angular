@@ -39,6 +39,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridSelectionMode } from '../common/enums';
+import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
 
@@ -64,6 +65,7 @@ let NEXT_ID = 0;
     selector: 'igx-tree-grid',
     templateUrl: 'tree-grid.component.html',
     providers: [
+        IgxGridCRUDService,
         IgxGridSummaryService,
         IgxGridNavigationService,
         { provide: IgxGridSelectionService, useClass: IgxTreeGridSelectionService },
@@ -537,7 +539,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        super.endEdit(true);
+        super.gridAPI.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
         this.onRowAdded.emit({ data });
         this._pipeTrigger++;

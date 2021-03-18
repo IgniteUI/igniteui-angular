@@ -397,7 +397,7 @@ export class IgxGridNavigationService {
                 }
 
                 if (this.grid.gridAPI.crudService.cellInEditMode || this.grid.gridAPI.crudService.rowInEditMode) {
-                    this.grid.endEdit(false, event);
+                    this.grid.gridAPI.crudService.endEdit(false, event);
                     if (isEdge()) {
                         this.grid.cdr.detectChanges();
                     }
@@ -528,7 +528,7 @@ export class IgxGridNavigationService {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
         if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.endEdit(true, event);
+            this.grid.gridAPI.crudService.endEdit(true, event);
             return;
         }
         event.preventDefault();

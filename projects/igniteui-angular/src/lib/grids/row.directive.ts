@@ -460,7 +460,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public update(value: any) {
         const crudService = this.gridAPI.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
-            this.grid.endEdit(false);
+            this.gridAPI.crudService.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);

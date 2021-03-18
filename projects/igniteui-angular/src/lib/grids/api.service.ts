@@ -305,7 +305,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        this.grid.endEdit(false);
+        this.crudService.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;
@@ -327,7 +327,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
+        this.crudService.endEdit(false);
         if (grid.paging) {
             grid.page = 0;
         }
@@ -343,7 +343,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public clear_filter(fieldName: string) {
         const grid = this.grid;
-        grid.endEdit(false);
+        this.crudService.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
         const index = filteringState.findIndex(fieldName);
 
@@ -436,7 +436,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         //  Otherwise just exit - there is nothing to delete
         if (index !== -1 || hasRowInNonDeletedState) {
             // Always exit edit when row is deleted
-            grid.endEdit(true);
+            this.crudService.endEdit(true);
         } else {
             return;
         }
@@ -518,7 +518,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         if (grid.rowEditable) {
-            grid.endEdit(false);
+            this.crudService.endEdit(false);
         }
     }
 

@@ -306,7 +306,7 @@ export class IgxFilteringService implements OnDestroy {
             return;
         }
 
-        grid.endEdit(false);
+        this.gridAPI.crudService.endEdit(false);
         if (grid.paging) {
             grid.page = 0;
         }
