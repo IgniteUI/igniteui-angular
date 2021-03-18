@@ -48,9 +48,9 @@ export class TreeTestFunctions {
         const nodesArr = [];
         const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
         for (let i = 0; i < count; i++) {
-            nodesArr.push(jasmine.createSpyObj<IgxTreeNodeComponent<any>>(['id', 'selected']), {
-                parentNode, children: children ? children[i] : null, selectedChange: mockEmitter
-            });
+            nodesArr.push(jasmine.createSpyObj<IgxTreeNodeComponent<any>>(['id', 'selected'], {
+                parentNode: parentNode ? parentNode : null, children: children ? children[i] : null, selectedChange: mockEmitter
+            }));
         }
         return nodesArr;
     }
