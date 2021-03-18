@@ -286,15 +286,15 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     @HostBinding('class.igx-checkbox--checked')
     @Input()
+    public get checked() {
+        return this._checked;
+    }
     public set checked(value: boolean) {
         if(this._checked !== value) {
             this._checked = value;
             this.change.emit({ checked: this._checked, checkbox: this });
             this._onChangeCallback(this._checked);
         }
-    }
-    public get checked() {
-        return this._checked;
     }
 
     /**
@@ -355,6 +355,11 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      * @internal
      */
+    private _checked = false;
+    /**
+     * @hidden
+     * @internal
+     */
     private _required = false;
     /**
      * @hidden
@@ -373,12 +378,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      * @internal
      */
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _checked = false;
 
     constructor() {}
 

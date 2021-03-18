@@ -5,7 +5,8 @@ import { IgxGridComponent,
     IFilteringEventArgs, IgxStringFilteringOperand, IColumnMovingEndEventArgs,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
     IColumnVisibilityChangingEventArgs,
-    IFilteringExpressionsTree} from 'igniteui-angular';
+    IFilteringExpressionsTree,
+    IColumnVisibilityChangedEventArgs} from 'igniteui-angular';
 import { data } from '../grid-cellEditing/data';
 
 @Component({
@@ -88,7 +89,8 @@ export class GridEventsComponent {
         event.cancel = this.$hiding;
         this.logAnEvent('=> columnVisibilityChanging', event.cancel);
     }
-    public onColumnVisibilityChanged() {
+    public onColumnVisibilityChanged(event: IColumnVisibilityChangedEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 

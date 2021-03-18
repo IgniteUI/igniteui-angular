@@ -1718,7 +1718,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
-            this.evaluateLoadingState();
+            if (!!this.data) {
+                this.evaluateLoadingState();
+            }
         }
         Promise.resolve().then(() => {
             // wait for the current detection cycle to end before triggering a new one.
