@@ -27,7 +27,7 @@
             class="igx-tree-node__indicator igx-tree-node__expand"
             (click)="expanded = !expanded"
         >
-            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: templateContext">
+            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
         </div>
         <div class="igx-tree-node__header">
@@ -36,7 +36,7 @@
                 (pointerdown)="$event.preventDefault()"
                 (click)="onSelectorClick($event)"
             >
-                <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
+                <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: { $implicit: expanded }">
                 </ng-container>
             </div>
             <ng-content></ng-content>

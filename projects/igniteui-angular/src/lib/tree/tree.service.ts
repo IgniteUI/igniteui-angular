@@ -24,12 +24,6 @@ export class IgxTreeService {
         return this.expandedNodes.has(id);
     }
 
-    public select(node: IgxTreeNode<any>): void {
-    }
-
-    public deselect(node: IgxTreeNode<any>): void {
-    }
-
     public register(tree: IgxTree) {
         this.tree = tree;
     }
