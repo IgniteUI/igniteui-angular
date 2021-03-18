@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -50,7 +50,7 @@ describe('IgxCheckbox', () => {
         expect(placeholderLabel.getAttribute('id')).toEqual('igx-checkbox-0-label');
     });
 
-    it('Initializes with ngModel', () => {
+    it('Initializes with ngModel', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
@@ -65,12 +65,17 @@ describe('IgxCheckbox', () => {
 
         testInstance.subscribed = true;
         checkboxInstance.name = 'my-checkbox';
+        // One change detection cycle for updating our checkbox
         fixture.detectChanges();
-
-        expect(nativeCheckbox.checked).toBe(true);
+        tick();
         expect(checkboxInstance.checked).toBe(true);
+
+        // Now one more change detection cycle to update the native checkbox
+        fixture.detectChanges();
+        tick();
+        expect(nativeCheckbox.checked).toBe(true);
         expect(checkboxInstance.name).toEqual('my-checkbox');
-    });
+    }));
 
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(CheckboxExternalLabelComponent);
@@ -268,7 +273,8 @@ class InitCheckboxComponent { }
 
 @Component({
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
+                            [(ngModel)]="subscribed">Simple</igx-checkbox>`
+})
 class CheckboxSimpleComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     public changeEventCalled = false;

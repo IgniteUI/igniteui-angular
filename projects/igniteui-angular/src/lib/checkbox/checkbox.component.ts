@@ -448,7 +448,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
     /** @hidden @internal */
     public writeValue(value: boolean) {
-        this.checked = value;
+        this.checked = !!value;
     }
 
     /** @hidden @internal */

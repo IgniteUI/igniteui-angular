@@ -359,7 +359,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     public writeValue(value: boolean) {
-        this.checked = value;
+        this.checked = !!value;
     }
     /**
      * @hidden
