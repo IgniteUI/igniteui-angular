@@ -10,9 +10,9 @@ body {
 }
 
 @include igx-core($direction: $direction);
+@include igx-typography($font-family: $typeface, $type-scale: $type-scale);
 @include igx-theme($palette: $palette, $schema: $schema, $legacy-support: $legacy-support);
 
-@include igx-typography($type-scale: $typography);
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {

@@ -40,6 +40,8 @@
 
 /// @access private
 @mixin _igx-typography-styles($font-family, $type-scale) {
+    $_variant: map-get(map-get($type-scale, '_meta'), 'variant');
+
     font-family: unquote($font-family);
     font-size: $browser-context;
     line-height: $browser-line-height;
@@ -50,24 +52,19 @@
     @include igx-banner-typography($type-scale);
     @include igx-bottom-nav-typography($type-scale);
     @include igx-button-typography($type-scale);
-    @include igx-calendar-typography($type-scale);
-    @include igx-card-typography($type-scale);
     @include igx-category-chart-typography($type-scale);
     @include igx-checkbox-typography($type-scale);
     @include igx-chip-typography($type-scale);
     @include igx-column-actions-typography($type-scale);
     @include igx-data-chart-typography($type-scale);
     @include igx-date-range-typography($type-scale);
-    @include igx-dialog-typography($type-scale);
     @include igx-dock-manager-typography();
-    @include igx-drop-down-typography($type-scale);
     @include igx-expansion-panel-typography($type-scale);
     @include igx-financial-chart-typography($type-scale);
     @include igx-funnel-chart-typography($type-scale);
     @include igx-gauge-typography();
     @include igx-graph-typography();
     @include igx-input-group-typography($type-scale);
-    @include igx-list-typography($type-scale);
     @include igx-navbar-typography($type-scale);
     @include igx-navdrawer-typography($type-scale);
     @include igx-radio-typography($type-scale);
@@ -79,18 +76,82 @@
     @include igx-time-picker-typography($type-scale);
     @include igx-toast-typography($type-scale);
     @include igx-tooltip-typography($type-scale);
+
+    // Add theme type-scale specific quirks
+    @if ($_variant == 'material' or $_variant == 'fluent') {
+        @include igx-calendar-typography($type-scale);
+        @include igx-card-typography($type-scale);
+        @include igx-dialog-typography($type-scale);
+        @include igx-drop-down-typography($type-scale);
+        @include igx-list-typography($type-scale);
+    }
+
+    @if ($_variant == 'bootstrap') {
+        $calendar-labels: map-get($type-scale, 'calendar-labels');
+
+        @include igx-calendar-typography($type-scale, $categories: (
+            header-year: 'subtitle-1',
+            header-date: 'h4',
+            weekday-label: if($calendar-labels, 'calendar-labels', 'body-1'),
+            picker-date: 'subtitle-1',
+            content: 'body-1',
+        ));
+
+        @include igx-card-typography($type-scale, $categories: (
+            title: 'h5',
+            title-small: 'subtitle-2',
+            subtitle: 'body-1',
+            content: 'body-1',
+        ));
+
+        @include igx-dialog-typography($type-scale, $categories: (
+            title: 'h5',
+            content: 'body-1',
+        ));
+
+        @include igx-drop-down-typography($type-scale, $categories: (
+            header: 'subtitle-1',
+            item: 'subtitle-1',
+            select-item: 'subtitle-1',
+        ));
+
+        @include igx-list-typography($type-scale, $categories: (
+            item: 'body-2',
+            title: 'body-1',
+            subtitle: 'subtitle-1',
+            header: 'overline',
+        ));
+    }
+
+    @if ($_variant == 'indigo') {
+        @include igx-calendar-typography($type-scale);
+
+        @include igx-card-typography($type-scale, $categories: (
+            title: 'h5',
+            title-small: 'subtitle-2',
+            subtitle: 'subtitle-2',
+            content: 'body-2',
+        ));
+
+        @include igx-dialog-typography($type-scale);
+        @include igx-drop-down-typography($type-scale);
+        @include igx-list-typography($type-scale);
+    }
 }
 
-/// Adds typography styles for h1-h6, paragraph and creates
-/// custom typography class selectors. The produces styles
-/// are based on the passed type scale. If omitted the
-/// default-type-scale will be used.
+/// Adds typography styles for h1-h6, paragraph and creates custom typography class selectors.
+/// The produces styles are based on the passed typeface and type scale.
+/// If omitted the $material-typeface and $material-type-scale will be used.
 /// @access public
-/// @param {String} $font-family ["'Titillium Web', sans-serif"] - The font family to be used across all typographic elements.
-/// @param {Map} $type-scale [$default-type-scale] - A type scale map as produced by igx-type-scale.
+/// @param {String} $font-family [$material-typeface] - The font family to be used across all typographic elements.
+/// @param {Map} $type-scale [$material-type-scale] - A type scale map as produced by igx-type-scale.
+/// @requires $material-typeface
+/// @requires $material-type-scale
+/// @see $material-typeface
+/// @see $material-type-scale
 @mixin igx-typography(
-    $font-family: "'Titillium Web', sans-serif",
-    $type-scale: $default-type-scale,
+    $font-family: $material-typeface,
+    $type-scale: $material-type-scale,
 ) {
     @if(is-root()) {
         // Use the BEM notation to create a link
@@ -108,34 +169,37 @@
                 h4: 'h4',
                 h5: 'h5',
                 h6: 'h6',
-                body-1: 'p'
+                body-1: 'p',
             );
 
+            /* stylelint-disable max-nesting-depth */
             @each $category, $type-style in $type-scale {
-                // Get the native element that uses typographic styles directly
-                // as mapped in the $category-element-map
-                $e: map-get($category-element-map, $category);
+                @if $category != _meta {
+                    // Get the native element that uses typographic styles directly
+                    // as mapped in the $category-element-map
+                    $e: map-get($category-element-map, $category);
 
-                // Create a placeholder selector with styles for each
-                // typographic style to be able to easily extend it
-                // elsewhere.
-                %#{$category} {
-                    @include igx-type-style($type-scale, $category);
-                }
+                    // Create a placeholder selector with styles for each
+                    // typographic style to be able to easily extend it
+                    // elsewhere.
+                    %#{$category} {
+                        @include igx-type-style($type-scale, $category);
+                    }
 
-                // Add native element typographic styles.
-                @if $e != null {
-                    // stylelint-disable-next-line max-nesting-depth
-                    #{$e} {
+                    // Add native element typographic styles.
+                    @if $e != null {
+                        #{$e} {
+                            @extend %#{$category};
+                        }
+                    }
+
+                    // Add class selector typographic styles.
+                    @include e(#{$category}) {
                         @extend %#{$category};
                     }
                 }
-
-                // Add class selector typographic styles.
-                @include e(#{$category}) {
-                    @extend %#{$category};
-                }
             }
+            /* stylint-enable max-nesting-depth */
         }
     } @else {
         @include _igx-typography-styles($font-family, $type-scale);

@@ -71,8 +71,6 @@
     $disabled-border-color: null,
 ) {
     $name: 'igx-button';
-    $selector: '[igxButton]';
-
     $button-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -422,7 +420,7 @@
     }
 
     %igx-button--flat {
-        @include igx-css-vars($flat-theme);
+        @include igx-css-vars($flat-theme, '');
 
         background: --var($flat-theme, 'background');
         color: --var($flat-theme, 'foreground');
@@ -442,7 +440,7 @@
     }
 
     %igx-button--outlined {
-        @include igx-css-vars($outlined-theme);
+        @include igx-css-vars($outlined-theme, '');
 
         background: --var($outlined-theme, 'background');
         color: --var($outlined-theme, 'foreground');
@@ -492,7 +490,7 @@
     }
 
     %igx-button--raised {
-        @include igx-css-vars($raised-theme);
+        @include igx-css-vars($raised-theme, '');
 
         color: --var($raised-theme, 'foreground');
         background: --var($raised-theme, 'background');
@@ -536,7 +534,7 @@
     }
 
     %igx-button--fab {
-        @include igx-css-vars($fab-theme);
+        @include igx-css-vars($fab-theme, '');
 
         padding: map-get($button-floating-padding, 'comfortable');
         min-width: map-get($button-floating-size, 'comfortable');
@@ -602,7 +600,7 @@
     }
 
     %igx-button--icon {
-        @include igx-css-vars($icon-theme);
+        @include igx-css-vars($icon-theme, '');
 
         width: $button-icon-width;
         height: $button-icon-width;

@@ -89,7 +89,6 @@
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
 /// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
-/// @requires {mixin} igx-typography
 /// @requires {mixin} igx-vhelper
 /// @requires {mixin} igx-print-layout
 @mixin igx-core(
@@ -104,9 +103,6 @@
     }
 
     $_igx-enhanced-accessibility: $enhanced-accessibility !global;
-
-    // TODO: Breaking Change - typography should be explicitly declared by the user.
-    @include igx-typography();
 
     @include igx-vhelper();
 
