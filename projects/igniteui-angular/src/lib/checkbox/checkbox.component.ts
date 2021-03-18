@@ -291,7 +291,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
     public set checked(value: boolean) {
         if(this._checked !== value) {
-            this.indeterminate = false;
             this._checked = value;
             this.change.emit({ checked: this._checked, checkbox: this });
             this._onChangeCallback(this._checked);
@@ -397,6 +396,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         event.stopPropagation();
         event.preventDefault();
 
+        this.indeterminate = false;
         this.toggle();
 
         if (isIE()) {

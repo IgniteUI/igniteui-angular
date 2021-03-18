@@ -128,21 +128,21 @@ describe('IgxCheckbox', () => {
 
         fixture.detectChanges();
         tick();
-        // First change detection should update our checkbox state and indeterminate state should be changed
+        // First change detection should update our checkbox state and API call should not change indeterminate
         expect(checkboxInstance.checked).toBe(true);
-        expect(checkboxInstance.indeterminate).toBe(false);
+        expect(checkboxInstance.indeterminate).toBe(true);
 
-        // Second change detection should update native checkbox state
+        // Second change detection should update native checkbox state but indeterminate should not change
         fixture.detectChanges();
         tick();
-        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(nativeCheckbox.indeterminate).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
 
         // Should not change the state
         nativeCheckbox.dispatchEvent(new Event('change'));
         fixture.detectChanges();
 
-        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(nativeCheckbox.indeterminate).toBe(true);
         expect(checkboxInstance.checked).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
 

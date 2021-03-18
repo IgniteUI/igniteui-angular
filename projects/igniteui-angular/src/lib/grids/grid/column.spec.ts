@@ -263,7 +263,6 @@ describe('IgxGrid - Column properties #grid', () => {
         allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-
     });
 
     it('column width should be adjusted after a column has been hidden', () => {
@@ -438,7 +437,7 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Data type currency column tests', () => {
-        xit('should display correctly the data when column dataType is currency', () => {
+        it('should display correctly the data when column dataType is currency', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -465,7 +464,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
         });
 
-        xit('should be able to change the locale runtime ', () => {
+        it('should be able to change the locale runtime ', () => {
             registerLocaleData(localeFR);
             registerLocaleData(localeJA);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
@@ -506,6 +505,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             let prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -518,18 +518,16 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             grid.locale = 'fr-FR';
-            tick(300);
             fix.detectChanges();
-
-            grid.notifyChanges();
-            fix.detectChanges();
+            tick();
 
             firstCell = grid.getCellByColumn(0, 'UnitsInStock');
             expect(grid.locale).toEqual('fr-FR');
-            // expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
+            expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -676,6 +674,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             const prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -685,8 +684,8 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((suffix as HTMLElement).innerText).toEqual('27%');
 
             UIInteractions.clickAndSendInputElementValue(input, 0.33);
-            tick();
             fix.detectChanges();
+            tick();
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             suffix = firstCell.nativeElement.querySelector('igx-suffix');
