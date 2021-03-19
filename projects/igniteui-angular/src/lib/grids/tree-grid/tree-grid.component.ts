@@ -97,7 +97,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden @internal
      */
     @HostBinding('attr.role')
-    public role = 'grid';
+    public role = 'treegrid';
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
