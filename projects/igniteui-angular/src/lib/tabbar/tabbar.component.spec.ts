@@ -50,7 +50,7 @@ describe('IgxBottomNav', () => {
         it('should set the correct attributes on the html elements', () => {
             fixture.detectChanges();
 
-            const igxBottomNavs = document.querySelectorAll('igx-bottom-nav');
+            const igxBottomNavs = document.querySelectorAll('igx-bottom-nav-old');
             expect(igxBottomNavs.length).toBe(2);
 
             const startIndex = parseInt(igxBottomNavs[0].id.replace('igx-bottom-nav-', ''), 10);
@@ -59,7 +59,7 @@ describe('IgxBottomNav', () => {
                 expect(tab.id).toEqual(`igx-bottom-nav-${tabIndex}`);
 
                 const headers = tab.querySelectorAll('igx-tab');
-                const contents = tab.querySelectorAll('igx-tab-panel');
+                const contents = tab.querySelectorAll('igx-tab-panel-old');
                 expect(headers.length).toBe(3);
                 expect(contents.length).toBe(3);
 
@@ -370,16 +370,16 @@ describe('IgxBottomNav', () => {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-bottom-nav (onTabSelected)="tabSelectedHandler($event)">
-                <igx-tab-panel label="Tab 1" icon="library_music">
+            <igx-bottom-nav-old (onTabSelected)="tabSelectedHandler($event)">
+                <igx-tab-panel-old label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab-panel>
-                <igx-tab-panel label="Tab 2" icon="video_library">
+                </igx-tab-panel-old>
+                <igx-tab-panel-old label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab-panel>
-                <igx-tab-panel label="Tab 3" icon="library_books">
+                </igx-tab-panel-old>
+                <igx-tab-panel-old label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -394,8 +394,8 @@ describe('IgxBottomNav', () => {
                         a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </igx-tab-panel>
-            </igx-bottom-nav>
+                </igx-tab-panel-old>
+            </igx-bottom-nav-old>
         </div>`
 })
 class TabBarTestComponent {
@@ -409,16 +409,16 @@ class TabBarTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-bottom-nav alignment="bottom">
-                <igx-tab-panel label="Tab 1" icon="library_music">
+            <igx-bottom-nav-old alignment="bottom">
+                <igx-tab-panel-old label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab-panel>
-                <igx-tab-panel label="Tab 2" icon="video_library">
+                </igx-tab-panel-old>
+                <igx-tab-panel-old label="Tab 2" icon="video_library">
                     <h1>Tab 2 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                </igx-tab-panel>
-                <igx-tab-panel label="Tab 3" icon="library_books">
+                </igx-tab-panel-old>
+                <igx-tab-panel-old label="Tab 3" icon="library_books">
                     <h1>Tab 3 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -433,8 +433,8 @@ class TabBarTestComponent {
                         a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
-                </igx-tab-panel>
-            </igx-bottom-nav>
+                </igx-tab-panel-old>
+            </igx-bottom-nav-old>
         </div>`
 })
 class BottomTabBarTestComponent {
@@ -446,26 +446,26 @@ class BottomTabBarTestComponent {
     template: `
         <div #wrapperDiv>
 
-        <igx-bottom-nav>
-            <igx-tab-panel label="dede">
+        <igx-bottom-nav-old>
+            <igx-tab-panel-old label="dede">
                 <ng-template igxTab>
                     <div>T1</div>
                  </ng-template>
                  <h1>Tab 1 Content</h1>
-              </igx-tab-panel>
-            <igx-tab-panel label="Tab 2">
+              </igx-tab-panel-old>
+            <igx-tab-panel-old label="Tab 2">
                 <ng-template igxTab>
                     <div>T2</div>
                 </ng-template>
                 <h1>Tab 2 Content</h1>
-            </igx-tab-panel>
-            <igx-tab-panel label="Tab 3">
+            </igx-tab-panel-old>
+            <igx-tab-panel-old label="Tab 3">
                 <ng-template igxTab>
                     <div>T3</div>
                 </ng-template>
                 <h1>Tab 3 Content</h1>
-            </igx-tab-panel>
-        </igx-bottom-nav>
+            </igx-tab-panel-old>
+        </igx-bottom-nav-old>
         </div>`
 })
 class TemplatedTabBarTestComponent {
@@ -479,7 +479,7 @@ class TemplatedTabBarTestComponent {
             <div>
                 <router-outlet></router-outlet>
             </div>
-            <igx-bottom-nav>
+            <igx-bottom-nav-old>
                 <igx-tab label="Tab 1" icon="library_music"
                     routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
                 </igx-tab>
@@ -489,7 +489,7 @@ class TemplatedTabBarTestComponent {
                 <igx-tab label="Tab 3" icon="library_books"
                     routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
                 </igx-tab>
-            </igx-bottom-nav>
+            </igx-bottom-nav-old>
         </div>
     `
 })
@@ -501,14 +501,14 @@ class TabBarRoutingTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-bottom-nav>
+            <igx-bottom-nav-old>
                 <igx-tab label="Tab 1" icon="library_music">
                 </igx-tab>
                 <igx-tab label="Tab 2" icon="video_library" [isSelected]="true">
                 </igx-tab>
                 <igx-tab label="Tab 3" icon="library_books">
                 </igx-tab>
-            </igx-bottom-nav>
+            </igx-bottom-nav-old>
         </div>
     `
 })
@@ -523,14 +523,14 @@ class TabBarTabsOnlyModeTestComponent {
             <div>
                 <router-outlet></router-outlet>
             </div>
-            <igx-bottom-nav>
+            <igx-bottom-nav-old>
                 <igx-tab label="Tab 1" icon="library_music"
                     routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
                 </igx-tab>
                 <igx-tab label="Tab 5" icon="library_books"
                     routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [isSelected]="rlaX.isActive">
                 </igx-tab>
-            </igx-bottom-nav>
+            </igx-bottom-nav-old>
         </div>
     `
 })
@@ -543,30 +543,30 @@ class BottomNavRoutingGuardTestComponent {
     template: `
         <div>
             <div>
-                <igx-bottom-nav>
-                    <igx-tab-panel label="Tab 1">
+                <igx-bottom-nav-old>
+                    <igx-tab-panel-old label="Tab 1">
                         <div>Content 1</div>
-                    </igx-tab-panel>
-                    <igx-tab-panel label="Tab 2">
+                    </igx-tab-panel-old>
+                    <igx-tab-panel-old label="Tab 2">
                         <div>Content 2</div>
-                    </igx-tab-panel>
-                    <igx-tab-panel label="Tab 3">
+                    </igx-tab-panel-old>
+                    <igx-tab-panel-old label="Tab 3">
                         <div>Content 3</div>
-                    </igx-tab-panel>
-                </igx-bottom-nav>
+                    </igx-tab-panel-old>
+                </igx-bottom-nav-old>
             </div>
             <div>
-                <igx-bottom-nav>
-                    <igx-tab-panel label="Tab 4">
+                <igx-bottom-nav-old>
+                    <igx-tab-panel-old label="Tab 4">
                         <div>Content 4</div>
-                    </igx-tab-panel>
-                    <igx-tab-panel label="Tab 5">
+                    </igx-tab-panel-old>
+                    <igx-tab-panel-old label="Tab 5">
                         <div>Content 5</div>
-                    </igx-tab-panel>
-                    <igx-tab-panel label="Tab 6">
+                    </igx-tab-panel-old>
+                    <igx-tab-panel-old label="Tab 6">
                         <div>Content 6</div>
-                    </igx-tab-panel>
-                </igx-bottom-nav>
+                    </igx-tab-panel-old>
+                </igx-bottom-nav-old>
             </div>
         </div>
         `
