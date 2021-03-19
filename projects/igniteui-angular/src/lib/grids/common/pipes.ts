@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -17,7 +18,7 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
+    public transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -46,7 +47,8 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): { [prop: string]: any } {
+    public transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number):
+     { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
@@ -70,7 +72,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 })
 export class IgxGridNotGroupedPipe implements PipeTransform {
 
-    transform(value: any[]): any[] {
+    public transform(value: any[]): any[] {
         return value.filter(item => !item.columnGroup);
     }
 }
@@ -84,7 +86,7 @@ export class IgxGridNotGroupedPipe implements PipeTransform {
 })
 export class IgxGridTopLevelColumns implements PipeTransform {
 
-    transform(value: any[]): any[] {
+    public transform(value: any[]): any[] {
         return value.filter(item => item.level === 0);
     }
 }
@@ -116,7 +118,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any[], id: string, pipeTrigger: number) {
+    public transform(collection: any[], id: string, pipeTrigger: number) {
         const grid: IgxGridBaseDirective = this.gridAPI.grid;
 
         if (grid.transactions.enabled) {
@@ -153,7 +155,7 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     pure: true
 })
 export class IgxHasVisibleColumnsPipe implements PipeTransform {
-    transform(values: any[], hasVisibleColumns) {
+    public transform(values: any[], hasVisibleColumns) {
         if (!(values && values.length)) {
             return values;
         }
@@ -268,7 +270,7 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
 @Pipe({ name: 'dataMapper' })
 export class IgxGridDataMapperPipe implements PipeTransform {
 
-    transform(data: any[], field: string, _: number, val: any, isNestedPath: boolean) {
+    public transform(data: any[], field: string, _: number, val: any, isNestedPath: boolean) {
         return isNestedPath ? resolveNestedPath(data, field) : val;
     }
 }
@@ -276,7 +278,7 @@ export class IgxGridDataMapperPipe implements PipeTransform {
 @Pipe({ name: 'igxStringReplace' })
 export class IgxStringReplacePipe implements PipeTransform {
 
-    transform(value: string, search: string | RegExp, replacement: string): string {
+    public transform(value: string, search: string | RegExp, replacement: string): string {
         return value.replace(search, replacement);
     }
 }
@@ -284,7 +286,7 @@ export class IgxStringReplacePipe implements PipeTransform {
 @Pipe({ name: 'transactionState' })
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
-    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
+    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
@@ -302,7 +304,7 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
 @Pipe({ name: 'columnFormatter' })
 export class IgxColumnFormatterPipe implements PipeTransform {
 
-    transform(value: any, formatter: (v: any) => any) {
+    public transform(value: any, formatter: (v: any) => any) {
         return formatter(value);
     }
 }
@@ -315,7 +317,7 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any, isPinned = false, pipeTrigger: number) {
+    public transform(collection: any, isPinned = false, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
         if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode || isPinned !== grid.addRowParent.isPinned) {
             return collection;
