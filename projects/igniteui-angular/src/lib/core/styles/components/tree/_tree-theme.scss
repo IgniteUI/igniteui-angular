@@ -83,6 +83,10 @@
         $tree-indicator-color: text-contrast($background);
     }
 
+    @if not($tree-indicator-color) and $background-hover {
+        $tree-indicator-color: text-contrast($background-hover);
+    }
+
     @if not($tree-indicator-color-selected) and $background-selected {
         $tree-indicator-color-selected: text-contrast($background-selected);
     }
