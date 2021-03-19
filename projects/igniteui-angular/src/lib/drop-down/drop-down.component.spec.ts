@@ -33,7 +33,7 @@ const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
 const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_TABS = '.igx-tabs__header-menu-item';
 
-fdescribe('IgxDropDown ', () => {
+describe('IgxDropDown ', () => {
     let fixture;
     let dropdown: IgxDropDownComponent;
     describe('Unit tests', () => {
