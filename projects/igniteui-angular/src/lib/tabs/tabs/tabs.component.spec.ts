@@ -26,6 +26,7 @@ import { TabsRoutingViewComponentsModule,
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
+import { IgxIconModule } from '../../icon/public_api';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -55,7 +56,7 @@ describe('IgxTabs', () => {
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
                 TabsRoutingGuardTestComponent],
             imports: [IgxTabsModule, BrowserAnimationsModule,
-                IgxButtonModule, IgxDropDownModule, IgxToggleModule,
+                IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [TabRoutingTestGuard]
         }).compileComponents();
