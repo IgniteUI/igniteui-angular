@@ -148,7 +148,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden @internal
      */
     @HostBinding('attr.role')
-    public role = 'grid';
+    public role = 'treegrid';
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
