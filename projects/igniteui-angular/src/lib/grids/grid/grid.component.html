@@ -217,7 +217,7 @@
 </div>
 
 
-<span class="igx-grid__tfoot" role="rowgroup">
+<div class="igx-grid__tfoot" role="rowgroup">
     <div [style.height.px]='summariesHeight' tabindex="0"
     (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot [attr.aria-activedescendant]="activeDescendant">
         <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summariesHeight'
@@ -228,7 +228,7 @@
         <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
             [style.width.px]="scrollSize"></div>
     </div>
-</span>
+</div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden" (pointerdown)="$event.preventDefault()">
     <div class="igx-grid__scroll-start" [style.width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth' [style.min-width.px]='isPinningToStart ? pinnedWidth : headerFeaturesWidth'></div>

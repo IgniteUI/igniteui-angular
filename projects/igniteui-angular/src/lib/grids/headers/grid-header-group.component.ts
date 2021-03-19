@@ -69,6 +69,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.column.colStart;
     }
 
+    @HostBinding('attr.id')
+    public get headerID() {
+        return `${this.gridID}_-1_${this.column.visibleIndex}`;
+    }
+
     /**
      * Gets the column of the header group.
      * @memberof IgxGridHeaderGroupComponent

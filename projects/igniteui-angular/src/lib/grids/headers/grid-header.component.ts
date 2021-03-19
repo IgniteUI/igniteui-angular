@@ -124,14 +124,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.column.title || this.column.header || this.column.field;
     }
 
-    @HostBinding('attr.role')
-    public hostRole = 'columnheader';
-
-    @HostBinding('attr.id')
-    get headerID() {
-        return `${this.gridID}_${this.column.field}`;
-    }
-
     protected sortDirection = SortingDirection.None;
 
     constructor(
