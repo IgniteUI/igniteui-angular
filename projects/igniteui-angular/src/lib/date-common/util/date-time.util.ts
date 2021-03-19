@@ -1,7 +1,7 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
-import { isDate } from '../../core/utils';
+import { isDate, parseDate } from '../../core/utils';
 
 /** @hidden */
 const enum FormatDesc {
@@ -275,7 +275,7 @@ export class DateTimeUtil {
      * @returns true if provided value is greater than provided maxValue
      */
     public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
-        if (!this.isValidDate(value) || !this.isValidDate(maxValue)) {
+        if (!DateTimeUtil.isValidDate(value) || !DateTimeUtil.isValidDate(maxValue)) {
             return false;
         }
         if (includeTime && includeDate) {
@@ -304,7 +304,7 @@ export class DateTimeUtil {
      * @returns true if provided value is less than provided minValue
      */
     public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
-        if (!this.isValidDate(value) || !this.isValidDate(minValue)) {
+        if (!DateTimeUtil.isValidDate(value) || !DateTimeUtil.isValidDate(minValue)) {
             return false;
         }
         if (includeTime && includeDate) {
@@ -334,8 +334,8 @@ export class DateTimeUtil {
      */
     public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string): ValidationErrors | null {
         const errors = {};
-        const min = DateTimeUtil.parseDate(minValue);
-        const max = DateTimeUtil.parseDate(maxValue);
+        const min = parseDate(minValue);
+        const max = parseDate(maxValue);
         if ((min && value && DateTimeUtil.lessThanMinValue(value, min, false))
             || (min && value && DateTimeUtil.lessThanMinValue(value, min, false))) {
             Object.assign(errors, { minValue: true });
@@ -346,39 +346,6 @@ export class DateTimeUtil {
         }
 
         return errors;
-    }
-
-    /**
-     * Parse provided input to Date.
-     *
-     * @param value input to parse
-     * @param dateTimeParts all segments of the input format
-     * @param mask the input format
-     *
-     * @remarks Either `dateTimeParts` or `mask` should be provided.
-     * @returns `Date` if parsing is successful, `null` otherwise
-     */
-    public static parseDate(value: any, dateTimeParts?: DatePartInfo[], mask?: string): Date | null {
-        const parsedString = new Date(value);
-        if (DateTimeUtil.isValidDate(parsedString)) {
-            return parsedString;
-        }
-        // providing true/false (same as 1/0) as value will cause this to behave incorrectly
-        // so we wait for the Date constructor to try and parse all values first
-        if (!value) {
-            return null;
-        }
-
-        // if parsedString is not a valid date, it's a date string not in ISO format
-        // attempt to parse it using the date parts or the mask, if such are provided
-        if (mask || dateTimeParts) {
-            if (!dateTimeParts) {
-                dateTimeParts = DateTimeUtil.parseDateTimeFormat(mask);
-            }
-            return DateTimeUtil.parseValueFromMask(value, dateTimeParts);
-        }
-
-        return null;
     }
 
     /**

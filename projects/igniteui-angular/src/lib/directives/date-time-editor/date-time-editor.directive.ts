@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { KEYS } from '../../core/utils';
+import { isDate, KEYS } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -357,8 +357,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    const maxValueAsDate = DateTimeUtil.parseDate(this.maxValue, this._inputDateParts);
-    const minValueAsDate = DateTimeUtil.parseDate(this.minValue, this._inputDateParts);
+    const maxValueAsDate = isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    const minValueAsDate = isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     if (minValueAsDate
       && DateTimeUtil.lessThanMinValue(
         control.value, minValueAsDate, this.hasTimeParts, this.hasDateParts)) {
@@ -396,7 +396,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public onInputChanged() {
     super.onInputChanged();
     if (this.inputIsComplete()) {
-      const parsedDate = DateTimeUtil.parseDate(this.inputValue, this._inputDateParts);
+      const parsedDate = this.parseDate(this.inputValue);
       if (DateTimeUtil.isValidDate(parsedDate)) {
         this.updateValue(parsedDate);
       } else {
@@ -445,7 +445,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public onBlur(value: string): void {
     this._isFocused = false;
     if (!this.inputIsComplete() && this.inputValue !== this.emptyMask) {
-      this.updateValue(DateTimeUtil.parseDate(this.inputValue, this._inputDateParts));
+      this.updateValue(this.parseDate(this.inputValue));
     } else {
       this.updateMask();
     }
@@ -473,6 +473,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this.inputValue = this.value.toLocaleString();
       }
     }
+  }
+
+  // TODO: move parseDate to utils
+  public parseDate(val: string): Date | null {
+    if (!val) {
+      return null;
+    }
+    return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
 
   private getMaskedValue(): string {
@@ -509,8 +517,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     if (!value) {
       return false;
     }
-    const maxValueAsDate = DateTimeUtil.parseDate(this.maxValue, this._inputDateParts);
-    const minValueAsDate = DateTimeUtil.parseDate(this.minValue, this._inputDateParts);
+    const maxValueAsDate = isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    const minValueAsDate = isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     if (minValueAsDate
       && DateTimeUtil.lessThanMinValue(
         value, minValueAsDate, this.hasTimeParts, this.hasDateParts)) {
