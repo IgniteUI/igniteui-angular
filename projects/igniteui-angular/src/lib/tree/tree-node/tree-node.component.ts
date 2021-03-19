@@ -123,6 +123,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @ViewChild('childrenContainer', { read: ElementRef })
     private childrenContainer: ElementRef;
 
+    @ViewChild('ghostTemplate', { read: ElementRef })
+    private header: ElementRef;
+
     // TODO: this should probably be dropped from the API
     /**
      * The unique ID of the node

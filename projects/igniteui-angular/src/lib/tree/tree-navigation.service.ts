@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxTree, IgxTreeNode } from './common';
+import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
 
 @Injectable()
@@ -28,14 +28,13 @@ export class IgxTreeNavigationService {
     }
 
     public set focusedNode(value: IgxTreeNode<any>) {
-        //this.lastActiveNode = this._activeNode;
-        //value.focus();
         this.lastFocusedNode = this._focusedNode;
         this._focusedNode = value;
         (this._focusedNode as any)?.cdr.markForCheck();
         if (this.lastFocusedNode?.id) {
             (this.lastFocusedNode as any).cdr.markForCheck();
         }
+        this.scrollIntoViewIfNeeded((this.focusedNode as any).header.nativeElement);
     }
 
     public handleFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
@@ -77,11 +76,11 @@ export class IgxTreeNavigationService {
 
     public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (!this.activeNode || !(NAVIGATION_KEYS.has(key))) {
+        if (!this.focusedNode || !(NAVIGATION_KEYS.has(key) || key === '*' || key === 'enter')) {
             return;
         }
-        const shift = event.shiftKey;
-        const ctrl = event.ctrlKey;
+        // const shift = event.shiftKey;
+        // const ctrl = event.ctrlKey;
         // if (NAVIGATION_KEYS.has(key)) {
         //     event.preventDefault();
         //     return;
@@ -97,7 +96,7 @@ export class IgxTreeNavigationService {
         // if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
         //     this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
         // }
-        this.getNextPosition(this.focusedNode, key, shift, ctrl, event);
+        this.getNextPosition(this.focusedNode, key, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
             //this.activeNode = position;
@@ -131,67 +130,57 @@ export class IgxTreeNavigationService {
             //visibleChildren[visibleChildren.length - 1].focus();
             //((event.target as HTMLElement).children[(event.target as HTMLElement).children.length - 1] as HTMLElement).focus();
             //(visibleChildren[visibleChildren.length - 1] as any).cdr.detectChanges();
-        }else {
+        } else {
             this.handleFocusedAndActiveNode(visibleChildren[0], false);
             //this.focusedNode = visibleChildren[0];
         }
         //this.focusedNode.focus();
     }
 
-    protected getNextPosition(node: IgxTreeNode<any>, key: string, shift: boolean, ctrl: boolean, event: KeyboardEvent) {
-        // if (!this.isDataRow(rowIndex, true) && (key.indexOf('down') < 0 || key.indexOf('up') < 0) && ctrl) {
-        //     return { rowIndex, colIndex };
-        // }
+    protected getNextPosition(node: IgxTreeNode<any>, key: string, event: KeyboardEvent) {
+        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => n.isFocusable);
         switch (key) {
-            // case 'end':
-            //     rowIndex = ctrl ? this.findLastDataRowIndex() : this.activeNode.row;
-            //     colIndex = this.lastColumnIndex;
-            //     break;
-            // case 'home':
-            //     rowIndex = ctrl ? this.findFirstDataRowIndex() : this.activeNode.row;
-            //     colIndex = 0;
-            //     break;
-            // case 'arrowleft':
-            // case 'left':
-            //     colIndex = ctrl ? 0 : this.activeNode.column - 1;
-            //     break;
-            // case 'arrowright':
-            // case 'right':
-            //     colIndex = ctrl ? this.lastColumnIndex : this.activeNode.column + 1;
-            //     break;
+            case 'home':
+                this.handleFocusedAndActiveNode(visibleChildren[0]);
+                break;
+            case 'end':
+                this.handleFocusedAndActiveNode(visibleChildren[visibleChildren.length - 1]);
+                break;
+            case 'arrowleft':
+            case 'left':
+                this.handleArrowLeft();
+                break;
+            case 'arrowright':
+            case 'right':
+                this.handleArrowRight();
+                break;
             case 'arrowup':
             case 'up':
-                this.handleTab(true, event);
+                this.handleUpDownArrow(true, event);
                 break;
             case 'arrowdown':
             case 'down':
-                this.handleTab(false, event);
+                this.handleUpDownArrow(false, event);
                 break;
-            // case ' ':
-            // case 'spacebar':
-            // case 'space':
-            //     const rowObj = this.grid.getRowByIndex(this.activeNode.row);
-            //     if (this.grid.isRowSelectable && rowObj) {
-            //         if (this.isDataRow(rowIndex)) {
-            //             if (rowObj.selected) {
-            //                 this.grid.selectionService.deselectRow(rowObj.rowID, event);
-            //             } else {
-            //                 this.grid.selectionService.selectRowById(rowObj.rowID, false, event);
-            //             }
-            //         }
-            //         if (this.isGroupRow(rowIndex)) {
-            //             ((rowObj as any) as IgxGridGroupByRowComponent).onGroupSelectorClick(event);
-            //         }
-            //     }
-            //     break;
+            case '*':
+                this.handleAsterisk();
+                break;
+            case ' ':
+            case 'spacebar':
+            case 'space':
+                this.handleSpace(event.shiftKey);
+                break;
+            case 'enter':
+                this.handleEnter(event.ctrlKey);
+                break;
             default:
                 return;
         }
         return node;
     }
 
-    protected handleTab(shift: boolean, event: KeyboardEvent) {
-        const next = shift ? this.tree.getPreviousNode(this.focusedNode) :
+    protected handleUpDownArrow(isUp: boolean, event: KeyboardEvent) {
+        const next = isUp ? this.tree.getPreviousNode(this.focusedNode) :
             this.tree.getNextNode(this.focusedNode);
         if (next === this.focusedNode) {
             return;
@@ -222,8 +211,88 @@ export class IgxTreeNavigationService {
         //     //this.tree.cdr.detectChanges();
         // });
 
-        this.handleFocusedAndActiveNode(next);
+        if (event.ctrlKey) {
+            this.handleFocusedAndActiveNode(next, false);
+        } else {
+            this.handleFocusedAndActiveNode(next);
+        }
+        // requestAnimationFrame(() => {
+        //     this.scrollIntoViewIfNeeded(document.getElementsByClassName('igx-tree-node--focused')[0]);
+        // });
         //this.focusedNode = next;
+    }
+
+    protected handleArrowRight() {
+        if (this.focusedNode.children.length > 0) {
+            if (!this.focusedNode.expanded) {
+                this.handleFocusedAndActiveNode(this.focusedNode);
+                this.focusedNode.expanded = true;
+            } else {
+                this.handleFocusedAndActiveNode(this.focusedNode.children.first);
+            }
+        }
+    }
+
+    protected handleArrowLeft() {
+        if (this.focusedNode.expanded) {
+            this.handleFocusedAndActiveNode(this.focusedNode);
+            this.focusedNode.expanded = false;
+        } else {
+            if (this.focusedNode.parentNode) {
+                this.handleFocusedAndActiveNode(this.focusedNode.parentNode);
+            }
+        }
+    }
+
+    protected handleAsterisk() {
+        if (this.focusedNode.parentNode) {
+            const children = this.focusedNode.parentNode.children;
+            children.forEach(child => child.expanded = true);
+        } else {
+            const rootNodes = this.tree.nodes.filter(node => node.level === 0);
+            rootNodes.forEach(node => node.expanded = true);
+        }
+    }
+
+    protected handleSpace(shiftKey = false) {
+        if (this.tree.selection === IGX_TREE_SELECTION_TYPE.None) {
+            return;
+        }
+
+        this.handleFocusedAndActiveNode(this.focusedNode);
+        if (shiftKey) {
+            (this.tree as any).selectionService.selectMultipleNodes(this.focusedNode);
+            return;
+        }
+
+        if (this.focusedNode.selected) {
+            (this.tree as any).selectionService.deselectNode(this.focusedNode);
+        } else {
+            (this.tree as any).selectionService.selectNode(this.focusedNode);
+        }
+    }
+
+    protected handleEnter(ctrlKey = false) {
+        //(this.focusedNode as any).element.nativeElement.querySelectorAll('a')[0].focus();
+        const ref = (this.focusedNode as any).element.nativeElement.querySelectorAll('a')[0].href;
+        if (ref) {
+            if (ctrlKey) {
+                window.open(ref);
+            } else {
+                window.open(ref, '_self');
+            }
+        }
+    }
+    protected scrollIntoViewIfNeeded(target) {
+        if (!target) {
+            return;
+        }
+        if (target?.getBoundingClientRect().bottom > window.innerHeight) {
+            target.scrollIntoView(false);
+        }
+        if (target?.getBoundingClientRect().top < 0) {
+            target.scrollIntoView();
+        }
     }
 
     // protected navigateInBody(next, cb: (arg: any) => void = null): void {
