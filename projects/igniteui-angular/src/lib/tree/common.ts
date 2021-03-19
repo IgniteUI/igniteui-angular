@@ -4,6 +4,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 
 // Component interfaces
 
+/** Comparer function that can be used when searching through IgxTreeNode<any>[] */
 export type IgxTreeSearchResolver = (data: any, node: IgxTreeNode<any>) => boolean;
 export interface IgxTree {
     id: string;

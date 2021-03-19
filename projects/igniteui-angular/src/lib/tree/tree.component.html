@@ -1,3 +1,4 @@
-<div class="tree__root" tabindex="0" (keydown)="navService.handleNavigation($event)" (focus)="navService.focusNode($event)" (blur)="navService.handleFocusedAndActiveNode(null, false)">
+<div class="tree__root" tabindex="0" (keydown)="navService.handleNavigation($event)"
+    (focus)="navService.focusNode($event)" (blur)="navService.handleFocusedAndActiveNode(null, false)">
     <ng-content select="igx-tree-node, igx-tree-nested-node"></ng-content>
 </div>

@@ -1,17 +1,19 @@
 import { EventEmitter } from '@angular/core';
 import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './common';
+import { TreeTestFunctions } from './tree-functions.spec';
+import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 
-describe('IgxTreeSelectionService - Unit Tests', () => {
+describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
     let selectionService: IgxTreeSelectionService;
     let mockEmitter: EventEmitter<ITreeNodeSelectionEvent>;
     let mockTree: IgxTree;
-    let mockNodesLevel1: IgxTreeNode<any>[];
-    let mockNodesLevel2_1: IgxTreeNode<any>[];
-    let mockNodesLevel2_2: IgxTreeNode<any>[];
-    let mockNodesLevel3_1: IgxTreeNode<any>[];
-    let mockNodesLevel3_2: IgxTreeNode<any>[];
-    let allNodes: IgxTreeNode<any>[];
+    let mockNodesLevel1: IgxTreeNodeComponent<any>[];
+    let mockNodesLevel2_1: IgxTreeNodeComponent<any>[];
+    let mockNodesLevel2_2: IgxTreeNodeComponent<any>[];
+    let mockNodesLevel3_1: IgxTreeNodeComponent<any>[];
+    let mockNodesLevel3_2: IgxTreeNodeComponent<any>[];
+    let allNodes: IgxTreeNodeComponent<any>[];
     const mockQuery1: any = {};
     const mockQuery2: any = {};
     const mockQuery3: any = {};
@@ -20,11 +22,11 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
 
     beforeEach(() => {
         selectionService = new IgxTreeSelectionService();
-        mockNodesLevel1 = createNodeSpies(null, [mockQuery2, mockQuery3], 3);
-        mockNodesLevel2_1 = createNodeSpies(mockNodesLevel1[0], [mockQuery4, mockQuery5], 2);
-        mockNodesLevel2_2 = createNodeSpies(mockNodesLevel1[1], null, 1);
-        mockNodesLevel3_1 = createNodeSpies(mockNodesLevel2_1[0], null, 2);
-        mockNodesLevel3_2 = createNodeSpies(mockNodesLevel2_1[1], null, 2);
+        mockNodesLevel1 = TreeTestFunctions.createNodeSpies(3, null, [mockQuery2, mockQuery3]);
+        mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel1[0], [mockQuery4, mockQuery5]);
+        mockNodesLevel2_2 = TreeTestFunctions.createNodeSpies(1, mockNodesLevel1[1], null);
+        mockNodesLevel3_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[0], null);
+        mockNodesLevel3_2 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[1], null);
         allNodes = [
             mockNodesLevel1[0],
             mockNodesLevel2_1[0],
@@ -36,11 +38,11 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
             mockNodesLevel1[2]
         ];
 
-        Object.assign(mockQuery1, createQueryListSpies(allNodes));
-        Object.assign(mockQuery2, createQueryListSpies(mockNodesLevel2_1));
-        Object.assign(mockQuery3, createQueryListSpies(mockNodesLevel2_2));
-        Object.assign(mockQuery4, createQueryListSpies(mockNodesLevel3_1));
-        Object.assign(mockQuery5, createQueryListSpies(mockNodesLevel3_2));
+        Object.assign(mockQuery1, TreeTestFunctions.createQueryListSpy(allNodes));
+        Object.assign(mockQuery2, TreeTestFunctions.createQueryListSpy(mockNodesLevel2_1));
+        Object.assign(mockQuery3, TreeTestFunctions.createQueryListSpy(mockNodesLevel2_2));
+        Object.assign(mockQuery4, TreeTestFunctions.createQueryListSpy(mockNodesLevel3_1));
+        Object.assign(mockQuery5, TreeTestFunctions.createQueryListSpy(mockNodesLevel3_2));
     });
 
     describe('IgxTreeSelectionService - BiState & None', () => {
@@ -573,23 +575,3 @@ describe('IgxTreeSelectionService - Unit Tests', () => {
         });
     });
 });
-const createNodeSpies = (parentNode: IgxTreeNode<any>, children: any[], count?: number): IgxTreeNode<any>[] => {
-    const nodesArr = [];
-    const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
-    for (let i = 0; i < count; i++) {
-        nodesArr.push(jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'],
-            { parentNode, children: children ? children[i] : null, selectedChange: mockEmitter }));
-    }
-    return nodesArr;
-};
-
-const createQueryListSpies = nodes => {
-    const mockQuery = jasmine.createSpyObj(['toArray', 'filter', 'forEach']);
-    Object.defineProperty(mockQuery, 'first', { value: nodes[0], enumerable: true });
-    Object.defineProperty(mockQuery, 'last', { value: nodes[nodes.length - 1], enumerable: true });
-    Object.defineProperty(mockQuery, 'length', { value: nodes.length, enumerable: true });
-    mockQuery.toArray.and.returnValue(nodes);
-    mockQuery.filter.and.callFake((cb) => nodes.filter(cb));
-    mockQuery.forEach.and.callFake((cb) => nodes.forEach(cb));
-    return mockQuery;
-};

@@ -1,7 +1,7 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
 <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
+    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
         <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"

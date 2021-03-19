@@ -108,7 +108,7 @@ export class TreeSampleComponent implements AfterViewInit {
         console.log(searchResult);
     }
 
-    public getNodes(){
+    public getNodes() {
         this.tree.getNextNode(this.tree.nodes.toArray()[0]);
     }
 

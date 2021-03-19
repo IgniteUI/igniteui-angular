@@ -5,4 +5,5 @@
 }
 
 @include igx-core($direction: rtl);
+@include igx-typography($font-family: $fluent-typeface, $type-scale: $fluent-type-scale);
 @include igx-fluent-light-theme($light-fluent-excel-palette);
