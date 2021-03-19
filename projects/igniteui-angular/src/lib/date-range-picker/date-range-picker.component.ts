@@ -17,11 +17,11 @@ import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { IBaseCancelableBrowserEventArgs, KEYS } from '../core/utils';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { IBaseCancelableBrowserEventArgs, KEYS, parseDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';
-import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
@@ -333,8 +333,8 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden @internal */
     public get appliedFormat(): string {
-        return DatePickerUtil.getLocaleDateFormat(this.locale, this.displayFormat)
-            || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+        return DateTimeUtil.getLocaleDateFormat(this.locale, this.displayFormat)
+            || DateTimeUtil.DEFAULT_INPUT_FORMAT;
     }
 
     /** @hidden @internal */
@@ -584,16 +584,16 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
                 }
             }
 
-            const min = DatePickerUtil.parseDate(this.minValue);
-            const max = DatePickerUtil.parseDate(this.maxValue);
-            const start = DatePickerUtil.parseDate(value.start);
-            const end = DatePickerUtil.parseDate(value.end);
-            if ((min && start && DatePickerUtil.lessThanMinValue(start, min, false))
-                || (min && end && DatePickerUtil.lessThanMinValue(end, min, false))) {
+            const min = parseDate(this.minValue);
+            const max = parseDate(this.maxValue);
+            const start = parseDate(value.start);
+            const end = parseDate(value.end);
+            if ((min && start && DateTimeUtil.lessThanMinValue(start, min, false))
+                || (min && end && DateTimeUtil.lessThanMinValue(end, min, false))) {
                 Object.assign(errors, { minValue: true });
             }
-            if ((max && start && DatePickerUtil.greaterThanMaxValue(start, max, false))
-                || (max && end && DatePickerUtil.greaterThanMaxValue(end, max, false))) {
+            if ((max && start && DateTimeUtil.greaterThanMaxValue(start, max, false))
+                || (max && end && DateTimeUtil.greaterThanMaxValue(end, max, false))) {
                 Object.assign(errors, { maxValue: true });
             }
         }
@@ -651,8 +651,8 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['locale']) {
-            this.inputFormat = DatePickerUtil.getDefaultInputFormat(this.locale || 'en') || DatePickerUtil.DEFAULT_INPUT_FORMAT;
+        if (changes['locale'] && !this.inputFormat) {
+            this.inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
         }
         if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.updateDisplayFormat();
@@ -826,11 +826,11 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private parseMinValue(value: string | Date): Date | null {
-        let minValue: Date = DatePickerUtil.parseDate(value);
+        let minValue: Date = parseDate(value);
         if (!minValue && this.hasProjectedInputs) {
             const start = this.projectedInputs.filter(i => i instanceof IgxDateRangeStartComponent)[0];
             if (start) {
-                minValue = DatePickerUtil.parseDate(start.dateTimeEditor.minValue);
+                minValue = parseDate(start.dateTimeEditor.minValue);
             }
         }
 
@@ -838,11 +838,11 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private parseMaxValue(value: string | Date): Date | null {
-        let maxValue: Date = DatePickerUtil.parseDate(value);
+        let maxValue: Date = parseDate(value);
         if (!maxValue && this.projectedInputs) {
             const end = this.projectedInputs.filter(i => i instanceof IgxDateRangeEndComponent)[0];
             if (end) {
-                maxValue = DatePickerUtil.parseDate(end.dateTimeEditor.maxValue);
+                maxValue = parseDate(end.dateTimeEditor.maxValue);
             }
         }
 
@@ -862,7 +862,7 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
         const range: Date[] = [];
         if (this.value?.start && this.value?.end) {
-            if (DatePickerUtil.greaterThanMaxValue(this.value.start, this.value.end)) {
+            if (DateTimeUtil.greaterThanMaxValue(this.value.start, this.value.end)) {
                 this.swapEditorDates();
             }
             if (this.valueInRange(this.value, minValue, maxValue)) {
@@ -888,10 +888,10 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
     }
 
     private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
-        if (minValue && DatePickerUtil.lessThanMinValue(value.start, minValue, false)) {
+        if (minValue && DateTimeUtil.lessThanMinValue(value.start, minValue, false)) {
             return false;
         }
-        if (maxValue && DatePickerUtil.greaterThanMaxValue(value.end, maxValue, false)) {
+        if (maxValue && DateTimeUtil.greaterThanMaxValue(value.end, maxValue, false)) {
             return false;
         }
 
