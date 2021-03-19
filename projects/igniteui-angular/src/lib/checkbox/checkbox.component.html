@@ -8,8 +8,7 @@
     [indeterminate]="indeterminate"
     [checked]="checked"
     [required]="required"
-    [attr.aria-checked]="ariaChecked"
-    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
     (change)="_onCheckboxChange($event)"
     (blur)="onBlur()" />
@@ -22,12 +21,11 @@
     [igxRippleDuration]="300"
     class="igx-checkbox__composite-wrapper"
 >
-    <label #label class="igx-checkbox__composite"
-        [attr.for]="inputId">
+    <span #label class="igx-checkbox__composite">
         <svg class="igx-checkbox__composite-mark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M4.1,12.7 9,17.6 20.3,6.3" />
         </svg>
-    </label>
+    </span>
 
     <div class="igx-checkbox__ripple"></div>
 </div>

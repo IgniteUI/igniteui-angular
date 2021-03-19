@@ -6,13 +6,12 @@
     [disabled]="disabled"
     [checked]="checked"
     [required]="required"
-    [attr.aria-checked]="checked"
-    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
     (change)="_onSwitchChange($event)"
     (blur)="onBlur()" />
 
-<label #label class ="igx-switch__composite" [for]="inputId"
+<span #label class ="igx-switch__composite"
     igxRipple
     igxRippleTarget=".igx-switch__ripple"
     [igxRippleDisabled]="disableRipple"
@@ -21,7 +20,7 @@
     <div class="igx-switch__composite-thumb">
         <div class="igx-switch__ripple"></div>
     </div>
-</label>
+</span>
 
 <span #placeholderLabel
     [class]="labelClass"

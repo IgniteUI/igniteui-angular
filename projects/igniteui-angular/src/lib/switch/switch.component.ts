@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -310,16 +310,9 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    @HostListener('click', ['$event'])
-    public _onSwitchClick(event: Event) {
-        event.stopPropagation();
-        event.preventDefault();
-
+    @HostListener('click')
+    public _onSwitchClick() {
         this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
     }
 
     /**

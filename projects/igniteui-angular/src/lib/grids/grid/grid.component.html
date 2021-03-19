@@ -345,7 +345,6 @@
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
             [aria-label]="headSelectorBaseAriaLabel"
-            (click)="onHeaderSelectorClick($event)"
             #headerCheckbox>
         </igx-checkbox>
     </div>

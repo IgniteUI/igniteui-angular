@@ -33,8 +33,9 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);
         fixture.detectChanges();
 
+        const checkbox = fixture.componentInstance.cb;
         const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
-        const nativeLabel = fixture.debugElement.query(By.css('label')).nativeElement;
+        const nativeLabel = checkbox.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
@@ -43,11 +44,18 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-checkbox-0-label');
 
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.getAttribute('for')).toEqual('igx-checkbox-0-input');
+        // No longer have a for attribute to not propagate clicks to the native checkbox
+        // expect(nativeLabel.getAttribute('for')).toEqual('igx-checkbox-0-input');
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-checkbox__label');
         expect(placeholderLabel.getAttribute('id')).toEqual('igx-checkbox-0-label');
+
+        // When aria-label is present, aria-labeledby shouldn't be
+        checkbox.ariaLabel = 'New Label';
+        fixture.detectChanges();
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toEqual(null);
+        expect(nativeCheckbox.getAttribute('aria-label')).toMatch('New Label');
     });
 
     it('Initializes with ngModel', fakeAsync(() => {
@@ -300,8 +308,10 @@ describe('IgxCheckbox', () => {
     });
 });
 
-@Component({ template: `<igx-checkbox>Init</igx-checkbox>` })
-class InitCheckboxComponent { }
+@Component({ template: `<igx-checkbox #cb>Init</igx-checkbox>` })
+class InitCheckboxComponent {
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+}
 
 @Component({
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"

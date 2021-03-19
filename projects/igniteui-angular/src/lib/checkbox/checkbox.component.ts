@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -387,21 +387,17 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         this.focused = true;
     }
     /** @hidden @internal */
-    @HostListener('click', ['$event'])
-    public _onCheckboxClick(event: Event) {
+    @HostListener('click')
+    public _onCheckboxClick() {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
         // we need to prevent the checkbox click event from bubbling up
         // as it gets triggered on label click
-        event.stopPropagation();
-        event.preventDefault();
+        // NOTE: The above is no longer valid, as the native checkbox is not labeled
+        // by the SVG anymore.
 
         this.indeterminate = false;
         this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
     }
     /**
      * If `disabled` is `false`, switches the `checked` state.
@@ -419,18 +415,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         this.nativeCheckbox.nativeElement.focus();
 
         this.checked = !this.checked;
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get ariaChecked() {
-       if (this.indeterminate) {
-           return 'mixed';
-       } else {
-           return this.checked;
-       }
     }
 
     /** @hidden @internal */
