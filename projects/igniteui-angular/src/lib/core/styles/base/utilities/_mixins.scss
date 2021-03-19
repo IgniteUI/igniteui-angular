@@ -160,10 +160,13 @@
 ///
 @mixin igx-palette-vars($palette, $contrast: true) {
     $scope: if(is-root(), ':root', '&');
+    $theme: map-get(map-get($palette, '_meta'), 'variant');
 
     #{$scope} {
         @each $name, $color in $palette {
             @each $variant, $value in $color {
+                $valid: not(str-index(#{$variant}, 'contrast')) and not(str-index(#{$variant}, 'variant'));
+
                 @if($variant == 500) {
                     --igx-#{$name}-h: #{round(hue($value))};
                     --igx-#{$name}-s: #{round(saturation($value))};
@@ -171,11 +174,13 @@
 
                     @if $name != 'grays' {
                         --igx-#{$name}-a: #{alpha($value)};
+                    } @else {
+                        --igx-#{$name}-a: 1;
                     }
                 }
 
-                @if not(str-index(#{$variant}, 'contrast')) {
-                    --igx-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant)};
+                @if $valid {
+                    --igx-#{$name}-#{$variant}: #{_gen-hsla-color($name, $variant, $theme)};
                 } @else {
                     --igx-#{$name}-#{$variant}: #{$value};
                 }
