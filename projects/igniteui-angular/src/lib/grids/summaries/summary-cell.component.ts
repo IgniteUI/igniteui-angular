@@ -35,9 +35,6 @@ export class IgxSummaryCellComponent {
     public density;
 
     @Input()
-    public pipeArgs: IColumnPipeArgs;
-
-    @Input()
     public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
 
     /** @hidden */
