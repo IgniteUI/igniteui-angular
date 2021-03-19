@@ -10,7 +10,7 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -351,9 +351,8 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     /**
      * @hidden
      */
-    @HostListener('click', ['$event'])
-    public _clicked(event: MouseEvent) {
-        event.stopPropagation();
+    @HostListener('click')
+    public _clicked() {
         this.select();
     }
 
@@ -367,10 +366,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      */
     public select() {
         this.nativeRadio.nativeElement.focus();
-
-        if (isIE()) {
-            this.nativeRadio.nativeElement.blur();
-        }
 
         if(!this.checked) {
             this.checked = true;

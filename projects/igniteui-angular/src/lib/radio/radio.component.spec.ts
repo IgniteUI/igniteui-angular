@@ -130,6 +130,8 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
 
         expect(nativeRadio.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
+        // aria-labelledby should not be present when aria-label is
+        expect(nativeRadio.getAttribute('aria-labelledby')).toEqual(null);
     });
 
     it('Disabled state', fakeAsync(() => {
