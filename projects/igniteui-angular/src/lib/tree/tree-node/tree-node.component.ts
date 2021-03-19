@@ -71,7 +71,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Output()
     public selectedChange = new EventEmitter<boolean>();
 
-    // // TODO: bind to active state when keynav is implemented
+    // TODO: bind to active state when keynav is implemented
     /** @hidden @internal */
     // @HostBinding('class.igx-tree-node--active')
     public get active() {
