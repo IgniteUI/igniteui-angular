@@ -2257,7 +2257,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return this.id;
         }
 
-        return this.id + '_' + activeElem.row + '_' + activeElem.column;
+        return activeElem.row < 0 ?
+        `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
+        `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /**
