@@ -214,9 +214,8 @@
 </div>
 
 
-<div class="igx-grid__tfoot" role="rowgroup">
-    <div [style.height.px]='summariesHeight' tabindex="0"
-    (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" #tfoot [attr.aria-activedescendant]="activeDescendant">
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+    <div tabindex="0" (focus)="navigation.focusFirstCell(false)" (keydown)="navigation.summaryNav($event)" [attr.aria-activedescendant]="activeDescendant">
         <igx-grid-summary-row [style.width.px]='calcWidth'  [style.height.px]='summariesHeight'
             *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
             [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"

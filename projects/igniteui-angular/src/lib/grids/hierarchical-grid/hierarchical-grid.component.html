@@ -180,9 +180,9 @@
     </div>
 </div>
 
-<div class="igx-grid__tfoot" role="rowgroup">
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
     <div tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
-     (keydown)="navigation.summaryNav($event)" [style.height.px]='summariesHeight' #tfoot>
+     (keydown)="navigation.summaryNav($event)">
         <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
             *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
             [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
