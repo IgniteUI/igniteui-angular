@@ -181,7 +181,7 @@
 
                 @if $valid {
                     --igx-#{$name}-#{$variant}: #{_gen-hsla-color($name, $variant, $theme)};
-                } @else {
+                } @else if $name != '_meta' {
                     --igx-#{$name}-#{$variant}: #{$value};
                 }
             }
