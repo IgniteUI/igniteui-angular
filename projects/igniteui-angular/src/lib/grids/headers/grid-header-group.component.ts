@@ -71,7 +71,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('attr.id')
     public get headerID() {
-        return `${this.gridID}_-1_${this.column.visibleIndex}`;
+        return `${this.gridID}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
 
     /**
