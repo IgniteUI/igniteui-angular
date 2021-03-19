@@ -167,7 +167,7 @@
 
     %tree-node-wrapper {
         min-height: map-get($node-height, 'comfortable');
-        padding-#{$right}: map-get($node-indent, 'comfortable');
+        padding: 0 map-get($node-indent, 'comfortable');
         background: --var($theme, 'background');
         color: --var($theme, 'color');
 
@@ -183,6 +183,7 @@
 
         &--cosy {
             min-height: map-get($node-height, 'cosy');
+            padding: 0 map-get($node-indent, 'cosy');
 
             %tree-node-spacer {
                 width: map-get($node-indent, 'cosy')
@@ -191,6 +192,7 @@
 
         &--compact {
             min-height: map-get($node-height, 'compact');
+            padding: 0 map-get($node-indent, 'compact');
 
             %tree-node-spacer {
                 width: map-get($node-indent, 'compact')
