@@ -475,7 +475,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  public parseDate(val: string): Date | null {
+  private parseDate(val: string): Date | null {
     if (!val) {
       return null;
     }
