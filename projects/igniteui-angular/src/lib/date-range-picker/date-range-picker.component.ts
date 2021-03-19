@@ -651,8 +651,8 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     /** @hidden @internal */
     public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['locale']) {
-            this.inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale) || DateTimeUtil.DEFAULT_INPUT_FORMAT;
+        if (changes['locale'] && !this.inputFormat) {
+            this.inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
         }
         if (changes['displayFormat'] && this.hasProjectedInputs) {
             this.updateDisplayFormat();

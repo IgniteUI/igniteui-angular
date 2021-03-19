@@ -357,8 +357,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    const maxValueAsDate = isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
-    const minValueAsDate = isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueAsDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    const minValueAsDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     if (minValueAsDate
       && DateTimeUtil.lessThanMinValue(
         control.value, minValueAsDate, this.hasTimeParts, this.hasDateParts)) {
@@ -401,9 +401,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this.updateValue(parsedDate);
       } else {
         const oldValue = this.value && new Date(this.value.getTime());
-        const args = { oldValue, newValue: parsedDate, userInput: this.inputValue };
+        const args: IgxDateTimeEditorEventArgs = { oldValue, newValue: parsedDate, userInput: this.inputValue };
         this.validationFailed.emit(args);
-        if (args.newValue?.getTime && args.newValue.getTime() !== oldValue.getTime()) {
+        if (DateTimeUtil.isValidDate(args.newValue)) {
           this.updateValue(args.newValue);
         } else {
           this.updateValue(null);
@@ -475,7 +475,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  // TODO: move parseDate to utils
   public parseDate(val: string): Date | null {
     if (!val) {
       return null;
@@ -579,6 +578,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this._oldValue = this.value;
     this.value = newDate;
 
+    // TODO: should we emit events here?
     if (this.value && !this.valueInRange(this.value)) {
       this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
     }

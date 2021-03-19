@@ -20,12 +20,9 @@ const enum DateParts {
 }
 
 /** @hidden */
-export class DateTimeUtil {
+export abstract class DateTimeUtil {
     public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
-    // TODO: this is the def mask for the date-picker, should remove it when we implement locale based default format
-    private static readonly SHORT_DATE_MASK = 'MM/dd/yy';
     private static readonly SEPARATOR = 'literal';
-    private static readonly PROMPT_CHAR = '_';
     private static readonly DEFAULT_LOCALE = 'en';
 
     /**
@@ -112,7 +109,7 @@ export class DateTimeUtil {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
         if (!Intl || !Intl.DateTimeFormat || !Intl.DateTimeFormat.prototype.formatToParts) {
             // TODO: fallback with Intl.format for IE?
-            return DateTimeUtil.SHORT_DATE_MASK;
+            return DateTimeUtil.DEFAULT_INPUT_FORMAT;
         }
         const parts = DateTimeUtil.getDefaultLocaleMask(locale);
         parts.forEach(p => {
@@ -275,9 +272,6 @@ export class DateTimeUtil {
      * @returns true if provided value is greater than provided maxValue
      */
     public static greaterThanMaxValue(value: Date, maxValue: Date, includeTime = true, includeDate = true): boolean {
-        if (!DateTimeUtil.isValidDate(value) || !DateTimeUtil.isValidDate(maxValue)) {
-            return false;
-        }
         if (includeTime && includeDate) {
             return value.getTime() > maxValue.getTime();
         }
@@ -304,9 +298,6 @@ export class DateTimeUtil {
      * @returns true if provided value is less than provided minValue
      */
     public static lessThanMinValue(value: Date, minValue: Date, includeTime = true, includeDate = true): boolean {
-        if (!DateTimeUtil.isValidDate(value) || !DateTimeUtil.isValidDate(minValue)) {
-            return false;
-        }
         if (includeTime && includeDate) {
             return value.getTime() < minValue.getTime();
         }
@@ -354,7 +345,7 @@ export class DateTimeUtil {
      * @param value input to check
      * @returns true if provided input is a valid date
      */
-    public static isValidDate(value: any): boolean {
+    public static isValidDate(value: any): value is Date {
         if (isDate(value)) {
             return !isNaN(value.getTime());
         }

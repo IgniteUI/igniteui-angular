@@ -50,7 +50,8 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
             expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
 
-            return 'TODO';
+            // TODO
+            return;
             result = DateTimeUtil.parseDateTimeFormat('dd.MM.yyyyг');
             resDict = reduceToDictionary(result);
             expect(result.length).toEqual(6);
@@ -143,16 +144,19 @@ describe(`DateTimeUtil Unit tests`, () => {
         result = DateTimeUtil.getDefaultInputFormat('bg-BG');
         expect(result).toEqual('dd.MM.yyyy г.');
 
-        result = DateTimeUtil.getDefaultInputFormat(null);
-        expect(DateTimeUtil.getDefaultInputFormat).not.toThrow();
+        expect(() => {
+            result = DateTimeUtil.getDefaultInputFormat(null);
+        }).not.toThrow();
         expect(result).toEqual('MM/dd/yyyy');
 
-        result = DateTimeUtil.getDefaultInputFormat('');
-        expect(DateTimeUtil.getDefaultInputFormat).not.toThrow();
+        expect(() => {
+            result = DateTimeUtil.getDefaultInputFormat('');
+        }).not.toThrow();
         expect(result).toEqual('MM/dd/yyyy');
 
-        result = DateTimeUtil.getDefaultInputFormat(undefined);
-        expect(DateTimeUtil.getDefaultInputFormat).not.toThrow();
+        expect(() => {
+            result = DateTimeUtil.getDefaultInputFormat(undefined);
+        }).not.toThrow();
         expect(result).toEqual('MM/dd/yyyy');
     });
 
@@ -455,7 +459,8 @@ describe(`DateTimeUtil Unit tests`, () => {
         minValue = new Date(2010, 3, 2, 10, 10, 10);
         maxValue = new Date(2010, 3, 2, 15, 15, 15);
 
-        return 'test with time portions as well';
+        // TODO: test with time portions as well
+        return;
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 11, 11, 11), minValue, maxValue)).toEqual({});
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 9, 11, 11), minValue, maxValue)).toEqual({ minValue: true });
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 16, 11, 11), minValue, maxValue)).toEqual({ maxValue: true });
