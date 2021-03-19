@@ -29,7 +29,7 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
-xdescribe('IgxTabs', () => {
+describe('IgxTabs', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
@@ -65,7 +65,7 @@ xdescribe('IgxTabs', () => {
         it('should set the correct attributes on the html elements', fakeAsync(() => {
             fixture.detectChanges();
 
-            const igxTabs = document.querySelectorAll('igx-tabs');
+            const igxTabs = document.querySelectorAll('igx-tabs-old');
             expect(igxTabs.length).toBe(2);
 
             const startTabsIndex = parseInt(igxTabs[0].id.replace('igx-tabs-', ''), 10);
@@ -73,7 +73,7 @@ xdescribe('IgxTabs', () => {
                 const tab = igxTabs[tabIndex - startTabsIndex];
                 expect(tab.id).toEqual(`igx-tabs-${tabIndex}`);
 
-                const tabHeaders = tab.querySelectorAll('igx-tab-item');
+                const tabHeaders = tab.querySelectorAll('igx-tab-item-old');
                 const tabContents = tab.querySelectorAll('igx-tabs-group');
                 expect(tabHeaders.length).toBe(3);
                 expect(tabContents.length).toBe(3);
@@ -834,7 +834,7 @@ xdescribe('IgxTabs', () => {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs (onTabSelected)="tabSelectedHandler($event)">
+            <igx-tabs-old (onTabSelected)="tabSelectedHandler($event)">
                 <igx-tabs-group label="Tab 1" icon="library_music">
                     <h1>Tab 1 Content</h1>
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
@@ -859,7 +859,7 @@ xdescribe('IgxTabs', () => {
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                     </p>
                 </igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>`
 })
 class TabsTestComponent {
@@ -873,9 +873,9 @@ class TabsTestComponent {
 @Component({
     template: `
         <div #wrapperDiv style="display: flex;">
-            <igx-tabs (onTabSelected)="tabSelectedHandler()">
+            <igx-tabs-old (onTabSelected)="tabSelectedHandler()">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>`
 })
 class TabsTest2Component {
@@ -928,7 +928,7 @@ class TabsTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-        <igx-tabs type="fixed">
+        <igx-tabs-old type="fixed">
             <igx-tabs-group label="Tab111111111111111111111111">
                 <ng-template igxTab>
                     <div>T1</div>
@@ -947,7 +947,7 @@ class TabsTest2Component {
                 </ng-template>
                 <h1>Tab 3 Content</h1>
             </igx-tabs-group>
-        </igx-tabs>
+        </igx-tabs-old>
         </div>`
 })
 class TemplatedTabsTestComponent {
@@ -958,9 +958,9 @@ class TemplatedTabsTestComponent {
 @Component({
     template: `
         <div>
-            <igx-tabs [selectedIndex]="2">
+            <igx-tabs-old [selectedIndex]="2">
                 <igx-tabs-group *ngFor="let tab of collection" [label]="tab.name"></igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>`
 })
 class TabsTestSelectedTabComponent {
@@ -981,14 +981,14 @@ class TabsTestSelectedTabComponent {
 @Component({
     template:
         `
-        <igx-tabs class="tabsClass">
+        <igx-tabs-old class="tabsClass">
             <igx-tabs-group class="groupClass" label="Tab1">
                 Content 1
             </igx-tabs-group>
             <igx-tabs-group label="Tab2">
                 Content 2
             </igx-tabs-group>
-        </igx-tabs>
+        </igx-tabs-old>
         `
 })
 class TabsTestCustomStylesComponent {
@@ -1002,14 +1002,14 @@ class TabsTestCustomStylesComponent {
         </button>
         <igx-drop-down #userProfile>
             <div>
-                <igx-tabs selectedIndex="1">
+                <igx-tabs-old selectedIndex="1">
                     <igx-tabs-group label="tab1">
                         Tab content 1
                     </igx-tabs-group>
                     <igx-tabs-group label="tab2">
                         Tab content 2
                     </igx-tabs-group>
-                </igx-tabs>
+                </igx-tabs-old>
             </div>
         </igx-drop-down>
         `
@@ -1021,14 +1021,14 @@ class TabsTestBug4420Component {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
-                <igx-tab-item label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
-                </igx-tab-item>
-            </igx-tabs>
+            <igx-tabs-old>
+                <igx-tab-item-old label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive">
+                </igx-tab-item-old>
+            </igx-tabs-old>
             <div>
                 <router-outlet></router-outlet>
             </div>
@@ -1043,21 +1043,21 @@ class TabsRoutingTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
-                <igx-tab-item label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive"
+            <igx-tabs-old>
+                <igx-tab-item-old label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive"
                     [disabled]="true">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive"
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 2" routerLink="/view2" routerLinkActive #rla2="routerLinkActive" [isSelected]="rla2.isActive">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 3" routerLink="/view3" routerLinkActive #rla3="routerLinkActive" [isSelected]="rla3.isActive"
                     [disabled]="true">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 4" routerLink="/view4" routerLinkActive #rla4="routerLinkActive" [isSelected]="rla4.isActive">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 5" routerLink="/view5" routerLinkActive #rla5="routerLinkActive" [isSelected]="rla5.isActive"
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 4" routerLink="/view4" routerLinkActive #rla4="routerLinkActive" [isSelected]="rla4.isActive">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 5" routerLink="/view5" routerLinkActive #rla5="routerLinkActive" [isSelected]="rla5.isActive"
                     [disabled]="true">
-                </igx-tab-item>
-            </igx-tabs>
+                </igx-tab-item-old>
+            </igx-tabs-old>
             <div>
                 <router-outlet></router-outlet>
             </div>
@@ -1072,12 +1072,12 @@ class TabsRoutingDisabledTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
-                <igx-tab-item label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
-                </igx-tab-item>
-                <igx-tab-item label="Tab X" routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [isSelected]="rlaX.isActive">
-                </igx-tab-item>
-            </igx-tabs>
+            <igx-tabs-old>
+                <igx-tab-item-old label="Tab 1" routerLink="/view1" routerLinkActive #rla1="routerLinkActive" [isSelected]="rla1.isActive">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab X" routerLink="/view5" routerLinkActive #rlaX="routerLinkActive" [isSelected]="rlaX.isActive">
+                </igx-tab-item-old>
+            </igx-tabs-old>
             <div>
                 <router-outlet></router-outlet>
             </div>
@@ -1092,14 +1092,14 @@ class TabsRoutingGuardTestComponent {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
-                <igx-tab-item label="Tab 1">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 2" [isSelected]="true">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 3">
-                </igx-tab-item>
-            </igx-tabs>
+            <igx-tabs-old>
+                <igx-tab-item-old label="Tab 1">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 2" [isSelected]="true">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 3">
+                </igx-tab-item-old>
+            </igx-tabs-old>
         </div>
     `
 })
@@ -1111,14 +1111,14 @@ class TabsTabsOnlyModeTest1Component {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs selectedIndex="2">
-                <igx-tab-item label="Tab 1">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 2">
-                </igx-tab-item>
-                <igx-tab-item label="Tab 3">
-                </igx-tab-item>
-            </igx-tabs>
+            <igx-tabs-old selectedIndex="2">
+                <igx-tab-item-old label="Tab 1">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 2">
+                </igx-tab-item-old>
+                <igx-tab-item-old label="Tab 3">
+                </igx-tab-item-old>
+            </igx-tabs-old>
         </div>
     `
 })
@@ -1130,7 +1130,7 @@ class TabsTabsOnlyModeTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-            <igx-tabs>
+            <igx-tabs-old>
                 <igx-tabs-group label="Tab 1" [disabled]="true">
                 </igx-tabs-group>
                 <igx-tabs-group label="Tab 2">
@@ -1141,7 +1141,7 @@ class TabsTabsOnlyModeTest2Component {
                 </igx-tabs-group>
                 <igx-tabs-group label="Tab 5" [disabled]="true">
                 </igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>
     `
 })
@@ -1152,7 +1152,7 @@ class TabsDisabledTestComponent {
 @Component({
     template: `
         <div #wrapperDiv1>
-            <igx-tabs [selectedIndex]="0">
+            <igx-tabs-old [selectedIndex]="0">
                 <igx-tabs-group label="Tab 1">
                     <div>Content 1</div>
                 </igx-tabs-group>
@@ -1162,10 +1162,10 @@ class TabsDisabledTestComponent {
                 <igx-tabs-group label="Tab 3">
                     <div>Content 3</div>
                 </igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>
         <div #wrapperDiv2>
-            <igx-tabs [selectedIndex]="0">
+            <igx-tabs-old [selectedIndex]="0">
                 <igx-tabs-group label="Tab 4">
                     <div>Content 4</div>
                 </igx-tabs-group>
@@ -1175,7 +1175,7 @@ class TabsDisabledTestComponent {
                 <igx-tabs-group label="Tab 6">
                     <div>Content 6</div>
                 </igx-tabs-group>
-            </igx-tabs>
+            </igx-tabs-old>
         </div>`
 })
 class TabsTestHtmlAttributesComponent {

@@ -33,7 +33,7 @@ const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
 const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
 const CSS_CLASS_TABS = '.igx-tabs__header-menu-item';
 
-describe('IgxDropDown ', () => {
+fdescribe('IgxDropDown ', () => {
     let fixture;
     let dropdown: IgxDropDownComponent;
     describe('Unit tests', () => {
@@ -1282,17 +1282,18 @@ class DoubleIgxDropDownComponent implements OnInit {
 
     public items: any[] = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         for (let index = 1; index < 100; index++) {
             this.items.push({ field: 'Item ' + index });
         }
     }
 }
+
 @Component({
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (tabItemSelected)="toggleDropDown()" tabsType="fixed">
+    <igx-tabs-old (tabItemSelected)="toggleDropDown()" tabsType="fixed">
         <igx-tabs-group label="Tab111111111111111111111111">
             <ng-template igxTab>
                 <div>T1</div>
@@ -1311,7 +1312,7 @@ class DoubleIgxDropDownComponent implements OnInit {
             </ng-template>
             <h1>Tab 3 Content</h1>
         </igx-tabs-group>
-    </igx-tabs>
+    </igx-tabs-old>
     <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
     (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
