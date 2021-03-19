@@ -7,8 +7,15 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
-
-
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    -  The `IgxRowAddTextDirective` allows to customize the text of the row adding overlay.
+        ```html
+             <igx-grid [rowEditable]="true">
+                <ng-template igxRowAddText>
+                    Adding Row {{rowChangesCount}}
+                </ng-template>
+            </igx-grid>
+        ```
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
