@@ -145,13 +145,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         super(builder);
     }
 
-    public get isFocusable(): boolean {
-        if (!this.parentNode) {
-            return true;
-        }
-        return this.parentNode.expanded;
-    }
-
     /**
      * @hidden @internal
      */

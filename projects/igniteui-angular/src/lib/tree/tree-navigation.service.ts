@@ -34,7 +34,9 @@ export class IgxTreeNavigationService {
         if (this.lastFocusedNode?.id) {
             (this.lastFocusedNode as any).cdr.markForCheck();
         }
-        this.scrollIntoViewIfNeeded((this.focusedNode as any).header.nativeElement);
+        if ((this.focusedNode as any).header) {
+            this.scrollIntoViewIfNeeded((this.focusedNode as any).header.nativeElement);
+        }
     }
 
     public handleFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
@@ -72,6 +74,16 @@ export class IgxTreeNavigationService {
         } else {
             this.dispatchEvent(event);
         }
+    }
+
+    public isFocusable(node: IgxTreeNode<any>): boolean {
+        if (!node.parentNode) {
+            return true;
+        }
+        if (!node.parentNode.expanded) {
+            return false;
+        }
+        return this.isFocusable(node.parentNode);
     }
 
     public dispatchEvent(event: KeyboardEvent) {
@@ -122,7 +134,7 @@ export class IgxTreeNavigationService {
         //     return;
         // }
         //(event.target as HTMLElement).blur();
-        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => n.isFocusable);
+        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
         // === this.tree.nativeElement.parentElement
         if ((this.tree as any).nativeElement.parentElement.nextSibling.contains(event.relatedTarget)) {
             this.handleFocusedAndActiveNode(visibleChildren[visibleChildren.length - 1], false);
@@ -138,7 +150,7 @@ export class IgxTreeNavigationService {
     }
 
     protected getNextPosition(node: IgxTreeNode<any>, key: string, event: KeyboardEvent) {
-        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => n.isFocusable);
+        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
         switch (key) {
             case 'home':
                 this.handleFocusedAndActiveNode(visibleChildren[0]);
@@ -284,9 +296,6 @@ export class IgxTreeNavigationService {
         }
     }
     protected scrollIntoViewIfNeeded(target) {
-        if (!target) {
-            return;
-        }
         if (target?.getBoundingClientRect().bottom > window.innerHeight) {
             target.scrollIntoView(false);
         }

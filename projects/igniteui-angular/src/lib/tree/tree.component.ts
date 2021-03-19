@@ -368,7 +368,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     public getPreviousNode(node: IgxTreeNodeComponent<any>) {
-        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => n.isFocusable);
+        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
         const nodeIndex = visibleChildren.indexOf(node);
         if (nodeIndex > 0) {
             return visibleChildren[nodeIndex - 1];
@@ -377,7 +377,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     public getNextNode(node: IgxTreeNodeComponent<any>) {
-        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => n.isFocusable);
+        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
         const nodeIndex = visibleChildren.indexOf(node);
         if (nodeIndex < visibleChildren.length - 1) {
             return visibleChildren[nodeIndex + 1];

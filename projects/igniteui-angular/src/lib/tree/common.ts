@@ -37,7 +37,6 @@ export interface IgxTreeNode<T> {
     level: number;
     data: T;
     children: QueryList<IgxTreeNode<any>> | null;
-    isFocusable: boolean;
     selectedChange: EventEmitter<boolean>;
 }
 
