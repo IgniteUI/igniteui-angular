@@ -12,7 +12,7 @@ All notable changes for each version of this project will be documented in this 
         ```html
              <igx-grid [rowEditable]="true">
                 <ng-template igxRowAddText>
-                    Adding Row {{rowChangesCount}}
+                    Adding Row
                 </ng-template>
             </igx-grid>
         ```
