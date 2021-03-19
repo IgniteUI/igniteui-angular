@@ -64,11 +64,12 @@ import {
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
 import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
-import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
+import { IgxDatePickerTemplateDirective } from './date-picker.directives';
 import { InteractionMode } from '../core/enums';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
+import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 
 let NEXT_ID = 0;
 
@@ -700,8 +701,8 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * @hidden
      */
-    @ContentChild(IgxDatePickerActionsDirective, { read: IgxDatePickerActionsDirective })
-    public datePickerActionsDirective: IgxDatePickerActionsDirective;
+    @ContentChild(IgxPickerActionsDirective, { read: IgxPickerActionsDirective })
+    public datePickerActionsDirective: IgxPickerActionsDirective;
 
     /*
      * @hidden
@@ -1391,12 +1392,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
         componentInstance.mode = this.mode;
         componentInstance.vertical = isVertical;
-        componentInstance.cancelButtonLabel = this.cancelButtonLabel;
+        componentInstance.closeButtonLabel = this.cancelButtonLabel;
         componentInstance.todayButtonLabel = this.todayButtonLabel;
-        componentInstance.datePickerActions = this.datePickerActionsDirective;
+        componentInstance.pickerActions = this.datePickerActionsDirective;
 
-        // componentInstance.onClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
-        // componentInstance.onTodaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
+        componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.closeCalendar());
+        componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.triggerTodaySelection());
     }
 
     // Focus a date, after the calendar appearance into DOM.
@@ -1469,22 +1470,18 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 @NgModule({
     declarations: [
         IgxDatePickerComponent,
-        IgxCalendarContainerComponent,
-        IgxDatePickerActionsDirective,
         IgxDatePickerTemplateDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe
     ],
-    entryComponents: [
-        IgxCalendarContainerComponent
-    ],
+    entryComponents: [IgxCalendarContainerComponent],
     exports: [
         IgxDatePickerComponent,
         IgxDatePickerTemplateDirective,
-        IgxDatePickerActionsDirective,
         DatePickerDisplayValuePipe,
         DatePickerInputValuePipe,
-        IgxInputGroupModule
+        IgxInputGroupModule,
+        IgxCalendarContainerModule
     ],
     imports: [
         CommonModule,

@@ -139,28 +139,6 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted before the picker finishes a selection, cancelable.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (selecting)="onSelecting($event)"></igx-date-picker>
-     * ```
-     */
-    @Output()
-    public selecting = new EventEmitter<IBaseCancelableBrowserEventArgs>();
-
-    /**
-     * Emitted when the selected date value has changed.
-     *
-     * @example
-     * ```html
-     * <igx-date-picker (selected)="onSelection($event)"></igx-date-picker>
-     * ```
-     */
-    @Output()
-    public abstract selected = new EventEmitter<Date | DateRange>();
-
-    /**
      * Emitted when the calendar has started opening, cancelable.
      *
      * @example
@@ -220,6 +198,8 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
     public get collapsed(): boolean {
         return this._collapsed;
     }
+
+    public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,

@@ -20,6 +20,7 @@ import {
     OverlayClosingEventArgs,
     OverlayEventArgs
 } from '../services/public_api';
+import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 
 xdescribe('IgxDatePicker', () => {
     configureTestSuite();
@@ -42,7 +43,7 @@ xdescribe('IgxDatePicker', () => {
                 IgxDatePickerDropdownButtonsComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
-                IgxButtonModule, IgxTextSelectionModule, IgxIconModule]
+                IgxButtonModule, IgxTextSelectionModule, IgxIconModule, IgxCalendarContainerModule]
         })
             .compileComponents();
     }));

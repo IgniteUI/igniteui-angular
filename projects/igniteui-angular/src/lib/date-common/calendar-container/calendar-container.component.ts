@@ -1,7 +1,11 @@
-import { Component, ViewChild, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
-import { IgxCalendarComponent } from '../../calendar/public_api';
+
+import { CommonModule } from '@angular/common';
+import { NgModule, Component, ViewChild, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
+import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
 import { InteractionMode } from '../../core/enums';
-import { IgxDatePickerActionsDirective } from '../../date-picker/date-picker.directives';
+import { IgxButtonModule } from '../../directives/button/button.directive';
+import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
+import { IgxPickerActionsDirective } from '../picker-icons.common';
 
 /** @hidden */
 @Component({
@@ -10,23 +14,8 @@ import { IgxDatePickerActionsDirective } from '../../date-picker/date-picker.dir
     templateUrl: 'calendar-container.component.html'
 })
 export class IgxCalendarContainerComponent {
-    @ViewChild('calendar', { static: true })
+    @ViewChild(IgxCalendarComponent, { static: true })
     public calendar: IgxCalendarComponent;
-
-    @Input()
-    public mode = InteractionMode.DropDown;
-
-    @Input()
-    public vertical = false;
-
-    @Input()
-    public cancelButtonLabel: string;
-
-    @Input()
-    public todayButtonLabel: string;
-
-    @Input()
-    public datePickerActions: IgxDatePickerActionsDirective;
 
     @Output()
     public calendarClose = new EventEmitter();
@@ -47,25 +36,33 @@ export class IgxCalendarContainerComponent {
         return this.vertical && this.mode === InteractionMode.Dialog;
     }
 
-    @HostListener('keydown.esc', ['$event'])
+    public vertical = false;
+    public closeButtonLabel: string;
+    public todayButtonLabel: string;
+    public mode = InteractionMode.DropDown;
+    public pickerActions: IgxPickerActionsDirective;
+
     @HostListener('keydown.alt.arrowup', ['$event'])
     public onEscape(event) {
         event.preventDefault();
         this.calendarClose.emit();
     }
 
-    /**  Returns whether the date-picker is in readonly dialog mode. */
     public get isReadonly() {
         return this.mode === InteractionMode.Dialog;
     }
-
-    /** Emits close event for the calendar. */
-    public emitCalendarClose() {
-        this.calendarClose.emit();
-    }
-
-    /**  Emits today selection event for the calendar. */
-    public selectToday() {
-        this.todaySelection.emit();
-    }
 }
+
+/** @hidden */
+@NgModule({
+    declarations: [IgxCalendarContainerComponent],
+    entryComponents: [IgxCalendarContainerComponent],
+    imports: [
+        CommonModule,
+        IgxButtonModule,
+        IgxRippleModule,
+        IgxCalendarModule
+    ],
+    exports: [IgxCalendarContainerComponent]
+})
+export class IgxCalendarContainerModule { }
