@@ -3,11 +3,13 @@ import { mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
 
-export const IgxTabsHeaderSizing = mkenum({
-    fixed: 'fluid',
-    contentfit: 'contentfit'
+export const IgxTabsAlignment = mkenum({
+    start: 'start',
+    end: 'end',
+    center: 'center',
+    justify: 'justify'
 });
-export type IgxTabsHeaderSizing = (typeof IgxTabsHeaderSizing)[keyof typeof IgxTabsHeaderSizing];
+export type IgxTabsAlignment = (typeof IgxTabsAlignment)[keyof typeof IgxTabsAlignment];
 
 /** @hidden */
 let NEXT_TAB_ID = 0;
@@ -26,7 +28,7 @@ let NEXT_TAB_ID = 0;
 export class IgxTabsComponent extends IgxTabsDirective {
 
     @Input()
-    public headerSizing: string | IgxTabsHeaderSizing = 'contentfit';
+    public tabAlignment: string | IgxTabsAlignment = 'start';
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
@@ -55,8 +57,26 @@ export class IgxTabsComponent extends IgxTabsDirective {
 
     /** @hidden */
     @HostBinding('class.igx-tabs--fixed')
-    public get fluidSizingClass() {
-        return this.headerSizing === 'fluid';
+    public get justifyAlignmentClass() {
+        return this.tabAlignment === 'justify';
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-tabs--start')
+    public get startAlignmentClass() {
+        return this.tabAlignment === 'start';
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-tabs--end')
+    public get endAlignmentClass() {
+        return this.tabAlignment === 'end';
+    }
+
+    /** @hidden */
+    @HostBinding('class.igx-tabs--center')
+    public get centerAlignmentClass() {
+        return this.tabAlignment === 'center';
     }
 
     /**  @hidden */

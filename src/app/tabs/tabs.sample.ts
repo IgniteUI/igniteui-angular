@@ -1,4 +1,4 @@
-import {Component, ViewChild, ViewEncapsulation} from '@angular/core';
+import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
 import { IgxTabsComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
@@ -7,7 +7,7 @@ import { IgxTabsComponent, ITabsSelectedIndexChangingEventArgs, ITabsSelectedIte
     templateUrl: 'tabs.sample.html',
     encapsulation: ViewEncapsulation.None
 })
-export class TabsSampleComponent {
+export class TabsSampleComponent implements OnInit {
 
     @ViewChild('tabsNew')
     private tabs: IgxTabsComponent;
@@ -16,6 +16,17 @@ export class TabsSampleComponent {
     private dynamicTabs: IgxTabsComponent;
 
     public tab2Label = 'Tab 2';
+
+    public tabAlignment = 'start';
+
+    public tabAlignments = [
+        { label: 'start', selected: this.tabAlignment === 'start', togglable: true },
+        { label: 'center', selected: this.tabAlignment === 'center', togglable: true },
+        { label: 'end', selected: this.tabAlignment === 'end', togglable: true },
+        { label: 'justify', selected: this.tabAlignment === 'justify', togglable: true }
+    ];
+
+    public scrollableTabs = [];
 
     public data = [
         /* eslint-disable max-len */
@@ -78,6 +89,14 @@ export class TabsSampleComponent {
         text: 'Lisa Landers'
     }];
 
+
+    public ngOnInit(): void {
+        for (let i = 0; i < 20; i++) {
+            const tab = 'Tab ' + i;
+            this.scrollableTabs.push(tab);
+        }
+    }
+
     public addTab() {
         const contact = {
             text: 'John Doe',
@@ -104,6 +123,10 @@ export class TabsSampleComponent {
 
     public changeTabSelected() {
         this.tabs.items.toArray()[1].selected = true;
+    }
+
+    public selectAlignment(event) {
+        this.tabAlignment = this.tabAlignments[event.index].label;
     }
 
     public tabsSelectedIndexChanging(_args: ITabsSelectedIndexChangingEventArgs) {
