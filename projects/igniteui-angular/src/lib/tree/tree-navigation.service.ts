@@ -34,7 +34,7 @@ export class IgxTreeNavigationService {
         if (this.lastFocusedNode?.id) {
             (this.lastFocusedNode as any).cdr.markForCheck();
         }
-        if ((this.focusedNode as any).header) {
+        if ((this.focusedNode as any)?.header) {
             this.scrollIntoViewIfNeeded((this.focusedNode as any).header.nativeElement);
         }
     }
@@ -77,13 +77,15 @@ export class IgxTreeNavigationService {
     }
 
     public isFocusable(node: IgxTreeNode<any>): boolean {
-        if (!node.parentNode) {
-            return true;
-        }
-        if (!node.parentNode.expanded) {
-            return false;
-        }
-        return this.isFocusable(node.parentNode);
+        return Array.from((this.tree as any).nativeElement.getElementsByClassName('igx-tree-node'))
+            .indexOf((node as any).nativeElement) < 0 ? false : true;
+        // if (!node.parentNode) {
+        //     return true;
+        // }
+        // if (!node.parentNode.expanded) {
+        //     return false;
+        // }
+        // return this.isFocusable(node.parentNode);
     }
 
     public dispatchEvent(event: KeyboardEvent) {
@@ -134,16 +136,16 @@ export class IgxTreeNavigationService {
         //     return;
         // }
         //(event.target as HTMLElement).blur();
-        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
         // === this.tree.nativeElement.parentElement
         if ((this.tree as any).nativeElement.parentElement.nextSibling.contains(event.relatedTarget)) {
+            const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
             this.handleFocusedAndActiveNode(visibleChildren[visibleChildren.length - 1], false);
             //this.focusedNode = visibleChildren[visibleChildren.length - 1];
             //visibleChildren[visibleChildren.length - 1].focus();
             //((event.target as HTMLElement).children[(event.target as HTMLElement).children.length - 1] as HTMLElement).focus();
             //(visibleChildren[visibleChildren.length - 1] as any).cdr.detectChanges();
         } else {
-            this.handleFocusedAndActiveNode(visibleChildren[0], false);
+            this.handleFocusedAndActiveNode(this.tree.nodes.first, false);
             //this.focusedNode = visibleChildren[0];
         }
         //this.focusedNode.focus();
