@@ -76,10 +76,18 @@
 
 /* stylelint-disable max-nesting-depth */
 @include describe('igx-palette-vars') {
+    $primary: red;
+    $secondary: green;
+
     $my-palette: igx-palette(
-        $primary: red,
-        $secondary: green,
+        $primary: $primary,
+        $secondary: $secondary,
     );
+
+    $h: round(hue($primary));
+    $s: round(saturation($primary));
+    $l: round(lightness($primary));
+    $a: round(alpha($primary));
 
     @include it('should generate variables for all palette colors') {
         @include assert() {
@@ -88,11 +96,11 @@
             }
 
             @include contains() {
-                @each $color, $name in $my-palette {
-                    @each $variant, $value in $name {
-                        --igx-#{$color}-#{$variant}: #{$value};
-                    }
-                }
+                --igx-primary-h: #{$h};
+                --igx-primary-s: #{$s};
+                --igx-primary-l: #{$l};
+                --igx-primary-a: #{$a};
+                --igx-primary-500: #{hsla(var(--igx-primary-h), var(--igx-primary-s), var(--igx-primary-l), var(--igx-primary-a))};
             }
         }
     }

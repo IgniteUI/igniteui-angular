@@ -117,6 +117,7 @@
     }
 }
 
+// stylelint-disable max-nesting-depth
 /// Generates CSS class names for all colors from
 /// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
@@ -188,6 +189,7 @@
         }
     }
 }
+// stylelint-enable max-nesting-depth
 
 /// Generates CSS variables for a given elevations map.
 /// @access public

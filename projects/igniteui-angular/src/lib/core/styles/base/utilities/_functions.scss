@@ -336,9 +336,9 @@
 }
 
 
+/// @access private
 /// Used in igx-color to test internally
 /// for color and variant validity.
-/// @private
 $p-test: igx-palette(#fff, #000);
 
 /// Retrieves a color from a color palette.
