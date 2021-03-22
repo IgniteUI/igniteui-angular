@@ -13,7 +13,7 @@
     <igx-column field="ContactTitle"></igx-column>
     <igx-column field="Country"></igx-column>
     <igx-column field="Phone"></igx-column>
-    <igx-row-island #rowIsland1 [key]="'Orders'" [isLoading]="true" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
+    <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false" [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland1)" [emptyGridMessage]="''">
         <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
             <igx-grid-toolbar-title>Child Toolbar - Level {{ grid.parentIsland.level }}</igx-grid-toolbar-title>
             <igx-grid-toolbar-actions>
@@ -25,7 +25,7 @@
         <igx-column field="ShipCountry"></igx-column>
         <igx-column field="ShipCity"></igx-column>
         <igx-column field="ShipAddress"></igx-column>
-        <igx-row-island #rowIsland2 [key]="'Order_Details'" [isLoading]="true" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
+        <igx-row-island #rowIsland2 [key]="'Order_Details'" [primaryKey]="'ProductID'" [autoGenerate]="false" [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland2)" [emptyGridMessage]="''">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid">
                 <igx-grid-toolbar-title>Child Toolbar - Level {{ grid.parentIsland.level }}</igx-grid-toolbar-title>
                 <igx-grid-toolbar-actions>

@@ -5,4 +5,5 @@
 }
 
 @include igx-core($direction: rtl);
+@include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
 @include igx-indigo-light-theme($light-indigo-palette);
