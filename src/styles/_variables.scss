@@ -9,6 +9,8 @@ $direction: ltr;
 $igx-background-color: darken(igx-color($palette, 'surface'), 5%);
 $igx-foreground-color: igx-color($palette, 'grays', 900);
 
+$default-palette: $palette;
+
 $handmade-palette: (
     primary: (
         50: #c0c0ff,
