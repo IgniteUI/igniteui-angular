@@ -85,6 +85,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} ellipsis
 /// @requires em
 /// @requires --var
 @mixin igx-navbar($theme) {
@@ -117,6 +118,8 @@
     }
 
     %igx-navbar-title {
+        @include ellipsis();
+        max-width: 25ch;
         margin: $navbar-title-margin;
         flex-grow: 1;
         user-select: text;
