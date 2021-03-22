@@ -264,9 +264,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngOnInit() {
-        // this.zone.runOutsideAngular(() => {
-        //     this.nativeElement.addEventListener('pointerdown', this.pointerdown);
-        // });
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
                 this.tree.nodeExpanded.emit({ owner: this.tree, node: this });
@@ -280,6 +277,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngAfterViewInit() {
+        (this.nativeElement as any).nodeInstance = this;
     }
 
     /**
@@ -335,6 +333,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.tree.nodeExpanding.emit(args);
         if (!args.cancel) {
             this.treeService.expand(this);
+            this.navService.getVisibleChildren();
             this.cdr.detectChanges();
             this.playOpenAnimation(
                 this.childrenContainer
@@ -354,6 +353,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         };
         this.tree.nodeCollapsing.emit(args);
         if (!args.cancel) {
+            this.treeService.collapsing(this.id);
+            this.navService.getVisibleChildren();
             this.playCloseAnimation(
                 this.childrenContainer
             );

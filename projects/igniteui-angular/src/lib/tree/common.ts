@@ -1,6 +1,7 @@
 import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
+import { IgxTreeNavigationService } from './tree-navigation.service';
 
 // Component interfaces
 
@@ -15,6 +16,7 @@ export interface IgxTree {
     selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
+    navService: IgxTreeNavigationService;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;

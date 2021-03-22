@@ -10,6 +10,15 @@ export class IgxTreeNavigationService {
     private tree: IgxTree;
     private lastActiveNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
     private lastFocusedNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
+    private _visibleChildren: any[];
+
+    public get visibleChildren() {
+        return this._visibleChildren;
+    }
+
+    public getVisibleChildren() {
+        this._visibleChildren = Array.from((this.tree as any).nativeElement.getElementsByClassName('igx-tree-node'));
+    }
 
     public get activeNode() {
         return this._activeNode;
@@ -77,8 +86,7 @@ export class IgxTreeNavigationService {
     }
 
     public isFocusable(node: IgxTreeNode<any>): boolean {
-        return Array.from((this.tree as any).nativeElement.getElementsByClassName('igx-tree-node'))
-            .indexOf((node as any).nativeElement) < 0 ? false : true;
+        return this.visibleChildren.indexOf((node as any).nativeElement) < 0 ? false : true;
         // if (!node.parentNode) {
         //     return true;
         // }
@@ -93,72 +101,28 @@ export class IgxTreeNavigationService {
         if (!this.focusedNode || !(NAVIGATION_KEYS.has(key) || key === '*' || key === 'enter')) {
             return;
         }
-        // const shift = event.shiftKey;
-        // const ctrl = event.ctrlKey;
-        // if (NAVIGATION_KEYS.has(key)) {
-        //     event.preventDefault();
-        //     return;
-        // }
-
-        // if (this.emitKeyDown(type, this.activeNode.row, event)) {
-        //     return;
-        // }
-        // if (event.altKey) {
-        //     this.handleAlt(key, event);
-        //     return;
-        // }
-        // if ([' ', 'spacebar', 'space'].indexOf(key) === -1) {
-        //     this.grid.selectionService.keyboardStateOnKeydown(this.activeNode, shift, shift && key === 'tab');
-        // }
         this.getNextPosition(this.focusedNode, key, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
-            //this.activeNode = position;
         }
-        //this.grid.cdr.detectChanges();
     }
 
     public focusNode(event: FocusEvent) {
         event.preventDefault();
-        // const allTabbableElements = document.querySelectorAll(
-        //     'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])'
-        // );
-        // const tabbableArr = Array.prototype.slice.call(allTabbableElements);
-        // if ((this.tree as any).nativeElement.contains(event.relatedTarget)) {
-        //     console.log((this.tree as any).nativeElement);
-        //     //(this.tree as any).nativeElement.children[0].focus();
-        //     requestAnimationFrame(() => {
-        //         document.dispatchEvent(new KeyboardEvent('keydown', { code: '9', shiftKey: true }));
-        //     });
-        //     const index = tabbableArr.indexOf(event.currentTarget);
-        //     const previousElement = tabbableArr[index - 1];
-        //     //previousElement.focus();
-        //     return;
-        // }
-        //(event.target as HTMLElement).blur();
-        // === this.tree.nativeElement.parentElement
         if ((this.tree as any).nativeElement.parentElement.nextSibling.contains(event.relatedTarget)) {
-            const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
-            this.handleFocusedAndActiveNode(visibleChildren[visibleChildren.length - 1], false);
-            //this.focusedNode = visibleChildren[visibleChildren.length - 1];
-            //visibleChildren[visibleChildren.length - 1].focus();
-            //((event.target as HTMLElement).children[(event.target as HTMLElement).children.length - 1] as HTMLElement).focus();
-            //(visibleChildren[visibleChildren.length - 1] as any).cdr.detectChanges();
+            this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1].nodeInstance, false);
         } else {
             this.handleFocusedAndActiveNode(this.tree.nodes.first, false);
-            //this.focusedNode = visibleChildren[0];
         }
-        //this.focusedNode.focus();
     }
 
     protected getNextPosition(node: IgxTreeNode<any>, key: string, event: KeyboardEvent) {
-        const visibleChildren: IgxTreeNode<any>[] = this.tree.nodes.filter(n => this.isFocusable(n));
         switch (key) {
             case 'home':
-                this.handleFocusedAndActiveNode(visibleChildren[0]);
+                this.handleFocusedAndActiveNode(this.tree.nodes.first);
                 break;
             case 'end':
-                this.handleFocusedAndActiveNode(visibleChildren[visibleChildren.length - 1]);
+                this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1].nodeInstance);
                 break;
             case 'arrowleft':
             case 'left':
@@ -200,40 +164,12 @@ export class IgxTreeNavigationService {
             return;
         }
         event.preventDefault();
-        // if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
-        //     (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
-        //     if (shift) {
-        //         this.grid.rowEditTabs.last.element.nativeElement.focus();
-        //     } else {
-        //         this.grid.rowEditTabs.first.element.nativeElement.focus();
-        //     }
-        //     return;
-        // }
-
-        // if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
-        //     if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
-        //         next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
-        //     } else if (!shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
-        //         next.visibleColumnIndex = this.grid.firstEditableColumnIndex;
-        //     } else {
-        //         next.rowIndex = this.activeNode.row;
-        //     }
-        // }
-
-        // this.navigateInBody(next, (obj) => {
-        //     obj.target.activate(event);
-        //     //this.tree.cdr.detectChanges();
-        // });
 
         if (event.ctrlKey) {
             this.handleFocusedAndActiveNode(next, false);
         } else {
             this.handleFocusedAndActiveNode(next);
         }
-        // requestAnimationFrame(() => {
-        //     this.scrollIntoViewIfNeeded(document.getElementsByClassName('igx-tree-node--focused')[0]);
-        // });
-        //this.focusedNode = next;
     }
 
     protected handleArrowRight() {
@@ -287,7 +223,6 @@ export class IgxTreeNavigationService {
     }
 
     protected handleEnter(ctrlKey = false) {
-        //(this.focusedNode as any).element.nativeElement.querySelectorAll('a')[0].focus();
         const ref = (this.focusedNode as any).element.nativeElement.querySelectorAll('a')[0].href;
         if (ref) {
             if (ctrlKey) {
@@ -297,6 +232,7 @@ export class IgxTreeNavigationService {
             }
         }
     }
+
     protected scrollIntoViewIfNeeded(target) {
         if (target?.getBoundingClientRect().bottom > window.innerHeight) {
             target.scrollIntoView(false);
@@ -305,11 +241,4 @@ export class IgxTreeNavigationService {
             target.scrollIntoView();
         }
     }
-
-    // protected navigateInBody(next, cb: (arg: any) => void = null): void {
-    //     if (this.isActiveNode(next)) {
-    //         return;
-    //     }
-    //     this.grid.navigateTo(rowIndex, visibleColIndex, cb);
-    // }
 }

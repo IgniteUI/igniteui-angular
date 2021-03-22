@@ -368,25 +368,27 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     public getPreviousNode(node: IgxTreeNodeComponent<any>) {
-        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
-        const nodeIndex = visibleChildren.indexOf(node);
+        //const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
+        const nodeIndex = this.navService.visibleChildren.indexOf(node.nativeElement);
         if (nodeIndex > 0) {
-            return visibleChildren[nodeIndex - 1];
+            return this.navService.visibleChildren[nodeIndex - 1].nodeInstance;
         }
         return node;
     }
 
     public getNextNode(node: IgxTreeNodeComponent<any>) {
-        const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
-        const nodeIndex = visibleChildren.indexOf(node);
-        if (nodeIndex < visibleChildren.length - 1) {
-            return visibleChildren[nodeIndex + 1];
+       // const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
+        const nodeIndex = this.navService.visibleChildren.indexOf(node.nativeElement);
+        if (nodeIndex < this.navService.visibleChildren.length - 1) {
+            return this.navService.visibleChildren[nodeIndex + 1].nodeInstance;
         }
         return node;
     }
 
     public ngOnInit() { }
-    public ngAfterViewInit() { }
+    public ngAfterViewInit() {
+        this.navService.getVisibleChildren();
+    }
     public ngOnDestroy() { }
 
     private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>) => node.data === data;
