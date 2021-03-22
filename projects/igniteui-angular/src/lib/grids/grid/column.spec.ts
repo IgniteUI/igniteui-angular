@@ -437,7 +437,7 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Data type currency column tests', () => {
-        it('should display correctly the data when column dataType is currency', () => {
+        it('should display correctly the data when column dataType is currency', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -453,8 +453,9 @@ describe('IgxGrid - Column properties #grid', () => {
                 digitsInfo: '3.4-4',
                 currencyCode: 'USD',
                 display: 'symbol-narrow'
-              };
+            };
             fix.detectChanges();
+            tick();
 
             unitsColumn = grid.getColumnByName('UnitsInStock');
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760.0000');
@@ -462,7 +463,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn.cells[6].nativeElement.innerText).toEqual('$000.0000');
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('$6,998.0000');
 
-        });
+        }));
 
         it('should be able to change the locale runtime ', () => {
             registerLocaleData(localeFR);
