@@ -769,4 +769,330 @@ describe('IgxTabs', () => {
 
     });
 
+    describe('Events', () => {
+        let fixture;
+        let tabs;
+        let tabItems;
+        let headers;
+        let itemChangeSpy;
+        let indexChangeSpy;
+        let indexChangingSpy;
+
+        describe('', () => {
+            beforeEach(waitForAsync(() => {
+                fixture = TestBed.createComponent(TabsTestComponent);
+                fixture.detectChanges();
+                tabs = fixture.componentInstance.tabs;
+                tabItems = tabs.items.toArray();
+                headers = tabItems.map(item => item.headerComponent.nativeElement);
+                itemChangeSpy = spyOn(tabs.selectedItemChange, 'emit').and.callThrough();
+                indexChangeSpy = spyOn(tabs.selectedIndexChange, 'emit').and.callThrough();
+                indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit').and.callThrough();
+            }));
+
+            it('Validate the fired events on clicking tab headers.', fakeAsync(() => {
+                tick(100);
+
+                headers[1].dispatchEvent(new Event('click', { bubbles: true }));
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(1);
+
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: 0,
+                    newIndex: 1
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(1);
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: tabItems[0],
+                    newItem: tabItems[1]
+                });
+            }));
+
+            it('Cancel selectedIndexChanging event.', fakeAsync(() => {
+                tick(100);
+                tabs.selectedIndexChanging.pipe().subscribe((e) => e.cancel = true);
+                fixture.detectChanges();
+
+                headers[1].dispatchEvent(new Event('click', { bubbles: true }));
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(0);
+
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: true,
+                    oldIndex: 0,
+                    newIndex: 1
+                });
+                expect(itemChangeSpy).not.toHaveBeenCalled();
+                expect(indexChangeSpy).not.toHaveBeenCalled();
+            }));
+
+            it('Validate the fired events when navigating between tabs with left and right arrows.', fakeAsync(() => {
+                tick(100);
+
+                headers[0].focus();
+                headers[0].dispatchEvent(KEY_RIGHT_EVENT);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(1);
+
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: 0,
+                    newIndex: 1
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(1);
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: tabItems[0],
+                    newItem: tabItems[1]
+                });
+
+                headers[1].dispatchEvent(KEY_LEFT_EVENT);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(0);
+
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: 1,
+                    newIndex: 0
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(0);
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: tabItems[1],
+                    newItem: tabItems[0]
+                });
+            }));
+
+            it('Validate the fired events when navigating between tabs with home and end keys.', fakeAsync(() => {
+                tick(100);
+
+                headers[0].focus();
+                headers[0].dispatchEvent(KEY_END_EVENT);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(2);
+
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: tabItems[0],
+                    newItem: tabItems[2]
+                });
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: 0,
+                    newIndex: 2
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(2);
+
+                headers[2].dispatchEvent(KEY_HOME_EVENT);
+                tick(200);
+                fixture.detectChanges();
+                expect(tabs.selectedIndex).toBe(0);
+
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: tabItems[2],
+                    newItem: tabItems[0]
+                });
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: 2,
+                    newIndex: 0
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(0);
+            }));
+        });
+
+        describe('& Routing', () => {
+            let router;
+            let location;
+            beforeEach(waitForAsync(() => {
+                router = TestBed.inject(Router);
+                location = TestBed.inject(Location);
+                fixture = TestBed.createComponent(TabsRoutingTestComponent);
+                tabs = fixture.componentInstance.tabs;
+                fixture.detectChanges();
+                tabItems = tabs.items.toArray();
+                headers = tabItems.map(item => item.headerComponent.nativeElement);
+                itemChangeSpy = spyOn(tabs.selectedItemChange, 'emit');
+                indexChangeSpy = spyOn(tabs.selectedIndexChange, 'emit');
+                indexChangingSpy = spyOn(tabs.selectedIndexChanging, 'emit');
+            }));
+
+            it('Validate the events are not fired on clicking tab headers before pressing enter/space key.', fakeAsync(() => {
+                fixture.ngZone.run(() => router.initialNavigation());
+                tick();
+                expect(location.path()).toBe('/');
+
+                fixture.ngZone.run(() => {
+                    UIInteractions.simulateClickAndSelectEvent(headers[1]);
+                });
+                tick();
+                expect(location.path()).toBe('/view2');
+                expect(tabs.selectedIndex).toBe(-1);
+
+                expect(indexChangingSpy).not.toHaveBeenCalled();
+                expect(indexChangeSpy).not.toHaveBeenCalled();
+                expect(itemChangeSpy).not.toHaveBeenCalled();
+
+                headers[1].dispatchEvent(KEY_ENTER_EVENT);
+                tick(200);
+                fixture.detectChanges();
+
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: undefined,
+                    newItem: tabItems[1]
+                });
+                expect(indexChangingSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    cancel: false,
+                    oldIndex: -1,
+                    newIndex: 1
+                });
+                expect(indexChangeSpy).toHaveBeenCalledWith(1);
+            }));
+
+            it('Validate the events are not fired when navigating between tabs with arrow keys before pressing enter/space key.',
+                fakeAsync(() => {
+                    tick(100);
+                    headers[0].focus();
+
+                    headers[0].dispatchEvent(KEY_LEFT_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(indexChangingSpy).not.toHaveBeenCalled();
+                    expect(indexChangeSpy).not.toHaveBeenCalled();
+                    expect(itemChangeSpy).not.toHaveBeenCalled();
+
+                    headers[2].dispatchEvent(KEY_ENTER_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[2]
+                    });
+                    expect(indexChangingSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        cancel: false,
+                        oldIndex: -1,
+                        newIndex: 2
+                    });
+                    expect(indexChangeSpy).toHaveBeenCalledWith(2);
+
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(1);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(1);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(1);
+
+                    headers[2].dispatchEvent(KEY_RIGHT_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(1);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(1);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(1);
+
+                    headers[0].dispatchEvent(KEY_SPACE_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[0]
+                    });
+                    expect(indexChangingSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        cancel: false,
+                        oldIndex: 2,
+                        newIndex: 0
+                    });
+                    expect(indexChangeSpy).toHaveBeenCalledWith(0);
+
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(2);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(2);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(2);
+            }));
+
+            it('Validate the events are not fired when navigating between tabs with home/end before pressing enter/space key.',
+                fakeAsync(() => {
+                    tick(100);
+                    headers[0].focus();
+
+                    headers[0].dispatchEvent(KEY_END_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(indexChangingSpy).not.toHaveBeenCalled();
+                    expect(indexChangeSpy).not.toHaveBeenCalled();
+                    expect(itemChangeSpy).not.toHaveBeenCalled();
+
+                    headers[2].dispatchEvent(KEY_ENTER_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[2]
+                    });
+                    expect(indexChangingSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        cancel: false,
+                        oldIndex: -1,
+                        newIndex: 2
+                    });
+                    expect(indexChangeSpy).toHaveBeenCalledWith(2);
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(1);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(1);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(1);
+
+                    headers[2].dispatchEvent(KEY_HOME_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(1);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(1);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(1);
+
+                    headers[0].dispatchEvent(KEY_SPACE_EVENT);
+                    tick(200);
+                    fixture.detectChanges();
+
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[0]
+                    });
+                    expect(indexChangingSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        cancel: false,
+                        oldIndex: 2,
+                        newIndex: 0
+                    });
+                    expect(indexChangeSpy).toHaveBeenCalledWith(0);
+
+                    expect(indexChangingSpy).toHaveBeenCalledTimes(2);
+                    expect(indexChangeSpy).toHaveBeenCalledTimes(2);
+                    expect(itemChangeSpy).toHaveBeenCalledTimes(2);
+            }));
+
+        });
+    });
+
 });
