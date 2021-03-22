@@ -141,7 +141,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
     public set disabled(value: boolean) {
         this._disabled = (value as any === '') || value;
-        this._disableRadioButtons();
+        this.setDisabledState(value);
     }
 
     /**
@@ -338,6 +338,18 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+     public setDisabledState(isDisabled: boolean) {
+        if (this.radioButtons) {
+            this.radioButtons.forEach((button) => {
+                button.disabled = isDisabled;
+            });
+        }
+    }
+
+    /**
      * Registers a function called when the control is touched.
      *
      * @hidden
@@ -451,18 +463,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.labelPosition = this._labelPosition;
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _disableRadioButtons() {
-        if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
-                button.disabled = this._disabled;
             });
         }
     }
