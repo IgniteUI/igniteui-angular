@@ -131,6 +131,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * The unique ID of the node
      */
     public id = `igxTreeNode_${nodeId++}`;
+    public isRendered = false;
 
     constructor(
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
@@ -277,7 +278,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public ngAfterViewInit() {
-        (this.nativeElement as any).nodeInstance = this;
+        this.isRendered = true;
     }
 
     /**
@@ -333,7 +334,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.tree.nodeExpanding.emit(args);
         if (!args.cancel) {
             this.treeService.expand(this);
-            this.navService.getVisibleChildren();
+            if (this.isRendered) {
+                this.navService.setVisibleChildren();
+            }
             this.cdr.detectChanges();
             this.playOpenAnimation(
                 this.childrenContainer
@@ -354,7 +357,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.tree.nodeCollapsing.emit(args);
         if (!args.cancel) {
             this.treeService.collapsing(this.id);
-            this.navService.getVisibleChildren();
+            if (this.isRendered) {
+                this.navService.setVisibleChildren();
+            }
             this.playCloseAnimation(
                 this.childrenContainer
             );

@@ -10,14 +10,45 @@ export class IgxTreeNavigationService {
     private tree: IgxTree;
     private lastActiveNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
     private lastFocusedNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
-    private _visibleChildren: any[];
+    private _visibleChildren: Set<IgxTreeNode<any>>;
 
     public get visibleChildren() {
-        return this._visibleChildren;
+        return Array.from(this._visibleChildren);
     }
 
-    public getVisibleChildren() {
-        this._visibleChildren = Array.from((this.tree as any).nativeElement.getElementsByClassName('igx-tree-node'));
+    public setVisibleChildren() {
+        this._visibleChildren = new Set<IgxTreeNode<any>>();
+        if (!this.tree.nodes) {
+            return;
+        }
+        const invisibleChildren = new Set<IgxTreeNode<any>>();
+        for (const node of this.tree.nodes.toArray()) {
+            if (invisibleChildren.has(node)) {
+                continue;
+            }
+            if (node.level === 0) {
+                this._visibleChildren.add(node);
+            } else {
+                if (node.parentNode.expanded && !(this.tree as any).treeService.collapsingNodes.has(node.parentNode.id)) {
+                    this._visibleChildren.add(node);
+                } else {
+                    this.get_all_children(node).forEach(_node => {
+                        invisibleChildren.add(_node);
+                    });
+                }
+            }
+        }
+    }
+
+    public get_all_children(node: IgxTreeNode<any>): IgxTreeNode<any>[] {
+        const children = [];
+        if (node && node.children && node.children.length) {
+            node.children.forEach((child) => {
+                children.push(...this.get_all_children(child));
+                children.push(child);
+            });
+        }
+        return children;
     }
 
     public get activeNode() {
@@ -110,7 +141,7 @@ export class IgxTreeNavigationService {
     public focusNode(event: FocusEvent) {
         event.preventDefault();
         if ((this.tree as any).nativeElement.parentElement.nextSibling.contains(event.relatedTarget)) {
-            this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1].nodeInstance, false);
+            this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1], false);
         } else {
             this.handleFocusedAndActiveNode(this.tree.nodes.first, false);
         }
@@ -122,7 +153,7 @@ export class IgxTreeNavigationService {
                 this.handleFocusedAndActiveNode(this.tree.nodes.first);
                 break;
             case 'end':
-                this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1].nodeInstance);
+                this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1]);
                 break;
             case 'arrowleft':
             case 'left':
