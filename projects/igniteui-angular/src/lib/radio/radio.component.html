@@ -6,6 +6,7 @@
     [disabled]="disabled"
     [checked]="checked"
     [required]="required"
+    [attr.aria-checked]="checked"
     [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
     (blur)="onBlur()" />

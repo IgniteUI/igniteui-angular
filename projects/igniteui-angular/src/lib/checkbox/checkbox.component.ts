@@ -417,6 +417,18 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         this.checked = !this.checked;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public get ariaChecked() {
+       if (this.indeterminate) {
+           return 'mixed';
+       } else {
+           return this.checked;
+       }
+    }
+
     /** @hidden @internal */
     public _onCheckboxChange(event: Event) {
         // We have to stop the original checkbox change event
