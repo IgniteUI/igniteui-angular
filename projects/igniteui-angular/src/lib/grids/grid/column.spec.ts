@@ -437,12 +437,13 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Data type currency column tests', () => {
-        it('should display correctly the data when column dataType is currency', fakeAsync(() => {
+        // NOTE: The following three tests fail only in an Ivy scenario. We should leave them running anyways
+        it('should display correctly the data when column dataType is currency', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            let unitsColumn = grid.getColumnByName('UnitsInStock');
+            const unitsColumn = grid.getColumnByName('UnitsInStock');
 
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098');
@@ -455,15 +456,13 @@ describe('IgxGrid - Column properties #grid', () => {
                 display: 'symbol-narrow'
             };
             fix.detectChanges();
-            tick();
 
-            unitsColumn = grid.getColumnByName('UnitsInStock');
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760.0000');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098.0000');
             expect(unitsColumn.cells[6].nativeElement.innerText).toEqual('$000.0000');
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('$6,998.0000');
 
-        }));
+        });
 
         it('should be able to change the locale runtime ', () => {
             registerLocaleData(localeFR);
