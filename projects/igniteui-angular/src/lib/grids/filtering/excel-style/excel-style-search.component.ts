@@ -198,6 +198,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         const selectedIndex = this.displayedListData.indexOf(eventArgs.checkbox.value);
         const selectAllBtn = this.displayedListData[0];
 
+        if (this.displayedListData[selectedIndex].isSelected === eventArgs.checked) {
+            return;
+        }
+
         if (selectedIndex === 0) {
             this.displayedListData.forEach(element => {
                 if (element === this.addToCurrentFilter) {
