@@ -11,88 +11,35 @@
 /// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
-/// @param {border-radius} $flat-border-radius [null] - The border radius used for flat button.
-/// @param {border-radius} $raised-border-radius [null] - The border radius used for raised button.
-/// @param {border-radius} $outlined-border-radius [null] - The border radius used for outlined button.
-/// @param {border-radius} $fab-border-radius [null] - The border radius used for fab button.
-/// @param {border-radius} $icon-border-radius [null] - The border radius used for icon button.
-///
-/// @param {Color} $flat-shadow-color [null] - The shadow/outline color of the flat button in its focus state.
-/// @param {Color} $raised-shadow-color [null] - The shadow/outline color of the raised button in its focus state.
-/// @param {Color} $outlined-shadow-color [null] - The shadow/outline color of the outlined button in its focus state.
-/// @param {Color} $icon-shadow-color [null] - The shadow/outline color of the flat icon in its focus state.
-/// @param {Color} $fab-shadow-color [null] - The shadow/outline color of the fab button in its focus state.
-///
-/// @param {Color} $flat-background [null] - The background color of a flat button.
-/// @param {Color} $flat-text-color [null] - The idle text color of a flat button.
-/// @param {Color} $flat-hover-background [null] - The hover background color of a flat button.
-/// @param {Color} $flat-hover-text-color [null] - The hover text color of a flat button.
-/// @param {Color} $flat-focus-background [null] - The focus background color of a flat button.
-/// @param {Color} $flat-focus-text-color [null] - The focus text color of a flat button.
-/// @param {Color} $flat-icon-color [null] - The color of a flat button icon.
-/// @param {Color} $flat-hover-icon-color [null] - The hover color of a flat button icon.
-/// @param {Color} $flat-focus-icon-color [null] - The focus color of a flat button icon.
-///
-/// @param {Color} $outlined-background [null] - The background color of an outlined button.
-/// @param {Color} $outlined-text-color [null] - The idle text color of an outlined button.
-/// @param {Color} $outlined-outline-color [null] - The outline color of an outlined button.
-/// @param {Color} $outlined-disabled-outline-color [null] - The outline color of an outlined, disabled button.
-/// @param {Color} $outlined-hover-background [null] - The hover background color of an outlined button.
-/// @param {Color} $outlined-hover-text-color [null] - The hover text color of an outlined button.
-/// @param {Color} $outlined-focus-background [null] - The focus background color of an outlined button.
-/// @param {Color} $outlined-focus-text-color [null] - The focus text color of an outlined button.
-/// @param {Color} $outlined-icon-color [null] - The color of a outlined button icon.
-/// @param {Color} $outlined-hover-icon-color [null] - The hover color of a outlined button icon.
-/// @param {Color} $outlined-focus-icon-color [null] - The focus color of a outlined button icon.
-///
-/// @param {Color} $raised-background [null] - The background color of a raised button.
-/// @param {Color} $raised-text-color [null] - The idle text color of a raised button.
-/// @param {Color} $raised-hover-background [null] - The hover background of a raised button.
-/// @param {Color} $raised-hover-text-color [null] - The hover text color of a raised button.
-/// @param {Color} $raised-focus-background [null] - The focus background color of a raised button.
-/// @param {Color} $raised-focus-text-color [null] - The focus text color of a raised button.
-/// @param {Color} $raised-icon-color [null] - The color of a raised button icon.
-/// @param {Color} $raised-hover-icon-color [null] - The hover color of a raised button icon.
-/// @param {Color} $raised-focus-icon-color [null] - The focus color of a raised button icon.
-///
-/// @param {box-shadow} $raised-resting-shadow [null] - The shadow color of the raised button in its resting state.
-/// @param {box-shadow} $raised-hover-shadow [null] - The shadow color of the raised button in its hover state.
-/// @param {box-shadow} $raised-focus-shadow [null] - The shadow color of the raised button in its focus state.
-///
-/// @param {Color} $fab-background [null] - The background color of a floating action button.
-/// @param {Color} $fab-text-color [null] - The text color of a floating action button.
-/// @param {Color} $fab-hover-background [null] - The hover background color of a floating action button.
-/// @param {Color} $fab-hover-text-color [null] - The hover text color of a floating action button.
-/// @param {Color} $fab-focus-background [null] - The focus background color of floating action button.
-/// @param {Color} $fab-focus-text-color [null] - The focus text color of a floating action button.
-///
-/// @param {box-shadow} $fab-resting-shadow [null] - The shadow color of the floating action button in its resting state.
-/// @param {box-shadow} $fab-hover-shadow [null] - The shadow color of the floating action button in its hover state.
-/// @param {box-shadow} $fab-focus-shadow [null] - The shadow color of the floating action button in its focus state.
-///
-/// @param {Color} $icon-color [null] - The icon color of an icon button.
-/// @param {Color} $icon-hover-color [null] - The hover icon color of an icon button.
-/// @param {Color} $icon-background [null] - The background color of the an icon button.
-/// @param {Color} $icon-hover-background [null] - The hover background color of an icon button.
-/// @param {Color} $icon-focus-color [null] - The focus icon color of an icon button.
-/// @param {Color} $icon-focus-background [null] - The focus background color an icon button.
-///
-/// @param {Color} $disabled-color [null] - The disabled text/icon color of a button.
-/// @param {Color} $disabled-background [null] - The disabled background color of raised, fab, or icon buttons.
+/// @param {Color} $background [null] - The background color of the button.
+/// @param {Color} $foreground [null] - The text color of the button.
+/// @param {Color} $hover-background [null] - The hover background color of the button.
+/// @param {Color} $hover-foreground [null] - The hover text color of the button.
+/// @param {Color} $focus-background [null] - The focus background color of the button.
+/// @param {Color} $focus-foreground [null] - The focus text color of the button.
+/// @param {Number} $border-radius [null] - The border radius of the button.
+/// @param {Color} $border-color [null] - The border color of the button.
+/// @param {Color} $shadow-color [null] - The shadow color of the button.
+/// @param {Color} $resting-shadow [null] - The shadow of the button in its idle state.
+/// @param {Color} $hover-shadow [null] - The shadow of the button in its hover state.
+/// @param {Color} $focus-shadow [null] - The shadow of the button in its focus state.
+/// @param {Color} $disabled-background [null] - The disabled background color of the button.
+/// @param {Color} $disabled-foreground [null] - The disabled text color of the button.
+/// @param {Color} $disabled-border-color [null] - The disabled border color of the button.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
+/// @requires $elevations
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 ///
 /// @example scss Change the background and text colors in raised buttons
 ///   $my-button-theme: igx-button-theme(
-///     $raised-text-color: white,
-///     $raised-background: black
+///     $foreground: white,
+///     $background: black
 ///   );
 ///   // Pass the theme to the igx-button component mixin
 ///   @include igx-button($my-button-theme);
@@ -101,74 +48,27 @@
     $schema: $light-schema,
     $elevations: $elevations,
 
-    $flat-border-radius: null,
-    $raised-border-radius: null,
-    $fab-border-radius: null,
-    $icon-border-radius: null,
-    $outlined-border-radius: null,
+    $background: null,
+    $foreground: null,
 
-    $flat-text-color: null,
-    $flat-background: null,
-    $flat-hover-background: null,
-    $flat-hover-text-color: null,
-    $flat-focus-background: null,
-    $flat-focus-text-color: null,
-    $flat-icon-color: null,
-    $flat-hover-icon-color: null,
-    $flat-focus-icon-color: null,
+    $hover-background: null,
+    $hover-foreground: null,
 
-    $flat-shadow-color: null,
-    $raised-shadow-color: null,
-    $outlined-shadow-color: null,
-    $icon-shadow-color: null,
-    $fab-shadow-color: null,
+    $focus-background: null,
+    $focus-foreground: null,
 
-    $outlined-text-color: null,
-    $outlined-outline-color: null,
-    $outlined-disabled-outline-color: null,
-    $outlined-background: null,
-    $outlined-hover-background: null,
-    $outlined-hover-text-color: null,
-    $outlined-focus-background: null,
-    $outlined-focus-text-color: null,
-    $outlined-icon-color: null,
-    $outlined-hover-icon-color: null,
-    $outlined-focus-icon-color: null,
+    $border-radius: null,
+    $border-color: null,
 
-    $raised-text-color: null,
-    $raised-background: null,
-    $raised-hover-background: null,
-    $raised-hover-text-color: null,
-    $raised-focus-background: null,
-    $raised-focus-text-color: null,
-    $raised-icon-color: null,
-    $raised-hover-icon-color: null,
-    $raised-focus-icon-color: null,
+    $shadow-color: null,
 
-    $raised-resting-shadow: null,
-    $raised-hover-shadow: null,
-    $raised-focus-shadow: null,
+    $resting-shadow: null,
+    $hover-shadow: null,
+    $focus-shadow: null,
 
-    $fab-text-color: null,
-    $fab-background: null,
-    $fab-hover-background: null,
-    $fab-hover-text-color: null,
-    $fab-focus-background: null,
-    $fab-focus-text-color: null,
-
-    $fab-resting-shadow: null,
-    $fab-hover-shadow: null,
-    $fab-focus-shadow: null,
-
-    $icon-color: null,
-    $icon-background: null,
-    $icon-hover-background: null,
-    $icon-hover-color: null,
-    $icon-focus-background: null,
-    $icon-focus-color: null,
-
-    $disabled-color: null,
     $disabled-background: null,
+    $disabled-foreground: null,
+    $disabled-border-color: null,
 ) {
     $name: 'igx-button';
     $button-schema: ();
@@ -179,233 +79,103 @@
         $button-schema: $schema;
     }
 
-    $theme: apply-palette($button-schema, $palette);
+    $themes: ();
+    $variant: null;
 
-    $variant: map-get($theme, 'variant');
-
-    $flat-border-radius: round-borders(
-        if($flat-border-radius, $flat-border-radius, map-get($button-schema, 'flat-border-radius')), 0, 20px
+    $_minmax-radius: (
+        flat: (0, 20px),
+        outlined: (0, 20px),
+        raised: (0, 20px),
+        fab: (12px, 28px),
+        icon: (0, 20px),
     );
 
-    $raised-border-radius: round-borders(
-        if($raised-border-radius, $raised-border-radius, map-get($button-schema, 'raised-border-radius')), 0, 20px
-    );
+    @each $_name, $_schema in $button-schema {
+        $_border-radius: round-borders(
+            if(
+                $border-radius,
+                $border-radius,
+                map-get($_schema, 'border-radius')
+            ),
+            map-get($_minmax-radius, $_name)...
+        );
 
-    $fab-border-radius: round-borders(
-        if($fab-border-radius, $fab-border-radius, map-get($button-schema, 'fab-border-radius')), 12, 28px
-    );
+        $_resting-shadow: $resting-shadow;
+        $_hover-shadow: $hover-shadow;
+        $_focus-shadow: $focus-shadow;
 
-    $icon-border-radius: round-borders(
-        if($icon-border-radius, $icon-border-radius, map-get($button-schema, 'icon-border-radius')), 0, 20px
-    );
+        @if not($variant) {
+            $variant: map-get($_schema, 'variant');
+        }
 
-    $outlined-border-radius: round-borders(
-        if($outlined-border-radius, $outlined-border-radius, map-get($button-schema, 'outlined-border-radius')), 0, 20px
-    );
+        @if not($foreground) and $background {
+            $foreground: text-contrast($background);
+        }
 
-    @if not($flat-text-color) and $flat-background {
-        $flat-text-color: text-contrast($flat-background);
+        @if not($hover-background) and $background {
+            $hover-background: lighten-color($background, 5%);
+        }
+
+        @if not($focus-background) and $background {
+            $focus-background: lighten-color($background, 5%);
+        }
+
+        @if not($hover-foreground) and $hover-background {
+            $hover-foreground: text-contrast($hover-background);
+        }
+
+        @if not($focus-foreground) and $focus-background {
+            $focus-foreground: text-contrast($focus-background);
+        }
+
+        @if not($_resting-shadow) {
+            $resting-elevation: map-get($_schema, 'resting-elevation');
+            $_resting-shadow: igx-elevation($elevations, $resting-elevation);
+        }
+
+        @if not($_hover-shadow) {
+            $hover-elevation: map-get($_schema, 'hover-elevation');
+            $_hover-shadow: igx-elevation($elevations, $hover-elevation);
+        }
+
+        @if not($_focus-shadow) {
+            $focus-elevation: map-get($_schema, 'focus-elevation');
+            $_focus-shadow: igx-elevation($elevations, $focus-elevation);
+        }
+
+        $themes: map-merge($themes, (
+            $_name: extend(apply-palette($_schema, $palette), (
+                name: $name,
+                background: $background,
+                foreground: $foreground,
+
+                hover-background: $hover-background,
+                hover-foreground: $hover-foreground,
+
+                focus-background: $focus-background,
+                focus-foreground: $focus-foreground,
+
+                border-radius: $_border-radius,
+                border-color: $border-color,
+
+                shadow-color: $shadow-color,
+
+                resting-shadow: $_resting-shadow,
+                hover-shadow: $_hover-shadow,
+                focus-shadow: $_focus-shadow,
+
+                disabled-background: $disabled-background,
+                disabled-foreground: $disabled-foreground,
+                disabled-border-color: $disabled-border-color,
+            ))
+        ));
     }
 
-    @if not($flat-hover-background) and $flat-background {
-        $flat-hover-background: lighten-color($flat-background, 5%);
-    }
-
-    @if not($flat-focus-background) and $flat-background {
-        $flat-focus-background: lighten-color($flat-background, 5%);
-    }
-
-    @if not($flat-hover-text-color) and $flat-hover-background {
-        $flat-hover-text-color: text-contrast($flat-hover-background);
-    }
-
-    @if not($flat-focus-text-color) and $flat-focus-background {
-        $flat-focus-text-color: text-contrast($flat-focus-background);
-    }
-
-    @if not($outlined-text-color) and $outlined-background {
-        $outlined-text-color: text-contrast($outlined-background);
-    }
-
-    @if not($outlined-hover-background) and $outlined-background {
-        $outlined-hover-background: lighten-color($outlined-background, 5%);
-    }
-
-    @if not($outlined-focus-background) and $outlined-background {
-        $outlined-focus-background: lighten-color($outlined-background, 5%);
-    }
-
-    @if not($outlined-hover-text-color) and $outlined-hover-background {
-        $outlined-hover-text-color: text-contrast($outlined-hover-background);
-    }
-
-    @if not($outlined-focus-text-color) and $outlined-focus-background {
-        $outlined-focus-text-color: text-contrast($outlined-focus-background);
-    }
-
-    @if not($raised-text-color) and $raised-background {
-        $raised-text-color: text-contrast($raised-background);
-    }
-
-    @if not($raised-hover-background) and $raised-background {
-        $raised-hover-background: lighten-color($raised-background, 5%);
-    }
-
-    @if not($raised-focus-background) and $raised-background {
-        $raised-focus-background: lighten-color($raised-background, 5%);
-    }
-
-    @if not($raised-hover-text-color) and $raised-hover-background {
-        $raised-hover-text-color: text-contrast($raised-hover-background);
-    }
-
-    @if not($raised-focus-text-color) and $raised-focus-background {
-        $raised-focus-text-color: text-contrast($raised-focus-background);
-    }
-
-    @if not($fab-text-color) and $fab-background {
-        $fab-text-color: text-contrast($fab-background);
-    }
-
-    @if not($fab-hover-background) and $fab-background {
-        $fab-hover-background: lighten-color($fab-background, 5%);
-    }
-
-    @if not($fab-focus-background) and $fab-background {
-        $fab-focus-background: lighten-color($fab-background, 5%);
-    }
-
-    @if not($fab-hover-text-color) and $fab-hover-background {
-        $fab-hover-text-color: text-contrast($fab-hover-background);
-    }
-
-    @if not($fab-focus-text-color) and $fab-focus-background {
-        $fab-focus-text-color: text-contrast($fab-focus-background);
-    }
-
-    @if not($icon-color) and $icon-background {
-        $icon-color: text-contrast($icon-background);
-    }
-
-    @if not($icon-hover-background) and $icon-background {
-        $icon-hover-background: lighten-color($icon-background, 5%);
-    }
-
-    @if not($icon-focus-background) and $icon-background {
-        $icon-focus-background: lighten-color($icon-background, 5%);
-    }
-
-    @if not($icon-focus-color) and $icon-focus-background {
-        $icon-focus-color: text-contrast($icon-focus-background);
-    }
-
-    @if not($icon-hover-color) and $icon-hover-background {
-        $icon-hover-color: text-contrast($icon-hover-background);
-    }
-
-    @if not($fab-resting-shadow) {
-        $fab-resting-elevation: map-get($button-schema, 'fab-resting-elevation');
-        $fab-resting-shadow: igx-elevation($elevations, $fab-resting-elevation);
-    }
-
-    @if not($fab-hover-shadow) {
-        $fab-hover-elevation: map-get($button-schema, 'fab-hover-elevation');
-        $fab-hover-shadow: igx-elevation($elevations, $fab-hover-elevation);
-    }
-
-    @if not($fab-focus-shadow) {
-        $fab-focus-elevation: map-get($button-schema, 'fab-focus-elevation');
-        $fab-focus-shadow: igx-elevation($elevations, $fab-focus-elevation);
-    }
-
-    @if not($raised-resting-shadow) {
-        $raised-resting-elevation: map-get($button-schema, 'raised-resting-elevation');
-        $raised-resting-shadow: igx-elevation($elevations, $raised-resting-elevation);
-    }
-
-    @if not($raised-hover-shadow) {
-        $raised-hover-elevation: map-get($button-schema, 'raised-hover-elevation');
-        $raised-hover-shadow: igx-elevation($elevations, $raised-hover-elevation);
-    }
-
-    @if not($raised-focus-shadow) {
-        $raised-focus-elevation: map-get($button-schema, 'raised-focus-elevation');
-        $raised-focus-shadow: igx-elevation($elevations, $raised-focus-elevation);
-    }
-
-    @return extend($theme, (
-        name: $name,
+    @return (
         palette: $palette,
-
-        flat-border-radius: $flat-border-radius,
-        raised-border-radius: $raised-border-radius,
-        fab-border-radius: $fab-border-radius,
-        icon-border-radius: $icon-border-radius,
-        outlined-border-radius: $outlined-border-radius,
-
-        flat-text-color: $flat-text-color,
-        flat-background: $flat-background,
-        flat-hover-background: $flat-hover-background,
-        flat-hover-text-color: $flat-hover-text-color,
-        flat-focus-background: $flat-focus-background,
-        flat-focus-text-color: $flat-focus-text-color,
-        flat-icon-color: $flat-icon-color,
-        flat-hover-icon-color: $flat-hover-icon-color,
-        flat-focus-icon-color: $flat-focus-icon-color,
-
-        outlined-text-color: $outlined-text-color,
-        outlined-outline-color: $outlined-outline-color,
-        outlined-disabled-outline-color: $outlined-disabled-outline-color,
-        outlined-background: $outlined-background,
-        outlined-hover-background: $outlined-hover-background,
-        outlined-hover-text-color: $outlined-hover-text-color,
-        outlined-focus-background: $outlined-focus-background,
-        outlined-focus-text-color: $outlined-focus-text-color,
-        outlined-icon-color: $outlined-icon-color,
-        outlined-hover-icon-color: $outlined-hover-icon-color,
-        outlined-focus-icon-color: $outlined-focus-icon-color,
-
-        raised-text-color: $raised-text-color,
-        raised-background: $raised-background,
-        raised-hover-background: $raised-hover-background,
-        raised-hover-text-color: $raised-hover-text-color,
-        raised-focus-background: $raised-focus-background,
-        raised-focus-text-color: $raised-focus-text-color,
-        raised-icon-color: $raised-icon-color,
-        raised-hover-icon-color: $raised-hover-icon-color,
-        raised-focus-icon-color: $raised-focus-icon-color,
-
-        fab-text-color: $fab-text-color,
-        fab-background: $fab-background,
-        fab-hover-background: $fab-hover-background,
-        fab-hover-text-color: $fab-hover-text-color,
-        fab-focus-background: $fab-focus-background,
-        fab-focus-text-color: $fab-focus-text-color,
-
-        icon-color: $icon-color,
-        icon-background: $icon-background,
-        icon-hover-background: $icon-hover-background,
-        icon-hover-color: $icon-hover-color,
-        icon-focus-background: $icon-focus-background,
-        icon-focus-color: $icon-focus-color,
-
-        disabled-color: $disabled-color,
-        disabled-background: $disabled-background,
-
-        raised-resting-shadow: $raised-resting-shadow,
-        raised-hover-shadow: $raised-hover-shadow,
-        raised-focus-shadow: $raised-focus-shadow,
-
-        fab-resting-shadow: $fab-resting-shadow,
-        fab-hover-shadow: $fab-hover-shadow,
-        fab-focus-shadow: $fab-focus-shadow,
-
-        flat-shadow-color: $flat-shadow-color,
-        raised-shadow-color: $raised-shadow-color,
-        outlined-shadow-color: $outlined-shadow-color,
-        icon-shadow-color: $icon-shadow-color,
-        fab-shadow-color: $fab-shadow-color,
-    ));
+        variant: $variant,
+        themes: $themes
+    );
 }
 
 /// @access private
@@ -421,8 +191,6 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-button($theme) {
-    @include igx-root-css-vars($theme);
-
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
     $button-border: 1px solid transparent;
@@ -430,10 +198,16 @@
 
     $variant: map-get($theme, variant);
 
+    $flat-theme: map-get(map-get($theme, 'themes'), 'flat');
+    $outlined-theme: map-get(map-get($theme, 'themes'), 'outlined');
+    $raised-theme: map-get(map-get($theme, 'themes'), 'raised');
+    $fab-theme: map-get(map-get($theme, 'themes'), 'fab');
+    $icon-theme: map-get(map-get($theme, 'themes'), 'icon');
+
     $time: map-get((
-        material: 1ms,
-        fluent: 1ms,
-        bootstrap:.15s,
+        material: .1s,
+        fluent: .1s,
+        bootstrap: .15s,
         indigo-design: .15s
     ), $variant);
 
@@ -548,52 +322,52 @@
     $icon-in-button-size: rem(18px);
 
     $raised-shadow: map-get((
-        material: --var($theme, 'raised-resting-shadow'),
-        fluent: --var($theme, 'raised-resting-shadow'),
+        material: --var($raised-theme, 'resting-shadow'),
+        fluent: --var($raised-theme, 'resting-shadow'),
+        bootstrap: none,
+        indigo-design: none
+    ), $variant);
+
+    $raised-shadow--hover: map-get((
+        material: --var($raised-theme, 'hover-shadow'),
+        fluent: --var($raised-theme, 'hover-shadow'),
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $raised-shadow--focus: map-get((
-        material: --var($theme, 'raised-focus-shadow'),
-        fluent: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'),
-        indigo-design: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color')
-    ), $variant);
-
-    $raised-shadow--hover: map-get((
-        material: --var($theme, 'raised-hover-shadow'),
-        fluent: --var($theme, 'raised-hover-shadow'),
-        bootstrap: none,
-        indigo-design: none
+        material: --var($raised-theme, 'focus-shadow'),
+        fluent: 0 0 0 rem(3px) --var($raised-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) --var($raised-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($raised-theme, 'shadow-color')
     ), $variant);
 
     $fab-shadow: map-get((
-        material: --var($theme, 'fab-resting-shadow'),
-        fluent: --var($theme, 'fab-resting-shadow'),
+        material: --var($fab-theme, 'resting-shadow'),
+        fluent: --var($fab-theme, 'resting-shadow'),
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $fab-shadow--hover: map-get((
-        material: --var($theme, 'fab-hover-shadow'),
-        fluent: --var($theme, 'fab-hover-shadow'),
+        material: --var($fab-theme, 'hover-shadow'),
+        fluent: --var($fab-theme, 'hover-shadow'),
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $fab-shadow--focus: map-get((
-        material: --var($theme, 'fab-focus-shadow'),
-        fluent:  0 0 0 rem(3px) --var($theme, 'fab-shadow-color'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color'),
-        indigo-design: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color')
+        material: --var($fab-theme, 'focus-shadow'),
+        fluent:  0 0 0 rem(3px) --var($fab-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) --var($fab-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($fab-theme, 'shadow-color')
     ), $variant);
 
     $icon-shadow: map-get((
-        material: --var($theme, 'raised-focus-shadow'),
-        fluent: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'),
-        bootstrap: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'),
-        indigo-design: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color')
+        material: --var($icon-theme, 'focus-shadow'),
+        fluent: 0 0 0 rem(3px) --var($icon-theme, 'shadow-color'),
+        bootstrap: 0 0 0 rem(3px) --var($icon-theme, 'shadow-color'),
+        indigo-design: 0 0 0 rem(3px) --var($icon-theme, 'shadow-color')
     ), $variant);
 
     %igx-button-display {
@@ -618,6 +392,7 @@
             width: $icon-in-button-size;
             height: $icon-in-button-size;
             font-size: $icon-in-button-size;
+            color: inherit;
         }
 
         @include _icon-w-margin(
@@ -645,75 +420,54 @@
     }
 
     %igx-button--flat {
-        background: --var($theme, 'flat-background');
-        color: --var($theme, 'flat-text-color');
-        border-radius: --var($theme, 'flat-border-radius');
+        @include igx-css-vars($flat-theme);
 
-        igx-icon {
-            color: --var($theme, 'flat-icon-color')
-        }
+        background: --var($flat-theme, 'background');
+        color: --var($flat-theme, 'foreground');
+        border-radius: --var($flat-theme, 'border-radius');
 
         &:hover {
-            background: --var($theme, 'flat-hover-background');
-            color: --var($theme, 'flat-hover-text-color');
-
-            igx-icon {
-                color: --var($theme, 'flat-hover-icon-color');
-            }
+            background: --var($flat-theme, 'hover-background');
+            color: --var($flat-theme, 'hover-foreground');
         }
 
         &:focus,
         &:active {
-            background: --var($theme, 'flat-focus-background');
-            color: --var($theme, 'flat-focus-text-color');
-            box-shadow: 0 0 0 rem(3px) --var($theme, 'flat-shadow-color');
-
-
-            igx-icon {
-                color: --var($theme, 'flat-focus-icon-color');
-            }
+            background: --var($flat-theme, 'focus-background');
+            color: --var($flat-theme, 'focus-foreground');
+            box-shadow: 0 0 0 rem(3px) --var($flat-theme, 'shadow-color');
         }
     }
 
     %igx-button--outlined {
-        background: --var($theme, 'outlined-background');
-        color: --var($theme, 'outlined-text-color');
-        border-radius: --var($theme, 'outlined-border-radius');
+        @include igx-css-vars($outlined-theme);
+
+        background: --var($outlined-theme, 'background');
+        color: --var($outlined-theme, 'foreground');
+        border-radius: --var($outlined-theme, 'border-radius');
         padding: map-get($outlined-button-padding, 'comfortable');
 
         @if $variant != 'indigo-design' {
             border: $button-border;
-            border-color: --var($theme, 'outlined-outline-color');
+            border-color: --var($outlined-theme, 'border-color');
         } @else {
             border: {
                 width: 2px;
                 style: solid;
-                color: --var($theme, 'outlined-outline-color');
+                color: --var($outlined-theme, 'border-color');
             }
-        }
-
-        igx-icon {
-            color: --var($theme, 'outlined-icon-color')
         }
 
         &:hover {
-            background: --var($theme, 'outlined-hover-background');
-            color: --var($theme, 'outlined-hover-text-color');
-
-            igx-icon {
-                color: --var($theme, 'outlined-hover-icon-color')
-            }
+            background: --var($outlined-theme, 'hover-background');
+            color: --var($outlined-theme, 'hover-foreground');
         }
 
         &:focus,
         &:active {
-            background: --var($theme, 'outlined-focus-background');
-            color: --var($theme, 'outlined-focus-text-color');
-            box-shadow: 0 0 0 rem(3px) --var($theme, 'outlined-shadow-color');
-
-            igx-icon {
-                color: --var($theme, 'outlined-focus-icon-color')
-            }
+            background: --var($outlined-theme, 'focus-background');
+            color: --var($outlined-theme, 'focus-foreground');
+            box-shadow: 0 0 0 rem(3px) --var($outlined-theme, 'shadow-color');
         }
     }
 
@@ -736,39 +490,28 @@
     }
 
     %igx-button--raised {
-        color: --var($theme, 'raised-text-color');
-        background: --var($theme, 'raised-background');
-        box-shadow: $raised-shadow;
-        border-radius: --var($theme, 'raised-border-radius');
+        @include igx-css-vars($raised-theme);
 
-        igx-icon {
-            color: --var($theme, 'raised-icon-color')
-        }
+        color: --var($raised-theme, 'foreground');
+        background: --var($raised-theme, 'background');
+        box-shadow: $raised-shadow;
+        border-radius: --var($raised-theme, 'border-radius');
 
         &:hover {
-            color: --var($theme, 'raised-hover-text-color');
-            background: --var($theme, 'raised-hover-background');
+            color: --var($raised-theme, 'hover-foreground');
+            background: --var($raised-theme, 'hover-background');
             box-shadow: $raised-shadow--hover;
-
-
-            igx-icon {
-                color: --var($theme, 'raised-hover-icon-color')
-            }
         }
 
         &:focus,
         &:active {
-            color: --var($theme, 'raised-focus-text-color');
-            background: --var($theme, 'raised-focus-background');
+            color: --var($raised-theme, 'focus-foreground');
+            background: --var($raised-theme, 'focus-background');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'raised-shadow-color'), $raised-shadow--focus;
+                box-shadow: 0 0 0 rem(3px) --var($raised-theme, 'shadow-color'), $raised-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
-            }
-
-            igx-icon {
-                color: --var($theme, 'raised-focus-icon-color')
             }
         }
     }
@@ -780,7 +523,6 @@
         justify-content: center;
         align-items: center;
         border: $button-border;
-        border-radius: --var($theme, 'fab-border-radius');
         outline: none;
         cursor: pointer;
         transition: $button-transition;
@@ -792,29 +534,31 @@
     }
 
     %igx-button--fab {
+        @include igx-css-vars($fab-theme);
+
         padding: map-get($button-floating-padding, 'comfortable');
         min-width: map-get($button-floating-size, 'comfortable');
         min-height: map-get($button-floating-size, 'comfortable');
         line-height: unset;
         white-space: nowrap;
-        color: --var($theme, 'fab-text-color');
-        background: --var($theme, 'fab-background');
+        color: --var($fab-theme, 'foreground');
+        background: --var($fab-theme, 'background');
         box-shadow: $fab-shadow;
-        border-radius: --var($theme, 'fab-border-radius');
+        border-radius: --var($fab-theme, 'border-radius');
 
         &:hover {
-            color: --var($theme, 'fab-hover-text-color');
-            background: --var($theme, 'fab-hover-background');
+            color: --var($fab-theme, 'hover-foreground');
+            background: --var($fab-theme, 'hover-background');
             box-shadow: $fab-shadow;
         }
 
         &:focus,
         &:active {
-            color: --var($theme, 'fab-focus-text-color');
-            background: --var($theme, 'fab-focus-background');
+            color: --var($fab-theme, 'focus-foreground');
+            background: --var($fab-theme, 'focus-background');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'fab-shadow-color'), $fab-shadow--focus;
+                box-shadow: 0 0 0 rem(3px) --var($fab-theme, 'shadow-color'), $fab-shadow--focus;
             } @else {
                 box-shadow: $raised-shadow--focus;
             }
@@ -824,6 +568,9 @@
             display: inline-flex;
             order: -1;
             margin: rem(8px) 0;
+            width: rem(24px);
+            height: rem(24px);
+            font-size: rem(24px);
         }
 
         * + igx-icon {
@@ -853,27 +600,31 @@
     }
 
     %igx-button--icon {
+        @include igx-css-vars($icon-theme);
+
         width: $button-icon-width;
         height: $button-icon-width;
+        min-width: unset;
+        min-height: unset;
         font-size: $button-icon-font-size;
         padding: $button-icon-padding;
-        color: --var($theme, 'icon-color');
-        background: --var($theme, 'icon-background');
-        border-radius: --var($theme, 'icon-border-radius');
+        color: --var($icon-theme, 'foreground');
+        background: --var($icon-theme, 'background');
+        border-radius: --var($icon-theme, 'border-radius');
 
         &:hover {
             transition: $button-transition;
-            color: --var($theme, 'icon-hover-color');
-            background: --var($theme, 'icon-hover-background');
+            color: --var($icon-theme, 'hover-foreground');
+            background: --var($icon-theme, 'hover-background');
         }
 
         &:focus,
         &:active {
-            color: --var($theme, 'icon-focus-color');
-            background: --var($theme, 'icon-focus-background');
+            color: --var($icon-theme, 'focus-foreground');
+            background: --var($icon-theme, 'focus-background');
 
             @if $variant == 'material' or  $variant == 'fluent' {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'icon-shadow-color'), $icon-shadow;
+                box-shadow: 0 0 0 rem(3px) --var($icon-theme, 'shadow-color'), $icon-shadow;
             } @else {
                 box-shadow: $icon-shadow;
             }
@@ -883,31 +634,16 @@
     %igx-button--disabled {
         pointer-events: none;
         box-shadow: none;
-
-        &%igx-button--outlined,
-        &%igx-button--flat,
-        &%igx-button--raised,
-        &%igx-button--fab,
-        &%igx-button--icon {
-            color: --var($theme, 'disabled-color');
-
-            igx-icon {
-                color: inherit;
-            }
-        }
+        color: --var($flat-theme, 'disabled-foreground');
+        background: transparent;
 
         &%igx-button--raised,
         &%igx-button--fab {
-            background: --var($theme, 'disabled-background');
-        }
-
-        &%igx-button--flat,
-        &%igx-button--outlined {
-            background: transparent;
+            background: --var($flat-theme, 'disabled-background');
         }
 
         &%igx-button--outlined {
-            border-color: --var($theme, 'outlined-disabled-outline-color');
+            border-color: --var($flat-theme, 'disabled-border-color');
         }
 
         &:focus {

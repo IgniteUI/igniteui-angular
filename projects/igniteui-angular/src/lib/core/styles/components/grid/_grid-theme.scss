@@ -1050,7 +1050,7 @@
         cursor: move;
         border-#{$right}: 1px solid transparent;
 
-        %igx-icon-display {
+        igx-icon {
             width: $drag-icon-size;
             height: $drag-icon-size;
             font-size: $drag-icon-size;
@@ -1142,7 +1142,7 @@
     %igx-grid__td--bool {
         justify-content: center;
 
-        %igx-icon-display {
+        igx-icon {
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
@@ -1992,7 +1992,7 @@
     %igx-group-label__icon {
         user-select: none;
 
-        &%igx-icon-display {
+        igx-icon {
             color: --var($theme, 'group-label-icon');
             width: rem(16px);
             height: rem(16px);
@@ -2754,6 +2754,10 @@
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
+
+        button {
+            transition: none;
+        }
     }
 
     %igx-grid__filtering-row-editing-buttons--small {
