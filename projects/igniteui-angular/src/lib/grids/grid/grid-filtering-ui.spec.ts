@@ -2752,7 +2752,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -4963,7 +4963,7 @@ fdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             ControlsFunction.verifyButtonIsDisabled(applyButton);
         }));
 
-        fit('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
+        it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
             const totalListItems = [];
 
             // Open excel style custom filtering dialog.
