@@ -12,14 +12,24 @@
 /// @param {Color} background-hover [null] - The background color on hover used for the tree node.
 /// @param {Color} background-selected [null] - The background color in selected state used for the tree node.
 /// @param {Color} background-selected-hover [null] - The background color on hover in selected state used for the tree node.
+/// @param {Color} background-active [null] - The background color in active state used for the tree node.
+/// @param {Color} background-disabled [null] - The background color in disabled state used for the tree node.
+///
 /// @param {Color} color [null] - The color used for the tree node content.
 /// @param {Color} color-hover [null] - The hover color used for the tree node content.
 /// @param {Color} color-selected [null] - The color used for the content of the selected tree node.
 /// @param {Color} color-selected-hover [null] - The hover color used for the content of the selected tree node.
+/// @param {Color} color-active [null] - The color used for the content of the active tree node.
+/// @param {Color} color-disabled [null] - The color used for the content of the disabled tree node.
+///
 /// @param {Color} tree-indicator-color [null] - The color used for the tree node expand/collapse indicator.
 /// @param {Color} tree-indicator-color-hover [null] - The hover color used for the tree node expand/collapse indicator.
 /// @param {Color} tree-indicator-color-selected [null] - The color used for the selected tree node expand/collapse indicator.
 /// @param {Color} tree-indicator-color-selected-hover [null] - The hover color used for the selected tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-active [null] - The color used for the active tree node expand/collapse indicator.
+/// @param {Color} tree-indicator-color-disabled [null] - The color used for the disabled tree node expand/collapse indicator.
+///
+/// @param {Color} drop-indicator-color [null] - The color used for the drop aria indicator.
 ///
 /// @requires $default-palette
 /// @requires $light-schema
@@ -40,21 +50,24 @@
     $background-selected: null,
     $background-selected-hover: null,
     $background-disabled: null,
+    $background-active: null,
+    $background-disabled: null,
 
     $color: null,
     $color-hover: null,
     $color-selected: null,
     $color-selected-hover: null,
+    $color-active: null,
     $color-disabled: null,
 
-    // TODO document this, once it's available.
     $drop-indicator-color: null,
 
     $tree-indicator-color: null,
     $tree-indicator-color-hover: null,
     $tree-indicator-color-selected: null,
     $tree-indicator-color-selected-hover: null,
-    $tree-indicator-disabled: null,
+    $tree-indicator-color-active: null,
+    $tree-indicator-color-disabled: null,
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -91,6 +104,14 @@
         $tree-indicator-color-selected: text-contrast($background-selected);
     }
 
+    @if not($color-active) and $background-active {
+        $color-active: text-contrast($background-active);
+    }
+
+    @if not($tree-indicator-color-active) and $background-active {
+        $tree-indicator-color-active: text-contrast($background-active);
+    }
+
     @return extend($theme, (
         name: $name,
         palette: $default-palette,
@@ -99,12 +120,14 @@
         background-hover: $background-hover,
         background-selected: $background-selected,
         background-selected-hover: $background-selected-hover,
+        background-active: $background-active,
         background-disabled: $background-disabled,
 
         color: $color,
         color-hover: $color-hover,
         color-selected: $color-selected,
         color-selected-hover: $color-selected-hover,
+        color-active: $color-active,
         color-disabled: $color-disabled,
 
         drop-indicator-color: $drop-indicator-color,
@@ -113,7 +136,8 @@
         tree-indicator-color-hover: $tree-indicator-color-hover,
         tree-indicator-color-selected: $tree-indicator-color-selected,
         tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
-        tree-indicator-disabled: $tree-indicator-disabled,
+        tree-indicator-color-active: $tree-indicator-color-disabled,
+        tree-indicator-color-disabled: $tree-indicator-color-disabled,
     ));
 }
 
@@ -138,6 +162,9 @@
         compact: rem(32px)
     );
 
+    $icon-size: rem(24px);
+    $icon-space: rem(8px);
+
     %tree-node,
     %tree-node-wrapper,
     %tree-node-indicator,
@@ -158,7 +185,7 @@
 
     %tree-node-indicator,
     %tree-node-select {
-        margin-#{$right}: rem(8px);
+        margin-#{$right}: $icon-space;
     }
 
     %tree-node-indicator--hidden {
@@ -174,6 +201,14 @@
         padding: 0 map-get($node-indent, 'comfortable');
         background: --var($theme, 'background');
         color: --var($theme, 'color');
+        position: relative;
+
+        // We need this here, since we count on it to calculate the width of the tree drop indicator
+        igx-icon {
+            width: $icon-size;
+            height: $icon-size;
+            font-size: $icon-size;
+        }
 
         &:hover,
         &:focus {
@@ -192,6 +227,11 @@
             %tree-node-spacer {
                 width: map-get($node-indent, 'cosy')
             }
+
+            %tree-node-drop-indicator {
+                #{$right}: map-get($node-indent, 'cosy');
+                width: calc(100% - ((#{map-get($node-indent, 'cosy')} * 2) + (#{$icon-size} + #{$icon-space})));
+            }
         }
 
         &--compact {
@@ -200,6 +240,11 @@
 
             %tree-node-spacer {
                 width: map-get($node-indent, 'compact')
+            }
+
+            %tree-node-drop-indicator {
+                #{$right}: map-get($node-indent, 'compact');
+                width: calc(100% - ((#{map-get($node-indent, 'compact')} * 2) + (#{$icon-size} + #{$icon-space})));
             }
         }
     }
@@ -212,7 +257,7 @@
             color: --var($theme, 'tree-indicator-color-selected');
 
             &:hover {
-                color: --var($theme, 'tree-indicator-color-selected-hover');
+                color: --var($theme, 'tree-indicator-color');
             }
         }
 
@@ -223,6 +268,44 @@
         }
     }
 
+    %tree-node-wrapper--active {
+        background: --var($theme, 'background-active');
+        color: --var($theme, 'color-active');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-active');
+
+            &:hover {
+                color: --var($theme, 'tree-indicator-color');
+            }
+        }
+
+        &:focus,
+        &:hover {
+            background: --var($theme, 'background-active');
+            color: --var($theme, 'color-active');
+        }
+    }
+
+    %tree-node-wrapper--disabled {
+        background: --var($theme, 'background-disabled');
+        color: --var($theme, 'color-disabled');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-disabled');
+
+            &:hover {
+                color: --var($theme, 'tree-indicator-color-disabled');
+            }
+        }
+
+        &:focus,
+        &:hover {
+            background: --var($theme, 'background-disabled');
+            color: --var($theme, 'color-disabled');
+        }
+    }
+
     %tree-node-spacer {
         display: inline-block;
         width: map-get($node-indent, 'comfortable');
@@ -230,7 +313,6 @@
 
     %tree-node-content {
         display: block;
-        position: relative;
         align-items: center;
         flex: 1;
         @include ellipsis();
@@ -245,6 +327,29 @@
         &:hover,
         &:focus, {
             color: --var($theme, 'tree-indicator-color-hover');
+        }
+    }
+
+    [dir='rtl'] {
+        %tree-node-indicator {
+            igx-icon {
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    %tree-node-drop-indicator {
+        display: flex;
+        visibility: hidden;
+        position: absolute;
+        #{$right}: map-get($node-indent, 'comfortable');
+        bottom: 0;
+        width: calc(100% - ((#{map-get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space})));
+
+        > div {
+            flex: 1;
+            height: rem(1px);
+            background: --var($theme, 'drop-indicator-color');
         }
     }
 

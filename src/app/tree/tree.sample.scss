@@ -4,20 +4,6 @@
 
     > * {
         margin-right: 8px;
-
-        &:last-of-type {
-            margin-right: 8px
-        }
-
-        [dir='rtl'] {
-            margin-left: 8px;
-            margin-right: 0;
-
-            &:last-of-type {
-                margin-left: 8px;
-                margin-right: 0;
-            }
-        }
     }
 }
 
@@ -31,6 +17,7 @@
 
 .tree-container {
     margin: 16px;
+    max-width: 350px;
 
     p {
         margin-bottom: 8px;

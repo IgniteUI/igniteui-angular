@@ -7,6 +7,7 @@ import { ICarouselResourceStrings, CarouselResourceStringsEN } from './carousel-
 import { IListResourceStrings, ListResourceStringsEN } from './list-resources';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from './calendar-resources';
 import { IInputResourceStrings, InputResourceStringsEN } from './input-resources';
+import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IInputResourceStrings, IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings { }
@@ -23,6 +24,7 @@ export const CurrentResourceStrings = {
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
     InputResStrings: cloneValue(InputResourceStringsEN),
+    TreeResStrings: cloneValue(TreeResourceStringsEN),
 };
 
 const updateResourceStrings = (currentStrings: IResourceStrings, newStrings: IResourceStrings) => {
