@@ -6133,7 +6133,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public createRow(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
         const rec = this.filteredSortedData[index];
-        if (!rec) { return undefined; }
+        if (!rec) {
+            return undefined;
+        }
         const row = new IgxRowDirective(this.gridAPI as GridBaseAPIService<IgxGridComponent>,
             this.crudService, this.selectionService, null, this.cdr);
         row.rowData = rec;
