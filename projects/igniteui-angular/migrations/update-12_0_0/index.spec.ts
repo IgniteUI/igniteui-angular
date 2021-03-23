@@ -59,4 +59,29 @@ $theme: igx-avatar-theme(
 `
         );
     });
+
+    it('should update onColumnChange', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+`
+<igx-grid>
+  <igx-column (onColumnChange)="columnChanged()"></igx-column>
+</igx-grid>
+`
+        );
+
+        const tree = await runner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+`
+<igx-grid>
+  <igx-column (columnChange)="columnChanged()"></igx-column>
+</igx-grid>
+`
+        );
+    });
 });

@@ -53,8 +53,8 @@ export function WatchColumnChanges(): PropertyDecorator {
             const oldValue = this[key];
             originalSetter.call(this, val);
             if (val !== oldValue || (typeof val === 'object' && val === oldValue)) {
-                if (this.onColumnChange) {
-                    this.onColumnChange.emit();
+                if (this.columnChange) {
+                    this.columnChange.emit();
                 }
             }
         };

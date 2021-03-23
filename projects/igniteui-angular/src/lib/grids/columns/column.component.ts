@@ -373,7 +373,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /** @hidden */
     @Output()
-    public onColumnChange = new EventEmitter<void>();
+    public columnChange = new EventEmitter<void>();
 
     /**
      * Gets whether the hiding is disabled.
