@@ -66,6 +66,7 @@ import {
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { Transaction, TransactionType, TransactionService, State } from '../services/public_api';
 import {
+    IgxRowAddTextDirective,
     IgxRowEditTemplateDirective,
     IgxRowEditTabStopDirective,
     IgxRowEditTextDirective,
@@ -1130,11 +1131,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @ContentChild(IgxRowEditTemplateDirective, { read: TemplateRef })
     public rowEditCustom: TemplateRef<any>;
+
     /**
      * @hidden @internal
      */
     @ContentChild(IgxRowEditTextDirective, { read: TemplateRef })
     public rowEditText: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ContentChild(IgxRowAddTextDirective, { read: TemplateRef })
+    public rowAddText: TemplateRef<any>;
 
     /**
      * @hidden @internal
@@ -1715,7 +1723,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set isLoading(value: boolean) {
         if (this._isLoading !== value) {
             this._isLoading = value;
-            this.evaluateLoadingState();
+            if (!!this.data) {
+                this.evaluateLoadingState();
+            }
         }
         Promise.resolve().then(() => {
             // wait for the current detection cycle to end before triggering a new one.
