@@ -126,7 +126,7 @@ export class GridFunctions {
     }
 
     public static getGridFooter(fix): DebugElement {
-        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS)).children[0];
     }
 
     public static getGridScroll(fix): DebugElement {
