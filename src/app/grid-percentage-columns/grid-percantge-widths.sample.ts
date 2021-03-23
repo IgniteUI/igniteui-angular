@@ -18,9 +18,9 @@ import { data, dataWithoutPK } from '../shared/data';
     public pipeArgs: IColumnPipeArgs = {
         digitsInfo: `${this.leadingDigits}.${this.trailingDigitsMin}-${this.trailingDigitsMax}`,
         currencyCode: this.currencyCode,
-        display: 'symbol-narrow'
+        display: 'symbol'
     };
-    public currencies = ['USD', 'EUR', 'JPY', 'GBP'];
+    public currencies = ['', 'USD', 'EUR', 'JPY', 'GBP'];
     public locales = ['en', 'fr-FR', 'ja', 'bg'];
     public locale = 'en';
 
@@ -33,7 +33,7 @@ import { data, dataWithoutPK } from '../shared/data';
         this.pipeArgs = {
             digitsInfo: `${this.leadingDigits}.${this.trailingDigitsMin}-${this.trailingDigitsMax}`,
             currencyCode: this.currencyCode,
-            display: 'symbol-narrow'
+            display: 'symbol'
         };
     }
 

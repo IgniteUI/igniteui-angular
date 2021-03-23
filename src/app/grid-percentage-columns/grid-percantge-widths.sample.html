@@ -51,14 +51,14 @@
         <input igxInput type="text" placeholder="Filter by product name" (input)="filter($event.target.value)">
     </igx-input-group>
     <div class="sample-content">
-        <igx-grid #grid1 [data]="data" [autoGenerate]="false" height="520px" width="100%" [allowFiltering]="true">
+        <igx-grid #grid1 [data]="data" [autoGenerate]="false" [locale]="locale" height="520px" width="100%" [allowFiltering]="true">
             <igx-column field="ProductName" header="Product Name" [dataType]="'string'">
             </igx-column>
             <igx-column field="QuantityPerUnit" [pinned]="true" [filterable]="false" header="Quantity Per Unit" [dataType]="'string'">
             </igx-column>
             <igx-column field="UnitPrice" header="Unit Price" [dataType]="'number'">
                 <ng-template igxCell let-cell="cell" let-val let-row>
-                    {{+val | currency}}
+                    {{+val | currency:currencyCode:'symbol':undefined:locale}}
                 </ng-template>
             </igx-column>
             <igx-column field="OrderDate" [editable]="true" header="Order Date" [dataType]="'date'" [formatter]="formatDate">
