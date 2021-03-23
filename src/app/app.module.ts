@@ -142,6 +142,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -211,6 +212,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
+    GridRowAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,

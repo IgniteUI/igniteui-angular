@@ -1,0 +1,24 @@
+.sample-buttons {
+    margin-top: 24px;
+}
+
+[igxButton] {
+    margin-right: 8px;
+    margin-bottom: 8px;
+}
+
+.density-chooser {
+    margin-bottom: 16px;
+    max-width: 900px;
+}
+
+.references {
+    font-size: .75em;
+}
+
+.references>p {
+    margin: 0;
+    letter-spacing: initial;
+    line-height: initial;
+    font-size: 1em;
+}
