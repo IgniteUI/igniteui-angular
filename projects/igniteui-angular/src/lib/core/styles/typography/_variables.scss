@@ -5,6 +5,7 @@
 ////
 
 /// @type Map - The default type scale.
+/// @deprecated - Use $material-type-scale instead.
 /// @link https://material.io/design/typography/the-type-system.html Material Type System.
 /// @prop h1
 /// @prop {String} h1.font-size [rem(96px)]
@@ -85,4 +86,21 @@
 /// @prop {String} overline.line-height [rem(16px)]
 /// @prop {String} overline.text-transform [uppercase]
 /// @requires igx-type-scale
+/// @see $material-type-scale
 $default-type-scale: igx-type-scale() !default;
+
+/// @alias default-type-scale
+/// @see $default-type-scale
+$material-type-scale: $default-type-scale !default;
+
+/// Material Typeface
+$material-typeface: "'Titillium Web', sans-serif" !default;
+
+/// Fluent Typeface
+$fluent-typeface: "'Open Sans', Helvetica, Arial, sans-serif" !default;
+
+/// Bootstrap Typeface
+$bootstrap-typeface: "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'" !default;
+
+/// Indigo Typeface
+$indigo-typeface: "'Nunito Sans', sans-serif" !default;

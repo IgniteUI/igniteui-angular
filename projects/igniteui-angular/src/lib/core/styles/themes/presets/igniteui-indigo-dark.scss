@@ -5,4 +5,5 @@
 }
 
 @include igx-core();
+@include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
 @include igx-indigo-dark-theme($dark-indigo-palette);
