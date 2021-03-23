@@ -1461,9 +1461,8 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid = fix.componentInstance.grid;
         }));
 
-        it('Paging: Should persist through paging', fakeAsync(() => {
+        it('Paging: Should persist through paging', () => {
             grid.paging = true;
-            tick();
             fix.detectChanges();
 
             const firstRow = grid.getRowByIndex(0);
@@ -1471,8 +1470,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             const middleRow = grid.getRowByIndex(3);
 
             secondRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
-            fix.detectChanges();
-            tick();
             middleRow.onRowSelectorClick(UIInteractions.getMouseEvent('click'));
             fix.detectChanges();
 
@@ -1481,7 +1478,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.nextPage();
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(secondRow, false);
@@ -1497,18 +1493,16 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             grid.previousPage();
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyRowSelected(firstRow, false);
             GridSelectionFunctions.verifyRowSelected(secondRow);
             GridSelectionFunctions.verifyRowSelected(middleRow);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
-        }));
+        });
 
-        it('Paging: Should persist all rows selection through paging', fakeAsync(() => {
+        it('Paging: Should persist all rows selection through paging', () => {
             grid.paging = true;
-            tick();
             fix.detectChanges();
 
             const secondRow = grid.getRowByIndex(1);
@@ -1519,7 +1513,6 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             grid.nextPage();
-            tick();
             fix.detectChanges();
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
@@ -1532,33 +1525,28 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowSelected(secondRow);
 
             grid.previousPage();
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray(), false);
-        }));
+        });
 
-        it('Paging: Should be able to select rows with Shift and Click', fakeAsync(() => {
+        it('Paging: Should be able to select rows with Shift and Click', () => {
             grid.paging = true;
-            tick();
             fix.detectChanges();
 
             const firstRow = grid.getRowByIndex(0);
             const thirdRow = grid.getRowByIndex(3);
             grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
-            fix.detectChanges();
 
             // Select first row on first page
             firstRow.onClick(UIInteractions.getMouseEvent('click'));
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.nextPage();
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -1572,12 +1560,11 @@ describe('IgxGrid - Row Selection #grid', () => {
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
 
             grid.previousPage();
-            tick();
             fix.detectChanges();
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowsArraySelected(grid.rowList.toArray());
-        }));
+        });
 
         it('CRUD: Should handle the deselection on a selected row properly', () => {
             let firstRow = grid.getRowByKey(1);
