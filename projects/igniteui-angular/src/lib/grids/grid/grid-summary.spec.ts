@@ -760,7 +760,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
-            grid.width = '400px';
+            grid.width = '800px';
             grid.height = '800px';
             fix.detectChanges();
             tick(100);

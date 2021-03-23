@@ -1567,7 +1567,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        UIInteractions.simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id$="_ProductName"]'), 0, 0);
+        const productNameCol = fix.nativeElement.querySelector('igx-grid-header-group[id$="_-1_0_2"]');
+        UIInteractions.simulateMouseEvent('click', productNameCol,0, 0);
         tick();
         fix.detectChanges();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
