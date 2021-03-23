@@ -2,7 +2,7 @@ import { QueryList } from '@angular/core';
 import { GridType } from './common/grid.interface';
 import { RowType, TreeGridRowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxRowDirective } from './row.directive'
+import { IgxRowDirective } from './row.directive';
 import { IgxTreeGridRowComponent } from './tree-grid/tree-grid-row.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
