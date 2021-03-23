@@ -61,6 +61,10 @@ export class IgxTreeNavigationService {
         if (this.lastActiveNode.id) {
             (this.lastActiveNode as any).cdr.markForCheck();
         }
+        // TODO: Should we emit the last active node as well? Should we emit focusedNodeChanged?
+        if (this._activeNode !== this.lastActiveNode) {
+            this.tree.activeNodeChanged.emit({node: this._activeNode});
+        }
     }
 
     public get focusedNode() {
@@ -100,9 +104,9 @@ export class IgxTreeNavigationService {
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        requestAnimationFrame(() => {
-            console.log(document.activeElement);
-        });
+        // requestAnimationFrame(() => {
+        //     console.log(document.activeElement);
+        // });
         if (key === 'tab') {
             return;
         }
@@ -132,10 +136,20 @@ export class IgxTreeNavigationService {
         if (!this.focusedNode || !(NAVIGATION_KEYS.has(key) || key === '*' || key === 'enter')) {
             return;
         }
+        if (this.emitKeyDown(event)) {
+            return;
+        }
         this.getNextPosition(this.focusedNode, key, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
         }
+    }
+
+    public emitKeyDown(event) {
+        const target = this.focusedNode;
+        const keydownArgs = { event, cancel: false, target };
+        this.tree.treeKeydown.emit(keydownArgs);
+        return keydownArgs.cancel;
     }
 
     public focusNode(event: FocusEvent) {

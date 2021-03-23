@@ -12,7 +12,8 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import {
     IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
-    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
+    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver,
+    IActiveNodeChangedEventArgs, ITreeKeydownEventArgs
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -214,6 +215,31 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      */
     @Output()
     public nodeCollapsed = new EventEmitter<ITreeNodeToggledEventArgs>();
+
+    /**
+     * Emitted when keydown is triggered over element inside tree component.
+     *
+     * @remarks
+     * This event is fired only if the key combination is supported in the tree.
+     * Return the target object and the original event. This event is cancelable.
+     * @example
+     * ```html
+     *  <igx-tree (treeKeydown)="customKeydown($event)"></igx-tree>
+     * ```
+     */
+    @Output()
+    public treeKeydown = new EventEmitter<ITreeKeydownEventArgs>();
+
+    /**
+     * Emmited when the active node is changed.
+     *
+     * @example
+     * ```
+     * <igx-tree (activeNodeChanged)="activeNodeChanged($event)"></igx-tree>
+     * ```
+     */
+    @Output()
+    public activeNodeChanged = new EventEmitter<IActiveNodeChangedEventArgs>();
 
     // TODO: should we remove this thus checkbox aren't templatable
     /**

@@ -31,7 +31,8 @@
     <div class="column tree-container">
         <p>IgxTree</p>
         <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
-            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)">
+            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)" 
+            (activeNodeChanged)="activeNodeChanged($event)" (treeKeydown)="keydown($event)">
             <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
                 <!-- <a href="www.google.com">test</a> -->
                 {{ node.CompanyName }}

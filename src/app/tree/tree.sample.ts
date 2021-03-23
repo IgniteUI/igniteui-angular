@@ -112,6 +112,14 @@ export class TreeSampleComponent implements AfterViewInit {
         this.tree.getNextNode(this.tree.nodes.toArray()[0]);
     }
 
+    public activeNodeChanged(evt) {
+        // console.log(evt);
+    }
+
+    public keydown(evt) {
+        // console.log(evt);
+    }
+
     private mapData(data: any[]) {
         data.forEach(x => {
             x.selected = false;

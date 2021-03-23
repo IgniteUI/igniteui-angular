@@ -22,6 +22,8 @@ export interface IgxTree {
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;
     nodeCollapsing: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeCollapsed: EventEmitter<ITreeNodeToggledEventArgs>;
+    treeKeydown: EventEmitter<ITreeKeydownEventArgs>;
+    activeNodeChanged: EventEmitter<IActiveNodeChangedEventArgs>;
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
@@ -66,6 +68,16 @@ export interface ITreeNodeTogglingEventArgs extends IBaseEventArgs, IBaseCancela
 }
 
 export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
+    node: IgxTreeNode<any>;
+}
+
+export interface ITreeKeydownEventArgs extends IBaseEventArgs {
+    target: IgxTreeNode<any>;
+    event: Event;
+    cancel: boolean;
+}
+
+export interface IActiveNodeChangedEventArgs extends IBaseEventArgs {
     node: IgxTreeNode<any>;
 }
 
