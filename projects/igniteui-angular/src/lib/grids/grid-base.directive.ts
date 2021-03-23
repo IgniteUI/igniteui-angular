@@ -1281,10 +1281,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         return this._resourceStrings;
     }
-    /**
-     * @hidden @internal
-     */
-    public cancelAddMode = false;
 
     /**
      * Gets/Sets the filtering logic of the `IgxGridComponent`.
@@ -4354,7 +4350,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.gridAPI.crudService.endEdit(true, event);
-        this.cancelAddMode = false;
+        this.gridAPI.crudService.cancelAddMode = false;
         const isInPinnedArea = this.isRecordPinnedByViewIndex(index);
         const pinIndex = this.pinnedRecords.findIndex(x => x[this.primaryKey] === rowID);
         const unpinIndex = this.getUnpinnedIndexById(rowID);
@@ -5983,36 +5979,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    public endRowEdit(commit = true, event?: Event) {
-        const canceled = this.gridAPI.crudService.endEdit(commit, event);
-
-        if (canceled) {
-            return true;
-        }
-
-        const activeCell = this.navigation.activeNode;
-        if (activeCell && activeCell.row !== -1) {
-            this.tbody.nativeElement.focus();
-        }
-    }
-
-    /**
      * @hidden @internal
      */
     public triggerPipes() {
         this._pipeTrigger++;
         this.cdr.detectChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public endAddRow() {
-        this.cancelAddMode = true;
-        this.triggerPipes();
     }
 
     protected writeToData(rowIndex: number, value: any) {

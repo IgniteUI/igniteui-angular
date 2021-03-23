@@ -319,7 +319,8 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     public transform(collection: any, isPinned = false, pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.gridAPI.crudService.addRowParent || grid.cancelAddMode || isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
+        if (!grid.rowEditable || !grid.gridAPI.crudService.addRowParent || grid.gridAPI.crudService.cancelAddMode ||
+            isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);

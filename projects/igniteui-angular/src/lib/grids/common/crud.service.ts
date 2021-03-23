@@ -110,6 +110,7 @@ export class IgxGridCRUDService {
     public cell: IgxCell | null = null;
     public row: IgxRow | null = null;
     public isInCompositionMode = false;
+    public cancelAddMode = false;
 
 
     /**
@@ -266,7 +267,7 @@ export class IgxGridCRUDService {
             this.grid.rowEditEnter.emit(rowArgs);
             if (rowArgs.cancel) {
                 this.endEditMode();
-                this.grid.endAddRow();
+                this.endAddRow();
                 return;
             }
             this.grid.openRowOverlay(this.row.id);
@@ -389,6 +390,23 @@ export class IgxGridCRUDService {
         return false;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+     public endRowEditTabStop(commit = true, event?: Event) {
+        const canceled = this.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
+        const activeCell = this.grid.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.grid.tbody.nativeElement.focus();
+        }
+    }
+
 
     public endAdd(commit = true, event?: Event) {
         const row = this.row;
@@ -426,21 +444,29 @@ export class IgxGridCRUDService {
                 }
             }
             this.addRowParent = null;
-            this.grid.cancelAddMode = cancelable;
+            this.cancelAddMode = cancelable;
         } else {
             this.grid.gridAPI.crudService.exitCellEdit(event);
-            this.grid.cancelAddMode = true;
+            this.cancelAddMode = true;
         }
         this.grid.gridAPI.crudService.endRowEdit();
         this.grid.closeRowEditingOverlay();
         this.grid.pipeTriggerNotifier.next();
-        if (!this.grid.cancelAddMode) {
+        if (!this.cancelAddMode) {
             this.grid.cdr.detectChanges();
             this.grid.onRowAdded.emit({ data: row.data });
         }
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData, event);
         this.grid.rowEditExit.emit(nonCancelableArgs);
-        return this.grid.cancelAddMode;
+        return this.cancelAddMode;
+    }
+
+    /**
+     * @hidden @internal
+     */
+     public endAddRow() {
+        this.cancelAddMode = true;
+        this.grid.triggerPipes();
     }
 
     /**

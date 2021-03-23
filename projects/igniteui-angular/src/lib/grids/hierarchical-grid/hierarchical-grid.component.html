@@ -264,15 +264,15 @@
     You have {{ rowChangesCount }} changes in this row
 </ng-template>
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="this.gridAPI.crudService.endRowEditTabStop(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="this.gridAPI.crudService.endRowEditTabStop(true, $event)">Done</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
-                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.gridAPI.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                context: { $implicit: !this.gridAPI.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
