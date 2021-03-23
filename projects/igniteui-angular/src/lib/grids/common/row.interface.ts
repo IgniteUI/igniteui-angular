@@ -1,20 +1,33 @@
-import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
+import { QueryList } from '@angular/core';
+import { IgxGridCellComponent, ITreeGridRecord } from 'igniteui-angular';
 
 export interface RowType {
-    nativeElement: HTMLElement;
-    checkboxElement: IgxCheckboxComponent;
     rowID: any;
     rowData: any;
     disabled: boolean;
-    rowSelectable: boolean;
     index: number;
     gridID: string;
     added: boolean;
     pinned: boolean;
-    deleted: boolean;
     selected: boolean;
-    focused: boolean;
-    expanded?: boolean;
-    treeRow?: any;
-    addRow?: boolean;
+    expanded: boolean;
+    deleted: boolean;
+    addRow: boolean;
+    cells: QueryList<IgxGridCellComponent>;
+    inEditMode: boolean;
+    update: (value: any) => void;
+    delete: () => any;
+    isCellActive: (visibleColumIndex: number) => boolean;
+    pin: () => void;
+    unpin: () => void;
+    beginAddRow: () => void;
+}
+
+export interface TreeGridRowType extends RowType {
+    treeRow: ITreeGridRecord;
+}
+
+export interface HierarchicalGridRowType extends RowType {
+    toggle: () => void;
+    hasChildren: boolean;
 }

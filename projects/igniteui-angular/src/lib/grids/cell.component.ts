@@ -28,6 +28,8 @@ import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 import { DataType } from '../data-operations/data-util';
+import { IgxGridRow } from './grid-public-row';
+import { IgxRowDirective } from './row.directive';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -70,6 +72,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public column: ColumnType;
 
     /**
+     * @hidden
+     * @internal
+     */
+    @Input()
+    private intRow: IgxRowDirective<IgxGridBaseDirective & GridType>;
+
+    /**
      * Gets the row of the cell.
      * ```typescript
      * let cellRow = this.cell.row;
@@ -78,7 +87,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     @Input()
-    public row: RowType;
+    public get row(): RowType {
+        return new IgxGridRow(this.intRow);
+    }
 
     /**
      * Gets the data of the row of the cell.

@@ -157,7 +157,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected positionInParent(rowIndex, isNext, cb?: () => void) {
-        const rowObj = this.grid.getRowByIndex(rowIndex);
+        const rowObj = this.grid.gridAPI.get_row_by_index(rowIndex);
         if (!rowObj) {
             if (cb) {
                 cb();

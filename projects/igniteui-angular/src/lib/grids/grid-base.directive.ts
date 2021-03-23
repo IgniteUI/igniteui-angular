@@ -74,7 +74,6 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
@@ -156,6 +155,10 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { RowType } from './common/row.interface';
+import { IgxGridRow } from './grid-public-row';
+import { IgxGridRowComponent } from './grid/grid-row.component';
+import { IgxGridComponent } from './grid/grid.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -4049,7 +4052,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxRowDirective` by index.
+     * Returns the `RowType` by index.
      *
      * @example
      * ```typescript
@@ -4057,12 +4060,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param index
      */
-    public getRowByIndex(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.gridAPI.get_row_by_index(index);
+    public getRowByIndex(index: number): RowType {
+        const row = this.gridAPI.get_row_by_index(index) ?? this.createRow(index);
+        return new IgxGridRow(row);
     }
 
     /**
-     * Returns `IgxGridRowComponent` object by the specified primary key .
+     * Returns `RowType` object by the specified primary key.
      *
      * @remarks
      * Requires that the `primaryKey` property is set.
@@ -4072,8 +4076,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param keyValue
      */
-    public getRowByKey(keyValue: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.gridAPI.get_row_by_key(keyValue);
+    public getRowByKey(keyValue: any): RowType {
+        let row = this.gridAPI.get_row_by_key(keyValue);
+        if (!row) {
+            const index = this.data.map(rec => rec[this.primaryKey]).indexOf(keyValue);
+            row = this.createRow(index);
+        }
+        return new IgxGridRow(row);
     }
 
     /**
@@ -4379,7 +4388,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (shouldScroll) {
             this.navigateTo(newRowIndex, -1);
         }
-        const row = this.getRowByIndex(index + 1);
+        const row = this.gridAPI.get_row_by_index(index + 1);
         row.animateAdd = true;
         row.onAnimationEnd.pipe(first()).subscribe(() => {
             row.animateAdd = false;
@@ -4752,7 +4761,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
-        const row = this.gridAPI.get_row_by_key(rowID);
+        const row = this.getRowByKey(rowID);
 
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
@@ -4788,7 +4797,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index === -1) {
             return false;
         }
-        const row = this.gridAPI.get_row_by_key(rowID);
+        const row = this.getRowByKey(rowID);
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
@@ -6116,6 +6125,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAddRow() {
         this.cancelAddMode = true;
         this.triggerPipes();
+    }
+
+    /**
+     * @hidden @internal
+     * Creates an instance of the row component, based on index. If index is out of the data array bounds, returns undefined.
+     */
+    public createRow(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
+        const rec = this.filteredSortedData[index];
+        if (!rec) { return undefined; }
+        const row = new IgxRowDirective(this.gridAPI as GridBaseAPIService<IgxGridComponent>,
+            this.crudService, this.selectionService, null, this.cdr);
+        row.rowData = rec;
+        row.index = index;
+        return row;
     }
 
     protected writeToData(rowIndex: number, value: any) {

@@ -5,4 +5,6 @@ export * from './grid.directives';
 export * from './grid.module';
 export * from './grid-api.service';
 export * from './grid-row.component';
+export * from '../grid-public-row';
+export * from '../common/row.interface';
 export * from './expandable-cell.component';
