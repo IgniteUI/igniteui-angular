@@ -29,7 +29,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
 
-fdescribe('IgxGrid - Summaries #grid', () => {
+describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
