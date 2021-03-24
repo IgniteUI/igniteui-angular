@@ -187,7 +187,7 @@ describe('IgxMonthPicker', () => {
 
         spyOn(monthPicker.selected, 'emit');
 
-        months[1].nativeElement.click();
+        months[2].nativeElement.click();
         fixture.detectChanges();
 
         const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
@@ -427,7 +427,7 @@ describe('IgxMonthPicker', () => {
         const months = dom.queryAll(By.css('.igx-calendar__month'));
         const currentMonth = dom.query(By.css('.igx-calendar__month--current'));
 
-        expect(months.length).toEqual(11);
+        expect(months.length).toEqual(12);
         expect(currentMonth.nativeElement.textContent.trim()).toMatch('Feb');
 
         UIInteractions.triggerKeyDownEvtUponElem('Home' , currentMonth.nativeElement );
