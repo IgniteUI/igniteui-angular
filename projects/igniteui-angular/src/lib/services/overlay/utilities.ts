@@ -1,10 +1,9 @@
-import { IPositionStrategy } from './position/IPositionStrategy';
-
-import { IScrollStrategy } from './scroll';
-import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
+import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
+import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
+import { IPositionStrategy } from './position/IPositionStrategy';
+import { IScrollStrategy } from './scroll';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -47,6 +46,7 @@ export enum AbsolutePosition {
     Center = 'center'
 }
 
+// TODO: make this interface
 export class Point {
     constructor(public x: number, public y: number) { }
 }
@@ -172,10 +172,9 @@ export interface ConnectedFit {
     verticalOffset?: number;
 }
 
-/** @hidden */
+/** @hidden @internal */
 export class Util {
     /**
-     * @hidden
      * Calculates the rectangle of target for provided overlay settings. Defaults to 0,0,0,0,0,0 rectangle
      * if no target is provided
      *
@@ -208,7 +207,6 @@ export class Util {
         return targetRect;
     }
 
-    /** @hidden @internal */
     public static getViewportRect(document: Document): ClientRect {
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
@@ -224,7 +222,6 @@ export class Util {
         };
     }
 
-    /** @hidden @internal */
     public static getViewportScrollPosition(document: Document): Point {
         const documentElement = document.documentElement;
         const documentRect = documentElement.getBoundingClientRect();
@@ -236,7 +233,6 @@ export class Util {
         return new Point(horizontalScrollPosition, verticalScrollPosition);
     }
 
-    /** @hidden @internal */
     public static cloneInstance(object) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);
