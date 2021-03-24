@@ -455,11 +455,12 @@ describe('IgxGrid - Column properties #grid', () => {
                 currencyCode: 'USD',
                 display: 'symbol-narrow'
             };
+            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc});
+            fix.detectChanges();
+            grid.clearSort('ProductName');
             fix.detectChanges();
 
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760.0000');
-            expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098.0000');
-            expect(unitsColumn.cells[6].nativeElement.innerText).toEqual('$000.0000');
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('$6,998.0000');
 
         });
@@ -475,17 +476,21 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('$6,998');
             grid.locale = 'fr-FR';
+            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc});
+            fix.detectChanges();
+            grid.clearSort('ProductName');
             fix.detectChanges();
 
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('6 998 €');
-            expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('1 098 €');
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('0 €');
 
             grid.locale = 'ja';
+            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc});
+            fix.detectChanges();
+            grid.clearSort('ProductName');
             fix.detectChanges();
 
             expect(unitsColumn.cells[8].nativeElement.innerText).toEqual('￥6,998');
-            expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('￥1,098');
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
@@ -518,6 +523,9 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             grid.locale = 'fr-FR';
+            grid.sort({ fieldName: 'ProductName', dir: SortingDirection.Asc});
+            fix.detectChanges();
+            grid.clearSort('ProductName');
             fix.detectChanges();
             tick();
 
