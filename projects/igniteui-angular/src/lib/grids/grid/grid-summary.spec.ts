@@ -27,10 +27,9 @@ import { GridSummaryCalculationMode } from '../common/enums';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
-import { DatePipe, registerLocaleData } from '@angular/common';
-import localeFR from '@angular/common/locales/fr';
+import { DatePipe } from '@angular/common';
 
-describe('IgxGrid - Summaries #grid', () => {
+fdescribe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
@@ -260,7 +259,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
                     ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['8', '1', '1,000', '2,204', '275.5']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count'], ['8']);
-                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'short', day: 'numeric' };
                 const earliest = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1).toLocaleString('us', options);
                 const latest = SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1).toLocaleString('us', options);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Earliest', 'Latest'], ['8', earliest, latest]);
@@ -396,7 +395,6 @@ describe('IgxGrid - Summaries #grid', () => {
 
             it('should display summaries for \'date\' dataType based on column formatter', () => {
                 const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
-                registerLocaleData(localeFR);
                 const pipe = new DatePipe('fr-FR');
 
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4,
@@ -1009,7 +1007,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 1);
 
-            summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
+            // summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 1);
             GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp');
             fix.detectChanges();
             cell = grid.getCellByColumn(2, 'ParentID');
