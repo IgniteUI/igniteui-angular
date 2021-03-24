@@ -983,7 +983,7 @@ fdescribe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifySummaryCellActive(fix, 3, 0);
 
             const summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
-            let summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
+            const summaryCell = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, 0);
             GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown');
             fix.detectChanges();
 
