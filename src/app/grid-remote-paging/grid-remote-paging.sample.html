@@ -1,5 +1,5 @@
 <div class="dark-grid">
-    <igx-grid igxPreventDocumentScroll #grid1 [data]="data | async" width="100%" height="540px" [paging]="true" [perPage]="perPage" [paginationTemplate]="customPager">
+    <igx-grid igxPreventDocumentScroll #grid1 [data]="data | async" width="100%" height="540px" [paging]="paging" [paginationTemplate]="customPager">
         <igx-column field="ID"></igx-column>
         <igx-column field="ProductName"></igx-column>
         <igx-column field="QuantityPerUnit"></igx-column>
@@ -18,4 +18,16 @@
             (perPageChange)="perPageChange($event)">
         </igx-paginator>
     </ng-template>
+
+    <igx-card style="width: 360px; margin-top: 12px">
+        <igx-card-header>
+            <h1 igxCardHeaderTitle>Paging settings</h1>
+        </igx-card-header>
+        <igx-card-content>
+            <button igxButton="raised" (click)="paging = !paging">Paging {{paging}}</button>
+            <igx-select [(ngModel)]="perPage">
+                <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
+            </igx-select>
+        </igx-card-content>
+    </igx-card>
 </div>

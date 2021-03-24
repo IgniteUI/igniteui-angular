@@ -38,7 +38,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
 
-    ngOnChanges(changes: SimpleChanges) {
+    public ngOnChanges(changes: SimpleChanges) {
         const actionType: TemplateOutletAction = this._getActionType(changes);
         switch (actionType) {
             case TemplateOutletAction.CreateView: this._recreateView(); break;

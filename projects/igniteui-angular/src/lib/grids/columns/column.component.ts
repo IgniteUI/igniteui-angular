@@ -373,7 +373,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /** @hidden */
     @Output()
-    public onColumnChange = new EventEmitter<void>();
+    public columnChange = new EventEmitter<void>();
 
     /**
      * Gets whether the hiding is disabled.
@@ -888,7 +888,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
-            (this.grid as any)._summaryPipeTrigger++;
+            this.grid.summaryPipeTrigger++;
             this.grid.summaryService.resetSummaryHeight();
         }
     }
@@ -1319,12 +1319,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      * @memberof IgxColumnComponent
      */
+    @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
-        (this.grid as any)._pipeTrigger++;
-        this.grid.notifyChanges();
+        this.grid.pipeTrigger++;
     }
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
@@ -2004,7 +2005,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-     public get topLevelParent() {
+    public get topLevelParent() {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
@@ -2021,7 +2022,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-     public get headerCell(): IgxGridHeaderComponent {
+    public get headerCell(): IgxGridHeaderComponent {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
@@ -2034,7 +2035,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-     public get filterCell(): IgxGridFilteringCellComponent {
+    public get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
@@ -2043,7 +2044,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-     public get headerGroup(): IgxGridHeaderGroupComponent {
+    public get headerGroup(): IgxGridHeaderGroupComponent {
         return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
     }
 

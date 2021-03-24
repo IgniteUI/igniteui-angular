@@ -6,8 +6,9 @@ import { IgxGridComponent,
     IColumnMovingEventArgs, IColumnMovingStartEventArgs, IPinColumnCancellableEventArgs,
     IColumnVisibilityChangingEventArgs,
     IFilteringExpressionsTree,
-    IColumnVisibilityChangedEventArgs} from 'igniteui-angular';
-import { data } from '../grid-cellEditing/data';
+    IColumnVisibilityChangedEventArgs
+} from 'igniteui-angular';
+import { data } from '../shared/data';
 
 @Component({
     selector: 'app-grid-events',

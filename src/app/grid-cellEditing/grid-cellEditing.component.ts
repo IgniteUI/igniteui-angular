@@ -1,8 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { data, dataWithoutPK } from './data';
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
-registerLocaleData(localeFr);
+import { data, dataWithoutPK } from '../shared/data';
 
 import {
     IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
