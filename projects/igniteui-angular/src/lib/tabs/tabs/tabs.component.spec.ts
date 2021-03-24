@@ -1,7 +1,7 @@
 import { QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
-import { IgxTabsComponent } from './tabs.component';
+import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -12,7 +12,7 @@ import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
 import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent, TabsRoutingTestComponent,
     TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsTest2Component, TabsTestBug4420Component, TabsTestComponent,
     TabsTestCustomStylesComponent, TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent,
-    TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
+    TabsWithPrefixSuffixTestComponent, TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -27,6 +27,7 @@ import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxIconModule } from '../../icon/public_api';
+import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -35,7 +36,7 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
-describe('IgxTabs', () => {
+fdescribe('IgxTabs', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
@@ -54,10 +55,10 @@ describe('IgxTabs', () => {
             declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent],
+                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent],
             imports: [IgxTabsModule, BrowserAnimationsModule,
                 IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
-                TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
+                TabsRoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [TabRoutingTestGuard]
         }).compileComponents();
     }));
@@ -984,7 +985,7 @@ describe('IgxTabs', () => {
 
                     expect(itemChangeSpy).toHaveBeenCalledWith({
                         owner: tabs,
-                        oldItem: undefined,
+                        oldItem: tabItems[0],
                         newItem: tabItems[2]
                     });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
@@ -1013,7 +1014,7 @@ describe('IgxTabs', () => {
 
                     expect(itemChangeSpy).toHaveBeenCalledWith({
                         owner: tabs,
-                        oldItem: undefined,
+                        oldItem: tabItems[2],
                         newItem: tabItems[0]
                     });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
@@ -1076,7 +1077,7 @@ describe('IgxTabs', () => {
 
                     expect(itemChangeSpy).toHaveBeenCalledWith({
                         owner: tabs,
-                        oldItem: undefined,
+                        oldItem: tabItems[2],
                         newItem: tabItems[0]
                     });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
@@ -1092,6 +1093,97 @@ describe('IgxTabs', () => {
                     expect(itemChangeSpy).toHaveBeenCalledTimes(2);
             }));
 
+        });
+    });
+    describe('', () => {
+        let fixture;
+        let tabs;
+        let tabItems;
+        let headers;
+
+        beforeEach(waitForAsync(() => {
+            fixture = TestBed.createComponent(TabsWithPrefixSuffixTestComponent);
+            fixture.detectChanges();
+            tabs = fixture.componentInstance.tabs;
+            tabItems = tabs.items.toArray();
+            headers = tabItems.map(item => item.headerComponent.nativeElement);
+        }));
+
+        it('show tabs prefix and suffix properly.', () => {
+            const header0Elements = headers[0].children;
+            expect(header0Elements[0].localName).toBe('span');
+            expect(header0Elements[0].innerText).toBe('Test:');
+            expect(header0Elements[1].children[0].localName).toBe('igx-icon');
+            expect(header0Elements[1].children[0].innerText).toBe('library_music');
+            expect(header0Elements[1].children[1].localName).toBe('span');
+            expect(header0Elements[1].children[1].innerText).toBe('Tab 1');
+            expect(header0Elements[2].localName).toBe('igx-icon');
+            expect(header0Elements[2].innerText).toBe('close');
+
+            const header1Elements = headers[1].children;
+            expect(header1Elements[0].localName).toBe('span');
+            expect(header1Elements[0].innerText).toBe('Test:');
+            expect(header1Elements[1].children[0].localName).toBe('igx-icon');
+            expect(header1Elements[1].children[0].innerText).toBe('video_library');
+            expect(header1Elements[1].children[1].localName).toBe('span');
+            expect(header1Elements[1].children[1].innerText).toBe('Tab 2');
+
+            const header2Elements = headers[2].children;
+            expect(header2Elements[0].children[0].localName).toBe('igx-icon');
+            expect(header2Elements[0].children[0].innerText).toBe('library_books');
+            expect(header2Elements[0].children[1].localName).toBe('span');
+            expect(header2Elements[0].children[1].innerText).toBe('Tab 3');
+            expect(header2Elements[1].localName).toBe('igx-icon');
+            expect(header2Elements[1].innerText).toBe('close');
+        });
+
+        it('aligns tab header content properly when tabAlignment="justify".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.justify;
+            fixture.detectChanges();
+            // const headerContainerWidth = tabs.headerContainer.nativeElement.clientWidth;
+
+            expect(tabs.justifyAlignmentClass).toBeTrue();
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+            // expect([...headerWidths][0]).toBeCloseTo(headerContainerWidth / tabItems.length);
+        });
+
+        it('aligns tab header content properly when tabAlignment="center".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.center;
+            fixture.detectChanges();
+
+            expect(tabs.centerAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+        });
+
+        it('aligns tab header content properly when tabAlignment="start".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.start;
+            fixture.detectChanges();
+
+            expect(tabs.startAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+        });
+
+        it('aligns tab header content properly when tabAlignment="end".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.end;
+            fixture.detectChanges();
+
+            expect(tabs.endAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
         });
     });
 
