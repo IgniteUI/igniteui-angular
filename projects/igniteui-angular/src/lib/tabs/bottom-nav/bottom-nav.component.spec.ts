@@ -4,25 +4,25 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { BottomNavRoutingView1Component,
-        BottomNavRoutingView2Component,
-        BottomNavRoutingView3Component,
-        BottomNavRoutingView4Component,
-        BottomNavRoutingView5Component,
-        BottomNavRoutingViewComponentsModule } from './routing-view-components.spec';
 import { BottomTabBarTestComponent,
         TabBarRoutingTestComponent,
         TabBarTabsOnlyModeTestComponent,
         TabBarTestComponent,
         BottomNavRoutingGuardTestComponent,
         BottomNavTestHtmlAttributesComponent } from '../../test-utils/bottom-nav-components.spec';
-import { BottomNavRoutingTestGuard } from './bottom-nav-routing-test-guard.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavModule } from './bottom-nav.module';
 import { IgxBottomNavPanelComponent } from './bottom-nav-panel.component';
 import { IgxBottomNavComponent, IgxBottomNavItemComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../../icon/public_api';
+import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
+import { RoutingView1Component,
+    RoutingView2Component,
+    RoutingView3Component,
+    RoutingView4Component,
+    RoutingView5Component,
+    RoutingViewComponentsModule } from '../../test-utils/routing-view-components.spec';
 
 fdescribe('IgxBottomNav', () => {
     configureTestSuite();
@@ -32,19 +32,19 @@ fdescribe('IgxBottomNav', () => {
 
     beforeAll(waitForAsync(() => {
         const testRoutes = [
-            { path: 'view1', component: BottomNavRoutingView1Component, canActivate: [BottomNavRoutingTestGuard] },
-            { path: 'view2', component: BottomNavRoutingView2Component, canActivate: [BottomNavRoutingTestGuard] },
-            { path: 'view3', component: BottomNavRoutingView3Component, canActivate: [BottomNavRoutingTestGuard] },
-            { path: 'view4', component: BottomNavRoutingView4Component, canActivate: [BottomNavRoutingTestGuard] },
-            { path: 'view5', component: BottomNavRoutingView5Component, canActivate: [BottomNavRoutingTestGuard] },
+            { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
+            { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
+            { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
+            { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
+            { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] },
         ];
 
         TestBed.configureTestingModule({
             declarations: [TabBarTestComponent, BottomTabBarTestComponent, TabBarRoutingTestComponent,
                 TabBarTabsOnlyModeTestComponent, BottomNavRoutingGuardTestComponent, BottomNavTestHtmlAttributesComponent],
-            imports: [IgxBottomNavModule, BrowserAnimationsModule, IgxIconModule, BottomNavRoutingViewComponentsModule,
+            imports: [IgxBottomNavModule, BrowserAnimationsModule, IgxIconModule, RoutingViewComponentsModule,
                 RouterTestingModule.withRoutes(testRoutes)],
-            providers: [BottomNavRoutingTestGuard]
+            providers: [RoutingTestGuard]
         }).compileComponents();
     }));
 
