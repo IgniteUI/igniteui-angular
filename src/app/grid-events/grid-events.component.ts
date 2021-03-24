@@ -88,6 +88,7 @@ export class GridEventsComponent {
         this.logAnEvent('=> columnVisibilityChanging', event.cancel);
     }
     public onColumnVisibilityChanged(event: IColumnVisibilityChangedEventArgs) {
+        console.log('event' + event);
         this.logAnEvent(`=> onColumnVisibilityChanged`);
     }
 

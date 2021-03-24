@@ -665,6 +665,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.headerContainer.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.headerContainer.getScroll().scrollLeft;
 
@@ -698,6 +699,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.rowList.first.virtDirRow.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.rowList.first.virtDirRow.getScroll().scrollLeft;
 
