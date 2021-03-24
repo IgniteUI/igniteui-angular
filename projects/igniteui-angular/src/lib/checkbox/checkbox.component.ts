@@ -349,10 +349,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     public inputId = `${this.id}-input`;
     /**
      * @hidden
-     */
-    protected _value: string;
-    /**
-     * @hidden
      * @internal
      */
     private _checked = false;
@@ -374,12 +370,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      */
     private _onChangeCallback: (_: any) => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
-
-    constructor() {}
 
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
@@ -395,6 +385,9 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // as it gets triggered on label click
         // NOTE: The above is no longer valid, as the native checkbox is not labeled
         // by the SVG anymore.
+        if (this.disabled || this.readonly) {
+            return;
+        }
 
         this.indeterminate = false;
         this.toggle();
@@ -445,7 +438,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     /** @hidden @internal */
     public writeValue(value: boolean) {
         if (typeof value === 'boolean') {
-            this.checked = value;
+            this._checked = value;
         }
     }
 

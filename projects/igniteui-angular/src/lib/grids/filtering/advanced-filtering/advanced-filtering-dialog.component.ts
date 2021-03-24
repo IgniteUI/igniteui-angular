@@ -326,8 +326,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public get displayDensity(): DisplayDensity {
-        return this.grid.displayDensity as DisplayDensity;
+    public get displayDensity() {
+        return this.grid.displayDensity;
     }
 
     /**

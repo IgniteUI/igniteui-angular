@@ -271,11 +271,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    protected _value: any;
-    /**
-     * @hidden
-     * @internal
-     */
     private _checked = false;
     /**
      * @hidden
@@ -353,7 +348,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public writeValue(value: boolean) {
         if (typeof value === 'boolean') {
-            this.checked = value;
+            this._checked = value;
         }
     }
     /**
@@ -363,7 +358,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }
-
     /**
      * @hidden
      * @internal

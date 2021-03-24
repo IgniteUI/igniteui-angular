@@ -1,7 +1,12 @@
-import { IgxExpansionPanelComponent, growVerIn, growVerOut, IExpansionPanelEventArgs } from 'igniteui-angular';
+import {
+    IgxExpansionPanelComponent,
+    growVerIn,
+    growVerOut,
+    IExpansionPanelEventArgs,
+    ExpansionPanelHeaderIconPosition
+} from 'igniteui-angular';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AnimationReferenceMetadata, useAnimation } from '@angular/animations';
-import { ICON_POSITION } from 'projects/igniteui-angular/src/lib/expansion-panel/expansion-panel-header.component';
 
 @Component({
     // eslint-disable-next-line @angular-eslint/component-selector
@@ -29,7 +34,7 @@ export class ExpansionPanelSampleComponent implements OnInit {
     public score: number;
     public data = [];
     public winningPlayer;
-    public iconPosition: ICON_POSITION = 'right';
+    public iconPosition: ExpansionPanelHeaderIconPosition = 'right';
     private rounds = 5;
     public get currentScore(): {
         'Player 1': number;

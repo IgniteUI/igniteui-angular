@@ -226,6 +226,12 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
         // Should not update
         expect(testInstance.subscribed).toBe(false);
+
+        nativeCheckbox.click();
+        fixture.detectChanges();
+        // Should not update
+        expect(testInstance.subscribed).toBe(false);
+        expect(checkboxInstance.indeterminate).toBe(true);
     });
 
     it('Should be able to enable/disable CSS transitions', () => {
@@ -361,6 +367,7 @@ class CheckboxDisabledComponent {
     template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
                                 [checked]="subscribed"
+                                [indeterminate]="true"
                                 [readonly]="true">Readonly</igx-checkbox>`})
 class CheckboxReadonlyComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
