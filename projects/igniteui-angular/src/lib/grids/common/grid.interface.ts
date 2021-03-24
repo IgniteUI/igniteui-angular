@@ -17,7 +17,7 @@ export interface IGridDataBindable {
  * An interface describing a Grid type
  */
 export interface GridType extends IGridDataBindable {
-    displayDensity: DisplayDensity | string;
+    displayDensity: DisplayDensity;
     locale: string;
     resourceStrings: IGridResourceStrings;
     nativeElement: HTMLElement;
