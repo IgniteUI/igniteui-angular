@@ -16,17 +16,16 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(waitForAsync(() => {
@@ -398,8 +397,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -407,7 +405,7 @@ describe('IgxHierarchicalGrid Virtualization Custom Scenarios #hGrid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     it('should show scrollbar after expanding a row with data loaded after initial view initialization',  async () => {

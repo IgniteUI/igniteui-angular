@@ -16,17 +16,16 @@ import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach( fakeAsync(() => {
@@ -461,17 +460,16 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -723,18 +721,17 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridSizingComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -865,18 +862,17 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
-    configureTestSuite();
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHGridRemoteOnDemandComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -941,19 +937,18 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
-    configureTestSuite();
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid__thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridColumnsUpdateComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -1181,17 +1176,16 @@ describe('IgxHierarchicalGrid hide child columns', () => {
 });
 
 describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () => {
-    configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridToggleRIComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridToggleRIComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -1273,9 +1267,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 });
 
 describe('IgxHierarchicalGrid custom template #hGrid', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridCustomTemplateComponent,
@@ -1283,7 +1275,7 @@ describe('IgxHierarchicalGrid custom template #hGrid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     it('should allow setting custom template for expand/collapse icons', async () => {

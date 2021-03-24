@@ -18,16 +18,15 @@ import { wait } from '../test-utils/ui-interactions.spec';
 
 /* eslint-disable max-len */
 describe('IgxHierarchicalGridState - input properties #hGrid', () => {
-    configureTestSuite();
     let fix;
     let grid;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestExpandedBaseComponent
             ],
             imports: [ NoopAnimationsModule, IgxHierarchicalGridModule ]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(waitForAsync(() => {
