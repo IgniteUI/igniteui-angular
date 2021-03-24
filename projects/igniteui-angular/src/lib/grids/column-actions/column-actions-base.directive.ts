@@ -25,7 +25,7 @@ export abstract class IgxColumnActionsBaseDirective {
     public abstract columnChecked(column: IgxColumnComponent): boolean;
 
     /** @hidden @internal */
-    public abstract toggleColumn(column: IgxColumnComponent, state: boolean): void;
+    public abstract toggleColumn(column: IgxColumnComponent): void;
 
     /** @hidden @internal */
     public abstract uncheckAll(): void;

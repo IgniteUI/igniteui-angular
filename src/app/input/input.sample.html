@@ -48,13 +48,19 @@
             <igx-list>
                 <igx-list-item [isHeader]="true">Settings</igx-list-item>
 
+                <igx-list-item>
+                    <igx-icon igxListThumbnail><igx-icon>{{airplaneMode ? 'airplanemode_active': 'airplanemode_inactive'}}</igx-icon></igx-icon>
+                    <h1 igxListLineTitle>Airplane Mode</h1>
+                    <div igxListAction>
+                        <igx-switch labelPosition="before" [(ngModel)]="airplaneMode" (ngModelChange)="toggleAirplaneMode()">
+                            {{airplaneMode ? 'ON': 'OFF'}}
+                        </igx-switch>
+                    </div>
+                </igx-list-item>
                 <igx-list-item *ngFor="let item of settings">
                     <igx-icon igxListThumbnail>{{item.icon}}</igx-icon>
                     <h1 igxListLineTitle>{{item.name}}</h1>
                     <div igxListAction>
-                        <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
-                            {{item.active ? 'ON': 'OFF'}}
-                        </igx-switch>
                         <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
                             {{item.active ? 'ON': 'OFF'}}
                         </igx-switch>

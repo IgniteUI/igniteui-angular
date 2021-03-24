@@ -58,11 +58,8 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     /**
      * @hidden @internal
      */
-    public toggleColumn(column: IgxColumnComponent, state: boolean) {
-        // Checked checkbox state means visible column
-        if (column.hidden === state) {
-            column.toggleVisibility();
-        }
+    public toggleColumn(column: IgxColumnComponent) {
+        column.toggleVisibility();
     }
 
     public get allChecked() {

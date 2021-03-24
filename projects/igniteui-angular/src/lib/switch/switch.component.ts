@@ -227,7 +227,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public set checked(value: boolean) {
         if(this._checked !== value) {
             this._checked = value;
-            this.change.emit({ checked: this.checked, switch: this });
             this._onChangeCallback(this.checked);
         }
     }
@@ -307,18 +306,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     @HostListener('click')
     public _onSwitchClick() {
-        this.toggle();
-    }
-
-    /**
-     * Toggles the checked state of the switch.
-     *
-     * @example
-     * ```typescript
-     * this.switch.toggle();
-     * ```
-     */
-    public toggle() {
         if (this.disabled) {
             return;
         }
@@ -326,6 +313,10 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this.nativeCheckbox.nativeElement.focus();
 
         this.checked = !this.checked;
+        // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
+        // bound on change would have to perform self checks for weather the value has changed because
+        // of the initial set on initialization
+        this.change.emit({ checked: this.checked, switch: this });
     }
     /**
      * @hidden

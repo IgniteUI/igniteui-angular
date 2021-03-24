@@ -292,7 +292,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     public set checked(value: boolean) {
         if(this._checked !== value) {
             this._checked = value;
-            this.change.emit({ checked: this._checked, checkbox: this });
             this._onChangeCallback(this._checked);
         }
     }
@@ -370,15 +369,15 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      */
     private _onChangeCallback: (_: any) => void = noop;
-
+    /** @hidden @internal */
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
     }
     /** @hidden @internal */
-    @HostListener('click')
-    public _onCheckboxClick() {
+    @HostListener('click', ['$event'])
+    public _onCheckboxClick(event: MouseEvent) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
         // we need to prevent the checkbox click event from bubbling up
@@ -386,28 +385,21 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
         // NOTE: The above is no longer valid, as the native checkbox is not labeled
         // by the SVG anymore.
         if (this.disabled || this.readonly) {
-            return;
-        }
-
-        this.indeterminate = false;
-        this.toggle();
-    }
-    /**
-     * If `disabled` is `false`, switches the `checked` state.
-     *
-     * @example
-     * ```typescript
-     * this.checkbox.toggle();
-     * ```
-     */
-    public toggle() {
-        if (this.disabled || this.readonly) {
+            // readonly prevents the component from changing state (see toggle() method).
+            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
+            // Prevent the native change so the input remains in sync
+            event.preventDefault();
             return;
         }
 
         this.nativeCheckbox.nativeElement.focus();
 
+        this.indeterminate = false;
         this.checked = !this.checked;
+        // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
+        // bound on change would have to perform self checks for weather the value has changed because
+        // of the initial set on initialization
+        this.change.emit({ checked: this._checked, checkbox: this });
     }
 
     /**
