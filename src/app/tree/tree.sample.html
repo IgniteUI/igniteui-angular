@@ -26,13 +26,15 @@
 <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
 <button igxButton (click)="changeNodeData()">Change Node Data</button>
 <button igxButton (click)="getNodes()">Nodes</button>
+<button igxButton (click)="activatedNode = null">Clear Active Node</button>
 <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
 <div class="row">
     <div class="column tree-container">
         <p>IgxTree</p>
         <igx-tree #tree1 class="medium" [singleBranchExpand]="singleBranchExpand"
-            [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)" 
-            (activeNodeChanged)="activeNodeChanged($event)" (treeKeydown)="keydown($event)">
+        [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)" 
+        (treeKeydown)="keydown($event)" [(activeNode)]="activatedNode" (activeNodeChange)="activeNodeChanged($event)">
+            <igx-tree-node #test [data]="{ID: 'test'}">asd</igx-tree-node>
             <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
                 <!-- <a href="www.google.com">test</a> -->
                 {{ node.CompanyName }}

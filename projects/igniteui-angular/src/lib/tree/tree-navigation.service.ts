@@ -58,12 +58,12 @@ export class IgxTreeNavigationService {
     public set activeNode(value: IgxTreeNode<any>) {
         this.lastActiveNode = this._activeNode;
         this._activeNode = value;
-        if (this.lastActiveNode.id) {
+        if (this.lastActiveNode?.id) {
             (this.lastActiveNode as any).cdr.markForCheck();
         }
         // TODO: Should we emit the last active node as well? Should we emit focusedNodeChanged?
         if (this._activeNode !== this.lastActiveNode) {
-            this.tree.activeNodeChanged.emit({node: this._activeNode});
+            this.tree.activeNodeChange.emit(this._activeNode);
         }
     }
 

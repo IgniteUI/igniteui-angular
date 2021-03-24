@@ -12,8 +12,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import {
     IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
-    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver,
-    IActiveNodeChangedEventArgs, ITreeKeydownEventArgs
+    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver, ITreeKeydownEventArgs
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -125,6 +124,28 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         closeAnimation: growVerOut
     };
 
+    /**
+     * Gets/Sets the activeNode
+     *
+     * @param node: IgxTreeNode<any>
+     */
+    @Input()
+    public get activeNode() {
+        return this.navService.activeNode;
+    }
+
+    public set activeNode(node: IgxTreeNode<any>) {
+        if (this.navService.activeNode === node) {
+            return;
+        }
+        if (!node) {
+            this.navService.activeNode = null;
+        } else {
+            this.navService.activeNode = node;
+            (this.navService.activeNode as any)?.cdr.detectChanges();
+        }
+    }
+
     /** Emitted when the node selection is changed through interaction
      *
      * ```html
@@ -235,11 +256,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      *
      * @example
      * ```
-     * <igx-tree (activeNodeChanged)="activeNodeChanged($event)"></igx-tree>
+     * <igx-tree (activeNodeChange)="activeNodeChange($event)"></igx-tree>
      * ```
      */
     @Output()
-    public activeNodeChanged = new EventEmitter<IActiveNodeChangedEventArgs>();
+    public activeNodeChange = new EventEmitter<IgxTreeNode<any>>();
 
     // TODO: should we remove this thus checkbox aren't templatable
     /**
@@ -336,6 +357,17 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     /**
+     * Clears the active node
+     *
+     * ```typescript
+     * tree.clearActiveNode();
+     * ```
+     */
+    public clearActiveNode() {
+        this.navService.activeNode = null;
+    }
+
+    /**
      * Deselect all nodes if the nodes collection is empty. Otherwise, deselect the nodes in the nodes collection.
      *
      * @example
@@ -403,7 +435,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     public getNextNode(node: IgxTreeNodeComponent<any>) {
-       // const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
+        // const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
         const nodeIndex = this.navService.visibleChildren.indexOf(node);
         if (nodeIndex < this.navService.visibleChildren.length - 1) {
             return this.navService.visibleChildren[nodeIndex + 1];

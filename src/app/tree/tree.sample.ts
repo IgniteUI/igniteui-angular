@@ -1,7 +1,7 @@
 import { useAnimation } from '@angular/animations';
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import { growVerIn, growVerOut } from 'igniteui-angular';
-import { IgxTreeSearchResolver } from 'projects/igniteui-angular/src/lib/tree/common';
+import { IgxTreeSearchResolver, IgxTreeNode } from 'projects/igniteui-angular/src/lib/tree/common';
 import { IgxTreeNodeComponent } from 'projects/igniteui-angular/src/lib/tree/tree-node/tree-node.component';
 import { IgxTreeComponent } from 'projects/igniteui-angular/src/lib/tree/tree.component';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
@@ -11,9 +11,12 @@ import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
     templateUrl: 'tree.sample.html',
     styleUrls: ['tree.sample.scss']
 })
-export class TreeSampleComponent implements AfterViewInit {
+export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     @ViewChild('tree1', { static: true })
     public tree: IgxTreeComponent;
+
+    @ViewChild('test', { static: true })
+    public testNode: IgxTreeNode<any>;
 
     public selectionModes = [];
 
@@ -24,6 +27,8 @@ export class TreeSampleComponent implements AfterViewInit {
     public data;
 
     public singleBranchExpand = false;
+
+    public activatedNode: any;
 
     constructor(private cdr: ChangeDetectorRef) {
         this.selectionModes = [
@@ -41,6 +46,18 @@ export class TreeSampleComponent implements AfterViewInit {
                 console.log(ev);
             });
         });
+        if (localStorage.getItem('activeNode')) {
+            this.activatedNode = this.customSearch(JSON.parse(localStorage.getItem('activeNode')).ID)[0];
+            this.cdr.detectChanges();
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.activatedNode) {
+            localStorage.setItem('activeNode', JSON.stringify(this.activatedNode.data));
+        } else {
+            localStorage.setItem('activeNode', JSON.stringify(this.testNode.data));
+        }
     }
 
     public selectCellSelectionMode(args) {
@@ -106,6 +123,7 @@ export class TreeSampleComponent implements AfterViewInit {
     public customSearch(term: string) {
         const searchResult = this.tree.findNodes(term, this.containsComparer);
         console.log(searchResult);
+        return searchResult;
     }
 
     public getNodes() {
@@ -113,7 +131,7 @@ export class TreeSampleComponent implements AfterViewInit {
     }
 
     public activeNodeChanged(evt) {
-        // console.log(evt);
+        console.log(this.activatedNode ? (this.activatedNode as any).nativeElement : this.activatedNode);
     }
 
     public keydown(evt) {

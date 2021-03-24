@@ -16,6 +16,7 @@ export interface IgxTree {
     selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
+    activeNode: IgxTreeNode<any>;
     navService: IgxTreeNavigationService;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
@@ -23,9 +24,10 @@ export interface IgxTree {
     nodeCollapsing: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeCollapsed: EventEmitter<ITreeNodeToggledEventArgs>;
     treeKeydown: EventEmitter<ITreeKeydownEventArgs>;
-    activeNodeChanged: EventEmitter<IActiveNodeChangedEventArgs>;
+    activeNodeChange: EventEmitter<IgxTreeNode<any>>;
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
+    clearActiveNode(): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
     getPreviousNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     getNextNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
@@ -75,10 +77,6 @@ export interface ITreeKeydownEventArgs extends IBaseEventArgs {
     target: IgxTreeNode<any>;
     event: Event;
     cancel: boolean;
-}
-
-export interface IActiveNodeChangedEventArgs extends IBaseEventArgs {
-    node: IgxTreeNode<any>;
 }
 
 // Enums
