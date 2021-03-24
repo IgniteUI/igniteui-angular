@@ -30,7 +30,7 @@ export const configureTestSuite = (configureAction?: () => void) => {
     }
 
     afterEach(() => {
-       
+        clearStyles();
         testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
         // reset ViewEngine TestBed
         testBedApi._instantiated = false;
@@ -39,7 +39,7 @@ export const configureTestSuite = (configureAction?: () => void) => {
     });
 
     afterAll(() => {
-        clearStyles();
+        
         TestBed.resetTestingModule = originReset;
         TestBed.resetTestingModule();
     });

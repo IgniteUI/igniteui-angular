@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel','jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -12,11 +12,16 @@ module.exports = function (config) {
       { pattern: '../../dist/igniteui-angular/styles/igniteui-angular.css', watched: false }
     ],
     plugins: [
+      require('karma-parallel'),
       require('karma-jasmine'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-spec-tags'),
       require('@angular-devkit/build-angular/plugins/karma')
     ],
+    parallelOptions: {
+      executors: require('os') ? Math.ceil(require('os').cpus().length / 2) : 2,
+      shardStrategy: 'round-robin'
+    },
     client: {
       clearContext: false, // leave Jasmine Spec Runner output visible in browser
       jasmine: {
