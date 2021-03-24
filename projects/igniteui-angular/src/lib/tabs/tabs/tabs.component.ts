@@ -22,7 +22,16 @@ let NEXT_TAB_ID = 0;
 export class IgxTabsComponent extends IgxTabsDirective {
 
     @Input()
-    public tabAlignment: string | IgxTabsAlignment = 'start';
+    public get tabAlignment(): string | IgxTabsAlignment {
+        return this._tabAlignment;
+    };
+
+    public set tabAlignment(value: string | IgxTabsAlignment) {
+        this._tabAlignment = value;
+        requestAnimationFrame(() => {
+            this.realignSelectedIndicator();
+        });
+    }
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
@@ -44,40 +53,13 @@ export class IgxTabsComponent extends IgxTabsDirective {
     @HostBinding('class.igx-tabs')
     public defaultClass = true;
 
-    /** @hidden */
-    @HostBinding('class.igx-tabs--icons')
-    // TODO this.tabs.some((tab) => !!tab.icon && !!tab.label);
-    public iconsClass = true;
-
-    /** @hidden */
-    @HostBinding('class.igx-tabs--justify')
-    public get justifyAlignmentClass() {
-        return this.tabAlignment === 'justify';
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-tabs--start')
-    public get startAlignmentClass() {
-        return this.tabAlignment === 'start';
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-tabs--end')
-    public get endAlignmentClass() {
-        return this.tabAlignment === 'end';
-    }
-
-    /** @hidden */
-    @HostBinding('class.igx-tabs--center')
-    public get centerAlignmentClass() {
-        return this.tabAlignment === 'center';
-    }
-
     /**  @hidden */
      public offset = 0;
 
     /** @hidden */
     protected componentName = 'igx-tabs';
+
+    private _tabAlignment: string | IgxTabsAlignment = 'start';
 
     /** @hidden */
     public scrollLeft() {
@@ -96,6 +78,16 @@ export class IgxTabsComponent extends IgxTabsDirective {
             const header = tabItems[this.selectedIndex].headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
         }
+    }
+
+    /** @hidden */
+    public resolveHeaderScrollClasses() {
+        return {
+            'igx-tabs__header-scroll': true,
+            'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
+            'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
+            'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
+        };
     }
 
     /** @hidden */
