@@ -415,7 +415,7 @@ export class IgxOverlayService implements OnDestroy {
         if (info.settings.positionStrategy.settings.openAnimation) {
             this.playOpenAnimation(info);
         } else {
-            //  to eliminate flickering show the element just before onOpened fire
+            //  to eliminate flickering show the element just before onOpened fires
             info.wrapperElement.style.visibility = '';
             info.visible = true;
             this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
