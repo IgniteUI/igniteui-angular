@@ -19,7 +19,7 @@
 
         <br/>
 
-        <igx-tabs [selectedIndex]="-1">
+        <igx-tabs (selectedItemChange)="selectedItemChanged($event)">
             <igx-tab-item
                 routerLinkActive
                 #rla1="routerLinkActive"

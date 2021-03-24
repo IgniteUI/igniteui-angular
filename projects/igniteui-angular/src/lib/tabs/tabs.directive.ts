@@ -268,28 +268,25 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
-        if (this.disableAnimation) {
-            return;
-        }
+        const tabs = this.items.toArray();
+        const slide = tabs[this._selectedIndex];
 
-        if (this.hasPanels && this._selectedIndex >= 0) {
-            const tabs = this.items.toArray();
-            const slide = tabs[this._selectedIndex];
+        if (!this.disableAnimation &&
+            this.hasPanels &&
+            this.currentSlide &&
+            !this.currentSlide.selected) {
+            slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
 
-            if (this.currentSlide && !this.currentSlide.selected) {
-                slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
-
-                if (this.previousSlide && this.previousSlide.previous) {
-                    this.previousSlide.previous = false;
-                }
-                this.currentSlide.direction = slide.direction;
-
-                this.previousSlide = this.currentSlide;
-                this.currentSlide = slide;
-                this.triggerAnimations();
-            } else {
-                this.currentSlide = slide;
+            if (this.previousSlide && this.previousSlide.previous) {
+                this.previousSlide.previous = false;
             }
+            this.currentSlide.direction = slide.direction;
+
+            this.previousSlide = this.currentSlide;
+            this.currentSlide = slide;
+            this.triggerAnimations();
+        } else {
+            this.currentSlide = slide;
         }
     }
 
