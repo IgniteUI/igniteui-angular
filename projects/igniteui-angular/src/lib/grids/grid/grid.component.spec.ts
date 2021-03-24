@@ -21,8 +21,6 @@ import { SortingDirection, ISortingExpression } from '../../data-operations/sort
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { registerLocaleData } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 
@@ -1507,8 +1505,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        xit('Should change dates/number display based on locale', fakeAsync(() => {
-            registerLocaleData(localeDE);
+        it('Should change dates/number display based on locale', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {

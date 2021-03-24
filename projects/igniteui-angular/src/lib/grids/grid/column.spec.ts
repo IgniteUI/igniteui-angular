@@ -18,9 +18,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
-import localeFR from '@angular/common/locales/fr';
-import localeJA from '@angular/common/locales/ja';
-import { getLocaleCurrencySymbol, registerLocaleData } from '@angular/common';
+import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column properties #grid', () => {
@@ -464,8 +462,6 @@ describe('IgxGrid - Column properties #grid', () => {
         });
 
         xit('should be able to change the locale runtime ', () => {
-            registerLocaleData(localeFR);
-            registerLocaleData(localeJA);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -489,7 +485,6 @@ describe('IgxGrid - Column properties #grid', () => {
         });
 
         it('should display the currency symbol in edit mode correctly according the grid locale', fakeAsync(() => {
-            registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -538,8 +533,6 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
 
         it('should display summaries correctly for currency column', () => {
-            registerLocaleData(localeFR);
-            registerLocaleData(localeJA);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -561,7 +554,6 @@ describe('IgxGrid - Column properties #grid', () => {
         });
 
         it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs' ,fakeAsync(()=> {
-            registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             tick();
             fix.detectChanges();
@@ -637,7 +629,6 @@ describe('IgxGrid - Column properties #grid', () => {
         });
 
         it('should be able to change the locale runtime ', () => {
-            registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             fix.detectChanges();
 
@@ -699,7 +690,6 @@ describe('IgxGrid - Column properties #grid', () => {
         }));
 
         it('should display summaries correctly for currency column', () => {
-            registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             fix.detectChanges();
 
@@ -714,7 +704,6 @@ describe('IgxGrid - Column properties #grid', () => {
         });
 
         it('filtering UI list should be populated with correct values based on the currency code, locale and/or pipeArgs' ,fakeAsync(()=> {
-            registerLocaleData(localeFR);
             const fix = TestBed.createComponent(IgxGridPercentColumnComponent);
             tick();
             fix.detectChanges();

@@ -9,6 +9,9 @@ export class GridAddRowSampleComponent implements OnInit {
     public data: any[];
     public dataFull: any[];
     public columns: any[];
+    public paging = true;
+    public selectOptions = [5, 10, 15, 25, 50];
+    public perPage = 15;
 
     public onMouseOver(event, grid, actionStrip) {
         if (event.target.nodeName.toLowerCase() === 'igx-grid-cell') {

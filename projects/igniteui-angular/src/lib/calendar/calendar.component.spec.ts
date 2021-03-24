@@ -777,19 +777,19 @@ describe('IgxCalendar - ', () => {
 
                 UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement);
                 fixture.detectChanges();
-                tick(100);
+                tick();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 calendar.viewDate = new Date(2017, 5, 13);
                 fixture.detectChanges();
                 UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement);
                 fixture.detectChanges();
-                tick(100);
+                tick();
 
                 expect(calendar.viewDate.getMonth()).toEqual(6);
                 UIInteractions.triggerKeyDownEvtUponElem('PageUp', component.nativeElement, true, false, true);
                 fixture.detectChanges();
-                tick(100);
+                tick();
 
                 expect(calendar.viewDate.getFullYear()).toEqual(2016);
 
@@ -798,7 +798,7 @@ describe('IgxCalendar - ', () => {
 
                 UIInteractions.triggerKeyDownEvtUponElem('PageDown', component.nativeElement, true, false, true);
                 fixture.detectChanges();
-                tick(100);
+                tick();
 
                 expect(calendar.viewDate.getFullYear()).toEqual(2018);
             }));
@@ -1957,13 +1957,13 @@ describe('IgxCalendar - ', () => {
                 // Have no idea how this test worked before,
                 // changing expectation based on my udnerstanding of that the test does
                 UIInteractions.simulateMouseEvent('mousedown', prevMonthBtn, 0, 0);
-                tick(900);
+                tick();
                 UIInteractions.simulateMouseEvent('mouseup', prevMonthBtn, 0, 0);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 UIInteractions.simulateMouseEvent('mousedown', nextMonthBtn, 0, 0);
-                tick(900);
+                tick();
                 UIInteractions.simulateMouseEvent('mouseup', nextMonthBtn, 0, 0);
                 fixture.detectChanges();
                 flush();
@@ -1975,13 +1975,13 @@ describe('IgxCalendar - ', () => {
 
                 prevMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', prevMonthBtn);
-                tick(800);
+                tick(100);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(4);
 
                 nextMonthBtn.focus();
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', nextMonthBtn);
-                tick(800);
+                tick(100);
                 fixture.detectChanges();
                 expect(calendar.viewDate.getMonth()).toEqual(5);
             }));
