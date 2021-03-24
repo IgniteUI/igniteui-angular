@@ -1333,7 +1333,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             value.type = FilteringExpressionsTreeType.Regular;
             this._filteringExpressionsTree = value;
-            this._filteringPipeTrigger++;
+            this.filteringPipeTrigger++;
             this.filteringExpressionsTreeChange.emit(this._filteringExpressionsTree);
 
             if (this.filteringService.isFilteringExpressionsTreeEmpty(this._filteringExpressionsTree) &&
@@ -1367,7 +1367,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (value && value instanceof FilteringExpressionsTree) {
             value.type = FilteringExpressionsTreeType.Advanced;
             this._advancedFilteringExpressionsTree = value;
-            this._filteringPipeTrigger++;
+            this.filteringPipeTrigger++;
         } else {
             this._advancedFilteringExpressionsTree = null;
         }
@@ -1402,7 +1402,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._locale = value;
             this._currencyPositionLeft = undefined;
             this.summaryService.clearSummaryCache();
-            this._pipeTrigger++;
+            this.pipeTrigger++;
             this.notifyChanges();
         }
     }
@@ -1414,7 +1414,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set pagingMode(val: GridPagingMode) {
         this._pagingMode = val;
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.notifyChanges(true);
     }
 
@@ -1435,8 +1435,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set paging(value: boolean) {
         this._paging = value;
-        this._pipeTrigger++;
-        this.notifyChanges(true);
+        this.pipeTrigger++;
     }
 
     /**
@@ -2284,27 +2283,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public get pipeTrigger(): number {
-        return this._pipeTrigger;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get filteringPipeTrigger(): number {
-        return this._filteringPipeTrigger;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get summaryPipeTrigger(): number {
-        return this._summaryPipeTrigger;
-    }
-
-    /**
      * Gets/Sets the sorting state.
      *
      * @remarks
@@ -2752,12 +2730,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public _totalRecords = -1;
-
     /**
      * @hidden @internal
      */
     public columnsWithNoSetWidths = null;
-
+    /**
+     * @hidden @internal
+     */
+    public pipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public filteringPipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public summaryPipeTrigger = 0;
     /**
      * @hidden
      */
@@ -2782,18 +2770,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _rowDrag = false;
-    /**
-     * @hidden
-     */
-    protected _pipeTrigger = 0;
-    /**
-     * @hidden
-     */
-    protected _filteringPipeTrigger = 0;
-    /**
-     * @hidden
-     */
-    protected _summaryPipeTrigger = 0;
     /**
      * @hidden
      */
@@ -3306,7 +3282,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
             this.selectionService.clearHeaderCBState();
             this.summaryService.clearSummaryCache();
-            this._pipeTrigger++;
+            this.pipeTrigger++;
             this.notifyChanges();
         });
 
@@ -4200,7 +4176,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set totalRecords(total: number) {
         if (total >= 0) {
             this._totalRecords = total;
-            this._pipeTrigger++;
+            this.pipeTrigger++;
             this.notifyChanges();
         }
     }
@@ -4365,7 +4341,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             asChild,
             isPinned: isInPinnedArea
         };
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.cdr.detectChanges();
         if (isInPinnedArea) {
             this.calculateGridHeight();
@@ -4404,7 +4380,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.gridAPI.addRowToData(data);
 
         this.onRowAdded.emit({ data });
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.notifyChanges();
     }
 
@@ -4763,7 +4739,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         const insertIndex = typeof eventArgs.insertAtIndex === 'number' ? eventArgs.insertAtIndex : this._pinnedRecordIDs.length;
         this._pinnedRecordIDs.splice(insertIndex, 0, rowID);
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.notifyChanges();
         }
@@ -4794,7 +4770,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.onRowPinning.emit(eventArgs);
         this.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         if (this.gridAPI.grid) {
             this.cdr.detectChanges();
         }
@@ -5292,11 +5268,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @WatchChanges()
     @Input()
-    get selectRowOnClick() {
+    public get selectRowOnClick() {
         return this._selectRowOnClick;
     }
 
-    set selectRowOnClick(enabled: boolean) {
+    public set selectRowOnClick(enabled: boolean) {
         this._selectRowOnClick = enabled;
     }
 
@@ -6072,7 +6048,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this.crudService.endRowEdit();
         this.closeRowEditingOverlay();
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         if (!this.cancelAddMode) {
             this.cdr.detectChanges();
             this.onRowAdded.emit({ data: row.data });
@@ -6103,7 +6079,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public triggerPipes() {
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.cdr.detectChanges();
     }
 
