@@ -83,13 +83,6 @@
     ));
 }
 
-@mixin line-clamp($lines, $inline, $vertical) {
-    display: if($inline, -webkit-inline-box, -webkit-box);
-    -webkit-line-clamp: if($lines, $lines, 'initial');
-    -webkit-box-orient: if($vertical, 'vertical', 'initial');
-    overflow: hidden;
-}
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
