@@ -2259,12 +2259,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             const firstCell = grid.getCellByColumn(2, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
             fix.detectChanges();
-            expect(grid.endRowTransaction).toHaveBeenCalledTimes(0);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
-            expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
             expect(cell.selected).toBeTruthy();
             expect(firstCell.selected).toBeFalsy();
         });

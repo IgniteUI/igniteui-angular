@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
+import { AbsoluteScrollStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/public_api';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
+import { RowEditPositionStrategy } from '../grid.common';
 import { GridType } from './grid.interface';
 
 export class IgxRow {
@@ -236,6 +238,29 @@ export class IgxGridCRUDService {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public endRowTransaction(commit: boolean, row: IgxRow, event?: Event) {
+        row.newData = this.grid.transactions.getAggregatedValue(row.id, true);
+        let rowEditArgs = row.createEditEventArgs(true, event);
+
+        if (!commit) {
+            this.grid.transactions.endPending(false);
+        } else {
+            rowEditArgs = this.grid.gridAPI.update_row(row, row.newData, event);
+            if (rowEditArgs?.cancel) {
+                return true;
+            }
+        }
+
+        this.endRowEdit();
+
+        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue, event);
+        this.grid.rowEditExit.emit(nonCancelableArgs);
+        this.grid.closeRowEditingOverlay();
+    }
+
     /** Exit row edit mode */
     public exitRowEdit(commit: boolean, event?: Event) {
         if (!this.grid.rowEditable ||
@@ -248,7 +273,7 @@ export class IgxGridCRUDService {
             return true;
         }
 
-        const canceled = this.grid.endRowTransaction(commit, this.row, event);
+        const canceled = this.endRowTransaction(commit, this.row, event);
         if (canceled) {
             return true;
         }
@@ -406,7 +431,6 @@ export class IgxGridCRUDService {
             this.grid.tbody.nativeElement.focus();
         }
     }
-
 
     public endAdd(commit = true, event?: Event) {
         const row = this.row;

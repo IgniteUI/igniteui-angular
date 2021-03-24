@@ -4307,7 +4307,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this._moveColumns(column, target, pos);
-        this._columnsReordered(column, target);
+        this._columnsReordered(column);
 
         this.onColumnMovingEnd.emit({ source: column, target });
     }
@@ -5831,6 +5831,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
+     * TODO: MOVE to CRUD
      */
     public openRowOverlay(id) {
         this.configureRowEditingOverlay(id, this.rowList.length <= MIN_ROW_EDITING_COUNT_THRESHOLD);
@@ -5842,7 +5843,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public closeRowEditingOverlay() {
+        public closeRowEditingOverlay() {
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
@@ -5958,32 +5959,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public endRowTransaction(commit: boolean, row: IgxRow, event?: Event) {
-        row.newData = this.transactions.getAggregatedValue(row.id, true);
-        let rowEditArgs = row.createEditEventArgs(true, event);
-
-        if (!commit) {
-            this.transactions.endPending(false);
-        } else {
-            rowEditArgs = this.gridAPI.update_row(row, row.newData, event);
-            if (rowEditArgs?.cancel) {
-                return true;
-            }
-        }
-
-        this.gridAPI.crudService.endRowEdit();
-
-        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue, event);
-        this.rowEditExit.emit(nonCancelableArgs);
-        this.closeRowEditingOverlay();
-    }
-
-    /**
-     * @hidden @internal
-     */
     public triggerPipes() {
         this._pipeTrigger++;
         this.cdr.detectChanges();
+    }
+
+    /**
+     * @hidden
+     */
+     public rowEditingWheelHandler(event: WheelEvent) {
+        if (event.deltaY > 0) {
+            this.verticalScrollContainer.scrollNext();
+        } else {
+            this.verticalScrollContainer.scrollPrev();
+        }
     }
 
     protected writeToData(rowIndex: number, value: any) {
@@ -6885,7 +6874,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @hidden
      */
-    private _columnsReordered(column: IgxColumnComponent, target) {
+    private _columnsReordered(column: IgxColumnComponent) {
         this.notifyChanges();
         if (this.hasColumnLayouts) {
             this.columns.filter(x => x.columnLayout).forEach(x => x.populateVisibleIndexes());
@@ -7192,6 +7181,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
     }
 
+    // TODO: About to Move to CRUD
     private configureRowEditingOverlay(rowID: any, useOuter = false) {
         let settings = this.rowEditSettings;
         const overlay = this.overlayService.getOverlayById(this.rowEditingOverlay.overlayId);
@@ -7207,16 +7197,5 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         settings.target = targetRow.element.nativeElement;
         this.toggleRowEditingOverlay(true);
-    }
-
-    /**
-     * @hidden
-     */
-    private rowEditingWheelHandler(event: WheelEvent) {
-        if (event.deltaY > 0) {
-            this.verticalScrollContainer.scrollNext();
-        } else {
-            this.verticalScrollContainer.scrollPrev();
-        }
     }
 }
