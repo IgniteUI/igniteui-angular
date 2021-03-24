@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,7 +38,7 @@ describe('IgxGrid - Column Moving #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
+        });
     }));
 
     describe('', () => {

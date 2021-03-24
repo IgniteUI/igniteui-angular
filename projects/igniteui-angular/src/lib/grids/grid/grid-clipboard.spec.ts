@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -19,8 +19,7 @@ describe('IgxGrid - Clipboard #grid', () => {
                 IgxGridClipboardComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
-         
+        });
     }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {

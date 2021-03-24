@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -48,7 +48,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByTransactionsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
+        });
     }));
 
     describe('Base tests: ', () => {

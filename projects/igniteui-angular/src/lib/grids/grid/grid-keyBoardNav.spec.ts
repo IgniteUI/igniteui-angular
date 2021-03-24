@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxGridCellComponent,
@@ -35,7 +35,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            })
+            });
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -219,7 +219,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                     VirtualGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            })
+            });
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -672,7 +672,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                     IgxGridGroupByComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            })
+            });
         }));
 
         let fix;

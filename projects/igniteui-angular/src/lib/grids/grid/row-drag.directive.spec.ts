@@ -1,5 +1,5 @@
 import { Component, ViewChild, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -67,7 +67,7 @@ describe('Row Drag Tests #grid', () => {
                         NoopAnimationsModule,
                         IgxGridModule
                     ]
-                })
+                });
             }));
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxGridRowDraggableComponent);
@@ -418,7 +418,7 @@ describe('Row Drag Tests #grid', () => {
                         NoopAnimationsModule,
                         IgxGridModule
                     ]
-                })
+                });
             }));
             it('should correctly create custom ghost element', () => {
                 fixture = TestBed.createComponent(IgxGridRowCustomGhostDraggableComponent);
@@ -469,7 +469,7 @@ describe('Row Drag Tests #grid', () => {
                     NoopAnimationsModule,
                     IgxGridModule
                 ]
-            })
+            });
         }));
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxGridFeaturesRowDragComponent);
@@ -929,7 +929,7 @@ describe('Row Drag Tests #hGrid', () => {
                 IgxGridModule,
                 IgxHierarchicalGridModule
             ]
-        })
+        });
     }));
     it('should be able to drag row on every hierarchical level', fakeAsync(/** height/width setter rAF */() => {
         fixture = TestBed.createComponent(IgxHierarchicalGridTestComponent);
@@ -1078,7 +1078,7 @@ describe('Row Drag Tests #tGrid', () => {
                 IgxGridModule,
                 IgxTreeGridModule
             ]
-        })
+        });
     }));
     beforeEach(fakeAsync(() => {
         fixture = TestBed.createComponent(IgxTreeGridTestComponent);

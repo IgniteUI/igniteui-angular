@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
@@ -68,7 +68,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule
             ]
-        })
+        });
     }));
 
     describe(null, () => {
@@ -2767,8 +2767,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule]
-        })
-          
+        });
     }));
 
     describe(null, () => {
@@ -5916,7 +5915,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        })
+        });
     }));
 
     beforeEach(fakeAsync(() => {

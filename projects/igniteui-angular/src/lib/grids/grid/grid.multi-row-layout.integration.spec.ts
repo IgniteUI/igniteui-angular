@@ -24,8 +24,6 @@ interface ColGroupsType {
 }
 
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
-
-
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
     let colGroups: Array<ColGroupsType>;
@@ -40,7 +38,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
-        })
+        });
     }));
 
     describe('Hiding ', () => {

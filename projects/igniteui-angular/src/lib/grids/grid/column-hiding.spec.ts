@@ -1,6 +1,6 @@
 
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
@@ -35,7 +35,7 @@ describe('Column Hiding UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
+        });
     }));
 
     describe('', () => {

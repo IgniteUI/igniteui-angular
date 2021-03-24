@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, DebugElement } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync, tick } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
@@ -38,7 +38,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 MRLMasterDetailComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
+        });
     }));
 
     describe('Basic', () => {

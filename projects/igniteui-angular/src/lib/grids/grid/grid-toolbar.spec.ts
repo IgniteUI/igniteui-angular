@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
@@ -39,8 +39,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        })
-
+        });
     }));
 
     describe('Basic Tests - ', () => {

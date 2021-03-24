@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
@@ -30,7 +30,7 @@ describe('IgxGrid - Cell selection #grid', () => {
                 CellSelectionSingleComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        })
+        });
     }));
 
     describe('Base', () => {

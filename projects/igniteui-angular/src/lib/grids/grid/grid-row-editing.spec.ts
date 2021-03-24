@@ -51,7 +51,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
-        })
+        });
     }));
 
     describe('General tests', () => {

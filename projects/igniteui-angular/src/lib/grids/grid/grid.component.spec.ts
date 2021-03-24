@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -46,7 +46,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should initialize a grid with columns from markup', fakeAsync(() => {
@@ -599,7 +599,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should change chunk size for every record after enlarging the grid and the horizontal dirs are scrambled', async () => {
@@ -734,7 +734,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should init columns with width >= 136px when 5 rows and 5 columns are rendered', fakeAsync(() => {
@@ -1755,7 +1755,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it(`When edit a cell onto filtered data through grid method, the row should
@@ -1964,7 +1964,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule, IgxTabsModule]
-            })
+            });
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -2116,7 +2116,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should be able to display custom content', () => {
@@ -2142,7 +2142,7 @@ describe('IgxGrid Component Tests #grid', () => {
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should have access to grid context', () => {
@@ -2177,7 +2177,7 @@ describe('IgxGrid Component Tests #grid', () => {
                     IgxGridModule,
                     IgxTabsModule
                 ]
-            })
+            });
         }));
         afterEach(() => {
             if (observer) {

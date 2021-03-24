@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -26,7 +26,7 @@ describe('IgxGrid - Cell component #grid', () => {
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            })
+            });
         }));
 
         beforeEach(fakeAsync(/** height/width setter rAF */() => {
@@ -153,7 +153,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
                 providers: [{ provide: NgZone, useFactory: () => zone = new TestNgZone() }]
-            })
+            });
         }));
 
         beforeEach(fakeAsync(() => {
@@ -269,7 +269,7 @@ describe('IgxGrid - Cell component #grid', () => {
                     NoScrollsComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule],
-            })
+            });
         }));
 
         it('Should not attach doubletap handler for non-iOS', fakeAsync(/** height/width setter rAF */() => {
@@ -328,7 +328,7 @@ describe('IgxGrid - Cell component #grid', () => {
                     NoColumnWidthGridComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should not make last column width 0 when no column width is set', fakeAsync(/** height/width setter rAF */() => {
@@ -349,7 +349,7 @@ describe('IgxGrid - Cell component #grid', () => {
                     ConditionalCellStyleTestComponent
                 ],
                 imports: [NoopAnimationsModule, IgxGridModule]
-            })
+            });
         }));
 
         it('should be able to conditionally style cells', fakeAsync(() => {

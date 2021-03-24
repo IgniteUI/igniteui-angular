@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, ComponentFixture, waitForAsync, fakeAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -211,7 +211,7 @@ describe('Grid - nested data source properties', () => {
             TestBed.configureTestingModule({
                 declarations: [NestedPropertiesGridComponent],
                 imports: [IgxGridModule, NoopAnimationsModule]
-            })
+            });
         }));
 
         beforeEach(fakeAsync(() => {
@@ -344,7 +344,7 @@ describe('Grid nested data advanced editing', () => {
         TestBed.configureTestingModule({
             declarations: [NestedPropertiesGrid2Component],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -504,7 +504,7 @@ describe('Edit cell with data of type Array', () => {
             declarations: [NestedPropertyGridComponent],
             imports: [IgxGridModule, IgxComboModule, FormsModule, IgxToggleModule,
                 ReactiveFormsModule, IgxFocusModule, IgxInputGroupModule, NoopAnimationsModule]
-        })
+        });
     }));
 
     beforeEach(fakeAsync(() => {

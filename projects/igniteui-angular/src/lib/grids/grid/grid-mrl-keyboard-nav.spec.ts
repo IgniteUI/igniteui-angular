@@ -1,5 +1,5 @@
-﻿import { Component, ViewChild, Type, DebugElement, NgZone } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
+﻿import { Component, ViewChild} from '@angular/core';
+import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './public_api';
@@ -27,7 +27,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule],
-        })
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -2447,7 +2447,7 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        })
+        });
     }));
 
     beforeEach(fakeAsync(() => {

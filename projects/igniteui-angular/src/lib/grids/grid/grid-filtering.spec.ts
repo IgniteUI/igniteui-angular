@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import {  NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
@@ -28,8 +28,7 @@ describe('IgxGrid - Filtering actions #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        })
-           
+        });
     }));
 
     let fix; let grid;
@@ -1048,8 +1047,7 @@ describe('IgxGrid - Filtering expression tree bindings #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        })
-
+        });
     }));
 
     let fix; let grid: IgxGridComponent;

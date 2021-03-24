@@ -27,7 +27,7 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridStateWithDetailsComponent
             ],
             imports: [ NoopAnimationsModule, IgxGridModule ]
-        })
+        });
     }));
 
     it('should initialize an IgxGridState with default options object', () => {

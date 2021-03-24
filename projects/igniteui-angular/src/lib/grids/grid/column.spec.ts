@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -43,8 +43,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 IgxGridPercentColumnComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
-           
+        });
     }));
 
     it('should correctly initialize column templates', () => {

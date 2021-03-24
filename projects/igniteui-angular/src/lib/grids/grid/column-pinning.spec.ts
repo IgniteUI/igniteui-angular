@@ -34,7 +34,7 @@ describe('Column Pinning UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
+        });
     }));
 
     describe('', () => {

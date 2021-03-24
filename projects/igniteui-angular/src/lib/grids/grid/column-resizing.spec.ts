@@ -1,5 +1,5 @@
 import { Component, DebugElement, OnInit, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxAvatarModule } from '../../avatar/avatar.component';
@@ -33,7 +33,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
+        });
     }));
 
     describe('Base tests: ', () => {

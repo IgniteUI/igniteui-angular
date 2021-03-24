@@ -1,4 +1,4 @@
-﻿import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+﻿import { TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { Component, ViewChild } from '@angular/core';
@@ -28,7 +28,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        })
+        });
     }));
 
     it('should initialize a grid with 1 column group', fakeAsync(() => {

@@ -41,7 +41,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GridGroupByRowCustomSelectorsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        })
+        });
     }));
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
