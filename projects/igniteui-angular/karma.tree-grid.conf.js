@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['parallel', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -22,7 +22,7 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     parallelOptions: {
-      executors: require('os') ? Math.ceil(require('os').cpus().length / 2) : 2,
+      executors: 2,
       shardStrategy: 'round-robin'
     },
     client: {

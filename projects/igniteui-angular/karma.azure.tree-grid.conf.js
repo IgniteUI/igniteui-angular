@@ -19,7 +19,7 @@ module.exports = function (config) {
       require('@angular-devkit/build-angular/plugins/karma')
     ],
     parallelOptions: {
-      executors: require('os') ? Math.ceil(require('os').cpus().length / 2) : 2,
+      executors: 2,
       shardStrategy: 'round-robin'
     },
     client: {
