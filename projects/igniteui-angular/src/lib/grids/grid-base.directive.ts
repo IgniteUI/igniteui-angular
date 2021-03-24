@@ -3196,8 +3196,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
             this.overlayService.detach(overlayID);
+            this.nativeElement.focus();
         });
-        this.nativeElement.focus();
     }
 
     /**
