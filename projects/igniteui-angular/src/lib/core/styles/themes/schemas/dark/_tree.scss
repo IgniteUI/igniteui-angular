@@ -1,0 +1,76 @@
+@import '../light/tree';
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a base dark tree schema.
+/// @type {Map}
+/// @prop {Map} color-hover [igx-color: ('grays', 900)] - The color used for the tree node content.
+$_base-dark-tree: (
+    color-hover: (
+        igx-color: ('grays', 900)
+    ),
+);
+
+/// Generates a dark tree schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_light-tree
+/// @requires $_base-dark-tree
+$_dark-tree: extend($_light-tree, $_base-dark-tree);
+
+/// Generates a dark fluent tree schema.
+/// @type {Map}
+/// @prop {Map} background-selected [igx-color: ('grays', 200)] - The background color in selected state used for the tree node.
+/// @prop {Map} background-selected-hover [igx-color: ('grays', 100)] - The background color on hover in selected state used for the tree node.
+/// @prop {Map} color-selected [igx-color: ('grays', 900)] - The color used for the content of the selected tree node.
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 200)] - The color used for the selected tree node expand/collapse indicator.
+
+/// @requires {function} extend
+/// @requires $_fluent-tree
+/// @requires $_base-dark-tree
+$_dark-fluent-tree: extend(
+    $_fluent-tree,
+    (
+        background-selected: (
+            igx-color: ('grays', 200)
+        ),
+
+        background-selected-hover: (
+            igx-color: ('grays', 100)
+        ),
+
+        color-selected: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-selected: (
+            igx-contrast-color: ('grays', 200)
+        ),
+    )
+);
+
+/// Generates a dark bootstrap tree schema.
+/// @type {Map}
+/// @requires {function} extend
+/// @requires $_bootstrap-tree
+/// @requires $_base-dark-tree
+$_dark-bootstrap-tree: extend($_bootstrap-tree, $_base-dark-tree);
+
+/// Generates a dark indigo tree schema.
+/// @type {Map}
+/// @prop {Map} tree-indicator-color-hover [igx-color: ('primary', 200)] - The hover color used for the tree node expand/collapse indicator.
+/// @requires {function} extend
+/// @requires $_indigo-tree
+/// @requires $_base-dark-tree
+$_dark-indigo-tree: extend(
+    $_indigo-tree,
+    $_base-dark-tree,
+    (
+        tree-indicator-color-hover: (
+            igx-color: ('primary', 200)
+        ),
+    )
+);

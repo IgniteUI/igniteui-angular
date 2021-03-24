@@ -59,6 +59,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './tree';
 @import './watermark';
 
 /// Used to create Material Design themes.
@@ -121,6 +122,7 @@
 /// @property {Map} igx-time-picker [$_dark-time-picker]
 /// @property {Map} igx-toast [$_dark-toast]
 /// @property {Map} igx-tooltip [$_dark-tooltip]
+/// @property {Map} igx-tree [$_dark-tree]
 $dark-schema: (
     igx-avatar: $_dark-avatar,
     igx-action-strip: $_dark-action-strip,
@@ -179,6 +181,7 @@ $dark-schema: (
     igx-time-picker: $_dark-time-picker,
     igx-toast: $_dark-toast,
     igx-tooltip: $_dark-tooltip,
+    igx-tree: $_dark-tree,
     igx-watermark: $_dark-watermark,
 );
 
@@ -247,6 +250,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-time-picker [$_dark-fluent-time-picker],
 /// @property {Map} igx-toast [$_dark-fluent-toast],
 /// @property {Map} igx-tooltip [$_dark-fluent-tooltip]
+/// @property {Map} igx-tree [$_dark-fluent-tree]
 $dark-fluent-schema: (
     igx-avatar: $_dark-fluent-avatar,
     igx-action-strip: $_dark-fluent-action-strip,
@@ -305,6 +309,7 @@ $dark-fluent-schema: (
     igx-time-picker: $_dark-fluent-time-picker,
     igx-toast: $_dark-fluent-toast,
     igx-tooltip: $_dark-fluent-tooltip,
+    igx-tree: $_dark-fluent-tree,
     igx-watermark: $_dark-fluent-watermark,
 );
 
@@ -368,6 +373,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-time-picker [$_dark-bootstrap-time-picker],
 /// @property {Map} igx-toast [$_dark-bootstrap-toast],
 /// @property {Map} igx-tooltip [$_dark-bootstrap-tooltip]
+/// @property {Map} igx-tree [$_dark-bootstrap-tree]
 $dark-bootstrap-schema: (
     igx-avatar: $_dark-bootstrap-avatar,
     igx-action-strip: $_dark-bootstrap-action-strip,
@@ -426,6 +432,7 @@ $dark-bootstrap-schema: (
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-bootstrap-toast,
     igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-tree: $_dark-bootstrap-tree,
     igx-watermark: $_dark-bootstrap-watermark,
 );
 
@@ -488,7 +495,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-tabs [$_dark-indigo-tabs]
 /// @property {Map} igx-time-picker [$_dark-indigo-time-picker]
 /// @property {Map} igx-toast [$_dark-indigo-toast]
-/// @property {Map} igx-tooltip [$_dark-indigo-tooltip]
+/// @property {Map} igx-tree [$_dark-indigo-tree]
 $dark-indigo-schema: (
     igx-avatar: $_dark-indigo-avatar,
     igx-action-strip: $_dark-indigo-action-strip,
@@ -547,6 +554,7 @@ $dark-indigo-schema: (
     igx-time-picker: $_dark-indigo-time-picker,
     igx-toast: $_dark-indigo-toast,
     igx-tooltip: $_dark-indigo-tooltip,
+    igx-tree: $_dark-indigo-tree,
     igx-watermark: $_dark-indigo-watermark,
 );
 

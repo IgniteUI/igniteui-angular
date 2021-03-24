@@ -11,7 +11,7 @@
 </div>
 
 <ng-template #defaultIndicator let-item>
-    <igx-icon>
+    <igx-icon [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand">
         {{ expanded ? "keyboard_arrow_down" : "keyboard_arrow_right" }}
     </igx-icon>
 </ng-template>
@@ -22,32 +22,44 @@
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__content">
-        <div [ngClass]="{ hidden: !children?.length }"
-            class="igx-tree-node__indicator igx-tree-node__expand"
+    <div #ghostTemplate class="igx-tree-node__wrapper" [ngClass]="{'igx-tree-node__wrapper--selected': selected}">
+        <div aria-hidden="true">
+            <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
+        </div>
+
+        <!-- Expand/Collapse indicator -->
+        <span [ngClass]="{ 'igx-tree-node__indicator--hidden': !children?.length }"
+            class="igx-tree-node__indicator"
             (click)="expanded = !expanded"
         >
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
+        </span>
+
+        <!-- Item selection -->
+        <div class="igx-tree-node__select" *ngIf="showSelectors"
+             (pointerdown)="$event.preventDefault()"
+             (click)="onSelectorClick($event)"
+        >
+            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: { $implicit: expanded }">
+            </ng-container>
         </div>
-        <div class="igx-tree-node__header">
-            <div *ngIf="showSelectors"
-                class="igx-tree-node__indicator igx-tree-node__select"
-                (pointerdown)="$event.preventDefault()"
-                (click)="onSelectorClick($event)"
-            >
-                <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: { $implicit: expanded }">
-                </ng-container>
-            </div>
+
+        <div class="igx-tree-node__content">
+            <!-- Ghost content -->
             <ng-content></ng-content>
         </div>
+
+        <!--  Buffer element for 'move after' when D&D is implemented-->
+        <div class="igx-tree-node__drop-indicator">
+            <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
+            <div></div>
+        </div>
     </div>
-    <!-- Buffer element for 'move after' when D&D is implemented -->
-    <div class="igx-tree-node__header-buffer"></div>
 </ng-template>
 
 <ng-template #dragTemplate>
-    <!-- Drag drop goes here 
+    <!-- Drag drop goes here
         igxDrop
         #dropRef="drop"
         [igxNodeDrag]="this"

@@ -1,26 +1,53 @@
-.row {
+.sample-template-center {
     display: flex;
-    flex-flow: row;
-}
+    align-items: center;
 
-.column {
-    display: flex;
-    flex-direction: column;
-}
-
-.tree-container {
-    width: 50%;
-}
-
-.controls {
-    padding: 40px;
-    .row {
-        border: 2px solid#d1d1d1;
-        padding: 12px;
-        margin: 12px;
+    > * {
+        margin-right: 8px;
     }
 }
 
-.meduim {
-    width: 400px
+.sample-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    align-items: center;
 }
+
+.tree-container {
+    margin: 16px;
+    max-width: 350px;
+
+    p {
+        margin-bottom: 8px;
+        font-size: 14px
+    }
+}
+
+.btn-holder {
+    margin-bottom: 24px;
+}
+
+igx-buttongroup {
+    margin-bottom: 16px;
+}
+
+.controls {
+    padding: 24px;
+
+    button {
+        margin-left: 16px;
+    }
+
+    > * {
+        margin-right: 24px;
+        margin-bottom: 16px;
+
+        &:last-child {
+            margin-right: 0;
+            margin-bottom: 0;
+        }
+    }
+}
+

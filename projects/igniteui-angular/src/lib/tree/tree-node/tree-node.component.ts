@@ -16,7 +16,8 @@ import {
 } from '../common';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
-
+import { ITreeResourceStrings } from "../../core/i18n/tree-resources";
+import { CurrentResourceStrings } from "../../core/i18n/resources";
 
 let nodeId = 0;
 
@@ -38,7 +39,6 @@ let nodeId = 0;
 @Component({
     selector: 'igx-tree-node',
     templateUrl: 'tree-node.component.html',
-    styleUrls: ['tree-node.component.scss'],
     providers: [
         { provide: IGX_TREE_NODE_COMPONENT, useExisting: IgxTreeNodeComponent }
     ]
@@ -51,6 +51,28 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
+    }
+
+    /** @hidden @internal */
+    private _resourceStrings = CurrentResourceStrings.TreeResStrings;
+
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: ITreeResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): ITreeResourceStrings {
+        if (!this._resourceStrings) {
+            this._resourceStrings = CurrentResourceStrings.TreeResStrings;
+        }
+        return this._resourceStrings;
     }
 
     /**
@@ -87,6 +109,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     /** @hidden @internal */
     @HostBinding('class.igx-tree-node')
     public cssClass = 'igx-tree-node';
+
+    /** @hidden @internal */
+    @HostBinding('attr.role')
+    public roleAttr = 'treeitem';
 
     // TODO: Public API should expose array or null, not query list
     @ContentChildren(IGX_TREE_NODE_COMPONENT, { read: IGX_TREE_NODE_COMPONENT })
