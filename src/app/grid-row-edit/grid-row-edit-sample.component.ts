@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { data } from './data';
+import { data } from '../shared/data';
 
 import { IgxGridComponent, IgxToggleDirective, GridSelectionMode } from 'igniteui-angular';
 
