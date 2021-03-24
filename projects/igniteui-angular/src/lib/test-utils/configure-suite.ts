@@ -39,7 +39,6 @@ export const configureTestSuite = (configureAction?: () => void) => {
     });
 
     afterAll(() => {
-        
         TestBed.resetTestingModule = originReset;
         TestBed.resetTestingModule();
     });
