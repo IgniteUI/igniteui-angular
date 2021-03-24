@@ -26,7 +26,7 @@ const EXPANDED_ICON_NAME = 'expand_more';
 const HIERARCHICAL_INDENT_CLASS = '.igx-grid__hierarchical-indent';
 const SELECTED_ROW_CALSS_NAME = 'igx-grid__tr--selected';
 
-describe('IgxGrid Master Detail #grid', () => {
+fdescribe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
@@ -114,7 +114,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(firstDetail.nativeElement)).toEqual('Obere Str. 57');
 
             inputElem.componentInstance.input.value = 'Test value';
-            checkboxElem.componentInstance.toggle();
+            checkboxElem.componentInstance.checked = !checkboxElem.componentInstance.checked;
             fix.detectChanges();
 
             grid.navigateTo(20);
@@ -157,7 +157,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(firstRowDetail.nativeElement)).toEqual('Obere Str. 57');
 
             inputGroup.input.value = 'Test value';
-            checkboxElem.toggle();
+            checkboxElem.checked = !checkboxElem.checked;
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
@@ -714,7 +714,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
                 // click the template checkbox
                 let checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
-                checkbox.componentInstance.toggle();
+                checkbox.componentInstance.checked = !checkbox.componentInstance.checked;
                 fix.detectChanges();
 
                 // go to last page that doesn't contain this view
@@ -987,7 +987,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
 
                 let checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
-                checkbox.componentInstance.toggle();
+                checkbox.componentInstance.checked = !checkbox.componentInstance.checked;
                 fix.detectChanges();
 
                 // check checkbox state
