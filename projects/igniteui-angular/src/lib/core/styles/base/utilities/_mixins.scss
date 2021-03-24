@@ -26,6 +26,18 @@
 //    }
 //}
 
+
+/// @access private
+@mixin _icon-w-margin($margin, $left) {
+    > * {
+        margin-#{$left}: $margin;
+
+        &:first-child {
+            margin-#{$left}: 0;
+        }
+    }
+}
+
 /// Hides the element from the DOM.
 /// @access public
 /// @example scss - Sample usage

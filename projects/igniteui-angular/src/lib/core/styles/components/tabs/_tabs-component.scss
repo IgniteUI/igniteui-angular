@@ -9,82 +9,156 @@
     $this: bem--selector-to-string(&);
     @include register-component(str-slice($this, 2, -1));
 
-    @extend %igx-tabs !optional;
-
-    @include e(header) {
-        @extend %igx-tabs__header !optional;
-    }
-
-    @include e(header-wrapper-fixed) {
-        @extend %igx-tabs__header-wrapper-fixed !optional;
-    }
-
-    @include e(header-wrapper-fluid) {
-        @extend %igx-tabs__header-wrapper-fluid !optional;
-    }
-
-    @include e(header-menu-item-indicator) {
-        @extend %igx-tabs__header-menu-item-indicator !optional;
-    }
-
-    @include e(item-label) {
-        @extend %igx-tabs__item-label !optional;
-    }
-
-    @include e(header-button) {
-        @extend %igx-tabs__header-button !optional;
-    }
-
-    @include e(header-button, $m: hidden) {
-        @extend %igx-tabs__header-button !optional;
-        @extend %igx-tabs__header-button--hidden !optional;
-    }
-
-    @include e(header-button, $m: none) {
-        @extend %igx-tabs__header-button--none !optional;
-    }
-
-    @include e(header-button, $m: active) {
-        @extend %igx-tabs__header-button !optional;
-    }
-
-    @include e(header-menu-item) {
-        @extend %igx-tabs__header-menu-item !optional;
-    }
-
-    @include e(header-menu-item, $m: selected) {
-        @extend %igx-tabs__header-menu-item !optional;
-        @extend %igx-tabs__header-menu-item--selected !optional;
-        @extend %igx-tabs__header-menu-item--selected-bootstrap !optional;
-    }
-
-    @include e(header-menu-item, $m: disabled) {
-        @extend %igx-tabs__header-menu-item !optional;
-        @extend %igx-tabs__header-menu-item--disabled !optional;
-    }
-
-    @include e(content-fixed) {
-        @extend %igx-tabs__content-fixed !optional;
-    }
-
-    @include e(content-fluid) {
-        @extend %igx-tabs__content-fluid !optional;
-    }
-
-
-    @include e(group) {
-        @extend %igx-tabs__group !optional;
-    }
-
-    @include e(header-menu-item-icon) {
-        @extend  %igx-tabs__header-menu-item-icon !optional;
-    }
-
-    @include m(fixed) {
-        @extend %igx-tabs--fixed !optional;
-    }
+    @extend %tabs-display !optional;
 
     @include m(icons) {
         @extend %igx-tabs--icons !optional;
     }
+
+    @include m(start) {
+        @extend %igx-tabs--start !optional;
+    }
+
+    @include m(end) {
+        @extend %igx-tabs--end !optional;
+    }
+
+    @include m(center) {
+        @extend %igx-tabs--center !optional;
+    }
+
+    @include m(justify) {
+        @extend %igx-tabs--justify !optional;
+    }
+
+    @include e(header) {
+        @extend %tabs-header !optional;
+    }
+
+    @include e(header-button) {
+        @extend %tabs-header-button !optional;
+    }
+
+    @include e(header-button, $m: hidden) {
+        @extend %tabs-header-button--hidden !optional;
+    }
+
+    @include e(header-button, $m: none) {
+        @extend %tabs-header-button--none !optional;
+    }
+
+    @include e(header-content) {
+        @extend %tabs-header-content !optional;
+    }
+
+    @include e(header-scroll) {
+        @extend %tabs-header-scroll !optional;
+    }
+
+    @include e(header-item) {
+        @extend %tabs-header-item !optional;
+    }
+
+    @include e(header-item, $m: selected) {
+        @extend %tabs-header-item--selected !optional;
+    }
+
+    @include e(header-item, $m: disabled) {
+        @extend %tabs-header-item--disabled !optional;
+    }
+
+    @include e(header-item-inner) {
+        @extend %tabs-header-item-inner !optional;
+    }
+
+    @include e(header-active-indicator) {
+        @extend  %tabs-header-active-indicator !optional;
+    }
+
+    @include e(panels) {
+        @extend %tabs-panels !optional;
+    }
+
+    @include e(panel) {
+        @extend %tabs-panel !optional;
+    }
+
+    //@extend %igx-tabs !optional;
+
+    //@include e(header) {
+    //    @extend %igx-tabs__header !optional;
+    //}
+    //
+    //@include e(header-wrapper-fixed) {
+    //    @extend %igx-tabs__header-wrapper-fixed !optional;
+    //}
+    //
+    //@include e(header-wrapper-fluid) {
+    //    @extend %igx-tabs__header-wrapper-fluid !optional;
+    //}
+    //
+    //@include e(header-item-indicator) {
+    //    @extend %igx-tabs__header-item-indicator !optional;
+    //}
+    //
+    //@include e(item-label) {
+    //    @extend %igx-tabs__item-label !optional;
+    //}
+    //
+    //@include e(header-button) {
+    //    @extend %igx-tabs__header-button !optional;
+    //}
+    //
+    //@include e(header-button, $m: hidden) {
+    //    @extend %igx-tabs__header-button !optional;
+    //    @extend %igx-tabs__header-button--hidden !optional;
+    //}
+    //
+    //@include e(header-button, $m: none) {
+    //    @extend %igx-tabs__header-button--none !optional;
+    //}
+    //
+    //@include e(header-button, $m: active) {
+    //    @extend %igx-tabs__header-button !optional;
+    //}
+    //
+    //@include e(header-item) {
+    //    @extend %igx-tabs__header-item !optional;
+    //}
+    //
+    //@include e(header-item-inner) {
+    //    @extend %igx-tabs__header-item-inner !optional;
+    //}
+    //
+    //@include e(header-item, $m: selected) {
+    //    @extend %igx-tabs__header-item--selected !optional;
+    //}
+    //
+    //@include e(header-item, $m: disabled) {
+    //    @extend %igx-tabs__header-item--disabled !optional;
+    //}
+    //
+    //@include e(content-fixed) {
+    //    @extend %igx-tabs__content-fixed !optional;
+    //}
+    //
+    //@include e(content-fluid) {
+    //    @extend %igx-tabs__content-fluid !optional;
+    //}
+    //
+    //@include e(group) {
+    //    @extend %igx-tabs__group !optional;
+    //}
+    //
+    //@include e(header-item-icon) {
+    //    @extend  %igx-tabs__header-item-icon !optional;
+    //}
+    //
+    //@include m(fixed) {
+    //    @extend %igx-tabs--fixed !optional;
+    //}
+    //
+    //@include m(icons) {
+    //    @extend %igx-tabs--icons !optional;
+    //}
 }

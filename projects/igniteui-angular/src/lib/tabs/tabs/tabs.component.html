@@ -8,15 +8,15 @@
     >
         <igx-icon>navigate_before</igx-icon>
     </button>
-    <div #viewPort class="igx-tabs__header-wrapper-fixed">
-        <div #itemsContainer class="igx-tabs__header-wrapper-fluid" role="tablist">
-            <ng-container *ngFor="let tab of items; let i = index">
+    <div #viewPort class="igx-tabs__header-content">
+        <div #itemsContainer class="igx-tabs__header-scroll" role="tablist">
+            <ng-container igxRipple *ngFor="let tab of items; let i = index">
                 <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
             </ng-container>
             <div
                 #selectedIndicator
                 *ngIf="items.length > 0"
-                class="igx-tabs__header-menu-item-indicator"
+                class="igx-tabs__header-active-indicator"
             >
             </div>
         </div>
@@ -31,7 +31,7 @@
         <igx-icon>navigate_next</igx-icon>
     </button>
 </div>
-<div style="position: relative; overflow: hidden; flex-grow: 1;">
+<div class="igx-tabs__panels">
     <ng-container *ngFor="let tab of items; let i = index">
         <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
     </ng-container>

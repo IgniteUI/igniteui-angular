@@ -17,12 +17,6 @@ let NEXT_TAB_ID = 0;
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
-    styles: [
-        `:host {
-            position: relative;
-            height: 100%;
-        }`
-    ],
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
 })
 export class IgxTabsComponent extends IgxTabsDirective {
@@ -56,7 +50,7 @@ export class IgxTabsComponent extends IgxTabsDirective {
     public iconsClass = true;
 
     /** @hidden */
-    @HostBinding('class.igx-tabs--fixed')
+    @HostBinding('class.igx-tabs--justify')
     public get justifyAlignmentClass() {
         return this.tabAlignment === 'justify';
     }

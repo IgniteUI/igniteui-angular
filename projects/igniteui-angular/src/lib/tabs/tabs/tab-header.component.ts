@@ -15,22 +15,20 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     private _resizeObserver: ResizeObserver;
 
     /** @hidden */
-    @HostBinding('class.igx-tabs__header-menu-item--selected')
+    @HostBinding('class.igx-tabs__header-item--selected')
     public get provideCssClassSelected(): boolean {
         return this.tab.selected;
     }
 
     /** @hidden */
-    @HostBinding('class.igx-tabs__header-menu-item--disabled')
+    @HostBinding('class.igx-tabs__header-item--disabled')
     public get provideCssClassDisabled(): boolean {
         return this.tab.disabled;
     }
 
     /** @hidden */
-    @HostBinding('class.igx-tabs__header-menu-item')
-    public get provideCssClass(): boolean {
-        return (!this.tab.disabled && !this.tab.selected);
-    }
+    @HostBinding('class.igx-tabs__header-item')
+    public cssClass = 'igx-tabs__header-item'
 
     /** @hidden */
     constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef, private ngZone: NgZone) {

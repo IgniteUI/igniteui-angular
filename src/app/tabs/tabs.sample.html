@@ -2,10 +2,11 @@
     <div class="column-span">
         <div>
             <h3 class="sample-title">Different size tabs</h3>
-            <button [igxButton]="'outlined'" class="action-button" (click)="changeSelectedIndex()">Change selected index</button>
-            <button [igxButton]="'outlined'" class="action-button" (click)="changeTabSelected()">Change tab.selected</button>
-            <button [igxButton]="'outlined'" class="action-button" (click)="renameTab2()">Rename Tab 2</button>
-
+            <div class="sample-actions">
+                <button [igxButton]="'outlined'" class="action-button" (click)="changeSelectedIndex()">Change selected index</button>
+                <button [igxButton]="'outlined'" class="action-button" (click)="changeTabSelected()">Change tab.selected</button>
+                <button [igxButton]="'outlined'" class="action-button" (click)="renameTab2()">Rename Tab 2</button>
+            </div>
             <igx-tabs
                 style="height: 400px;"
                 #tabsNew
@@ -14,7 +15,7 @@
                 (selectedItemChange)="tabsSelectedItemChange($event)"
             >
                 <igx-tab-item>
-                    <igx-tab-header>
+                    <igx-tab-header igxRipple>
                         <igx-icon igxTabHeaderIcon>folder</igx-icon>
                         <span igxTabHeaderLabel>Tab 1</span>
                     </igx-tab-header>
@@ -25,7 +26,7 @@
                 </igx-tab-item>
 
                 <igx-tab-item>
-                    <igx-tab-header>
+                    <igx-tab-header igxRipple>
                         <igx-icon igxTabHeaderIcon>folder</igx-icon>
                         <span igxTabHeaderLabel>{{tab2Label}}</span>
                     </igx-tab-header>
@@ -43,8 +44,9 @@
                 </igx-tab-item>
 
                 <igx-tab-item>
-                    <igx-tab-header>
-                        Tab 3 Lorem ipsum dolor
+                    <igx-tab-header igxRipple>
+                        <igx-icon igxTabHeaderIcon>folder</igx-icon>
+                        <span igxTabHeaderLabel>Tab 3 Lorem ipsum dolor</span>
                     </igx-tab-header>
                     <igx-tab-panel>
                         Content 3
@@ -64,9 +66,10 @@
                 </igx-tab-item>
             </igx-tabs>
         </div>
+
         <div>
             <h3 class="sample-title">Alignment</h3>
-            <igx-buttongroup [values]="tabAlignments" (selected)="selectAlignment($event)"></igx-buttongroup>
+            <igx-buttongroup class="sample-actions" [values]="tabAlignments" (selected)="selectAlignment($event)"></igx-buttongroup>
 
             <igx-tabs style="height: 400px;" [tabAlignment]="tabAlignment">
                 <igx-tab-item>
@@ -127,7 +130,7 @@
                 <igx-tab-item *ngFor="let tab of scrollableTabs;">
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon>folder</igx-icon>
-                        <span igxTabHeaderLabel>{{tab}}</span>
+                        <span igxTabHeaderLabel>Lorem ipsum. {{tab}}</span>
                     </igx-tab-header>
                     <igx-tab-panel>
                         Content of {{tab}}
@@ -147,6 +150,7 @@
                 <igx-tab-item *ngFor="let contact of contacts; index as i">
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon igxPrefix>person</igx-icon>
+                        <igx-icon igxTabHeaderIcon igxPrefix>person</igx-icon>
                         <span igxTabHeaderLabel>{{contact.text}}</span>
                         <button
                             igxButton="icon"
@@ -155,6 +159,7 @@
                         >
                             <igx-icon>close</igx-icon>
                         </button>
+                        <igx-icon igxTabHeaderIcon igxSuffix>person</igx-icon>
                     </igx-tab-header>
                     <igx-tab-panel>
                         Phone: {{contact.phone}}
@@ -722,6 +727,6 @@
                         vulputate in quis nisl.</p>
                 </div>
             </igx-tabs-group>
-        </igx-tabs>
-    </div> -->
+        </igx-tabs> -->
+    </div>
 </div>
