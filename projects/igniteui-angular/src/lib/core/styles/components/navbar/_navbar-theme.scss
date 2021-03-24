@@ -83,6 +83,13 @@
     ));
 }
 
+@mixin line-clamp($lines, $inline, $vertical) {
+    display: if($inline, -webkit-inline-box, -webkit-box);
+    -webkit-line-clamp: if($lines, $lines, 'initial');
+    -webkit-box-orient: if($vertical, 'vertical', 'initial');
+    overflow: hidden;
+}
+
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-root-css-vars
 /// @requires em
@@ -110,6 +117,7 @@
         color: --var($theme, 'text-color');
         box-shadow: --var($theme, 'shadow');
         z-index: 4;
+        overflow: hidden;
     }
 
     %igx-navbar-part {
@@ -118,6 +126,7 @@
     }
 
     %igx-navbar-title {
+        @include line-clamp(4, true, true);
         margin: $navbar-title-margin;
         flex-grow: 1;
         user-select: text;
