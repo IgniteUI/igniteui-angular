@@ -81,9 +81,9 @@
 @mixin igx-bottom-nav($theme) {
     @include igx-root-css-vars($theme);
 
-    $menu-height: 56px;
-    $item-min-width: 80px;
-    $item-max-width: 168px;
+    $menu-height: rem(56px);
+    $item-min-width: rem(80px);
+    $item-max-width: rem(168px);
     $item-padding: 0 rem(12px, 16px);
 
     %igx-bottom-nav-panel:focus {
@@ -131,7 +131,7 @@
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
-        outline: 0;
+        outline-style: none;
     }
 
     %igx-bottom-nav-menu-item--disabled {
@@ -140,7 +140,7 @@
         pointer-events: none;
     }
 
-    %igx-active-tab {
+    %igx-bottom-nav-menu-item--selected {
         color: --var($theme, 'active-item-color');
         transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
@@ -167,12 +167,10 @@
     }
 
     %igx-tab-icon--selected {
-        @extend %igx-active-tab;
         transform: translateY(-2px);
     }
 
     %igx-tab-label--selected {
-        @extend %igx-active-tab;
         transform: translateY(-2px) scale(1.166667);
     }
 }

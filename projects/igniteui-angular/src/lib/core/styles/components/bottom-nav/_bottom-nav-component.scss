@@ -39,6 +39,7 @@
 
     @include e(menu-item, $m: selected) {
         @extend %igx-bottom-nav-menu-item !optional;
+        @extend %igx-bottom-nav-menu-item--selected !optional;
 
         [igxBottomNavHeaderIcon] {
             @extend %igx-tab-icon !optional;
