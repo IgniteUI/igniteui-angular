@@ -1572,7 +1572,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('CRUD: Should handle the deselection on a selected row properly', () => {
-            let firstRow = grid.getRowByKey(1);
+            let firstRow = grid.gridAPI.get_row_by_key(1);
             grid.selectRows([1]);
 
             fix.detectChanges();
@@ -1590,14 +1590,14 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectAllRows();
             fix.detectChanges();
 
-            firstRow = grid.getRowByKey(2);
+            firstRow = grid.gridAPI.get_row_by_key(2);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
             GridSelectionFunctions.verifyRowSelected(firstRow);
 
             grid.deleteRow(2);
             fix.detectChanges();
 
-            expect(grid.getRowByKey(2)).toBeUndefined();
+            expect(grid.gridAPI.get_row_by_key(2)).toBeUndefined();
             expect(grid.selectedRows.includes(2)).toBe(false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
 
@@ -1610,7 +1610,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.deleteRow(3);
             fix.detectChanges();
 
-            expect(grid.getRowByKey(3)).toBeUndefined();
+            expect(grid.gridAPI.get_row_by_key(3)).toBeUndefined();
             expect(grid.selectedRows.includes(3)).toBe(false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, true);
         });
@@ -2050,7 +2050,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
-            const addedRow = grid.getRowByKey(112);
+            const addedRow = grid.gridAPI.get_row_by_key(112);
             GridSelectionFunctions.verifyRowSelected(addedRow, false);
             expect(grid.selectedRows.includes(112)).toBe(false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
@@ -2070,7 +2070,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.addRow({ ID: 112, ParentID: 177, Name: 'Ricardo Matias', HireDate: new Date('Dec 27, 2017'), Age: 55, OnPTO: false });
             fix.detectChanges();
 
-            const addedRow = grid.getRowByKey(112);
+            const addedRow = grid.gridAPI.get_row_by_key(112);
             GridSelectionFunctions.verifyRowSelected(addedRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix);
 

@@ -847,7 +847,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 });
                 fix.detectChanges();
 
-                let groupRow = (grid.getRowByIndex(0) as any) as IgxGridGroupByRowComponent;
+                let groupRow = (grid.gridAPI.get_row_by_index(0) as any) as IgxGridGroupByRowComponent;
                 UIInteractions.simulateClickAndSelectEvent(groupRow);
                 fix.detectChanges();
 
@@ -864,7 +864,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check next group row is active
-                groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow up
@@ -879,7 +879,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check first group row is active
-                groupRow = (grid.getRowByIndex(0) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(0) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
             });
 
@@ -934,7 +934,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check next group row is active
-                let groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                let groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow down
@@ -951,7 +951,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check group row is active
-                groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow up

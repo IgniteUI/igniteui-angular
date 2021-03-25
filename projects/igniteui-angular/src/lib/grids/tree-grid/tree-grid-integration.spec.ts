@@ -331,7 +331,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 fix.detectChanges();
 
                 // const editRow = cell.row.nativeElement;
-                const editRow = cell.gridAPI.get_row_by_index(cell.row.index).nativeElement;
+                const editRow = cell.intRow.nativeElement;
                 const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
                 const bannerTop = banner.getBoundingClientRect().top;
@@ -363,7 +363,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
-            const editRow = cell.gridAPI.get_row_by_index(cell.row.index).nativeElement;
+            const editRow = cell.intRow.nativeElement;
             const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerTop = banner.getBoundingClientRect().top;
@@ -390,7 +390,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
-            const editRow = cell.gridAPI.get_row_by_index(cell.row.index).nativeElement;
+            const editRow = cell.intRow.nativeElement;
             const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
             const bannerBottom = banner.getBoundingClientRect().bottom;
@@ -438,7 +438,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(banner.parent.attributes['aria-hidden']).toEqual('false');
 
             // Expand parent row
-            grid.expandRow(cell.row.rowID);
+            grid.expandRow(cell.intRow.rowID);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -453,7 +453,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(banner.parent.attributes['aria-hidden']).toEqual('false');
 
             // Collapse parent row
-            grid.collapseRow(cell.row.rowID);
+            grid.collapseRow(cell.intRow.rowID);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));

@@ -110,7 +110,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     public get showExpanderIndicator() {
-        const isGhost = this.row.pinned && this.row.disabled;
-        return !this.editMode && (!this.row.pinned || isGhost);
+        const isGhost = this.intRow.pinned && this.intRow.disabled;
+        return !this.editMode && (!this.intRow.pinned || isGhost);
     }
 }
