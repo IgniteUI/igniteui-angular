@@ -24,7 +24,7 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       tags: 'grid',
-      skipTags: 'perf'
+      skipTags: 'perf,ivy' // TODO: Remove ivy skip, once Azure run is updated
     },
     port: 9876,
     colors: true,

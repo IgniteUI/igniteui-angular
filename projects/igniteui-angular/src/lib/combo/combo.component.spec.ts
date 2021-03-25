@@ -2885,7 +2885,7 @@ class IgxComboSampleComponent {
      */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public density = DisplayDensity.cosy;
+    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items = [];
     public initData = [];
@@ -2923,7 +2923,7 @@ class IgxComboSampleComponent {
         this.initData = this.items;
     }
 
-    onSelectionChange(ev: IComboSelectionChangeEventArgs) {
+    public onSelectionChange() {
     }
 }
 
@@ -2955,14 +2955,14 @@ class IgxComboFormComponent {
     public combo: IgxComboComponent;
     public items = [];
 
-    get valuesTemplate() {
+    public get valuesTemplate() {
         return this.combo.selectedItems();
     }
-    set valuesTemplate(values: any[]) {
+    public set valuesTemplate(values: any[]) {
         this.combo.selectItems(values);
     }
 
-    reactiveForm: FormGroup;
+    public reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
 
@@ -3001,9 +3001,9 @@ class IgxComboFormComponent {
         });
 
     }
-    onSubmitReactive() { }
+    public onSubmitReactive() { }
 
-    onSubmitTemplateBased() { }
+    public onSubmitTemplateBased() { }
 }
 
 @Component({
@@ -3020,7 +3020,8 @@ class IgxComboFormComponent {
 `
 })
 class IgxComboInTemplatedFormComponent {
-    @ViewChild('testCombo', { read: IgxComboComponent, static: true }) testCombo: IgxComboComponent;
+    @ViewChild('testCombo', { read: IgxComboComponent, static: true })
+    public testCombo: IgxComboComponent;
     public items: any[] = [];
     public values: Array<any>;
 
@@ -3195,13 +3196,13 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.remoteDataService.getData(evt, () => {
             this.cdr.detectChanges();
         });
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.cdr.detach();
     }
 }
@@ -3214,7 +3215,7 @@ export class ComboModelBindingComponent implements OnInit {
     public items: any[];
     public selectedItems: any[];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
         { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
     }

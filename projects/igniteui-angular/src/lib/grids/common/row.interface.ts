@@ -6,7 +6,6 @@ export interface RowType {
     rowID: any;
     rowData: any;
     disabled: boolean;
-    rowSelectable: boolean;
     index: number;
     gridID: string;
     added: boolean;

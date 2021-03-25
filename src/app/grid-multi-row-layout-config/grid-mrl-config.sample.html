@@ -54,8 +54,8 @@
                             </span>
                             <span #resizeHandleBottom class="resizerBottom"
                                 (pointerdown)="pointerDownResize($event, rowIndex, colIndex)"
-                                (pointermove)="pointerMoveResizeBottom($event, gridCell, rowIndex, colIndex)"
-                                (pointerup)="pointerUpResizeBottom($event, gridCell, rowIndex, colIndex)">
+                                (pointermove)="pointerMoveResizeBottom($event, rowIndex)"
+                                (pointerup)="pointerUpResizeBottom(rowIndex)">
                             </span>
                         </ng-container>
                     </div>
@@ -76,17 +76,17 @@
     </div>
     <igx-grid *ngIf="renderGrid" [rowSelection]="selectionMode" #grid [data]="data" displayDensity="compact" [width]="'800px'">
         <igx-column-layout [movable]="false" [pinned]="false">
-            <igx-column *ngFor="let col of gridCollection" [field]="col.key" sortable="true" resizable="true"
+            <igx-column *ngFor="let col of gridCollection" [field]="col.key" [sortable]="true" [resizable]="true"
                 [rowStart]="col.rowStart" [rowEnd]="col.rowStart + col.rowSpan" [colStart]="col.colStart" [colEnd]="col.colStart + col.colSpan" ></igx-column>
         </igx-column-layout>
         <!-- <igx-column-group [movable]="false" [pinned]="false">
-            <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" sortable="true" resizable="true" field="ContactName" [width]='"50%"'></igx-column>
-            <igx-column [rowStart]="1" [colStart]="2" [movable]="false" sortable="true" resizable="true" field="ContactTitle" [width]='"10%"'></igx-column>
-            <igx-column [rowStart]="1" [colStart]="3" [movable]="false" sortable="true" resizable="true" field="Country" [width]='"15%"'></igx-column>
-            <igx-column [rowStart]="1" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Phone" [width]='"15%"'></igx-column>
-             <igx-column [rowStart]="2" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="City"></igx-column>
-            <igx-column [rowStart]="3" [colStart]="4" [movable]="false" sortable="true" resizable="true" field="Address"></igx-column>
-            <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="4" [colEnd]="4" [movable]="false" [filterable]="false" sortable="true" resizable="true"  field="CompanyName"></igx-column>
+            <igx-column [rowStart]="1" [colStart]="1" [movable]="false" [pinned]="false" [sortable]="true" [resizable]="true" field="ContactName" [width]='"50%"'></igx-column>
+            <igx-column [rowStart]="1" [colStart]="2" [movable]="false" [sortable]="true" [resizable]="true" field="ContactTitle" [width]='"10%"'></igx-column>
+            <igx-column [rowStart]="1" [colStart]="3" [movable]="false" [sortable]="true" [resizable]="true" field="Country" [width]='"15%"'></igx-column>
+            <igx-column [rowStart]="1" [colStart]="4" [movable]="false" [sortable]="true" [resizable]="true" field="Phone" [width]='"15%"'></igx-column>
+             <igx-column [rowStart]="2" [colStart]="4" [movable]="false" [sortable]="true" [resizable]="true" field="City"></igx-column>
+            <igx-column [rowStart]="3" [colStart]="4" [movable]="false" [sortable]="true" [resizable]="true" field="Address"></igx-column>
+            <igx-column [rowStart]="2" [colStart]="1" [rowEnd]="4" [colEnd]="4" [movable]="false" [filterable]="false" [sortable]="true" [resizable]="true"  field="CompanyName"></igx-column>
         </igx-column-group> -->
     </igx-grid>
 

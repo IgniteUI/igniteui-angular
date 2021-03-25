@@ -269,7 +269,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-     public set hasSummary(value) {
+    public set hasSummary(value) {
         this._hasSummary = value;
 
         if (this.grid) {
