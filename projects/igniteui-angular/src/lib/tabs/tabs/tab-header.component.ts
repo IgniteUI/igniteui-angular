@@ -12,7 +12,6 @@ import { KEYS } from '../../core/utils';
     providers: [{ provide: IgxTabHeaderBase, useExisting: IgxTabHeaderComponent }]
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
-    private _resizeObserver: ResizeObserver;
 
     /** @hidden */
     @HostBinding('class.igx-tabs__header-item--selected')
@@ -28,7 +27,9 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
 
     /** @hidden */
     @HostBinding('class.igx-tabs__header-item')
-    public cssClass = 'igx-tabs__header-item'
+    public cssClass = true;
+
+    private _resizeObserver: ResizeObserver;
 
     /** @hidden */
     constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef, private ngZone: NgZone) {
