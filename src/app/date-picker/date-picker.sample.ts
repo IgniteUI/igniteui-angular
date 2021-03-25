@@ -2,10 +2,6 @@ import { Component, ViewChild } from '@angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular';
 import { formatDate } from '@angular/common';
 
-import { registerLocaleData } from '@angular/common';
-// import localeDE from '@angular/common/locales/de';
-import localeJA from '@angular/common/locales/ja';
-
 @Component({
     selector: 'app-date-picker-sample',
     styleUrls: ['date-picker.sample.scss'],
@@ -43,8 +39,6 @@ export class DatePickerSampleComponent {
     ];
 
     constructor() {
-        registerLocaleData(localeJA);
-        // registerLocaleData(localeDE);
         const date1 = new Date();
         date1.setDate(8);
         date1.setMonth(5);

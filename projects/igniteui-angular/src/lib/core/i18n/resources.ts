@@ -4,13 +4,15 @@ import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-
 import { IPaginatorResourceStrings, PaginatorResourceStringsEN } from './paginator-resources';
 import { cloneValue } from '../utils';
 import { ICarouselResourceStrings, CarouselResourceStringsEN } from './carousel-resources';
+import { IChipResourceStrings, ChipResourceStringsEN } from './chip-resources';
 import { IListResourceStrings, ListResourceStringsEN } from './list-resources';
 import { CalendarResourceStringsEN, ICalendarResourceStrings } from './calendar-resources';
 import { IInputResourceStrings, InputResourceStringsEN } from './input-resources';
 import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
-    ICarouselResourceStrings, IInputResourceStrings, IDateRangePickerResourceStrings, IListResourceStrings, IPaginatorResourceStrings { }
+    ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDateRangePickerResourceStrings, IListResourceStrings,
+    IPaginatorResourceStrings { }
 
 /**
  * @hidden
@@ -20,6 +22,7 @@ export const CurrentResourceStrings = {
     PaginatorResStrings: cloneValue(PaginatorResourceStringsEN),
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
     CalendarResStrings: cloneValue(CalendarResourceStringsEN),
+    ChipResStrings: cloneValue(ChipResourceStringsEN),
     DateRangePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
@@ -52,6 +55,7 @@ export const changei18n = (resourceStrings: IResourceStrings) => {
 export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.CalendarResStrings,
     ...CurrentResourceStrings.CarouselResStrings,
+    ...CurrentResourceStrings.ChipResStrings,
     ...CurrentResourceStrings.DateRangePickerResStrings,
     ...CurrentResourceStrings.GridResStrings,
     ...CurrentResourceStrings.InputResStrings,
