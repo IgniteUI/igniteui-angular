@@ -26,7 +26,7 @@ const EXPANDED_ICON_NAME = 'expand_more';
 const HIERARCHICAL_INDENT_CLASS = '.igx-grid__hierarchical-indent';
 const SELECTED_ROW_CALSS_NAME = 'igx-grid__tr--selected';
 
-fdescribe('IgxGrid Master Detail #grid', () => {
+describe('IgxGrid Master Detail #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
 
