@@ -227,11 +227,9 @@
     $item-min-width: 90px;
     $item-max-width: 360px;
 
-    $item-padding: 0 rem(16px);
-    $tabs-height: rem(48px);
-    $tabs-height-icon: rem(72px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
-    $icon-label-space: rem(12px);
+
+    $item-padding: rem(11px) rem(16px);
 
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
@@ -239,7 +237,7 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    $icon-in-button-margin: (
+    $icon-space: (
         comfortable: rem(12px),
         cosy: rem(8px),
         compact: rem(4px)
@@ -248,7 +246,8 @@
     %tabs-display,
     %tabs-header,
     %tabs-header-button,
-    %tabs-header-item-inner {
+    %tabs-header-item-inner,
+    %tabs-header-content {
         display: flex;
     }
 
@@ -260,6 +259,8 @@
         overflow: hidden;
         background: --var($theme, 'item-background');
         box-shadow: --var($theme, 'tab-area-shadow');
+        min-height: rem(42px);
+        z-index: 1;
 
         @if $bootstrap-theme or $indigo-theme {
             box-shadow: none;
@@ -300,7 +301,6 @@
         padding: 0;
         min-width: rem(48px);
         width: rem(48px);
-        min-height: $tabs-height;
         cursor: pointer;
         position: relative;
         background: --var($theme, 'button-background');
@@ -338,14 +338,13 @@
     }
 
     %tabs-header-item {
-        @include _icon-w-margin(map-get($icon-in-button-margin, 'comfortable'), $left);
+        @include _icon-w-margin(map-get($icon-space, 'comfortable'), $left);
         display: inline-flex;
         justify-content: center;
         align-items: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
         word-wrap: break-word;
-        min-height: $tabs-height;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
         flex-shrink: 0;
@@ -435,12 +434,8 @@
             color: --var($theme, 'item-active-color');
         }
 
-        %igx-tabs__header-item-icon {
+        igx-icon {
             color: --var($theme, 'item-active-icon-color');
-
-            igx-icon {
-                color: --var($theme, 'item-active-icon-color');
-            }
         }
 
         @if $bootstrap-theme {
@@ -477,8 +472,7 @@
         @if not $indigo-theme {
             opacity: .5;
         } @else  {
-            %igx-tabs__header-item-icon,
-            %igx-tabs__item-label {
+            > * {
                 opacity: .4;
             }
         }
@@ -490,6 +484,15 @@
         align-items: center;
         justify-content: center;
         flex-direction: column;
+        text-align: center;
+
+        > [igxtabheadericon] {
+            margin-bottom: rem(8px);
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
     }
 
     %tabs-header-active-indicator {
@@ -532,39 +535,25 @@
         }
     }
 
-    %igx-tabs--icons {
-        %tabs-header-button,
+    %tabs-header-scroll--start {
+        justify-content: flex-start;
+    }
+
+    %tabs-header-scroll--end {
+        justify-content: flex-end;
+    }
+
+    %tabs-header-scroll--center {
+        justify-content: center;
+    }
+
+    %tabs-header-scroll--justify {
         %tabs-header-item {
-            min-height: $tabs-height-icon;
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
         }
     }
-
-    %igx-tabs--start {
-        %tabs-header-scroll {
-            justify-content: flex-start;
-        }
-    }
-
-    %igx-tabs--end {
-        %tabs-header-scroll {
-            justify-content: flex-end;
-        }
-    }
-
-    %igx-tabs--center {
-        %tabs-header-scroll {
-            justify-content: center;
-        }
-    }
-
-    %igx-tabs--justify {
-        %tabs-header-item {
-            flex: 1 1 auto;
-            width: 100%;
-        }
-    }
-
-
 
     //%igx-tabs {
     //    display: flex;
@@ -891,7 +880,7 @@
 @mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
     $label: map-get($categories, 'label');
 
-    %igx-tabs__item-label {
+    %tabs-header-item-inner > [igxtabheaderlabel]{
         @include igx-type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;

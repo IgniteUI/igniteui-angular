@@ -11,26 +11,6 @@
 
     @extend %tabs-display !optional;
 
-    @include m(icons) {
-        @extend %igx-tabs--icons !optional;
-    }
-
-    @include m(start) {
-        @extend %igx-tabs--start !optional;
-    }
-
-    @include m(end) {
-        @extend %igx-tabs--end !optional;
-    }
-
-    @include m(center) {
-        @extend %igx-tabs--center !optional;
-    }
-
-    @include m(justify) {
-        @extend %igx-tabs--justify !optional;
-    }
-
     @include e(header) {
         @extend %tabs-header !optional;
     }
@@ -53,6 +33,22 @@
 
     @include e(header-scroll) {
         @extend %tabs-header-scroll !optional;
+    }
+
+    @include e(header-scroll, $m: start) {
+        @extend %tabs-header-scroll--start !optional;
+    }
+
+    @include e(header-scroll, $m: end) {
+        @extend %tabs-header-scroll--end !optional;
+    }
+
+    @include e(header-scroll, $m: center) {
+        @extend %tabs-header-scroll--center !optional;
+    }
+
+    @include e(header-scroll, $m: justify) {
+        @extend %tabs-header-scroll--justify !optional;
     }
 
     @include e(header-item) {
@@ -82,6 +78,7 @@
     @include e(panel) {
         @extend %tabs-panel !optional;
     }
+
 
     //@extend %igx-tabs !optional;
 

@@ -87,6 +87,7 @@ export class IgxTabsComponent extends IgxTabsDirective {
             'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
             'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
             'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
+            'igx-tabs__header-scroll--justify': this.tabAlignment === 'justify',
         };
     }
 
