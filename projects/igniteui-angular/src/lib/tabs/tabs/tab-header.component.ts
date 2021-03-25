@@ -117,3 +117,4 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         });
     }
 }
+
