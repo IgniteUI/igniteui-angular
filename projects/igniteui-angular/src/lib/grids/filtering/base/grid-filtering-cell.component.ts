@@ -106,7 +106,7 @@ export class IgxGridFilteringCellComponent implements AfterViewInit, OnInit, DoC
         this.updateVisibleFilters();
     }
 
-    public get displayDensity(): string {
+    public get displayDensity(): DisplayDensity {
         return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 

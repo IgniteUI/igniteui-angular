@@ -8,6 +8,7 @@ import {
     ViewChild } from '@angular/core';
 import {
     DefaultSortingStrategy,
+    GridSelectionMode,
     IgxGridComponent,
     SortingDirection
 } from 'igniteui-angular';
@@ -28,7 +29,7 @@ export class GridFinJSComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public data = [];
     public multiCellSelection: { data: any[] } = { data: [] };
-    public selectionMode = 'multiple';
+    public selectionMode: GridSelectionMode = 'multiple';
     public contracts = Contract;
     public regions = REGIONS;
     public showToolbar = true;

@@ -61,7 +61,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
     public resizeHeight = 0;
     public selectionMode;
 
-    public columnsList = [
+    public columnsList: {key: string; field: string; hide?: boolean} [] = [
         { key: 'ContactName', field: 'Contact name'},
         { key: 'ContactTitle', field: 'Contact title'},
         { key: 'CompanyName', field: 'Company name'},
@@ -468,7 +468,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         this.colSpanIncrease = 0;
     }
 
-    public pointerMoveResizeBottom(event, cellRef, rowIndex) {
+    public pointerMoveResizeBottom(event, rowIndex) {
         if (this.dragStarted) {
             const curDistance = event.pageY - this.dragStartY;
             const maxIncrease = this.rowsCount - rowIndex - this.curResizedCell.rowSpan;
@@ -477,7 +477,7 @@ export class GridMRLConfigSampleComponent implements AfterViewInit {
         }
     }
 
-    public pointerUpResizeBottom(event, cellRef, rowIndex) {
+    public pointerUpResizeBottom(rowIndex) {
         this.dragStarted = false;
         this.resizeVisible = false;
 

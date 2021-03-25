@@ -17,7 +17,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxNavigationService, IToggleView } from '../core/navigation';
-import { IgxButtonModule } from '../directives/button/button.directive';
+import { IgxButtonModule, IgxButtonType } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxDialogActionsDirective, IgxDialogTitleDirective } from './dialog.directives';
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
@@ -145,7 +145,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Input()
-    public leftButtonType = 'flat';
+    public leftButtonType: IgxButtonType = 'flat';
     /**
      * An @Input property to set the left button color. The property accepts all valid CSS color property values.
      * ```html
@@ -194,7 +194,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Input()
-    public rightButtonType = 'flat';
+    public rightButtonType: IgxButtonType = 'flat';
 
     /**
      * An @Input property to set the right button `color`. The property accepts all valid CSS color property values.

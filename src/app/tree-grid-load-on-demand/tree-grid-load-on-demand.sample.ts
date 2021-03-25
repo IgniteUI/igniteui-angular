@@ -1,7 +1,9 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxTreeGridComponent, IgxExcelExporterService, IgxCsvExporterService, IgxGridTransaction, IgxHierarchicalTransactionService,
          IgxExcelExporterOptions, IgxCsvExporterOptions, CsvFileTypes, IgxSummaryOperand, IgxSummaryResult,
-         GridSelectionMode } from 'igniteui-angular';
+         GridSelectionMode,
+         GridSummaryCalculationMode,
+         DisplayDensity} from 'igniteui-angular';
 import { TreeGridLoadOnDemandService } from './tree-grid-load-on-demand.service';
 
 export class MySummaryOperand extends IgxSummaryOperand {
@@ -30,11 +32,11 @@ export class TreeGridLoadOnDemandSampleComponent implements OnInit {
     public data1: Array<any>;
     public data2: Array<any>;
     public columns: Array<any>;
-    public summaryMode = 'rootLevelOnly';
+    public summaryMode: GridSummaryCalculationMode = GridSummaryCalculationMode.rootLevelOnly;
     public summaryModes = [];
     public selectionMode;
 
-    public density = '';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
     private dataService = new TreeGridLoadOnDemandService();
     private nextRow = 1;
