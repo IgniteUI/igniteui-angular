@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { STATE_POSSIBLE } from 'hammerjs';
 import {
     IgxGridComponent,
     IgxTransactionService,
     IgxGridTransaction,
     GridSelectionMode,
     RowType,
-    TreeGridRowType,
-    IgxTreeGridComponent
+    IgxTreeGridComponent,
+    IgxHierarchicalGridComponent
 } from 'igniteui-angular';
 
 @Component({
@@ -44,7 +45,7 @@ export class GridRowAPISampleComponent implements OnInit {
     public tKey = '';
     public hKey = '';
 
-    constructor() { }
+    constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
         this.columns = [
@@ -168,13 +169,33 @@ export class GridRowAPISampleComponent implements OnInit {
     }
 
     public toggleTGridPinning(byIndex: boolean) {
-        const row: TreeGridRowType = byIndex ? this.treeGrid.getRowByIndex(this.tIndex) :
+        const row = byIndex ? this.treeGrid.getRowByIndex(this.tIndex) :
             this.treeGrid.getRowByKey(this.tKey);
         if (row.pinned) {
             row.unpin();
         } else {
             row.pin();
         }
+    }
+
+    public deleteRow(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        row.delete();
+    }
+
+    public toggle(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        row.expanded = !row.expanded;
+    }
+
+    public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        row.selected = !row.selected;
+    }
+
+    public deleted(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        row.selected = !row.selected;
     }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
@@ -200,5 +221,36 @@ export class GridRowAPISampleComponent implements OnInit {
             });
         }
         return prods;
+    }
+
+    public clearLog(logger: HTMLElement) {
+        const elements = logger.querySelectorAll('p');
+
+        elements.forEach(element => {
+            this.renderer.removeChild(logger, element);
+        });
+    }
+
+    public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number, logger: HTMLElement) {
+        this.clearLog(logger);
+        const row = grid.getRowByIndex(index);
+        const state = `key: ${row.key},
+            pinned: ${row.pinned},
+            deleted: ${row.deleted},
+            inEditMode: ${row.inEditMode},
+            expanded: ${row.expanded},
+            selected: ${row.selected},
+            hasChildren: ${row.hasChildren},
+            disabled: ${row.disabled}`;
+        const states = state.split(',');
+        const createElem = this.renderer.createElement('p');
+
+        states.forEach(st => {
+            const text = this.renderer.createText(st);
+            this.renderer.appendChild(createElem, text);
+            this.renderer.appendChild(createElem, this.renderer.createElement('br'));
+        });
+
+        this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
 }
