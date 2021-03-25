@@ -654,7 +654,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const index = this.data.map(rec => rec[this.primaryKey]).indexOf(key);
+        const index = this.primaryKey ?
+            this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(key) :
+            this.filteredSortedData.indexOf(key);
         if (index < 0) {
             return undefined;
         }

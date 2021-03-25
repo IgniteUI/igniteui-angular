@@ -4055,7 +4055,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param keyValue
      */
     public getRowByKey(keyValue: any): RowType {
-        const index = this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(keyValue);
+        const index = this.primaryKey ?
+             this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(keyValue) :
+             this.filteredSortedData.indexOf(keyValue);
         if (index < 0) {
             return undefined;
         }

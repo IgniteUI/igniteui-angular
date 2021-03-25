@@ -709,8 +709,6 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(0);
-            expect(row).not.toBeDefined();
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThanOrEqual(100);
         });
 

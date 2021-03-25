@@ -292,7 +292,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify collapsed group sub records are not rendered
 
         for (const rec of groupRows[0].groupRow.records) {
-            expect(grid.getRowByKey(rec.ID)).toBeUndefined();
+            expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
 
         // toggle grouprow - expand

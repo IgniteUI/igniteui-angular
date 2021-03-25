@@ -460,9 +460,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
-        const row = grid.getRowByKey(rowID);
         expect(grid.data.length).toBe(11);
-        expect(row).toBeUndefined();
 
         grid.deleteRow(rowID);
         fix.detectChanges();
