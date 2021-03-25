@@ -67,8 +67,8 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        const expansionState = this.gridAPI.get_row_expansion_state(this.row.rowData);
-        this.gridAPI.set_row_expansion_state(this.row.rowID, !expansionState, event);
+        const expansionState = this.gridAPI.get_row_expansion_state(this.intRow.rowData);
+        this.gridAPI.set_row_expansion_state(this.intRow.rowID, !expansionState, event);
     }
 
     /**

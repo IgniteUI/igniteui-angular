@@ -4061,8 +4061,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        const row = this.gridAPI.get_row_by_index(index) ?? this.createRow(index);
-        return new IgxGridRow(row);
+        if (index < 0 || index >= this.filteredSortedData.length) {
+            return undefined;
+        }
+        return new IgxGridRow(index, this);
     }
 
     /**
@@ -4077,12 +4079,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param keyValue
      */
     public getRowByKey(keyValue: any): RowType {
-        let row = this.gridAPI.get_row_by_key(keyValue);
-        if (!row) {
-            const index = this.data.map(rec => rec[this.primaryKey]).indexOf(keyValue);
-            row = this.createRow(index);
+        const index = this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(keyValue);
+        if (index < 0) {
+            return undefined;
         }
-        return new IgxGridRow(row);
+        return new IgxGridRow(index, this);
     }
 
     /**
@@ -6125,22 +6126,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endAddRow() {
         this.cancelAddMode = true;
         this.triggerPipes();
-    }
-
-    /**
-     * @hidden @internal
-     * Creates an instance of the row component, based on index. If index is out of the data array bounds, returns undefined.
-     */
-    public createRow(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        const rec = this.filteredSortedData[index];
-        if (!rec) {
-            return undefined;
-        }
-        const row = new IgxRowDirective(this.gridAPI as GridBaseAPIService<IgxGridComponent>,
-            this.crudService, this.selectionService, null, this.cdr);
-        row.rowData = rec;
-        row.index = index;
-        return row;
     }
 
     protected writeToData(rowIndex: number, value: any) {

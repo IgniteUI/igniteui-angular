@@ -116,6 +116,27 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.grid.isRecordPinned(this.rowData);
     }
 
+    /**
+     * Gets the expanded state of the row.
+     * ```typescript
+     * let isExpanded = row.expanded;
+     * ```
+     */
+    public get expanded(): boolean {
+        return this.gridAPI.get_row_expansion_state(this.rowData);
+    }
+
+    /**
+     * Expands/collapses the current row.
+     *
+     * ```typescript
+     * this.grid.selectedRows[2].expanded = true;
+     * ```
+     */
+    public set expanded(val: boolean) {
+        this.gridAPI.set_row_expansion_state(this.rowID, val);
+    }
+
     @Input()
     public get addRow(): any {
         return this._addRow;

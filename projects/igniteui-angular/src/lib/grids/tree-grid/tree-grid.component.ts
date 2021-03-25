@@ -38,9 +38,8 @@ import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridSelectionMode } from '../common/enums';
-import { TreeGridRowType } from '../common/row.interface';
 import { IgxTreeGridRow } from '../grid-public-row';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
+import { RowType } from '../common/row.interface';
 
 let NEXT_ID = 0;
 
@@ -565,7 +564,16 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @internal
      */
     public getInitialPinnedIndex(rec) {
-        return this._pinnedRecordIDs.indexOf(rec.rowID);
+        const id = this.gridAPI.get_row_id(rec);
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordPinned(rec) {
+        return this.getInitialPinnedIndex(rec.data) !== -1;
     }
 
     /**
@@ -621,7 +629,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns the `TreeGridRowType` object by index.
+     * Returns the `RowType` object by index.
      *
      * @example
      * ```typescript
@@ -629,44 +637,28 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * ```
      * @param index
      */
-    public getRowByIndex(index: number): TreeGridRowType {
-        const row = this.gridAPI.get_row_by_index(index) ?? this.createRow(index);
-        return new IgxTreeGridRow(row as IgxTreeGridRowComponent);
-    }
-
-    /**
-     * Returns the `TreeGridRowType` object by the specified primary key.
-     *
-     * @example
-     * ```typescript
-     * const myRow = this.treeGrid.getRowByIndex(1);
-     * ```
-     * @param index
-     */
-    public getRowByKey(key: any): TreeGridRowType {
-        let row = this.gridAPI.get_row_by_key(key);
-        if (!row) {
-            const index = this.data.map(rec => rec[this.primaryKey]).indexOf(key);
-            row = this.createRow(index);
-        }
-        return new IgxTreeGridRow(row as IgxTreeGridRowComponent);
-    }
-
-    /**
-     * @hidden @internal
-     * Creates an instance of the row component, based on index. If index is out of the data array bounds, returns undefined.
-     */
-    public createRow(index: number): IgxTreeGridRowComponent {
-        const rec = this.filteredSortedData[index];
-        if (!rec) {
+    public getRowByIndex(index: number): RowType {
+        if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
-        const row = new IgxTreeGridRowComponent(this.gridAPI as GridBaseAPIService<IgxTreeGridComponent>,
-            this.crudService, this.selectionService, null, this.cdr);
-        row.rowData = rec;
-        row.index = index;
-        row.treeRow = this.findTreeRow(this.rootRecords, row.rowID);
-        return row;
+        return new IgxTreeGridRow(index, this);
+    }
+
+    /**
+     * Returns the `RowType` object by the specified primary key.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.treeGrid.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByKey(key: any): RowType {
+        const index = this.data.map(rec => rec[this.primaryKey]).indexOf(key);
+        if (index < 0) {
+            return undefined;
+        }
+        return new IgxTreeGridRow(index, this);
     }
 
     /** @hidden */
@@ -773,9 +765,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     private deselectChildren(recordID): void {
         const selectedChildren = [];
-        const rowToDeselect = (this.getRowByKey(recordID) as TreeGridRowType).treeRow;
+        const rowToDeselect = this.getRowByKey(recordID);
         this.selectionService.deselectRow(recordID);
-        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        this._gridAPI.get_selected_children(rowToDeselect.children, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
         }
@@ -857,20 +849,5 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 this.notifyChanges();
             }
         });
-    }
-
-    private findTreeRow(records: ITreeGridRecord[], rowID: any): ITreeGridRecord {
-        const flatRecords = [];
-        this.flattenTreeGridRecords(records, flatRecords);
-        return flatRecords.find((tr: ITreeGridRecord) => tr.rowID === rowID);
-    }
-
-    private flattenTreeGridRecords(records: ITreeGridRecord[], flatRecords: any[]) {
-        if (records && records.length) {
-            for (const record of records) {
-                flatRecords.push(record);
-                this.flattenTreeGridRecords(record.children, flatRecords);
-            }
-        }
     }
 }

@@ -1,9 +1,7 @@
-import { QueryList } from '@angular/core';
-import { GridType } from './common/grid.interface';
-import { RowType, TreeGridRowType } from './common/row.interface';
+import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxRowDirective } from './row.directive';
-import { IgxTreeGridRowComponent } from './tree-grid/tree-grid-row.component';
+import { IgxGridComponent } from './grid/grid.component';
+import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 export class IgxGridRow implements RowType {
@@ -15,20 +13,8 @@ export class IgxGridRow implements RowType {
      * let selectedRowData = this.grid.selectedRows[0].rowData;
      * ```
      */
-    public get rowData(): any {
-        return this._row.rowData;
-    }
-
-    public set rowData(v: any) {
-        this._row.rowData = v;
-    }
-
-    public get addRow(): any {
-        return this._row.addRow;
-    }
-
-    public set addRow(v: any) {
-        this._row.addRow = v;
+    public get data(): any {
+        return this.grid.filteredSortedData[this.index];
     }
 
     /**
@@ -39,10 +25,15 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get pinned(): boolean {
-        return this._row.pinned;
+        return this.grid.isRecordPinned(this.data);
     }
-    public set pinned(v: boolean) {
-        this._row.pinned = v;
+
+    public set pinned(val: boolean) {
+        if (val) {
+            this.grid.pinRow(this.key);
+        } else {
+            this.grid.unpinRow(this.key);
+        }
     }
 
     /**
@@ -53,13 +44,19 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get selected(): boolean {
-        return this._row.selected;
+        return this.grid.selectionService.isRowSelected(this.key);
     }
 
-    public set selected(v: boolean) {
-        this._row.selected = v;
+    public set selected(val: boolean) {
+        if (val) {
+            this.grid.selectionService.selectRowsWithNoEvent([this.key]);
+        } else {
+            this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
+        }
+        this.grid.cdr.markForCheck();
     }
 
+    // todo TODO ROW
     /**
      * Sets whether this specific row has disabled functionality for editing and row selection.
      * Default value is `false`.
@@ -68,100 +65,91 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get disabled(): boolean {
-        return this._row.disabled;
-    }
-    public set disabled(v: boolean) {
-        this._row.disabled = v;
+        return false;
     }
 
     /**
-     * Gets the rendered cells in the row component.
-     *
-     * ```typescript
-     * // get the cells of the third selected row
-     * let selectedRowCells = this.grid.selectedRows[2].cells;
-     * ```
+     * Returns the index of the row in the rows collection.
      */
-    public get cells(): QueryList<any> {
-        return this._row.cells;
-    }
+    public index: number;
 
-    public get index(): number {
-        return this._row.index;
-    }
-
-    public get dataRowIndex(): number {
-        return this._row.dataRowIndex;
-    }
-
+    /**
+     * Returns if the row is in delete state.
+     */
     public get deleted(): boolean {
-        return this._row.deleted;
+        return this.grid.gridAPI.row_deleted_transaction(this.key);
     }
 
+    /**
+     * Returns if the row is currently in edit mode.
+     */
     public get inEditMode(): boolean {
-        return this._row.inEditMode;
+        if (this.grid.rowEditable) {
+            const editRowState = this.grid.crudService.row;
+            return (editRowState && editRowState.id === this.key) || false;
+        } else {
+            return false;
+        }
     }
 
-    public get added(): boolean {
-        return this._row.added;
+    /**
+     * Returns the child rows. Always returns null for IgxGridRow.
+     */
+    public get children(): any[] {
+        return null;
     }
 
-    public get focused(): boolean {
-        return this._row.focused;
+    /**
+     * Returns true if child rows exist. Always return false for IgxGridRow.
+     */
+    public get hasChildren(): boolean {
+        return false;
     }
 
+    /**
+     * Gets/sets the row expanded state.
+     */
     public get expanded(): boolean {
-        return this.grid.gridAPI.get_row_expansion_state(this.rowData);
+        return this.grid.gridAPI.get_row_expansion_state(this.data);
+    }
+
+    public set expanded(val: boolean) {
+        this.grid.gridAPI.set_row_expansion_state(this.key, val);
     }
 
     /**
      * Get a reference to the grid that contains the selected row.
-     *
-     * ```typescript
-     * handleRowSelection(event) {
-     *  // the grid on which the onRowSelectionChange event was triggered
-     *  const grid = event.row.grid;
-     * }
-     * ```
-     *
-     * ```html
-     *  <igx-grid
-     *    [data]="data"
-     *    (onRowSelectionChange)="handleRowSelection($event)">
-     *  </igx-grid>
-     * ```
      */
-    public get grid(): IgxGridBaseDirective {
-        return this._row.grid;
+    protected get grid(): IgxGridComponent {
+        return this._grid as IgxGridComponent;
     }
 
     /**
-     * Gets the ID of the grid, that contains the row.
-     *
-     * ```typescript
-     * let gridID = this.row.gridID;
-     * ```
-     */
-    public get gridID(): string {
-        return this.grid.id;
-    }
-
-    /**
-     * Gets the ID of the row.
+     * Gets the row key.
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole rowData, if the primaryKey is omitted.
      *
      * ```typescript
-     * let rowID = this.grid.selectedRows[2].rowID;
+     * let rowKey = row.key;
      * ```
      */
-    public get rowID(): any {
-        return this._row.rowID;
+    public get key(): any {
+        const primaryKey = this.grid.primaryKey;
+        return primaryKey ? this.data[primaryKey] : this.data;
     }
 
-    constructor(
-        private _row: IgxRowDirective<IgxGridBaseDirective & GridType>) {
+    /**
+     * TODO after cell facade class is implemented
+     * Gets the rendered cells in the row component.
+     * public get cells()
+     */
+
+    /**
+     * @hidden
+     */
+    constructor(index: number, private _grid: IgxGridBaseDirective) {
+        this.index = index;
     }
 
     /**
@@ -175,7 +163,11 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public update(value: any): void {
-        this._row.update(value);
+        const crudService = this.grid.crudService;
+        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
+            this.grid.endEdit(false);
+        }
+        this.grid.updateRow(value, this.key);
     }
 
     /**
@@ -188,18 +180,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public delete(): void {
-        this._row.delete();
-    }
-
-    /**
-     * Returns if cell at the passed index is the current activeNode in the grid.
-     *
-     * ```typescript
-     * const isActiveNode = row.isCellActive(index);
-     * ```
-     */
-    public isCellActive(visibleColumnIndex: number): boolean {
-        return this._row.isCellActive(visibleColumnIndex);
+        this.grid.deleteRowById(this.key);
     }
 
     /**
@@ -212,7 +193,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        return this._row.pin();
+        return this.grid.pinRow(this.key);
     }
 
     /**
@@ -225,27 +206,41 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public unpin(): boolean {
-        return this._row.unpin();
-    }
-
-    /**
-     * Spawns the add row UI for the specific row.
-     *
-     * @example
-     * ```typescript
-     * const row = this.grid1.getRowByIndex(1);
-     * row.beginAddRow();
-     * ```
-     */
-    public beginAddRow(): void {
-        this._row.beginAddRow();
+        return this.grid.unpinRow(this.key);
     }
 }
 
-export class IgxTreeGridRow extends IgxGridRow implements TreeGridRowType {
-    constructor(
-        private _trow: IgxTreeGridRowComponent) {
-            super(_trow);
+export class IgxTreeGridRow extends IgxGridRow implements RowType {
+    public get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
+     * Returns the child rows.
+     */
+    public get children(): ITreeGridRecord[] {
+        return this.treeRow.children;
+    }
+
+    /**
+     * Returns the parent row.
+     */
+    public get parent(): ITreeGridRecord {
+        return this.treeRow.parent;
+    }
+
+    /**
+     * Returns true if child rows exist. Always return false for IgxGridRow.
+     */
+    public get hasChildren(): boolean {
+        return this.treeRow.children.length > 0;
+    }
+
+    /**
+     * @hidden
+     */
+    constructor(index: number, private _tgrid: IgxTreeGridComponent) {
+        super(index, _tgrid);
     }
 
     /**
@@ -256,7 +251,40 @@ export class IgxTreeGridRow extends IgxGridRow implements TreeGridRowType {
      * const treeRow = row.treeRow;
      * ```
      */
-     public get treeRow(): ITreeGridRecord {
-         return this._trow.treeRow;
-     }
+    public get treeRow(): ITreeGridRecord {
+        return this._tgrid.records.get(this.key);
+    }
+
+    /**
+     * Gets whether the row is pinned.
+     *
+     * ```typescript
+     * let isPinned = row.pinned;
+     * ```
+     */
+    public get pinned(): boolean {
+        return this.grid.isRecordPinned(this);
+    }
+
+    /**
+     * Gets whether the row is expanded.
+     *
+     * ```typescript
+     * let esExpanded = row.expanded;
+     * ```
+     */
+    public get expanded(): boolean {
+        return this.grid.gridAPI.get_row_expansion_state(this.treeRow);
+    }
+
+    /**
+     * Expands/collapses the row.
+     *
+     * ```typescript
+     * row.expanded = true;
+     * ```
+     */
+    public set expanded(val: boolean) {
+        this.grid.gridAPI.set_row_expansion_state(this.key, val);
+    }
 }

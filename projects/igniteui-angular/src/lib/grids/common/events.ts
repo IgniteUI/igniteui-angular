@@ -10,6 +10,7 @@ import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { RowType } from './row.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -174,7 +175,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
      * The row component instance, that was pinned/unpinned.
      * May be undefined if row does not exist in the current visible data.
      */
-    readonly row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
+    readonly row?: RowType;
     /**
      * The ID of the row, that was pinned/unpinned.
      *   ID is either the primaryKey value or the data record instance.

@@ -12,7 +12,6 @@ import { FilterMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { TreeGridRowType } from '../grid/public_api';
 
 describe('IgxTreeGrid - Filtering actions #tGrid', () => {
     configureTestSuite();
@@ -449,8 +448,7 @@ describe('IgxTreeGrid - Filtering actions #tGrid', () => {
                 expect(treeGrid.filteredData.filter(c => c.Name === newCellValue).length).toBe(0);
 
                 // check if the parent which contains the edited row is not removed
-                expect(treeGrid.filteredData.filter(p => p.Name === (targetCell.row as TreeGridRowType)
-                    .treeRow.parent.data.Name).length).toBeGreaterThan(0);
+                expect(treeGrid.filteredData.filter(p => p.Name === targetCell.row.parent.data.Name).length).toBeGreaterThan(0);
 
                 treeGrid.clearFilter();
                 tick(16);
