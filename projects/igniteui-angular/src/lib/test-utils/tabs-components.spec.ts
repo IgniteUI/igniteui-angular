@@ -141,7 +141,7 @@ export class TabsTest2Component {
 @Component({
     template: `
         <div #wrapperDiv>
-        <igx-tabs type="fixed">
+        <igx-tabs>
             <igx-tab-item>
                 <igx-tab-header>
                     <div>T1</div>
@@ -436,4 +436,51 @@ export class TabsDisabledTestComponent {
 })
 export class TabsTestHtmlAttributesComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+        <div #wrapperDiv>
+            <igx-tabs>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <span igxPrefix>Test:</span>
+                        <igx-icon igxTabHeaderIcon>library_music</igx-icon>
+                        <span igxTabHeaderLabel>Tab 1</span>
+                        <igx-icon igxSuffix>close</igx-icon>
+                    </igx-tab-header>
+                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <span igxPrefix>Test:</span>
+                        <igx-icon igxTabHeaderIcon>video_library</igx-icon>
+                        <span igxTabHeaderLabel>Tab 2</span>
+                    </igx-tab-header>
+                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                </igx-tab-item>
+                <igx-tab-item>
+                    <igx-tab-header>
+                        <igx-icon igxTabHeaderIcon>library_books</igx-icon>
+                        <span igxTabHeaderLabel>Tab 3</span>
+                        <igx-icon igxSuffix>close</igx-icon>
+                    </igx-tab-header>
+                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
+                        Vivamus sit amet purus eu lectus cursus rhoncus quis non ex.
+                        Cras ac nulla sed arcu finibus volutpat.
+                        Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio.
+                        Integer id velit rutrum, accumsan ante a, semper nunc.
+                        Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam.
+                         Nullam elementum, libero vel varius fermentum, lorem ex bibendum nulla,
+                         pretium lacinia erat nibh vel massa.
+                        In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem,
+                        a accumsan lectus nisl facilisis leo.
+                        Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
+                    </igx-tab-panel>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>`
+})
+export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
 }

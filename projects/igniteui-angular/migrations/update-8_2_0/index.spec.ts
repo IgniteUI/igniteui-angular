@@ -28,7 +28,7 @@ describe('Update 8.2.0', () => {
     it('should update Excel Style Filtering template selectors', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html',
-            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
                 <ng-template igxExcelStyleSortingTemplate><div class="esf-custom-sorting">Sorting Template</div></ng-template>
                 <ng-template igxExcelStyleHidingTemplate><div class="esf-custom-hiding">Hiding Template</div></ng-template>
                 <ng-template igxExcelStyleMovingTemplate><div class="esf-custom-moving">Moving Template</div></ng-template>
@@ -39,7 +39,7 @@ describe('Update 8.2.0', () => {
             .toPromise();
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(
-            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+            `<igx-grid [data]="data" height="500px" [autoGenerate]="true" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
                 <ng-template igxExcelStyleSorting><div class="esf-custom-sorting">Sorting Template</div></ng-template>
                 <ng-template igxExcelStyleHiding><div class="esf-custom-hiding">Hiding Template</div></ng-template>
                 <ng-template igxExcelStyleMoving><div class="esf-custom-moving">Moving Template</div></ng-template>

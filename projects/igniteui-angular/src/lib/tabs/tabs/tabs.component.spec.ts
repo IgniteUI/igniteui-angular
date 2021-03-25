@@ -1,32 +1,33 @@
 import { QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { IgxTabItemComponent } from './tab-item.component';
-import { IgxTabsComponent } from './tabs.component';
+import { IgxTabsAlignment, IgxTabsComponent } from './tabs.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
 import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent, TabsRoutingTestComponent,
     TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsTest2Component, TabsTestBug4420Component, TabsTestComponent,
     TabsTestCustomStylesComponent, TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent,
-    TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
+    TabsWithPrefixSuffixTestComponent, TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxTabPanelComponent } from './tab-panel.component';
-import { TabsRoutingViewComponentsModule,
-        TabsRoutingView1Component,
-        TabsRoutingView2Component,
-        TabsRoutingView3Component,
-        TabsRoutingView4Component,
-        TabsRoutingView5Component } from './tabs-routing-view-components.spec';
+import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
+import { RoutingView1Component,
+    RoutingView2Component,
+    RoutingView3Component,
+    RoutingView4Component,
+    RoutingView5Component,
+    RoutingViewComponentsModule } from '../../test-utils/routing-view-components.spec';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxIconModule } from '../../icon/public_api';
+import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -35,7 +36,7 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
-describe('IgxTabs', () => {
+fdescribe('IgxTabs', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
@@ -43,22 +44,22 @@ describe('IgxTabs', () => {
 
     beforeAll(waitForAsync(() => {
         const testRoutes = [
-            { path: 'view1', component: TabsRoutingView1Component, canActivate: [TabRoutingTestGuard] },
-            { path: 'view2', component: TabsRoutingView2Component, canActivate: [TabRoutingTestGuard] },
-            { path: 'view3', component: TabsRoutingView3Component, canActivate: [TabRoutingTestGuard] },
-            { path: 'view4', component: TabsRoutingView4Component, canActivate: [TabRoutingTestGuard] },
-            { path: 'view5', component: TabsRoutingView5Component, canActivate: [TabRoutingTestGuard] }
+            { path: 'view1', component: RoutingView1Component, canActivate: [RoutingTestGuard] },
+            { path: 'view2', component: RoutingView2Component, canActivate: [RoutingTestGuard] },
+            { path: 'view3', component: RoutingView3Component, canActivate: [RoutingTestGuard] },
+            { path: 'view4', component: RoutingView4Component, canActivate: [RoutingTestGuard] },
+            { path: 'view5', component: RoutingView5Component, canActivate: [RoutingTestGuard] }
         ];
 
         TestBed.configureTestingModule({
             declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent],
+                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent],
             imports: [IgxTabsModule, BrowserAnimationsModule,
                 IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
-                TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
-            providers: [TabRoutingTestGuard]
+                RoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
+            providers: [RoutingTestGuard]
         }).compileComponents();
     }));
 
@@ -828,8 +829,8 @@ describe('IgxTabs', () => {
                     oldIndex: 0,
                     newIndex: 1
                 });
-                expect(itemChangeSpy).not.toHaveBeenCalled();
                 expect(indexChangeSpy).not.toHaveBeenCalled();
+                expect(itemChangeSpy).not.toHaveBeenCalled();
             }));
 
             it('Validate the fired events when navigating between tabs with left and right arrows.', fakeAsync(() => {
@@ -951,11 +952,6 @@ describe('IgxTabs', () => {
                 tick(200);
                 fixture.detectChanges();
 
-                expect(itemChangeSpy).toHaveBeenCalledWith({
-                    owner: tabs,
-                    oldItem: undefined,
-                    newItem: tabItems[1]
-                });
                 expect(indexChangingSpy).toHaveBeenCalledWith({
                     owner: tabs,
                     cancel: false,
@@ -963,6 +959,11 @@ describe('IgxTabs', () => {
                     newIndex: 1
                 });
                 expect(indexChangeSpy).toHaveBeenCalledWith(1);
+                expect(itemChangeSpy).toHaveBeenCalledWith({
+                    owner: tabs,
+                    oldItem: undefined,
+                    newItem: tabItems[1]
+                });
             }));
 
             it('Validate the events are not fired when navigating between tabs with arrow keys before pressing enter/space key.',
@@ -982,11 +983,6 @@ describe('IgxTabs', () => {
                     tick(200);
                     fixture.detectChanges();
 
-                    expect(itemChangeSpy).toHaveBeenCalledWith({
-                        owner: tabs,
-                        oldItem: undefined,
-                        newItem: tabItems[2]
-                    });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
                         owner: tabs,
                         cancel: false,
@@ -994,6 +990,11 @@ describe('IgxTabs', () => {
                         newIndex: 2
                     });
                     expect(indexChangeSpy).toHaveBeenCalledWith(2);
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[2]
+                    });
 
                     expect(indexChangingSpy).toHaveBeenCalledTimes(1);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(1);
@@ -1011,11 +1012,6 @@ describe('IgxTabs', () => {
                     tick(200);
                     fixture.detectChanges();
 
-                    expect(itemChangeSpy).toHaveBeenCalledWith({
-                        owner: tabs,
-                        oldItem: undefined,
-                        newItem: tabItems[0]
-                    });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
                         owner: tabs,
                         cancel: false,
@@ -1023,6 +1019,11 @@ describe('IgxTabs', () => {
                         newIndex: 0
                     });
                     expect(indexChangeSpy).toHaveBeenCalledWith(0);
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: tabItems[2],
+                        newItem: tabItems[0]
+                    });
 
                     expect(indexChangingSpy).toHaveBeenCalledTimes(2);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(2);
@@ -1046,11 +1047,6 @@ describe('IgxTabs', () => {
                     tick(200);
                     fixture.detectChanges();
 
-                    expect(itemChangeSpy).toHaveBeenCalledWith({
-                        owner: tabs,
-                        oldItem: undefined,
-                        newItem: tabItems[2]
-                    });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
                         owner: tabs,
                         cancel: false,
@@ -1058,6 +1054,12 @@ describe('IgxTabs', () => {
                         newIndex: 2
                     });
                     expect(indexChangeSpy).toHaveBeenCalledWith(2);
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: undefined,
+                        newItem: tabItems[2]
+                    });
+
                     expect(indexChangingSpy).toHaveBeenCalledTimes(1);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(1);
                     expect(itemChangeSpy).toHaveBeenCalledTimes(1);
@@ -1074,11 +1076,6 @@ describe('IgxTabs', () => {
                     tick(200);
                     fixture.detectChanges();
 
-                    expect(itemChangeSpy).toHaveBeenCalledWith({
-                        owner: tabs,
-                        oldItem: undefined,
-                        newItem: tabItems[0]
-                    });
                     expect(indexChangingSpy).toHaveBeenCalledWith({
                         owner: tabs,
                         cancel: false,
@@ -1086,12 +1083,127 @@ describe('IgxTabs', () => {
                         newIndex: 0
                     });
                     expect(indexChangeSpy).toHaveBeenCalledWith(0);
+                    expect(itemChangeSpy).toHaveBeenCalledWith({
+                        owner: tabs,
+                        oldItem: tabItems[2],
+                        newItem: tabItems[0]
+                    });
 
                     expect(indexChangingSpy).toHaveBeenCalledTimes(2);
                     expect(indexChangeSpy).toHaveBeenCalledTimes(2);
                     expect(itemChangeSpy).toHaveBeenCalledTimes(2);
             }));
 
+        });
+    });
+    describe('', () => {
+        let fixture;
+        let tabs;
+        let tabItems;
+        let headers;
+
+        beforeEach(waitForAsync(() => {
+            fixture = TestBed.createComponent(TabsWithPrefixSuffixTestComponent);
+            fixture.detectChanges();
+            tabs = fixture.componentInstance.tabs;
+            tabItems = tabs.items.toArray();
+            headers = tabItems.map(item => item.headerComponent.nativeElement);
+        }));
+
+        it('show tabs prefix and suffix properly.', () => {
+            const header0Elements = headers[0].children;
+            expect(header0Elements[0].localName).toBe('span');
+            expect(header0Elements[0].innerText).toBe('Test:');
+            expect(header0Elements[1].children[0].localName).toBe('igx-icon');
+            expect(header0Elements[1].children[0].innerText).toBe('library_music');
+            expect(header0Elements[1].children[1].localName).toBe('span');
+            expect(header0Elements[1].children[1].innerText).toBe('Tab 1');
+            expect(header0Elements[2].localName).toBe('igx-icon');
+            expect(header0Elements[2].innerText).toBe('close');
+
+            const header1Elements = headers[1].children;
+            expect(header1Elements[0].localName).toBe('span');
+            expect(header1Elements[0].innerText).toBe('Test:');
+            expect(header1Elements[1].children[0].localName).toBe('igx-icon');
+            expect(header1Elements[1].children[0].innerText).toBe('video_library');
+            expect(header1Elements[1].children[1].localName).toBe('span');
+            expect(header1Elements[1].children[1].innerText).toBe('Tab 2');
+
+            const header2Elements = headers[2].children;
+            expect(header2Elements[0].children[0].localName).toBe('igx-icon');
+            expect(header2Elements[0].children[0].innerText).toBe('library_books');
+            expect(header2Elements[0].children[1].localName).toBe('span');
+            expect(header2Elements[0].children[1].innerText).toBe('Tab 3');
+            expect(header2Elements[1].localName).toBe('igx-icon');
+            expect(header2Elements[1].innerText).toBe('close');
+        });
+
+        it('tabAlignment is set to "start" by default.', () => {
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.start);
+            expect(tabs.startAlignmentClass).toBeTrue();
+        });
+
+        it('tabAlignment changes in runtime are properly applied.', () => {
+            tabs.tabAlignment = IgxTabsAlignment.justify;
+            fixture.detectChanges();
+
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.justify);
+            expect(tabs.justifyAlignmentClass).toBeTrue();
+
+            tabs.tabAlignment = IgxTabsAlignment.end;
+            fixture.detectChanges();
+
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.end);
+            expect(tabs.endAlignmentClass).toBeTrue();
+        });
+
+        it('aligns tab header content properly when tabAlignment="justify".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.justify;
+            fixture.detectChanges();
+            // const headerContainerWidth = tabs.headerContainer.nativeElement.clientWidth;
+
+            expect(tabs.justifyAlignmentClass).toBeTrue();
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+            // expect([...headerWidths][0]).toBeCloseTo(headerContainerWidth / tabItems.length);
+        });
+
+        it('aligns tab header content properly when tabAlignment="center".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.center;
+            fixture.detectChanges();
+
+            expect(tabs.centerAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+        });
+
+        it('aligns tab header content properly when tabAlignment="start".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.start;
+            fixture.detectChanges();
+
+            expect(tabs.startAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
+        });
+
+        it('aligns tab header content properly when tabAlignment="end".', () => {
+            tabs.tabAlignment = IgxTabsAlignment.end;
+            fixture.detectChanges();
+
+            expect(tabs.endAlignmentClass).toBeTrue();
+
+            const headerWidths = new Set<number>();
+            headers.every((elem) => headerWidths.add(elem.clientWidth));
+
+            expect(headerWidths.size).toBe(1);
         });
     });
 

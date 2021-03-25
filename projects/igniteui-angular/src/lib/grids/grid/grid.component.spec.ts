@@ -20,8 +20,6 @@ import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { GridSelectionMode } from '../common/enums';
-import { registerLocaleData } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
@@ -667,6 +665,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.headerContainer.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.headerContainer.getScroll().scrollLeft;
 
@@ -700,6 +699,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.rowList.first.virtDirRow.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.rowList.first.virtDirRow.getScroll().scrollLeft;
 
@@ -1508,8 +1508,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        xit('Should change dates/number display based on locale', fakeAsync(() => {
-            registerLocaleData(localeDE);
+        it('Should change dates/number display based on locale #ivy', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -2583,7 +2582,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 }
@@ -2599,7 +2598,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 @Component({

@@ -19,8 +19,8 @@ import { TabsRoutingViewComponentsModule,
     TabsRoutingView2Component,
     TabsRoutingView3Component,
     TabsRoutingView4Component,
-    TabsRoutingView5Component } from '../tabs/tabs/tabs-routing-view-components.spec';
-import { TabRoutingTestGuard } from '../tabs/tabs/tab-routing-test-guard.spec';
+    TabsRoutingView5Component } from './tabs-routing-view-components.spec';
+import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });

@@ -1233,7 +1233,7 @@ class IgxDropDownTestComponent {
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
     public maxHeight: string;
-    public density = DisplayDensity.cosy;
+    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items: any[] = [
         { field: 'Item 1' },

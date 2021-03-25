@@ -1,7 +1,7 @@
 import { Component, ViewChild, ChangeDetectorRef, ElementRef } from '@angular/core';
 import {
-    IgxChipsAreaComponent, IgxChipComponent, IChipSelectEventArgs,
-    IChipsAreaReorderEventArgs, IBaseChipEventArgs
+    IgxChipsAreaComponent, IgxChipComponent,
+    IChipsAreaReorderEventArgs, IBaseChipEventArgs, IChipsAreaSelectEventArgs
 } from 'igniteui-angular';
 
 @Component({
@@ -101,7 +101,7 @@ export class ChipsSampleComponent {
         chipToSelect.selected = true;
     }
 
-    public onChipsSelected(event: IChipSelectEventArgs) {
+    public onChipsSelected(event: IChipsAreaSelectEventArgs) {
         console.log(event);
     }
 
