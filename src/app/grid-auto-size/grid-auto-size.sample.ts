@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -15,7 +15,7 @@ export class GridAutoSizeSampleComponent implements OnInit {
 
     public data: Array<any>;
     public columns: Array<any>;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
     public height = '100%';
     public gridContainerHidden = false;

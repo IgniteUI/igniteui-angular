@@ -12,8 +12,7 @@
     displayDensity="compact"
     width="900px" height="550px"
     [paging]="true">
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest"
-        [sortable]="true">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
         <!-- <ng-template igxCell let-cell="cell" let-val>
             {{val | date}}
         </ng-template> -->
@@ -23,7 +22,7 @@
             {{val | date:'mediumDate':undefined:grid1.locale }}
         </ng-template> -->
     </igx-column>
-    <igx-column width="200px" field="OrderDate" header="Unbound column" [filterable]="true" [hasSummary]="true" sortable="true">
+    <igx-column width="200px" field="OrderDate" header="Unbound column" [filterable]="true" [hasSummary]="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val>
             {{ cell.rowData.UnitsInStock }}
         </ng-template>
@@ -47,12 +46,12 @@
     displayDensity="compact"
     width="900px" height="550px">
 
-    <igx-column field="OrderID" width="200px" [dataType]="'number'" filterable="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
+    <igx-column field="OrderID" width="200px" [dataType]="'number'" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
     </igx-column>
 
-    <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
+    <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
     </igx-column>
-    <igx-column field="RequiredDate" width="200px" [pipeArgs]="formatOptions" [dataType]="'date'" filterable="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
+    <igx-column field="RequiredDate" width="200px" [pipeArgs]="formatOptions" [dataType]="'date'" [filterable]="true" [hasSummary]="true" [summaries]="earliest" [sortable]="true">
     </igx-column>
     <igx-column field="Freight" width="200px" [sortable]="true" [filterable]="true" [dataType]="'string'" [hasSummary]="false">
     </igx-column>
@@ -62,7 +61,7 @@
 <igx-tree-grid #treeGrid
     [data]="treeData"
     childDataKey="ChildCompanies"
-    primaryKey="ID" expansionDepth="1"
+    primaryKey="ID" [expansionDepth]="1"
     [width]="'900px'" [height]="'500px'"
     [allowFiltering]="true"
     [filterMode]="'excelStyleFilter'">
