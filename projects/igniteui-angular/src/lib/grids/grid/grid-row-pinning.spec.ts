@@ -151,7 +151,7 @@ describe('Row Pinning #grid', () => {
         it('should emit onRowPinning on pin/unpin.', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
-            let row = grid.gridAPI.get_row_by_index(0);
+            let row = grid.getRowByIndex(0);
             let rowID = row.rowID;
             row.pin();
             fix.detectChanges();

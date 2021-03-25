@@ -359,7 +359,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.primaryKey = null;
         fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
-        let firstRow = grid.getRowByIndex(0);
+        let firstRow = grid.gridAPI.get_row_by_index(0);
         firstRow.update({ index: 100, value: 99});
 
         fix.detectChanges();
@@ -441,9 +441,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
-        const row = grid.getRowByKey(rowID);
         expect(grid.data.length).toBe(11);
-        expect(row).toBeUndefined();
 
         grid.updateRow({ index: 97, value: 87}, rowID);
         fix.detectChanges();

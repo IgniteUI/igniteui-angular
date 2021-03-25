@@ -1699,7 +1699,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toEqual(cellValue);
         });
 
-        it('When rowEdit is canceled the new row data should never be commited', () => {
+        it('When rowEdit is cancelled the new row data should never be commited', () => {
             grid.rowEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
                 evt.cancel = true;
             });
@@ -1712,8 +1712,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             grid.endRowEdit(true, null);
             fix.detectChanges();
-
-            const rowData = Object.assign(cell.row.rowData, newRowData);
+            const rowData = Object.assign({}, cell.row.rowData, newRowData);
             expect(grid.crudService.rowInEditMode).toEqual(true);
             expect(grid.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
@@ -2191,6 +2190,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 oldValue: row.rowData,
                 newValue: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 owner: grid,
+                isAddRow: row.addRow,
                 event: jasmine.anything() as any
             };
 

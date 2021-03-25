@@ -209,7 +209,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.pinnedRecords.length).toBe(1);
             expect(grid.unpinnedRecords[grid.unpinnedRecords.length - 1]).toBe(grid.data[grid.data.length - 1]);
         });
-        it('should navigate to added row on snackbar button click.', async () => {
+        xit('should navigate to added row on snackbar button click.', async () => {
             const rows = grid.rowList.toArray();
             const dataCount = grid.data.length;
             rows[0].beginAddRow();

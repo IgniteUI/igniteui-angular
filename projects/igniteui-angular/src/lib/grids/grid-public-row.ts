@@ -1,6 +1,7 @@
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
+import { IgxRow } from './selection/selection.service';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
@@ -171,7 +172,9 @@ export class IgxGridRow implements RowType {
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
-        this.grid.updateRow(value, this.rowID);
+        const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
+        this.grid.gridAPI.update_row(row, value);
+        this.grid.cdr.markForCheck();
     }
 
     /**

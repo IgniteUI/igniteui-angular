@@ -1102,7 +1102,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key)));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
             }
 
             grid.deselectAllRows();
@@ -1115,7 +1115,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key)));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
             }
         }));
 
@@ -1186,7 +1186,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key), false));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
             }
         }));
 
@@ -1211,14 +1211,14 @@ describe('IgxGrid - GroupBy #grid', () => {
             const grRow = grid.groupsRowList.toArray()[0];
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key), false, false));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false, false));
             }
 
             GridSelectionFunctions.clickRowCheckbox(grRow);
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key), true, true));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), true, true));
             }
         }));
 
@@ -1330,7 +1330,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick();
             fix.detectChanges();
 
-            expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(grRow.groupRow.records[0]), false));
+            expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(grRow.groupRow.records[0]), false));
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
@@ -1392,7 +1392,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key)));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key)));
             }
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
@@ -1402,7 +1402,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key), false));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key), false));
             }
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
@@ -1436,7 +1436,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key.ID)));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID)));
             }
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
@@ -1446,7 +1446,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             for (const key of grRow.groupRow.records) {
-                expect(GridSelectionFunctions.verifyRowSelected(grid.getRowByKey(key.ID), false));
+                expect(GridSelectionFunctions.verifyRowSelected(grid.gridAPI.get_row_by_key(key.ID), false));
             }
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
@@ -2952,7 +2952,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify collapsed group sub records are not rendered
 
         for (const rec of groupRows[0].groupRow.records) {
-            expect(grid.getRowByKey(rec.ID)).toBeUndefined();
+            expect(grid.gridAPI.get_row_by_key(rec.ID)).toBeUndefined();
         }
 
         // toggle grouprow - expand
