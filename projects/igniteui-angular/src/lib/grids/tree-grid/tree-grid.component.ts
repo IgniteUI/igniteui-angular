@@ -539,7 +539,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        super.gridAPI.crudService.endEdit(true);
+        this.gridAPI.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
         this.onRowAdded.emit({ data });
         this.pipeTrigger++;
