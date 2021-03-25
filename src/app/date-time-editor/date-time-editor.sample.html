@@ -14,12 +14,12 @@
                     igxInput (valueChange)="onValueChanged($event)" (validationFailed)="onValidationFailed($event)"
                     [igxDateTimeEditor]="'dd/MM/yyyy hh:mm'" [minValue]="minDate" [maxValue]="maxDate" required />
                 <igx-suffix>
-                    <button igxRipple igxRippleCentered="true" igxButton="icon" (click)="dateEditor.increment()">
+                    <button igxRipple [igxRippleCentered]="true" igxButton="icon" (click)="dateEditor.increment()">
                         <igx-icon>expand_less</igx-icon>
                     </button>
                 </igx-suffix>
                 <igx-suffix>
-                    <button igxRipple igxRippleCentered="true" igxButton="icon" (click)="dateEditor.decrement()">
+                    <button igxRipple [igxRippleCentered]="true" igxButton="icon" (click)="dateEditor.decrement()">
                         <igx-icon>expand_more</igx-icon>
                     </button>
                 </igx-suffix>

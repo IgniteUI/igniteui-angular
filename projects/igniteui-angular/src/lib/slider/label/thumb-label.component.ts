@@ -11,7 +11,7 @@ import { IgxSliderThumbComponent } from '../thumb/thumb-slider.component';
 })
 export class IgxThumbLabelComponent {
     @Input()
-    public value: number;
+    public value: any;
 
     @Input()
     public templateRef: TemplateRef<any>;
