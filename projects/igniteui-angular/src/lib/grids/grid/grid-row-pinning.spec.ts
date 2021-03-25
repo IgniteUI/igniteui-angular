@@ -1176,7 +1176,7 @@ describe('Row Pinning #grid', () => {
 @Component({
     template: `
         <igx-grid
-            [allowFiltering]='true'
+            [allowFiltering]="true"
             [pinning]='pinningConfig'
             [width]='"800px"'
             [height]='"500px"'

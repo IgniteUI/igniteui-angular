@@ -233,7 +233,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1, $event)'>
+    <button igxButton="raised" igxRipple (click)="beginAddRowByIndex(null, -1, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -295,7 +295,7 @@
             [tabindex]="-1"
             [readonly]="true"
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
-            disableRipple="true"
+            [disableRipple]="true"
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
             [aria-label]="headSelectorBaseAriaLabel"

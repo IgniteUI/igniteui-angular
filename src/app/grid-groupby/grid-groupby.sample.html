@@ -29,9 +29,9 @@
     </div>
     <igx-grid #grid1 [data]="data" [allowFiltering]="true" [cellSelection]="'single'" [width]="'1200px'"
         [hideGroupedColumns]="hideGroupedColumns" [height]="'700px'" [(groupingExpansionState)]='expState'
-        [summaryCalculationMode]="summaryMode" [summaryPosition]='position' [rowDraggable]="true">
+        [summaryCalculationMode]="summaryMode" [summaryPosition]="position" [rowDraggable]="true">
         <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width"
-            [hidden]='c.hidden' [sortable]='true' [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'
+            [hidden]='c.hidden' [sortable]="true" [groupable]='c.groupable' [movable]='true' [pinned]='!!c.pinned'
             [editable]="true" [hasSummary]="true" [dataType]='c.dataType'>
         </igx-column>
         <!--<ng-template igxGroupByRow let-groupRow>

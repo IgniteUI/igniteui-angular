@@ -76,7 +76,7 @@ export class GridCellStylingSampleComponent implements OnInit {
         this.data2 = HIERARCHICAL_SAMPLE_DATA.slice(0);
     }
 
-    public indent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+    public indent(event: Event, element: HTMLTextAreaElement) {
         event.preventDefault();
         const start = element.selectionStart;
         const end = element.selectionEnd;
@@ -85,7 +85,7 @@ export class GridCellStylingSampleComponent implements OnInit {
         element.selectionStart = element.selectionEnd = start + 2;
     }
 
-    public dedent(event: KeyboardEvent, element: HTMLTextAreaElement) {
+    public dedent(event: Event, element: HTMLTextAreaElement) {
         event.preventDefault();
         const start = element.selectionStart;
         const end = element.selectionEnd;

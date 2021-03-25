@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IgxGridComponent } from 'igniteui-angular';
+import { DisplayDensity, IgxGridComponent } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
 
 enum DragIcon {
@@ -24,7 +24,7 @@ export class GridRowDraggableComponent implements AfterViewInit {
     public remote: Observable<any[]>;
     public newData = [];
     public dragdrop = true;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
 
     constructor(private remoteService: RemoteService, private cdr: ChangeDetectorRef) {
