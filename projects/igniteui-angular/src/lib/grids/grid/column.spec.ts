@@ -436,7 +436,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
     describe('Data type currency column tests', () => {
         // NOTE: The following three tests fail only in an Ivy scenario. We should leave them running anyways
-        it('should display correctly the data when column dataType is currency', () => {
+        it('should display correctly the data when column dataType is currency #ivy', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -462,7 +462,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
         });
 
-        it('should be able to change the locale runtime ', () => {
+        it('should be able to change the locale runtime  #ivy', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -485,7 +485,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
-        it('should display the currency symbol in edit mode correctly according the grid locale', fakeAsync(() => {
+        it('should display the currency symbol in edit mode correctly according the grid locale #ivy', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
