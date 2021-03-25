@@ -16,8 +16,8 @@ import {
 } from '../common';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeService } from '../tree.service';
-import { ITreeResourceStrings } from "../../core/i18n/tree-resources";
-import { CurrentResourceStrings } from "../../core/i18n/resources";
+import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
+import { CurrentResourceStrings } from '../../core/i18n/resources';
 
 let nodeId = 0;
 
@@ -52,9 +52,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
     }
-
-    /** @hidden @internal */
-    private _resourceStrings = CurrentResourceStrings.TreeResStrings;
 
     /**
      * An accessor that sets the resource strings.
@@ -91,6 +88,23 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     @Output()
     public selectedChange = new EventEmitter<boolean>();
+
+    /**
+     * Emitted when the node's `selected` property changes.
+     *
+     * ```html
+     * <igx-tree>
+     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="data.expanded">
+     * </igx-tree>
+     * ```
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * node.expandedChange.pipe(takeUntil(this.destroy$)).subscribe((e: boolean) => console.log("Node expansion state changed to ", e))
+     * ```
+     */
+    @Output()
+    public expandedChange = new EventEmitter<boolean>();
 
     // TODO: bind to active state when keynav is implemented
     /** @hidden @internal */
@@ -148,6 +162,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * The unique ID of the node
      */
     public id = `igxTreeNode_${nodeId++}`;
+
+    /** @hidden @internal */
+    private _resourceStrings = CurrentResourceStrings.TreeResStrings;
 
     constructor(
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
