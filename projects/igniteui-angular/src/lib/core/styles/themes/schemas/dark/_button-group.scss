@@ -16,18 +16,15 @@ $_base-dark-button-group: (
     item-background: #222,
 
     item-border-color: (
-        igx-color: ('grays', 400),
-        hexrgba: (#222)
+        igx-color: ('grays', 400)
     ),
 
     item-selected-border-color: (
-        igx-color: ('grays', 500),
-        hexrgba: (#222)
+        igx-color: ('grays', 500)
     ),
 
     item-disabled-border: (
-        igx-color: ('grays', 400),
-        hexrgba: (#222)
+        igx-color: ('grays', 200)
     ),
 );
 
@@ -60,20 +57,11 @@ $_dark-fluent-button-group: extend(
     $_fluent-button-group,
     $_base-dark-button-group,
     (
-        item-border-color: (
-            igx-color: ('grays', 100),
-            hexrgba: #000
-        ),
+        item-border-color: #000,
 
-        item-selected-border-color: (
-            igx-color: ('grays', 100),
-            hexrgba: #000
-        ),
+        item-selected-border-color: #000,
 
-        item-disabled-border: (
-            igx-color: ('grays', 100),
-            hexrgba: #000
-        ),
+        item-disabled-border: #000,
 
         item-text-color: (
             igx-color: ('grays', 900)

@@ -39,8 +39,7 @@ $_light-button-group: extend(
         item-background: #fff,
 
         item-border-color: (
-            igx-color: ('grays', 50),
-            hexrgba: (#ccc)
+            igx-color: ('grays', 400)
         ),
 
         item-text-color: (
@@ -68,8 +67,7 @@ $_light-button-group: extend(
         ),
 
         item-selected-border-color: (
-            igx-color: ('grays', 400),
-            hexrgba: (#ccc)
+            igx-color: ('grays', 500)
         ),
 
         disabled-text-color: (
@@ -81,8 +79,7 @@ $_light-button-group: extend(
         ),
 
         item-disabled-border: (
-            igx-color: ('grays', 50),
-            hexrgba: (#ccc)
+            igx-color: ('grays', 300)
         ),
     )
 );
@@ -181,34 +178,29 @@ $_bootstrap-button-group: extend(
         item-hover-text-color: #fff,
 
         item-selected-background: (
-            igx-color: ('primary', 500),
-            darken: 10%
+            igx-color: ('primary', 700)
         ),
 
         item-selected-text-color: #fff,
 
         item-selected-border-color: (
-            igx-color: ('primary', 500),
-            darken: 10%
+            igx-color: ('primary', 700)
         ),
 
         item-selected-hover-background: (
-            igx-color: ('primary', 500),
-            darken: 15%
+            igx-color: ('primary', 800)
         ),
 
         disabled-background-color: (
-            igx-color: ('primary', 500),
-            lighten: 35%
+            igx-color: ('primary', 100)
         ),
 
         disabled-text-color: (
-            igx-color: ('primary', 500),
-            lighten: 20%
+            igx-color: ('primary', 200)
         ),
 
         item-disabled-border: (
-            igx-color: ('primary', 500), lighten: 35%
+            igx-color: ('primary', 100)
         ),
     )
 );

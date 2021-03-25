@@ -55,8 +55,7 @@ $_dark-indigo-bottom-nav: extend(
         ),
 
         idle-item-color: (
-            igx-contrast-color: 'surface',
-            rgba: .6
+            igx-color: ('grays', 700)
         ),
     )
 );

@@ -17,9 +17,7 @@ $_light-banner: (
     ),
 
     banner-message-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
+        igx-contrast-color: 'surface'
     ),
 
     banner-border-color: (
@@ -27,9 +25,7 @@ $_light-banner: (
     ),
 
     banner-illustration-color: (
-        igx-color: 'surface',
-        text-contrast: (),
-        rgba: .87
+        igx-contrast-color: 'surface'
     )
 );
 
