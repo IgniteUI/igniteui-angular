@@ -23,8 +23,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
-import { registerLocaleData, DatePipe } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
+import { DatePipe } from '@angular/common';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -1222,7 +1221,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should correctly apply locale to datePicker.', fakeAsync(() => {
-            registerLocaleData(localeDE);
             fix.detectChanges();
 
             grid.locale = 'de-DE';
@@ -4526,7 +4524,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
-            registerLocaleData(localeFR);
             const pipe = new DatePipe('fr-FR');
             const formatOptions = {
                 timezone: 'utc',
@@ -5548,7 +5545,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Verify date values are displayed in correct format according to column pipeArgs', fakeAsync(() => {
             const downloads = ['Select All', '(Blanks)', '0,00', '20,00', '100,00', '127,00', '254,00', '702,00', '1 000,00'];
-            registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5598,7 +5594,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter', fakeAsync(() => {
-            registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5637,7 +5632,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
-            registerLocaleData(localeFR);
             const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);
