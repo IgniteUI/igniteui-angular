@@ -1706,7 +1706,7 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.crudService.cell;
+        const currentCell = grid.gridAPI.crudService.cell;
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 

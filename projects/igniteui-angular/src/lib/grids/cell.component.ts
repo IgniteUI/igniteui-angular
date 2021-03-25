@@ -768,7 +768,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.gridAPI.submit_value();
             this.gridAPI.crudService.enterEditMode(this);
         } else {
-            this.grid.crudService.exitCellEdit();
+            this.grid.gridAPI.crudService.exitCellEdit();
         }
         this.grid.notifyChanges();
     }
@@ -792,7 +792,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (args.cancel) {
                 return;
             }
-            this.grid.crudService.exitCellEdit();
+            this.grid.gridAPI.crudService.exitCellEdit();
         }
         this.cdr.markForCheck();
     }

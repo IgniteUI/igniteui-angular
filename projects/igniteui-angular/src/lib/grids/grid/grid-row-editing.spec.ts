@@ -2254,7 +2254,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.deleteRow(1);
 
             fix.detectChanges();
-            spyOn(grid, 'endRowTransaction').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endRowTransaction').and.callThrough();
 
             const firstCell = grid.getCellByColumn(2, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
