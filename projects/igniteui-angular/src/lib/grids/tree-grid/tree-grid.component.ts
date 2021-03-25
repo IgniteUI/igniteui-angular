@@ -145,6 +145,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'treegrid';
+
+    /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
      * ```html
      * <igx-tree-grid [id]="'igx-tree-grid-1'"></igx-tree-grid>
