@@ -968,7 +968,7 @@ describe('IgxGrid - Summaries #grid', () => {
             cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
 
-            const row = grid.getRowByIndex(4);
+            const row = grid.gridAPI.get_row_by_index(4);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', grid.tbody.nativeElement, true);
@@ -1316,7 +1316,7 @@ describe('IgxGrid - Summaries #grid', () => {
             await wait(50);
             fix.detectChanges();
 
-            let row = grid.getRowByIndex(16);
+            let row = grid.gridAPI.get_row_by_index(16);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 18, 4, ['Min', 'Max'], ['19', '19']);
@@ -1327,7 +1327,7 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.transactions.undo();
             await wait(50);
             fix.detectChanges();
-            row = grid.getRowByIndex(16);
+            row = grid.gridAPI.get_row_by_index(16);
             expect(row).toBeUndefined();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
@@ -1337,7 +1337,7 @@ describe('IgxGrid - Summaries #grid', () => {
             await wait(50);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(16);
+            row = grid.gridAPI.get_row_by_index(16);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 4, ['Min', 'Max'], ['19', '50']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
@@ -1352,7 +1352,7 @@ describe('IgxGrid - Summaries #grid', () => {
             await wait(50);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(16);
+            row = grid.gridAPI.get_row_by_index(16);
             expect(row).toBeUndefined();
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
         }));
@@ -1363,19 +1363,19 @@ describe('IgxGrid - Summaries #grid', () => {
             });
             fix.detectChanges();
 
-            grid.deleteRow(grid.getRowByIndex(1).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['7']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['1']);
 
-            grid.deleteRow(grid.getRowByIndex(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['6']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['0']);
 
-            const row = grid.getRowByIndex(0);
+            const row = grid.gridAPI.get_row_by_index(0);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
 
             // Commit transactions
@@ -2192,7 +2192,7 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.getColumnByName('HireDate').hasSummary = false;
             fix.detectChanges();
 
-            grid.deleteRow(grid.getRowByIndex(1).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -2204,7 +2204,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(5);
 
-            grid.deleteRow(grid.getRowByIndex(1).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
             fix.detectChanges();
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['6']);
@@ -2212,20 +2212,20 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('CRUD: delete all nodes', () => {
-            grid.deleteRow(grid.getRowByIndex(1).rowID);
-            grid.deleteRow(grid.getRowByIndex(2).rowID);
-            grid.deleteRow(grid.getRowByIndex(5).rowID);
-            grid.deleteRow(grid.getRowByIndex(8).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(5).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(8).rowID);
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
 
-            grid.deleteRow(grid.getRowByIndex(1).rowID);
-            grid.deleteRow(grid.getRowByIndex(2).rowID);
-            grid.deleteRow(grid.getRowByIndex(5).rowID);
-            grid.deleteRow(grid.getRowByIndex(6).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(5).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(6).rowID);
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);

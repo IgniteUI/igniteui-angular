@@ -319,7 +319,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // apply some filter
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
 
-            expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
+            expect(hierarchicalGrid.getRowByIndex(0).expanded).toBe(true);
             expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
@@ -879,7 +879,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
             expect(pinRowContainer[0].children[0].context.index).toBe(fixture.componentInstance.data.length);
             expect(pinRowContainer[0].children[0].nativeElement)
-                .toBe(hierarchicalGrid.getRowByIndex(fixture.componentInstance.data.length).nativeElement);
+                .toBe(hierarchicalGrid.gridAPI.get_row_by_index(fixture.componentInstance.data.length).nativeElement);
 
             expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
             expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');

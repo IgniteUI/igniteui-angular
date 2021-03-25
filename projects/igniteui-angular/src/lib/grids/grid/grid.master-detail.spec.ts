@@ -123,7 +123,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(20);
+            const row = grid.gridAPI.get_row_by_index(20);
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
 
             grid.navigateTo(0);
@@ -378,7 +378,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate down through a detail view partially out of view by scrolling it so it becomes fully visible.', async () => {
-            const row = grid.getRowByIndex(4) as IgxGridRowComponent;
+            const row = grid.gridAPI.get_row_by_index(4) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(4, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -399,7 +399,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(6) as IgxGridRowComponent;
+            const row = grid.gridAPI.get_row_by_index(6) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(6, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -417,7 +417,7 @@ describe('IgxGrid Master Detail #grid', () => {
         });
 
         it('Should navigate up through a detail view by focusing the whole row and continuing onto the next with arrow up.', () => {
-            const prevRow = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const prevRow = grid.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -440,7 +440,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const row = grid.getRowByIndex(2);
+            const row = grid.gridAPI.get_row_by_index(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -459,7 +459,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let row = grid.getRowByIndex(2);
+            let row = grid.gridAPI.get_row_by_index(2);
             const targetCellElement = grid.getCellByColumn(2, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -468,14 +468,14 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(2);
+            row = grid.gridAPI.get_row_by_index(2);
             const detailRow = row.element.nativeElement.previousElementSibling as HTMLElement;
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
         });
 
         it('Should expand and collapse using Alt + Right/Down and Alt + Left/Up without losing focus on current row.', async () => {
-            const row = grid.getRowByIndex(0) as IgxGridRowComponent;
+            const row = grid.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
             const targetCellElement = grid.getCellByColumn(0, 'ContactName');
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -518,7 +518,7 @@ describe('IgxGrid Master Detail #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
             fix.detectChanges();
-            const row = grid.getRowByIndex(52) as IgxGridRowComponent;
+            const row = grid.gridAPI.get_row_by_index(52) as IgxGridRowComponent;
             let targetCellElement = grid.getCellByColumn(52, 'ContactName');
 
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
@@ -556,7 +556,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            let row = grid.getRowByIndex(20) as IgxGridRowComponent;
+            let row = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
             expect(row).not.toBeNull();
             expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
 
@@ -566,7 +566,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(20) as IgxGridRowComponent;
+            row = grid.gridAPI.get_row_by_index(20) as IgxGridRowComponent;
             const detailRow = GridFunctions.getMasterRowDetail(row);
             expect(GridFunctions.elementInGridView(grid, detailRow)).toBeTruthy();
 
@@ -584,7 +584,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const lastRow = grid.getRowByIndex(52);
+            const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
             expect(lastRow.cells.last.active).toBeTruthy();
@@ -604,7 +604,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const fRow = grid.getRowByIndex(0);
+            const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
             expect(fRow.cells.first.active).toBeTruthy();
@@ -622,7 +622,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            const lastRow = grid.getRowByIndex(52);
+            const lastRow = grid.gridAPI.get_row_by_index(52);
             expect(lastRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, lastRow.nativeElement)).toBeTruthy();
             expect(lastRow.cells.first.active).toBeTruthy();
@@ -642,7 +642,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await waitForActiveNodeChange(grid);
             fix.detectChanges();
 
-            const fRow = grid.getRowByIndex(0);
+            const fRow = grid.gridAPI.get_row_by_index(0);
             expect(fRow).not.toBeUndefined();
             expect(GridFunctions.elementInGridView(grid, fRow.nativeElement)).toBeTruthy();
             expect(fRow.cells.last.active).toBeTruthy();
@@ -651,7 +651,7 @@ describe('IgxGrid Master Detail #grid', () => {
         it(`Should navigate to the first/last row when using Ctrl+ArrowUp/ArrowDown
                 and focus is on the detail row container.`, async () => {
             // Focus first cell
-            let row = grid.getRowByIndex(0);
+            let row = grid.gridAPI.get_row_by_index(0);
             let detailRow = GridFunctions.getMasterRowDetail(row);
             UIInteractions.simulateClickAndSelectEvent(detailRow);
             fix.detectChanges();
@@ -662,7 +662,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(0);
+            row = grid.gridAPI.get_row_by_index(0);
             detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
 
@@ -671,7 +671,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            row = grid.getRowByIndex(0);
+            row = grid.gridAPI.get_row_by_index(0);
             detailRow = GridFunctions.getMasterRowDetail(row);
             GridFunctions.verifyMasterDetailRowFocused(detailRow);
         });
@@ -897,14 +897,14 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid.findNext('Paolo');
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                let row = grid.getRowByIndex(52);
+                let row = grid.gridAPI.get_row_by_index(52);
                 expect(row).not.toBeNull();
                 GridFunctions.elementInGridView(grid, row.nativeElement);
                 grid.findPrev('Maria');
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                row = grid.getRowByIndex(0);
+                row = grid.gridAPI.get_row_by_index(0);
                 expect(row).not.toBeNull();
                 GridFunctions.elementInGridView(grid, row.nativeElement);
             });

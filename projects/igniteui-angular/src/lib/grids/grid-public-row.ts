@@ -17,6 +17,10 @@ export class IgxGridRow implements RowType {
         return this.grid.filteredSortedData[this.index];
     }
 
+    public get rowData(): any {
+        return this.grid.filteredSortedData[this.index];
+    }
+
     /**
      * Sets/gets whether the row is pinned.
      * Default value is `false`.
@@ -30,9 +34,9 @@ export class IgxGridRow implements RowType {
 
     public set pinned(val: boolean) {
         if (val) {
-            this.grid.pinRow(this.key);
+            this.grid.pinRow(this.rowID);
         } else {
-            this.grid.unpinRow(this.key);
+            this.grid.unpinRow(this.rowID);
         }
     }
 
@@ -44,14 +48,14 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get selected(): boolean {
-        return this.grid.selectionService.isRowSelected(this.key);
+        return this.grid.selectionService.isRowSelected(this.rowID);
     }
 
     public set selected(val: boolean) {
         if (val) {
-            this.grid.selectionService.selectRowsWithNoEvent([this.key]);
+            this.grid.selectionService.selectRowsWithNoEvent([this.rowID]);
         } else {
-            this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
+            this.grid.selectionService.deselectRowsWithNoEvent([this.rowID]);
         }
         this.grid.cdr.markForCheck();
     }
@@ -77,7 +81,7 @@ export class IgxGridRow implements RowType {
      * Returns if the row is in delete state.
      */
     public get deleted(): boolean {
-        return this.grid.gridAPI.row_deleted_transaction(this.key);
+        return this.grid.gridAPI.row_deleted_transaction(this.rowID);
     }
 
     /**
@@ -86,7 +90,7 @@ export class IgxGridRow implements RowType {
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
             const editRowState = this.grid.crudService.row;
-            return (editRowState && editRowState.id === this.key) || false;
+            return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
         }
@@ -114,7 +118,7 @@ export class IgxGridRow implements RowType {
     }
 
     public set expanded(val: boolean) {
-        this.grid.gridAPI.set_row_expansion_state(this.key, val);
+        this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
     /**
@@ -125,7 +129,7 @@ export class IgxGridRow implements RowType {
     }
 
     /**
-     * Gets the row key.
+     * Gets the  row key.
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole rowData, if the primaryKey is omitted.
@@ -134,7 +138,7 @@ export class IgxGridRow implements RowType {
      * let rowKey = row.key;
      * ```
      */
-    public get key(): any {
+    public get rowID(): any {
         const primaryKey = this.grid.primaryKey;
         return primaryKey ? this.data[primaryKey] : this.data;
     }
@@ -164,10 +168,10 @@ export class IgxGridRow implements RowType {
      */
     public update(value: any): void {
         const crudService = this.grid.crudService;
-        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
+        if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
-        this.grid.updateRow(value, this.key);
+        this.grid.updateRow(value, this.rowID);
     }
 
     /**
@@ -180,7 +184,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public delete(): void {
-        this.grid.deleteRowById(this.key);
+        this.grid.deleteRowById(this.rowID);
     }
 
     /**
@@ -193,7 +197,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        return this.grid.pinRow(this.key);
+        return this.grid.pinRow(this.rowID);
     }
 
     /**
@@ -206,7 +210,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public unpin(): boolean {
-        return this.grid.unpinRow(this.key);
+        return this.grid.unpinRow(this.rowID);
     }
 }
 
@@ -252,7 +256,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * ```
      */
     public get treeRow(): ITreeGridRecord {
-        return this._tgrid.records.get(this.key);
+        return this._tgrid.records.get(this.rowID);
     }
 
     /**
@@ -285,6 +289,6 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * ```
      */
     public set expanded(val: boolean) {
-        this.grid.gridAPI.set_row_expansion_state(this.key, val);
+        this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 }

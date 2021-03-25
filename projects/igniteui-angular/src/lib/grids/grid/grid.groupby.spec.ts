@@ -859,18 +859,18 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // collapse last group row
-        let groupRow = grid.getRowByIndex(11);
+        let groupRow = grid.gridAPI.get_row_by_index(11);
         UIInteractions.simulateClickAndSelectEvent(groupRow);
         fix.detectChanges();
         GridFunctions.verifyGroupRowIsFocused(groupRow);
         GridFunctions.simulateGridContentKeydown(fix, 'ArrowUp', true);
         fix.detectChanges();
-        groupRow = grid.getRowByIndex(11);
+        groupRow = grid.gridAPI.get_row_by_index(11);
         GridFunctions.verifyGroupRowIsFocused(groupRow);
         // expand last group row
         GridFunctions.simulateGridContentKeydown(fix, 'ArrowDown', true);
         fix.detectChanges();
-        groupRow = grid.getRowByIndex(11);
+        groupRow = grid.gridAPI.get_row_by_index(11);
         GridFunctions.verifyGroupRowIsFocused(groupRow);
     });
 
@@ -906,7 +906,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(virtState.startIndex).toBe(grid.dataView.length - virtState.chunkSize);
 
         // verify last row is visible at bottom
-        const lastRow = grid.getRowByIndex(grid.dataView.length - 1);
+        const lastRow = grid.gridAPI.get_row_by_index(grid.dataView.length - 1);
         expect(lastRow.nativeElement.getBoundingClientRect().bottom).toBe(grid.tbody.nativeElement.getBoundingClientRect().bottom);
 
     });

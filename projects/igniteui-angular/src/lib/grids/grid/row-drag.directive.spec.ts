@@ -485,10 +485,10 @@ describe('Row Drag Tests #grid', () => {
             dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
         }));
         const verifyDragAndDropRowCellValues = (dragRowIndex: number, dropRowIndex: number) => {
-            const dragRow = dragGrid.getRowByIndex(dragRowIndex);
+            const dragRow = dragGrid.gridAPI.get_row_by_index(dragRowIndex);
             const dragRowCells = dragRow.cells.toArray();
 
-            const dropRow = dropGrid.getRowByIndex(dropRowIndex);
+            const dropRow = dropGrid.gridAPI.get_row_by_index(dropRowIndex);
             const dropRowCells = dropRow.cells.toArray();
             for (let cellIndex = 0; cellIndex < dropRowCells.length; cellIndex++) {
                 expect(dropRowCells[cellIndex].value).toEqual(dragRowCells[cellIndex].value);
@@ -944,12 +944,12 @@ describe('Row Drag Tests #hGrid', () => {
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row
-        let rowToDrag = dragGrid.getRowByIndex(0);
+        let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
         dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
         rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
         dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
         pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
         pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
@@ -970,7 +970,7 @@ describe('Row Drag Tests #hGrid', () => {
 
         // second level row
         const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
-        rowToDrag = childGrid.getRowByIndex(0);
+        rowToDrag = childGrid.gridAPI.get_row_by_index(0);
         dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
         rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -989,7 +989,7 @@ describe('Row Drag Tests #hGrid', () => {
 
         // third level row
         const nestedChildGrid = childGrid.hgridAPI.getChildGrids(false)[0];
-        rowToDrag = nestedChildGrid.getRowByIndex(0);
+        rowToDrag = nestedChildGrid.gridAPI.get_row_by_index(0);
         dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
         rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -1015,12 +1015,12 @@ describe('Row Drag Tests #hGrid', () => {
         dragRows = fixture.debugElement.queryAll(By.directive(IgxRowDragDirective));
 
         // first level row
-        let rowToDrag = dragGrid.getRowByIndex(0);
+        let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
         dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
         rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
         dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
         pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
         pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
@@ -1038,7 +1038,7 @@ describe('Row Drag Tests #hGrid', () => {
 
         // second level row
         const childGrid = dragGrid.hgridAPI.getChildGrids(false)[0];
-        rowToDrag = childGrid.getRowByIndex(0);
+        rowToDrag = childGrid.gridAPI.get_row_by_index(0);
         dragIndicatorElement = rowToDrag.nativeElement.querySelector(CSS_CLASS_DRAG_INDICATOR);
         rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
@@ -1097,11 +1097,11 @@ describe('Row Drag Tests #tGrid', () => {
     it('should be able to drag row on every hierarchical level', () => {
         // first level row
         dragIndicatorElement = dragIndicatorElements[1].nativeElement;
-        let rowToDrag = dragGrid.getRowByIndex(0);
+        let rowToDrag = dragGrid.gridAPI.get_row_by_index(0);
         rowDragDirective = dragRows[0].injector.get(IgxRowDragDirective);
 
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
-        movePoint = UIInteractions.getPointFromElement(dragGrid.getRowByIndex(3).nativeElement);
+        movePoint = UIInteractions.getPointFromElement(dragGrid.gridAPI.get_row_by_index(3).nativeElement);
         dropPoint = UIInteractions.getPointFromElement(dropAreaElement);
         pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
         pointerMoveEvent = UIInteractions.createPointerEvent('pointermove', movePoint);
@@ -1121,7 +1121,7 @@ describe('Row Drag Tests #tGrid', () => {
 
         // second level row
         dragIndicatorElement = dragIndicatorElements[2].nativeElement;
-        rowToDrag = dragGrid.getRowByIndex(1);
+        rowToDrag = dragGrid.gridAPI.get_row_by_index(1);
         rowDragDirective = dragRows[1].injector.get(IgxRowDragDirective);
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
         pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);
@@ -1136,7 +1136,7 @@ describe('Row Drag Tests #tGrid', () => {
 
         // third level row
         dragIndicatorElement = dragIndicatorElements[3].nativeElement;
-        rowToDrag = dragGrid.getRowByIndex(2);
+        rowToDrag = dragGrid.gridAPI.get_row_by_index(2);
         rowDragDirective = dragRows[2].injector.get(IgxRowDragDirective);
         startPoint = UIInteractions.getPointFromElement(dragIndicatorElement);
         pointerDownEvent = UIInteractions.createPointerEvent('pointerdown', startPoint);

@@ -656,7 +656,7 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        const row = grid.getRowByIndex(2);
+        const row = grid.gridAPI.get_row_by_index(2);
         let initialRowData = { ...cell.rowData };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -665,6 +665,7 @@ describe('Edit cell with data of type Array', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
+        // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.rowID,
             rowData: initialRowData,
@@ -718,7 +719,7 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        const row = grid.getRowByIndex(2);
+        const row = grid.gridAPI.get_row_by_index(2);
         let initialRowData = { ...cell.rowData };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -727,6 +728,7 @@ describe('Edit cell with data of type Array', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
+        // TODO ROW addRow
         const rowArgs: IGridEditEventArgs = {
             rowID: row.rowID,
             rowData: initialRowData,

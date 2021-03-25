@@ -486,7 +486,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         // second data row in parent should be focused
-        const parentRow2 = hierarchicalGrid.getRowByIndex(2);
+        const parentRow2 = hierarchicalGrid.gridAPI.get_row_by_index(2);
         const parentCell2 = parentRow2.cells.toArray()[0];
 
         let selectedCell = fixture.componentInstance.selectedCell;

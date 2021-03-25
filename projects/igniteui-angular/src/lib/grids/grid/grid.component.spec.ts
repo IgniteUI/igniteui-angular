@@ -1613,7 +1613,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(false);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(350);
             expect(virtDir.getSizeAt(1)).toEqual(136);
             expect(virtDir.getSizeAt(2)).toEqual(136);
@@ -1644,7 +1644,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(hScroll.nativeElement.hidden).toBe(true);
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(700);
             expect(virtDir.getSizeAt(1)).toEqual(150);
             expect(virtDir.getSizeAt(2)).toEqual(150);
@@ -1675,7 +1675,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(false);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(expectedWidth);
             expect(virtDir.getSizeAt(1)).toEqual(136);
             expect(virtDir.getSizeAt(2)).toEqual(136);
@@ -1701,7 +1701,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(true);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(250);
             expect(virtDir.getSizeAt(1)).toEqual(100);
             expect(virtDir.getSizeAt(2)).toEqual(150);
@@ -1719,7 +1719,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
 
             // grid should render all columns and all should be visible.
-            const cells = grid.getRowByIndex(0).cells;
+            const cells = grid.gridAPI.get_row_by_index(0).cells;
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });

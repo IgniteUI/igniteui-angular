@@ -453,7 +453,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it('When cell in editMode and try to navigate with `ArrowRight` - focus should remain over the input.', (async () => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
-            const virtRow = grid.getRowByIndex(0).virtDirRow;
+            const virtRow = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
             cellElem.dispatchEvent(new Event('focus'));
@@ -477,7 +477,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         }));
 
         it('When cell in editMode and try to navigate with `ArrowLeft` - focus should remain over the input.', (async () => {
-            const virtRow = grid.getRowByIndex(0).virtDirRow;
+            const virtRow = grid.gridAPI.get_row_by_index(0).virtDirRow;
 
             GridFunctions.scrollLeft(grid, 800);
             await wait(100);
@@ -880,7 +880,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // update the cell value via updateRow and cancel the event
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 const rowIndex: number = e.cellID.rowIndex;
-                const row = grid.getRowByIndex(rowIndex);
+                const row = grid.gridAPI.get_row_by_index(rowIndex);
                 grid.updateRow({[row.columns[e.cellID.columnID].field]: e.newValue}, row.rowID);
                 e.cancel = true;
             });

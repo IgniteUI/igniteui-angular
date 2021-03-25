@@ -44,7 +44,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             row.beginAddRow();
             fixture.detectChanges();
             expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
         });
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
@@ -57,7 +57,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             fixture.detectChanges();
             endTransition();
             expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
             hierarchicalGrid.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();

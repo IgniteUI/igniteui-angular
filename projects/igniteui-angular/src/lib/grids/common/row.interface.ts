@@ -1,8 +1,8 @@
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 
 export interface RowType {
-    key: any;
-    data: any;
+    rowID: any;
+    rowData: any;
     disabled: boolean;
     index: number;
     pinned: boolean;
