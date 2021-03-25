@@ -10,5 +10,5 @@ import { IgxTabPanelBase } from '../tabs.base';
 export class IgxTabPanelComponent extends IgxTabPanelDirective {
     /** @hidden */
     @HostBinding('class.igx-tabs__panel')
-    public cssClass = 'igx-tabs__panel'
+    public cssClass = true;
 }
