@@ -1653,7 +1653,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
         });
 
@@ -1666,7 +1666,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
 
             grid.gridAPI.crudService.endEditMode();
@@ -1676,7 +1676,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(true);
         });
 
@@ -1694,7 +1694,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.endRowEditTabStop(true);
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(true);
             expect(cell.value).toEqual(cellValue);
         });
@@ -1714,14 +1714,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const rowData = Object.assign(cell.row.rowData, newRowData);
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
 
             grid.gridAPI.crudService.endRowEditTabStop(false, null);
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
         });
@@ -1891,7 +1891,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(cell.editMode).toEqual(false);
-            expect(grid.gridAPI.crudService.rowInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(GridFunctions.getRowEditingOverlay(fix)).toBeFalsy();
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);

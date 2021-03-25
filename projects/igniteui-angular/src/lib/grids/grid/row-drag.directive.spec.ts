@@ -867,7 +867,7 @@ describe('Row Drag Tests #grid', () => {
             const cellElement = dragCell.nativeElement;
             let cellInput = null;
 
-            spyOn(dragGrid, 'endEdit').and.callThrough();
+            spyOn(dragGrid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             cellElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();

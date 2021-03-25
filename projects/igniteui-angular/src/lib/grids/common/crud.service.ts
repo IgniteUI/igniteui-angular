@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { AbsoluteScrollStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/public_api';
 import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IgxRowDirective, IRowDataEventArgs } from '../grid/public_api';
-import { RowEditPositionStrategy } from '../grid.common';
 import { GridType } from './grid.interface';
 
 export class IgxRow {

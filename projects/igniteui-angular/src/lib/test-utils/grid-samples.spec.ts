@@ -1701,7 +1701,7 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     }
 
     public get cellInEditMode() {
-        return this.grid.crudService.cell;
+        return this.grid.gridAPI.crudService.cell;
     }
 
     public getCurrentEditCell(): IgxGridCellComponent {

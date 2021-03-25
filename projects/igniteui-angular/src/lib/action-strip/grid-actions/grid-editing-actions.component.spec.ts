@@ -56,7 +56,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editIcon.nativeElement.innerText).toBe('edit');
             editIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
-            expect(grid.rowInEditMode).not.toBeNull();
+            expect(grid.gridAPI.crudService.rowInEditMode).not.toBeNull();
             expect(grid.rowList.first.inEditMode).toBe(true);
 
             expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');

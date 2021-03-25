@@ -460,7 +460,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
 
             expect(grid.getRowByIndex(1).addRow).toBeTrue();
-            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
 
             grid.gridAPI.crudService.endEdit(false);
             fixture.detectChanges();
@@ -655,7 +655,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode on filter applied and discard', () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
@@ -727,7 +727,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode and discard on sorting', () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
@@ -899,7 +899,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         }));
 
         it('Should exit add row mode when moving a column', () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -919,7 +919,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when pinning/unpinning a column', () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();
@@ -948,7 +948,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when resizing a column', async () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             fixture.detectChanges();
 
@@ -979,7 +979,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should exit add row mode when hiding a column', () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             const dataLength = grid.data.length;
             const row = grid.rowList.first;
             row.beginAddRow();

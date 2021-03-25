@@ -397,7 +397,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         wait();
 
-        expect(childGrid.crudService.cellInEditMode).toBeFalsy();
+        expect(childGrid.gridAPI.crudService.cellInEditMode).toBeFalsy();
         expect(childGridSecondRow.inEditMode).toBeFalsy();
     });
 
