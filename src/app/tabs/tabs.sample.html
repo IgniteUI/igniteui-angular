@@ -209,7 +209,7 @@
             >
                 <igx-tab-item *ngFor="let contact of contacts; index as i">
                     <igx-tab-header>
-                        <igx-avatar igxPrefix [initials]="contact.text" size="small" roundShape="true">person</igx-avatar>
+                        <igx-avatar igxPrefix [initials]="contact.text" size="small" [roundShape]="true">person</igx-avatar>
                         <span igxTabHeaderLabel>{{contact.text}}</span>
                         <button
                             igxButton="icon"
