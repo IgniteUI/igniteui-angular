@@ -32,7 +32,7 @@
 <section class="sample-content">
     <article class="sample-column">
         <h4 class="sample-title">Radio group without data model (Vertical Alignment)</h4>
-        <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required="true" (change)="onRadioChange($event)" [alignment]="alignment">
+        <igx-radio-group #radioGroupZZ name="radiogroupZZ" value="Bar" required (change)="onRadioChange($event)" [alignment]="alignment">
             <igx-radio class="radio-sample" *ngFor="let item of ['Foo', 'Bar', 'Baz']" value="{{item}}">
                 {{item}}
             </igx-radio>

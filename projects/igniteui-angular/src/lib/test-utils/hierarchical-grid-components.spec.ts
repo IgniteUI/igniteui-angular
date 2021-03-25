@@ -13,14 +13,14 @@ import { IgxActionStripComponent } from '../action-strip/public_api';
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
      [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
-        <igx-column field="ID" [groupable]='true' [movable]='true'></igx-column>
+        <igx-column field="ID" [groupable]="true" [movable]='true'></igx-column>
         <igx-column-group header="Information">
-                <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true" [movable]='true'></igx-column>
-                <igx-column field="ProductName" [groupable]='true' [hasSummary]='true' [movable]='true'></igx-column>
+                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
+                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
-            <igx-column field="ID" [groupable]='true' [hasSummary]='true' [movable]='true'>
+            <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
                 <ng-template igxHeader let-columnRef="column">
                     <div>
                         <span>ID</span>
@@ -29,14 +29,14 @@ import { IgxActionStripComponent } from '../action-strip/public_api';
                 </ng-template>
             </igx-column>
             <igx-column-group header="Information">
-                    <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
-                    <igx-column field="ProductName" [groupable]='true'></igx-column>
+                    <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                    <igx-column field="ProductName" [groupable]="true"></igx-column>
             </igx-column-group>
             <igx-row-island [key]="'childData'" #rowIsland2 >
-                <igx-column field="ID" [groupable]='true' ></igx-column>
+                <igx-column field="ID" [groupable]="true" ></igx-column>
                 <igx-column-group header="Information">
-                        <igx-column field="ChildLevels" [groupable]='true' [sortable]='true' [editable]="true"></igx-column>
-                        <igx-column field="ProductName" [groupable]='true' [hasSummary]='true'></igx-column>
+                        <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                        <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>

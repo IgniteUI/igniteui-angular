@@ -57,6 +57,8 @@ let nextId = 0;
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxRadioGroupDirective, multi: true }]
 })
 export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAccessor, OnDestroy {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Returns reference to the child radio buttons.
      *
@@ -120,11 +122,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     public get required(): boolean {
         return this._required;
     }
-    public set required(newValue: boolean) {
-        if (this._required !== newValue) {
-            this._required = newValue;
-            this._setRadioButtonsRequired();
-        }
+    public set required(value: boolean) {
+        this._required = (value as any === '') || value;
+        this._setRadioButtonsRequired();
     }
 
     /**
@@ -139,11 +139,9 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     public get disabled(): boolean {
         return this._disabled;
     }
-    public set disabled(newValue: boolean) {
-        if (this._disabled !== newValue) {
-            this._disabled = newValue;
-            this._disableRadioButtons();
-        }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+        this.setDisabledState(value);
     }
 
     /**
@@ -340,6 +338,18 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+     public setDisabledState(isDisabled: boolean) {
+        if (this.radioButtons) {
+            this.radioButtons.forEach((button) => {
+                button.disabled = isDisabled;
+            });
+        }
+    }
+
+    /**
      * Registers a function called when the control is touched.
      *
      * @hidden
@@ -453,18 +463,6 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
                 button.labelPosition = this._labelPosition;
-            });
-        }
-    }
-
-    /**
-     * @hidden
-     * @internal
-     */
-    private _disableRadioButtons() {
-        if (this.radioButtons) {
-            this.radioButtons.forEach((button) => {
-                button.disabled = this._disabled;
             });
         }
     }

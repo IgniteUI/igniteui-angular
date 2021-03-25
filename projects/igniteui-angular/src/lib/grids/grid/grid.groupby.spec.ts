@@ -1480,7 +1480,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.selectRows([grRow.groupRow.records[0]]);
             fix.detectChanges();
 
-            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
+            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('mixed');
             expect(groupByRowCheckboxElement.getAttribute('aria-label'))
                 .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
 
@@ -3540,7 +3540,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             [width]='width'
             [autoGenerate]='false'
             [data]='data'>
-            <igx-column [width]='width' [groupable]='true'>
+            <igx-column [width]='width' [groupable]="true">
                 <ng-template igxCell>
                     <button>Dummy button</button>
                 </ng-template>

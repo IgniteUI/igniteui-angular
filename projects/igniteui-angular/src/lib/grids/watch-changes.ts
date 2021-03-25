@@ -11,11 +11,11 @@ export function WatchChanges(): PropertyDecorator {
             enumerable: true,
         };
         propDesc.get = propDesc.get || (function(this: any) {
- return this[privateKey];
-});
+            return this[privateKey];
+        });
         const originalSetter = propDesc.set || (function(this: any, val: any) {
- this[privateKey] = val;
-});
+            this[privateKey] = val;
+        });
 
         propDesc.set = function(this: any, val: any) {
             const init = this._init;
@@ -43,11 +43,11 @@ export function WatchColumnChanges(): PropertyDecorator {
             enumerable: true,
         };
         propDesc.get = propDesc.get || (function(this: any) {
- return this[privateKey];
-});
+            return this[privateKey];
+        });
         const originalSetter = propDesc.set || (function(this: any, val: any) {
- this[privateKey] = val;
-});
+            this[privateKey] = val;
+        });
 
         propDesc.set = function(this: any, val: any) {
             const oldValue = this[key];
@@ -76,8 +76,8 @@ export function notifyChanges(repaint = false) {
         const originalSetter = propDesc ? propDesc.set : null;
 
         propDesc.get = propDesc.get || (function(this) {
- return this[privateKey];
-});
+            return this[privateKey];
+        });
 
         propDesc.set = function(this, newValue) {
             if (originalSetter) {
@@ -87,8 +87,8 @@ export function notifyChanges(repaint = false) {
                 }
             } else {
                 if (newValue === this[key]) {
- return;
-}
+                    return;
+                }
                 this[privateKey] = newValue;
                 if (this.grid) {
                     this.grid.notifyChanges(repaint);

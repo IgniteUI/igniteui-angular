@@ -7,22 +7,19 @@
     [checked]="checked"
     [required]="required"
     [attr.aria-checked]="checked"
-    [attr.aria-labelledby]="ariaLabelledBy"
+    [attr.aria-labelledby]="ariaLabel ? null : ariaLabelledBy"
     [attr.aria-label]="ariaLabel"
-    (click)="_clicked($event)"
     (blur)="onBlur()" />
 
-<label #nativeLabel class="igx-radio__composite" igxRipple
+<span #nativeLabel class="igx-radio__composite" igxRipple
     igxRippleTarget=".igx-radio__ripple"
     [igxRippleDisabled]="disableRipple"
     [igxRippleCentered]="true"
-    [igxRippleDuration]="300"
-    [for]="inputId">
+    [igxRippleDuration]="300">
     <div class="igx-radio__ripple"></div>
-</label>
+</span>
 
 <span #placeholderLabel
-    (click)="_clicked($event)"
     [id]="labelId"
     [class]="labelClass">
     <ng-content></ng-content>

@@ -70,7 +70,7 @@
             <igx-checkbox [(ngModel)]="grid1.allowAdvancedFiltering">Allow Advanced Filtering</igx-checkbox>
             <button igxButton="raised" (click)="openAdvancedFiltering()">Open Advanced Filtering</button>
             <button igxButton="raised" (click)="closeAdvancedFiltering()">Close Advanced Filtering</button>
-            <igx-checkbox #applyChangesCheckbox checked="true">Apply Changes</igx-checkbox>
+            <igx-checkbox #applyChangesCheckbox [checked]="true">Apply Changes</igx-checkbox>
             <button igxButton="raised" (click)="clearAdvancedFiltering()">Clear Advanced Filtering</button>
         </div>
     </div>

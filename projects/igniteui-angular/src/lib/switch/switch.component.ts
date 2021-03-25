@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -59,6 +59,8 @@ let nextId = 0;
     templateUrl: 'switch.component.html'
 })
 export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Returns a reference to the native checkbox element.
      *
@@ -118,7 +120,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * <igx-switch [value]="switchValue"></igx-switch>
      * ```
      */
-    @Input() public value: string;
+    @Input() public value: any;
     /**
      * Sets/gets the `name` attribute of the switch component.
      *
@@ -163,10 +165,16 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      *
      * @example
      * ```html
-     * <igx-switch [required]="true"></igx-switch>
+     * <igx-switch required></igx-switch>
      * ```
      */
-    @Input() public required = false;
+     @Input()
+     public get required(): boolean {
+         return this._required;
+     }
+     public set required(value: boolean) {
+         this._required = (value as any === '') || value;
+     }
     /**
      * Sets/gets the `aria-labelledBy` attribute.
      * If not set, the  value of `aria-labelledBy` will be equal to the value of `labelId` attribute.
@@ -215,18 +223,33 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * ```
      */
     @HostBinding('class.igx-switch--checked')
-    @Input() public checked = false;
+    @Input()
+    public set checked(value: boolean) {
+        if(this._checked !== value) {
+            this._checked = value;
+            this._onChangeCallback(this.checked);
+        }
+    }
+    public get checked() {
+        return this._checked;
+    }
     /**
      * Sets/gets the `disabled` attribute.
      * Default value is `false`.
      *
      * @example
      * ```html
-     * <igx-switch [disabled]="true"><igx-switch>
+     * <igx-switch disabled><igx-switch>
      * ```
      */
     @HostBinding('class.igx-switch--disabled')
-    @Input() public disabled = false;
+    @Input()
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+    }
     /**
      * Sets/gets whether the switch component is on focus.
      * Default value is `false`.
@@ -247,7 +270,17 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    protected _value: any;
+    private _checked = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _disabled = false;
     /**
      * @hidden
      * @internal
@@ -267,16 +300,12 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         event.stopPropagation();
         this.focused = true;
     }
-
     /**
-     * Toggles the checked state of the switch.
-     *
-     * @example
-     * ```typescript
-     * this.switch.toggle();
-     * ```
+     * @hidden
+     * @internal
      */
-    public toggle() {
+    @HostListener('click')
+    public _onSwitchClick() {
         if (this.disabled) {
             return;
         }
@@ -284,8 +313,10 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
         this.nativeCheckbox.nativeElement.focus();
 
         this.checked = !this.checked;
+        // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
+        // bound on change would have to perform self checks for weather the value has changed because
+        // of the initial set on initialization
         this.change.emit({ checked: this.checked, switch: this });
-        this._onChangeCallback(this.checked);
     }
     /**
      * @hidden
@@ -293,25 +324,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      */
     public _onSwitchChange(event: Event) {
         event.stopPropagation();
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public _onSwitchClick(event: Event) {
-        event.stopPropagation();
-        this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
-    }
-    /**
-     * @hidden
-     * @internal
-     */
-    public onLabelClick() {
-        this.toggle();
     }
     /**
      * @hidden
@@ -325,9 +337,10 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @hidden
      * @internal
      */
-    public writeValue(value: string) {
-        this._value = value;
-        this.checked = !!this._value;
+    public writeValue(value: boolean) {
+        if (typeof value === 'boolean') {
+            this._checked = value;
+        }
     }
     /**
      * @hidden
@@ -336,7 +349,6 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
     public getEditElement() {
         return this.nativeCheckbox.nativeElement;
     }
-
     /**
      * @hidden
      * @internal
@@ -355,15 +367,15 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * @internal
      */
     public registerOnChange(fn: (_: any) => void) {
- this._onChangeCallback = fn;
-}
+        this._onChangeCallback = fn;
+    }
     /**
      * @hidden
      * @internal
      */
     public registerOnTouched(fn: () => void) {
- this._onTouchedCallback = fn;
-}
+        this._onTouchedCallback = fn;
+    }
 }
 
 export const IGX_SWITCH_REQUIRED_VALIDATOR: Provider = {

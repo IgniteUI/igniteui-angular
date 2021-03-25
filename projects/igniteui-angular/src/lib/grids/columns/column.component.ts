@@ -79,11 +79,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    set field(value: string) {
+    public set field(value: string) {
         this._field = value;
         this.hasNestedPath = value?.includes('.');
     }
-    get field(): string {
+    public get field(): string {
         return this._field;
     }
     /**
@@ -888,7 +888,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
-            (this.grid as any)._summaryPipeTrigger++;
+            this.grid.summaryPipeTrigger++;
             this.grid.summaryService.resetSummaryHeight();
         }
     }
@@ -1319,12 +1319,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      * @memberof IgxColumnComponent
      */
+    @notifyChanges()
+    @WatchColumnChanges()
     @Input()
     public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
-        (this.grid as any)._pipeTrigger++;
-        this.grid.notifyChanges();
+        this.grid.pipeTrigger++;
     }
     public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
