@@ -850,7 +850,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
     @Output()
-    onGridCopy = new EventEmitter<IGridClipboardEvent>();
+    public onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
      * @hidden @internal
@@ -3368,7 +3368,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges(true);
         });
 
-        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
             this.calculateGridSizes(false);
         });
 

@@ -24,7 +24,7 @@ export class NavbarSampleComponent implements OnInit {
         this._location.back();
     }
 
-    public canGoBack() {
+    public get canGoBack() {
         return window.history.length === 0;
     }
 }

@@ -3541,7 +3541,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             [width]='width'
             [autoGenerate]='false'
             [data]='data'>
-            <igx-column [width]='width' [groupable]='true'>
+            <igx-column [width]='width' [groupable]="true">
                 <ng-template igxCell>
                     <button>Dummy button</button>
                 </ng-template>

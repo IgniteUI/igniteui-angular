@@ -73,7 +73,7 @@ export class DragDropSampleComponent {
         { text: 'The Avengers', dragged: false }
     ];
     public listObserver = null;
-    public draggableElems = [
+    public draggableElems: {value: string; hide?: boolean}[] = [
         { value: 'Suspect 1' },
         { value: 'Suspect 2' },
         { value: 'Suspect 3' },

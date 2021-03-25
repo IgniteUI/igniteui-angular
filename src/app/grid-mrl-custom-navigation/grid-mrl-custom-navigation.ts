@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     selector: 'app-grid-mrl-custom-navigation-sample',
@@ -23,7 +23,7 @@ export class GridMRLCustomNavigationSampleComponent {
         }
     ];
 
-    public density = 'compact';
+    public density: DisplayDensity = 'compact';
     public displayDensities;
     public selectionMode;
     /* eslint-disable max-len */

@@ -303,7 +303,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      *
      * @hidden
      */
-    public paginatorSelectDisplayDensity(): string {
+    public get paginatorSelectDisplayDensity(): DisplayDensity {
         if (this.displayDensity === DisplayDensity.comfortable) {
             return DisplayDensity.cosy;
         }

@@ -206,7 +206,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1, $event)'>
+    <button igxButton="raised" igxRipple (click)="beginAddRowByIndex(null, -1, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -264,7 +264,7 @@
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [readonly]="true"
-            disableRipple="true"
+            [disableRipple]="true"
             [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
             [aria-label]="headSelectorBaseAriaLabel"
             #headerCheckbox>
