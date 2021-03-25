@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
-import {IgxDialogComponent, IgxFilterOptions, IgxListComponent} from 'igniteui-angular';
+import {DisplayDensity, IgxDialogComponent, IgxFilterOptions, IgxListComponent} from 'igniteui-angular';
 
 interface Employee {
     imageURL: string;
@@ -30,7 +30,7 @@ export class ListSampleComponent implements OnInit {
     public options = {};
     public fruitsFilteredItemsCount = undefined;
 
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
 
     public employeeItems: Employee[] = [{

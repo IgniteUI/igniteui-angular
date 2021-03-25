@@ -28,8 +28,8 @@
             </igx-chips-area>
         </div>
         <div class="searchButtons">
-            <igx-icon igxRipple igxRippleCentered="true" (click)="grid.findPrev(searchText, caseSensitive, exactMatch)">navigate_before</igx-icon>
-            <igx-icon igxRipple igxRippleCentered="true" (click)="grid.findNext(searchText, caseSensitive, exactMatch)">navigate_next</igx-icon>
+            <igx-icon igxRipple [igxRippleCentered]="true" (click)="grid.findPrev(searchText, caseSensitive, exactMatch)">navigate_before</igx-icon>
+            <igx-icon igxRipple [igxRippleCentered]="true" (click)="grid.findNext(searchText, caseSensitive, exactMatch)">navigate_next</igx-icon>
         </div>
     </igx-suffix>
 </igx-input-group>

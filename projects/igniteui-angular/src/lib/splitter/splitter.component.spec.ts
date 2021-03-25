@@ -416,7 +416,7 @@ describe('IgxSplitter pane toggle', () => {
 export class SplitterTestComponent {
     @ViewChild(IgxSplitterComponent, { static: true })
     public splitter: IgxSplitterComponent;
-    type = SplitterType.Horizontal;
+    public type = SplitterType.Horizontal;
 }
 
 @Component({
