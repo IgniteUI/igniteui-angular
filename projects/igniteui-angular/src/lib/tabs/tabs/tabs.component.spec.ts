@@ -1138,6 +1138,25 @@ fdescribe('IgxTabs', () => {
             expect(header2Elements[1].innerText).toBe('close');
         });
 
+        it('tabAlignment is set to "start" by default.', () => {
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.start);
+            expect(tabs.startAlignmentClass).toBeTrue();
+        });
+
+        it('tabAlignment changes in runtime are properly applied.', () => {
+            tabs.tabAlignment = IgxTabsAlignment.justify;
+            fixture.detectChanges();
+
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.justify);
+            expect(tabs.justifyAlignmentClass).toBeTrue();
+
+            tabs.tabAlignment = IgxTabsAlignment.end;
+            fixture.detectChanges();
+
+            expect(tabs.tabAlignment).toBe(IgxTabsAlignment.end);
+            expect(tabs.endAlignmentClass).toBeTrue();
+        });
+
         it('aligns tab header content properly when tabAlignment="justify".', () => {
             tabs.tabAlignment = IgxTabsAlignment.justify;
             fixture.detectChanges();
