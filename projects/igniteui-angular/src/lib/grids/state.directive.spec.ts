@@ -18,7 +18,7 @@ import { FilteringLogic } from '../data-operations/filtering-expression.interfac
 import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 /* eslint-disable max-len */
-fdescribe('IgxGridState - input properties #grid', () => {
+describe('IgxGridState - input properties #grid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
