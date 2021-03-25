@@ -85,6 +85,29 @@ export class IgxChipsAreaComponent implements DoCheck, AfterViewInit, OnDestroy 
     }
 
     /**
+     * Returns the `role` attribute of the chips area.
+     *
+     * @example
+     * ```typescript
+     * let chipsAreaRole = this.chipsArea.role;
+     * ```
+     */
+     @HostBinding('attr.role')
+     public role = 'listbox';
+
+    /**
+     * Returns the `aria-label` attribute of the chips area.
+     *
+     * @example
+     * ```typescript
+     * let ariaLabel = this.chipsArea.ariaLabel;
+     * ```
+     *
+     */
+     @HostBinding('attr.aria-label')
+     public ariaLabel = 'chip area';
+
+    /**
      * An @Input property that sets the width of the `IgxChipsAreaComponent`.
      *
      * @example

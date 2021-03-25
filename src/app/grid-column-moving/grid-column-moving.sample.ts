@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent } from 'igniteui-angular';
+import { DisplayDensity, IgxGridComponent } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -17,7 +17,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
     public columns: Array<any>;
     public newIndex = 0;
     public gridMCHNewIndex = 0;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
 
     public mchData = [

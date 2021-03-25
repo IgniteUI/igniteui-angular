@@ -4,7 +4,7 @@
     </div>
 
     <app-tree-grid-with-transactions>
-        <igx-tree-grid #grid1 selectionType='multi' [data]="data" childDataKey="ChildCompanies" primaryKey="ID" expansionDepth="1"
+        <igx-tree-grid #grid1 selectionType='multi' [data]="data" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
             [rowSelection]="selectionMode" [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
             [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
             <igx-grid-toolbar [displayDensity]="grid1.displayDensity">

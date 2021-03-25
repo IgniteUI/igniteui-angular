@@ -233,7 +233,7 @@
 </ng-template>
 
 <ng-template #defaultAddRowEmptyTemplate>
-    <button igxButton="raised" igxRipple (click)='beginAddRowByIndex(null, -1, $event)'>
+    <button igxButton="raised" igxRipple (click)="beginAddRowByIndex(null, -1, false, $event)">
         {{resourceStrings.igx_grid_add_row_label}}
     </button>
 </ng-template>
@@ -268,10 +268,11 @@
     <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
-    <div class="igx-banner__message" *ngIf="!this.crudService.row?.isAddRow">
+    <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="rowEditText ? rowEditText : defaultRowEditText; context: { $implicit: rowChangesCount }">
+                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
@@ -294,7 +295,7 @@
             [tabindex]="-1"
             [readonly]="true"
             [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
-            disableRipple="true"
+            [disableRipple]="true"
             [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
             [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
             [aria-label]="headSelectorBaseAriaLabel"
