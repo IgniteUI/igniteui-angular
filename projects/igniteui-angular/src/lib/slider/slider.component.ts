@@ -676,7 +676,7 @@ export class IgxSliderComponent implements
      * ```
      */
     @Input()
-    public tickLabelsOrientation = TickLabelsOrientation.Horizontal;
+    public tickLabelsOrientation: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
 
     /**
      * @hidden
@@ -1016,7 +1016,7 @@ export class IgxSliderComponent implements
             this.changeThumbFocusableState(this.disabled);
         });
 
-        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(() => {
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
             this.positionHandler(null, labelFrom, this.lowerValue);
         });

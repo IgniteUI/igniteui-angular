@@ -78,7 +78,7 @@
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}
                             </ng-template>
-                            <igx-column [movable]="true" [filterable]="false" [hidden]="true" sortable="true" resizable="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false">
+                            <igx-column [movable]="true" [filterable]="false" [hidden]="true" [sortable]="true" [resizable]="true" field="CompanyName" title="Company Name" width="200px" [visibleWhenCollapsed]="false">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
@@ -92,12 +92,12 @@
                                 <ng-template igxHeader let-column>
                                     {{ column.header }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column [movable]="true" [visibleWhenCollapsed]="false" [hidden]="true" filterable="true" sortable="true" resizable="true" field="ContactName">
+                                <igx-column [movable]="true" [visibleWhenCollapsed]="false" [hidden]="true" [filterable]="true" [sortable]="true" [resizable]="true" field="ContactName">
                                     <ng-template igxHeader let-column>
                                         {{ column.field }} {{ column.visibleIndex }}
                                     </ng-template>
                                 </igx-column>
-                                <igx-column [movable]="true" [visibleWhenCollapsed]="false"  filterable="true" sortable="true" resizable="true" field="ContactTitle">
+                                <igx-column [movable]="true" [visibleWhenCollapsed]="false"  [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle">
                                     <ng-template igxHeader let-column>
                                         {{ column.field }} {{ column.visibleIndex }}
                                     </ng-template>
@@ -107,32 +107,32 @@
                                 <igx-icon [attr.draggable]="false">{{column.expanded ? 'remove' : 'add'}} </igx-icon>
                             </ng-template>
                         </igx-column-group>
-                        <igx-column [movable]="true" [resizable]="true" field="ID" editable="true">
+                        <igx-column [movable]="true" [resizable]="true" field="ID" [editable]="true">
                             <ng-template igxHeader let-column>
                                 {{ column.field }} {{ column.visibleIndex }}
                             </ng-template>
                         </igx-column>
-                        <igx-column-group header="Address Information" movable="true">
+                        <igx-column-group header="Address Information" [movable]="true">
                             <ng-template igxHeader let-column>
                                 {{ column.header }} {{ column.visibleIndex }}
                             </ng-template>
-                            <igx-column filterable="true" sortable="true" movable="true" field="PostalCode">                <ng-template igxHeader let-column>
+                            <igx-column [filterable]="true" [sortable]="true" [movable]="true" field="PostalCode">                <ng-template igxHeader let-column>
                                 {{ column.field }} {{ column.visibleIndex }}
                             </ng-template></igx-column>
-                            <igx-column-group header="Location" movable="true">
+                            <igx-column-group header="Location" [movable]="true">
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column filterable="true" movable="true" resizable="true" field="Country">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Country">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
-                                <igx-column filterable="true" movable="true" resizable="true" field="Region">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Region">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
-                                <igx-column filterable="true" movable="true" resizable="true" field="City">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="City">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
-                                <igx-column filterable="true" movable="true" resizable="true" field="Address">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [movable]="true" [resizable]="true" field="Address">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
                             </igx-column-group>
@@ -140,10 +140,10 @@
                                 <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template>
-                                <igx-column filterable="true" sortable="true" resizable="true" field="Phone">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
-                                <igx-column filterable="true" sortable="true" resizable="true" field="Fax">                <ng-template igxHeader let-column>
+                                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax">                <ng-template igxHeader let-column>
                                     {{ column.field }} {{ column.visibleIndex }}
                                 </ng-template></igx-column>
                             </igx-column-group>
