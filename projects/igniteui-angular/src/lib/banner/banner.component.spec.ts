@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { TestBed, ComponentFixture, tick, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxAvatarModule } from '../avatar/avatar.component';
@@ -487,7 +487,7 @@ describe('igxBanner', () => {
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             expect(banner.collapsed).toBeFalsy();
             banner.toggle();
-            tick(100);
+            tick();
             // Banner is collapsING, display is 'block';
             expect(banner.elementRef.nativeElement.style.display).toEqual('block');
             tick();
@@ -566,7 +566,7 @@ export class IgxBannerSampleComponent {
                     <igx-card-header class="compact">
                         <igx-avatar
                             src="https://www.infragistics.com/angular-demos/assets/images/card/avatars/brad_stanley.jpg"
-                            roundShape="true">
+                            [roundShape]="true">
                         </igx-avatar>
                         <div class="igx-card-header__tgroup">
                             <h3 class="igx-card-header__title--small">Brad Stanley</h3>

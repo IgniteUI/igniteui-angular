@@ -1,0 +1,13 @@
+{
+    "$schema": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "onColumnChange",
+            "replaceWith": "columnChange",
+            "owner": {
+                "selector": "igx-column",
+                "type": "component"
+            }
+        }
+    ]
+}

@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
@@ -33,8 +33,9 @@ describe('IgxCheckbox', () => {
         const fixture = TestBed.createComponent(InitCheckboxComponent);
         fixture.detectChanges();
 
+        const checkbox = fixture.componentInstance.cb;
         const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
-        const nativeLabel = fixture.debugElement.query(By.css('label')).nativeElement;
+        const nativeLabel = checkbox.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-checkbox__label')).nativeElement;
 
         expect(nativeCheckbox).toBeTruthy();
@@ -43,14 +44,21 @@ describe('IgxCheckbox', () => {
         expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-checkbox-0-label');
 
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.getAttribute('for')).toEqual('igx-checkbox-0-input');
+        // No longer have a for attribute to not propagate clicks to the native checkbox
+        // expect(nativeLabel.getAttribute('for')).toEqual('igx-checkbox-0-input');
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-checkbox__label');
         expect(placeholderLabel.getAttribute('id')).toEqual('igx-checkbox-0-label');
+
+        // When aria-label is present, aria-labeledby shouldn't be
+        checkbox.ariaLabel = 'New Label';
+        fixture.detectChanges();
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toEqual(null);
+        expect(nativeCheckbox.getAttribute('aria-label')).toMatch('New Label');
     });
 
-    it('Initializes with ngModel', () => {
+    it('Initializes with ngModel', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxSimpleComponent);
         fixture.detectChanges();
 
@@ -65,12 +73,17 @@ describe('IgxCheckbox', () => {
 
         testInstance.subscribed = true;
         checkboxInstance.name = 'my-checkbox';
+        // One change detection cycle for updating our checkbox
         fixture.detectChanges();
-
-        expect(nativeCheckbox.checked).toBe(true);
+        tick();
         expect(checkboxInstance.checked).toBe(true);
+
+        // Now one more change detection cycle to update the native checkbox
+        fixture.detectChanges();
+        tick();
+        expect(nativeCheckbox.checked).toBe(true);
         expect(checkboxInstance.name).toEqual('my-checkbox');
-    });
+    }));
 
     it('Initializes with external label', () => {
         const fixture = TestBed.createComponent(CheckboxExternalLabelComponent);
@@ -107,32 +120,64 @@ describe('IgxCheckbox', () => {
         expect(labelStyles.order).toEqual('-1');
     });
 
-    it('Indeterminate state', () => {
+    it('Indeterminate state', fakeAsync(() => {
         const fixture = TestBed.createComponent(CheckboxIndeterminateComponent);
         const testInstance = fixture.componentInstance;
         const checkboxInstance = testInstance.cb;
         const nativeCheckbox = checkboxInstance.nativeCheckbox.nativeElement;
         const nativeLabel = checkboxInstance.nativeLabel.nativeElement;
-        testInstance.subscribed = true;
+
+        // Before any changes indeterminate should be true
         fixture.detectChanges();
-
+        expect(checkboxInstance.indeterminate).toBe(true);
         expect(nativeCheckbox.indeterminate).toBe(true);
-        expect(nativeCheckbox.checked).toBe(false);
 
-        // Should not update
+        testInstance.subscribed = true;
+
+        fixture.detectChanges();
+        tick();
+        // First change detection should update our checkbox state and API call should not change indeterminate
+        expect(checkboxInstance.checked).toBe(true);
+        expect(checkboxInstance.indeterminate).toBe(true);
+
+        // Second change detection should update native checkbox state but indeterminate should not change
+        fixture.detectChanges();
+        tick();
+        expect(nativeCheckbox.indeterminate).toBe(true);
+        expect(nativeCheckbox.checked).toBe(true);
+
+        // Should not change the state
         nativeCheckbox.dispatchEvent(new Event('change'));
         fixture.detectChanges();
 
         expect(nativeCheckbox.indeterminate).toBe(true);
-        expect(nativeCheckbox.checked).toBe(false);
+        expect(checkboxInstance.checked).toBe(true);
+        expect(nativeCheckbox.checked).toBe(true);
 
-        // Should update on click
+        // Should update the state on click
         nativeLabel.click();
         fixture.detectChanges();
 
         expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(checkboxInstance.checked).toBe(false);
+        expect(nativeCheckbox.checked).toBe(false);
+
+        // Should update the state again on click
+        nativeLabel.click();
+        fixture.detectChanges();
+
+        expect(nativeCheckbox.indeterminate).toBe(false);
+        expect(checkboxInstance.checked).toBe(true);
         expect(nativeCheckbox.checked).toBe(true);
-    });
+
+        // Should be able to set indeterminate again
+        checkboxInstance.indeterminate = true;
+        fixture.detectChanges();
+
+        expect(nativeCheckbox.indeterminate).toBe(true);
+        expect(checkboxInstance.checked).toBe(true);
+        expect(nativeCheckbox.checked).toBe(true);
+    }));
 
     it('Disabled state', () => {
         const fixture = TestBed.createComponent(CheckboxDisabledComponent);
@@ -181,6 +226,12 @@ describe('IgxCheckbox', () => {
         fixture.detectChanges();
         // Should not update
         expect(testInstance.subscribed).toBe(false);
+
+        nativeCheckbox.click();
+        fixture.detectChanges();
+        // Should not update
+        expect(testInstance.subscribed).toBe(false);
+        expect(checkboxInstance.indeterminate).toBe(true);
     });
 
     it('Should be able to enable/disable CSS transitions', () => {
@@ -263,12 +314,15 @@ describe('IgxCheckbox', () => {
     });
 });
 
-@Component({ template: `<igx-checkbox>Init</igx-checkbox>` })
-class InitCheckboxComponent { }
+@Component({ template: `<igx-checkbox #cb>Init</igx-checkbox>` })
+class InitCheckboxComponent {
+    @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
+}
 
 @Component({
     template: `<igx-checkbox #cb (change)="onChange()" (click)="onClick()"
-[(ngModel)]="subscribed" [checked]="subscribed">Simple</igx-checkbox>`})
+                            [(ngModel)]="subscribed">Simple</igx-checkbox>`
+})
 class CheckboxSimpleComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
     public changeEventCalled = false;
@@ -293,7 +347,7 @@ class CheckboxIndeterminateComponent {
 }
 
 @Component({
-    template: `<igx-checkbox #cb [required]="true">Required</igx-checkbox>`
+    template: `<igx-checkbox #cb required>Required</igx-checkbox>`
 })
 class CheckboxRequiredComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -302,7 +356,6 @@ class CheckboxRequiredComponent {
 @Component({
     template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
-                                [checked]="subscribed"
                                 [disabled]="true">Disabled</igx-checkbox>`})
 class CheckboxDisabledComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
@@ -314,6 +367,7 @@ class CheckboxDisabledComponent {
     template: `<igx-checkbox #cb
                                 [(ngModel)]="subscribed"
                                 [checked]="subscribed"
+                                [indeterminate]="true"
                                 [readonly]="true">Readonly</igx-checkbox>`})
 class CheckboxReadonlyComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
