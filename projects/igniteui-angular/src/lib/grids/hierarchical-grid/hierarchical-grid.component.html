@@ -1,9 +1,10 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 <ng-container #toolbarOutlet></ng-container>
 
-<div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
-     (keydown)="navigation.headerNavigation($event)" role="rowgroup" [style.width.px]='calcWidth' #theadRow>
+<div class="igx-grid__thead" role="rowgroup">
+    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" 
+        tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
+        (keydown)="navigation.headerNavigation($event)" [style.width.px]='calcWidth' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -87,10 +88,10 @@
     <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollSize"></div>
 </div>
 
-<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody">
-    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" [attr.aria-activedescendant]="activeDescendant"
+<div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
+    <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
      (keydown)="navigation.handleNavigation($event)" (onDragStop)="selectionService.dragMode = $event"
-        (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" role="rowgroup"
+        (onDragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
         <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -179,15 +180,17 @@
     </div>
 </div>
 
-<div class="igx-grid__tfoot" tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
- (keydown)="navigation.summaryNav($event)"  role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
-    <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
-        *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
-        [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
-        class="igx-grid__summaries" #summaryRow>
-    </igx-grid-summary-row>
-    <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
-        [style.width.px]="scrollSize"></div>
+<div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
+    <div tabindex="0" (focus)="navigation.focusFirstCell(false)" [attr.aria-activedescendant]="activeDescendant"
+     (keydown)="navigation.summaryNav($event)">
+        <igx-grid-summary-row [style.width.px]='calcWidth' [style.height.px]='summariesHeight'
+            *ngIf="hasSummarizedColumns && rootSummariesEnabled" [gridID]="id" role="row"
+            [summaries]="id | igxGridSummaryDataPipe:summaryService.retriggerRootPipe" [index]="dataView.length"
+            class="igx-grid__summaries" #summaryRow>
+        </igx-grid-summary-row>
+        <div class="igx-grid__tfoot-thumb" [hidden]='!hasVerticalScroll()' [style.height.px]='summariesHeight'
+            [style.width.px]="scrollSize"></div>
+    </div>
 </div>
 
 <div class="igx-grid__scroll" [style.height.px]="scrollSize" #scr [hidden]="isHorizontalScrollHidden"  (pointerdown)="$event.preventDefault()">

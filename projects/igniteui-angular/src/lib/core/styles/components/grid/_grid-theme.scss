@@ -752,6 +752,10 @@
                 color: inherit;
             }
         }
+
+        > [aria-activedescendant] {
+            outline-style: none;
+        }
     }
 
     %grid-thead {
@@ -1771,6 +1775,7 @@
         display: flex;
         overflow: hidden;
         background: --var($theme, 'root-summaries-background');
+        outline-style: none;
 
         %igx-grid-summary__result {
             color: --var($theme, 'root-summaries-text-color');
