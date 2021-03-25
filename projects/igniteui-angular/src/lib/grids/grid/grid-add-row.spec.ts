@@ -839,7 +839,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             expect(groupRows[2].expanded).toBeFalse();
 
-            let row = grid.gridAPI.get_row_by_index(1);
+            const row = grid.gridAPI.get_row_by_index(1);
             row.beginAddRow();
             fixture.detectChanges();
             endTransition();
