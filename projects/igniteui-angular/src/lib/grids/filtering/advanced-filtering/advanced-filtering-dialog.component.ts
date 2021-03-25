@@ -20,7 +20,6 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
-import { DisplayDensity } from '../../../core/displayDensity';
 
 /**
  * @hidden
