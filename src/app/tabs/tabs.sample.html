@@ -33,7 +33,7 @@
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                                 *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar" [roundShape]="true"></igx-avatar>
                                     <p igxListLineTitle>{{contact.text}}</p>
                                     <span igxListLineSubTitle>{{contact.phone}}</span>
                                     <igx-icon igxListAction>phone</igx-icon>
@@ -89,7 +89,7 @@
                         <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
                             <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item"
                                 *ngFor="let contact of contacts">
-                                    <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
+                                    <igx-avatar igxListThumbnail [src]="contact.avatar" [roundShape]="true"></igx-avatar>
                                     <p igxListLineTitle>{{contact.text}}</p>
                                     <span igxListLineSubTitle>{{contact.phone}}</span>
                                     <igx-icon igxListAction>phone</igx-icon>
