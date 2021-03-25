@@ -28,6 +28,7 @@ export interface GridType extends IGridDataBindable {
     primaryKey: any;
     id: string;
     renderedRowHeight: number;
+    summaryPipeTrigger: number;
 
     filterMode: FilterMode;
 

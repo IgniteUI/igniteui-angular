@@ -516,7 +516,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.primaryKey && this.foreignKey) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
-            this._pipeTrigger++;
+            this.pipeTrigger++;
             this.cdr.detectChanges();
         }
     }
@@ -542,7 +542,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.gridAPI.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
         this.onRowAdded.emit({ data });
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.notifyChanges();
     }
 
@@ -767,7 +767,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             parentData[this.childDataKey] = children;
         }
         this.selectionService.clearHeaderCBState();
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();
