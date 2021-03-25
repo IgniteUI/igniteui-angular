@@ -243,7 +243,6 @@
         compact: rem(4px)
     );
 
-    %tabs-display,
     %tabs-header,
     %tabs-header-button,
     %tabs-header-item-inner,
@@ -252,7 +251,8 @@
     }
 
     %tabs-display {
-        flex-direction: column;
+        display: block;
+        height: 100%;
     }
 
     %tabs-header {
@@ -517,13 +517,16 @@
     }
 
     %tabs-panel {
+        display: block;
         position: absolute;
-        width: 100%;
-        height: 100%;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
 
         &::-moz-focus-inner {
             // remove focus dotted border in firefox
@@ -532,6 +535,10 @@
 
         &:focus {
             outline-width: 0;
+        }
+
+        &[tabindex='0'] {
+            position: relative;
         }
     }
 
