@@ -24,9 +24,9 @@
 /// @requires $elevations
 ///
 /// @example scss Set a custom background color
-///   $my-tabbar-theme: igx-toast-theme($background: black);
+///   $my-bottom-nav-theme: igx-bottom-nav-theme($background: black);
 ///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-bottom-nav($my-tabbar-theme);
+///   @include igx-bottom-nav($my-bottom-nav-theme);
 @function igx-bottom-nav-theme(
     $palette: $default-palette,
     $schema: $light-schema,
@@ -86,12 +86,8 @@
     $item-max-width: 168px;
     $item-padding: 0 rem(12px, 16px);
 
-    %igx-tab-panel {
-        display: none;
-    }
-
-    %igx-tab-panel--selected {
-        display: block;
+    %igx-bottom-nav-panel:focus {
+        outline-style: none;
     }
 
     %igx-bottom-nav-menu {
@@ -141,6 +137,7 @@
     %igx-bottom-nav-menu-item--disabled {
         opacity: .5;
         cursor: default;
+        pointer-events: none;
     }
 
     %igx-active-tab {
@@ -167,13 +164,6 @@
         transform: translateZ(0);
         transition: transform .15s $ease-in-out-quad;
         z-index: 1;
-
-        igx-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            padding: 1px;
-        }
     }
 
     %igx-tab-icon--selected {
