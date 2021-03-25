@@ -6,7 +6,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxExpansionPanelComponent } from './expansion-panel.component';
-import { ICON_POSITION, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
+import { ExpansionPanelHeaderIconPosition, IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
 import { IgxExpansionPanelModule } from './expansion-panel.module';
 import { IgxGridComponent, IgxGridModule } from '../grids/grid/public_api';
 import { IgxListModule } from '../list/public_api';
@@ -263,7 +263,7 @@ describe('igxExpansionPanel', () => {
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(3);
 
             // Remove expand/collapse button
-            header.iconPosition = ICON_POSITION.NONE;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             tick();
             fixture.detectChanges();
             tick();
@@ -324,7 +324,7 @@ describe('igxExpansionPanel', () => {
             expect(header.onInteraction.emit).toHaveBeenCalledTimes(3);
 
             // Change expand/collapse button position
-            header.iconPosition = ICON_POSITION.RIGHT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
             tick();
             fixture.detectChanges();
             tick();
@@ -757,12 +757,12 @@ describe('igxExpansionPanel', () => {
             expect(headerButton.children[1].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[0].getBoundingClientRect().left);
 
-            header.iconPosition = ICON_POSITION.NONE;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
             expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
-            header.iconPosition = ICON_POSITION.RIGHT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('right');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
@@ -770,12 +770,12 @@ describe('igxExpansionPanel', () => {
             expect(headerButton.children[0].getBoundingClientRect().left).
                 toBeLessThan(headerButton.children[1].getBoundingClientRect().left);
 
-            header.iconPosition = ICON_POSITION.NONE;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('none');
             expect(headerButton.children[1].className).toEqual(CSS_CLASS_HEADER_ICON_NONE);
 
-            header.iconPosition = ICON_POSITION.LEFT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
             expect(header.iconPosition).toEqual('left');
             expect(headerButton.children[0].className).toEqual(CSS_CLASS_PANEL_TITLE_WRAPPER);
@@ -790,7 +790,7 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
-            header.iconPosition = ICON_POSITION.LEFT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
 
             // Buttons are wrapper in wrapper div to hold positioning class
@@ -810,7 +810,7 @@ describe('igxExpansionPanel', () => {
             expect(header.iconRef).not.toBe(null);
             expect(header.iconRef.nativeElement).toEqual(iconContainer.firstElementChild);
 
-            fixture.componentInstance.header.iconPosition = ICON_POSITION.NONE;
+            fixture.componentInstance.header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(header.iconRef).toEqual(null);
 
@@ -818,7 +818,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             expect(header.iconRef).toEqual(null);
 
-            fixture.componentInstance.header.iconPosition = ICON_POSITION.LEFT;
+            fixture.componentInstance.header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
             expect(header.iconRef).not.toBe(null);
 
@@ -832,15 +832,15 @@ describe('igxExpansionPanel', () => {
             const header = fixture.componentInstance.header;
             const panelHeader = fixture.nativeElement.querySelector('.' + CSS_CLASS_PANEL_HEADER) as HTMLElement;
             const headerButton = panelHeader.querySelector('div [role = \'button\']');
-            header.iconPosition = ICON_POSITION.LEFT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.LEFT;
             fixture.detectChanges();
             expect(headerButton.children[1].classList).toContain(IconPositionClass.LEFT);
 
-            header.iconPosition = ICON_POSITION.RIGHT;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.RIGHT;
             fixture.detectChanges();
             expect(headerButton.children[1].classList).toContain(IconPositionClass.RIGHT);
 
-            header.iconPosition = ICON_POSITION.NONE;
+            header.iconPosition = ExpansionPanelHeaderIconPosition.NONE;
             fixture.detectChanges();
             expect(headerButton.children[1].classList).toContain(IconPositionClass.NONE);
         });

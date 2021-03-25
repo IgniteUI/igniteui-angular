@@ -67,7 +67,7 @@
     <ng-template #groupByRowSelectorBaseTemplate let-context>
         <div class="igx-grid__cbx-padding">
             <igx-checkbox [tabindex]="-1" [readonly]="true" [checked]="areAllRowsInTheGroupSelected"
-                disableRipple="true" [indeterminate]="groupByRowCheckboxIndeterminateState"
+                [disableRipple]="true" [indeterminate]="groupByRowCheckboxIndeterminateState"
                 [disabled]="this.grid.rowSelection === 'single'" [aria-label]="groupByRowSelectorBaseAriaLabel"
                 #groupByRowCheckbox>
             </igx-checkbox>

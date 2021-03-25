@@ -6,7 +6,7 @@
             <h4 class="form-title igx-typography__overline">Personal Info</h4>
 
             <igx-input-group>
-                <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled="disabled"/>
+                <input igxInput name="firstName" type="text" [(ngModel)]="user.firstName" required disabled />
                 <label igxLabel for="firstName">First Name</label>
             </igx-input-group>
 
@@ -32,7 +32,7 @@
 
             <div class="radio-group">
                 <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group" [(ngModel)]="user.gender" (click)="onClick($event)"
-                    (change)="onChange($event)">{{item}}</igx-radio>
+                    (change)="onRadioChanged($event)">{{item}}</igx-radio>
                 <igx-radio *ngFor="let item of ['Male', 'Female']" value="{{item}}" name="group2" [disabled]="true" [(ngModel)]="user.gender">{{item}}</igx-radio>
             </div>
 
@@ -48,12 +48,23 @@
             <igx-list>
                 <igx-list-item [isHeader]="true">Settings</igx-list-item>
 
+                <igx-list-item>
+                    <igx-icon igxListThumbnail><igx-icon>{{airplaneMode ? 'airplanemode_active': 'airplanemode_inactive'}}</igx-icon></igx-icon>
+                    <h1 igxListLineTitle>Airplane Mode</h1>
+                    <div igxListAction>
+                        <igx-switch labelPosition="before" [(ngModel)]="airplaneMode" (ngModelChange)="toggleAirplaneMode()">
+                            {{airplaneMode ? 'ON': 'OFF'}}
+                        </igx-switch>
+                    </div>
+                </igx-list-item>
                 <igx-list-item *ngFor="let item of settings">
                     <igx-icon igxListThumbnail>{{item.icon}}</igx-icon>
                     <h1 igxListLineTitle>{{item.name}}</h1>
-                    <igx-switch igxListAction labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
-                        {{item.active ? 'ON': 'OFF'}}
-                    </igx-switch>
+                    <div igxListAction>
+                        <igx-switch labelPosition="before" [(ngModel)]="item.active" [value]="item.active" [disabled]="item.disabled">
+                            {{item.active ? 'ON': 'OFF'}}
+                        </igx-switch>
+                    </div>
                 </igx-list-item>
             </igx-list>
         </div>
@@ -67,7 +78,7 @@
                 <igx-list-item [isHeader]="true">Delete Contacts</igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/22.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/22.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Alicia Keys</span>
                     <igx-checkbox igxListAction
                                   [(ngModel)]="user.registered"
@@ -77,37 +88,37 @@
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/8.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/8.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Petar Vasilev</span>
                     <igx-checkbox igxListAction [(ngModel)]="user2.registered" [disableRipple]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan (disabled)</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan (readonly)</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [readonly]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user2.registered" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [indeterminate]="true">Value</igx-checkbox>
                 </igx-list-item>
 
                 <igx-list-item>
-                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" roundShape="true"></igx-avatar>
+                    <igx-avatar igxListThumbnail src="assets/images/avatar/17.jpg" [roundShape]="true"></igx-avatar>
                     <span igxListLineTitle>Brian Vaughan</span>
                     <igx-checkbox igxListAction [(ngModel)]="user.registered" [indeterminate]="true" [disabled]="true">Value</igx-checkbox>
                 </igx-list-item>
@@ -120,7 +131,7 @@
 
         <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option1">Option 1</igx-radio>
         <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option2">Option 2</igx-radio>
-        <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option3" disabled="true">Option 3</igx-radio>
+        <igx-radio [(ngModel)]="selected" (ngModelChange)="onChange($event)" (change)="onRadioChanged($event)" value="option3" disabled>Option 3</igx-radio>
         <br>
         <button igxButton="raised" (click)="selectSecond()">Select second</button>
     </article>

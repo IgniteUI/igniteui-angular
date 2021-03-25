@@ -150,7 +150,7 @@ export class ServerHost implements ts.server.ServerHost {
         // return ts.sys.exit(exitCode);
     }
 
-    public setTimeout(callback: (...args: any[]) => void, ms: number, ...args: any[]): any {
+    public setTimeout(callback: (...argsv: any[]) => void, ms: number, ...args: any[]): any {
         throw new Error('Method "setTimeout" not implemented.');
         // return ts.sys.setTimeout(callback, ms, ...args);
     }
@@ -175,7 +175,7 @@ export class ServerHost implements ts.server.ServerHost {
         // return ts.sys.base64encode(input);
     }
 
-    public setImmediate(callback: (...args: any[]) => void, ...args: any[]): any {
+    public setImmediate(callback: (...argsv: any[]) => void, ...args: any[]): any {
         throw new Error('Method "setImmediate" not implemented.');
         // return setImmediate(callback, ...args);
     }
