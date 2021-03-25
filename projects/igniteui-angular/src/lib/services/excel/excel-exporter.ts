@@ -86,7 +86,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             }
         }
 
-        const worksheetData = new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort);
+        const worksheetData = new WorksheetData(data, options, this._sort, this._ownersMap);
 
         this._xlsx = new (JSZip as any).default();
 

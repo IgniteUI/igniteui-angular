@@ -1,4 +1,4 @@
-import { IExportRecord } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IMapRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -11,8 +11,10 @@ export class WorksheetData {
     private _keys: string[];
     private _isSpecialData: boolean;
 
-    constructor(private _data: IExportRecord[], private _columnWidths: number[], public options: IgxExcelExporterOptions,
-            public indexOfLastPinnedColumn: number, public sort: any) {
+    constructor(private _data: IExportRecord[],
+                public options: IgxExcelExporterOptions,
+                public sort: any,
+                public owners: Map<any, IMapRecord>) {
             this.initializeData();
     }
 
@@ -48,10 +50,21 @@ export class WorksheetData {
         if (!this._data || this._data.length === 0) {
             return;
         }
+        debugger
+        const columnWidths = this.owners.values().next().value.columnWidths;
+        const actualData = this._data.filter(item => item.type !== ExportRecordType.HeaderRecord).map(item => item.data);
 
-        const actualData = this._data.map(item => item.data);
+        if (this._data[0].type === ExportRecordType.HierarchicalGridRecord) {
+            this.options.exportAsTable = false;
 
-        this._keys = ExportUtilities.getKeysFromData(actualData);
+            const hierarchicalGridData =
+                this._data.filter(item => item.type === ExportRecordType.HierarchicalGridRecord).map(item => item.data);
+
+            this._keys = ExportUtilities.getKeysFromData(hierarchicalGridData); // TODO refactor
+        } else {
+            this._keys = ExportUtilities.getKeysFromData(actualData);
+        }
+
         if (this._keys.length === 0) {
             return;
         }
@@ -61,6 +74,6 @@ export class WorksheetData {
         this._columnCount = this._keys.length;
         this._rowCount = this._data.length + 1;
 
-        this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth, this._columnWidths);
+        this._dataDictionary = new WorksheetDataDictionary(this._columnCount, this.options.columnWidth, columnWidths);
     }
 }

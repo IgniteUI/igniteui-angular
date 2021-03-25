@@ -4,6 +4,7 @@ import { WorksheetData } from './worksheet-data';
 
 import * as JSZip from 'jszip';
 import { yieldingLoop } from '../../core/utils';
+import { ExportRecordType } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -60,19 +61,170 @@ export class WorksheetFile implements IExcelFile {
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
+    private globalCounter = 0;
 
     public writeElement() {}
 
     public async writeElementAsync(folder: JSZip, worksheetData: WorksheetData) {
         return new Promise<void>(resolve => {
-            this.prepareDataAsync(worksheetData, (cols, rows) => {
-                const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+            debugger
+            if (worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord) {
+                this.prepareHierarchicalDataAsync(worksheetData, (cols, rows) => {
+                    const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
 
-                folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel));
-                resolve();
-            });
+                    folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                        this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel));
+                    resolve();
+                });
+            } else {
+                this.prepareDataAsync(worksheetData, (cols, rows) => {
+                    const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+
+                    folder.file('sheet1.xml', ExcelStrings.getSheetXML(
+                        this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel));
+                    resolve();
+                });
+            }
         });
+    }
+
+    private prepareHierarchicalDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
+        let sheetData = '';
+        let cols = '';
+        const dictionary = worksheetData.dataDictionary;
+
+        if (worksheetData.isEmpty) {
+            sheetData += '<sheetData/>';
+            this.dimension = 'A1';
+            done('', sheetData);
+        } else {
+            sheetData += '<sheetData>';
+            const height =  worksheetData.options.rowHeight;
+            this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+
+            sheetData += `<row r="1" ${this.rowHeight}>`;
+
+            for (let i = 0; i < worksheetData.columnCount; i++) {
+                const column = ExcelStrings.getExcelColumn(i) + 1;
+                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
+                sheetData += `<c r="${column}" s="3" t="s"><v>${value}</v></c>`;
+            }
+            sheetData += '</row>';
+            cols += '<cols>';
+
+            // for (let i = 0; i < worksheetData.columnCount; i++) {
+            //     const width = dictionary.columnWidths[i];
+            //     // Use the width provided in the options if it exists
+            //     let widthInTwips = worksheetData.options.columnWidth !== undefined ?
+            //                             worksheetData.options.columnWidth :
+            //                             Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
+            //     if (!(widthInTwips > 0)) {
+            //         widthInTwips = WorksheetFile.MIN_WIDTH;
+            //     }
+
+            //     cols += `<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`;
+            // }
+
+            const maxColumnSize = worksheetData.data
+                .filter(rec => rec.type === ExportRecordType.HeaderRecord)
+                .map(a => a.data.length + a.level)
+                .sort((a,b) => b - a)[0];
+
+            cols += `<col min="1" max="${maxColumnSize}" width="25" customWidth="1"/>`;
+
+            cols += '</cols>';
+
+            //const indexOfLastPinnedColumn = worksheetData.owners.values().next().value.indexOfLastPinnedColumn;
+            // const indexOfLastPinnedColumn = -1;
+
+            // if (indexOfLastPinnedColumn !== -1 &&
+            //     !worksheetData.options.ignorePinning &&
+            //     !worksheetData.options.ignoreColumnsOrder) {
+            //     const frozenColumnCount = indexOfLastPinnedColumn + 1;
+            //     const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
+            //     this.freezePane =
+            //      `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+            // }
+
+            this.processDataRecordsAsync(worksheetData, (rows) => {
+                sheetData += rows;
+                sheetData += '</sheetData>';
+                done(cols, sheetData);
+            });
+        }
+    }
+
+    private processHierarchicalRow(worksheetData: WorksheetData, i: number) {
+        const rowData = new Array(worksheetData.columnCount + 2);
+        const record = worksheetData.data[i - 1];
+        const sHidden = record.hidden ? ` hidden="1"` : '';
+        const rowLevel = record.level;
+        const outlineLevel = rowLevel > 0 ? ` outlineLevel="${rowLevel}"` : '';
+
+        this.maxOutlineLevel = this.maxOutlineLevel < rowLevel ? rowLevel : this.maxOutlineLevel;
+
+        rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
+
+        if (record.type === ExportRecordType.HeaderRecord) {
+            for (let j = 0; j < record.data.length; j++) {
+                const excelColumn = record.level + j;
+                const column = ExcelStrings.getExcelColumn(excelColumn) + (i + 1);
+                const value = worksheetData.dataDictionary.saveValue(record.data[j].header, i, true);
+                rowData[j + 1] = `<c r="${column}" s="3" t="s"><v>${value}</v></c>`;
+            }
+
+            rowData[record.data.length + 1] = '</row>';
+        } else {
+            const keys = Object.keys(record.data);
+
+            for (let j = 0; j < keys.length; j++) {
+                const cellData = WorksheetFile.getHierarchicalCellData(worksheetData, i, j, record.level, keys[j], this.globalCounter);
+                rowData[j + 1] = cellData;
+                this.globalCounter++;
+            }
+
+            rowData[keys.length + 1] = '</row>';
+        }
+
+
+        return rowData.join('');
+    }
+
+    /* eslint-disable  @typescript-eslint/member-ordering */
+    private static getHierarchicalCellData(worksheetData: WorksheetData, row: number,
+        column: number, level: number, key: string, globalCounter: number): string {
+        const dictionary = worksheetData.dataDictionary;
+        const columnName = ExcelStrings.getExcelColumn(column + level) + (row + 1);
+        const fullRow = worksheetData.data[row - 1];
+
+        debugger;
+
+        const cellValue = worksheetData.isSpecialData ?
+            fullRow.data :
+            fullRow.data[key];
+
+        if (cellValue === undefined || cellValue === null) {
+            return `<c r="${columnName}" s="1"/>`;
+        } else {
+            const savedValue = dictionary.saveValue(cellValue, globalCounter, false);
+            const isSavedAsString = savedValue !== -1;
+
+            const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
+
+            let value = isSavedAsString ? savedValue : cellValue;
+
+            if (isSavedAsDate) {
+                const timeZoneOffset = value.getTimezoneOffset() * 60000;
+                const isoString = (new Date(value - timeZoneOffset)).toISOString();
+                value = isoString.substring(0, isoString.indexOf('.'));
+            }
+
+            const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
+
+            const format = isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+
+            return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
+        }
     }
 
     private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
@@ -115,10 +267,12 @@ export class WorksheetFile implements IExcelFile {
 
             cols += '</cols>';
 
-            if (worksheetData.indexOfLastPinnedColumn !== -1 &&
+            //const indexOfLastPinnedColumn = worksheetData.owners.values().next().value.indexOfLastPinnedColumn;
+            const indexOfLastPinnedColumn = -1;
+            if (indexOfLastPinnedColumn !== -1 &&
                 !worksheetData.options.ignorePinning &&
                 !worksheetData.options.ignoreColumnsOrder) {
-                const frozenColumnCount = worksheetData.indexOfLastPinnedColumn + 1;
+                const frozenColumnCount = indexOfLastPinnedColumn + 1;
                 const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
                 this.freezePane = `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
             }
@@ -138,7 +292,11 @@ export class WorksheetFile implements IExcelFile {
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                rowDataArr[i] = this.processRow(worksheetData, i + 1);
+                if (worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord) {
+                    rowDataArr[i] = this.processHierarchicalRow(worksheetData, i + 1);
+                } else {
+                    rowDataArr[i] = this.processRow(worksheetData, i + 1);
+                }
             },
             () => {
                 done(rowDataArr.join(''));
@@ -210,7 +368,8 @@ export class StyleFile implements IExcelFile {
     public writeElement(folder: JSZip, worksheetData: WorksheetData) {
         const hasNumberValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasNumberValues;
         const hasDateValues = worksheetData.dataDictionary && worksheetData.dataDictionary.hasDateValues;
-        folder.file('styles.xml', ExcelStrings.getStyles(hasNumberValues, hasDateValues));
+        const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
+        folder.file('styles.xml', ExcelStrings.getStyles(hasNumberValues, hasDateValues, isHierarchicalGrid));
     }
 }
 
