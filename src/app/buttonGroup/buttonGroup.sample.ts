@@ -41,7 +41,7 @@ class Button {
 
 export class ButtonGroupSampleComponent implements OnInit {
     public multi = true;
-    public alignment = ButtonGroupAlignment.vertical;
+    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public alignOptions: Button[];
     public fontOptions: Button[];
     public cities: Button[];

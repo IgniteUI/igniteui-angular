@@ -13,7 +13,7 @@ export class ActionStripSampleComponent implements OnInit {
     public comfortable: DisplayDensity = DisplayDensity.comfortable;
     public cosy: DisplayDensity = DisplayDensity.cosy;
     public compact: DisplayDensity = DisplayDensity.compact;
-    public displayDensity = this.comfortable;
+    public displayDensity: DisplayDensity = this.comfortable;
     public data: any[];
     public columns: any[];
 

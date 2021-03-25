@@ -87,9 +87,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
         <igx-checkbox
-            (change)="editValue = $event.checked"
-            [value]="editValue"
-            [checked]="editValue"
+            [(ngModel)]="editValue"
             [disableRipple]="true"
         ></igx-checkbox>
     </ng-container>
@@ -110,8 +108,7 @@
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -122,8 +119,7 @@
     <ng-container *ngIf="column.dataType === 'percent'">
         <igx-input-group displayDensity="compact">
             <input igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
