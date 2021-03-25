@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxGridComponent, GridSelectionMode } from 'igniteui-angular';
+import { IgxGridComponent, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -14,7 +14,7 @@ export class GridSearchComponent implements OnInit {
     public data: Array<any>;
     public columns: Array<any>;
     public displayDensities;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public selectionMode;
 
     public ngOnInit(): void {

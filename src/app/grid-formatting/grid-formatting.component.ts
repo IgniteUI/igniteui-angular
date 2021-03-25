@@ -1,12 +1,10 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { registerLocaleData, DatePipe } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
-registerLocaleData(localeFr);
+import { DatePipe } from '@angular/common';
 
 import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
     IFilteringExpressionsTree, FilteringStrategy } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
-import { data } from '../grid-cellEditing/data';
+import { data } from '../shared/data';
 import { Observable } from 'rxjs';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 

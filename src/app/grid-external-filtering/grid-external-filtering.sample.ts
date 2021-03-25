@@ -1,6 +1,6 @@
 import { Component, ViewChild, OnInit, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
-    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode } from 'igniteui-angular';
+    FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode, DisplayDensity } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -19,7 +19,7 @@ export class GridExternalFilteringComponent implements OnInit, AfterViewInit {
     public columns: Array<any>;
     public displayDensities;
     public filterModes;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public selectionMode;
 
     constructor(private cdr: ChangeDetectorRef) {
