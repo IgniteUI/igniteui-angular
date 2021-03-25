@@ -1039,14 +1039,19 @@ describe('IgxGrid - Row Selection #grid', () => {
             grid.selectRows([1, 3, 5], true);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyRowsArraySelected([grid.gridAPI.get_row_by_index(0), grid.gridAPI.get_row_by_index(2), grid.gridAPI.get_row_by_index(4)]);
+            GridSelectionFunctions.verifyRowsArraySelected(
+                [grid.gridAPI.get_row_by_index(0), grid.gridAPI.get_row_by_index(2), grid.gridAPI.get_row_by_index(4)]);
             expect(grid.selectedRows).toEqual([1, 3, 5]);
 
             grid.selectRows([1, 2, 4], false);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyRowsArraySelected([grid.gridAPI.get_row_by_index(0),
-            grid.gridAPI.get_row_by_index(1), grid.gridAPI.get_row_by_index(2), grid.gridAPI.get_row_by_index(3), grid.gridAPI.get_row_by_index(4)]);
+            GridSelectionFunctions.verifyRowsArraySelected(
+                [grid.gridAPI.get_row_by_index(0),
+                grid.gridAPI.get_row_by_index(1),
+                grid.gridAPI.get_row_by_index(2),
+                grid.gridAPI.get_row_by_index(3),
+                grid.gridAPI.get_row_by_index(4)]);
             expect(grid.selectedRows).toEqual([1, 3, 5, 2, 4]);
         });
 

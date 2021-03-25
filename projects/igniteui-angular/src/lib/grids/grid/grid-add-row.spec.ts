@@ -1,4 +1,4 @@
-import { IgxGridModule, IgxGridComponent, RowType } from './public_api';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { configureTestSuite } from '../../test-utils/configure-suite';
