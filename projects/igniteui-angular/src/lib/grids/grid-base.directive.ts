@@ -2219,14 +2219,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        const editRowState = this.gridAPI.crudService.row;
-        return editRowState !== null ? this.rowList.find(e => e.rowID === editRowState.id) : null;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get firstEditableColumnIndex(): number {
         const index = this.visibleColumns.filter(col => col.editable)
             .map(c => c.visibleIndex).sort((a, b) => a - b);
@@ -3253,7 +3245,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
                     || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.gridAPI.crudService.rowEditingBlocked && this.rowInEditMode)) {
+                !(this.rowEditable && this.gridAPI.crudService.rowEditingBlocked && this.gridAPI.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
@@ -3292,7 +3284,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 });
             });
 
-        this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this._pipeTrigger++);
+        this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
 
         this.onPagingDone.pipe(destructor).subscribe(() => {
             this.gridAPI.crudService.endEdit(false);
@@ -6280,7 +6272,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.calculateGridHeight();
 
         if (this.rowEditable) {
-            this.repositionRowEditingOverlay(this.rowInEditMode);
+            this.repositionRowEditingOverlay(this.gridAPI.crudService.rowInEditMode);
         }
 
         if (this.filteringService.isFilterRowVisible) {
@@ -6882,7 +6874,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.zone.onStable.pipe(first()).subscribe(() => {
                 this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
                 if (this.rowEditable) {
-                    this.changeRowEditingOverlayStateOnScroll(this.rowInEditMode);
+                    this.changeRowEditingOverlayStateOnScroll(this.gridAPI.crudService.rowInEditMode);
                 }
             });
         });
@@ -6997,6 +6989,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * If record is group rec, summary rec, child rec, ghost rec. etc. it is not editable.
      *
      * @param dataViewIndex The index of that record in the data view.
+     *
+     * TODO: Consider moving it into CRUD
      */
     private isEditableDataRecordAtIndex(dataViewIndex) {
         const rec = this.dataView[dataViewIndex];

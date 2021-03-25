@@ -643,7 +643,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     private _update_row(row: IgxRow, value?: any) {
         const grid = this.grid;
 
-        const rowInEditMode = grid.crudService.row;
+        const rowInEditMode = grid.gridAPI.crudService.row;
         row.newData = value ?? rowInEditMode.transactionState;
 
 

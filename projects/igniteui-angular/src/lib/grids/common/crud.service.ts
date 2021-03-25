@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { AbsoluteScrollStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../../services/public_api';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IgxRowDirective, IRowDataEventArgs } from '../grid/public_api';
 import { RowEditPositionStrategy } from '../grid.common';
 import { GridType } from './grid.interface';
 
@@ -145,8 +145,12 @@ export class IgxGridCRUDService {
         return !!this.cell;
     }
 
-    public get rowInEditMode(): boolean {
-        return !!this.row;
+    /**
+     * @hidden @internal
+     */
+     public get rowInEditMode(): IgxRowDirective<IgxGridBaseDirective & GridType> {
+        const editRowState = this.row;
+        return editRowState !== null ? this.grid.rowList.find(e => e.rowID === editRowState.id) : null;
     }
 
     public get rowEditing(): boolean {
@@ -172,6 +176,7 @@ export class IgxGridCRUDService {
     public set rowEditingBlocked(val: boolean) {
         this._rowEditingBlocked = val;
     }
+
 
     public enterEditMode(cell, event?: Event) {
         if (this.isInCompositionMode) {
@@ -377,15 +382,12 @@ export class IgxGridCRUDService {
      * @param commit
      */
      public endEdit(commit = true, event?: Event) {
-        const row = this.row;
-        const cell = this.cell;
         let canceled = false;
-        // TODO: Merge the crudService with with BaseAPI service
-        if (!row && !cell) {
+        if (!this.row && !this.cell) {
             return;
         }
 
-        if (row?.isAddRow) {
+        if (this.row?.isAddRow) {
             canceled = this.endAdd(commit, event);
             return canceled;
         }

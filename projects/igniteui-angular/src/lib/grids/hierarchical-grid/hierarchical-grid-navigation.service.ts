@@ -18,7 +18,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.gridAPI.crudService.cell)) &&
-            !this.grid.gridAPI.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+            !this.grid.gridAPI.crudService.rowEditingBlocked && !this.grid.gridAPI.crudService.rowInEditMode) {
             return;
         }
 
