@@ -4703,31 +4703,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should open/close ESF menu for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
-        fakeAsync(() => {
-            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            // Verify ESF is not visible.
-            expect(excelMenu).toBeNull();
+            fakeAsync(() => {
+                let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                // Verify ESF is not visible.
+                expect(excelMenu).toBeNull();
 
-            const downloadsColumn = GridFunctions.getColumnHeader('Downloads', fix);
-            UIInteractions.simulateClickAndSelectEvent(downloadsColumn);
-            fix.detectChanges();
+                const downloadsColumn = GridFunctions.getColumnHeader('Downloads', fix);
+                UIInteractions.simulateClickAndSelectEvent(downloadsColumn);
+                fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('l', downloadsColumn.nativeElement, true, false, true, true);
-            tick(200);
-            fix.detectChanges();
+                UIInteractions.triggerKeyDownEvtUponElem('l', downloadsColumn.nativeElement, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
 
-            // Verify ESF menu is opened for the 'Downloads' column.
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            expect(excelMenu).not.toBeNull();
+                // Verify ESF menu is opened for the 'Downloads' column.
+                excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                expect(excelMenu).not.toBeNull();
 
-            // Press the combination again.
-            UIInteractions.triggerKeyDownEvtUponElem('l', excelMenu, true, false, true, true);
-            tick(200);
-            fix.detectChanges();
+                // Press the combination again.
+                UIInteractions.triggerKeyDownEvtUponElem('l', excelMenu, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
 
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            expect(excelMenu).toBeNull();
-    }));
+                excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                expect(excelMenu).toBeNull();
+        }));
 
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -4944,17 +4944,17 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
-        GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
-        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
-        UIInteractions.clickAndSendInputElementValue(inputNativeElement, '3', fix);
-        tick(100);
-        fix.detectChanges();
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '3', fix);
+            tick(100);
+            fix.detectChanges();
 
-        ControlsFunction.verifyButtonIsDisabled(applyButton);
+            ControlsFunction.verifyButtonIsDisabled(applyButton);
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
@@ -4967,8 +4967,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
                 .splice(2)
@@ -4978,8 +4978,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleFiltering(fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             // Get the results and verify that they match the list items.
             let gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
@@ -4995,8 +4995,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '7', fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
                 .splice(2)
@@ -5008,13 +5008,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Select 'Add to current filter selection'.
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkbox[1].click();
-            tick();
             fix.detectChanges();
+            tick();
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleFiltering(fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             // Get the results and verify that they match the list items.
             gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
@@ -5027,11 +5027,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style custom filtering dialog again.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
+            fix.detectChanges();
+            tick();
+
             // Get checkboxes and verify 'Select All' is indeterminate.
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
-            fix.detectChanges();
-
             expect(checkboxes[0].indeterminate).toBeTrue();
         }));
 

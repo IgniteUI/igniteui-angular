@@ -73,7 +73,7 @@
             <ng-container *ngTemplateOutlet="emptyTemplate ? emptyTemplate : empty">
             </ng-container>
         </div>
-        <igx-combo-add-item [itemHeight]='itemHeight' *ngIf="isAddButtonVisible()"
+        <igx-combo-add-item [itemHeight]="itemHeight" *ngIf="isAddButtonVisible()"
             [tabindex]="dropdown.collapsed ? -1 : customValueFlag ? 1 : -1" class="igx-combo__add-item" role="button"
             aria-label="Add Item" [index]="virtualScrollContainer.igxForOf.length">
             <ng-container *ngTemplateOutlet="addItemTemplate ? addItemTemplate : addItemDefault">

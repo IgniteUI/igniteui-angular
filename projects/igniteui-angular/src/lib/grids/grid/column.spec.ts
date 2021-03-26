@@ -259,7 +259,6 @@ describe('IgxGrid - Column properties #grid', () => {
         allCells = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
         allCells.forEach((cell) => expect(cell.nativeElement.className.indexOf(CELL_NUMBER_CLASS)).toBeGreaterThan(-1));
         expect(allCells[3].nativeElement.className.indexOf('headerAlignSyle')).toBeGreaterThan(-1);
-
     });
 
     it('column width should be adjusted after a column has been hidden', () => {
@@ -434,12 +433,13 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('Data type currency column tests', () => {
-        xit('should display correctly the data when column dataType is currency', () => {
+        // NOTE: The following three tests fail only in an Ivy scenario. We should leave them running anyways
+        it('should display correctly the data when column dataType is currency #ivy', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            let unitsColumn = grid.getColumnByName('UnitsInStock');
+            const unitsColumn = grid.getColumnByName('UnitsInStock');
 
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098');
@@ -450,10 +450,9 @@ describe('IgxGrid - Column properties #grid', () => {
                 digitsInfo: '3.4-4',
                 currencyCode: 'USD',
                 display: 'symbol-narrow'
-              };
+            };
             fix.detectChanges();
 
-            unitsColumn = grid.getColumnByName('UnitsInStock');
             expect(unitsColumn.cells[0].nativeElement.innerText).toEqual('$2,760.0000');
             expect(unitsColumn.cells[5].nativeElement.innerText).toEqual('$1,098.0000');
             expect(unitsColumn.cells[6].nativeElement.innerText).toEqual('$000.0000');
@@ -461,7 +460,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
         });
 
-        xit('should be able to change the locale runtime ', () => {
+        it('should be able to change the locale runtime  #ivy', () => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -484,7 +483,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(unitsColumn.cells[3].nativeElement.innerText).toEqual('￥0');
         });
 
-        it('should display the currency symbol in edit mode correctly according the grid locale', fakeAsync(() => {
+        it('should display the currency symbol in edit mode correctly according the grid locale #ivy', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridCurrencyColumnComponent);
             fix.detectChanges();
 
@@ -499,6 +498,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             let prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -511,18 +511,16 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             grid.locale = 'fr-FR';
-            tick(300);
             fix.detectChanges();
-
-            grid.notifyChanges();
-            fix.detectChanges();
+            tick();
 
             firstCell = grid.getCellByColumn(0, 'UnitsInStock');
             expect(grid.locale).toEqual('fr-FR');
-            // expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
+            expect(firstCell.nativeElement.innerText).toEqual('2 760 €');
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -665,6 +663,7 @@ describe('IgxGrid - Column properties #grid', () => {
 
             firstCell.setEditMode(true);
             fix.detectChanges();
+            tick();
 
             let input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             const prefix = firstCell.nativeElement.querySelector('igx-prefix');
@@ -674,8 +673,8 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((suffix as HTMLElement).innerText).toEqual('27%');
 
             UIInteractions.clickAndSendInputElementValue(input, 0.33);
-            tick();
             fix.detectChanges();
+            tick();
 
             input = firstCell.nativeElement.querySelector('.igx-input-group__input');
             suffix = firstCell.nativeElement.querySelector('igx-suffix');
@@ -811,8 +810,8 @@ export class TemplatedInputColumnsComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public instance: IgxGridComponent;
 
-    data = SampleTestData.personIDNameRegionData();
-    columns = Object.keys(this.data[0]);
+    public data = SampleTestData.personIDNameRegionData();
+    public columns = Object.keys(this.data[0]);
 }
 
 @Component({

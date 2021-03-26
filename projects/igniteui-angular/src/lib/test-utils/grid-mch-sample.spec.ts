@@ -50,23 +50,23 @@ export class OneGroupThreeColsGridComponent {
     <igx-grid #grid [data]="data" height="500px">
         <igx-column field="ID"></igx-column>
         <igx-column-group header="General Information">
-            <igx-column filterable="true" sortable="true" resizable="true" field="CompanyName"></igx-column>
+            <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="CompanyName"></igx-column>
             <igx-column-group header="Person Details">
-                <igx-column filterable="true" sortable="true" resizable="true" field="ContactName"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="ContactTitle"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
             </igx-column-group>
         </igx-column-group>
         <igx-column-group header="Address Information">
             <igx-column-group header="Location">
-                <igx-column filterable="true" sortable="true" resizable="true" field="Country"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="Region"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="City"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="Address"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Country"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Region"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="City"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Address"></igx-column>
             </igx-column-group>
             <igx-column-group header="Contact Information">
-                <igx-column filterable="true" sortable="true" resizable="true" field="Phone"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="Fax"></igx-column>
-                <igx-column filterable="true" sortable="true" resizable="true" field="PostalCode"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Phone"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="Fax"></igx-column>
+                <igx-column [filterable]="true" [sortable]="true" [resizable]="true" field="PostalCode"></igx-column>
             </igx-column-group>
         </igx-column-group>
         <igx-column-group #emptyColGroup header="Empty Header">

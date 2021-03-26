@@ -65,6 +65,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'grid';
+
+    /**
      * @hidden
      */
     @ContentChildren(IgxRowIslandComponent, { read: IgxRowIslandComponent, descendants: false })
