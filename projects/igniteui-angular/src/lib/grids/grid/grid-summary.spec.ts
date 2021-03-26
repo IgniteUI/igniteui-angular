@@ -68,7 +68,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             it('should enableSummaries through grid API ', () => {
                 expect(grid.hasSummarizedColumns).toBe(false);
-                let tFoot = GridFunctions.getGridFooter(fixture).nativeElement.getBoundingClientRect().height;
+                let tFoot = GridFunctions.getGridFooterWrapper(fixture).nativeElement.getBoundingClientRect().height;
                 expect(tFoot < grid.defaultSummaryHeight).toBe(true);
 
                 grid.enableSummaries([{ fieldName: 'ProductName' }, { fieldName: 'ProductID' }]);
@@ -85,7 +85,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 expect(grid.getColumnByName('ProductName').hasSummary).toBe(true);
                 expect(grid.getColumnByName('OrderDate').hasSummary).toBe(false);
 
-                tFoot = GridFunctions.getGridFooter(fixture).nativeElement.getBoundingClientRect().height;
+                tFoot = GridFunctions.getGridFooterWrapper(fixture).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(grid.defaultSummaryHeight);
             });
 
@@ -96,7 +96,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 grid.getColumnByName('UnitsInStock').hasSummary = true;
                 fixture.detectChanges();
 
-                const tFoot = GridFunctions.getGridFooter(fixture).nativeElement.getBoundingClientRect().height;
+                const tFoot = GridFunctions.getGridFooterWrapper(fixture).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
                 expect(GridSummaryFunctions.getRootSummaryRow(fixture)).toBeDefined();
             });
@@ -171,7 +171,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Test 1', 'Test 2'], ['10', '50', '150']);
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count', 'Test 3'], ['10', '850']);
 
-                const tFootHeight = GridFunctions.getGridFooter(fixture).nativeElement.getBoundingClientRect().height;
+                const tFootHeight = GridFunctions.getGridFooterWrapper(fixture).nativeElement.getBoundingClientRect().height;
                 expect(tFootHeight).toBeGreaterThanOrEqual(3 * grid.defaultSummaryHeight);
             });
 
@@ -634,14 +634,14 @@ describe('IgxGrid - Summaries #grid', () => {
             }));
 
             it('Hiding: should recalculate summary area after column with enabled summary is hidden', fakeAsync(() => {
-                let tFoot = GridFunctions.getGridFooter(fix).nativeElement.getBoundingClientRect().height;
+                let tFoot = GridFunctions.getGridFooterWrapper(fix).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
 
                 grid.getColumnByName('UnitsInStock').hidden = true;
                 tick();
                 fix.detectChanges();
 
-                tFoot = GridFunctions.getGridFooter(fix).nativeElement.getBoundingClientRect().height;
+                tFoot = GridFunctions.getGridFooterWrapper(fix).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(3 * grid.defaultSummaryHeight);
                 expect(grid.hasSummarizedColumns).toBe(true);
 
@@ -657,7 +657,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 fix.detectChanges();
 
                 expect(grid.hasSummarizedColumns).toBe(true);
-                tFoot = GridFunctions.getGridFooter(fix).nativeElement.getBoundingClientRect().height;
+                tFoot = GridFunctions.getGridFooterWrapper(fix).nativeElement.getBoundingClientRect().height;
                 expect(tFoot).toEqual(5 * grid.defaultSummaryHeight);
                 summaryRow = fix.debugElement.query(By.css(SUMMARY_ROW));
                 GridSummaryFunctions.verifyColumnSummaries(summaryRow, 0, [], []);
@@ -784,7 +784,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
-            grid.width = '400px';
+            grid.width = '800px';
             grid.height = '800px';
             fix.detectChanges();
             tick(100);

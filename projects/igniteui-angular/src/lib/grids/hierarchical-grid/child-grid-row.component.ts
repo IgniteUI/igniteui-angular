@@ -66,12 +66,6 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
     public hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
-     * @hidden
-     */
-    @HostBinding('attr.role')
-    public role = 'row';
-
-    /**
      * Get a reference to the grid that contains the selected row.
      *
      * ```typescript
@@ -93,7 +87,7 @@ export class IgxChildGridRowComponent implements AfterViewInit, OnInit {
         return this.gridAPI.grid;
     }
 
-    @HostBinding('attr.data-level')
+    @HostBinding('attr.aria-level')
     get level() {
         return this.layout.level;
     }
