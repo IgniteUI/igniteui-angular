@@ -8,7 +8,9 @@ import {
     IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
+    IgxListModule,
+    IgxTextSelectionModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -292,6 +294,9 @@ const components = [
         IgxDragDropModule,
         IgxDateRangePickerModule,
         IgxDividerModule,
+        IgxButtonGroupModule,
+        IgxListModule,
+        IgxTextSelectionModule,
         SharedModule,
         routing,
         HammerModule,

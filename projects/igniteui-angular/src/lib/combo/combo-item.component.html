@@ -1,4 +1,4 @@
 <ng-container *ngIf="!isHeader">
-    <igx-checkbox [checked]="selected" disableRipple="true" [disableTransitions]="disableTransitions" [tabindex]="-1" (click)="disableCheck($event)" class="igx-combo__checkbox"></igx-checkbox>
+    <igx-checkbox [checked]="selected" [disableRipple]="true" [disableTransitions]="disableTransitions" [tabindex]="-1" (click)="disableCheck($event)" class="igx-combo__checkbox"></igx-checkbox>
 </ng-container>
 <span class="igx-drop-down__inner"><ng-content></ng-content></span>
