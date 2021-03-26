@@ -18,7 +18,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     @Output() public volumeChanged = new EventEmitter<any>();
     @Output() public playAction = new EventEmitter<any>();
 
-    public theme = false;
+    public darkTheme = true;
     public volume = 1000;
     public frequency = 500;
     public controls = [
