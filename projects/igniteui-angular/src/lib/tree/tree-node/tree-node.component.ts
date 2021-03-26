@@ -48,6 +48,22 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Input()
     public data: T;
 
+    // TO DO: return different tab index depending on anchor child
+    public set tabIndex(val: number) {
+        this._tabIndex = val;
+    }
+
+    public get tabIndex(): number {
+        if (this._tabIndex === null) {
+            if (this.tree.nodes?.first === this) {
+                return 0;
+            } else {
+                return -1;
+            }
+        }
+        return this._tabIndex;
+    }
+
     public set animationSettings(val: ToggleAnimationSettings) { }
 
     public get animationSettings(): ToggleAnimationSettings {
@@ -175,6 +191,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     private _resourceStrings = CurrentResourceStrings.TreeResStrings;
+
+    private _tabIndex = null;
 
     constructor(
         @Inject(IGX_TREE_COMPONENT) public tree: IgxTree,
@@ -328,9 +346,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * @hidden @internal
      */
     public onSelectorClick(event) {
-        event.stopPropagation();
+        // event.stopPropagation();
         event.preventDefault();
-        this.navService.handleFocusedAndActiveNode(this);
+        // this.navService.handleFocusedAndActiveNode(this);
         if (event.shiftKey) {
             this.selectionService.selectMultipleNodes(this, event);
             return;
@@ -355,8 +373,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     public onPointerDown(event) {
         event.stopPropagation();
-        event.preventDefault();
-        (this.tree as any).nativeElement.children[0].focus();
         this.navService.handleFocusedAndActiveNode(this);
     }
 

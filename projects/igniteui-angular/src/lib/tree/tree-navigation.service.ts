@@ -56,6 +56,9 @@ export class IgxTreeNavigationService {
     }
 
     public set activeNode(value: IgxTreeNode<any>) {
+        if (this._activeNode === value) {
+            return;
+        }
         this.lastActiveNode = this._activeNode;
         this._activeNode = value;
         if (this.lastActiveNode?.id) {
@@ -72,15 +75,16 @@ export class IgxTreeNavigationService {
     }
 
     public set focusedNode(value: IgxTreeNode<any>) {
+        if (this._focusedNode === value) {
+            return;
+        }
         this.lastFocusedNode = this._focusedNode;
+        if (this.lastFocusedNode) {
+            (this.lastFocusedNode as any).tabIndex = -1;
+        }
         this._focusedNode = value;
-        (this._focusedNode as any)?.cdr.markForCheck();
-        if (this.lastFocusedNode?.id) {
-            (this.lastFocusedNode as any).cdr.markForCheck();
-        }
-        if ((this.focusedNode as any)?.header) {
-            this.scrollIntoViewIfNeeded((this.focusedNode as any).header.nativeElement);
-        }
+        (this._focusedNode as any).tabIndex = 0;
+        (this._focusedNode as any).header.nativeElement.focus();
     }
 
     public handleFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
@@ -104,10 +108,9 @@ export class IgxTreeNavigationService {
 
     public handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        // requestAnimationFrame(() => {
-        //     console.log(document.activeElement);
-        // });
         if (key === 'tab') {
+            // (this.focusedNode as any).tabIndex = 0;
+            // this._focusedNode = null;
             return;
         }
         if (event.repeat && NAVIGATION_KEYS.has(key)) {
@@ -275,15 +278,6 @@ export class IgxTreeNavigationService {
             } else {
                 window.open(ref, '_self');
             }
-        }
-    }
-
-    protected scrollIntoViewIfNeeded(target) {
-        if (target?.getBoundingClientRect().bottom > window.innerHeight) {
-            target.scrollIntoView(false);
-        }
-        if (target?.getBoundingClientRect().top < 0) {
-            target.scrollIntoView();
         }
     }
 }

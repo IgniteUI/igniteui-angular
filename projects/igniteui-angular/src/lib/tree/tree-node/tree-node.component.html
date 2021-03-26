@@ -22,10 +22,9 @@
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__wrapper" [ngClass]="{
+    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" [ngClass]="{
             'igx-tree-node__wrapper--selected': selected,
-            'igx-tree-node__wrapper--focused' : this.focused,
-            'igx-tree-node__wrapper--active' : this.active}">
+            'igx-tree-node__wrapper--active' : this.active}" (pointerdown)="onPointerDown($event)">
         <div aria-hidden="true">
             <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
         </div>
@@ -44,7 +43,7 @@
             </ng-container>
         </div>
 
-        <div class="igx-tree-node__content" [ngClass]="{}" (pointerdown)="onPointerDown($event)">
+        <div class="igx-tree-node__content">
             <!-- <div class="igx-tree-node__content" (pointerdown)="onPointerDown($event)"> -->
             <!-- Ghost content -->
             <ng-content></ng-content>
