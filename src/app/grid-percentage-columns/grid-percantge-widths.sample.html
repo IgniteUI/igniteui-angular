@@ -48,7 +48,7 @@
         </igx-card-content>
     </igx-card>
     <igx-input-group class="sample-column">
-        <input igxInput type="text" placeholder="Filter by product name" (input)="filter($event.target.value)">
+        <input igxInput type="text" #filterInput placeholder="Filter by product name" (input)="filter(filterInput.value)">
     </igx-input-group>
     <div class="sample-content">
         <igx-grid #grid1 [data]="data" [autoGenerate]="false" [locale]="locale" height="520px" width="100%" [allowFiltering]="true">

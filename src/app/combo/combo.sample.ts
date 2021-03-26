@@ -22,7 +22,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
     @ViewChild('customItemTemplate', { read: TemplateRef, static: true })
     private customItemTemplate;
 
-    public alignment = ButtonGroupAlignment.vertical;
+    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public toggleItemState = false;
     public filterableFlag = true;
     public customValuesFlag = true;
