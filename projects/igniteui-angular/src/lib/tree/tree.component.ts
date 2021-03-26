@@ -58,7 +58,6 @@ export class IgxTreeExpandIndicatorDirective {
 @Component({
     selector: 'igx-tree',
     templateUrl: 'tree.component.html',
-    styleUrls: ['tree.component.scss'],
     providers: [
         IgxTreeService,
         IgxTreeSelectionService,
@@ -67,6 +66,9 @@ export class IgxTreeExpandIndicatorDirective {
     ]
 })
 export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+
+    @HostBinding('class.igx-tree')
+    public cssClass = 'igx-tree';
 
     /**
      * Gets/Sets tree selection mode

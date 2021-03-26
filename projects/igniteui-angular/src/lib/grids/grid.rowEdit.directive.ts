@@ -15,6 +15,12 @@ export class IgxRowEditTextDirective { }
 
 /** @hidden @internal */
 @Directive({
+    selector: '[igxRowAddText]'
+})
+export class IgxRowAddTextDirective { }
+
+/** @hidden @internal */
+@Directive({
     selector: '[igxRowEditActions]'
 })
 export class IgxRowEditActionsDirective { }

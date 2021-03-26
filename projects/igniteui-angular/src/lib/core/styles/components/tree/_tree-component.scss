@@ -1,0 +1,71 @@
+////
+/// @group components
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@include b(igx-tree) {
+    display: block;
+}
+
+@include b(igx-tree-node) {
+    $this: bem--selector-to-string(&);
+    @include register-component(str-slice($this, 2, -1));
+
+    @extend %tree-node !optional;
+
+    @include e(wrapper) {
+        @extend %tree-node-wrapper !optional;
+    }
+
+    @include e(wrapper, $m: cosy) {
+        @extend %tree-node-wrapper--cosy !optional;
+    }
+
+    @include e(wrapper, $m: compact) {
+        @extend %tree-node-wrapper--compact !optional;
+    }
+
+    @include e(wrapper, $m: selected) {
+        @extend %tree-node-wrapper--selected !optional;
+    }
+
+    @include e(wrapper, $m: active) {
+        @extend %tree-node-wrapper--active !optional;
+    }
+
+    @include e(wrapper, $m: disabled) {
+        @extend %tree-node-wrapper--disabled !optional;
+    }
+
+    @include e(content) {
+        @extend %tree-node-content !optional;
+    }
+
+    @include e(spacer) {
+        @extend %tree-node-spacer !optional;
+    }
+
+    @include e(indicator) {
+        @extend %tree-node-indicator !optional;
+    }
+
+    @include e(indicator, $m: hidden) {
+        @extend %tree-node-indicator--hidden !optional;
+    }
+
+    @include e(drop-indicator) {
+        @extend %tree-node-drop-indicator !optional;
+    }
+
+    @include e(select) {
+        @extend %tree-node-select !optional;
+    }
+
+    @include e(group) {
+        @extend %tree-node-group !optional;
+    }
+}
+
