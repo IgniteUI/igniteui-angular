@@ -1,7 +1,7 @@
 <div class="igx-paginator__select" [hidden]="dropdownHidden">
     <label class="igx-paginator__label">{{ resourceStrings.igx_paginator_label }}</label>
     <div class="igx-paginator__select-input">
-        <igx-select [overlaySettings]="overlaySettings" [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity()" type="border"
+        <igx-select [overlaySettings]="overlaySettings" [(ngModel)]="perPage" [displayDensity]="paginatorSelectDisplayDensity" type="border"
             [disabled]="!dropdownEnabled">
             <label igxLabel [hidden]="true">{{ resourceStrings.igx_paginator_label }}</label>
             <igx-select-item [value]="val" *ngFor="let val of selectOptions">
@@ -11,10 +11,10 @@
     </div>
 </div>
 <div class="igx-paginator__pager" [hidden]="pagerHidden" role="navigation">
-    <button [title]="resourceStrings.igx_paginator_first_page_button_text" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="paginate(0)" igxButton="icon" igxRipple igxRippleCentered="true">
+    <button [title]="resourceStrings.igx_paginator_first_page_button_text" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="paginate(0)" igxButton="icon" igxRipple [igxRippleCentered]="true">
         <igx-icon>first_page</igx-icon>
     </button>
-    <button [title]="resourceStrings.igx_paginator_previous_page_button_text" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="previousPage()" igxButton="icon" igxRipple igxRippleCentered="true">
+    <button [title]="resourceStrings.igx_paginator_previous_page_button_text" [disabled]="isFirstPageDisabled" [attr.aria-disabled]="isFirstPageDisabled" (click)="previousPage()" igxButton="icon" igxRipple [igxRippleCentered]="true">
         <igx-icon>chevron_left</igx-icon>
     </button>
     <div class='igx-paginator__pager-text' aria-current="page">
@@ -22,11 +22,11 @@
         <span>&nbsp;{{ resourceStrings.igx_paginator_pager_text }}&nbsp;</span>
         <span>{{ totalPages }}</span>
     </div>
-    <button [title]="resourceStrings.igx_paginator_next_page_button_text" [disabled]="isLastPageDisabled" [attr.aria-disabled]="isLastPageDisabled" (click)="nextPage()" igxRipple igxRippleCentered="true" igxButton="icon">
+    <button [title]="resourceStrings.igx_paginator_next_page_button_text" [disabled]="isLastPageDisabled" [attr.aria-disabled]="isLastPageDisabled" (click)="nextPage()" igxRipple [igxRippleCentered]="true" igxButton="icon">
         <igx-icon>chevron_right</igx-icon>
     </button>
     <button [title]="resourceStrings.igx_paginator_last_page_button_text" [disabled]="isLastPageDisabled" [attr.aria-disabled]="isLastPageDisabled" (click)="paginate(totalPages - 1)" igxButton="icon" igxRipple
-        igxRippleCentered="true">
+        [igxRippleCentered]="true">
         <igx-icon>last_page</igx-icon>
     </button>
 </div>

@@ -6,13 +6,14 @@ import {
     DisplayDensityToken,
     IDisplayDensityOptions,
     IButtonGroupEventArgs,
-    IGX_INPUT_GROUP_TYPE
+    IGX_INPUT_GROUP_TYPE,
+    DisplayDensity
 } from 'igniteui-angular';
 
 interface Selection {
     selected: boolean;
     type?: IgxInputGroupType;
-    label: string;
+    label: string | DisplayDensity;
     togglable: boolean;
 }
 
@@ -27,8 +28,8 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     public inputValue: any;
     public isRequired = true;
     public isDisabled = false;
-    public alignment = ButtonGroupAlignment.vertical;
-    public density = 'comfortable';
+    public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
+    public density: DisplayDensity = 'comfortable';
     public displayDensities: Selection[];
     public inputType: IgxInputGroupType = null;
     public inputTypes: Selection[];
@@ -93,7 +94,7 @@ export class InputGroupSampleComponent implements OnInit, AfterViewInit {
     }
 
     public selectDensity(event: IButtonGroupEventArgs) {
-        this.density = this.displayDensities[event.index].label;
+        this.density = this.displayDensities[event.index].label as DisplayDensity;
     }
 
     public selectInputType(event: IButtonGroupEventArgs) {
