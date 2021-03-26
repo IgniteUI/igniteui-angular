@@ -47,15 +47,21 @@
 
     $background: null,
     $background-hover: null,
+    $background-focused: null,
+    $background-selected-focused: null,
     $background-selected: null,
     $background-selected-hover: null,
-    $background-disabled: null,
+
     $background-active: null,
+    $background-disabled: null,
 
     $color: null,
     $color-hover: null,
+    $color-focused: null,
+    $color-selected-focused: null,
     $color-selected: null,
     $color-selected-hover: null,
+
     $color-active: null,
     $color-disabled: null,
 
@@ -63,10 +69,15 @@
 
     $tree-indicator-color: null,
     $tree-indicator-color-hover: null,
+    $tree-indicator-color-focused: null,
+    $tree-indicator-color-selected-focused: null,
     $tree-indicator-color-selected: null,
     $tree-indicator-color-selected-hover: null,
+
     $tree-indicator-color-active: null,
     $tree-indicator-color-disabled: null,
+
+    $border-focused: null
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -117,6 +128,8 @@
 
         background: $background,
         background-hover: $background-hover,
+        background-focused: $background-focused,
+        background-selected-focused: $background-selected-focused,
         background-selected: $background-selected,
         background-selected-hover: $background-selected-hover,
         background-active: $background-active,
@@ -124,6 +137,8 @@
 
         color: $color,
         color-hover: $color-hover,
+        color-focused: $color-focused,
+        color-selected-focused: $color-selected-focused,
         color-selected: $color-selected,
         color-selected-hover: $color-selected-hover,
         color-active: $color-active,
@@ -133,10 +148,14 @@
 
         tree-indicator-color: $tree-indicator-color,
         tree-indicator-color-hover: $tree-indicator-color-hover,
+        tree-indicator-color-focused: $tree-indicator-color-focused,
+        tree-indicator-color-selected-focused: $tree-indicator-color-selected-focused,
         tree-indicator-color-selected: $tree-indicator-color-selected,
         tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
         tree-indicator-color-active: $tree-indicator-color-disabled,
         tree-indicator-color-disabled: $tree-indicator-color-disabled,
+
+        border-focused: $border-focused
     ));
 }
 
@@ -172,10 +191,24 @@
         display: flex;
     }
 
+    %tree-display {
+        display: block;
+    }
+
     %tree-node-display {
         flex-direction: column;
         justify-content: center;
     }
+
+    %tree-display,
+    %tree-node-root,
+    %tree-node,
+    %tree-node-wrapper {
+        &:focus {
+            outline-width: 0;
+        }
+    }
+
     %tree-node-wrapper,
     %tree-node-indicator,
     %tree-node-select {
@@ -209,14 +242,20 @@
             font-size: $icon-size;
         }
 
-        &:hover,
-        &:focus {
+        &:hover {
             color: --var($theme, 'color-hover');
             background: --var($theme, 'background-hover');
         }
 
         &:focus {
+            background: --var($theme, 'background-focused');
+            color: --var($theme, 'color-focused');
             outline-color: transparent;
+            box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
+
+            %tree-node-indicator {
+                color: --var($theme, 'tree-indicator-color-focused');
+            }
         }
 
         &--cosy {
@@ -248,7 +287,8 @@
         }
     }
 
-    %tree-node-wrapper--selected {
+    %tree-node-wrapper--selected,
+    %tree-node-wrapper--active-selected {
         background: --var($theme, 'background-selected');
         color: --var($theme, 'color-selected');
 
@@ -256,14 +296,22 @@
             color: --var($theme, 'tree-indicator-color-selected');
 
             &:hover {
-                color: --var($theme, 'tree-indicator-color');
+                color: --var($theme, 'tree-indicator-color-selected-hover');
             }
         }
 
-        &:focus,
         &:hover {
             background: --var($theme, 'background-selected-hover');
             color: --var($theme, 'color-selected-hover');
+        }
+
+        &:focus {
+            background: --var($theme, 'background-selected-focused');
+            color: --var($theme, 'color-selected-focused');
+
+            %tree-node-indicator {
+                color: --var($theme, 'tree-indicator-color-selected-focused');
+            }
         }
     }
 
@@ -273,10 +321,6 @@
 
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-active');
-
-            &:hover {
-                color: --var($theme, 'tree-indicator-color');
-            }
         }
 
         &:focus,

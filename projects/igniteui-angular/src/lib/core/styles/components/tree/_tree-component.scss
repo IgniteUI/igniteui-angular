@@ -7,7 +7,12 @@
 ////
 
 @include b(igx-tree) {
-    display: block;
+
+    @extend %tree-display !optional;
+
+    @include e(root) {
+        @extend %tree-node-root !optional;
+    }
 }
 
 @include b(igx-tree-node) {
@@ -28,6 +33,7 @@
         @extend %tree-node-wrapper--compact !optional;
     }
 
+    // STATES START
     @include e(wrapper, $m: selected) {
         @extend %tree-node-wrapper--selected !optional;
     }
@@ -36,9 +42,14 @@
         @extend %tree-node-wrapper--active !optional;
     }
 
+    @include e(wrapper, $mods: (active, selected)) {
+        @extend %tree-node-wrapper--active-selected !optional;
+    }
+
     @include e(wrapper, $m: disabled) {
         @extend %tree-node-wrapper--disabled !optional;
     }
+    // STATES END
 
     @include e(content) {
         @extend %tree-node-content !optional;
