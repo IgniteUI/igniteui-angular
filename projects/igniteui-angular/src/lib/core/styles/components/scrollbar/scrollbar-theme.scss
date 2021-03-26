@@ -71,5 +71,12 @@
             background: --var($theme, 'thumb-background');
         }
     }
+
+    @media (hover: none) {
+        %scrollbar-display ::-webkit-scrollbar {
+            width: auto;
+            height: auto;
+        }
+    }
 }
 
