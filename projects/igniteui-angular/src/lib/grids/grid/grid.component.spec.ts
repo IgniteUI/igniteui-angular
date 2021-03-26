@@ -1508,7 +1508,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        it('Should change dates/number display based on locale', fakeAsync(() => {
+        it('Should change dates/number display based on locale #ivy', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -1549,6 +1549,11 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
+            grid.columnList.toArray()[5].pipeArgs = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
             grid.columnList.toArray()[4].pipeArgs = {
                 timezone: 'UTC',
                 format: 'longDate',
@@ -2582,7 +2587,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 }
@@ -2598,7 +2603,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 @Component({

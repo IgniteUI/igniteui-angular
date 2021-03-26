@@ -7,10 +7,10 @@
     <igx-switch (change)='this.$hiding = !this.$hiding' style="padding-left: 20px">cancel hiding</igx-switch>
 </div>
 <igx-input-group>
-    <input igxInput type="text" placeholder="Filter by product name" (input)="filter($event.target.value)">
+    <input igxInput #productName type="text" placeholder="Filter by product name" (input)="filter(productName.value)">
 </igx-input-group><br>
 <igx-input-group>
-    <input igxInput type="text" placeholder="Filter global" (input)="filterGlobal($event.target.value)">
+    <input igxInput #globalFilter type="text" placeholder="Filter global" (input)="filterGlobal(globalFilter.value)">
 </igx-input-group><br>
 
 <div class="sample-wrapper">
@@ -49,11 +49,11 @@
                     </igx-grid-toolbar-actions>
                 </igx-grid-toolbar>
 
-                <igx-column field="ProductID" width="130px" [dataType]="'number'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                <igx-column field="ProductID" width="130px" [dataType]="'number'" [filterable]="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
                 </igx-column>
-                <igx-column field="ProductName" width="200px" [dataType]="'string'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                <igx-column field="ProductName" width="200px" [dataType]="'string'" [filterable]="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
                 </igx-column>
-                <igx-column field="OrderDate" width="200px" [dataType]="'date'" filterable="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
+                <igx-column field="OrderDate" width="200px" [dataType]="'date'" [filterable]="true" [resizable]="true" [hasSummary]="true" [movable]="true" [sortable]="true" [editable]="true">
                 </igx-column>
                 <igx-column field="ReorderLevel" width="100px" [sortable]="true" [filterable]="true" [resizable]="true" [dataType]="'number'" [movable]="true" [hasSummary]="false" [editable]="true">
                 </igx-column>
