@@ -52,6 +52,10 @@ $_light-tree: extend(
             igx-color: ('grays', 100)
         ),
 
+        background-selected-focused: (
+            igx-color: ('secondary', 300)
+        ),
+
         background-disabled: (
             igx-color: ('surface')
         ),
@@ -74,6 +78,10 @@ $_light-tree: extend(
 
         color-selected: (
             igx-contrast-color: ('secondary', 200)
+        ),
+
+        color-selected-focused: (
+            igx-contrast-color: ('secondary', 300)
         ),
 
         color-active: (
@@ -102,6 +110,10 @@ $_light-tree: extend(
 
         tree-indicator-color-selected: (
             igx-contrast-color: ('secondary', 200)
+        ),
+
+        tree-indicator-color-selected-focused: (
+            igx-contrast-color: ('secondary', 300)
         ),
 
         tree-indicator-color-selected-hover: (

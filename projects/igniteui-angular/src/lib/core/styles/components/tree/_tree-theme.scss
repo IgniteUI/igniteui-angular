@@ -48,6 +48,7 @@
     $background: null,
     $background-hover: null,
     $background-focused: null,
+    $background-selected-focused: null,
     $background-selected: null,
     $background-selected-hover: null,
 
@@ -57,6 +58,7 @@
     $color: null,
     $color-hover: null,
     $color-focused: null,
+    $color-selected-focused: null,
     $color-selected: null,
     $color-selected-hover: null,
 
@@ -68,6 +70,7 @@
     $tree-indicator-color: null,
     $tree-indicator-color-hover: null,
     $tree-indicator-color-focused: null,
+    $tree-indicator-color-selected-focused: null,
     $tree-indicator-color-selected: null,
     $tree-indicator-color-selected-hover: null,
 
@@ -126,6 +129,7 @@
         background: $background,
         background-hover: $background-hover,
         background-focused: $background-focused,
+        background-selected-focused: $background-selected-focused,
         background-selected: $background-selected,
         background-selected-hover: $background-selected-hover,
         background-active: $background-active,
@@ -134,6 +138,7 @@
         color: $color,
         color-hover: $color-hover,
         color-focused: $color-focused,
+        color-selected-focused: $color-selected-focused,
         color-selected: $color-selected,
         color-selected-hover: $color-selected-hover,
         color-active: $color-active,
@@ -144,6 +149,7 @@
         tree-indicator-color: $tree-indicator-color,
         tree-indicator-color-hover: $tree-indicator-color-hover,
         tree-indicator-color-focused: $tree-indicator-color-focused,
+        tree-indicator-color-selected-focused: $tree-indicator-color-selected-focused,
         tree-indicator-color-selected: $tree-indicator-color-selected,
         tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
         tree-indicator-color-active: $tree-indicator-color-disabled,
@@ -276,13 +282,17 @@
     }
 
     %tree-node-wrapper--selected,
-    %tree-node-wrapper--active-selected,
-    %tree-node-wrapper--selected-focused {
+    %tree-node-wrapper--active-selected {
         background: --var($theme, 'background-selected');
         color: --var($theme, 'color-selected');
 
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-selected');
+
+            &:hover,
+            &:focus {
+                color: --var($theme, 'tree-indicator-color-selected-hover');
+            }
         }
 
         &:focus,
@@ -315,6 +325,16 @@
 
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-focused');
+        }
+    }
+
+    // TODO Remove after native focus is implemented
+    %tree-node-wrapper--selected-focused {
+        background: --var($theme, 'background-selected-focused');
+        color: --var($theme, 'color-selected-focused');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-selected-focused');
         }
     }
 
