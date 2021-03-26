@@ -149,13 +149,14 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         }
     }
 
+    // TODO: consider moving into CRUD
     protected endEdit(grid: IgxHierarchicalGridComponent) {
         if (grid.gridAPI.crudService.cellInEditMode) {
             grid.gridAPI.crudService.endEdit();
         }
         grid.hgridAPI.getChildGrids(true).forEach(g => {
-            if (grid.gridAPI.crudService.cellInEditMode) {
-            grid.gridAPI.crudService.endEdit();
+            if (g.gridAPI.crudService.cellInEditMode) {
+            g.gridAPI.crudService.endEdit();
         }
 });
     }
