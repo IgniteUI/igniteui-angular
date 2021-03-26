@@ -1549,6 +1549,11 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
+            grid.columnList.toArray()[5].pipeArgs = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
             grid.columnList.toArray()[4].pipeArgs = {
                 timezone: 'UTC',
                 format: 'longDate',
