@@ -1369,7 +1369,7 @@ const verifyProcessedTreeGridRecordsCount = (fix, expectedProcessedRootRecordsCo
 const verifyCellValue = (fix, rowIndex, columnKey, expectedCellValue) => {
     const treeGrid = fix.componentInstance.treeGrid;
     const actualValue = TreeGridFunctions.getCellValue(fix, rowIndex, columnKey);
-    const actualAPIValue = treeGrid.getRowByIndex(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
+    const actualAPIValue = treeGrid.gridAPI.get_row_by_index(rowIndex).cells.filter((c) => c.column.field === columnKey)[0].value;
     expect(actualValue.toString()).toBe(expectedCellValue, 'incorrect cell value');
     expect(actualAPIValue.toString()).toBe(expectedCellValue, 'incorrect api cell value');
 };
