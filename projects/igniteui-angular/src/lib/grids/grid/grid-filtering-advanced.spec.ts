@@ -18,6 +18,8 @@ import {
     IgxGridAdvancedFilteringBindingComponent
 } from '../../test-utils/grid-samples.spec';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IgxHierGridExternalAdvancedFilteringComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridModule, IgxHierarchicalGridComponent } from '../hierarchical-grid/public_api';
 
 const ADVANCED_FILTERING_OPERATOR_LINE_AND_CSS_CLASS = 'igx-filter-tree__line--and';
 const ADVANCED_FILTERING_OPERATOR_LINE_OR_CSS_CLASS = 'igx-filter-tree__line--or';
@@ -35,11 +37,13 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
                 IgxGridAdvancedFilteringColumnGroupComponent,
                 IgxGridAdvancedFilteringComponent,
                 IgxGridExternalAdvancedFilteringComponent,
-                IgxGridAdvancedFilteringBindingComponent
+                IgxGridAdvancedFilteringBindingComponent,
+                IgxHierGridExternalAdvancedFilteringComponent
             ],
             imports: [
                 NoopAnimationsModule,
-                IgxGridModule]
+                IgxGridModule,
+                IgxHierarchicalGridModule]
         }).compileComponents();
     }));
 
@@ -2669,6 +2673,28 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.rowList.length).toBe(1);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 1).value).toBe('Ignite UI for JavaScript');
         }));
+
+        it('Should allow hosting Advanced Filtering dialog outside of the hierarchical grid without any console errors.', fakeAsync(() => {
+            fix = TestBed.createComponent(IgxHierGridExternalAdvancedFilteringComponent);
+            const hgrid: IgxHierarchicalGridComponent = fix.componentInstance.hgrid;
+            fix.detectChanges();
+            spyOn(console, 'error');
+
+            const advFilterDialog = fix.nativeElement.querySelector('.igx-advanced-filter');
+            const applyFilterButton: any = Array.from(advFilterDialog.querySelectorAll('button'))
+                .find((b: any) => b.innerText.toLowerCase() === 'apply');
+
+            applyFilterButton.click();
+            tick(100);
+            fix.detectChanges();
+
+            UIInteractions.simulatePointerEvent('pointerenter',
+                hgrid.nativeElement.querySelectorAll('igx-hierarchical-grid-cell')[0], 5, 5);
+            fix.detectChanges();
+
+            expect(console.error).not.toHaveBeenCalled();
+        }));
+
     });
 
     describe('Expression tree bindings - ', () => {

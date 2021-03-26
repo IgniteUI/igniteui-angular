@@ -156,7 +156,11 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
 
         const data = cell.rowData;
-        mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        if (cell.column.hasNestedPath) {
+            mergeObjects(data, reverseMapper(cell.column.field, args.newValue));
+        } else {
+            data[cell.column.field] = args.newValue;
+        }
         this.grid.crudService.row.data = data;
         const doneArgs = cell.createDoneEditEventArgs(args.newValue);
         doneArgs.rowData = data;

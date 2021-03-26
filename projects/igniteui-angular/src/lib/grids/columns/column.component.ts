@@ -76,7 +76,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public field: string;
+    set field(value: string) {
+        this._field = value;
+        this.hasNestedPath = value?.includes('.');
+    }
+    get field(): string {
+        return this._field;
+    }
     /**
      * Sets/gets the `header` value.
      * ```typescript
@@ -442,6 +448,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return this.getCalcWidth();
     }
 
+    private _field: string;
     private _calcWidth = null;
     public calcPixelWidth: number;
     /**
@@ -1244,6 +1251,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * hidden
      */
     public widthSetByUser: boolean;
+
+    /**
+     * @hidden
+     */
+    public hasNestedPath: boolean;
 
     /**
      * Returns the filteringExpressionsTree of the column.

@@ -317,10 +317,15 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
             this.nativeRadio.nativeElement.blur();
         }
 
-        this.checked = true;
-        this.focused = false;
-        this.change.emit({ value: this.value, radio: this });
-        this._onChangeCallback(this.value);
+        if (this.focused) {
+            this.focused = false;
+        }
+
+        if (!this.checked) {
+            this.checked = true;
+            this.change.emit({ value: this.value, radio: this });
+            this._onChangeCallback(this.value);
+        }
     }
 
     /**
@@ -334,7 +339,6 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
         this.checked = false;
         this.focused = false;
         this.cdr.markForCheck();
-        this.change.emit({ value: this.value, radio: this });
     }
 
     /**
