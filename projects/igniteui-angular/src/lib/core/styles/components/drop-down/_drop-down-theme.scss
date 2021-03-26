@@ -262,6 +262,7 @@
     %igx-drop-down__list-scroll {
         overflow-y: auto;
         overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
         position: relative;
 
         igx-input-group {
