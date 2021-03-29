@@ -16,6 +16,10 @@ export const configureTestSuite = (configureAction?: () => void) => {
         document.querySelectorAll('style').forEach(tag => tag.remove());
     };
 
+    const clearSVGContainer = () => {
+        document.querySelectorAll('svg').forEach(tag => tag.remove());
+    };
+
     beforeAll(() => {
         TestBed.resetTestingModule();
         TestBed.resetTestingModule = () => TestBed;
@@ -31,6 +35,7 @@ export const configureTestSuite = (configureAction?: () => void) => {
 
     afterEach(() => {
         clearStyles();
+        clearSVGContainer();
         testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
         // reset ViewEngine TestBed
         testBedApi._instantiated = false;
