@@ -1425,7 +1425,7 @@
         }
 
         igx-input-group {
-            --igx-input-group-variant: fluent;
+            --theme: fluent;
             padding-top: 0 !important;
         }
 
@@ -2484,7 +2484,7 @@
         }
 
         igx-input-group {
-            --igx-input-group-variant: fluent;
+            --theme: fluent;
             width: 100%;
             max-width: rem(200px);
             min-width: rem(140px);

@@ -101,6 +101,7 @@
         vertical-align: middle;
         border-radius: --var($theme, 'border-radius');
         outline-style: none;
+        flex-shrink: 0;
 
         &::after {
             box-shadow: none;
