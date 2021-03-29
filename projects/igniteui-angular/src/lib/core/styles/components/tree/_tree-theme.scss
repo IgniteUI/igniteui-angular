@@ -48,21 +48,25 @@
     $background: null,
     $background-hover: null,
     $background-focused: null,
-    $background-selected-focused: null,
     $background-selected: null,
     $background-selected-hover: null,
-
+    $background-selected-focused: null,
     $background-active: null,
+    $background-active-hover: null,
+    $background-active-focused: null,
+    $background-active-selected: null,
     $background-disabled: null,
 
     $color: null,
     $color-hover: null,
     $color-focused: null,
-    $color-selected-focused: null,
     $color-selected: null,
     $color-selected-hover: null,
-
+    $color-selected-focused: null,
     $color-active: null,
+    $color-active-hover: null,
+    $color-active-focused: null,
+    $color-active-selected: null,
     $color-disabled: null,
 
     $drop-indicator-color: null,
@@ -129,19 +133,25 @@
         background: $background,
         background-hover: $background-hover,
         background-focused: $background-focused,
-        background-selected-focused: $background-selected-focused,
         background-selected: $background-selected,
         background-selected-hover: $background-selected-hover,
+        background-selected-focused: $background-selected-focused,
         background-active: $background-active,
+        background-active-hover: $background-active-hover,
+        background-active-focused: $background-active-focused,
+        background-active-selected: $background-active-selected,
         background-disabled: $background-disabled,
 
         color: $color,
         color-hover: $color-hover,
         color-focused: $color-focused,
-        color-selected-focused: $color-selected-focused,
         color-selected: $color-selected,
         color-selected-hover: $color-selected-hover,
+        color-selected-focused: $color-selected-focused,
         color-active: $color-active,
+        color-active-hover: $color-active-hover,
+        color-active-focused: $color-active-focused,
+        color-active-selected: $color-active-selected,
         color-disabled: $color-disabled,
 
         drop-indicator-color: $drop-indicator-color,
@@ -183,6 +193,10 @@
     $icon-size: rem(24px);
     $icon-space: rem(8px);
 
+    %tree-display {
+        display: block;
+    }
+
     %tree-node,
     %tree-node-wrapper,
     %tree-node-indicator,
@@ -191,13 +205,8 @@
         display: flex;
     }
 
-    %tree-display {
-        display: block;
-    }
-
-    %tree-node-display {
+    %tree-node {
         flex-direction: column;
-        justify-content: center;
     }
 
     %tree-display,
@@ -224,10 +233,6 @@
         visibility: hidden;
     }
 
-    %tree-node {
-        flex-direction: column;
-    }
-
     %tree-node-wrapper {
         min-height: map-get($node-height, 'comfortable');
         padding: 0 map-get($node-indent, 'comfortable');
@@ -248,14 +253,7 @@
         }
 
         &:focus {
-            background: --var($theme, 'background-focused');
-            color: --var($theme, 'color-focused');
             outline-color: transparent;
-            box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
-
-            %tree-node-indicator {
-                color: --var($theme, 'tree-indicator-color-focused');
-            }
         }
 
         &--cosy {
@@ -287,11 +285,18 @@
         }
     }
 
-    %tree-node-wrapper--selected,
-    %tree-node-wrapper--active-selected {
+    %tree-node-wrapper--selected {
         background: --var($theme, 'background-selected');
         color: --var($theme, 'color-selected');
+    }
 
+    %tree-node-wrapper--active-selected {
+        background: --var($theme, 'background-active-selected');
+        color: --var($theme, 'color-active-selected');
+    }
+
+    %tree-node-wrapper--selected,
+    %tree-node-wrapper--active-selected {
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-selected');
 
@@ -304,15 +309,6 @@
             background: --var($theme, 'background-selected-hover');
             color: --var($theme, 'color-selected-hover');
         }
-
-        &:focus {
-            background: --var($theme, 'background-selected-focused');
-            color: --var($theme, 'color-selected-focused');
-
-            %tree-node-indicator {
-                color: --var($theme, 'tree-indicator-color-selected-focused');
-            }
-        }
     }
 
     %tree-node-wrapper--active {
@@ -323,13 +319,39 @@
             color: --var($theme, 'tree-indicator-color-active');
         }
 
-        &:focus,
         &:hover {
-            background: --var($theme, 'background-active');
-            color: --var($theme, 'color-active');
+            background: --var($theme, 'background-active-hover');
+            color: --var($theme, 'color-active-hover');
+        }
+
+        &:focus {
+            background: --var($theme, 'background-active-focused');
+            color: --var($theme, 'color-active-focused');
         }
     }
 
+    %tree-node-wrapper--focused {
+        background: --var($theme, 'background-focused');
+        color: --var($theme, 'color-focused');
+
+        box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-focused');
+        }
+    }
+
+    %tree-node-wrapper--selected-focused {
+        background: --var($theme, 'background-selected-focused');
+        color: --var($theme, 'color-selected-focused');
+
+        %tree-node-indicator {
+            color: --var($theme, 'tree-indicator-color-selected-focused');
+        }
+    }
+
+    %tree-node-wrapper--selected%tree-node-wrapper--disabled,
+    %tree-node-wrapper--active-selected%tree-node-wrapper--disabled,
     %tree-node-wrapper--disabled {
         background: --var($theme, 'background-disabled');
         color: --var($theme, 'color-disabled');
@@ -370,14 +392,6 @@
         &:hover,
         &:focus, {
             color: --var($theme, 'tree-indicator-color-hover');
-        }
-    }
-
-    [dir='rtl'] {
-        %tree-node-indicator {
-            igx-icon {
-                transform: rotate(180deg);
-            }
         }
     }
 

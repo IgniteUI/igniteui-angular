@@ -7,7 +7,6 @@
 ////
 
 @include b(igx-tree) {
-
     @extend %tree-display !optional;
 
     @include e(root) {
@@ -44,6 +43,14 @@
 
     @include e(wrapper, $mods: (active, selected)) {
         @extend %tree-node-wrapper--active-selected !optional;
+    }
+
+    @include e(wrapper, $mods: (selected, focused)) {
+        @extend %tree-node-wrapper--selected-focused !optional;
+    }
+
+    @include e(wrapper, $m: focused) {
+        @extend %tree-node-wrapper--focused !optional;
     }
 
     @include e(wrapper, $m: disabled) {

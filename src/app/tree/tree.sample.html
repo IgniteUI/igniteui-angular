@@ -37,7 +37,7 @@
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
-                <div style="height: 300px; overflow: scroll;">
+                <div class="sample-scroll">
                 <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand" [animationSettings]="animationSettings"
                     (nodeSelection)="nodeSelection($event)" (treeKeydown)="keydown($event)"
                     [(activeNode)]="activatedNode" (activeNodeChange)="activeNodeChanged($event)">
