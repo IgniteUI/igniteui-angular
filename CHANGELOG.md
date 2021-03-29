@@ -37,6 +37,8 @@ All notable changes for each version of this project will be documented in this 
                 [summaryFormatter]="dateSummaryFormat">
             </igx-column>
         ```
+    - **Behavioral Change** - `Column Autosize` feature now does not handle templated headers where the first level children are sized based on parent like default `div` and etc. Autosizing for such headers will not result in change.
+    - A new `IgxColumnComponent` input property is exposed called `autosizeHeader`, which if false, allows the autosizing to ignore the header template and autosize only based on content cells.
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.

@@ -678,6 +678,20 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.width).toEqual('89px');
         });
+
+        it('should ignore header template during autosize if autosizeHeader is false.', () => {
+            const column = grid.getColumnByName('ID');
+            column.minWidth = "10px";
+            column.autosizeHeader = false;
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('150px');
+
+            column.autosize();
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('55px');
+        });
     });
 
     describe('Multi Column Headers tests: ', () => {
