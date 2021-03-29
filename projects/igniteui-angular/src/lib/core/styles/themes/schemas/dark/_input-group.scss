@@ -23,8 +23,8 @@ $_dark-input-group: extend($_light-input-group, $_base-dark-input-group);
 
 /// Generates a dark fluent input-group schema based on a mix of $_fluent-input-group and $_base-dark-input-group.
 /// @type {Map}
-/// @prop {Map} input-prefix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input prefix of type line, box and border.
-/// @prop {Map} input-suffix-background [igx-color: ('grays', 100), hexrgba: #222] - The background color of an input sufix of type line, box and border.
+/// @prop {Map} input-prefix-background [igx-color: ('grays', 100), to-opaque: #222] - The background color of an input prefix of type line, box and border.
+/// @prop {Map} input-suffix-background [igx-color: ('grays', 100), to-opaque: #222] - The background color of an input sufix of type line, box and border.
 /// @requires {function} extend
 /// @requires $_fluent-input-group
 /// @requires $_base-dark-input-group
@@ -34,12 +34,12 @@ $_dark-fluent-input-group: extend(
     (
         input-prefix-background: (
             igx-color: ('grays', 100),
-            hexrgba: #222
+            to-opaque: #222
         ),
 
         input-suffix-background: (
             igx-color: ('grays', 100),
-            hexrgba: #222
+            to-opaque: #222
         ),
     )
 );
@@ -56,9 +56,9 @@ $_dark-bootstrap-input-group: extend(
 
 /// Generates an dark indigo input-group schema
 /// @type {Map}
-/// @prop {Map} success-secondary-color [igx-color: ('success'), rgba: .7, hexrgba: #fff] - The success color used in the valid state.
-/// @prop {Map} warning-secondary-color [igx-color: ('warn'), rgba: .7, hexrgba: #fff] - The warning color used in the warning state.
-/// @prop {Map} error-secondary-color [igx-color: ('error'), rgba: .7, hexrgba: #fff] - The error color used in the error state.
+/// @prop {Map} success-secondary-color [igx-color: ('success'), rgba: .7, to-opaque: #fff] - The success color used in the valid state.
+/// @prop {Map} warning-secondary-color [igx-color: ('warn'), rgba: .7, to-opaque: #fff] - The warning color used in the warning state.
+/// @prop {Map} error-secondary-color [igx-color: ('error'), rgba: .7, to-opaque: #fff] - The error color used in the error state.
 /// @prop {Map} $idle-secondary-color [igx-contrast-color: ('surface')] - The label color in the idle state.
 /// @prop {Map} $filled-secondary-color [igx-contrast-color: ('surface')] - The label color in the filled state.
 /// @prop {Map} $focused-secondary-color [igx-contrast-color: ('surface')] - The label color in the focused state.
@@ -74,19 +74,19 @@ $_dark-indigo-input-group: extend(
         success-secondary-color: (
             igx-color: ('success'),
             rgba: .7,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         warning-secondary-color: (
             igx-color: ('warn'),
             rgba: .7,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         error-secondary-color: (
             igx-color: ('error'),
             rgba: .7,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         idle-secondary-color: (

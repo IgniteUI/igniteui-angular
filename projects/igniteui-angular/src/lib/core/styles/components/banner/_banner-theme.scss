@@ -6,7 +6,7 @@
 
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $banner-background [null]- The background color used banner background.
@@ -25,7 +25,7 @@
 ///   // Pass the theme to the igx-banner component mixin
 ///   @include igx-banner($my-banner-theme);
 @function igx-banner-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $banner-background: null,
     $banner-message-color: null,
@@ -33,6 +33,7 @@
     $banner-illustration-color: null
 ) {
     $name: 'igx-banner';
+    $selector: 'igx-banner, .igx-banner, .igx-banner--cosy, .igx-banner--compact';
     $banner-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -49,6 +50,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         banner-background: $banner-background,
         banner-message-color: $banner-message-color,
@@ -58,11 +60,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-banner($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
