@@ -6230,11 +6230,34 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
-                column.defaultWidth = this._columnWidth;
+                // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
+                column.defaultWidth = this.getExtremumBasedColWidth(column);
                 column.resetCaches();
             }
         });
         this.resetCachedWidths();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getExtremumBasedColWidth(column: IgxColumnComponent): string {
+        let width = this._columnWidth;
+        if (column.minWidthPx > parseFloat(width)) {
+            width = column.minWidth;
+        } else if (column.maxWidthPx < parseFloat(width)) {
+            width = column.maxWidth;
+        }
+
+        if (width && typeof width !== 'string') {
+            width = String(width);
+        }
+        // if no px or % are defined in maxWidth/minWidth consider it px
+        if (width.indexOf('%') === -1 && width.indexOf('px') === -1) {
+            width += 'px';
+        }
+        return width;
     }
 
     protected resetNotifyChanges() {
