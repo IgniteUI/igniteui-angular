@@ -4,6 +4,10 @@ All notable changes for each version of this project will be documented in this 
 
 ## 12.0.0
 
+### General
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
+
 ### New Features
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
@@ -16,11 +20,28 @@ All notable changes for each version of this project will be documented in this 
                 </ng-template>
             </igx-grid>
         ```
+    -   A new `summaryFormatter` input property is exposed by the `IgxColumnComponent`, which is used to format the displayed summary values for the columns.
+        ```typescript
+            public dateSummaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+                const result = summary.summaryResult;
+                if(summaryOperand instanceof IgxDateSummaryOperand && summary.key !== 'count'
+                    && result !== null && result !== undefined) {
+                    const pipe = new DatePipe('en-US');
+                    return pipe.transform(result,'MMM YYYY');
+                }
+                return result;
+            }
+        ```
+        ```html
+            <igx-column field="OrderDate" header="Order Date" [sortable]="true" [disableHiding]="true" [dataType]="'date'" [hasSummary]="true"
+                [summaryFormatter]="dateSummaryFormat">
+            </igx-column>
+        ```
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
     - The `igx-typography` mixin is no longer implicitly included with `igx-core`. To use our typography styles users have to include the mixin explicitly:
-    
+
     ```html
     @include igx-core();
     /// Example with Indigo Design theme:
@@ -53,10 +74,10 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting grouped data.
 - `IgxTreeGrid`
     - Added `multipleCascade` row selection mode. In this mode, selecting a record results in the selection of all its children recursively. When only some children are selected, their parent's checkbox is in an indeterminate state.
- 
+
 
         ```html
-        <igx-tree-grid [rowSelection]="'multipleCascade'">           
+        <igx-tree-grid [rowSelection]="'multipleCascade'">
         </igx-tree-grid>
         ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -70,7 +91,7 @@ All notable changes for each version of this project will be documented in this 
     - `Column Resizing` now does not exit edit mode.
 - `IgxInput` now supports `type="file"` and its styling upon all themes.
    _Note: validation of file type input is not yet supported._
-- `igxSplitter` now has the following additional outputs: 
+- `igxSplitter` now has the following additional outputs:
     - `resizeStart` - Emits when pane resizing starts.
     - `resizing`- Emits while panes are being resized.
     - `resizeEnd` - Emits when pane resizing ends.

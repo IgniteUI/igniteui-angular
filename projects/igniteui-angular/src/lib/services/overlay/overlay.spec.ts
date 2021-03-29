@@ -2960,7 +2960,6 @@ describe('igxOverlay', () => {
         }));
 
         it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
-
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const _handler = event => {

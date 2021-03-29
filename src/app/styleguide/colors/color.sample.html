@@ -4,8 +4,8 @@
         <div class="color-palettes">
             <div class="color-palette" *ngFor="let color of colors">
                 <div *ngIf="color.variants.length > 1" class="color-container">
-                    <h4 class="color-title igx-{{color.name}}-500">{{color.name}}</h4>
-                    <div *ngFor="let variant of color.variants" class="color-values igx-{{color.name}}-{{variant}}">
+                    <h4 class="color-title bg-{{color.name}}-500 color-{{color.name}}-500-contrast">{{color.name}}</h4>
+                    <div *ngFor="let variant of color.variants" class="color-values bg-{{color.name}}-{{variant}} color-{{color.name}}-{{variant}}-contrast">
                         <span class="variables">{{variant}}</span>
                     </div>
                 </div>
@@ -17,23 +17,25 @@
         <h4 class="sample-title">Supporting Colors</h4>
         <div class="colors-row">
 
-            <div class="color-container igx-success-500">
-                <h4 class="color-title">Success Color</h4>
+            <div class="color-container bg-success-500 color-success-500-contrast">
+                <h4 class="color-title">Success</h4>
             </div>
 
-            <div class="color-container igx-info-500">
-                <h4 class="color-title">Info Color</h4>
+            <div class="color-container bg-info-500 color-info-500-contrast">
+                <h4 class="color-title">Info</h4>
             </div>
 
-            <div class="color-container igx-warn-500">
-                <h4 class="color-title">Warning Color</h4>
+            <div class="color-container bg-warn-500 color-warn-500-contrast">
+                <h4 class="color-title">Warning</h4>
             </div>
 
-            <div class="color-container igx-error-500">
-                <h4 class="color-title">Error Color</h4>
+            <div class="color-container bg-error-500 color-error-500-contrast">
+                <h4 class="color-title">Error</h4>
             </div>
 
+            <div class="color-container bg-surface-500 color-surface-500-contrast">
+                <h4 class="color-title">Surface</h4>
+            </div>
         </div>
     </article>
-
 </div>
