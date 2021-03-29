@@ -4,31 +4,56 @@ import { IgxTree, IgxTreeNode } from './common';
 /** @hidden @internal */
 @Injectable()
 export class IgxTreeService {
-    public expandedNodes: Set<string> = new Set<string>();
-    public collapsingNodes: Set<string> = new Set<string>();
+    public expandedNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
+    public collapsingNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
     private tree: IgxTree;
 
-    public expand(node: IgxTreeNode<any>): void {
-        this.expandedNodes.add(node.id);
-        this.collapsingNodes.delete(node.id);
+    /**
+     * Adds the node to the `expandedNodes` set and fires the nodes change event
+     *
+     * @param node target node
+     * @param uiTrigger is the event triggered by a ui interraction (so we know if we should animate)
+     * @returns void
+     */
+    public expand(node: IgxTreeNode<any>, uiTrigger?: boolean): void {
+        this.collapsingNodes.delete(node);
+        if (!this.expandedNodes.has(node)) {
+            node.expandedChange.emit(true);
+        } else {
+            return;
+        }
+        this.expandedNodes.add(node);
         if (this.tree.singleBranchExpand) {
             this.tree.findNodes(node, this.siblingComparer)?.forEach(e => {
-                e.expanded = false;
+                if (uiTrigger) {
+                    e.collapse();
+                } else {
+                    e.expanded = false;
+                }
             });
         }
     }
 
-    public collapsing(id: string) {
-        this.collapsingNodes.add(id);
+    public collapsing(node: IgxTreeNode<any>) {
+        this.collapsingNodes.add(node);
     }
 
-    public collapse(id: string): void {
-        this.collapsingNodes.delete(id);
-        this.expandedNodes.delete(id);
+    /**
+     * Removes the node from the 'expandedNodes' set and emits the node's change event
+     *
+     * @param node target node
+     * @returns void
+     */
+    public collapse(node: IgxTreeNode<any>): void {
+        if (this.expandedNodes.has(node)) {
+            node.expandedChange.emit(false);
+        }
+        this.collapsingNodes.delete(node);
+        this.expandedNodes.delete(node);
     }
 
-    public isExpanded(id: string): boolean {
-        return this.expandedNodes.has(id);
+    public isExpanded(node: IgxTreeNode<any>): boolean {
+        return this.expandedNodes.has(node);
     }
 
     public register(tree: IgxTree) {

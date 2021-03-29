@@ -63,6 +63,9 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         closeAnimation: growVerOut
     };
 
+    private closeInterrupted = false;
+    private openInterrupted = false;
+
     private _defaultClosedCallback = noop;
     private _defaultOpenedCallback = noop;
     private onClosedCallback: () => any = this._defaultClosedCallback;
@@ -117,6 +120,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
                 // .getPosition() still returns 0 sometimes, regardless of the fix for https://github.com/angular/angular/issues/18891;
                 oppositePosition = (opposite as any)._renderer.engine.players[0].getPosition();
             }
+
             this.cleanUpPlayer(oppositeType);
         }
         if (type === ANIMATION_TYPE.OPEN) {
@@ -129,14 +133,18 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         this.getPlayer(type).setPosition(1 - oppositePosition);
         if (type === ANIMATION_TYPE.OPEN) {
             this.onOpenedCallback = callback;
+            this.openInterrupted = false;
         } else if (type === ANIMATION_TYPE.CLOSE) {
             this.onClosedCallback = callback;
+            this.closeInterrupted = false;
         }
-        const targetCallback = type === ANIMATION_TYPE.OPEN ? this.onOpenedCallback : this.onClosedCallback;
         const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationDone : this.closeAnimationDone;
         target.onDone(() => {
+            const targetCallback = type === ANIMATION_TYPE.OPEN ? this.onOpenedCallback : this.onClosedCallback;
             targetCallback();
-            targetEmitter.emit();
+            if (!(type === ANIMATION_TYPE.OPEN ? this.openInterrupted : this.closeInterrupted)) {
+                targetEmitter.emit();
+            }
             this.cleanUpPlayer(type);
         });
         return target;
@@ -151,6 +159,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
                     this.closeAnimationPlayer.destroy();
                     this.closeAnimationPlayer = null;
                 }
+                this.closeInterrupted = true;
                 this.onClosedCallback = this._defaultClosedCallback;
                 break;
             case ANIMATION_TYPE.OPEN:
@@ -159,6 +168,7 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
                     this.openAnimationPlayer.destroy();
                     this.openAnimationPlayer = null;
                 }
+                this.openInterrupted = true;
                 this.onOpenedCallback = this._defaultOpenedCallback;
                 break;
             default:

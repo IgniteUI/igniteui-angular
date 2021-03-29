@@ -16,15 +16,22 @@
     </igx-icon>
 </ng-template>
 
-<ng-template #defaultSelect let-item>
+<ng-template #selectMarkerTemplate let-item>
     <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" tabindex="-1">
     </igx-checkbox>
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" [ngClass]="{
+    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" 
+        [ngClass]="{
             'igx-tree-node__wrapper--selected': selected,
-            'igx-tree-node__wrapper--active' : this.active}" (pointerdown)="onPointerDown($event)">
+            'igx-tree-node__wrapper--active' : this.active,
+            'igx-tree-node__wrapper--focused' : this.focused,
+            'igx-tree-node__wrapper--disabled' : this.disabled
+        }" 
+        (pointerdown)="onPointerDown($event)"
+        (focus)="divertFocus()"
+        >
         <div aria-hidden="true">
             <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
         </div>

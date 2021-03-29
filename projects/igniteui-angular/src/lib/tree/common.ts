@@ -16,18 +16,17 @@ export interface IgxTree {
     selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
-    activeNode: IgxTreeNode<any>;
     navService: IgxTreeNavigationService;
+    /** @hidden @internal */
+    disabledChange: EventEmitter<IgxTreeNode<any>>;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;
     nodeCollapsing: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeCollapsed: EventEmitter<ITreeNodeToggledEventArgs>;
-    treeKeydown: EventEmitter<ITreeKeydownEventArgs>;
-    activeNodeChange: EventEmitter<IgxTreeNode<any>>;
+    activeNodeChanged: EventEmitter<IgxTreeNode<any>>;
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
-    clearActiveNode(): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
     getPreviousNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     getNextNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
@@ -38,12 +37,24 @@ export interface IgxTree {
 export interface IgxTreeNode<T> {
     id: any;
     parentNode?: IgxTreeNode<any> | null;
+    path: IgxTreeNode<any>[];
     expanded: boolean | null;
     selected: boolean | null;
+    disabled: boolean;
     level: number;
     data: T;
+    /** @hidden @internal */
+    nativeElement: HTMLElement;
+    /** @hidden @internal */
+    tabIndex: number;
+    /** @hidden @internal */
+    allChildren: QueryList<IgxTreeNode<any>>;
     children: QueryList<IgxTreeNode<any>> | null;
     selectedChange: EventEmitter<boolean>;
+    expandedChange: EventEmitter<boolean>;
+    expand(): void;
+    collapse(): void;
+    toggle(): void;
 }
 
 // Events
@@ -71,12 +82,6 @@ export interface ITreeNodeTogglingEventArgs extends IBaseEventArgs, IBaseCancela
 
 export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
     node: IgxTreeNode<any>;
-}
-
-export interface ITreeKeydownEventArgs extends IBaseEventArgs {
-    target: IgxTreeNode<any>;
-    event: Event;
-    cancel: boolean;
 }
 
 // Enums

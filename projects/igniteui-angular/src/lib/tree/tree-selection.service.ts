@@ -274,17 +274,6 @@ export class IgxTreeSelectionService {
         }
     }
 
-    private get_all_children(node: IgxTreeNode<any>): IgxTreeNode<any>[] {
-        const children = [];
-        if (node && node.children && node.children.length) {
-            node.children.forEach((child) => {
-                children.push(...this.get_all_children(child));
-                children.push(child);
-            });
-        }
-        return children;
-    }
-
     /**
      * Get a collection of all nodes affected by the change event
      *
@@ -298,10 +287,11 @@ export class IgxTreeSelectionService {
         };
 
         Array.from(collection.nodes).forEach((node) => {
-            const nodeAndAllChildren = this.get_all_children(node);
+            const nodeAndAllChildren = node.allChildren?.toArray() || [];
             nodeAndAllChildren.forEach(n => {
                 collection.nodes.add(n);
             });
+
             if (node && node.parentNode) {
                 collection.parents.add(node.parentNode);
             }
