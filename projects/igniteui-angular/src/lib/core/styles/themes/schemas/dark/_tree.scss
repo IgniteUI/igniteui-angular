@@ -19,7 +19,30 @@ $_base-dark-tree: (
 /// @requires {function} extend
 /// @requires $_light-tree
 /// @requires $_base-dark-tree
-$_dark-tree: extend($_light-tree, $_base-dark-tree);
+$_dark-tree: extend(
+    $_light-tree,
+    (
+        color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-focused: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-focused : (
+            igx-color: ('grays', 900)
+        )
+    )
+);
 
 /// Generates a dark fluent tree schema.
 /// @type {Map}
@@ -30,7 +53,6 @@ $_dark-tree: extend($_light-tree, $_base-dark-tree);
 
 /// @requires {function} extend
 /// @requires $_fluent-tree
-/// @requires $_base-dark-tree
 $_dark-fluent-tree: extend(
     $_fluent-tree,
     (
