@@ -38,6 +38,7 @@ export interface IgxTree {
 export interface IgxTreeNode<T> {
     id: any;
     parentNode?: IgxTreeNode<any> | null;
+    path: IgxTreeNode<any>[];
     expanded: boolean | null;
     selected: boolean | null;
     level: number;
