@@ -237,7 +237,7 @@ export class IgxGridStateDirective {
                 return { rowSelection: selection };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
-                context.currGrid.selectRows(state);
+                context.currGrid.selectRows(state, true);
             }
         },
         cellSelection: {
