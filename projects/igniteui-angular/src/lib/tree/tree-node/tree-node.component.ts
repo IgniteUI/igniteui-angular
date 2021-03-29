@@ -140,7 +140,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * Retrieves the full path to the node
      */
     public get path(): IgxTreeNode<any>[] {
-        return this.parentNode?.path ? [...this.parentNode.path] : [this];
+        return this.parentNode?.path ? [...this.parentNode.path, this] : [this];
     }
 
     // TODO: bind to disabled state when node is dragged
