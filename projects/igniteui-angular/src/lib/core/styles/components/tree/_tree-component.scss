@@ -46,14 +46,6 @@
         @extend %tree-node-wrapper--active-selected !optional;
     }
 
-    @include e(wrapper, $mods: (selected, focused)) {
-        @extend %tree-node-wrapper--selected-focused !optional;
-    }
-
-    @include e(wrapper, $m: focused) {
-        @extend %tree-node-wrapper--focused !optional;
-    }
-
     @include e(wrapper, $m: disabled) {
         @extend %tree-node-wrapper--disabled !optional;
     }
