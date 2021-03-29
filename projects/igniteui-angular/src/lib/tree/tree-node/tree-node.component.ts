@@ -135,6 +135,14 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.navService.isFocusedNode(this);;
     }
 
+    // TODO: Add API docs
+    /**
+     * Retrieves the full path to the node
+     */
+    public get path(): IgxTreeNode<any>[] {
+        return this.parentNode?.path ? [...this.parentNode.path, this] : [this];
+    }
+
     // TODO: bind to disabled state when node is dragged
     /** @hidden @internal */
     @HostBinding('class.igx-tree-node--disabled')
