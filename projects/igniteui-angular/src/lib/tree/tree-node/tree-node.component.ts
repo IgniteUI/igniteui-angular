@@ -90,6 +90,22 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /**
+     * Gets/Sets the active state of the node
+     *
+     * @param value: boolean
+     */
+    @Input()
+    public set active(value: boolean) {
+        if (value) {
+            this.navService.activeNode = this;
+        }
+    }
+
+    public get active(): boolean {
+        return this.navService.isActiveNode(this);
+    }
+
+    /**
      * Emitted when the node's `selected` property changes.
      *
      * ```html
@@ -122,13 +138,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      */
     @Output()
     public expandedChange = new EventEmitter<boolean>();
-
-    // TODO: bind to active state when keynav is implemented
-    /** @hidden @internal */
-    // @HostBinding('class.igx-tree-node--active')
-    public get active() {
-        return this.navService.isActiveNode(this);;
-    }
 
     public get focused() {
         //console.log(this.navService.isActiveNode(this));
