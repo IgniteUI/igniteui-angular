@@ -1,0 +1,61 @@
+{
+    "@scheme": "../../common/schema/binding.schema.json",
+    "changes": [
+        {
+            "name": "tabsType",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tabs",
+                "type": "component"
+            }
+        },
+        {
+            "name": "label",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "icon",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "routerLink",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "label",
+            "remove": true,
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "icon",
+            "remove": true,
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "routerLink",
+            "remove": true,
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        }
+    ]
+}
