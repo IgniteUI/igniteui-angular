@@ -306,8 +306,6 @@
         background: --var($theme, 'background-active');
         color: --var($theme, 'color-active');
 
-        box-shadow: inset 0 0 0 1px --var($theme, 'border-active');
-
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-active');
         }
@@ -322,6 +320,8 @@
     %tree-node-wrapper--focused {
         background: --var($theme, 'background-focused');
         color: --var($theme, 'color-focused');
+
+        box-shadow: inset 0 0 0 1px --var($theme, 'border-active');
 
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-focused');
