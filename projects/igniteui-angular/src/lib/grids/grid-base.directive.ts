@@ -4311,6 +4311,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * @hidden @internal
+     * TODO: eventually move to CRUD
      */
     public beginAddRowByIndex(rowID: any, index: number, asChild?: boolean, event?: Event) {
         if (!this.rowEditable) {
@@ -6990,8 +6991,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @param dataViewIndex The index of that record in the data view.
      *
-     * TODO: Consider moving it into CRUD
      */
+    // TODO: Consider moving it into CRUD
     private isEditableDataRecordAtIndex(dataViewIndex) {
         const rec = this.dataView[dataViewIndex];
         return !rec.expression && !rec.summaries && !rec.childGridsData && !rec.detailsData &&

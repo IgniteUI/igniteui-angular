@@ -115,8 +115,8 @@ export class IgxGridCRUDService {
 
     /**
      * @hidden @interal
-     * TODO: Consider changing the modifier to protected or private.
      */
+    // TODO: Consider changing the modifier to protected or private.
     public addRowParent = null;
 
     private _cellEditingBlocked = false;
@@ -457,11 +457,11 @@ export class IgxGridCRUDService {
                 if (args.cancel) {
                     return args.cancel;
                 }
-                const parentId = this._getAddRowParentRecordId();
+                const parentId = this._getParentRecordId();
                 this.grid.gridAPI.addRowToData(row.data, parentId);
                 const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
                 this.grid.rowEditDone.emit(doneArgs);
-                this.grid.gridAPI.crudService.endRowEdit();
+                this.endRowEdit();
                 if (this.addRowParent.isPinned) {
                     this.grid.pinRow(row.id);
                 }
@@ -469,10 +469,10 @@ export class IgxGridCRUDService {
             this.addRowParent = null;
             this.cancelAddMode = cancelable;
         } else {
-            this.grid.gridAPI.crudService.exitCellEdit(event);
+            this.exitCellEdit(event);
             this.cancelAddMode = true;
         }
-        this.grid.gridAPI.crudService.endRowEdit();
+        this.endRowEdit();
         this.grid.closeRowEditingOverlay();
         this.grid.pipeTriggerNotifier.next();
         if (!this.cancelAddMode) {
@@ -497,16 +497,16 @@ export class IgxGridCRUDService {
      * @internal
      * TODO: consider changing modifier
      */
-    public _getAddRowParentRecordId() {
-        return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;
+     public _findRecordIndexInView(rec) {
+        return this.grid.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
     }
 
-    /**
-     * @hidden
-     * @internal
-     * TODO: consider changing modifier
-     */
-    public _findRecordIndexInView(rec) {
-        return this.grid.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
+    private  _getParentRecordId() {
+        if (this.addRowParent.asChild) {
+            return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;;
+        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
+            const spawnedForRecord = this.grid.gridAPI.get_rec_by_id(this.addRowParent.rowID);
+            return spawnedForRecord?.parent?.rowID;
+        }
     }
 }
