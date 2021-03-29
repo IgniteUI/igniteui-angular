@@ -360,7 +360,7 @@ describe('IgxGridState - input properties #grid', () => {
 
         let gridState = state.getState(true, 'rowSelection');
         expect(gridState).toBe(initialState);
-
+        state.setState('{"rowSelection":[2]}');
         state.setState(rowSelectionState);
         gridState = state.getState(false, 'rowSelection');
         HelperFunctions.verifyRowSelection(grid.selectedRows, gridState as IGridState);

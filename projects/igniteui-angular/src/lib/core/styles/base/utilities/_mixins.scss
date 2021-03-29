@@ -346,3 +346,16 @@
         @content;
     }
 }
+
+/// Truncates text at a specific number of lines
+/// @param {number|string} $lines - The number of lines to show
+/// @param {Boolean} $inline - Sets whether an element displays inline-box or box
+/// @param {Boolean} $vertical - Sets whether an element lays out its contents horizontally or vertically
+/// @example scss Truncates text after the fourth line
+///    @include line-clamp(4, true, true);
+@mixin line-clamp($lines, $inline, $vertical) {
+    display: if($inline, -webkit-inline-box, -webkit-box);
+    -webkit-line-clamp: if($lines, $lines, initial);
+    -webkit-box-orient: if($vertical, vertical, initial);
+    overflow: hidden;
+}
