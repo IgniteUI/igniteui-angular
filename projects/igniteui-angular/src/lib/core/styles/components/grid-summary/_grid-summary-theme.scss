@@ -46,6 +46,7 @@
     $label-hover-color: null
 ) {
     $name: 'igx-grid-summary';
+    $selector: '.igx-grid-summary';
     $grid-summary-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -70,6 +71,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         background-color: $background-color,
         focus-background-color: $focus-background-color,

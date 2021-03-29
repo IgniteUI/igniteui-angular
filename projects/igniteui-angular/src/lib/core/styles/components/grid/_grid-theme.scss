@@ -1035,7 +1035,14 @@
         }
 
         &%igx-grid__tr--ghost {
+            @include igx-css-vars((
+                name: 'igx-grid-row',
+                row-ghost-background: map-get($theme, 'row-ghost-background'),
+                row-drag-color: map-get($theme, 'row-drago-color')
+            ));
+
             background: --var($theme, 'row-ghost-background');
+            color: --var($theme, 'row-drag-color');
             z-index: 1;
         }
     }
