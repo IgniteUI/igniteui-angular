@@ -6,25 +6,18 @@
 
 /// Generates a light tree schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('surface')] - The background color used for the tree node.
-/// @prop {Map} background-hover [igx-color: ('grays', 100)] - The background color on hover used for the tree node.
-/// @prop {Map} background-selected [igx-color: ('secondary', 200)] - The background color in selected state used for the tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('secondary', 300)] - The background color on hover in selected state used for the tree node.
-/// @prop {Map} background-disabled [igx-color: ('secondary', 300)] - The background color in disabled state used for the tree node.
-/// @prop {Map} background-active [igx-color: ('secondary', 200)] - The background color in active state used for the tree node.
+/// @prop {Map} background [ igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} background-selected [igx-color: ('secondary', 200)] - The background color used for the selected tree node.
+/// @prop {Map} background-active [igx-color: ('grays', 200)] - The background color used for the active tree node.
+/// @prop {Map} background-disabled [igx-color: ('secondary', 300)] - The background color used for the tree node in disabled state.
+///
 /// @prop {Map} color [igx-contrast-color: ('surface')] - The color used for the tree node content.
-/// @prop {Map} color-hover [igx-contrast-color: ('grays', 100)] - The hover color used for the tree node content.
 /// @prop {Map} color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the content of the selected tree node.
+/// @prop {Map} color-active [igx-contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
 /// @prop {Map} color-disabled [igx-contrast-color: ('secondary', 300)] - The color used for the content of the disabled tree node.
-/// @prop {Map} color-active [igx-contrast-color: ('secondary', 200)] - The color used for the content in active state of the tree node.
-/// @prop {Map} tree-indicator-color [igx-contrast-color: ('surface')] - The color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-hover [igx-color: ('primary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the tree node expand/collapse indicator in selected state.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the tree node expand/collapse indicator in selected state.
-/// @prop {Map} tree-indicator-color-active [igx-color: ('grays', 500)] - The  color used for the tree node expand/collapse indicator in active state.
-/// @prop {Map} tree-indicator-color-disabled [igx-color: ('grays', 500)] - The  color used for the tree node expand/collapse indicator in disabled state.
+///
 /// @prop {Map} drop-indicator-color [igx-color: ('secondary'] - The color used for the drop aria indicator.
+/// @prop {Map} border-color [igx-color: ('secondary')] - The outline shadow color used for tree node in focus state.
 ///
 /// @requires {function} extend
 /// @see $default-palette
@@ -32,99 +25,51 @@ $_light-tree: extend(
     (
         variant: 'material',
 
+        type: 'light',
+
         background: (
             igx-color: ('surface')
         ),
 
-        color: (
+        foreground: (
             igx-contrast-color: ('surface')
-        ),
-
-        background-hover: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-hover: (
-            igx-contrast-color: ('grays', 100)
         ),
 
         background-selected: (
             igx-color: ('secondary', 200)
         ),
 
-        color-selected: (
+        foreground-selected: (
             igx-contrast-color: ('secondary', 200)
         ),
 
-        background-selected-hover: (
-            igx-color: ('secondary', 300)
-        ),
-
-        color-selected-hover: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
         background-active: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 200),
         ),
 
-        color-active: (
+        foreground-active: (
             igx-contrast-color: ('grays', 200),
         ),
 
-        background-focused: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-focused: (
-            igx-contrast-color: ('grays', 100)
-        ),
-
-        background-selected-focused: (
+        background-active-selected: (
             igx-color: ('secondary', 300)
         ),
 
-        color-selected-focused: (
-            igx-contrast-color: ('secondary', 300)
+        foreground-active-selected: (
+            igx-contrast-color: ('secondary', 300),
         ),
+
+        border-color: (
+            igx-color: ('secondary')
+        ),
+
+        // Same for all themes
 
         background-disabled: (
             igx-color: ('surface')
         ),
 
-        color-disabled: (
-            igx-color: ('grays', 500)
-        ),
-
-        tree-indicator-color: (
-            igx-contrast-color: ('surface')
-        ),
-
-        tree-indicator-color-hover: (
-            igx-color: ('primary')
-        ),
-
-        tree-indicator-color-focused: (
-            igx-contrast-color: ('grays', 100)
-        ),
-
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('secondary', 200)
-        ),
-
-        tree-indicator-color-selected-focused: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        tree-indicator-color-active: (
-            igx-contrast-color: ('secondary', 200)
-        ),
-
-        tree-indicator-color-disabled: (
+        foreground-disabled: (
             igx-color: ('grays', 500)
         ),
 
@@ -132,22 +77,14 @@ $_light-tree: extend(
             igx-color: ('secondary')
         ),
 
-        border-focused: (
-            igx-color: ('secondary')
-        ),
+        _hover-color: (
+            igx-color: ('grays', 200)
+        )
     )
 );
 
 /// Generates a light fluent tree schema.
 /// @type {Map}
-/// @prop {Map} background-selected [igx-color: ('grays', 100)] - The background color in selected state used for the tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('grays', 200)] - The background color on hover in selected state used for the tree node.
-/// @prop {Map} color-hover [igx-color: ('secondary')] - The hover color used for the tree node content.
-/// @prop {Map} color-selected [igx-contrast-color: ('grays', 200)] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-color: ('secondary')] - The hover color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-hover [igx-color: ('secondary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 100)] - The color used for the tree node expand/collapse indicator in selected state..
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('grays', 200)] - The hover color used for the tree node expand/collapse indicator in selected state.
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
 $_fluent-tree: extend(
@@ -155,49 +92,47 @@ $_fluent-tree: extend(
     (
         variant: 'fluent',
 
+        background: (
+            igx-color: ('surface')
+        ),
+
+        foreground: (
+            igx-contrast-color: ('surface')
+        ),
+
         background-selected: (
             igx-color: ('grays', 100)
         ),
 
-        background-selected-hover: (
-            igx-color: ('grays', 200)
-        ),
-
-        color-hover: (
-            igx-color: ('secondary')
-        ),
-
-        color-selected: (
-            igx-contrast-color: ('grays', 200)
-        ),
-
-        color-selected-hover: (
-            igx-color: ('secondary')
-        ),
-
-        tree-indicator-color-hover: (
-            igx-color: ('secondary')
-        ),
-
-        tree-indicator-color-selected: (
+        foreground-selected: (
             igx-contrast-color: ('grays', 100)
         ),
 
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('grays', 200)
+        background-active: (
+            igx-color: ('surface')
         ),
 
+        foreground-active: (
+            igx-contrast-color: ('surface'),
+        ),
+
+        background-active-selected: (
+            igx-color: ('grays', 200)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('grays', 200),
+        ),
+
+        border-color: (
+            igx-color: ('grays', 800)
+        ),
     )
 );
 
 /// Generates a bootstrap tree schema.
 /// @type {Map}
-/// @prop {Map} background-selected [igx-color: ('primary', 600)] - The background color in selected state used for the tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('primary', 700)] - The background color on hover in selected state used for the tree node.
-/// @prop {Map} color-selected [igx-contrast-color: ('primary', 600)] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('primary', 700)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('primary', 600)] - The color used for the tree node expand/collapse indicator in selected state.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('primary', 700)] - The hover color used for the tree node expand/collapse indicator in selected state.
+///
 /// @requires {function} extend
 /// @requires $_light-tree
 $_bootstrap-tree: extend(
@@ -205,42 +140,42 @@ $_bootstrap-tree: extend(
     (
         variant: 'bootstrap',
 
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
+        ),
+
         background-selected: (
+            igx-color: ('primary')
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('primary', 600)
+        ),
+
+        background-active-selected: (
             igx-color: ('primary', 600)
         ),
 
-        background-selected-hover: (
-            igx-color: ('primary', 700)
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 600),
         ),
 
-        color-selected: (
-            igx-contrast-color: ('primary', 600)
+        border-color: (
+            igx-color: ('primary' 200)
         ),
 
-        color-selected-hover: (
-            igx-contrast-color: ('primary', 700)
-        ),
-
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('primary', 700)
-        ),
+        _hover-color: (
+            igx-color: ('grays', 100)
+        )
     )
 );
 
 /// Generates an indigo tree schema.
 /// @type {Map}
-/// @prop {Map} background-hover [igx-color: ('secondary', 100), rgba: .15] - The background color on hover used for the tree node.
-/// @prop {Map} background-selected [igx-color: ('secondary')] - The background color in selected state used for the tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('secondary', 400)] - The background color on hover in selected state used for the tree node.
-/// @prop {Map} color-hover [igx-contrast-color: ('secondary', 100)] - The hover color used for the tree node content.
-/// @prop {Map} color-selected [igx-contrast-color: ('secondary')] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('secondary', 400)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary')] - The color used for the tree node expand/collapse indicator in selected state.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 400)] - The hover color used for the tree node expand/collapse indicator in selected state.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
@@ -249,37 +184,36 @@ $_indigo-tree: extend(
     (
         variant: 'indigo-design',
 
-        background-hover: (
-            igx-color: ('secondary', 100),
-            rgba: .15
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
         ),
 
         background-selected: (
-            igx-color: ('secondary')
+            igx-color: ('primary')
         ),
 
-        background-selected-hover: (
-            igx-color: ('secondary', 400)
+        foreground-selected: (
+            igx-contrast-color: ('primary')
         ),
 
-        color-hover: (
-            igx-contrast-color: ('secondary', 100)
+        background-active-selected: (
+            igx-color: ('primary', 400)
         ),
 
-        color-selected: (
-            igx-contrast-color: ('secondary')
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 400),
         ),
 
-        color-selected-hover: (
-            igx-contrast-color: ('secondary', 400)
+        border-color: (
+            igx-color: ('primary', 300)
         ),
 
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('secondary')
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('secondary', 400)
-        ),
+        _hover-color: (
+            igx-color: ('primary', 50)
+        )
     )
 );

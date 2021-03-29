@@ -22,13 +22,13 @@
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" 
+    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex"
         [ngClass]="{
             'igx-tree-node__wrapper--selected': selected,
             'igx-tree-node__wrapper--active' : this.active,
             'igx-tree-node__wrapper--focused' : this.focused,
             'igx-tree-node__wrapper--disabled' : this.disabled
-        }" 
+        }"
         (pointerdown)="onPointerDown($event)"
         (focus)="divertFocus()"
         >
@@ -37,10 +37,8 @@
         </div>
 
         <!-- Expand/Collapse indicator -->
-        <span [ngClass]="{ 'igx-tree-node__indicator--hidden': !children?.length }"
-            class="igx-tree-node__indicator"
-            (click)="expandNode()"
-        >
+        <span [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !children?.length }" class="igx-tree-node__toggle-button"
+            (click)="indicatorClick()">
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
             </ng-container>
         </span>

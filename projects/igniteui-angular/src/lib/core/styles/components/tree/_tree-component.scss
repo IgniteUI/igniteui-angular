@@ -7,12 +7,7 @@
 ////
 
 @include b(igx-tree) {
-
     @extend %tree-display !optional;
-
-    @include e(root) {
-        @extend %tree-node-root !optional;
-    }
 }
 
 @include b(igx-tree-node) {
@@ -22,61 +17,65 @@
     @extend %tree-node !optional;
 
     @include e(wrapper) {
-        @extend %tree-node-wrapper !optional;
+        @extend %node-wrapper !optional;
     }
 
     @include e(wrapper, $m: cosy) {
-        @extend %tree-node-wrapper--cosy !optional;
+        @extend %node-wrapper--cosy !optional;
     }
 
     @include e(wrapper, $m: compact) {
-        @extend %tree-node-wrapper--compact !optional;
+        @extend %node-wrapper--compact !optional;
     }
 
     // STATES START
     @include e(wrapper, $m: selected) {
-        @extend %tree-node-wrapper--selected !optional;
+        @extend %node-wrapper--selected !optional;
     }
 
     @include e(wrapper, $m: active) {
-        @extend %tree-node-wrapper--active !optional;
+        @extend %node-wrapper--active !optional;
     }
 
     @include e(wrapper, $mods: (active, selected)) {
-        @extend %tree-node-wrapper--active-selected !optional;
+        @extend %node-wrapper--active-selected !optional;
+    }
+
+    @include e(wrapper, $m: focused) {
+        @extend %node-wrapper--focused !optional;
     }
 
     @include e(wrapper, $m: disabled) {
-        @extend %tree-node-wrapper--disabled !optional;
+        @extend %node-wrapper--disabled !optional;
     }
     // STATES END
 
     @include e(content) {
-        @extend %tree-node-content !optional;
+        @extend %node-content !optional;
     }
 
     @include e(spacer) {
-        @extend %tree-node-spacer !optional;
+        @extend %node-spacer !optional;
     }
 
-    @include e(indicator) {
-        @extend %tree-node-indicator !optional;
+    @include e(toggle-button) {
+        @extend %node-toggle-button !optional;
     }
 
-    @include e(indicator, $m: hidden) {
-        @extend %tree-node-indicator--hidden !optional;
+    @include e(toggle-button, $m: hidden) {
+        @extend %node-toggle-button--hidden !optional;
     }
 
     @include e(drop-indicator) {
-        @extend %tree-node-drop-indicator !optional;
+        @extend %node-drop-indicator !optional;
     }
 
     @include e(select) {
-        @extend %tree-node-select !optional;
+        @extend %node-select !optional;
     }
 
     @include e(group) {
-        @extend %tree-node-group !optional;
+        @extend %node-group !optional;
     }
 }
 
