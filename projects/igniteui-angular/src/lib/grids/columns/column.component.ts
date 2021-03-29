@@ -36,7 +36,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand } from '../summaries/grid-summary';
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -575,6 +575,37 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public formatter: (value: any) => any;
+
+    /**
+     * The summaryFormatter is used to format the display of the column summaries.
+     *
+     * In this example, we check to see if the column name is OrderDate, and then provide a method as the summaryFormatter
+     * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
+     *
+     * ```typescript
+     * onColumnInit(column: IgxColumnComponent) {
+     *   if (column.field == "OrderDate") {
+     *     column.summaryFormatter = this.summaryFormat;
+     *   }
+     * }
+     *
+     * summaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+     *   const result = summary.summaryResult;
+     *   if(summaryResult.key !== 'count' && result !== null && result !== undefined) {
+     *      const pipe = new DatePipe('fr-FR');
+     *      return pipe.transform(result,'mediumDate');
+     *   }
+     *   return result;
+     * }
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.

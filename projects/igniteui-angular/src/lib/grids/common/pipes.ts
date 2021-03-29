@@ -7,6 +7,7 @@ import { GridType } from './grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
 
 /**
  * @hidden
@@ -305,6 +306,15 @@ export class IgxColumnFormatterPipe implements PipeTransform {
 
     public transform(value: any, formatter: (v: any) => any) {
         return formatter(value);
+    }
+}
+
+@Pipe({ name: 'summaryFormatter' })
+export class IgxSummaryFormatterPipe implements PipeTransform {
+
+    transform(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand,
+        summaryFormatter: (s: IgxSummaryResult, o: IgxSummaryOperand) => any) {
+        return summaryFormatter(summaryResult, summaryOperand);
     }
 }
 
