@@ -852,7 +852,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
     @Output()
-    onGridCopy = new EventEmitter<IGridClipboardEvent>();
+    public onGridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
      * @hidden @internal
@@ -2244,11 +2244,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public get activeDescendant() {
         const activeElem = this.navigation.activeNode;
-        if (activeElem) {
-            return !this.navigation.isDataRow(activeElem.row, true) ? this.id + '_' + activeElem.row :
-                this.id + '_' + activeElem.row + '_' + activeElem.column;
+
+        if (!activeElem || !Object.keys(activeElem).length) {
+            return this.id;
         }
-        return null;
+
+        return activeElem.row < 0 ?
+        `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
+        `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /**
@@ -3354,7 +3357,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges(true);
         });
 
-        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
             this.calculateGridSizes(false);
         });
 

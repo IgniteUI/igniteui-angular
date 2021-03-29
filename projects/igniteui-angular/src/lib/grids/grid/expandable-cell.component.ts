@@ -30,7 +30,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     @Input()
-    expanded = false;
+    public expanded = false;
 
     @ViewChild('indicator', { read: ElementRef })
     public indicator: ElementRef;

@@ -117,7 +117,7 @@
             </igx-card-media>
 
             <igx-card-header [vertical]="false">
-                <igx-avatar [src]="cards[0].avatarUrl" roundShape="true"></igx-avatar>
+                <igx-avatar [src]="cards[0].avatarUrl" [roundShape]="true"></igx-avatar>
                 <h1 igxCardHeaderTitle>{{ cards[0].title }}</h1>
                 <h2 igxCardHeaderSubtitle>{{ cards[0].subtitle }}</h2>
             </igx-card-header>
@@ -128,7 +128,7 @@
 
             <igx-card-actions>
                 <button igxButton igxRipple>Read More</button>
-                <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[0].icons">
+                <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[0].icons">
                     <igx-icon>{{icon}}</igx-icon>
                 </span>
             </igx-card-actions>
@@ -164,7 +164,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--start">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[5].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[5].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -180,7 +180,7 @@
     <article class="card">
         <igx-card>
             <igx-card-header class="compact">
-                <igx-avatar [src]="cards[6].avatarUrl" roundShape="true"></igx-avatar>
+                <igx-avatar [src]="cards[6].avatarUrl" [roundShape]="true"></igx-avatar>
                 <div class="igx-card-header__tgroup">
                     <h3 class="igx-card-header__title--small">{{ cards[6].title }}</h3>
                     <h5 class="igx-card-header__subtitle">{{ cards[6].subtitle }}</h5>
@@ -191,7 +191,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--start">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[6].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[6].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -211,7 +211,7 @@
             </div>
             <igx-card-actions>
                 <div class="igx-card-actions__igroup--end">
-                    <span igxButton="icon" igxRipple igxRippleCentered="true" *ngFor="let icon of cards[1].icons">
+                    <span igxButton="icon" igxRipple [igxRippleCentered]="true" *ngFor="let icon of cards[1].icons">
                         <igx-icon>{{icon}}</igx-icon>
                     </span>
                 </div>
@@ -234,7 +234,7 @@
             <igx-divider type="dashed" [middle]="true" inset="16px"></igx-divider>
 
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true">
+                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple [igxRippleCentered]="true">
                     <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
                 </button>
             </igx-card-actions>
@@ -247,7 +247,7 @@
         <igx-card type="outlined" [horizontal]="true">
 
             <igx-card-actions layout="justify">
-                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple igxRippleCentered="true" >
+                <button *ngFor="let icon of cards[7].icons;" igxButton="icon" igxRipple [igxRippleCentered]="true" >
                     <igx-icon class="bidirectional-icon">{{icon}}</igx-icon>
                 </button>
             </igx-card-actions>
@@ -292,7 +292,7 @@
 
             <div style="display: flex; flex-direction: column; flex: 1 1 auto">
                 <igx-card-header>
-                    <igx-avatar [src]="cards[4].avatarUrl" roundShape="true"></igx-avatar>
+                    <igx-avatar [src]="cards[4].avatarUrl" [roundShape]="true"></igx-avatar>
                     <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
                     <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
                 </igx-card-header>
@@ -312,7 +312,7 @@
     <article class="card">
         <igx-card>
             <igx-card-header>
-                <igx-avatar src="assets/images/card/avatars/photographer.jpg" roundShape="true"></igx-avatar>
+                <igx-avatar src="assets/images/card/avatars/photographer.jpg" [roundShape]="true"></igx-avatar>
                 <h4 igxCardHeaderTitle>Frank Carter</h4>
                 <h5 igxCardHeaderSubtitle>Photographer</h5>
             </igx-card-header>
@@ -378,7 +378,7 @@
 
             <div style="display: flex; flex-direction: column; flex: 1 1 auto">
                 <igx-card-header>
-                    <igx-avatar [src]="cards[4].avatarUrl" roundShape="true"></igx-avatar>
+                    <igx-avatar [src]="cards[4].avatarUrl" [roundShape]="true"></igx-avatar>
                     <h3 igxCardHeaderTitle>{{ cards[4].title }}</h3>
                     <h5 igxCardHeaderSubtitle>{{ cards[4].subtitle }}</h5>
                 </igx-card-header>

@@ -151,16 +151,17 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(parseFloat(cell.value)).toBe(expectedValue);
         });
 
-        it('edit template should be according column data type -- boolean', () => {
+        it('edit template should be according column data type -- boolean', fakeAsync(() => {
             const cell = grid.getCellByColumn(0, 'isActive');
             const cellDomBoolean = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2];
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fixture.detectChanges();
+            tick();
 
             expect(cell.editMode).toBe(true);
 
-            const editTemplate = cellDomBoolean.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
+            const editTemplate = cellDomBoolean.query(By.css('.igx-checkbox'));
             expect(editTemplate).toBeDefined();
             expect(cell.value).toBe(true);
 
@@ -172,7 +173,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(false);
-        });
+        }));
 
         it('edit template should be according column data type -- date', () => {
             const cell = grid.getCellByColumn(0, 'birthday');
@@ -246,7 +247,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBeNull();
         });
 
-        it('Should not revert cell\' value when onDoubleClick while in editMode', (async () => {
+        it('Should not revert cell\' value when onDoubleClick while in editMode',  fakeAsync(() => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.getCellByColumn(0, 'fullName');
 
@@ -255,6 +256,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
             fixture.detectChanges();
+            tick(100);
+
             const editCell = cellElem.query(By.css('input'));
             expect(editCell.nativeElement.value).toBe('John Brown');
             expect(firstCell.editMode).toBeTruthy();
@@ -832,7 +835,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.cellEdit.emit).toHaveBeenCalledWith(cellArgs);
         }));
 
-        it(`Should be able to update other cell in 'cellEdit' event`, () => {
+        it(`Should be able to update other cell in 'cellEdit' event`, fakeAsync(() => {
             grid.primaryKey = 'personNumber';
             fixture.detectChanges();
 
@@ -856,6 +859,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             // press tab on edited cell
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
             fixture.detectChanges();
+            tick();
 
             expect(grid.cellEdit.emit).toHaveBeenCalledTimes(2);
             cell = grid.getCellByColumn(0, 'age');
@@ -867,7 +871,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             cell = grid.getCellByColumn(0, 'fullName');
             expect(cell.value).toEqual('New Name');
-        });
+        }));
 
         it(`Should not update data in grid with transactions, when row is updated in cellEdit and cellEdit is canceled`, () => {
             fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
@@ -1195,7 +1199,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
     }));
 
     // Bug #5855
-    it('should apply proper style on cell editing when new value equals zero or false', () => {
+    it('should apply proper style on cell editing when new value equals zero or false', fakeAsync(() => {
         const fixture = TestBed.createComponent(SelectionWithTransactionsComponent);
         fixture.detectChanges();
 
@@ -1230,6 +1234,8 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
+        tick();
+
         expect(cell.editMode).toBe(true);
 
         editTemplate = cellDomPK.query(By.css('.igx-checkbox')).query(By.css('.igx-checkbox__label'));
@@ -1241,5 +1247,5 @@ describe('IgxGrid - Cell Editing #grid', () => {
         expect(cell.editMode).toBe(false);
         expect(cell.value).toBe(false);
         expect(cell.nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
-    });
+    }));
 });

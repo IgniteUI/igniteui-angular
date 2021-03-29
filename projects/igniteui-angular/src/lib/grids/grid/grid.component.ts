@@ -167,6 +167,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public groupArea: ElementRef;
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'grid';
+
+    /**
      * Gets/Sets the value of the `id` attribute.
      *
      * @remarks

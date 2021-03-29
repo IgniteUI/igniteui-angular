@@ -29,7 +29,6 @@ describe('IgxRadio', () => {
 
     it('Init a radio', () => {
         const fixture = TestBed.createComponent(InitRadioComponent);
-        const testInstance = fixture.componentInstance;
         const radioInstance = fixture.componentInstance.radio;
         fixture.detectChanges();
 
@@ -131,6 +130,8 @@ describe('IgxRadio', () => {
         fixture.detectChanges();
 
         expect(nativeRadio.getAttribute('aria-label')).toMatch(fixture.componentInstance.label);
+        // aria-labelledby should not be present when aria-label is
+        expect(nativeRadio.getAttribute('aria-labelledby')).toEqual(null);
     });
 
     it('Disabled state', fakeAsync(() => {
@@ -231,7 +232,7 @@ class DisabledRadioComponent {
     <igx-radio #radios *ngFor="let item of ['Foo', 'Bar']"
         [value]="item"
         [(ngModel)]="Foo"
-        [required]="true">
+        required>
         {{item}}
     </igx-radio>`
 })
@@ -245,7 +246,7 @@ class RequiredRadioComponent {
 })
 class RadioExternalLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
-    label = 'My Label';
+    public label = 'My Label';
 }
 
 @Component({
@@ -253,5 +254,5 @@ class RadioExternalLabelComponent {
 })
 class RadioInvisibleLabelComponent {
     @ViewChild('radio', { static: true }) public radio: IgxRadioComponent;
-    label = 'Invisible Label';
+    public label = 'Invisible Label';
 }

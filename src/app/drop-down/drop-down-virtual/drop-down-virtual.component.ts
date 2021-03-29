@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 import { RemoteService } from 'src/app/shared/remote.service';
 import { Observable } from 'rxjs';
-import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective } from 'igniteui-angular';
+import { IForOfState, IgxDropDownComponent, IgxToastComponent, IgxForOfDirective, DisplayDensity } from 'igniteui-angular';
 
 interface DataItem {
   name: string;
@@ -26,7 +26,7 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
   public startIndex = 0;
   public itemHeight = 40;
   public itemsMaxHeight = 320;
-  public density = 'comfortable';
+  public density: DisplayDensity = 'comfortable';
   public displayDensities = [
     { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
     { label: 'cosy', selected: this.density === 'cosy', togglable: true },

@@ -392,6 +392,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
+    public get hasEditedExpression(): boolean {
+        return this.editedExpression !== undefined && this.editedExpression !== null;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public dragStart(dragArgs: IDragStartEventArgs) {
         if (!this._overlayComponentId) {
             dragArgs.cancel = true;
