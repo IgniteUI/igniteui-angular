@@ -848,7 +848,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick(event?: Event) {
-        this.grid.gridAPI.crudService.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -869,7 +869,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public applyChanges(event?: Event) {
-        this.grid.gridAPI.crudService.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }

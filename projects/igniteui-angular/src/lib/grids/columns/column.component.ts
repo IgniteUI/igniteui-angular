@@ -313,7 +313,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 return;
             }
             if (this.grid) {
-                this.gridAPI.crudService.endEdit(false);
+                this.grid.crudService.endEdit(false);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
                 this.grid.filteringService.hideFilteringRowOnColumnVisibilityChange(this);
@@ -1824,7 +1824,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.gridAPI.crudService.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
@@ -1915,7 +1915,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.gridAPI.crudService.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);

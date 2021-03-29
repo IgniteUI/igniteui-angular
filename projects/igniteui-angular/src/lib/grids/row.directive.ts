@@ -315,7 +315,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.gridAPI.crudService.row;
+            const editRowState = this.grid.crudService.row;
             return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
@@ -459,9 +459,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public update(value: any) {
-        const crudService = this.gridAPI.crudService;
+        const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
-            this.gridAPI.crudService.endEdit(false);
+            this.grid.crudService.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);

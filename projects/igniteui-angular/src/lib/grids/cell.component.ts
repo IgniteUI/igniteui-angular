@@ -495,8 +495,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public set editValue(value) {
-        if (this.gridAPI.crudService.cellInEditMode) {
-            this.gridAPI.crudService.cell.editValue = value;
+        if (this.grid.crudService.cellInEditMode) {
+            this.grid.crudService.cell.editValue = value;
         }
     }
 
@@ -510,8 +510,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get editValue() {
-        if (this.gridAPI.crudService.cellInEditMode) {
-            return this.gridAPI.crudService.cell.editValue;
+        if (this.grid.crudService.cellInEditMode) {
+            return this.grid.crudService.cell.editValue;
         }
     }
 
@@ -663,10 +663,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             (event as HammerInput).preventDefault();
         }
         if (this.grid.rowEditable && this.row.addRow) {
-            this.gridAPI.crudService.enterEditMode(this, event as Event);
+            this.grid.crudService.enterEditMode(this, event as Event);
         }
-        if (this.editable && !this.editMode && !this.row.deleted && !this.gridAPI.crudService.rowEditingBlocked) {
-            this.gridAPI.crudService.enterEditMode(this, event as Event);
+        if (this.editable && !this.editMode && !this.row.deleted && !this.grid.crudService.rowEditingBlocked) {
+            this.grid.crudService.enterEditMode(this, event as Event);
         }
 
         this.grid.onDoubleClick.emit({
@@ -709,8 +709,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
             if (this.platformUtil.isBrowser && isIE()) { // TODO: Move isIE to platformUtil
-                this.compositionStartHandler = () => this.gridAPI.crudService.isInCompositionMode = true;
-                this.compositionEndHandler = () => this.gridAPI.crudService.isInCompositionMode = false;
+                this.compositionStartHandler = () => this.grid.crudService.isInCompositionMode = true;
+                this.compositionEndHandler = () => this.grid.crudService.isInCompositionMode = false;
                 // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
                 this.nativeElement.addEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.addEventListener('compositionend', this.compositionEndHandler);
@@ -766,9 +766,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.editable && value) {
             this.gridAPI.submit_value();
-            this.gridAPI.crudService.enterEditMode(this);
+            this.grid.crudService.enterEditMode(this);
         } else {
-            this.grid.gridAPI.crudService.exitCellEdit();
+            this.grid.crudService.exitCellEdit();
         }
         this.grid.notifyChanges();
     }
@@ -786,13 +786,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.row.deleted) {
             return;
         }
-        const cell = this.gridAPI.crudService.createCell(this);
+        const cell = this.grid.crudService.createCell(this);
         const args = this.gridAPI.update_cell(cell, val);
-        if (this.gridAPI.crudService.cell && this.gridAPI.crudService.sameCell(cell)) {
+        if (this.grid.crudService.cell && this.grid.crudService.sameCell(cell)) {
             if (args.cancel) {
                 return;
             }
-            this.grid.gridAPI.crudService.exitCellEdit();
+            this.grid.crudService.exitCellEdit();
         }
         this.cdr.markForCheck();
     }
@@ -873,15 +873,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
-            if ((this.gridAPI.crudService.rowEditingBlocked && row && this.row.rowID !== row.rowID) ||
-                (this.gridAPI.crudService.cell && this.gridAPI.crudService.cellEditingBlocked)) {
+            if ((this.grid.crudService.rowEditingBlocked && row && this.row.rowID !== row.rowID) ||
+                (this.grid.crudService.cell && this.grid.crudService.cellEditingBlocked)) {
                 return;
             }
 
             this.selectionService.activeElement = node;
         } else {
             this.selectionService.activeElement = null;
-            if (this.gridAPI.crudService.cellInEditMode && !this.editMode) {
+            if (this.grid.crudService.cellInEditMode && !this.editMode) {
                 this.gridAPI.submit_value(event);
             }
         }
@@ -952,8 +952,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             return;
         }
 
-        const crud = this.gridAPI.crudService;
-        const editableCell = this.gridAPI.crudService.cell;
+        const crud = this.grid.crudService;
+        const editableCell = this.grid.crudService.cell;
         const editMode = !!(crud.row || crud.cell);
 
         if (this.editable && editMode && !this.row.deleted) {
@@ -975,7 +975,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                if (this.gridAPI.crudService.cellEditingBlocked) {
+                if (this.grid.crudService.cellEditingBlocked) {
                     return true;
                 }
 
@@ -995,7 +995,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.gridAPI.submit_value(event);
             }
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
-            this.grid.gridAPI.crudService.endEdit(true, event);
+            this.grid.crudService.endEdit(true, event);
         }
     }
 
