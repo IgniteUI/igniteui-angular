@@ -96,6 +96,7 @@
     $bootstrap-theme: $variant == 'boostrap';
 
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
+    $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
@@ -201,6 +202,7 @@
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
+        buttons-shadow: $buttons-shadow,
         border-color: $border-color,
         border-radius: $border-radius,
     ));
@@ -304,8 +306,9 @@
         background: --var($theme, 'button-background');
         color: --var($theme, 'button-color');
         outline: 0;
+
         @if not $indigo-theme {
-            box-shadow: igx-elevation($elevations, 4);
+            box-shadow: --var($theme, 'buttons-shadow');
         }
 
         &:hover {
