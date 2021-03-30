@@ -9,6 +9,7 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  */
 
 export const configureTestSuite = (configureAction?: () => void) => {
+
     const testBedApi: any = getTestBed();
     const originReset = TestBed.resetTestingModule;
 
