@@ -80,11 +80,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public get tabIndex(): number {
         if (this._tabIndex === null) {
-            if (this.tree.nodes?.first === this) {
+            if (this.navService.focusedNode === null) {
                 return 0;
-            } else {
-                return -1;
             }
+            return -1;
         }
         if (this.linkChildren?.length) {
             return -1;
@@ -388,6 +387,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public divertFocus(): void {
+        if (!this.navService.isFocusedNode(this)) {
+            this.navService.focusedNode = this;
+        }
         if (this.linkChildren?.length) {
             this.linkChildren.first.nativeElement.focus();
         }
