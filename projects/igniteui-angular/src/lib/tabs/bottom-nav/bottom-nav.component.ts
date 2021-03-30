@@ -26,8 +26,8 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
  * <igx-bottom-nav>
  *     <igx-bottom-nav-item>
            <igx-bottom-nav-header>
-               <igx-icon igxTabHeaderIcon>folder</igx-icon>
-               <span igxTabHeaderLabel>Tab 1</span>
+               <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+               <span igxBottomNavHeaderLabel>Tab 1</span>
            </igx-bottom-nav-header>
            <igx-bottom-nav-panel>
                Content 1
