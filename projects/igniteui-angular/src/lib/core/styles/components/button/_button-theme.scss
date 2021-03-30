@@ -178,14 +178,6 @@
     );
 }
 
-/// @access private
-@mixin _icon-w-margin($margin, $left) {
-    * + igx-icon,
-    igx-icon + *:not(igx-icon) {
-        margin-#{$left}: $margin;
-    }
-}
-
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
