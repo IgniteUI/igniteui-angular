@@ -4,8 +4,8 @@ import { NAVIGATION_KEYS } from '../core/utils';
 
 @Injectable()
 export class IgxTreeNavigationService {
-    public _activeNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
-    public _focusedNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
+    public _activeNode: IgxTreeNode<any> = null;
+    public _focusedNode: IgxTreeNode<any> = null;
     protected pendingNavigation = false;
     private tree: IgxTree;
     private lastActiveNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
@@ -84,8 +84,10 @@ export class IgxTreeNavigationService {
             (this.lastFocusedNode as any).tabIndex = -1;
         }
         this._focusedNode = value;
-        (this._focusedNode as any).tabIndex = 0;
-        (this._focusedNode as any).header.nativeElement.focus();
+        if (this._focusedNode !== null) {
+            (this._focusedNode as any).tabIndex = 0;
+            (this._focusedNode as any).header.nativeElement.focus();
+        }
     }
 
     public handleFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
