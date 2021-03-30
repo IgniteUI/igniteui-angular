@@ -1179,7 +1179,7 @@ fdescribe('IgxTabs', () => {
             const headerWidths = new Set<number>();
             headers.every((elem) => headerWidths.add(elem.clientWidth));
 
-            expect(headerWidths.size).toBe(1);
+            expect(headerWidths.size).toBe(3);
         });
 
         it('aligns tab header content properly when tabAlignment="start".', () => {
@@ -1191,7 +1191,7 @@ fdescribe('IgxTabs', () => {
             const headerWidths = new Set<number>();
             headers.every((elem) => headerWidths.add(elem.clientWidth));
 
-            expect(headerWidths.size).toBe(1);
+            expect(headerWidths.size).toBe(3);
         });
 
         it('aligns tab header content properly when tabAlignment="end".', () => {
@@ -1203,7 +1203,7 @@ fdescribe('IgxTabs', () => {
             const headerWidths = new Set<number>();
             headers.every((elem) => headerWidths.add(elem.clientWidth));
 
-            expect(headerWidths.size).toBe(1);
+            expect(headerWidths.size).toBe(3);
         });
     });
 
