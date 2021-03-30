@@ -9,7 +9,8 @@ import {
     VerticalAlignment,
     IgxDropDownComponent,
     IgxButtonDirective,
-    FilterMode
+    FilterMode,
+    DisplayDensity
 } from 'igniteui-angular';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
@@ -47,7 +48,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
             togglable: true
         }
     ];
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
 
     private _positionSettings: PositionSettings = {

@@ -26,13 +26,13 @@
     <ng-template #cellTemplate>
         <igx-grid-cell
             class="igx-grid__td igx-grid__td--fw"
-            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.crudService.cell:grid.crudService.row"
+            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
             [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
             [class.igx-grid__td--number]="col.dataType === 'number'"
             [class.igx-grid__td--bool]="col.dataType === 'boolean'"
             [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
             [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
-            [editMode]="col.editable && crudService.targetInEdit(index, col.index)"
+            [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
             [column]="col"
             [formatter]="col.formatter"
             [row]="this"
@@ -55,7 +55,7 @@
     <ng-template #treeCellTemplate>
         <igx-tree-grid-cell
             class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell"
-            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.crudService.cell:grid.crudService.row"
+            [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
             [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
             [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
             [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
@@ -63,7 +63,7 @@
             [level]="treeRow.level"
             [expanded]="treeRow.expanded"
             [showIndicator]="showIndicator"
-            [editMode]="col.editable && crudService.targetInEdit(index, col.index)"
+            [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
             [column]="col"
             [formatter]="col.formatter"
             [row]="this"
@@ -97,7 +97,7 @@
             [checked]="selected"
             [indeterminate]="indeterminate"
             [disabled]="deleted"
-            disableRipple="true"
+            [disableRipple]="true"
             [disableTransitions]="grid.disableTransitions"
             [aria-label]="rowCheckboxAriaLabel">
         </igx-checkbox>
@@ -109,12 +109,12 @@
         <ng-template #cellTemplate>
             <igx-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--pinned"
-                [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.crudService.cell:grid.crudService.row"
+                [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
                 [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
                 [class.igx-grid__td--number]="col.dataType === 'number'"
                 [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
                 [ngStyle]="col.cellStyles | igxCellStyles:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
-                [editMode]="col.editable && crudService.targetInEdit(index, col.index)"
+                [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
                 [column]="col"
                 [formatter]="col.formatter"
                 [row]="this"
@@ -140,7 +140,7 @@
         <ng-template #treeCellTemplate>
             <igx-tree-grid-cell
                 class="igx-grid__td igx-grid__td--fw igx-grid__td--tree-cell igx-grid__td--pinned"
-                [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.crudService.cell:grid.crudService.row"
+                [class.igx-grid__td--edited]="rowID | transactionState:col.field:grid.rowEditable:grid.transactions:grid.pipeTrigger:grid.gridAPI.crudService.cell:grid.gridAPI.crudService.row"
                 [attr.aria-describedby]="gridID + '_' + col.field | igxStringReplace:'.':'_'"
                 [class.igx-grid__td--number]="col.dataType === 'number' && col.visibleIndex !== 0"
                 [ngClass]="col.cellClasses | igxCellStyleClasses:rowData[col.field]:rowData:col.field:viewIndex:grid.pipeTrigger"
@@ -148,7 +148,7 @@
                 [level]="treeRow.level"
                 [expanded]="treeRow.expanded"
                 [showIndicator]="showIndicator"
-                [editMode]="col.editable && crudService.targetInEdit(index, col.index)"
+                [editMode]="col.editable && this.grid.crudService.targetInEdit(index, col.index)"
                 [column]="col"
                 [formatter]="col.formatter"
                 [row]="this"

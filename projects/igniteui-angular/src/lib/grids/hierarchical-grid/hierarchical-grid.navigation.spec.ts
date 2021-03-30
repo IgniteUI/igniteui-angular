@@ -554,7 +554,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         GridFunctions.focusCell(fixture, firstCell);
         fixture.detectChanges();
 
-        const footerContent = fixture.debugElement.queryAll(By.css(GRID_FOOTER_CLASS))[2];
+        const footerContent = fixture.debugElement.queryAll(By.css(GRID_FOOTER_CLASS))[2].children[0];
         UIInteractions.triggerEventHandlerKeyDown('arrowright', footerContent, false, false, true);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);

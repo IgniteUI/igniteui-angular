@@ -10,6 +10,7 @@ import { IChangeRadioEventArgs } from 'igniteui-angular';
 export class InputSampleComponent {
     public placeholder = 'Please enter a value';
     public selected = 'option1';
+    public airplaneMode = false;
 
     public user = {
         comment: '',
@@ -63,5 +64,12 @@ export class InputSampleComponent {
 
     public selectSecond() {
         this.selected = 'option2';
+    }
+
+    public toggleAirplaneMode() {
+        this.settings.forEach(setting => {
+            setting.active = !this.airplaneMode;
+            setting.disabled = this.airplaneMode;
+        });
     }
 }

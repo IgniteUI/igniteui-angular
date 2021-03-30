@@ -117,23 +117,6 @@
     );
 }
 
-/// Returns an igx elevation from an igx-elevations produced map.
-/// @access public
-/// @param {Map} $elevations - The igx-elevations map to extract the elevation from.
-/// @param {number} $elevation - The elevation level from 1 to 24.
-/// @returns {String} Returns a box-shadow value.
-@function igx-elevation($elevations, $elevation) {
-    @if type-of($elevation) != number or not unitless($elevation) {
-        @error '$elevation must be a number';
-    }
-
-    @if $elevation < 0 or $elevation > 24 {
-        @error '$elevation must be between 0 and 24';
-    }
-
-    @return map-get($elevations, #{$elevation});
-}
-
 /// Generates a map of 24 shadows.
 /// @access public
 /// @requires _elevation
@@ -157,9 +140,34 @@
 /// @prop {Color} $color-2 [rgba(0, 0, 0, .12)] - The color used for the penumbra shadow.
 /// @prop {Color} $color-3 [rgba(0, 0, 0, .08)] - The color used for the ambient shadow.
 /// @requires igx-elevations
-$elevations: igx-elevations(
+$igx-elevations: igx-elevations(
     rgba(0, 0, 0, .26),
     rgba(0, 0, 0, .12),
     rgba(0, 0, 0, .08)
 ) !default;
+
+/// Returns an igx elevation from an igx-elevations produced map.
+/// @access public
+/// @param {Map} $elevations [null] - The igx-elevations map to extract the elevation from.
+/// @param {number} $elevation [0] - The elevation level from 0 to 24.
+/// @returns {String} Returns a box-shadow value.
+@function igx-elevation($elevations: null, $elevation: 0) {
+    @if type-of($elevation) != number or not unitless($elevation) {
+        @error '$elevation must be a number';
+    }
+
+    @if $elevation < 0 or $elevation > 24 {
+        @error '$elevation must be between 0 and 24';
+    }
+
+    @if $elevations == null {
+        @return if(
+            legacy(),
+            igx-elevation($igx-elevations, $elevation),
+            #{var(--igx-elevation-#{$elevation})}
+        );
+    }
+
+    @return map-get($elevations, #{$elevation});
+}
 

@@ -12,7 +12,21 @@
 
                 <span class="igx-grid-summary__label" [title]="summary.label">{{ translateSummary(summary) }}</span>
                 <span class="igx-grid-summary__result" [title]="summary.summaryResult">
-                    {{ summary.summaryResult }}
+                    {{
+                        summaryFormatter
+                        ? (summary | summaryFormatter:column.summaries:summaryFormatter)
+                        : (isNumberOperand() && summary.key !== 'count')
+                        ? (summary.summaryResult | number:column.pipeArgs.digitsInfo:grid.locale)
+                        : (isDateOperand() && summary.key !== 'count')
+                        ? (summary.summaryResult | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
+                        : (isCurrencyOperand() && summary.key !== 'count')
+                        ? (summary.summaryResult | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
+                        : (isPercentOperand() && summary.key !== 'count')
+                        ? (summary.summaryResult | percent:column.pipeArgs.digitsInfo:grid.locale)
+                        : (summary.key === 'count' && (isNumberOperand() || isDateOperand() || isCurrencyOperand() || isPercentOperand()))
+                        ? (summary.summaryResult | number:undefined:grid.locale)
+                        : summary.summaryResult
+                    }}
                 </span>
             </div>
     </ng-container>

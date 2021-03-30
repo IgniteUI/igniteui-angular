@@ -1043,7 +1043,7 @@ export class CustomFilter extends IgxFilteringOperand {
     }
 }
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
@@ -1070,7 +1070,7 @@ export class IgxGridFilteringComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>
@@ -1161,7 +1161,7 @@ export class CustomFilterStrategy extends FilteringStrategy {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" width="600px" [allowFiltering]='true'>
+    template: `<igx-grid [data]="data" height="500px" width="600px" [allowFiltering]="true">
         <igx-column [field]="'ID'" [header]="'ID'" [filterable]="false"></igx-column>
         <igx-column width="100px" [field]="'Name'" [filterable]="filterable">
             <ng-template igxCell let-val>
@@ -1180,7 +1180,7 @@ export class CustomFilteringStrategyComponent extends BasicGridComponent {
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true"
                          [filterMode]="'excelStyleFilter'" [uniqueColumnValuesStrategy]="columnValuesStrategy">
         <igx-column width="100px" [field]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" dataType="string"></igx-column>
@@ -1209,7 +1209,7 @@ export class IgxGridFilteringESFLoadOnDemandComponent extends BasicGridComponent
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
@@ -1239,7 +1239,7 @@ export class IgxGridFilteringESFEmptyTemplatesComponent extends BasicGridCompone
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true' [filterMode]="'excelStyleFilter'">
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable" [sortable]="'true'" [movable]="'true'"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
@@ -1321,7 +1321,7 @@ export class IgxGridExternalESFTemplateComponent extends BasicGridComponent impl
 }
 
 @Component({
-    template: `<igx-grid [data]="data" height="500px" [allowFiltering]='true'>
+    template: `<igx-grid [data]="data" height="500px" [allowFiltering]="true">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true"
             [filterable]="false" [resizable]="resizable"></igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"
@@ -1601,11 +1601,11 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="600px" [rowEditable]="true">
         <igx-grid-toolbar *ngIf="showToolbar"></igx-grid-toolbar>
         <igx-column field="ProductID" header="Product ID" [editable]="false" width="200px"></igx-column>
-        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" editable="true" width="100px">
+        <igx-column field="ReorderLevel" header="Reorder Lever" [dataType]="'number'" [editable]="true" width="100px">
         </igx-column>
-        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" editable="true" [sortable]="true" width="200px">
+        <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [editable]="true" [sortable]="true" width="200px">
         </igx-column>
-        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" editable="true" width="200px"></igx-column>
+        <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [editable]="true" width="200px"></igx-column>
     </igx-grid>`
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
@@ -1701,12 +1701,12 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
     }
 
     public get cellInEditMode() {
-        return this.grid.crudService.cell;
+        return this.grid.gridAPI.crudService.cell;
     }
 
     public getCurrentEditCell(): IgxGridCellComponent {
         const grid = this.grid as any;
-        const currentCell = grid.crudService.cell;
+        const currentCell = grid.gridAPI.crudService.cell;
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
     }
 
@@ -2146,7 +2146,7 @@ export class ColumnGroupsNavigationTestComponent {
 
 @Component({
     template: `
-    <igx-grid [data]="data" height="500px" [allowFiltering]='true' [(filteringExpressionsTree)]="filterTree">
+    <igx-grid [data]="data" height="500px" [allowFiltering]="true" [(filteringExpressionsTree)]="filterTree">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'" [hasSummary]="true" [filterable]="false" [resizable]="resizable">
         </igx-column>
         <igx-column width="100px" [field]="'ProductName'" [filterable]="filterable" [resizable]="resizable" dataType="string"></igx-column>

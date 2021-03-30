@@ -23,8 +23,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { changei18n, getCurrentResourceStrings } from '../../core/i18n/resources';
-import { registerLocaleData, DatePipe } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
+import { DatePipe } from '@angular/common';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic, IFilteringExpression } from '../../data-operations/filtering-expression.interface';
 import { IgxChipComponent } from '../../chips/chip.component';
@@ -1221,7 +1220,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should correctly apply locale to datePicker.', fakeAsync(() => {
-            registerLocaleData(localeDE);
             fix.detectChanges();
 
             grid.locale = 'de-DE';
@@ -4523,7 +4521,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
-            registerLocaleData(localeFR);
             const pipe = new DatePipe('fr-FR');
             const formatOptions = {
                 timezone: 'utc',
@@ -4706,31 +4703,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should open/close ESF menu for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
-        fakeAsync(() => {
-            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            // Verify ESF is not visible.
-            expect(excelMenu).toBeNull();
+            fakeAsync(() => {
+                let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                // Verify ESF is not visible.
+                expect(excelMenu).toBeNull();
 
-            const downloadsColumn = GridFunctions.getColumnHeader('Downloads', fix);
-            UIInteractions.simulateClickAndSelectEvent(downloadsColumn);
-            fix.detectChanges();
+                const downloadsColumn = GridFunctions.getColumnHeader('Downloads', fix);
+                UIInteractions.simulateClickAndSelectEvent(downloadsColumn);
+                fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('l', downloadsColumn.nativeElement, true, false, true, true);
-            tick(200);
-            fix.detectChanges();
+                UIInteractions.triggerKeyDownEvtUponElem('l', downloadsColumn.nativeElement, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
 
-            // Verify ESF menu is opened for the 'Downloads' column.
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            expect(excelMenu).not.toBeNull();
+                // Verify ESF menu is opened for the 'Downloads' column.
+                excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                expect(excelMenu).not.toBeNull();
 
-            // Press the combination again.
-            UIInteractions.triggerKeyDownEvtUponElem('l', excelMenu, true, false, true, true);
-            tick(200);
-            fix.detectChanges();
+                // Press the combination again.
+                UIInteractions.triggerKeyDownEvtUponElem('l', excelMenu, true, false, true, true);
+                tick(200);
+                fix.detectChanges();
 
-            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
-            expect(excelMenu).toBeNull();
-    }));
+                excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+                expect(excelMenu).toBeNull();
+        }));
 
         it('Should filter date by input string', fakeAsync(() => {
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -4947,17 +4944,17 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Should disable the apply button when there are no results.', fakeAsync(() => {
-        GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-        const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
-        const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-        const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+            const applyButton = GridFunctions.getApplyButtonExcelStyleFiltering(fix) as HTMLElement;
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
-        UIInteractions.clickAndSendInputElementValue(inputNativeElement, '3', fix);
-        tick(100);
-        fix.detectChanges();
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '3', fix);
+            tick(100);
+            fix.detectChanges();
 
-        ControlsFunction.verifyButtonIsDisabled(applyButton);
+            ControlsFunction.verifyButtonIsDisabled(applyButton);
         }));
 
         it('Should add list items to current filtered items when "Add to current filter selection" is selected.', fakeAsync(() => {
@@ -4970,8 +4967,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             let searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             let inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '5', fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
                 .splice(2)
@@ -4981,8 +4978,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleFiltering(fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             // Get the results and verify that they match the list items.
             let gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
@@ -4998,8 +4995,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
             inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '7', fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent)
                 .splice(2)
@@ -5011,13 +5008,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Select 'Add to current filter selection'.
             const checkbox = GridFunctions.getExcelStyleFilteringCheckboxes(fix);
             checkbox[1].click();
-            tick();
             fix.detectChanges();
+            tick();
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleFiltering(fix);
-            tick(100);
             fix.detectChanges();
+            tick();
 
             // Get the results and verify that they match the list items.
             gridCellValues = GridFunctions.getColumnCells(fix, 'Downloads')
@@ -5030,11 +5027,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Open excel style custom filtering dialog again.
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
+            fix.detectChanges();
+            tick();
+
             // Get checkboxes and verify 'Select All' is indeterminate.
             const excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
             const checkboxes: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
-            fix.detectChanges();
-
             expect(checkboxes[0].indeterminate).toBeTrue();
         }));
 
@@ -5545,7 +5543,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
         it('Verify date values are displayed in correct format according to column pipeArgs', fakeAsync(() => {
             const downloads = ['Select All', '(Blanks)', '0,00', '20,00', '100,00', '127,00', '254,00', '702,00', '1 000,00'];
-            registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5595,7 +5592,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter', fakeAsync(() => {
-            registerLocaleData(localeFR);
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.getTime() : null;
@@ -5634,7 +5630,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         }));
 
         it('Verify date values are displayed in correct format according to column formatter after filtering', fakeAsync(() => {
-            registerLocaleData(localeFR);
             const grid = fix.componentInstance.grid;
             grid.locale = 'fr-FR';
             const datePipe = new DatePipe(grid.locale);

@@ -134,7 +134,7 @@ export class IgxTreeGridRowComponent extends IgxRowDirective<IgxTreeGridComponen
     /**
      * @hidden
      */
-    get indeterminate(): boolean {
+    public get indeterminate(): boolean {
         return this.selectionService.isRowInIndeterminateState(this.rowID);
     }
 

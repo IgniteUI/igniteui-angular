@@ -3,29 +3,6 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// Help debug sass maps.
-/// @access privet
-/// @example scss - Sample usage
-///   input[type="checkbox"] {
-///     @include hide-default();
-///   }
-
-//@mixin debug-map($map) {
-//    @at-root {
-//        @debug-map {
-//            __toString__: inspect($map);
-//            __length__: length($map);
-//            __keys__: map-keys($map);
-//
-//            __properties__ {
-//                @each $key, $value in $map {
-//                    #{$key}: inspect($value);
-//                }
-//            }
-//        }
-//    }
-//}
-
 /// Hides the element from the DOM.
 /// @access public
 /// @example scss - Sample usage
@@ -140,6 +117,7 @@
     }
 }
 
+// stylelint-disable max-nesting-depth
 /// Generates CSS class names for all colors from
 /// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
@@ -158,11 +136,15 @@
 ///   );
 /// @requires {mixin} gen-color-class
 @mixin gen-color-classes($prop, $prefix, $suffix, $palette: $default-palette) {
-    @each $palette-name, $sub-palette in $palette {
-        @each $variant, $color in $sub-palette {
-            @if type-of($color) != 'map' {
-                @include gen-color-class($palette-name, $variant, $prefix, $suffix) {
-                    #{$prop}: $color;
+    @each $name, $color in $palette {
+        @each $variant, $value in $color {
+            @if type-of($value) != 'map' {
+                @include gen-color-class($name, $variant, $prefix, $suffix) {
+                    @if legacy() {
+                        #{$prop}: igx-color($palette, $color: $name, $variant: $variant);
+                    } @else {
+                        #{$prop}: igx-color($color: $name, $variant: $variant);
+                    }
                 }
             }
         }
@@ -170,44 +152,59 @@
 }
 
 /// Generates CSS variables for a given palette.
-/// @access private
-/// @param {Map} $palette - The igx palette to use to generate css variables for.
-/// @param {Map} $contrast [false] - Specifies if contrast colors should be generated for each color in the palette.
+/// @access public
+/// @param {Map} $palette [null] - The igx palette to use to generate CSS variables for.
+/// @param {bool} $contrast [true] - Specify if contrast colors should be included.
 ///
 /// @example scss Generate css variables for the `$default-palette`.
-///   @include css-vars-from-palette($default-palette);
+///    @include igx-palette-vars($default-palette);
 ///
-@mixin css-vars-from-palette($palette, $contrast: false) {
-    @each $palette-name, $sub-palette in $palette {
-        @each $variant, $color in $sub-palette {
-            @if($contrast) {
-                $color: text-contrast($color);
-            }
+@mixin igx-palette-vars($palette, $contrast: true) {
+    $scope: if(is-root(), ':root', '&');
+    $theme: map-get(map-get($palette, '_meta'), 'variant');
 
-            @if type-of($color) != 'map' {
-                --igx-#{$palette-name}-#{$variant}#{if($contrast, -contrast, null)}: #{$color};
+    #{$scope} {
+        @each $name, $color in $palette {
+            @each $variant, $value in $color {
+                $valid: not(str-index(#{$variant}, 'contrast')) and not(str-index(#{$variant}, 'variant'));
+
+                @if($variant == 500) {
+                    --igx-#{$name}-h: #{round(hue($value))};
+                    --igx-#{$name}-s: #{round(saturation($value))};
+                    --igx-#{$name}-l: #{round(lightness($value))};
+
+                    @if $name != 'grays' {
+                        --igx-#{$name}-a: #{alpha($value)};
+                    } @else {
+                        --igx-#{$name}-a: 1;
+                    }
+                }
+
+                @if $valid {
+                    --igx-#{$name}-#{$variant}: #{_gen-hsla-color($name, $variant, $theme)};
+                } @else if $name != '_meta' {
+                    --igx-#{$name}-#{$variant}: #{$value};
+                }
             }
         }
     }
 }
+// stylelint-enable max-nesting-depth
 
-/// Generates CSS variables for a given palette.
+/// Generates CSS variables for a given elevations map.
 /// @access public
-/// @param {Map} $palette - The igx palette to use to generate css variables for.
-/// @param {Map} $contrast [false] - Specifies if the mixin outputs contrast colors for each color in the palette.
+/// @param {Map} $elevations - The igx elevations map to use to generate CSS variables for.
 ///
-/// @example scss Generate css variables for the `$default-palette`.
-///   @include css-vars-from-palette($default-palette);
+/// @example scss Generate CSS variables for elevations.
+///    $elevations: igx-elevations(red, green, blue); // umbra, penumbra, ambient
+///    @include igx-elevation-vars($elevations);
 ///
-/// @requires {mixin} css-vars-from-palette
-@mixin igx-palette-vars($palette, $contrast: false) {
+@mixin igx-elevation-vars($elevations) {
     $scope: if(is-root(), ':root', '&');
 
     #{$scope} {
-        @include css-vars-from-palette($palette);
-
-        @if($contrast) {
-            @include css-vars-from-palette($palette, $contrast: true);
+        @each $level, $shadow in $elevations {
+            --igx-elevation-#{$level}: #{$shadow};
         }
     }
 }
@@ -242,29 +239,23 @@
 ///     @include css-vars-from-theme($my-theme);
 ///   }
 @mixin css-vars-from-theme($theme, $prefix: null) {
+    $name: map-get($theme, 'name');
+    $ignore: ('name', 'palette', 'variant', 'selector');
+
+    @if not($name) or str-length($name) == 0 {
+        @error 'Theme should have a non-null or empty name property. Example: my-theme: (name: my-theme)';
+    }
+
     @each $key, $value in $theme {
-        @if $key != 'name' and $key != 'palette' and type-of($value) != 'map' {
+        $elevation: str-index($key, 'elevation');
+
+        @if not(index($ignore, $key) or $elevation) and type-of($value) != 'map' {
             @if $prefix {
-                --#{$prefix}-#{$key}: #{$value};
+                --#{$prefix}-#{$key}: var(--#{$name}-#{$key}, #{$value});
             } @else {
-                --#{$key}: #{$value};
+                --#{$key}: var(--#{$name}-#{$key}, #{$value});
             }
         }
-    }
-}
-
-/// Add theme colors to the global root scope
-/// Ensures the operation is done only once.
-/// @access private
-/// @param {map} $theme - The component theme to register as css vars.
-/// @requires {mixin} css-vars-from-theme
-@mixin igx-root-css-vars($theme) {
-    $scope: &;
-
-    @if map-get($themes, $scope) == null {
-        $id: unique-id();
-        $themes: map-merge($themes, (#{$scope}: $id)) !global;
-        @include igx-css-vars($theme);
     }
 }
 
@@ -272,12 +263,22 @@
 /// @access public
 /// @param {map} $theme - The component theme to be used
 /// @requires {mixin} css-vars-from-theme
-@mixin igx-css-vars($theme) {
-    $scope: if(is-root(), ':root', '&');
-    $prefix: map-get($theme, 'name');
+@mixin igx-css-vars($theme, $scope: null, $prefix: null) {
+    $s: map-get($theme, 'selector');
+    $n: map-get($theme, 'name');
+    $name: if($scope, $scope, $s or $n);
 
-    #{$scope} {
-        @include css-vars-from-theme($theme, $prefix);
+    @if not(legacy()) {
+        @if is-root() {
+            #{$name} {
+                @include css-vars-from-theme($theme, $prefix);
+            }
+        } @else {
+            &,
+            #{$name} {
+                @include css-vars-from-theme($theme, $prefix);
+            }
+        }
     }
 }
 
@@ -344,4 +345,17 @@
     @if $dir == 'rtl' {
         @content;
     }
+}
+
+/// Truncates text at a specific number of lines
+/// @param {number|string} $lines - The number of lines to show
+/// @param {Boolean} $inline - Sets whether an element displays inline-box or box
+/// @param {Boolean} $vertical - Sets whether an element lays out its contents horizontally or vertically
+/// @example scss Truncates text after the fourth line
+///    @include line-clamp(4, true, true);
+@mixin line-clamp($lines, $inline, $vertical) {
+    display: if($inline, -webkit-inline-box, -webkit-box);
+    -webkit-line-clamp: if($lines, $lines, initial);
+    -webkit-box-orient: if($vertical, vertical, initial);
+    overflow: hidden;
 }

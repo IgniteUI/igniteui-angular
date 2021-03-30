@@ -141,7 +141,7 @@ class NestedPropertiesGridComponent {
         <igx-column field='user.name.first' header='First Name' editable='true' dataType='string'></igx-column>
         <igx-column field='user.name.last' header='Last Name' editable='true' dataType='string'></igx-column>
         <igx-column field='user.email' header='E-Mail' editable='true' dataType='string'></igx-column>
-        <igx-column field='user.age' header='Age' [sortable]='true' editable='true' dataType='number'></igx-column>
+        <igx-column field='user.age' header='Age' [sortable]="true" editable='true' dataType='number'></igx-column>
         <igx-column field='user.address.zip' header='ZIP' editable='true' dataType='number'></igx-column>
         <igx-column field='user.address.country' header='Country' editable='true' dataType='string'></igx-column>
         <igx-column field='active' header='Active' editable='true' dataType='boolean'></igx-column>
@@ -682,7 +682,7 @@ describe('Edit cell with data of type Array', () => {
         expect(grid.data[2].locations.length).toEqual(3);
         expect(cell.editValue.length).toEqual(1);
 
-        grid.endEdit(false);
+        grid.gridAPI.crudService.endEdit(false);
         fixture.detectChanges();
         await fixture.whenStable();
         rowArgs.event = undefined;
@@ -744,7 +744,7 @@ describe('Edit cell with data of type Array', () => {
         expect(grid.data[2].locations.length).toEqual(3);
         expect(cell.editValue.length).toEqual(1);
 
-        grid.endEdit(true);
+        grid.gridAPI.crudService.endEdit(true);
         fixture.detectChanges();
         await fixture.whenStable();
         rowArgs.event = undefined;

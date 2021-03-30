@@ -26,13 +26,13 @@
         <igx-list-item
         *igxFor="let item of displayedListData scrollOrientation : 'vertical'; containerSize: containerSize; itemSize: itemSize">
             <igx-checkbox
-            [value]="item"
-            tabindex="-1"
-            [checked]="item.isSelected"
-            [disableRipple]="true"
-            [indeterminate]="item.indeterminate"
-            [disableTransitions]="true"
-            (change)="onCheckboxChange($event)">
+                [value]="item"
+                [tabindex]="-1"
+                [checked]="item.isSelected"
+                [disableRipple]="true"
+                [indeterminate]="item.indeterminate"
+                [disableTransitions]="true"
+                (change)="onCheckboxChange($event)">
                 {{ item.label }}
             </igx-checkbox>
         </igx-list-item>
