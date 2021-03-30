@@ -7,6 +7,8 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
+- `IgxTabs`, `IgxBottomNav`
+    - **Breaking Change** - `IgxTabs` and `IgxBottomNav` components were completely refactored in order to provide more flexible and descriptive way to define tab headers and panels. Please make sure to update via `ng update` in order to migrate the existing `igx-tabs` and `igx-bottom-nav` definitions to the new ones.
 
 ### New Features
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -37,6 +39,11 @@ All notable changes for each version of this project will be documented in this 
                 [summaryFormatter]="dateSummaryFormat">
             </igx-column>
         ```
+- `IgxTabs`
+    - The `tabAlignment` property of the `IgxTabs` component replaces the `type` property and enables you to set the tab alignment to `start`, `center`, `end` and `justify`.
+    - The `igx-tab-header` supports `igx-prefix` and `igx-suffix` directives in its `ng-content`.
+- `IgxBottomNav`
+    - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the panels should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled.
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
