@@ -5,24 +5,22 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Generates a base dark tree schema.
-/// @type {Map}
-/// @prop {Map} color-hover [igx-color: ('grays', 900)] - The color used for the tree node content.
-$_base-dark-tree: (
-    color-hover: (
-        igx-color: ('grays', 900)
-    ),
-);
-
 /// Generates a dark tree schema.
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_light-tree
-/// @requires $_base-dark-tree
 $_dark-tree: extend(
     $_light-tree,
     (
+        background: (
+            igx-color: ('surface')
+        ),
+
         color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-active-hover: (
             igx-color: ('grays', 900)
         ),
 
@@ -56,6 +54,10 @@ $_dark-tree: extend(
 $_dark-fluent-tree: extend(
     $_fluent-tree,
     (
+        background: (
+            igx-color: ('surface')
+        ),
+
         background-selected: (
             igx-color: ('grays', 200)
         ),
@@ -78,10 +80,8 @@ $_dark-fluent-tree: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @requires $_bootstrap-tree
-/// @requires $_base-dark-tree
 $_dark-bootstrap-tree: extend(
     $_bootstrap-tree,
-    $_base-dark-tree,
     (
         background: (
             igx-color: ('surface')
@@ -91,8 +91,16 @@ $_dark-bootstrap-tree: extend(
             igx-color: ('surface')
         ),
 
+        color-hover: (
+            igx-color: ('grays', 900)
+        ),
+
         color-focused: (
             igx-contrast-color: ('surface'),
+        ),
+
+        color-active: (
+            igx-color: ('grays', 900)
         ),
 
         background-active-focused: (
@@ -116,10 +124,8 @@ $_dark-bootstrap-tree: extend(
 /// @prop {Map} tree-indicator-color-hover [igx-color: ('primary', 200)] - The hover color used for the tree node expand/collapse indicator.
 /// @requires {function} extend
 /// @requires $_indigo-tree
-/// @requires $_base-dark-tree
 $_dark-indigo-tree: extend(
     $_indigo-tree,
-    $_base-dark-tree,
     (
         background: (
             igx-color: ('surface')
@@ -161,7 +167,9 @@ $_dark-indigo-tree: extend(
             igx-color: ('grays', 50)
         ),
 
-        color-hover: #fff,
+        color-hover: (
+            igx-color: ('grays', 900)
+        ),
 
         background-active-hover: (
             igx-color: ('grays', 50),

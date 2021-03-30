@@ -154,8 +154,6 @@
         color-active-selected: $color-active-selected,
         color-disabled: $color-disabled,
 
-        drop-indicator-color: $drop-indicator-color,
-
         tree-indicator-color: $tree-indicator-color,
         tree-indicator-color-hover: $tree-indicator-color-hover,
         tree-indicator-color-focused: $tree-indicator-color-focused,
@@ -165,6 +163,7 @@
         tree-indicator-color-active: $tree-indicator-color-disabled,
         tree-indicator-color-disabled: $tree-indicator-color-disabled,
 
+        drop-indicator-color: $drop-indicator-color,
         border-focused: $border-focused
     ));
 }
@@ -285,16 +284,6 @@
         }
     }
 
-    %tree-node-wrapper--selected {
-        background: --var($theme, 'background-selected');
-        color: --var($theme, 'color-selected');
-    }
-
-    %tree-node-wrapper--active-selected {
-        background: --var($theme, 'background-active-selected');
-        color: --var($theme, 'color-active-selected');
-    }
-
     %tree-node-wrapper--selected,
     %tree-node-wrapper--active-selected {
         %tree-node-indicator {
@@ -309,6 +298,16 @@
             background: --var($theme, 'background-selected-hover');
             color: --var($theme, 'color-selected-hover');
         }
+    }
+
+    %tree-node-wrapper--selected {
+        background: --var($theme, 'background-selected');
+        color: --var($theme, 'color-selected');
+    }
+
+    %tree-node-wrapper--active-selected {
+        background: --var($theme, 'background-active-selected');
+        color: --var($theme, 'color-active-selected');
     }
 
     %tree-node-wrapper--active {
@@ -368,6 +367,10 @@
             background: --var($theme, 'background-disabled');
             color: --var($theme, 'color-disabled');
         }
+    }
+
+    %tree-node-wrapper--focused%tree-node-wrapper--disabled {
+        box-shadow: none;
     }
 
     %tree-node-spacer {

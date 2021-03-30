@@ -181,11 +181,11 @@ $_fluent-tree: extend(
             igx-color: ('grays', 800)
         ),
 
-        color-focused: (
+        color: (
             igx-color: ('grays', 700)
         ),
 
-        color: (
+        color-focused: (
             igx-color: ('grays', 700)
         ),
 
@@ -206,6 +206,18 @@ $_fluent-tree: extend(
         ),
 
         color-active-hover: (
+            igx-color: ('grays', 900)
+        ),
+
+        color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        background-active-selected: (
+            igx-color: ('grays', 100)
+        ),
+
+        color-active-selected: (
             igx-color: ('grays', 900)
         ),
 
