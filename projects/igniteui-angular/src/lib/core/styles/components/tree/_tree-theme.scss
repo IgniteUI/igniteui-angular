@@ -323,11 +323,6 @@
             background: --var($theme, 'background-active-hover');
             color: --var($theme, 'color-active-hover');
         }
-
-        &:focus {
-            background: --var($theme, 'background-active-focused');
-            color: --var($theme, 'color-active-focused');
-        }
     }
 
     %tree-node-wrapper--focused {
@@ -335,6 +330,11 @@
         color: --var($theme, 'color-focused');
 
         box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
+
+        &:hover {
+            background: --var($theme, 'background-active-hover');
+            color: --var($theme, 'color-active-hover');
+        }
 
         %tree-node-indicator {
             color: --var($theme, 'tree-indicator-color-focused');
@@ -364,7 +364,6 @@
             }
         }
 
-        &:focus,
         &:hover {
             background: --var($theme, 'background-disabled');
             color: --var($theme, 'color-disabled');
@@ -389,8 +388,7 @@
 
         color: --var($theme, 'tree-indicator-color');
 
-        &:hover,
-        &:focus, {
+        &:hover {
             color: --var($theme, 'tree-indicator-color-hover');
         }
     }

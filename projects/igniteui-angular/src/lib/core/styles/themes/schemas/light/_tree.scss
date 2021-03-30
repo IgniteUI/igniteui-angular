@@ -32,10 +32,10 @@ $_light-tree: extend(
     (
         variant: 'material',
 
-        background: transparent,
+        background: #fff,
 
         color: (
-            igx-contrast-color: ('grays', 900)
+            igx-color: ('grays', 900)
         ),
 
         background-hover: (
@@ -119,7 +119,7 @@ $_light-tree: extend(
         ),
 
         tree-indicator-color: (
-            igx-contrast-color: ('surface')
+            igx-color: ('grays', 900)
         ),
 
         tree-indicator-color-hover: (
@@ -181,6 +181,10 @@ $_fluent-tree: extend(
             igx-color: ('grays', 800)
         ),
 
+        color-focused: (
+            igx-color: ('grays', 700)
+        ),
+
         color: (
             igx-color: ('grays', 700)
         ),
@@ -194,7 +198,7 @@ $_fluent-tree: extend(
         ),
 
         color-active-focused: (
-            igx-contrast-color: ('grays', 100),
+            igx-color: ('grays', 900)
         ),
 
         background-active-hover: (
@@ -202,7 +206,7 @@ $_fluent-tree: extend(
         ),
 
         color-active-hover: (
-            igx-contrast-color: ('grays', 100),
+            igx-color: ('grays', 900)
         ),
 
         background-selected: (
@@ -210,7 +214,7 @@ $_fluent-tree: extend(
         ),
 
         color-selected: (
-            igx-contrast-color: ('grays', 200)
+            igx-color: ('grays', 700)
         ),
 
         background-selected-hover: (
@@ -218,7 +222,7 @@ $_fluent-tree: extend(
         ),
 
         color-selected-hover: (
-            igx-color: ('grays', 700)
+            igx-color: ('grays', 900)
         ),
 
         background-selected-focused: (
@@ -226,7 +230,7 @@ $_fluent-tree: extend(
         ),
 
         color-selected-focused: (
-            igx-contrast-color: ('grays', 100)
+            igx-color: ('grays', 900)
         ),
 
         tree-indicator-color-hover: (
@@ -259,28 +263,84 @@ $_bootstrap-tree: extend(
     (
         variant: 'bootstrap',
 
+        border-focused: (
+            igx-color: ('primary')
+        ),
+
+        background-focused: (
+            igx-color: #fff
+        ),
+
+        color-focused: (
+            igx-contrast-color: #fff,
+        ),
+
+        background-active-focused: (
+            igx-color: #fff
+        ),
+
+        color-active-focused: (
+            igx-contrast-color: #fff,
+        ),
+
+        background-active-hover: (
+            igx-color: ('grays', 100)
+        ),
+
+        color-active-hover: (
+            igx-contrast-color: ('grays', 100),
+        ),
+
         background-selected: (
+            igx-color: ('primary')
+        ),
+
+        color-selected: #fff,
+
+        background-selected-hover: (
             igx-color: ('primary', 600)
         ),
 
-        background-selected-hover: (
-            igx-color: ('primary', 700)
-        ),
-
-        color-selected: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
         color-selected-hover: (
-            igx-contrast-color: ('primary', 700)
+            igx-contrast-color: ('primary', 600),
         ),
 
-        tree-indicator-color-selected: (
+        background-selected-focused: (
+            igx-color: ('primary', 600)
+        ),
+
+        color-selected-focused: (
+            igx-contrast-color: ('primary', 600),
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 600)
+        ),
+
+        color-active-selected: (
+            igx-contrast-color: ('primary', 600),
+        ),
+
+        tree-indicator-color-hover: (
+            igx-color: ('primary')
+        ),
+
+        tree-indicator-color-focused: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-selected: #fff,
+
+        tree-indicator-color-selected-focused: (
             igx-contrast-color: ('primary', 600)
         ),
 
         tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('primary', 700)
+            igx-contrast-color: ('primary', 600)
+        ),
+
+        tree-indicator-color-active: (
+            igx-color: ('grays', 900)
         ),
     )
 );
@@ -303,37 +363,86 @@ $_indigo-tree: extend(
     (
         variant: 'indigo-design',
 
+        color: (
+            igx-color: ('grays', 900)
+        ),
+
         background-hover: (
-            igx-color: ('secondary', 100),
-            rgba: .15
-        ),
-
-        background-selected: (
-            igx-color: ('secondary')
-        ),
-
-        background-selected-hover: (
-            igx-color: ('secondary', 400)
+            igx-color: ('primary', 50)
         ),
 
         color-hover: (
-            igx-contrast-color: ('secondary', 100)
+            igx-contrast-color: ('primary', 50),
+        ),
+
+        background-active-hover: (
+            igx-color: ('primary', 50),
+        ),
+
+        color-active-hover: (
+            igx-color: ('primary')
+        ),
+
+        background-focused: #fff,
+
+        color-focused: (
+            igx-contrast-color: #fff
+        ),
+
+        background-active: #fff,
+
+        color-active: (
+            igx-color: ('primary')
+        ),
+
+        background-active-focused: #fff,
+
+        color-active-focused: (
+            igx-color: ('primary')
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 400)
+        ),
+
+        color-active-selected: (
+            igx-contrast-color: ('primary', 400),
+        ),
+
+        background-selected: (
+            igx-color: ('primary')
         ),
 
         color-selected: (
-            igx-contrast-color: ('secondary')
+            igx-contrast-color: ('primary')
+        ),
+
+        background-selected-hover: (
+            igx-color: ('primary', 400)
         ),
 
         color-selected-hover: (
-            igx-contrast-color: ('secondary', 400)
+            igx-contrast-color: ('primary', 400)
+        ),
+
+        background-selected-focused: (
+            igx-color: ('primary', 400)
+        ),
+
+        color-selected-focused: (
+            igx-contrast-color: ('primary', 400)
         ),
 
         tree-indicator-color-selected: (
-            igx-contrast-color: ('secondary')
+            igx-contrast-color: ('primary')
         ),
 
         tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('secondary', 400)
+            igx-contrast-color: ('primary', 400)
+        ),
+
+        tree-indicator-color-selected-focused: (
+            igx-contrast-color: ('primary', 400)
         ),
     )
 );

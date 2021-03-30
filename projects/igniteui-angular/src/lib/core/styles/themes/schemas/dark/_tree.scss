@@ -79,7 +79,37 @@ $_dark-fluent-tree: extend(
 /// @requires {function} extend
 /// @requires $_bootstrap-tree
 /// @requires $_base-dark-tree
-$_dark-bootstrap-tree: extend($_bootstrap-tree, $_base-dark-tree);
+$_dark-bootstrap-tree: extend(
+    $_bootstrap-tree,
+    $_base-dark-tree,
+    (
+        background: (
+            igx-color: ('surface')
+        ),
+
+        background-focused: (
+            igx-color: ('surface')
+        ),
+
+        color-focused: (
+            igx-contrast-color: ('surface'),
+        ),
+
+        background-active-focused: (
+            igx-color: #fff
+        ),
+
+        color-active-focused: (
+            igx-color: #fff,
+        ),
+
+        color-active-hover: (
+            igx-color: #fff,
+        ),
+
+        tree-indicator-color-selected: #fff,
+    )
+);
 
 /// Generates a dark indigo tree schema.
 /// @type {Map}
@@ -91,8 +121,52 @@ $_dark-indigo-tree: extend(
     $_indigo-tree,
     $_base-dark-tree,
     (
+        background: (
+            igx-color: ('surface')
+        ),
+
+        color: (
+            igx-contrast-color: ('surface')
+        ),
+
+        background-focused: (
+            igx-color: ('surface')
+        ),
+
+        color-focused: (
+            igx-contrast-color: ('surface')
+        ),
+
+        background-active: (
+            igx-color: ('surface')
+        ),
+
+        background-active-focused: (
+            igx-color: ('surface')
+        ),
+
         tree-indicator-color-hover: (
             igx-color: ('primary', 200)
         ),
+
+        tree-indicator-color-active: (
+            igx-color: ('grays', 900)
+        ),
+
+        tree-indicator-color-focused: (
+            igx-color: ('grays', 900)
+        ),
+
+        background-hover: (
+            igx-color: ('grays', 50)
+        ),
+
+        color-hover: #fff,
+
+        background-active-hover: (
+            igx-color: ('grays', 50),
+        ),
+
+        color-active-hover: #fff,
     )
 );
