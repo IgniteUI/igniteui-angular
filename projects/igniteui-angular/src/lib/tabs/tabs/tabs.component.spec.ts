@@ -15,7 +15,7 @@ import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutin
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
-import { IgxTabPanelComponent } from './tab-panel.component';
+import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component,
     RoutingView2Component,
@@ -78,7 +78,7 @@ fdescribe('IgxTabs', () => {
 
             igxTabs.forEach((tab, i) => {
                 const tabHeaders = tab.querySelectorAll('igx-tab-header');
-                const tabPanels = tab.querySelectorAll('igx-tab-panel');
+                const tabPanels = tab.querySelectorAll('igx-tab-content');
                 expect(tabHeaders.length).toBe(3);
                 expect(tabPanels.length).toBe(3);
 
@@ -106,11 +106,11 @@ fdescribe('IgxTabs', () => {
             tabs = fixture.componentInstance.tabs;
         }));
 
-        it('should initialize igx-tabs, igx-tab-panel and igx-tab-item', fakeAsync(() => {
+        it('should initialize igx-tabs, igx-tab-content and igx-tab-item', fakeAsync(() => {
             tick(100);
             fixture.detectChanges();
 
-            const panels: IgxTabPanelComponent[] = tabs.panels.toArray();
+            const panels: IgxTabContentComponent[] = tabs.panels.toArray();
             const tabsItems: IgxTabItemComponent[] = tabs.items.toArray();
 
             expect(tabs).toBeDefined();
@@ -119,7 +119,7 @@ fdescribe('IgxTabs', () => {
             expect(tabs.panels.length).toBe(3);
 
             for (let i = 0; i < tabs.panels.length; i++) {
-                expect(panels[i] instanceof IgxTabPanelComponent).toBeTruthy();
+                expect(panels[i] instanceof IgxTabContentComponent).toBeTruthy();
                 expect(panels[i].tab).toBe(tabsItems[i]);
             }
 
@@ -469,7 +469,7 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.selectedIndex).toBe(1);
-            const selectedPanel = document.getElementsByTagName('igx-tab-panel')[1] as HTMLElement;
+            const selectedPanel = document.getElementsByTagName('igx-tab-content')[1] as HTMLElement;
             expect(selectedPanel.innerText.trim()).toEqual('Tab content 2');
             const indicator = dom.query(By.css('.igx-tabs__header-menu-item-indicator'));
             expect(indicator.nativeElement.style.width).toBe('90px');

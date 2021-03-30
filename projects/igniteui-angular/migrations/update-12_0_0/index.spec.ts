@@ -105,9 +105,9 @@ $theme: igx-avatar-theme(
 <igx-icon igxTabHeaderIcon>home</igx-icon>
 <span igxTabHeaderLabel>Tab1</span>
 </igx-tab-header>
-<igx-tab-panel>
+<igx-tab-content>
     <div>Some Content</div>
-</igx-tab-panel>
+</igx-tab-content>
 </igx-tab-item>
 </igx-tabs>`);
     });
@@ -155,9 +155,9 @@ $theme: igx-avatar-theme(
 <igx-tab-header>
     <span>Tab1</span>
 </igx-tab-header>
-<igx-tab-panel>
+<igx-tab-content>
 <div>Tab Content</div>
-</igx-tab-panel>
+</igx-tab-content>
 </igx-tab-item>
 </igx-tabs>`);
     });
@@ -182,9 +182,9 @@ Some Content
 <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
 <span igxBottomNavHeaderLabel>Tab1</span>
 </igx-bottom-nav-header>
-<igx-bottom-nav-panel>
+<igx-bottom-nav-content>
 Some Content
-</igx-bottom-nav-panel>
+</igx-bottom-nav-content>
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
     });
@@ -232,9 +232,9 @@ Some Content
 <igx-bottom-nav-header>
 <div>Tab1</div>
 </igx-bottom-nav-header>
-<igx-bottom-nav-panel>
+<igx-bottom-nav-content>
 <div>Tab Content</div>
-</igx-bottom-nav-panel>
+</igx-bottom-nav-content>
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
     });

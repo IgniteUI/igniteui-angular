@@ -36,9 +36,9 @@ let NEXT_TAB_ID = 0;
                <igx-icon igxTabHeaderIcon>folder</igx-icon>
                <span igxTabHeaderLabel>Tab 1</span>
            </igx-tab-header>
-           <igx-tab-panel>
+           <igx-tab-content>
                Content 1
-           </igx-tab-panel>
+           </igx-tab-content>
        </igx-tab-item>
        ...
  * </igx-tabs>

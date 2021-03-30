@@ -14,7 +14,7 @@ export abstract class IgxTabItemBase {
     public headerTemplate: TemplateRef<any>;
     public panelTemplate: TemplateRef<any>;
     public headerComponent: IgxTabHeaderBase;
-    public panelComponent: IgxTabPanelBase;
+    public panelComponent: IgxTabContentBase;
 }
 
 /** @hidden */
@@ -23,7 +23,7 @@ export abstract class IgxTabHeaderBase {
 }
 
 /** @hidden */
-export abstract class IgxTabPanelBase {
+export abstract class IgxTabContentBase {
     public nativeElement: HTMLElement;
 }
 

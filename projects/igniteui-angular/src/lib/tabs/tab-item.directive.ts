@@ -1,6 +1,6 @@
 import { ContentChild, Directive, Input, TemplateRef, ViewChild } from '@angular/core';
 import { Direction, IgxSlideComponentBase } from '../carousel/carousel-base';
-import { IgxTabHeaderBase, IgxTabItemBase, IgxTabPanelBase, IgxTabsBase } from './tabs.base';
+import { IgxTabHeaderBase, IgxTabItemBase, IgxTabContentBase, IgxTabsBase } from './tabs.base';
 
 @Directive()
 export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideComponentBase {
@@ -10,8 +10,8 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     public headerComponent: IgxTabHeaderBase;
 
     /** @hidden */
-    @ContentChild(IgxTabPanelBase)
-    public panelComponent: IgxTabPanelBase;
+    @ContentChild(IgxTabContentBase)
+    public panelComponent: IgxTabContentBase;
 
     /** @hidden */
     @ViewChild('headerTemplate', { static: true })

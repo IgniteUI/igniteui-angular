@@ -2778,13 +2778,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 1</span>
             </igx-tab-header>
-            <igx-tab-panel>This is Tab 1 content.</igx-tab-panel>
+            <igx-tab-content>This is Tab 1 content.</igx-tab-content>
         </igx-tab-item>
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 2</span>
             </igx-tab-header>
-            <igx-tab-panel>
+            <igx-tab-content>
                 <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
                     <igx-column
                         *ngFor="let column of columns"
@@ -2793,13 +2793,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                     >
                     </igx-column>
                 </igx-grid>
-            </igx-tab-panel>
+            </igx-tab-content>
         </igx-tab-item>
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 3</span>
             </igx-tab-header>
-            <igx-tab-panel>
+            <igx-tab-content>
                 <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
                     <igx-column
                         *ngFor="let column of columns"
@@ -2809,13 +2809,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                     >
                     </igx-column>
                 </igx-grid>
-            </igx-tab-panel>
+            </igx-tab-content>
         </igx-tab-item>
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 4</span>
             </igx-tab-header>
-            <igx-tab-panel>
+            <igx-tab-content>
                 <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
                     [paging]="true" [perPage]="3">
                     <igx-column
@@ -2826,13 +2826,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                     >
                     </igx-column>
                 </igx-grid>
-            </igx-tab-panel>
+            </igx-tab-content>
         </igx-tab-item>
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 5</span>
             </igx-tab-header>
-            <igx-tab-panel>
+            <igx-tab-content>
                 <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
                     [paging]="true" [perPage]="4">
                 <igx-column
@@ -2842,13 +2842,13 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                 >
                 </igx-column>
                 </igx-grid>
-            </igx-tab-panel>
+            </igx-tab-content>
         </igx-tab-item>
         <igx-tab-item>
             <igx-tab-header>
                 <span igxTabHeaderLabel>Tab 6</span>
             </igx-tab-header>
-            <igx-tab-panel>
+            <igx-tab-content>
                 <div style='height:300px;'>
                     <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
                         <igx-column
@@ -2859,7 +2859,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                         </igx-column>
                     </igx-grid>
                 </div>
-            </igx-tab-panel>
+            </igx-tab-content>
         </igx-tab-item>
     </igx-tabs>
   </div>

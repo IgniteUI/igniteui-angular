@@ -12,7 +12,7 @@ import { BottomTabBarTestComponent,
         BottomNavTestHtmlAttributesComponent } from '../../test-utils/bottom-nav-components.spec';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxBottomNavModule } from './bottom-nav.module';
-import { IgxBottomNavPanelComponent } from './bottom-nav-panel.component';
+import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { IgxBottomNavComponent, IgxBottomNavItemComponent } from './public_api';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxIconModule } from '../../icon/public_api';
@@ -62,13 +62,13 @@ fdescribe('IgxBottomNav', () => {
 
             igxBottomNavs.forEach((bottomNav, i) => {
                 const tabHeaders = bottomNav.querySelectorAll('igx-bottom-nav-header');
-                const tabPanels = bottomNav.querySelectorAll('igx-bottom-nav-panel');
+                const tabPanels = bottomNav.querySelectorAll('igx-bottom-nav-content');
                 expect(tabHeaders.length).toBe(3);
                 expect(tabPanels.length).toBe(3);
 
                 for (let itemIndex = 0; itemIndex < 3; itemIndex++) {
                     const headerId = `igx-bottom-nav-header-${itemIndex + 3 * i}`;
-                    const panelId = `igx-bottom-nav-panel-${itemIndex + 3 * i}`;
+                    const panelId = `igx-bottom-nav-content-${itemIndex + 3 * i}`;
 
                     expect(tabHeaders[itemIndex].id).toEqual(headerId);
                     expect(tabPanels[itemIndex].id).toEqual(panelId);
@@ -93,8 +93,8 @@ fdescribe('IgxBottomNav', () => {
             tabItems = bottomNav.items.toArray();
         }));
 
-        it('should initialize igx-bottom-nav, igx-bottom-nav-panel and igx-bottom-nav-item', () => {
-            const panels: IgxBottomNavPanelComponent[] = bottomNav.panels.toArray();
+        it('should initialize igx-bottom-nav, igx-bottom-nav-content and igx-bottom-nav-item', () => {
+            const panels: IgxBottomNavContentComponent[] = bottomNav.panels.toArray();
 
             expect(bottomNav).toBeDefined();
             expect(bottomNav instanceof IgxBottomNavComponent).toBeTruthy();
@@ -102,7 +102,7 @@ fdescribe('IgxBottomNav', () => {
             expect(bottomNav.panels.length).toBe(3);
 
             for (let i = 0; i < bottomNav.panels.length; i++) {
-                expect(panels[i] instanceof IgxBottomNavPanelComponent).toBeTruthy();
+                expect(panels[i] instanceof IgxBottomNavContentComponent).toBeTruthy();
                 expect(panels[i].tab).toBe(tabItems[i]);
             }
 

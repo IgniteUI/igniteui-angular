@@ -8,28 +8,28 @@ import { IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
                     <igx-tab-header>
                         Tab 1
                     </igx-tab-header>
-                    <igx-tab-panel>
+                    <igx-tab-content>
                         Content 1
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                    </igx-tab-panel>
+                    </igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
                         Tab 2
                     </igx-tab-header>
-                    <igx-tab-panel>
+                    <igx-tab-content>
                         Content 2
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                    </igx-tab-panel>
+                    </igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
                         Tab 3
                     </igx-tab-header>
-                    <igx-tab-panel>
+                    <igx-tab-content>
                         Content 3
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
-                    </igx-tab-panel>
+                    </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>`
 })
@@ -47,21 +47,21 @@ export class BasicTabsComponent {
                         <igx-icon igxTabHeaderIcon>library_music</igx-icon>
                         <span igxTabHeaderLabel>Tab 1</span>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon>video_library</igx-icon>
                         <span igxTabHeaderLabel>Tab 2</span>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
                         <igx-icon igxTabHeaderIcon>library_books</igx-icon>
                         <span igxTabHeaderLabel>Tab 3</span>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
                         Vivamus sit amet purus eu lectus cursus rhoncus quis non ex.
                         Cras ac nulla sed arcu finibus volutpat.
@@ -73,7 +73,7 @@ export class BasicTabsComponent {
                         In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem,
                         a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
-                    </igx-tab-panel>
+                    </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>`
@@ -89,7 +89,7 @@ export class TabsTestComponent {
             <igx-tabs>
                 <igx-tab-item *ngFor="let tab of collection">
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>`
@@ -147,27 +147,27 @@ export class TabsTest2Component {
                     <div>T1</div>
                     <span igxTabHeaderLabel>Tab 1</span>
                 </igx-tab-header>
-                <igx-tab-panel>
+                <igx-tab-content>
                     <h1>Tab 1 Content</h1>
-                </igx-tab-panel>
+                </igx-tab-content>
               </igx-tab-item>
             <igx-tab-item>
                 <igx-tab-header>
                     <div>T2</div>
                     <span igxTabHeaderLabel>Tab 2</span>
                 </igx-tab-header>
-                <igx-tab-panel>
+                <igx-tab-content>
                     <h1>Tab 2 Content</h1>
-                </igx-tab-panel>
+                </igx-tab-content>
             </igx-tab-item>
             <igx-tab-item>
                 <igx-tab-header>
                     <div>T3</div>
                     <span igxTabHeaderLabel>Tab 3</span>
                 </igx-tab-header>
-                <igx-tab-panel>
+                <igx-tab-content>
                     <h1>Tab 3 Content</h1>
-                </igx-tab-panel>
+                </igx-tab-content>
             </igx-tab-item>
         </igx-tabs>
         </div>`
@@ -207,11 +207,11 @@ export class TabsTestSelectedTabComponent {
         <igx-tabs class="tabsClass">
             <igx-tab-item>
                 <igx-tab-header><span igxTabHeaderLabel>Tab1</span></igx-tab-header>
-                <igx-tab-panel class="groupClass">Content 1</igx-tab-panel>
+                <igx-tab-content class="groupClass">Content 1</igx-tab-content>
             </igx-tab-item>
             <igx-tab-item>
                 <igx-tab-header><span igxTabHeaderLabel>Tab2</span></igx-tab-header>
-                <igx-tab-panel>Content 2</igx-tab-panel>
+                <igx-tab-content>Content 2</igx-tab-content>
             </igx-tab-item>
         </igx-tabs>`
 })
@@ -228,11 +228,11 @@ export class TabsTestCustomStylesComponent {
                 <igx-tabs selectedIndex="1">
                     <igx-tab-item>
                         <igx-tab-header><span igxTabHeaderLabel>tab2</span></igx-tab-header>
-                        <igx-tab-panel>Tab content 1</igx-tab-panel>
+                        <igx-tab-content>Tab content 1</igx-tab-content>
                     </igx-tab-item>
                     <igx-tab-item>
                         <igx-tab-header><span igxTabHeaderLabel>tab2</span></igx-tab-header>
-                        <igx-tab-panel>Tab content 2</igx-tab-panel>
+                        <igx-tab-content>Tab content 2</igx-tab-content>
                     </igx-tab-item>
                 </igx-tabs>
             </div>
@@ -373,23 +373,23 @@ export class TabsTabsOnlyModeTest2Component {
             <igx-tabs>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item [selected]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 4</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item [disabled]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 5</span></igx-tab-header>
-                    <igx-tab-panel></igx-tab-panel>
+                    <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>
@@ -405,15 +405,15 @@ export class TabsDisabledTestComponent {
             <igx-tabs [selectedIndex]="0">
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 1</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 1</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 1</div></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item [selected]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 2</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 2</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 2</div></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 3</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 3</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 3</div></igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>
@@ -421,15 +421,15 @@ export class TabsDisabledTestComponent {
             <igx-tabs [selectedIndex]="0">
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 4</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 4</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 4</div></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item [selected]="true">
                     <igx-tab-header><span igxTabHeaderLabel>Tab 5</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 5</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 5</div></igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header><span igxTabHeaderLabel>Tab 6</span></igx-tab-header>
-                    <igx-tab-panel><div>Content 6</div></igx-tab-panel>
+                    <igx-tab-content><div>Content 6</div></igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>`
@@ -449,7 +449,7 @@ export class TabsTestHtmlAttributesComponent {
                         <span igxTabHeaderLabel>Tab 1</span>
                         <igx-icon igxSuffix>close</igx-icon>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
@@ -457,7 +457,7 @@ export class TabsTestHtmlAttributesComponent {
                         <igx-icon igxTabHeaderIcon>video_library</igx-icon>
                         <span igxTabHeaderLabel>Tab 2</span>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-panel>
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</igx-tab-content>
                 </igx-tab-item>
                 <igx-tab-item>
                     <igx-tab-header>
@@ -465,7 +465,7 @@ export class TabsTestHtmlAttributesComponent {
                         <span igxTabHeaderLabel>Tab 3</span>
                         <igx-icon igxSuffix>close</igx-icon>
                     </igx-tab-header>
-                    <igx-tab-panel>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                    <igx-tab-content>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                         Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
                         Vivamus sit amet purus eu lectus cursus rhoncus quis non ex.
                         Cras ac nulla sed arcu finibus volutpat.
@@ -477,7 +477,7 @@ export class TabsTestHtmlAttributesComponent {
                         In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem,
                         a accumsan lectus nisl facilisis leo.
                         Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
-                    </igx-tab-panel>
+                    </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
         </div>`

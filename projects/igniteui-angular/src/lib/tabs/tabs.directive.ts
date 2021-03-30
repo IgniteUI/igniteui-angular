@@ -6,7 +6,7 @@ import { Subscription } from 'rxjs';
 import { Direction, IgxCarouselComponentBase } from '../carousel/carousel-base';
 import { IBaseEventArgs } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelBase, IgxTabsBase } from './tabs.base';
+import { IgxTabContentBase, IgxTabsBase } from './tabs.base';
 
 export interface ITabsBaseEventArgs extends IBaseEventArgs {
     readonly owner: IgxTabsDirective;
@@ -32,7 +32,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     /**
      * An @Input property that gets/sets the index of the selected item.
-     * Default value is 0 if panels are defined otherwise defaults to -1.
+     * Default value is 0 if contents are defined otherwise defaults to -1.
      */
     @Input()
     public get selectedIndex(): number {
@@ -62,7 +62,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     /**
-     * Enables/disables the transition animation of the panels.
+     * Enables/disables the transition animation of the contents.
      */
     @Input()
     public get disableAnimation() {
@@ -106,8 +106,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     /** @hidden */
-    @ContentChildren(IgxTabPanelBase, { descendants: true })
-    public panels: QueryList<IgxTabPanelBase>;
+    @ContentChildren(IgxTabContentBase, { descendants: true })
+    public panels: QueryList<IgxTabContentBase>;
 
     /** @hidden */
     protected _disableAnimation = false;
@@ -199,7 +199,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             if (item.panelComponent && !item.headerComponent.nativeElement.getAttribute('id')) {
                 const id = this.getNextTabId();
                 const tabHeaderId = `${this.componentName}-header-${id}`;
-                const tabPanelId = `${this.componentName}-panel-${id}`;
+                const tabPanelId = `${this.componentName}-content-${id}`;
 
                 this.setHeaderAttribute(item, 'id', tabHeaderId);
                 this.setHeaderAttribute(item, 'aria-controls', tabPanelId);

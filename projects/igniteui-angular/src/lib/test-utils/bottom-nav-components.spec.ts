@@ -10,27 +10,27 @@ import { IgxBottomNavComponent } from '../tabs/bottom-nav/public_api';
                         <igx-icon igxTabHeaderIcon>library_music</igx-icon>
                         <span igxTabHeaderLabel>Tab 1</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 1 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>video_library</igx-icon>
                         <span igxTabHeaderLabel>Tab 2</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 2 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>library_books</igx-icon>
                         <span igxTabHeaderLabel>Tab 3</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 3 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                             Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -45,7 +45,7 @@ import { IgxBottomNavComponent } from '../tabs/bottom-nav/public_api';
                             a accumsan lectus nisl facilisis leo.
                             Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                         </p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>`
@@ -64,27 +64,27 @@ export class TabBarTestComponent {
                         <igx-icon igxTabHeaderIcon>library_music</igx-icon>
                         <span igxTabHeaderLabel>Tab 1</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 1 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>video_library</igx-icon>
                         <span igxTabHeaderLabel>Tab 2</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 2 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>library_books</igx-icon>
                         <span igxTabHeaderLabel>Tab 3</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel>
+                    <igx-bottom-nav-content>
                         <h1>Tab 3 Content</h1>
                         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                             Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu nisl.
@@ -99,7 +99,7 @@ export class TabBarTestComponent {
                             a accumsan lectus nisl facilisis leo.
                             Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.
                         </p>
-                    </igx-bottom-nav-panel>
+                    </igx-bottom-nav-content>
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>`
@@ -114,24 +114,24 @@ export class BottomTabBarTestComponent {
 //         <div #wrapperDiv>
 
 //         <igx-bottom-nav>
-//             <igx-bottom-nav-panel label="dede">
+//             <igx-bottom-nav-content label="dede">
 //                 <ng-template igxTab>
 //                     <div>T1</div>
 //                  </ng-template>
 //                  <h1>Tab 1 Content</h1>
-//               </igx-bottom-nav-panel>
-//             <igx-bottom-nav-panel label="Tab 2">
+//               </igx-bottom-nav-content>
+//             <igx-bottom-nav-content label="Tab 2">
 //                 <ng-template igxTab>
 //                     <div>T2</div>
 //                 </ng-template>
 //                 <h1>Tab 2 Content</h1>
-//             </igx-bottom-nav-panel>
-//             <igx-bottom-nav-panel label="Tab 3">
+//             </igx-bottom-nav-content>
+//             <igx-bottom-nav-content label="Tab 3">
 //                 <ng-template igxTab>
 //                     <div>T3</div>
 //                 </ng-template>
 //                 <h1>Tab 3 Content</h1>
-//             </igx-bottom-nav-panel>
+//             </igx-bottom-nav-content>
 //         </igx-bottom-nav>
 //         </div>`
 // })
@@ -183,21 +183,21 @@ export class TabBarRoutingTestComponent {
                         <igx-icon igxTabHeaderIcon>library_music</igx-icon>
                         <span igxTabHeaderLabel>Tab 1</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel></igx-bottom-nav-panel>
+                    <igx-bottom-nav-content></igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item [selected]="true">
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>video_library</igx-icon>
                         <span igxTabHeaderLabel>Tab 2</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel></igx-bottom-nav-panel>
+                    <igx-bottom-nav-content></igx-bottom-nav-content>
                 </igx-bottom-nav-item>
                 <igx-bottom-nav-item>
                     <igx-bottom-nav-header>
                         <igx-icon igxTabHeaderIcon>library_books</igx-icon>
                         <span igxTabHeaderLabel>Tab 3</span>
                     </igx-bottom-nav-header>
-                    <igx-bottom-nav-panel></igx-bottom-nav-panel>
+                    <igx-bottom-nav-content></igx-bottom-nav-content>
                 </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
@@ -245,25 +245,25 @@ export class BottomNavRoutingGuardTestComponent {
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 1</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 1</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                     <igx-bottom-nav-item>
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 2</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 2</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                     <igx-bottom-nav-item>
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 3</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 3</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                 </igx-bottom-nav>
             </div>
@@ -273,25 +273,25 @@ export class BottomNavRoutingGuardTestComponent {
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 4</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 4</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                     <igx-bottom-nav-item>
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 5</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 5</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                     <igx-bottom-nav-item>
                         <igx-bottom-nav-header>
                             <span igxTabHeaderLabel>Tab 6</span>
                         </igx-bottom-nav-header>
-                        <igx-bottom-nav-panel>
+                        <igx-bottom-nav-content>
                             <div>Content 6</div>
-                        </igx-bottom-nav-panel>
+                        </igx-bottom-nav-content>
                     </igx-bottom-nav-item>
                 </igx-bottom-nav>
             </div>

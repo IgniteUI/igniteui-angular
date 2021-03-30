@@ -7,7 +7,7 @@ import { IgxTabsDirective } from '../tabs.directive';
 let NEXT_BOTTOM_NAV_ITEM_ID = 0;
 
 /**
- * Bottom Navigation component enables the user to navigate among a number of content panels displayed in a single view.
+ * Bottom Navigation component enables the user to navigate among a number of contents displayed in a single view.
  *
  * @igxModule IgxBottomNavModule
  *
@@ -18,8 +18,8 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
  * @igxGroup Layouts
  *
  * @remarks
- * The Ignite UI for Angular Bottom Navigation component enables the user to navigate among a number of content panels
- * displayed in a single view. The navigation through the panels is accomplished with the tab buttons located at bottom.
+ * The Ignite UI for Angular Bottom Navigation component enables the user to navigate among a number of contents
+ * displayed in a single view. The navigation through the contents is accomplished with the tab buttons located at bottom.
  *
  * @example
  * ```html
@@ -29,9 +29,9 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
                <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
                <span igxBottomNavHeaderLabel>Tab 1</span>
            </igx-bottom-nav-header>
-           <igx-bottom-nav-panel>
+           <igx-bottom-nav-content>
                Content 1
-           </igx-bottom-nav-panel>
+           </igx-bottom-nav-content>
        </igx-bottom-nav-item>
        ...
  * </igx-bottom-nav>

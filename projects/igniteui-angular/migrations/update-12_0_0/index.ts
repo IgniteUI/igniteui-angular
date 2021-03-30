@@ -35,7 +35,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             tags: ['igx-bottom-nav-item', 'igx-tab'],
             tabItem: 'igx-bottom-nav-item',
             headerItem: 'igx-bottom-nav-header',
-            panelItem: 'igx-bottom-nav-panel',
+            panelItem: 'igx-bottom-nav-content',
             iconDirective: 'igxBottomNavHeaderIcon',
             labelDirective: 'igxBottomNavHeaderLabel'
         },
@@ -44,7 +44,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             tags: ['igx-tabs-group', 'igx-tab-item'],
             tabItem: 'igx-tab-item',
             headerItem: 'igx-tab-header',
-            panelItem: 'igx-tab-panel',
+            panelItem: 'igx-tab-content',
             iconDirective: 'igxTabHeaderIcon',
             labelDirective: 'igxTabHeaderLabel'
         }
@@ -169,7 +169,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             applyChanges();
             changes.clear();
 
-            // Grab the content between <igx-tabs-group> and create a <igx-tab-panel>
+            // Grab the content between <igx-tabs-group> and create a <igx-tab-content>
             findElementNodes(parseFile(host, path), comp.tags)
                 .map(node => getSourceOffset(node as Element))
                 .forEach(offset => {

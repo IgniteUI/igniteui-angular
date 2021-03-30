@@ -7,7 +7,7 @@ import {
     IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective
 } from './tabs.directives';
 import { IgxTabItemComponent } from './tab-item.component';
-import { IgxTabPanelComponent } from './tab-panel.component';
+import { IgxTabContentComponent } from './tab-content.component';
 import { IgxTabsComponent } from './tabs.component';
 import { IgxPrefixModule } from '../../directives/prefix/prefix.directive';
 import { IgxSuffixModule } from '../../directives/suffix/suffix.directive';
@@ -18,7 +18,7 @@ import { IgxSuffixModule } from '../../directives/suffix/suffix.directive';
         IgxTabsComponent,
         IgxTabItemComponent,
         IgxTabHeaderComponent,
-        IgxTabPanelComponent,
+        IgxTabContentComponent,
         IgxTabHeaderLabelDirective,
         IgxTabHeaderIconDirective,
         IgxRightButtonStyleDirective,
@@ -28,7 +28,7 @@ import { IgxSuffixModule } from '../../directives/suffix/suffix.directive';
         IgxTabsComponent,
         IgxTabItemComponent,
         IgxTabHeaderComponent,
-        IgxTabPanelComponent,
+        IgxTabContentComponent,
         IgxTabHeaderLabelDirective,
         IgxTabHeaderIconDirective,
         IgxPrefixModule,

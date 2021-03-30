@@ -1,9 +1,9 @@
 import { Directive, ElementRef, HostBinding } from '@angular/core';
 import { IgxTabItemDirective } from './tab-item.directive';
-import { IgxTabPanelBase } from './tabs.base';
+import { IgxTabContentBase } from './tabs.base';
 
 @Directive()
-export abstract class IgxTabPanelDirective implements IgxTabPanelBase {
+export abstract class IgxTabContentDirective implements IgxTabContentBase {
 
     /** @hidden */
     @HostBinding('attr.role')

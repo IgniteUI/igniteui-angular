@@ -5,7 +5,7 @@ import { IgxIconModule } from '../../icon/public_api';
 import { IgxBottomNavHeaderComponent } from './bottom-nav-header.component';
 import { IgxBottomNavHeaderIconDirective, IgxBottomNavHeaderLabelDirective } from './bottom-nav.directives';
 import { IgxBottomNavItemComponent } from './bottom-nav-item.component';
-import { IgxBottomNavPanelComponent } from './bottom-nav-panel.component';
+import { IgxBottomNavContentComponent } from './bottom-nav-content.component';
 import { IgxBottomNavComponent } from './bottom-nav.component';
 
 /** @hidden */
@@ -14,7 +14,7 @@ import { IgxBottomNavComponent } from './bottom-nav.component';
         IgxBottomNavComponent,
         IgxBottomNavItemComponent,
         IgxBottomNavHeaderComponent,
-        IgxBottomNavPanelComponent,
+        IgxBottomNavContentComponent,
         IgxBottomNavHeaderLabelDirective,
         IgxBottomNavHeaderIconDirective
     ],
@@ -22,7 +22,7 @@ import { IgxBottomNavComponent } from './bottom-nav.component';
         IgxBottomNavComponent,
         IgxBottomNavItemComponent,
         IgxBottomNavHeaderComponent,
-        IgxBottomNavPanelComponent,
+        IgxBottomNavContentComponent,
         IgxBottomNavHeaderLabelDirective,
         IgxBottomNavHeaderIconDirective
     ],
