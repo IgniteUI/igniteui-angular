@@ -17,6 +17,7 @@ import {
     IgxStringReplacePipe,
     IgxGridTransactionStatePipe,
     IgxColumnFormatterPipe,
+    IgxSummaryFormatterPipe,
     IgxGridAddRowPipe
 } from './pipes';
 
@@ -38,7 +39,8 @@ import {
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
-        IgxColumnFormatterPipe
+        IgxColumnFormatterPipe,
+        IgxSummaryFormatterPipe
     ],
     exports: [
         IgxGridFilterConditionPipe,
@@ -57,7 +59,8 @@ import {
         IgxStringReplacePipe,
         IgxGridTransactionStatePipe,
         IgxGridAddRowPipe,
-        IgxColumnFormatterPipe
+        IgxColumnFormatterPipe,
+        IgxSummaryFormatterPipe
     ],
     imports: [
         CommonModule

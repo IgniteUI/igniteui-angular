@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $track-color [null] - The main track color.
@@ -31,7 +31,7 @@
 ///   // Pass the theme to the igx-progress-linear component mixin
 ///   @include igx-progress-linear($my-progress-linear-theme);
 @function igx-progress-linear-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $track-color: null,
@@ -75,11 +75,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-progress-linear($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, variant);
 
@@ -305,7 +305,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires {mixin} rotate-center
 /// @requires --var
@@ -313,7 +313,7 @@
     // Include rotate animation
     @include rotate-center();
 
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, variant);
 
