@@ -389,6 +389,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     public ngAfterViewInit() {
         // TO DO: figure out better way to do this
+        this.navService._focusedNode = this.nodes.first;
         this.navService.setVisibleChildren();
         // this.scrollIntoView();
         if (this.navService.activeNode.id && this.navService.activeNode.parentNode) {
