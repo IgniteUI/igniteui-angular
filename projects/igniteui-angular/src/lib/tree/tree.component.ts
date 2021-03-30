@@ -12,28 +12,14 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import {
     IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
-    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver, ITreeKeydownEventArgs
+    ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
-import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 
 let init_id = 0;
-
-// TODO: Implement aria functionality
-/**
- * @hidden @internal
- * Used for links (`a` tags) in the body of an `igx-tree-node`. Handles aria and event dispatch.
- */
-@Directive({
-    selector: `[igxTreeNodeLink]`
-})
-export class IgxTreeNodeLinkDirective {
-    /** @hidden @internal */
-    @HostBinding('role')
-    public role = 'tree-item';
-}
 
 /**
  * @hidden @internal
@@ -125,28 +111,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         openAnimation: growVerIn,
         closeAnimation: growVerOut
     };
-
-    /**
-     * Gets/Sets the activeNode
-     *
-     * @param node: IgxTreeNode<any>
-     */
-    @Input()
-    public get activeNode() {
-        return this.navService.activeNode;
-    }
-
-    public set activeNode(node: IgxTreeNode<any>) {
-        if (this.navService.activeNode === node) {
-            return;
-        }
-        if (!node) {
-            this.navService.activeNode = null;
-        } else {
-            this.navService.activeNode = node;
-            (this.navService.activeNode as any)?.cdr.detectChanges();
-        }
-    }
 
     /** Emitted when the node selection is changed through interaction
      *
@@ -240,29 +204,15 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public nodeCollapsed = new EventEmitter<ITreeNodeToggledEventArgs>();
 
     /**
-     * Emitted when keydown is triggered over element inside tree component.
-     *
-     * @remarks
-     * This event is fired only if the key combination is supported in the tree.
-     * Return the target object and the original event. This event is cancelable.
-     * @example
-     * ```html
-     *  <igx-tree (treeKeydown)="customKeydown($event)"></igx-tree>
-     * ```
-     */
-    @Output()
-    public treeKeydown = new EventEmitter<ITreeKeydownEventArgs>();
-
-    /**
      * Emmited when the active node is changed.
      *
      * @example
      * ```
-     * <igx-tree (activeNodeChange)="activeNodeChange($event)"></igx-tree>
+     * <igx-tree (activeNodeChanged)="activeNodeChanged($event)"></igx-tree>
      * ```
      */
     @Output()
-    public activeNodeChange = new EventEmitter<IgxTreeNode<any>>();
+    public activeNodeChanged = new EventEmitter<IgxTreeNode<any>>();
 
     // TODO: should we remove this thus checkbox aren't templatable
     /**
@@ -359,17 +309,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     /**
-     * Clears the active node
-     *
-     * ```typescript
-     * tree.clearActiveNode();
-     * ```
-     */
-    public clearActiveNode() {
-        this.navService.activeNode = null;
-    }
-
-    /**
      * Deselect all nodes if the nodes collection is empty. Otherwise, deselect the nodes in the nodes collection.
      *
      * @example
@@ -445,13 +384,31 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return node;
     }
 
-    public ngOnInit() { }
+    public ngOnInit() {
+    }
+
     public ngAfterViewInit() {
         // TO DO: figure out better way to do this
-        this.navService._focusedNode = this.nodes.first;
         this.navService.setVisibleChildren();
+        // this.scrollIntoView();
+        if (this.navService.activeNode && this.navService.activeNode?.parentNode) {
+            this.navService.activeNode.path.forEach(node => {
+                if (node !== this.navService.activeNode && !node.expanded) {
+                    node.expanded = true;
+                }
+            });
+        }
+        this.scrollIntoView();
     }
-    public ngOnDestroy() { }
+
+    public ngOnDestroy() {
+    }
+
+    private scrollIntoView() {
+        if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
+            this.nativeElement.scrollTop = (this.navService.activeNode as any).nativeElement.offsetTop;
+        }
+    }
 
     private _comparer = <T>(data: T, node: IgxTreeNodeComponent<T>) => node.data === data;
 

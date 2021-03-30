@@ -28,8 +28,6 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public singleBranchExpand = false;
 
-    public activatedNode: any;
-
     constructor(private cdr: ChangeDetectorRef) {
         this.selectionModes = [
             { label: 'None', selectMode: 'None', selected: this.selectionMode === 'None', togglable: true },
@@ -46,18 +44,18 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
                 console.log(ev);
             });
         });
-        if (localStorage.getItem('activeNode')) {
-            this.activatedNode = this.customSearch(JSON.parse(localStorage.getItem('activeNode')).ID)[0];
-            this.cdr.detectChanges();
-        }
+        // if (localStorage.getItem('activeNode')) {
+        //     this.activatedNode = this.customSearch(JSON.parse(localStorage.getItem('activeNode')).ID)[0];
+        //     this.cdr.detectChanges();
+        // }
     }
 
     public ngOnDestroy() {
-        if (this.activatedNode) {
-            localStorage.setItem('activeNode', JSON.stringify(this.activatedNode.data));
-        } else {
-            localStorage.setItem('activeNode', JSON.stringify(this.testNode.data));
-        }
+        // if (this.activatedNode) {
+        //     localStorage.setItem('activeNode', JSON.stringify(this.activatedNode.data));
+        // } else {
+        //     localStorage.setItem('activeNode', JSON.stringify(this.testNode.data));
+        // }
     }
 
     public selectCellSelectionMode(args) {
@@ -131,11 +129,11 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     }
 
     public activeNodeChanged(evt) {
-        console.log(this.activatedNode ? (this.activatedNode as any).nativeElement : this.activatedNode);
+        console.log(evt);
     }
 
     public keydown(evt) {
-        // console.log(evt);
+        console.log(evt);
     }
 
     private mapData(data: any[]) {
