@@ -66,7 +66,7 @@ export class IgxGridNavigationService {
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+            !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
             return;
         }
         const shift = event.shiftKey;
@@ -397,7 +397,7 @@ export class IgxGridNavigationService {
                 }
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
-                    this.grid.endEdit(false, event);
+                    this.grid.crudService.endEdit(false, event);
                     if (isEdge()) {
                         this.grid.cdr.detectChanges();
                     }
@@ -527,12 +527,12 @@ export class IgxGridNavigationService {
     protected handleEditing(shift: boolean, event: KeyboardEvent) {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
-        if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.endEdit(true, event);
+        if (!this.grid.crudService.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
+            this.grid.crudService.endEdit(true, event);
             return;
         }
         event.preventDefault();
-        if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
+        if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
                 this.grid.gridAPI.submit_add_value(event);
@@ -549,7 +549,7 @@ export class IgxGridNavigationService {
             return;
         }
 
-        if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
+        if (this.grid.crudService.rowInEditMode && !this.grid.rowEditTabs.length) {
             if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
                 next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
             } else if (!shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
