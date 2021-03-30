@@ -61,12 +61,13 @@ export class IgxTreeNavigationService {
         }
         this.lastActiveNode = this._activeNode;
         this._activeNode = value;
+
         if (this.lastActiveNode?.id) {
             (this.lastActiveNode as any).cdr.markForCheck();
         }
-        // TODO: Should we emit the last active node as well? Should we emit focusedNodeChanged?
+
         if (this._activeNode !== this.lastActiveNode) {
-            this.tree.activeNodeChange.emit(this._activeNode);
+            this.tree.activeNodeChanged.emit(this._activeNode);
         }
     }
 
@@ -139,20 +140,11 @@ export class IgxTreeNavigationService {
         if (!this.focusedNode || !(NAVIGATION_KEYS.has(key) || key === '*' || key === 'enter')) {
             return;
         }
-        if (this.emitKeyDown(event)) {
-            return;
-        }
+
         this.getNextPosition(this.focusedNode, key, event);
         if (NAVIGATION_KEYS.has(key)) {
             event.preventDefault();
         }
-    }
-
-    public emitKeyDown(event) {
-        const target = this.focusedNode;
-        const keydownArgs = { event, cancel: false, target };
-        this.tree.treeKeydown.emit(keydownArgs);
-        return keydownArgs.cancel;
     }
 
     public focusNode(event: FocusEvent) {
@@ -195,9 +187,6 @@ export class IgxTreeNavigationService {
             case 'spacebar':
             case 'space':
                 this.handleSpace(event.shiftKey);
-                break;
-            case 'enter':
-                this.handleEnter(event.ctrlKey);
                 break;
             default:
                 return;
@@ -267,17 +256,6 @@ export class IgxTreeNavigationService {
             (this.tree as any).selectionService.deselectNode(this.focusedNode);
         } else {
             (this.tree as any).selectionService.selectNode(this.focusedNode);
-        }
-    }
-
-    protected handleEnter(ctrlKey = false) {
-        const ref = (this.focusedNode as any).element.nativeElement.querySelectorAll('a')[0].href;
-        if (ref) {
-            if (ctrlKey) {
-                window.open(ref);
-            } else {
-                window.open(ref, '_self');
-            }
         }
     }
 }

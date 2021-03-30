@@ -1,4 +1,12 @@
 <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+    <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p> -->
     <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutItemAlign="center" class="controls">
         <igx-input-group>
             <label igxLabel for="time">Animation Duration</label>
@@ -29,7 +37,6 @@
             <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
             <button igxButton (click)="changeNodeData()">Change Node Data</button>
             <button igxButton (click)="getNodes()">Nodes</button>
-            <button igxButton (click)="activatedNode = null">Clear Active Node</button>
         </div>
 
         <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
@@ -37,28 +44,27 @@
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
-                <div style="height: 300px; overflow: scroll;">
                 <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand" [animationSettings]="animationSettings"
-                    (nodeSelection)="nodeSelection($event)" (treeKeydown)="keydown($event)"
-                    [(activeNode)]="activatedNode" (activeNodeChange)="activeNodeChanged($event)">
+                    (nodeSelection)="nodeSelection($event)" (keydown)="keydown($event)"
+                    (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">
                     <igx-tree-node #test [data]="{ID: 'test'}">asd</igx-tree-node>
-                    <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected"
+                        [expanded]="true">
                         <div class="sample-template-center">
                             <!-- <a href="www.google.com">test</a> -->
                             <igx-icon>face</igx-icon>
                             <span class="sample-ellipsis">{{ node.CompanyName }}</span>
                         </div>
                         <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child"
-                            [(selected)]="child.selected">
+                            [(selected)]="child.selected" [active]="true">
                             {{ child.CompanyName }}
                             <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild"
-                                [(selected)]="leafchild.selected">
+                                [(selected)]="leafchild.selected" [active]="true">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>
                         </igx-tree-node>
                     </igx-tree-node>
                 </igx-tree>
-            </div>
             </div>
 
 
