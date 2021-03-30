@@ -28,9 +28,9 @@ export enum ExportRecordType {
 export interface IExportRecord {
     data: any;
     level: number;
-    hidden?: boolean;
     type: ExportRecordType;
     owner?: any;
+    hidden?: boolean;
 }
 
 export interface IMapRecord {
@@ -97,6 +97,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     skipFormatter: boolean;
 }
 
+const DEFAULT_OWNER = 'default';
 const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
@@ -145,7 +146,7 @@ export abstract class IgxBaseExporter {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
         }
-        debugger
+
         this.options = options;
         const columns = grid.columnList.toArray();
         const colDefinitions = this.getColumns(columns, options);
@@ -168,7 +169,7 @@ export abstract class IgxBaseExporter {
                 this.mapHierarchicalGridColumns(rowIsland);
             }
         } else {
-            this._ownersMap.set('default', mapRecord);
+            this._ownersMap.set(DEFAULT_OWNER, mapRecord);
         }
 
         this.prepareData(grid, options);
@@ -218,7 +219,7 @@ export abstract class IgxBaseExporter {
                 indexOfLastPinnedColumn: -1
             };
 
-            this._ownersMap.set('default', mapRecord);
+            this._ownersMap.set(DEFAULT_OWNER, mapRecord);
         }
 
         for (const [key, mapRecord] of this._ownersMap) {
@@ -236,7 +237,7 @@ export abstract class IgxBaseExporter {
                         columnIndex: index,
                         cancel: false,
                         skipFormatter: false,
-                        owner: key === 'default' ? undefined : key
+                        owner: key === DEFAULT_OWNER ? undefined : key
                     };
                     this.columnExporting.emit(columnExportArgs);
 
@@ -277,7 +278,7 @@ export abstract class IgxBaseExporter {
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
             const columns = record.owner === undefined ?
-                this._ownersMap.get('default').columns :
+                this._ownersMap.get(DEFAULT_OWNER).columns :
                 this._ownersMap.get(record.owner).columns;
 
             record.data = columns.reduce((a, e) => {

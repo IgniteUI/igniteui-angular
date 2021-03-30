@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -72,9 +72,14 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
-        const level = data[0]?.level;
+        const firstDataElement = data[0];
+        let rootKeys;
+        let columnCount;
+        let columnWidths;
+        let maxColumnSize;
+        let indexOfLastPinnedColumn;
 
-        if (typeof level !== 'undefined') {
+        if (typeof firstDataElement !== 'undefined') {
             let maxLevel = 0;
 
             data.forEach((r) => {
@@ -84,9 +89,24 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             if (maxLevel > 7) {
                 throw Error('Can create an outline of up to eight levels!');
             }
+
+            if (firstDataElement.type === ExportRecordType.HierarchicalGridRecord) {
+                maxColumnSize = data
+                    .filter(rec => rec.type === ExportRecordType.HeaderRecord)
+                    .map(a => a.data.length + a.level)
+                    .sort((a,b) => b - a)[0];
+            } else {
+                const defaultOwner = this._ownersMap.get('default');
+                columnWidths = defaultOwner.columnWidths;
+                indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
+            }
+
+            rootKeys = Object.keys(firstDataElement.data);
+            columnCount = Object.keys(firstDataElement.data).length;
         }
 
-        const worksheetData = new WorksheetData(data, options, this._sort, this._ownersMap);
+        const worksheetData =
+            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths, maxColumnSize);
 
         this._xlsx = new (JSZip as any).default();
 
