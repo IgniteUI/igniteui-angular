@@ -76,7 +76,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const addRow = treeGrid.getRowByIndex(2);
             expect(addRow.addRow).toBeTrue();
 
-            treeGrid.endEdit(true);
+            treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
             expect(treeGrid.rowList.length).toBe(9);
@@ -100,7 +100,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            treeGrid.endEdit(true);
+            treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
             // check row is added as sibling
@@ -122,7 +122,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            treeGrid.endEdit(true);
+            treeGrid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
             expect(treeGrid.rowList.length).toBe(1);
