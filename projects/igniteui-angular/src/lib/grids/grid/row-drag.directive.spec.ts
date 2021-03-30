@@ -864,7 +864,7 @@ describe('Row Drag Tests #grid', () => {
             const cellElement = dragCell.nativeElement;
             let cellInput = null;
 
-            spyOn(dragGrid, 'endEdit').and.callThrough();
+            spyOn(dragGrid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             cellElement.dispatchEvent(new Event('focus'));
             fixture.detectChanges();
@@ -884,7 +884,7 @@ describe('Row Drag Tests #grid', () => {
             rowDragDirective.onPointerMove(pointerMoveEvent);
             expect(row.dragging).toBeTruthy();
             expect(row.grid.rowDragging).toBeTruthy();
-            expect(dragGrid.endEdit).toHaveBeenCalled();
+            expect(dragGrid.gridAPI.crudService.endEdit).toHaveBeenCalled();
             expect(row.inEditMode).toBeFalsy();
             expect(dragCell.editMode).toEqual(false);
 

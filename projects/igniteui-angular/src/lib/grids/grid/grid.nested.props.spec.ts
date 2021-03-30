@@ -682,7 +682,7 @@ describe('Edit cell with data of type Array', () => {
         expect(grid.data[2].locations.length).toEqual(3);
         expect(cell.editValue.length).toEqual(1);
 
-        grid.endEdit(false);
+        grid.gridAPI.crudService.endEdit(false);
         fixture.detectChanges();
         await fixture.whenStable();
         rowArgs.event = undefined;
@@ -744,7 +744,7 @@ describe('Edit cell with data of type Array', () => {
         expect(grid.data[2].locations.length).toEqual(3);
         expect(cell.editValue.length).toEqual(1);
 
-        grid.endEdit(true);
+        grid.gridAPI.crudService.endEdit(true);
         fixture.detectChanges();
         await fixture.whenStable();
         rowArgs.event = undefined;

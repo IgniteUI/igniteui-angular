@@ -56,7 +56,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             endTransition();
             expect(row.expanded).toBeFalse();
             expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
-            hierarchicalGrid.endEdit(true);
+            hierarchicalGrid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();
             fixture.detectChanges();

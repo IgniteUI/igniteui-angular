@@ -1,0 +1,195 @@
+@include describe('Register Component') {
+    $components: () !default;
+
+    @include it('should add new component inside components list') {
+        @include register-component('my-component');
+        @include assert-true(map-has-key($components, 'my-component'));
+    }
+}
+
+@include describe('CSS Variables from themes') {
+    @include it('should concatenated variable names in the right order:--[prefix]-[key]: var(--[name]-[key], [value])'){
+        $name: red-theme;
+        $key: color;
+        $value: red;
+        $prefix: 'my';
+
+        $theme: (
+            name: #{$name},
+            #{$key}: #{$value}
+        );
+        @include assert() {
+            @include output() {
+                @include css-vars-from-theme($theme, #{$prefix});
+            }
+
+            @include contains() {
+                --#{$prefix}-#{$key}: var(--#{$name}-#{$key}, #{$value});
+            }
+        }
+    }
+
+    @include it('should not generate variables for name, palette, variant, selector and elevation') {
+        $theme: (
+            name: green-theme,
+            palette: my-palette,
+            variant: my-variant,
+            selector: my-selector,
+            elevation: my-elevsation,
+            color: green
+        );
+        @include assert() {
+            @include output() {
+                @include css-vars-from-theme($theme);
+            }
+
+            @include expect() {
+                --color: var(--green-theme-color, green);
+            }
+        }
+    }
+}
+
+@include describe('Generate color class') {
+    @include it('should concatenate the name, variant, prefix, and suffix in the correct order.') {
+        $name: primary;
+        $variant: 500;
+        $prefix: igx;
+        $suffix: bg;
+        $selector: #{$prefix}-#{$name}-#{$variant}-#{$suffix};
+
+        @include assert() {
+            @include output() {
+                @include gen-color-class($name, $variant, $prefix, $suffix) {
+                    content: 'test';
+                }
+            }
+
+            @include expect() {
+                .#{$selector}{
+                    content: 'test'
+                }
+            }
+        }
+    }
+}
+
+/* stylelint-disable max-nesting-depth */
+@include describe('igx-palette-vars') {
+    $primary: red;
+    $secondary: green;
+
+    $my-palette: igx-palette(
+        $primary: $primary,
+        $secondary: $secondary,
+    );
+
+    $h: round(hue($primary));
+    $s: round(saturation($primary));
+    $l: round(lightness($primary));
+    $a: round(alpha($primary));
+
+    @include it('should generate variables for all palette colors') {
+        @include assert() {
+            @include output() {
+                @include igx-palette-vars($my-palette);
+            }
+
+            @include contains() {
+                --igx-primary-h: #{$h};
+                --igx-primary-s: #{$s};
+                --igx-primary-l: #{$l};
+                --igx-primary-a: #{$a};
+                --igx-primary-500: #{hsla(var(--igx-primary-h), var(--igx-primary-s), var(--igx-primary-l), var(--igx-primary-a))};
+            }
+        }
+    }
+}
+/* stylelint-enable max-nesting-depth */
+
+@include describe('Direction') {
+    @include it('should return styles only when the global direction is RTL') {
+        $direction: 'rtl' !global;
+
+        @include assert() {
+            @include output() {
+                @include  if-rtl() {
+                    margin: 1px;
+                }
+            }
+
+            @include expect() {
+                margin: 1px;
+            }
+        }
+    }
+    @include it('should return styles only when the global direction is LTR') {
+        $direction: 'ltr' !global;
+
+        @include assert() {
+            @include output() {
+                @include  if-ltr() {
+                    margin: 1px;
+                }
+            }
+
+            @include expect() {
+                margin: 1px;
+            }
+        }
+    }
+}
+
+/* stylelint-disable string-quotes, number-leading-zero */
+@include describe('Animation') {
+    @include it('should produce correct syntax for animation') {
+        @include assert() {
+            @include output() {
+                @include animation('fade-in' .3s ease-out);
+            }
+
+            @include expect() {
+                animation: "fade-in" 0.3s ease-out;
+            }
+        }
+    }
+}
+/* stylelint-enable string-quotes, number-leading-zero */
+
+@include describe('Keyframes') {
+    $keyframes: () !default;
+    @include it('should registers a keyframe animation in the global keyframes registry list') {
+        @include keyframes('my-keyframe');
+        @include assert-true(map-has-key($keyframes, 'my-keyframe'));
+    }
+
+    /* stylelint-disable max-nesting-depth */
+    @include it('should produce a keyframe animation with the passed name') {
+        @include assert() {
+            @include output() {
+                @include keyframes('my-keyframe') {
+                    0% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        opacity: 0;
+                    }
+                }
+            }
+
+            @include expect() {
+                @keyframes keyframes {
+                    0% {
+                        opacity: 1;
+                    }
+
+                    100% {
+                        opacity: 0;
+                    }
+                }
+            }
+        }
+    }
+    /* stylelint-enable max-nesting-depth */
+}

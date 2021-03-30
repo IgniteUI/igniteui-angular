@@ -10,7 +10,7 @@ import { IgxRowDirective } from './row.directive';
 import { IFilteringOperation } from '../data-operations/filtering-condition';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxRow } from './selection/selection.service';
+import { IgxCell, IgxGridCRUDService, IgxRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
@@ -21,8 +21,11 @@ import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
 @Injectable()
 export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
-    grid: T;
+
+    public grid: T;
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
+
+    constructor(public crudService: IgxGridCRUDService) { }
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columnList.find((col: ColumnType) => col.field === name);
@@ -114,26 +117,26 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     }
 
     public submit_value(event?: Event) {
-        const cell = this.grid.crudService.cell;
+        const cell = this.crudService.cell;
         if (cell) {
             const args = this.update_cell(cell, cell.editValue, event);
-            this.grid.crudService.cellEditingBlocked = args.cancel;
+            this.crudService.cellEditingBlocked = args.cancel;
             if (args.cancel) {
                 return args.cancel;
             }
-            this.grid.crudService.exitCellEdit(event);
+            this.crudService.exitCellEdit(event);
         }
     }
 
     public submit_add_value(event?: Event) {
-        const cell = this.grid.crudService.cell;
+        const cell = this.crudService.cell;
         if (cell) {
             const args = this.update_add_cell(cell, cell.editValue, event);
             if (args.cancel) {
-                this.grid.endAddRow();
+                this.crudService.endAddRow();
                 return args.cancel;
             }
-            return this.grid.crudService.exitCellEdit(event);
+            return this.crudService.exitCellEdit(event);
         }
     }
 
@@ -147,7 +150,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.cellEdit.emit(args);
-        this.grid.crudService.cellEditingBlocked = args.cancel;
+        this.crudService.cellEditingBlocked = args.cancel;
         if (args.cancel) {
             return args;
         }
@@ -158,7 +161,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         } else {
             data[cell.column.field] = args.newValue;
         }
-        this.grid.crudService.row.data = data;
+        this.crudService.row.data = data;
         const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
@@ -174,7 +177,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
 
         this.grid.cellEdit.emit(args);
-        this.grid.crudService.cellEditingBlocked = args.cancel;
+        this.crudService.cellEditingBlocked = args.cancel;
         if (args.cancel) {
             return args;
         }
@@ -192,8 +195,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
                 this.grid.summaryService.removeSummaries(cell.id.rowID);
             }
         }
-        if (!this.grid.rowEditable || !this.grid.crudService.row ||
-                this.grid.crudService.row.id !== cell.id.rowID || !this.grid.transactions.enabled) {
+        if (!this.grid.rowEditable || !this.crudService.row ||
+                this.crudService.row.id !== cell.id.rowID || !this.grid.transactions.enabled) {
             this.grid.summaryService.clearSummaryCache(args);
             this.grid.pipeTrigger++;
         }
@@ -206,7 +209,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     public update_row(row: IgxRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
-        const rowInEditMode = grid.crudService.row;
+        const rowInEditMode = this.crudService.row;
         const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id, data);
         const hasSummarized = grid.hasSummarizedColumns;
@@ -286,7 +289,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        this.grid.endEdit(false);
+        this.crudService.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;
@@ -308,7 +311,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
+        this.crudService.endEdit(false);
         if (grid.paging) {
             grid.page = 0;
         }
@@ -324,7 +327,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public clear_filter(fieldName: string) {
         const grid = this.grid;
-        grid.endEdit(false);
+        this.crudService.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
         const index = filteringState.findIndex(fieldName);
 
@@ -417,7 +420,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         //  Otherwise just exit - there is nothing to delete
         if (index !== -1 || hasRowInNonDeletedState) {
             // Always exit edit when row is deleted
-            grid.endEdit(true);
+            this.crudService.endEdit(true);
         } else {
             return;
         }
@@ -499,7 +502,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
         if (grid.rowEditable) {
-            grid.endEdit(false);
+            this.crudService.endEdit(false);
         }
     }
 
@@ -640,7 +643,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
     private _update_row(row: IgxRow, value?: any) {
         const grid = this.grid;
 
-        const rowInEditMode = grid.crudService.row;
+        const rowInEditMode = grid.gridAPI.crudService.row;
         row.newData = value ?? rowInEditMode.transactionState;
 
 

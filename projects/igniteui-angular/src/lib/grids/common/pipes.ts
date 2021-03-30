@@ -328,11 +328,12 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     public transform(collection: any, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode || isPinned !== grid.addRowParent.isPinned) {
+        if (!grid.rowEditable || !grid.gridAPI.crudService.addRowParent || grid.gridAPI.crudService.cancelAddMode ||
+            isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
-        const parentIndex = grid.addRowParent.index;
+        const parentIndex = grid.gridAPI.crudService.addRowParent.index;
         const row = grid.getEmptyRecordObjectFor(collection[parentIndex]);
         const rec = {
             recordRef: row,
