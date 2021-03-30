@@ -5955,6 +5955,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
+    /**
+     * Finishes the row transactions on the current row.
+     *
+     * @remarks
+     * If `commit === true`, passes them from the pending state to the data (or transaction service)
+     * @example
+     * ```html
+     * <button igxButton (click)="grid.endEdit(true)">Commit Row</button>
+     * ```
+     * @param commit
+     */
+    // TODO: Facade for crud service refactoring. To be removed
+    public endEdit(commit = true, event?: Event) {
+        this.crudService.endEdit(commit, event);
+    }
+
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
     }
