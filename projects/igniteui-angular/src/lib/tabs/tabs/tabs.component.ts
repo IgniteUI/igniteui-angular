@@ -27,6 +27,9 @@ let NEXT_TAB_ID = 0;
 })
 export class IgxTabsComponent extends IgxTabsDirective {
 
+    /**
+     * An @Input property which determines the tab alignment. Defaults to `start`.
+     */
     @Input()
     public tabAlignment: string | IgxTabsAlignment = 'start';
 

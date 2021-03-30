@@ -11,6 +11,7 @@ export class IgxTabHeaderLabelDirective { }
 })
 export class IgxTabHeaderIconDirective { }
 
+/** @hidden */
 enum TabScrollButtonStyle {
     Visible = 'visible',
     Hidden = 'hidden',

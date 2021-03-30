@@ -26,9 +26,14 @@ export interface ITabsSelectedItemChangeEventArgs extends ITabsBaseEventArgs {
 @Directive()
 export abstract class IgxTabsDirective extends IgxCarouselComponentBase implements IgxTabsBase, AfterViewInit, OnDestroy {
 
+    /** @hidden */
     @HostBinding('attr.role')
     public role = 'tabs';
 
+    /**
+     * An @Input property that gets/sets the index of the selected item.
+     * Default value is 0 if panels are defined otherwise defaults to -1.
+     */
     @Input()
     public get selectedIndex(): number {
         return this._selectedIndex;
@@ -56,6 +61,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
     }
 
+    /**
+     * Enables/disables the transition animation of the panels.
+     */
     @Input()
     public get disableAnimation() {
         return this._disableAnimation;
@@ -65,18 +73,33 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         this._disableAnimation = value;
     }
 
+    /**
+     * Output to enable support for two-way binding on [(selectedIndex)]
+     */
     @Output()
     public selectedIndexChange = new EventEmitter<number>();
 
+    /**
+     * Emitted when the selected index is about to change.
+     */
     @Output()
     public selectedIndexChanging = new EventEmitter<ITabsSelectedIndexChangingEventArgs>();
 
+    /**
+     * Emitted when the selected item is changed.
+     */
     @Output()
     public selectedItemChange = new EventEmitter<ITabsSelectedItemChangeEventArgs>();
 
+    /**
+     * Returns the items.
+     */
     @ContentChildren(IgxTabItemDirective)
     public items: QueryList<IgxTabItemDirective>;
 
+    /**
+     * Gets the selected item.
+     */
     public get selectedItem(): IgxTabItemDirective {
         return this.items && this.selectedIndex >= 0 && this.selectedIndex < this.items.length ?
             this.items.toArray()[this.selectedIndex] : null;

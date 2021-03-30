@@ -25,6 +25,7 @@ export interface IgxSlideComponentBase {
 
 /** @hidden */
 export abstract class IgxCarouselComponentBase {
+    /** @hidden */
     public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
     protected currentSlide: IgxSlideComponentBase;

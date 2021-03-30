@@ -21,6 +21,9 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
     @ViewChild('panelTemplate', { static: true })
     public panelTemplate: TemplateRef<any>;
 
+    /**
+     * An @Input property that allows you to enable/disable the item.
+     */
     @Input()
     public disabled = false;
 
@@ -31,6 +34,9 @@ export abstract class IgxTabItemDirective implements IgxTabItemBase, IgxSlideCom
 
     private _selected = false;
 
+    /**
+     * An @Input property which determines whether an item is selected.
+     */
     @Input()
     public get selected(): boolean {
         return this._selected;

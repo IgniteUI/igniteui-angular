@@ -13,11 +13,13 @@ export abstract class IgxTabPanelDirective implements IgxTabPanelBase {
     constructor(public tab: IgxTabItemDirective, private elementRef: ElementRef) {
     }
 
+    /** @hidden */
     @HostBinding('attr.tabindex')
     public get tabIndex() {
         return this.tab.selected ? 0 : -1;
     }
 
+    /** @hidden */
     @HostBinding('style.z-index')
     public get zIndex() {
         return this.tab.selected ? 'auto' : -1;
