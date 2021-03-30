@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, AfterContentInit
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { growVerIn, growVerOut } from '../animations/grow';
@@ -15,25 +15,11 @@ import {
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
-import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './tree-node/tree-node.component';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 
 let init_id = 0;
-
-// TODO: Implement aria functionality
-/**
- * @hidden @internal
- * Used for links (`a` tags) in the body of an `igx-tree-node`. Handles aria and event dispatch.
- */
-@Directive({
-    selector: `[igxTreeNodeLink]`
-})
-export class IgxTreeNodeLinkDirective {
-    /** @hidden @internal */
-    @HostBinding('role')
-    public role = 'tree-item';
-}
 
 /**
  * @hidden @internal
@@ -65,7 +51,7 @@ export class IgxTreeExpandIndicatorDirective {
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
-export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, AfterContentInit, OnDestroy {
+export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -398,31 +384,21 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, AfterCo
         return node;
     }
 
-    public ngOnInit() { }
-    public ngAfterViewInit() {
-        // TO DO: figure out better way to do this
-        this.navService._focusedNode = this.nodes.first;
-        this.navService.setVisibleChildren();
-        // this.scrollIntoView();
+    public ngOnInit() {
     }
 
-    public ngAfterContentInit() {
+    public ngAfterViewInit() {
+        // TO DO: figure out better way to do this
+        this.navService.setVisibleChildren();
+        // this.scrollIntoView();
         if (this.navService.activeNode.id && this.navService.activeNode.parentNode) {
             this.navService.activeNode.path.forEach(node => {
                 if (node !== this.navService.activeNode && !node.expanded) {
                     node.expanded = true;
                 }
             });
-
-            // (this.navService.activeNode.path[this.navService.activeNode.path.length - 2] as any).openAnimationDone.pipe(
-            //     take(1)
-            // ).subscribe(() => {
-            //     if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
-            //         this.nativeElement.scrollTop = (this.navService.activeNode as any).nativeElement.offsetTop;
-            //     }
-            //     // (this.navService.activeNode as any).nativeElement.scrollIntoView();
-            // });
         }
+        this.scrollIntoView();
     }
 
     public ngOnDestroy() {

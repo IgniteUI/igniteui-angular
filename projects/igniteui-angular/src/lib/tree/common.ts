@@ -42,6 +42,10 @@ export interface IgxTreeNode<T> {
     data: T;
     children: QueryList<IgxTreeNode<any>> | null;
     selectedChange: EventEmitter<boolean>;
+    expandedChange: EventEmitter<boolean>;
+    expand(): void;
+    collapse(): void;
+    toggle(): void;
 }
 
 // Events
