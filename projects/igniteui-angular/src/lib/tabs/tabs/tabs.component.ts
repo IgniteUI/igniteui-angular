@@ -14,6 +14,36 @@ export type IgxTabsAlignment = (typeof IgxTabsAlignment)[keyof typeof IgxTabsAli
 /** @hidden */
 let NEXT_TAB_ID = 0;
 
+/**
+ * Tabs component is used to organize or switch between similar data sets.
+ *
+ * @igxModule IgxTabsModule
+ *
+ * @igxTheme igx-tabs-theme
+ *
+ * @igxKeywords tabs
+ *
+ * @igxGroup Layouts
+ *
+ * @remarks
+ * The Ignite UI for Angular Tabs component places tabs at the top and allows for scrolling when there are multiple tab items on the screen.
+ *
+ * @example
+ * ```html
+ * <igx-tabs>
+ *     <igx-tab-item>
+           <igx-tab-header>
+               <igx-icon igxTabHeaderIcon>folder</igx-icon>
+               <span igxTabHeaderLabel>Tab 1</span>
+           </igx-tab-header>
+           <igx-tab-panel>
+               Content 1
+           </igx-tab-panel>
+       </igx-tab-item>
+       ...
+ * </igx-tabs>
+ * ```
+ */
 @Component({
     selector: 'igx-tabs',
     templateUrl: 'tabs.component.html',
