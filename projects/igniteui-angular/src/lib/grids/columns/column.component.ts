@@ -263,7 +263,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public autosizeHeader = true;
-    
+
     /**
      * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
@@ -2122,7 +2122,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
-            
+
         let newWidth;
         if (isPercentageWidth) {
             const gridAvailableSize = this.grid.calcWidth;
@@ -2162,7 +2162,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public getHeaderCellWidths() {
         const range = this.grid.document.createRange();
 
-        // We do not cover cases where there are children with width 100% and etc, because then we try to get new column size, based on header content, which is sized based on column size...
+        // We do not cover cases where there are children with width 100% and etc,
+        // because then we try to get new column size, based on header content, which is sized based on column size...
         let headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
 
         if (this.sortable || this.filterable) {

@@ -681,7 +681,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         it('should ignore header template during autosize if autosizeHeader is false.', () => {
             const column = grid.getColumnByName('ID');
-            column.minWidth = "10px";
+            column.minWidth = '10px';
             column.autosizeHeader = false;
             fixture.detectChanges();
 
