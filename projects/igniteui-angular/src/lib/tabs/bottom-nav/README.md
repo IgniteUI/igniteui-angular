@@ -9,6 +9,7 @@ _igx-bottom-nav represents a single content area with multiple nav items. The bo
 
 Each item (`igx-bottom-nav-item`) contains header (`igx-bottom-nav-header`) and content (`igx-bottom-nav-content`). Header is related to particular content.
 When tab is clicked, the associated content is selected and visualized into single container. There should always be a selected tab. Only one tab can be selected at a time.
+A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar).
 
 ----------
 ## Usage
@@ -57,7 +58,8 @@ When tab is clicked, the associated content is selected and visualized into sing
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
 | `items` |  QueryList<IgxTabItemDirective> | Observable collection of `IgxTabItemDirective` content children. |
-| `selectedIndex` | number | Gets the index of selected tab/item in the respective collection. Default value: -1. |
+| `selectedIndex` | number | Gets the index of selected tab/item in the respective collection. Default value is 0 if content is defined otherwise defaults to -1. |
+| `disableAnimation` | boolean | Enables/disables the transition animation of the content. |
 | `selectedItem` | IgxTabItemDirective | Gets the selected `IgxTabItemDirective` in the bottom-nav based on selectedIndex. |
 
 
