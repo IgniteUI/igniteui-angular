@@ -25,7 +25,9 @@
     <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex" 
         [ngClass]="{
             'igx-tree-node__wrapper--selected': selected,
-            'igx-tree-node__wrapper--active' : this.active
+            'igx-tree-node__wrapper--active' : this.active,
+            'igx-tree-node__wrapper--focused' : this.focused,
+            'igx-tree-node__wrapper--disabled' : this.disabled
         }" 
         (pointerdown)="onPointerDown($event)"
         (focus)="divertFocus()"
