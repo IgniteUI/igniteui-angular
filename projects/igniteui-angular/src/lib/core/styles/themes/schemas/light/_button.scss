@@ -722,11 +722,10 @@ $_indigo-outlined-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Color} foreground [igx-color: 'surface'] - The idle text color of a raised button.
-/// @prop {Color} hover-foreground [igx-color: 'surface'] - The hover text color of a raised button.
-/// @prop {Color} focus-foreground [igx-color: 'surface'] - The focus text color of a raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 400)] - The hover background color of a raised button.
+/// @prop {Map} hover-foreground [igx-contrast-color: ('primary', 400)] - The hover text color of a raised button.
 /// @prop {Map} focus-background [igx-color: ('primary', 400)] - The focus background color of a raised button.
+/// @prop {Map} focus-foreground [igx-contrast-color: ('primary', 400)] - The focus text color of a raised button.
 /// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
 /// @prop {Number} border-radius [1] - The border radius used for flat button. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {Map} $_material-raised-button
@@ -736,24 +735,20 @@ $_indigo-raised-button: extend(
     $_material-raised-button,
     $_indigo-base-button,
     (
-        foreground: (
-            igx-color: 'surface'
-        ),
-
-        hover-foreground: (
-            igx-color: 'surface'
-        ),
-
-        focus-foreground: (
-            igx-color: 'surface'
-        ),
-
         hover-background: (
             igx-color: ('primary', 400),
         ),
 
+        hover-foreground: (
+            igx-contrast-color: ('primary', 400),
+        ),
+
         focus-background: (
             igx-color: ('primary', 400),
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('primary', 400),
         ),
 
         shadow-color: (
