@@ -1122,7 +1122,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Should exit edit mode when edited row is being deleted`, () => {
             const row = grid.gridAPI.get_row_by_index(0);
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             cell.setEditMode(true);
             fix.detectChanges();
             expect(grid.rowEditingOverlay.collapsed).toBeFalsy();
