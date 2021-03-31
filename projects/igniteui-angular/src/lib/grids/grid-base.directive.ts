@@ -2992,8 +2992,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
-                !(this.rowEditable && this.crudService.rowEditingBlocked && this.rowInEditMode)) {
+                    || (event.target === this.tfoot.nativeElement.children[0] &&
+                        this.navigation.activeNode.row === this.dataView.length)) &&
+                !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();

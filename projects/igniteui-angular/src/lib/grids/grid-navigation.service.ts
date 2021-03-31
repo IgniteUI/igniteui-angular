@@ -336,7 +336,8 @@ export class IgxGridNavigationService {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
         if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.endEdit(true);
+            this.grid.endEdit(true, event);
+            this.grid.tbody.nativeElement.focus();
             return;
         }
         event.preventDefault();
