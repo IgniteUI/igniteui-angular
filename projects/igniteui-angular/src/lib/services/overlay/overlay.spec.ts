@@ -2954,7 +2954,7 @@ describe('igxOverlay', () => {
             const wrapperElement = (fixture.nativeElement as HTMLElement)
                 .parentElement.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0] as HTMLElement;
             const styles = css(wrapperElement);
-            const expectedBackgroundColor = 'background: var(--igx-overlay-background-color)';
+            const expectedBackgroundColor = 'background: var(--background-color)';
             const appliedBackgroundStyles = styles[2];
             expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
         }));
