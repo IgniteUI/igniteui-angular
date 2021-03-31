@@ -142,6 +142,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -258,6 +259,7 @@ const components = [
     GridEventsComponent,
     GridFilteringComponent,
     GridFinJSComponent,
+    GridUpdatesComponent,
     MainComponent,
     ControllerComponent,
     GridExternalFilteringComponent,
