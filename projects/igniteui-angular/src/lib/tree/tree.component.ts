@@ -394,7 +394,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
             this.navService.update_disabled_cache(e);
         });
         this.subToCollapsing();
-        // this.scrollActiveIntoView();
     }
 
     public ngAfterContentInit() {
@@ -402,9 +401,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
     }
 
     public ngAfterViewInit() {
-        // TO DO: figure out better way to do this
-        this.navService.setVisibleChildren();
-
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
