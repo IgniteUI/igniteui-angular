@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, AfterContentInit
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
@@ -51,7 +53,7 @@ export class IgxTreeExpandIndicatorDirective {
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
-export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -245,6 +247,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     @ContentChildren(IgxTreeNodeComponent, { descendants: true })
     public nodes: QueryList<IgxTreeNodeComponent<any>>;
 
+    public disabledChange = new EventEmitter<IgxTreeNode<any>>();
     /**
      * Returns all **root level** nodes
      *
@@ -261,6 +264,8 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public id = `tree-${init_id++}`;
 
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
+    private destroy$ = new Subject<void>();
+    private unsubChildren$ = new Subject<void>();
 
     constructor(
         public navService: IgxTreeNavigationService,
@@ -385,12 +390,37 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     }
 
     public ngOnInit() {
+        this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
+            this.navService.update_disabled_cache(e);
+        });
+        this.subToCollapsing();
+        // this.scrollActiveIntoView();
+    }
+
+    public ngAfterContentInit() {
+        this.scrollActiveIntoView();
     }
 
     public ngAfterViewInit() {
         // TO DO: figure out better way to do this
         this.navService.setVisibleChildren();
-        // this.scrollIntoView();
+
+        this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.subToChanges();
+        });
+        this.scrollIntoView();
+        this.subToChanges();
+    }
+
+
+    public ngOnDestroy() {
+        this.unsubChildren$.next();
+        this.unsubChildren$.complete();
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    private scrollActiveIntoView() {
         if (this.navService.activeNode && this.navService.activeNode?.parentNode) {
             this.navService.activeNode.path.forEach(node => {
                 if (node !== this.navService.activeNode && !node.expanded) {
@@ -398,12 +428,26 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
                 }
             });
         }
-        this.scrollIntoView();
     }
 
-    public ngOnDestroy() {
+    private subToCollapsing() {
+        this.nodeCollapsing.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            if (event.cancel) {
+                return;
+            }
+            this.navService.update_visible_cache(event.node, false);
+        });
     }
 
+    private subToChanges() {
+        this.unsubChildren$.next();
+        this.nodes.forEach(node => {
+            node.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
+                this.navService.update_visible_cache(node, nodeState);
+            });
+        });
+        this.navService.init_invisible_cache();
+    }
     private scrollIntoView() {
         if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
             this.nativeElement.scrollTop = (this.navService.activeNode as any).nativeElement.offsetTop;

@@ -6,6 +6,25 @@ import { IgxTreeNodeComponent } from 'projects/igniteui-angular/src/lib/tree/tre
 import { IgxTreeComponent } from 'projects/igniteui-angular/src/lib/tree/tree.component';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
+interface CompanyData {
+    ID: string;
+    CompanyName?: string;
+    ContactName?: string;
+    ContactTitle?: string;
+    Address?: string;
+    City?: string;
+    Region?: string;
+    PostalCode?: string;
+    Country?: string;
+    Phone?: string;
+    Fax?: string;
+    ChildCompanies?: CompanyData[];
+    selected?: boolean;
+    expanded?: boolean;
+    disabled?: boolean;
+    active?: boolean;
+}
+
 @Component({
     selector: 'app-tree-sample',
     templateUrl: 'tree.sample.html',
@@ -24,9 +43,14 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public animationDuration = 400;
 
-    public data;
+
+    public data: CompanyData[];
 
     public singleBranchExpand = false;
+
+    private iteration = 0;
+
+    private initData: CompanyData[];
 
     constructor(private cdr: ChangeDetectorRef) {
         this.selectionModes = [
@@ -35,7 +59,12 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
             { label: 'Cascade', selectMode: 'Cascading', selected: this.selectionMode === 'Cascading', togglable: true }
         ];
         this.data = HIERARCHICAL_SAMPLE_DATA;
+        this.initData = HIERARCHICAL_SAMPLE_DATA;
         this.mapData(this.data);
+    }
+
+    public handleEvent(event: any) {
+        // event.cancel = true;
     }
 
     public ngAfterViewInit() {
@@ -60,6 +89,34 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public selectCellSelectionMode(args) {
         this.tree.selection = this.selectionModes[args.index].selectMode;
+    }
+
+    public addItem() {
+        const newArray = [...this.data];
+        const children = Math.floor(Math.random() * 4);
+        const createChildren = (count: number): CompanyData[] => {
+            const array = [];
+            for (let i = 0; i < count; i++) {
+                this.iteration++;
+                array.push({
+                    ID: `TEST${this.iteration}`,
+                    CompanyName: `TEST${this.iteration}`
+                });
+            }
+            return array;
+        };
+
+        this.iteration++;
+        newArray.push({
+            ID: `TEST${this.iteration}`,
+            CompanyName: `TEST${this.iteration}`,
+            ChildCompanies: createChildren(children)
+        });
+        this.data = newArray;
+    }
+
+    public resetData() {
+        this.data = [...this.initData];
     }
 
     public get animationSettings() {
