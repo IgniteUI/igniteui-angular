@@ -1,6 +1,7 @@
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxRow } from './selection/selection.service';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
@@ -125,12 +126,12 @@ export class IgxGridRow implements RowType {
     /**
      * Get a reference to the grid that contains the selected row.
      */
-    protected get grid(): IgxGridComponent {
+    protected get grid(): IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent {
         return this._grid as IgxGridComponent;
     }
 
     /**
-     * Gets the  row key.
+     * Gets the row key.
      * A row in the grid is identified either by:
      * - primaryKey data value,
      * - the whole rowData, if the primaryKey is omitted.
@@ -223,6 +224,31 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     }
 
     /**
+     * Get a reference to the grid that contains the selected row.
+     */
+    protected get grid(): IgxTreeGridComponent {
+        return this._tgrid as IgxTreeGridComponent;
+    }
+
+    /**
+     *  The data passed to the row component.
+     *
+     * ```typescript
+     * // get the row data for the first selected row
+     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * ```
+     */
+    public get data(): any {
+        let data;
+        if (this._tgrid.foreignKey) {
+            data = this._tgrid.filteredSortedData[this.index];
+        } else {
+            data = this.getRowData(this.index);
+        }
+        return data;
+    }
+
+    /**
      * Returns the child rows.
      */
     public get children(): ITreeGridRecord[] {
@@ -240,7 +266,11 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * Returns true if child rows exist. Always return false for IgxGridRow.
      */
     public get hasChildren(): boolean {
-        return this.treeRow.children.length > 0;
+        if (this.treeRow.children) {
+           return this.treeRow.children.length > 0;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -293,5 +323,54 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      */
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
+    }
+
+    private getRowData(index: number): any {
+        let res = { reps: 0 } as { reps: number; rec: ITreeGridRecord };
+        let reps = 0;
+        let rootIndex = 0;
+
+        if (index === 0) {
+            return this.grid.rootRecords[0].data;
+        }
+        // TODO row
+        if (index === this.grid.filteredSortedData.length - 1) {
+            return this.grid.filteredSortedData[index];
+        }
+
+        while (!res.rec && rootIndex < this.grid.rootRecords.length) {
+            res = this.lookInChildren(this.grid.rootRecords[rootIndex], index - reps);
+            reps+= res.reps;
+            rootIndex++;
+        }
+
+        return res.rec.data;
+    }
+
+    private lookInChildren(rec: ITreeGridRecord, index: number): { reps: number; rec: ITreeGridRecord} {
+        let rowData: any;
+        let i = 0;
+        const children = rec.children;
+
+        if (index === 0) {
+            return { reps: i + 1, rec };
+            // return { reps: i + 1, rec: children[0] };
+        }
+
+        while (!rowData && i < children.length) {
+            const child = children[i];
+            // TODO
+            if (i + 1 === index) {
+                rowData = child;
+                break;
+            }
+            i++;
+            if (child.expanded && child.children && child.children.length) {
+                const res = this.lookInChildren(child, index - 1);
+                rowData = res.rec;
+            }
+        }
+
+        return { reps: i + 1, rec: rowData };
     }
 }

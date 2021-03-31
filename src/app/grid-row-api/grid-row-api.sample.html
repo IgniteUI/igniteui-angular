@@ -51,7 +51,61 @@
 </div>
 
 <div class="sample-column">
-    <div>IgxTreeGrid</div>
+    <div>IgxTreeGrid Hierarchical Data</div>
+    <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="toggleTGridPinning(true)">Pin Row by index</button>
+            <br />
+            <button (click)="toggleTGridPinning(false)">Pin Row by key</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="deleteRow(treeGridHier, tHIndex)">Delete Row by Index</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="toggle(treeGridHier, tHIndex)">Expand/collapse</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="select(treeGridHier, tHIndex)">Select</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log row state</button>
+        </div>
+        <div style="margin-right: 5px;">
+            <input name="tHIndex" type="number" [(ngModel)]="tHIndex" />
+            <br/>
+            <input name="tHKey" [(ngModel)]="tHKey" />
+        </div>
+    </div>
+    <div class="grid-wrapper">
+        <igx-tree-grid #treeGridHier
+            [width]="'900px'" [height]="'500px'"
+            [data]="treeGridHierData"
+            childDataKey="ChildCompanies"
+            primaryKey="ID"
+            [expansionDepth]="1"
+            [rowSelection]="'multiple'"
+            [paging]="false">
+        <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+            [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
+            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+        </igx-column>
+        </igx-tree-grid>
+    </div>
+    <div class="log-wrapper">
+        <div class="logContainer">
+            <hr />
+            <div #tHGridLogger class="logger"></div>
+            <button class="clearBtn" igxButton="flat" (click)="clearLog(tGridLogger)">
+                <igx-icon>clear</igx-icon>
+                <span>Clear log</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="sample-column">
+    <div>IgxTreeGrid Flat Data</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
             <button (click)="toggleTGridPinning(true)">Pin Row by index</button>
@@ -77,7 +131,14 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode" [width]="'900px'" [height]="'800px'">
+        <igx-tree-grid #treeGrid
+            [paging]='true'
+            [allowFiltering]='true'
+            [data]="treeData"
+            primaryKey="employeeID"
+            foreignKey="PID"
+            [rowSelection]="'multiple'"
+            [width]="'900px'" [height]="'800px'">
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
@@ -122,11 +183,11 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="true">
+        <igx-hierarchical-grid #hGrid [width]="'800px'" [height]="'600px'" [paging]="true" [primaryKey]='"ID"' [allowFiltering]='true' [showExpandAll]='true' [data]="hierarchicalData" [rowSelection]="'multiple'">
             <igx-column *ngFor="let c of hColumns" [hasSummary]='true' [editable]="true" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable'>
             </igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='true' [allowFiltering]='true'>
-                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='true' [allowFiltering]='true'></igx-row-island>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
+                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'></igx-row-island>
             </igx-row-island>
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
         </igx-hierarchical-grid>

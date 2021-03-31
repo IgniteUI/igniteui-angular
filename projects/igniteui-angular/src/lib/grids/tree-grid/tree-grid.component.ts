@@ -644,7 +644,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.filteredSortedData.length) {
+        const visibleRecords = this.treeRecords.filter(
+            rec => rec.expanded ||
+            (!rec.expanded && rec.children) ||
+            (!rec.children && !rec.expanded && rec.parent?.expanded) ||
+            (!rec.expanded && !rec.children && !rec.parent));
+        if (index < 0 || index >= this.filteredSortedData.length || index >= visibleRecords.length) {
             return undefined;
         }
         return new IgxTreeGridRow(index, this);
@@ -661,8 +666,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public getRowByKey(key: any): RowType {
         const index = this.primaryKey ?
-            this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(key) :
-            this.filteredSortedData.indexOf(key);
+            this.data.map(rec => rec[this.primaryKey]).indexOf(key) :
+            this.data.indexOf(key);
         if (index < 0) {
             return undefined;
         }

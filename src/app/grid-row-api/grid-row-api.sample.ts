@@ -9,6 +9,7 @@ import {
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent
 } from 'igniteui-angular';
+import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     selector: 'app-grid-row-api-sample',
@@ -29,20 +30,23 @@ export class GridRowAPISampleComponent implements OnInit {
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxTreeGridComponent;
 
-    public selectionMode;
     public data: any[];
+    public treeGridHierData: any[];
     public hierarchicalData: any[];
     public columns: any[];
     public hColumns: any[];
+    public treeGridHierColumns: any[];
     public treeColumns: any[];
     public treeData: any[];
 
     public index = 0;
     public tIndex = 0;
+    public tHIndex = 0;
     public hIndex = 0;
 
     public key = '';
     public tKey = '';
+    public tHKey = '';
     public hKey = '';
 
     constructor(private renderer: Renderer2) { }
@@ -72,6 +76,20 @@ export class GridRowAPISampleComponent implements OnInit {
             { field: 'childData2', width: '200px' },
             { field: 'hasChild', width: '200px' }
         ];
+
+        this.treeGridHierColumns = [
+            { field: 'ID', width: 200, resizable: true, movable: true, pinned: true },
+            { field: 'CompanyName', width: 150, resizable: true, movable: true },
+            { field: 'ContactName', width: 150, resizable: true, movable: true },
+            { field: 'ContactTitle', width: 150, resizable: true, movable: true },
+            { field: 'Address', width: 150, resizable: true, movable: true },
+            { field: 'City', width: 150, resizable: true, movable: true },
+            { field: 'Region', width: 150, resizable: true, movable: true },
+            { field: 'PostalCode', width: 150, resizable: true, movable: true },
+            { field: 'Phone', width: 150, resizable: true, movable: true },
+            { field: 'Fax', width: 150, resizable: true, movable: true }
+        ];
+        this.treeGridHierData = HIERARCHICAL_SAMPLE_DATA.slice(0);
 
         this.data = [
             /* eslint-disable max-len */
@@ -146,7 +164,6 @@ export class GridRowAPISampleComponent implements OnInit {
             // sub of ID 20
             { Salary: 1500, employeeID: 23, PID: 20, firstName: 'Jeremy', lastName: 'Donaldson', Title: 'Software Developer' }
         ];
-        this.selectionMode = GridSelectionMode.multiple;
         /* eslint-enable max-len */
     }
 
@@ -234,7 +251,7 @@ export class GridRowAPISampleComponent implements OnInit {
     public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number, logger: HTMLElement) {
         this.clearLog(logger);
         const row = grid.getRowByIndex(index);
-        const state = `key: ${row.key},
+        const state = `key: ${row.rowID},
             pinned: ${row.pinned},
             deleted: ${row.deleted},
             inEditMode: ${row.inEditMode},

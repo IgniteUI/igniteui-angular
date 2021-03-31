@@ -159,6 +159,7 @@ import { RowType } from './common/row.interface';
 import { IgxGridRow } from './grid-public-row';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IgxGridComponent } from './grid/grid.component';
+import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 let FAKE_ROW_ID = -1;
 
@@ -2864,6 +2865,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
+    private _treeRecords = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
@@ -2956,6 +2958,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get filteredSortedData(): any[] {
         return this._filteredSortedData;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get treeRecords(): any[] {
+        return this._treeRecords;
     }
 
     /**
@@ -3508,6 +3517,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this._filteredSortedData = data;
             this.refreshSearch(true, false);
         }
+    }
+
+    /**
+     * A flat collection of the IgxTreeGrid records.
+     * @hidden
+     * @internal
+     */
+    public setTreeRecords(treeRecords: ITreeGridRecord[]) {
+        this._treeRecords = treeRecords;
     }
 
     /**
