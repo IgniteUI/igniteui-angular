@@ -3518,6 +3518,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * A flat collection of the IgxTreeGrid records.
+     *
      * @hidden
      * @internal
      */
