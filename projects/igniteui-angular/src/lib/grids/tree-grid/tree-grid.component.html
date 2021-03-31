@@ -221,7 +221,7 @@
 <div *ngIf="rowEditable" igxToggle #rowEditingOverlay>
     <div [className]="bannerClass">
         <ng-container
-            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: endEdit.bind(this) }">
+            *ngTemplateOutlet="rowEditContainer; context: { rowChangesCount: rowChangesCount, endEdit: this.crudService.endEdit.bind(this) }">
         </ng-container>
     </div>
 </div>
@@ -231,8 +231,8 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="this.crudService.endRowEditTabStop(false, $event)">Cancel</button>
+    <button igxButton igxRowEditTabStop (click)="this.crudService.endRowEditTabStop(true, $event)">Done</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
@@ -247,7 +247,7 @@
     <div class="igx-banner__actions">
         <div class="igx-banner__row">
             <ng-container
-                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: endEdit.bind(this) }">
+                *ngTemplateOutlet="rowEditActions ? rowEditActions : defaultRowEditActions; context: { $implicit: this.crudService.endEdit.bind(this) }">
             </ng-container>
         </div>
     </div>

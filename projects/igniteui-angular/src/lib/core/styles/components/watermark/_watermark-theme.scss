@@ -5,7 +5,7 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the watermark directive.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Number} $border-radius [null] - The border radius used for the link.
 /// @param {Color} $border-color [null] - The border color used for the  link.
@@ -24,7 +24,7 @@
 ///   // Pass the theme to the igx-watermark component mixin
 ///   @include igx-watermark($my-watermark-theme);
 @function igx-watermark-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -64,10 +64,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-watermark($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %igx-watermark {
         display: block;

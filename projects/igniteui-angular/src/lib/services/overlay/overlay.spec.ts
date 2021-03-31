@@ -2829,24 +2829,7 @@ describe('igxOverlay', () => {
 
         // 3. Interaction
         // 3.1 Modal
-        it('Should apply a greyed-out mask layers when is modal.', fakeAsync(() => {
-            const fixture = TestBed.createComponent(EmptyPageComponent);
-            const overlay = fixture.componentInstance.overlay;
-            const overlaySettings: OverlaySettings = {
-                modal: true,
-            };
-
-            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
-            const overlayWrapper = document.getElementsByClassName(CLASS_OVERLAY_WRAPPER_MODAL)[0];
-            tick();
-            const styles = css(overlayWrapper);
-            const expectedBackgroundColor = 'background: var(--igx-overlay-background-color)';
-            const appliedBackgroundStyles = styles[2];
-            expect(appliedBackgroundStyles).toContain(expectedBackgroundColor);
-        }));
-
         it('Should allow interaction only for the shown component when is modal.', fakeAsync(() => {
-
             // Utility handler meant for later detachment
             // TO DO replace Spies with css class and/or getBoundingClientRect.
             const _handler = event => {

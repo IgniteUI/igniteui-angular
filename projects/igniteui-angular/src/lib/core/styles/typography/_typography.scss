@@ -46,8 +46,6 @@
     font-size: $browser-context;
     line-height: $browser-line-height;
     font-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
 
     // Call the individual component styles with the type scale
     @include _excel-filtering-typography($type-scale);

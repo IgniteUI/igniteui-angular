@@ -104,10 +104,8 @@
 /// @group typography
 /// @requires {mixin} igx-type-style
 @mixin igx-graph-typography() {
-    $scope: if(is-root(), ':root', '&');
-
-    #{$scope} {
-        @include css-vars-from-theme((font: inherit), 'bullet-graph');
+    igx-bullet-graph {
+        --bullet-graph-font: var(--igx-font-family, inherit);
     }
 }
 
