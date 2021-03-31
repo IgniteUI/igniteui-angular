@@ -7,9 +7,9 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
 /// @param {Color} $active-item-color [null] - The text-color used for the active color.
@@ -28,9 +28,9 @@
 ///   // Pass the theme to the igx-bottom-nav component mixin
 ///   @include igx-bottom-nav($my-tabbar-theme);
 @function igx-bottom-nav-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background: null,
     $idle-item-color: null,
@@ -70,7 +70,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-bottom-nav-theme
 /// @requires igx-color
@@ -79,7 +79,7 @@
 /// @requires $ease-in-out-quad
 /// @requires --var
 @mixin igx-bottom-nav($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $menu-height: 56px;
     $item-min-width: 80px;

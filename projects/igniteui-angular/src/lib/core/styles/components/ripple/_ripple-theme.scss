@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $color [null] - The color of the ripple.
@@ -20,11 +20,13 @@
 ///   // Pass the theme to the igx-ripple component mixin
 ///   igx-ripple($my-ripple-theme);
 @function igx-ripple-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $color: null
 ) {
     $name: 'igx-ripple';
+    $selector: '[igxRipple]';
+
     $ripple-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -37,6 +39,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         color: $color
     ));
@@ -44,10 +47,10 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @param {Map} $palette [$default-palette] - The palette used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-ripple($theme, $palette: $default-palette) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %igx-ripple-display {
         display: block;

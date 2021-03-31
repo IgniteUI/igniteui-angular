@@ -30,12 +30,13 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { takeUntil } from 'rxjs/operators';
 import { IgxTemplateOutletDirective } from '../../directives/template-outlet/template_outlet.directive';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxTransactionService } from '../../services/public_api';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
+import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
 
@@ -49,8 +50,8 @@ export interface HierarchicalStateRecord {
     selector: 'igx-hierarchical-grid',
     templateUrl: 'hierarchical-grid.component.html',
     providers: [
-        IgxGridSelectionService,
         IgxGridCRUDService,
+        IgxGridSelectionService,
         { provide: GridBaseAPIService, useClass: IgxHierarchicalGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxHierarchicalGridComponent) },
         IgxGridSummaryService,
@@ -63,6 +64,12 @@ export interface HierarchicalStateRecord {
 })
 export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirective
     implements GridType, AfterViewInit, AfterContentInit, OnInit, OnDestroy, DoCheck {
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'grid';
 
     /**
      * @hidden

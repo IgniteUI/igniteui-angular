@@ -6,7 +6,7 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $accent-color [null] - Sets the pinned header background color, the joystick background and border colors, as well as the context menu background color.
@@ -54,7 +54,7 @@
 ///   // Pass the theme to the igc-dock-manager component mixin
 ///   @include igx-css-vars($my-dock-manager-theme);
 @function igc-dock-manager-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $rest...
 ) {
@@ -78,10 +78,8 @@
 /// @group typography
 /// @requires {mixin} igx-type-style
 @mixin igx-dock-manager-typography() {
-    $scope: if(is-root(), ':root', '&');
-
-    #{$scope} {
-        @include css-vars-from-theme((font-family: inherit), 'igc');
+    igx-dock-manager {
+        --igc-font-family: var(--igx-font-family, inherit);
     }
 }
 

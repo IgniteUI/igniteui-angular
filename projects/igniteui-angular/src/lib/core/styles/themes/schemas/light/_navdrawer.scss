@@ -116,7 +116,7 @@ $_bootstrap-navdrawer: extend(
 
 /// Generates an indigo navdrawer schema.
 /// @type {Map}
-/// @prop {Map} background [igx-color: ('grays', 700), hexrgba: #fff] - The navigation drawer background color.
+/// @prop {Map} background [igx-color: ('grays', 700), to-opaque: #fff] - The navigation drawer background color.
 /// @prop {Map} item-header-text-color [igx-contrast-color: ('grays', 700)] - The header's idle text color.
 /// @prop {Map} item-text-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's idle text color.
 /// @prop {Map} item-icon-color [igx-contrast-color: ('grays', 700), rgba: .8] - The item's icon color.
@@ -142,7 +142,7 @@ $_indigo-navdrawer: extend(
 
         background: (
             igx-color: ('grays', 700),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         item-header-text-color: (

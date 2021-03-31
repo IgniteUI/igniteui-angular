@@ -7,7 +7,7 @@
 
 /// Generates a dark calendar schema.
 /// @type {Map}
-/// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .38] - The text color for disabled dates.
+/// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), to-opaque: (), rgba: .38] - The text color for disabled dates.
 /// @requires {function} extend
 /// @requires $_light-calendar
 /// @see $default-palette

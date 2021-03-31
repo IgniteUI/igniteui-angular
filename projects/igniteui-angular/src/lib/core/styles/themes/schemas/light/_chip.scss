@@ -13,7 +13,7 @@
 /// @prop {Map} text-color [igx-color: ('grays', 700)] - The chip text color.
 /// @prop {Map} background [igx-color: ('grays', 200)] - The chip background color.
 /// @prop {Color} border-color [transparent] - The chip border color.
-/// @prop {Map} ghost-background [igx-color: ('grays', 400), hexrgba: #fff)] - The chip ghost background color.
+/// @prop {Map} ghost-background [igx-color: ('grays', 400), to-opaque: #fff)] - The chip ghost background color.
 /// @prop {Map} hover-text-color [igx-color: ('grays', 700)] - The chip text hover color.
 /// @prop {Map} hover-background [igx-color: ('grays', 300)] - The chip hover background color.
 /// @prop {Color} hover-border-color [transparent] - The chip hover border color.
@@ -65,7 +65,7 @@ $_light-chip: extend(
 
         ghost-background: (
             igx-color: ('grays', 400),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         hover-text-color: (

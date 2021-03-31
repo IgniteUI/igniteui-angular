@@ -56,7 +56,7 @@ describe('igxGridEditingActions #grid ', () => {
             expect(editIcon.nativeElement.innerText).toBe('edit');
             editIcon.parent.triggerEventHandler('click', new Event('click'));
             fixture.detectChanges();
-            expect(grid.rowInEditMode).not.toBeNull();
+            expect(grid.gridAPI.crudService.rowInEditMode).not.toBeNull();
             expect(grid.rowList.first.inEditMode).toBe(true);
 
             expect(grid.rowList.first.rowData['ID']).toBe('ALFKI');
@@ -66,7 +66,7 @@ describe('igxGridEditingActions #grid ', () => {
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
             // grid actions should not showing when the row is in edit mode #
             expect(deleteIcon).toBeUndefined();
-            grid.endEdit();
+            grid.gridAPI.crudService.endEdit();
             actionStrip.show(grid.rowList.first);
             fixture.detectChanges();
             deleteIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[1];
@@ -102,7 +102,7 @@ describe('igxGridEditingActions #grid ', () => {
 
             expect(row.inEditMode).toBeTrue();
 
-            grid.endEdit();
+            grid.gridAPI.crudService.endEdit();
             fixture.detectChanges();
             actionStrip.menu.open();
             fixture.detectChanges();
