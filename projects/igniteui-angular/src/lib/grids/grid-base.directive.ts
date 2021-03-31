@@ -6254,9 +6254,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (minWidth > parseFloat(width)) {
-            width = column.minWidth;
+            width = String(column.minWidth);
         } else if (maxWidth < parseFloat(width)) {
-            width = column.maxWidth;
+            width = String(column.maxWidth);
         }
 
         // if no px or % are defined in maxWidth/minWidth consider it px
