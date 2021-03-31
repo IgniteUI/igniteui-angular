@@ -52,7 +52,6 @@
                         (nodeCollapsing)="handleEvent($event)" (activeNodeChanged)="activeNodeChanged($event)">
                         <igx-tree-node #test [data]="{ID: 'test'}">asd</igx-tree-node>
                         <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true" [(selected)]="node.selected">
-
                             <div class="sample-template-center">
                                 <!-- <a href="www.google.com">test</a> -->
                                 <igx-icon>face</igx-icon>

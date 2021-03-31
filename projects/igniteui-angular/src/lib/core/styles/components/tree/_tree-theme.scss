@@ -9,37 +9,14 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} background [null] - The background color used for the tree node.
-/// @param {Color} background-hover [null] - The background hover color used for the tree node.
-/// @param {Color} background-focused [null] - The background color used for the focused tree node.
 /// @param {Color} background-selected [null] - The background color used for the selected tree node.
-/// @param {Color} background-selected-hover [null] - The background hover color used for the selected tree node.
-/// @param {Color} background-selected-focused [null] - The background color used for the selected tree node when it is on focus.
 /// @param {Color} background-active [null] - The background color used for the active tree node.
-/// @param {Color} background-active-hover [null] - The background hover color in active state used for the tree node.
-/// @param {Color} background-active-focused [null] - The background color in active state used for the focused tree node.
-/// @param {Color} background-active-selected [null] - The background color used for the selected tree node in active state.
 /// @param {Color} background-disabled [null] - The background color used for the tree node in disabled state.
 ///
-/// @param {Color} color [null] - The color used for the tree node content.
-/// @param {Color} color-hover [null] - The hover color used for the tree node content.
-/// @param {Color} color-focused [null] - The color used for the content of the focused tree node.
-/// @param {Color} color-selected [null] - The color used for the content of the selected tree node.
-/// @param {Color} color-selected-hover [null] - The hover color used for the content of the selected tree node.
-/// @param {Color} color-selected-focused [null] -  The background color used for the selected tree node when it is on focus.
-/// @param {Color} color-active [null] - The color used for the content of the active tree node.
-/// @param {Color} color-active-hover [null] - The hover color used for the content of the active tree node.
-/// @param {Color} color-active-focused [null] - The color used for the content of the active tree node.
-/// @param {Color} color-active-selected [null] - The color used for the selected tree node in active state.
-/// @param {Color} color-disabled [null] - The color used for the content of the disabled tree node.
-///
-/// @param {Color} tree-indicator-color [null] - The color used for the tree node expand/collapse indicator.
-/// @param {Color} tree-indicator-color-hover [null] - The hover color used for the tree node expand/collapse indicator.
-/// @param {Color} tree-indicator-color-focused [null] - The color used for the tree node expand/collapse indicator when the tree node is focused.
-/// @param {Color} tree-indicator-color-selected [null] - The color used for the expand/collapse indicator when the tree node is selected.
-/// @param {Color} tree-indicator-color-selected-focus [null] - The color used for expand/collapse indicator when the tree node is selected and on focus.
-/// @param {Color} tree-indicator-color-selected-hover [null] - The hover color used for expand/collapse indicator when the tree node is selected.
-/// @param {Color} tree-indicator-color-active [null] - The color used for tree node expand/collapse indicator when the tree node is active.
-/// @param {Color} tree-indicator-color-disabled [null] - The color used for the tree node expand/collapse indicator when the tree node is disabled.
+/// @param {Color} foreground [null] - The color used for the tree node content.
+/// @param {Color} foreground-selected [null] - The color used for the content of the selected tree node.
+/// @param {Color} foreground-active [null] - The color used for the content of the active tree node.
+/// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
 ///
 /// @param {Color} drop-indicator-color [null] - The color used for the drop aria indicator.
 /// @param {Color} border-focused [null] - The outline shadow color used for tree node in focus state.
@@ -59,50 +36,20 @@
     $schema: $light-schema,
 
     $background: null,
-    $background-hover: null,
-    $background-focused: null,
-
     $background-selected: null,
-    $background-selected-hover: null,
-    $background-selected-focused: null,
-
     $background-active: null,
-    $background-active-hover: null,
-    $background-active-focused: null,
     $background-active-selected: null,
-
     $background-disabled: null,
 
-    $color: null,
-    $color-hover: null,
-    $color-focused: null,
-
-    $color-selected: null,
-    $color-selected-hover: null,
-    $color-selected-focused: null,
-
-    $color-active: null,
-    $color-active-hover: null,
-    $color-active-focused: null,
-    $color-active-selected: null,
-
-    $color-disabled: null,
+    $foreground: null,
+    $foreground-selected: null,
+    $foreground-active: null,
+    $foreground-active-selected: null,
+    $foreground-disabled: null,
 
     $drop-indicator-color: null,
-
-    $tree-indicator-color: null,
-    $tree-indicator-color-hover: null,
-    $tree-indicator-color-focused: null,
-
-    $tree-indicator-color-selected: null,
-    $tree-indicator-color-selected-focused: null,
-    $tree-indicator-color-selected-hover: null,
-
-    $tree-indicator-color-active: null,
-
-    $tree-indicator-color-disabled: null,
-
-    $border-focused: null
+    $border-color: null,
+    $_hover-color: null,
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -115,36 +62,16 @@
 
     $theme: apply-palette($tree-schema, $palette);
 
-    @if not($color) and $background {
-        $color: text-contrast($background);
+    @if not($foreground) and $background {
+        $foreground: text-contrast($background);
     }
 
-    @if not($color-hover) and $background-hover {
-        $color-hover: text-contrast($background-hover);
+    @if not($foreground-selected) and $background-selected {
+        $foreground-selected: text-contrast($background-selected);
     }
 
-    @if not($color-selected) and $background-selected {
-        $color-selected: text-contrast($background-selected);
-    }
-
-    @if not($tree-indicator-color) and $background {
-        $tree-indicator-color: text-contrast($background);
-    }
-
-    @if not($tree-indicator-color) and $background-hover {
-        $tree-indicator-color: text-contrast($background-hover);
-    }
-
-    @if not($tree-indicator-color-selected) and $background-selected {
-        $tree-indicator-color-selected: text-contrast($background-selected);
-    }
-
-    @if not($color-active) and $background-active {
-        $color-active: text-contrast($background-active);
-    }
-
-    @if not($tree-indicator-color-active) and $background-active {
-        $tree-indicator-color-active: text-contrast($background-active);
+    @if not($foreground-active) and $background-active {
+        $foreground-active: text-contrast($background-active);
     }
 
     @return extend($theme, (
@@ -152,40 +79,20 @@
         palette: $default-palette,
 
         background: $background,
-        background-hover: $background-hover,
-        background-focused: $background-focused,
         background-selected: $background-selected,
-        background-selected-hover: $background-selected-hover,
-        background-selected-focused: $background-selected-focused,
         background-active: $background-active,
-        background-active-hover: $background-active-hover,
-        background-active-focused: $background-active-focused,
         background-active-selected: $background-active-selected,
         background-disabled: $background-disabled,
 
-        color: $color,
-        color-hover: $color-hover,
-        color-focused: $color-focused,
-        color-selected: $color-selected,
-        color-selected-hover: $color-selected-hover,
-        color-selected-focused: $color-selected-focused,
-        color-active: $color-active,
-        color-active-hover: $color-active-hover,
-        color-active-focused: $color-active-focused,
-        color-active-selected: $color-active-selected,
-        color-disabled: $color-disabled,
-
-        tree-indicator-color: $tree-indicator-color,
-        tree-indicator-color-hover: $tree-indicator-color-hover,
-        tree-indicator-color-focused: $tree-indicator-color-focused,
-        tree-indicator-color-selected-focused: $tree-indicator-color-selected-focused,
-        tree-indicator-color-selected: $tree-indicator-color-selected,
-        tree-indicator-color-selected-hover: $tree-indicator-color-selected-hover,
-        tree-indicator-color-active: $tree-indicator-color-disabled,
-        tree-indicator-color-disabled: $tree-indicator-color-disabled,
+        foreground: $foreground,
+        foreground-selected: $foreground-selected,
+        foreground-active: $foreground-active,
+        foreground-active-selected: $foreground-active-selected,
+        foreground-disabled: $foreground-disabled,
 
         drop-indicator-color: $drop-indicator-color,
-        border-focused: $border-focused,
+        border-color: $border-color,
+        _hover-color: $_hover-color,
     ));
 }
 
@@ -224,10 +131,10 @@
     }
 
     %tree-node,
-    %tree-node-wrapper,
-    %tree-node-indicator,
-    %tree-node-content,
-    %tree-node-select {
+    %node-wrapper,
+    %node-indicator,
+    %node-content,
+    %node-select {
         display: flex;
     }
 
@@ -236,35 +143,40 @@
     }
 
     %tree-display,
-    %tree-node-root,
+    %node-root,
     %tree-node,
-    %tree-node-wrapper {
+    %node-wrapper {
         &:focus {
             outline-width: 0;
         }
     }
 
-    %tree-node-wrapper,
-    %tree-node-indicator,
-    %tree-node-select {
+    %node-wrapper,
+    %node-indicator,
+    %node-select {
         align-items: center;
     }
 
-    %tree-node-indicator,
-    %tree-node-select {
+    %node-indicator,
+    %node-select {
         margin-#{$right}: $icon-space;
     }
 
-    %tree-node-indicator--hidden {
+    %node-content,
+    %node-indicator {
+        z-index: 1;
+    }
+
+    %node-indicator--hidden {
         visibility: hidden;
     }
 
-    %tree-node-wrapper {
+    %node-wrapper {
         min-height: map-get($node-height, 'comfortable');
         padding: 0 map-get($node-indent, 'comfortable');
-        background: --var($theme, 'background');
-        color: --var($theme, 'color');
         position: relative;
+        background: --var($theme, 'background');
+        color: --var($theme, 'foreground');
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
@@ -273,24 +185,32 @@
             font-size: $icon-size;
         }
 
-        &:hover {
-            color: --var($theme, 'color-hover');
-            background: --var($theme, 'background-hover');
+        &::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 0;
         }
 
-        &:focus {
-            outline-color: transparent;
+        &:hover {
+            &::after {
+                background: --var($theme, '_hover-color');
+            }
         }
 
         &--cosy {
             min-height: map-get($node-height, 'cosy');
             padding: 0 map-get($node-indent, 'cosy');
 
-            %tree-node-spacer {
+            %node-spacer {
                 width: map-get($node-indent, 'cosy')
             }
 
-            %tree-node-drop-indicator {
+            %node-drop-indicator {
                 #{$right}: map-get($node-indent, 'cosy');
                 width: map-get($drop-indicator-width, 'cosy');
             }
@@ -300,127 +220,78 @@
             min-height: map-get($node-height, 'compact');
             padding: 0 map-get($node-indent, 'compact');
 
-            %tree-node-spacer {
+            %node-spacer {
                 width: map-get($node-indent, 'compact')
             }
 
-            %tree-node-drop-indicator {
+            %node-drop-indicator {
                 #{$right}: map-get($node-indent, 'compact');
                 width: map-get($drop-indicator-width, 'compact');            }
         }
     }
 
-    %tree-node-wrapper--selected,
-    %tree-node-wrapper--active-selected {
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-selected');
+    %node-wrapper--selected {
+        background: --var($theme, 'background-selected');
+        color: --var($theme, 'foreground-selected');
+    }
 
-            &:hover {
-                color: --var($theme, 'tree-indicator-color-selected-hover');
+    %node-wrapper--active {
+        background: --var($theme, 'background-active');
+        color: --var($theme, 'foreground-active');
+
+        &:hover {
+            &::after {
+                opacity: .5;
             }
         }
-
-        &:hover {
-            background: --var($theme, 'background-selected-hover');
-            color: --var($theme, 'color-selected-hover');
-        }
     }
 
-    %tree-node-wrapper--selected {
-        background: --var($theme, 'background-selected');
-        color: --var($theme, 'color-selected');
-    }
-
-    %tree-node-wrapper--active-selected {
+    %node-wrapper--active-selected {
         background: --var($theme, 'background-active-selected');
-        color: --var($theme, 'color-active-selected');
+        color: --var($theme, 'foreground-active-selected');
     }
 
-    %tree-node-wrapper--active {
-        background: --var($theme, 'background-active');
-        color: --var($theme, 'color-active');
-
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-active');
-        }
-
-        &:hover {
-            background: --var($theme, 'background-active-hover');
-            color: --var($theme, 'color-active-hover');
-        }
+    %node-wrapper--focused {
+        box-shadow: inset 0 0 0 1px --var($theme, 'border-color');
     }
 
-    %tree-node-wrapper--focused {
-        background: --var($theme, 'background-focused');
-        color: --var($theme, 'color-focused');
-
-        box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
-
-        &:hover {
-            background: --var($theme, 'background-hover');
-            color: --var($theme, 'color-hover');
-        }
-
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-focused');
-        }
-    }
-
-    %tree-node-wrapper--selected-focused {
-        background: --var($theme, 'background-selected-focused');
-        color: --var($theme, 'color-selected-focused');
-
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-selected-focused');
-        }
-    }
-
-    %tree-node-wrapper--disabled {
+    %node-wrapper--disabled {
         background: --var($theme, 'background-disabled') !important;
-        color: --var($theme, 'color-disabled') !important;
+        color: --var($theme, 'foreground-disabled') !important;
 
         box-shadow: none !important;
 
         pointer-events: none;
 
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-disabled') !important;
-
-            &:hover {
-                color: --var($theme, 'tree-indicator-color-disabled') !important;
-            }
+        &::after {
+            display: none;
         }
 
-        &:hover {
-            background: --var($theme, 'background-disabled') !important;
-            color: --var($theme, 'color-disabled') !important;
+        %node-indicator {
+            color: --var($theme, 'foreground-disabled') !important;
         }
     }
 
-    %tree-node-spacer {
+    %node-spacer {
         display: inline-block;
         width: map-get($node-indent, 'comfortable');
     }
 
-    %tree-node-content {
+    %node-content {
         display: block;
         align-items: center;
         flex: 1;
         @include ellipsis();
     }
 
-    %tree-node-indicator {
+    %node-indicator {
         justify-content: center;
         cursor: pointer;
-
-        color: --var($theme, 'tree-indicator-color');
-
-        &:hover {
-            color: --var($theme, 'tree-indicator-color-hover');
-        }
+        user-select: none;
+        color: --var($theme, 'foreground');
     }
 
-    %tree-node-drop-indicator {
+    %node-drop-indicator {
         display: flex;
         visibility: hidden;
         position: absolute;
@@ -435,7 +306,7 @@
         }
     }
 
-    %tree-node-group {
+    %node-group {
         overflow: hidden;
     }
 }
@@ -452,7 +323,7 @@
 ) {
     $text: map-get($categories, 'label');
 
-    %tree-node-content {
+    %node-content {
         @include igx-type-style($type-scale, $text)
     }
 }

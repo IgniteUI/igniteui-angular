@@ -6,47 +6,18 @@
 
 /// Generates a light tree schema.
 /// @type {Map}
-/// @prop {Color} background [#fff] - The background color used for the tree node.
-/// @prop {Map} background-hover [igx-color: ('grays', 100)] - The background hover color used for the tree node.
-/// @prop {Map} background-focused [igx-color: ('grays', 100)] - The background color used for the focused tree node.
-///
+/// @prop {Map} background [ igx-color: ('surface')] - The background color used for the tree node.
 /// @prop {Map} background-selected [igx-color: ('secondary', 200)] - The background color used for the selected tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('secondary', 300)] - The background hover color used for the selected tree node.
-/// @prop {Map} background-selected-focused [igx-color: ('secondary', 300)] - The background color used for the selected tree node when it is on focus.
-///
 /// @prop {Map} background-active [igx-color: ('grays', 200)] - The background color used for the active tree node.
-/// @prop {Map} background-active-hover [igx-color: ('grays', 200)] - The background hover color in active state used for the tree node.
-/// @prop {Map} background-active-focused [igx-color: ('grays', 200)] - The background color in active state used for the focused tree node.
-/// @prop {Map} background-active-selected [igx-color: ('secondary', 200)] - The background color used for the selected tree node in active state.
-///
 /// @prop {Map} background-disabled [igx-color: ('secondary', 300)] - The background color used for the tree node in disabled state.
 ///
-/// @prop {Map} color [igx-color: ('grays', 900)] - The color used for the tree node content.
-/// @prop {Map} color-hover [igx-contrast-color: ('grays', 100)] - The hover color used for the tree node content.
-/// @prop {Map} color-focused [igx-contrast-color: ('grays', 100)] - The color used for the content of the focused tree node
-///
+/// @prop {Map} color [igx-contrast-color: ('surface')] - The color used for the tree node content.
 /// @prop {Map} color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} color-selected-focused [igx-contrast-color: ('secondary', 300)] - The hover color used for the content of the selected tree node.
-///
 /// @prop {Map} color-active [igx-contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-hover [igx-contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-focused [igx-contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-selected [igx-contrast-color: ('secondary', 200)] - The color used for the content in active state of the tree node.
-///
 /// @prop {Map} color-disabled [igx-contrast-color: ('secondary', 300)] - The color used for the content of the disabled tree node.
 ///
-/// @prop {Map} tree-indicator-color [igx-color: ('grays', 900)] - The color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-hover [igx-color: ('primary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-focused [igx-contrast-color: ('grays', 100)] - The color used for the tree node expand/collapse indicator when the tree node is focused.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('secondary', 200)] - The color used for the expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('secondary', 300)] - The hover color used for expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-focused [igx-contrast-color: ('secondary', 300)] - The color used for expand/collapse indicator when the tree node is selected and on focus.
-/// @prop {Map} tree-indicator-color-active [igx-contrast-color: ('secondary', 200)] - The color used for the active tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-disabled [igx-color: ('grays', 500)] - The  color used for the tree node expand/collapse indicator in disabled state.
-///
 /// @prop {Map} drop-indicator-color [igx-color: ('secondary'] - The color used for the drop aria indicator.
-/// @prop {Map} border-focused [igx-color: ('secondary')] - The outline shadow color used for tree node in focus state.
+/// @prop {Map} border-color [igx-color: ('secondary')] - The outline shadow color used for tree node in focus state.
 ///
 /// @requires {function} extend
 /// @see $default-palette
@@ -54,121 +25,43 @@ $_light-tree: extend(
     (
         variant: 'material',
 
-        background: #fff,
-
-        color: (
-            igx-color: ('grays', 900)
+        background: (
+            igx-color: ('surface')
         ),
 
-        background-hover: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-hover: (
-            igx-contrast-color: ('grays', 100)
+        foreground: (
+            igx-contrast-color: ('surface')
         ),
 
         background-selected: (
             igx-color: ('secondary', 200)
         ),
 
-        color-selected: (
+        foreground-selected: (
             igx-contrast-color: ('secondary', 200)
-        ),
-
-        background-selected-hover: (
-            igx-color: ('secondary', 300)
-        ),
-
-        color-selected-hover: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        background-focused: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-focused: (
-            igx-contrast-color: ('grays', 100)
         ),
 
         background-active: (
             igx-color: ('grays', 200)
         ),
 
-        color-active: (
-            igx-contrast-color: ('grays', 200),
-        ),
-
-        background-active-focused: (
-            igx-color: ('grays', 200)
-        ),
-
-        color-active-focused: (
-            igx-contrast-color: ('grays', 200),
-        ),
-
-        background-active-hover: (
-            igx-color: ('grays', 200)
-        ),
-
-        color-active-hover: (
+        foreground-active: (
             igx-contrast-color: ('grays', 200),
         ),
 
         background-active-selected: (
-            igx-color: ('secondary', 200)
-        ),
-
-        color-active-selected: (
-            igx-contrast-color: ('secondary', 200),
-        ),
-
-        background-selected-focused: (
             igx-color: ('secondary', 300)
         ),
 
-        color-selected-focused: (
-            igx-contrast-color: ('secondary', 300)
+        foreground-active-selected: (
+            igx-contrast-color: ('secondary', 300),
         ),
 
         background-disabled: (
             igx-color: ('surface')
         ),
 
-        color-disabled: (
-            igx-color: ('grays', 500)
-        ),
-
-        tree-indicator-color: (
-            igx-color: ('grays', 900)
-        ),
-
-        tree-indicator-color-hover: (
-            igx-color: ('primary')
-        ),
-
-        tree-indicator-color-focused: (
-            igx-contrast-color: ('grays', 100)
-        ),
-
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('secondary', 200)
-        ),
-
-        tree-indicator-color-selected-focused: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('secondary', 300)
-        ),
-
-        tree-indicator-color-active: (
-            igx-contrast-color: ('secondary', 200)
-        ),
-
-        tree-indicator-color-disabled: (
+        foreground-disabled: (
             igx-color: ('grays', 500)
         ),
 
@@ -176,155 +69,29 @@ $_light-tree: extend(
             igx-color: ('secondary')
         ),
 
-        border-focused: (
+        border-color: (
             igx-color: ('secondary')
         ),
+
+        _hover-color: (
+            igx-color: ('grays', 200)
+        )
     )
 );
 
 /// Generates a light fluent tree schema.
 /// @type {Map}
-/// @prop {Map} background-selected [igx-color: ('grays', 100)] - The background color used for the selected tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('grays', 200)] - The background hover color used for the selected tree node.
-/// @prop {Map} background-selected-focused [igx-color: ('grays', 100)] - The background color used for the selected tree node when it is on focus.
-/// @prop {Map} background-active-hover [igx-color: ('grays', 100)] - The background hover color in active state used for the tree node.
-/// @prop {Map} background-active-focused [igx-color: ('grays', 100)] - The background color in active state used for the focused tree node.
-/// @prop {Map} background-active-selected [igx-color: ('grays', 100)] - The background color used for the selected tree node in active state..
-/// @prop {Map} color [igx-color: ('grays', 700)] - The color used for the tree node content.
-/// @prop {Map} color-hover [igx-color: ('grays', 700)] - The hover color used for the tree node content.
-/// @prop {Map} color-focused [igx-color: ('grays', 700)] - The color used for the content of the focused tree node
-/// @prop {Map} color-selected [igx-color: ('grays', 700)] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-color: ('grays', 900)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} color-selected-focused [igx-color: ('grays', 900)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} color-active [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-hover [gx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-focused [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-selected [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
-/// @prop {Map} tree-indicator-color-hover [igx-color: ('secondary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 100)] - The color used for the expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('grays', 200)] - The hover color used for expand/collapse indicator when the tree node is selected.
-/// @prop {Map} border-focused [igx-color: ('grays', 800)] - The outline shadow color used for tree node in focus state.
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
 $_fluent-tree: extend(
     $_light-tree,
     (
         variant: 'fluent',
-
-        border-focused: (
-            igx-color: ('grays', 800)
-        ),
-
-        color: (
-            igx-color: ('grays', 700)
-        ),
-
-        color-focused: (
-            igx-color: ('grays', 700)
-        ),
-
-        color-hover: (
-            igx-color: ('grays', 700)
-        ),
-
-        background-active-focused: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-active-focused: (
-            igx-color: ('grays', 900)
-        ),
-
-        background-active-hover: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-active-hover: (
-            igx-color: ('grays', 900)
-        ),
-
-        color-active: (
-            igx-color: ('grays', 900)
-        ),
-
-        background-active-selected: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-active-selected: (
-            igx-color: ('grays', 900)
-        ),
-
-        background-selected: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-selected: (
-            igx-color: ('grays', 700)
-        ),
-
-        background-selected-hover: (
-            igx-color: ('grays', 200)
-        ),
-
-        color-selected-hover: (
-            igx-color: ('grays', 900)
-        ),
-
-        background-selected-focused: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-selected-focused: (
-            igx-color: ('grays', 900)
-        ),
-
-        tree-indicator-color-hover: (
-            igx-color: ('secondary')
-        ),
-
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('grays', 100)
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('grays', 200)
-        ),
-
     )
 );
 
 /// Generates a bootstrap tree schema.
 /// @type {Map}
-/// @prop {Color} background [#fff] - The background color used for the tree node.
-/// @prop {Color} background-focused [$fff] - The background color used for the focused tree node.
-///
-/// @prop {Map} background-selected [igx-color: ('primary')] - The background color used for the selected tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('primary', 600)] - The background hover color used for the selected tree node.
-/// @prop {Map} background-selected-focused [igx-color: ('primary', 600)] - The background color used for the selected tree node when it is on focus.
-///
-/// @prop {Map} background-active-hover [igx-color: ('grays', 100)] - The background hover color in active state used for the tree node.
-/// @prop {Color} background-active-focused [#fff] - The background color in active state used for the focused tree node.
-/// @prop {Map} background-active-selected [igx-color: (igx-color: ('primary', 600)] - The background color used for the selected tree node in active state.
-///
-/// @prop {Color} color-focused [igx-contrast-color: #fff] - The color used for the content of the focused tree node
-///
-/// @prop {Color} color-selected [#fff] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('primary', 600)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} color-selected-focused [igx-contrast-color: ('primary', 600)] - The hover color used for the content of the selected tree node.
-///
-/// @prop {Map} color-active-hover [igx-contrast-color: ('grays', 100)] - The color used for the content in active state of the tree node.
-/// @prop {Color} color-active-focused [igx-contrast-color: #fff] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-selected [igx-contrast-color: ('primary', 600)] - The color used for the content in active state of the tree node.
-///
-/// @prop {Map} tree-indicator-color-hover [igx-color: ('primary')] - The hover color used for the tree node expand/collapse indicator.
-/// @prop {Map} tree-indicator-color-focused [igx-color: ('grays', 900)] - The color used for the tree node expand/collapse indicator when the tree node is focused.
-/// @prop {Color} tree-indicator-color-selected [#fff] - The color used for the expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('primary', 600)] - The hover color used for expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-focused [igx-contrast-color: ('primary', 600)] - The color used for expand/collapse indicator when the tree node is selected and on focus.
-/// @prop {Map} tree-indicator-color-active [igx-color: ('grays', 900)] - The color used for the active tree node expand/collapse indicator.
-///
-/// @prop {Map} border-focused [igx-color: ('primary')] - The outline shadow color used for tree node in focus state.
 ///
 /// @requires {function} extend
 /// @requires $_light-tree
@@ -332,118 +99,11 @@ $_bootstrap-tree: extend(
     $_light-tree,
     (
         variant: 'bootstrap',
-
-        border-focused: (
-            igx-color: ('primary')
-        ),
-
-        background-focused: (
-            igx-color: #fff
-        ),
-
-        color-focused: (
-            igx-contrast-color: #fff,
-        ),
-
-        background-active-focused: (
-            igx-color: #fff
-        ),
-
-        color-active-focused: (
-            igx-contrast-color: #fff,
-        ),
-
-        background-active-hover: (
-            igx-color: ('grays', 100)
-        ),
-
-        color-active-hover: (
-            igx-contrast-color: ('grays', 100)
-        ),
-
-        background-selected: (
-            igx-color: ('primary')
-        ),
-
-        color-selected: #fff,
-
-        background-selected-hover: (
-            igx-color: ('primary', 600)
-        ),
-
-        color-selected-hover: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        background-selected-focused: (
-            igx-color: ('primary', 600)
-        ),
-
-        color-selected-focused: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        background-active-selected: (
-            igx-color: ('primary', 600)
-        ),
-
-        color-active-selected: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        tree-indicator-color-hover: (
-            igx-color: ('primary')
-        ),
-
-        tree-indicator-color-focused: (
-            igx-color: ('grays', 900)
-        ),
-
-        tree-indicator-color-selected: #fff,
-
-        tree-indicator-color-selected-focused: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('primary', 600)
-        ),
-
-        tree-indicator-color-active: (
-            igx-color: ('grays', 900)
-        ),
     )
 );
 
 /// Generates an indigo tree schema.
 /// @type {Map}
-/// @prop {Map} background-hover [igx-color: ('primary', 50)] - The background hover color used for the tree node.
-/// @prop {Color} background-focused [#fff] - The background color used for the focused tree node.
-///
-/// @prop {Map} background-selected [igx-color: ('primary')] - The background color used for the selected tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('primary', 400)] - The background hover color used for the selected tree node.
-/// @prop {Map} background-selected-focused [igx-color: ('primary', 400)] - The background color used for the selected tree node when it is on focus.
-///
-/// @prop {Color} background-active [#fff] - The background color used for the active tree node.
-/// @prop {Map} background-active-hover [igx-color: ('primary', 50)] - The background hover color in active state used for the tree node.
-/// @prop {Color} background-active-focused [#fff] - The background color in active state used for the focused tree node.
-/// @prop {Map} background-active-selected [igx-color: ('primary', 400)] - The background color used for the selected tree node in active state.
-///
-/// @prop {Map} color-hover [igx-contrast-color: ('primary', 50)] - The hover color used for the tree node content.
-/// @prop {Color} color-focused [igx-contrast-color: #fff] - The color used for the content of the focused tree node
-///
-/// @prop {Map} color-selected [igx-contrast-color: ('primary')] - The color used for the content of the selected tree node.
-/// @prop {Map} color-selected-hover [igx-contrast-color: ('primary', 400)] - The hover color used for the content of the selected tree node.
-/// @prop {Map} color-selected-focused [igx-contrast-color: ('primary', 400)] - The hover color used for the content of the selected tree node.
-///
-/// @prop {Map} color-active [igx-color: ('primary')] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-hover [igx-color: ('primary')] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-focused [igx-color: ('primary')] - The color used for the content in active state of the tree node.
-/// @prop {Map} color-active-selected [igx-contrast-color: ('primary', 400)] - The color used for the content in active state of the tree node.
-///
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('primary')] - The color used for the expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-hover [igx-contrast-color: ('primary', 400)] - The hover color used for expand/collapse indicator when the tree node is selected.
-/// @prop {Map} tree-indicator-color-selected-focused [igx-contrast-color: ('primary', 400)] - The color used for expand/collapse indicator when the tree node is selected and on focus.
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-tree
@@ -451,83 +111,5 @@ $_indigo-tree: extend(
     $_light-tree,
     (
         variant: 'indigo-design',
-
-        background-hover: (
-            igx-color: ('primary', 50)
-        ),
-
-        color-hover: (
-            igx-contrast-color: ('primary', 50),
-        ),
-
-        background-active-hover: (
-            igx-color: ('primary', 50),
-        ),
-
-        color-active-hover: (
-            igx-color: ('primary')
-        ),
-
-        background-focused: #fff,
-
-        color-focused: (
-            igx-contrast-color: #fff
-        ),
-
-        background-active: #fff,
-
-        color-active: (
-            igx-color: ('primary')
-        ),
-
-        background-active-focused: #fff,
-
-        color-active-focused: (
-            igx-color: ('primary')
-        ),
-
-        background-active-selected: (
-            igx-color: ('primary', 400)
-        ),
-
-        color-active-selected: (
-            igx-contrast-color: ('primary', 400)
-        ),
-
-        background-selected: (
-            igx-color: ('primary')
-        ),
-
-        color-selected: (
-            igx-contrast-color: ('primary')
-        ),
-
-        background-selected-hover: (
-            igx-color: ('primary', 400)
-        ),
-
-        color-selected-hover: (
-            igx-contrast-color: ('primary', 400)
-        ),
-
-        background-selected-focused: (
-            igx-color: ('primary', 400)
-        ),
-
-        color-selected-focused: (
-            igx-contrast-color: ('primary', 400)
-        ),
-
-        tree-indicator-color-selected: (
-            igx-contrast-color: ('primary')
-        ),
-
-        tree-indicator-color-selected-hover: (
-            igx-contrast-color: ('primary', 400)
-        ),
-
-        tree-indicator-color-selected-focused: (
-            igx-contrast-color: ('primary', 400)
-        ),
     )
 );
