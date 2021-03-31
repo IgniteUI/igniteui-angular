@@ -50,6 +50,8 @@ import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEFAULT_TIME_FORMAT = 'mediumTime';
+const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /**
@@ -1530,7 +1532,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     private _field: string;
     private _calcWidth = null;
-    private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 
     constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
 
@@ -1568,6 +1570,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (this.filterCellTemplateDirective) {
             this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
+        if (!this._columnPipeArgs.format) {
+            this._columnPipeArgs.format = this.dataType === DataType.Time ? DEFAULT_TIME_FORMAT : this.dataType === DataType.DateTime?
+                DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
+        }
         if (!this.summaries) {
             switch (this.dataType) {
                 case DataType.String:
@@ -1578,6 +1584,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.summaries = IgxNumberSummaryOperand;
                     break;
                 case DataType.Date:
+                case DataType.DateTime:
+                case DataType.Time:
                     this.summaries = IgxDateSummaryOperand;
                     break;
                 case DataType.Currency:
@@ -1602,6 +1610,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
+                case DataType.Time:
+                case DataType.DateTime:
                     this.filters = IgxDateFilteringOperand.instance();
                     break;
                 case DataType.String:
