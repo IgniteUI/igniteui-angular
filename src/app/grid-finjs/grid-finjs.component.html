@@ -57,6 +57,9 @@
             </div>
         </ng-template>
     </igx-column>
+
+    <igx-column [field]="'Obj.Price'" [width]="'120px'"></igx-column>
+
     <igx-column [field]="'Chart'" [width]="'60px'" [hidden]="false" [filterable]='false'>
         <ng-template igxCell let-cell="cell" class="center-text">
             <button class="button-icon" igxButton="icon" igxRippleCentered="true" tabindex="-1">

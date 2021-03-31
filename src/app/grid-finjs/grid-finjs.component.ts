@@ -4,12 +4,14 @@ import {
     ViewChild } from '@angular/core';
 import {
     DefaultSortingStrategy,
+    GridSelectionMode,
+    IGroupingExpression,
     IgxGridComponent,
     SortingDirection
 } from 'igniteui-angular';
 import { Contract, REGIONS } from '../shared/financialData';
 
-const GROUPING_EXPRESSIONS = [{
+const GROUPING_EXPRESSIONS: IGroupingExpression[] = [{
     dir: SortingDirection.Desc,
     fieldName: 'Category',
     ignoreCase: false,
@@ -40,12 +42,12 @@ export class GridFinJSComponent {
     @Input()
     public data: any;
 
-    public selectionMode = 'multiple';
+    public selectionMode: GridSelectionMode = GridSelectionMode.multiple;
     public contracts = Contract;
     public regions = REGIONS;
     public columnFormat = { digitsInfo: '1.3-3'};
     public showToolbar = true;
-    public groupingExpressions = GROUPING_EXPRESSIONS;
+    public groupingExpressions: IGroupingExpression[] = GROUPING_EXPRESSIONS;
 
     constructor() { }
 
