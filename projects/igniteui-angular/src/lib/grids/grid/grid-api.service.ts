@@ -86,8 +86,8 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
 
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
-        if (grid.crudService.cellInEditMode) {
-            grid.endEdit(false);
+        if (grid.gridAPI.crudService.cellInEditMode) {
+            this.crudService.endEdit(false);
         }
 
         const expansionState = grid.groupingExpansionState;
@@ -102,7 +102,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
         this.grid.groupingExpansionState = [...expansionState];
         if (grid.rowEditable) {
-            grid.repositionRowEditingOverlay(grid.rowInEditMode);
+            grid.repositionRowEditingOverlay(grid.gridAPI.crudService.rowInEditMode);
         }
     }
 

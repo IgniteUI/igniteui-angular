@@ -864,7 +864,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
         it(`Should call correct methods on clicking DONE and CANCEL buttons in row edit overlay`, () => {
             const mockEvent = new MouseEvent('click');
-            spyOn(grid, 'endEdit');
+            spyOn(grid.gridAPI.crudService, 'endEdit');
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -873,8 +873,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             //  ged CANCEL button and click it
             const cancelButtonElement = GridFunctions.getRowEditingCancelButton(fix);
             cancelButtonElement.dispatchEvent(mockEvent);
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false, mockEvent);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false, mockEvent);
 
             cell.setEditMode(true);
             fix.detectChanges();
@@ -883,13 +883,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
             doneButtonElement.dispatchEvent(mockEvent);
             fix.detectChanges();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true, mockEvent);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true, mockEvent);
         });
 
         it(`Should exit row editing AND do not commit when press Escape key on Done and Cancel buttons`, () => {
             const mockEvent = new KeyboardEvent('keydown', { key: 'escape' });
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -904,8 +904,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(cell.editMode).toEqual(false);
             expect(overlayContent).toBeFalsy();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false, mockEvent);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false, mockEvent);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -916,24 +916,24 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(cell.editMode).toEqual(false);
             expect(overlayContent).toBeFalsy();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false, mockEvent);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false, mockEvent);
         });
 
         it(`Should exit row editing AND COMMIT on add row`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
 
             grid.addRow({ ProductID: 99, ProductName: 'ADDED', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') });
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true);
             expect(cell.editMode).toBeFalsy();
         });
 
         it(`Should exit row editing AND COMMIT on delete row`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -941,8 +941,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true);
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -950,8 +950,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             // const cell = grid.getCellByColumn(0, 'ProductName');
@@ -962,18 +962,18 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(gridAPI.submit_value).toHaveBeenCalled();
             expect(gridAPI.submit_value).toHaveBeenCalledWith();
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalledWith(undefined);
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalledWith(undefined);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
             expect(cell.editMode).toBeFalsy();
         });
 
         it(`Should exit row editing AND DISCARD on sort`, () => {
             const gridAPI = grid.gridAPI as IgxGridAPIService;
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -990,10 +990,10 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe('Aniseed Syrup'); // SORT does not submit
 
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalledWith();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalledWith();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
         });
 
         it(`Should exit row editing AND COMMIT on displayDensity change`, () => {
@@ -1016,7 +1016,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should NOT exit row editing on click on non-editable cell in same row`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1031,7 +1031,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(nonEditableCell);
             fix.detectChanges();
 
-            expect(grid.endEdit).not.toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).not.toHaveBeenCalled();
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(overlayContent).toBeTruthy();
             expect(cell.editMode).toBeFalsy();
@@ -1039,7 +1039,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit row editing AND COMMIT on click on non-editable cell in other row`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1052,15 +1052,15 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateClickAndSelectEvent(nonEditableCell);
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true, (jasmine.anything() as any));
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true, (jasmine.anything() as any));
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(overlayContent).toBeFalsy();
             expect(cell.editMode).toBeFalsy();
         });
 
         it(`Should exit row editing AND COMMIT on click on editable cell in other row`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1076,8 +1076,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             overlayContent = GridFunctions.getRowEditingOverlay(fix);
             expect(overlayContent).toBeTruthy();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(true, jasmine.anything() as any);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true, jasmine.anything() as any);
             expect(cell.editMode).toBeFalsy();
             expect(otherEditableCell.editMode).toBeTruthy();
         });
@@ -1093,12 +1093,12 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
 
             expect(gridAPI.submit_value).toHaveBeenCalled();
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -1110,13 +1110,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
             expect(gridAPI.submit_value).not.toHaveBeenCalled();
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
 
@@ -1129,8 +1129,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             row.delete();
             fix.detectChanges();
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
-            expect(grid.endEdit).toHaveBeenCalledTimes(1);
-            expect(grid.endEdit).toHaveBeenCalledWith(true);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(true);
         });
     });
 
@@ -1249,7 +1249,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
                 cell.setEditMode(true);
 
-                grid.crudService.cell.editValue = 'IG';
+                grid.gridAPI.crudService.cell.editValue = 'IG';
                 // cell.update('IG');
                 // Do not exit edit mode
                 fix.detectChanges();
@@ -1283,7 +1283,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
 
         it(`Filtering: Should exit edit mode on filter applied`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             cell.setEditMode(true);
             // flush();
@@ -1293,8 +1293,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             // flush();
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
         });
 
         it(`Filtering: Should NOT include the new value in the results when filtering`, () => {
@@ -1341,7 +1341,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const gridAPI = grid.gridAPI as IgxGridAPIService;
 
             spyOn(gridAPI, 'submit_value').and.callThrough();
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             cell.setEditMode(true);
 
@@ -1350,7 +1350,7 @@ describe('IgxGrid - Row Editing #grid', () => {
                 strategy: DefaultSortingStrategy.instance()
             });
 
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(gridAPI.submit_value).toHaveBeenCalled();
         });
 
@@ -1440,7 +1440,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1453,13 +1453,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(cell.editMode).toBeFalsy();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
             expect(grid.rowEditingOverlay.collapsed).toEqual(true);
         });
 
         it(`Pinning: Should exit edit mode when pinning/unpinning a column`, () => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1468,9 +1468,9 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
-            expect(grid.endEdit).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
             expect(cell.editMode).toBeFalsy();
 
             // put cell in edit mode
@@ -1482,14 +1482,14 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledWith(false);
-            expect(grid.endEdit).toHaveBeenCalledTimes(2);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledWith(false);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(2);
             expect(cell.editMode).toBeFalsy();
         });
 
         it(`Resizing: Should keep edit mode when resizing a column`, fakeAsync(() => {
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
             cell.setEditMode(true);
@@ -1508,7 +1508,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);
             fix.detectChanges();
 
-            expect(grid.endEdit).toHaveBeenCalledTimes(0);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(0);
             expect(cell.editMode).toBeTruthy();
         }));
 
@@ -1516,14 +1516,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(true);
 
             fix.detectChanges();
-            expect(grid.crudService.cell).toBeTruthy(); // check if there is cell in edit mode
-            spyOn(grid.crudService, 'exitCellEdit').and.callThrough();
+            expect(grid.gridAPI.crudService.cell).toBeTruthy(); // check if there is cell in edit mode
+            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             cell.column.hidden = true;
 
             fix.detectChanges();
 
-            expect(grid.crudService.exitCellEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(grid.rowEditingOverlay.collapsed).toBeTruthy();
         });
 
@@ -1637,11 +1637,11 @@ describe('IgxGrid - Row Editing #grid', () => {
                 expect(grid.rowEditExit.emit).toHaveBeenCalledTimes(1);
             });
 
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
             cell.editValue = 'new Value';
-            grid.endRowEdit(true, null);
+            grid.gridAPI.crudService.endRowEditTabStop(true, null);
             fix.detectChanges();
         });
 
@@ -1650,11 +1650,11 @@ describe('IgxGrid - Row Editing #grid', () => {
                 evt.cancel = true;
             });
 
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.crudService.rowInEditMode).toEqual(false);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
         });
 
         it('Should not enter cell edit when cellEditEnter is canceled but row edit should be entered', () => {
@@ -1663,21 +1663,21 @@ describe('IgxGrid - Row Editing #grid', () => {
                 evt.cancel = canceled;
             });
 
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
 
-            grid.crudService.endEditMode();
+            grid.gridAPI.crudService.endEditMode();
             fix.detectChanges();
 
             canceled = false;
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(true);
         });
 
         it('When cellEdit is canceled the new value of the cell should never be commited and editing should be closed', () => {
@@ -1685,17 +1685,17 @@ describe('IgxGrid - Row Editing #grid', () => {
                 evt.cancel = true;
             });
 
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
             const cellValue = cell.value;
             cell.editValue = 'new value';
 
-            grid.endRowEdit(true);
+            grid.gridAPI.crudService.endRowEditTabStop(true);
             fix.detectChanges();
 
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(true);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(true);
             expect(cell.value).toEqual(cellValue);
         });
 
@@ -1704,24 +1704,25 @@ describe('IgxGrid - Row Editing #grid', () => {
                 evt.cancel = true;
             });
 
-            grid.crudService.enterEditMode(cell);
+            grid.gridAPI.crudService.enterEditMode(cell);
             fix.detectChanges();
 
             const newRowData = {ProductName: 'new product name', ReorderLevel: 20};
             grid.updateRow(newRowData, 0);
 
-            grid.endRowEdit(true, null);
+            grid.gridAPI.crudService.endRowEditTabStop(true, null);
             fix.detectChanges();
+
             const rowData = Object.assign({}, cell.row.rowData, newRowData);
-            expect(grid.crudService.rowInEditMode).toEqual(true);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
 
-            grid.endRowEdit(false, null);
+            grid.gridAPI.crudService.endRowEditTabStop(false, null);
             fix.detectChanges();
 
-            expect(grid.crudService.rowInEditMode).toEqual(false);
-            expect(grid.crudService.cellInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
+            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.rowData).not.toEqual(rowData);
         });
 
@@ -1890,7 +1891,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(cell.editMode).toEqual(false);
-            expect(grid.crudService.rowInEditMode).toEqual(false);
+            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(GridFunctions.getRowEditingOverlay(fix)).toBeFalsy();
 
             expect(grid.rowEditEnter.emit).toHaveBeenCalledTimes(1);
@@ -2074,13 +2075,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(grid.crudService.cell.column.header).toBe('2');
+            expect(grid.gridAPI.crudService.cell.column.header).toBe('2');
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent);
 
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            expect(grid.crudService.cell.column.header).toBe('1');
+            expect(grid.gridAPI.crudService.cell.column.header).toBe('1');
         }));
     });
 
@@ -2093,7 +2094,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const grid = fix.componentInstance.grid;
             let cell = grid.getCellByColumn(0, 'ProductName');
-            spyOn(grid, 'endEdit').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
 
@@ -2106,8 +2107,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(parseInt(GridFunctions.getRowEditingBannerText(fix), 10)).toEqual(1);
 
             fix.componentInstance.buttons.last.element.nativeElement.click();
-            expect(grid.endEdit).toHaveBeenCalled();
-            expect(grid.endEdit).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
+            expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalledTimes(1);
         }));
 
         it('Empty template', fakeAsync(/** height/width setter rAF */() => {
@@ -2214,7 +2215,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             cell.editValue = 'IG';
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
             expect(row.classList).toContain(ROW_EDITED_CLASS);
@@ -2253,17 +2254,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.deleteRow(1);
 
             fix.detectChanges();
-            spyOn(grid, 'endRowTransaction').and.callThrough();
+            spyOn(grid.gridAPI.crudService, 'endRowTransaction').and.callThrough();
 
             const firstCell = grid.getCellByColumn(2, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
             fix.detectChanges();
-            expect(grid.endRowTransaction).toHaveBeenCalledTimes(0);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateClickAndSelectEvent(targetCell);
             fix.detectChanges();
-            expect(grid.endRowTransaction).toHaveBeenCalledTimes(1);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
             expect(cell.selected).toBeTruthy();
             expect(firstCell.selected).toBeFalsy();
         });
@@ -2282,7 +2283,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.editValue = 'IG';
 
             fix.detectChanges();
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
 
             fix.detectChanges();
             expect(rowEl.classList).toContain(ROW_EDITED_CLASS);
@@ -2321,7 +2322,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(state[0].type).toEqual(TransactionType.UPDATE);
             expect(state[0].newValue['ProductName']).toEqual('Chaiiii');
 
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
             state = trans.getAggregatedChanges(false);
             expect(trans.onStateUpdate.emit).toHaveBeenCalled();
@@ -2589,7 +2590,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
 
             fix.detectChanges();
 
@@ -2602,7 +2603,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             fix.detectChanges();
 
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
 
             fix.detectChanges();
 
@@ -2637,13 +2638,13 @@ describe('IgxGrid - Row Editing #grid', () => {
             // fix.detectChanges();
             cell = grid.getCellByColumn(1, 'ProductName');
 
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in second group in edit mode
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.cellInEditMode).toBeTruthy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].expanded).toBeTruthy();
 
@@ -2652,41 +2653,41 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // collapse first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in second group in edit mode
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.cellInEditMode).toBeTruthy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // set cell in first group in edit mode
             cell = grid.getCellByColumn(1, 'ProductName');
             cell.setEditMode(true);
             fix.detectChanges();
 
-            expect(grid.crudService.cellInEditMode).toBeTruthy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
             expect(groupRows[0].expanded).toBeTruthy();
 
             // collapse first group
@@ -2694,14 +2695,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
 
             // expand first group
             grid.toggleGroup(groupRows[0].groupRow);
             fix.detectChanges();
 
             expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.crudService.cellInEditMode).toBeFalsy();
+            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
         });
 
         it('Hide row editing dialog when hierarchical group is collapsed/expanded',
@@ -2715,19 +2716,19 @@ describe('IgxGrid - Row Editing #grid', () => {
                     strategy: DefaultSortingStrategy.instance()
                 });
                 fix.detectChanges();
-                expect(grid.crudService.cellInEditMode).toBeFalsy();
+                expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
                 cell = grid.getCellByColumn(2, 'ProductName');
                 cell.setEditMode(true);
                 fix.detectChanges();
-                expect(grid.crudService.cellInEditMode).toBeTruthy();
+                expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
                 groupRows = grid.groupsRowList.toArray();
 
                 grid.toggleGroup(groupRows[0].groupRow);
                 fix.detectChanges();
-                expect(grid.crudService.cellInEditMode).toBeFalsy();
+                expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
                 grid.toggleGroup(groupRows[0].groupRow);
                 fix.detectChanges();
-                expect(grid.crudService.cellInEditMode).toBeFalsy();
+                expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
             });
     });
 

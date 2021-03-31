@@ -14,8 +14,9 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
 
     public get_all_data(transactions?: boolean): any[] {
         const grid = this.grid;
-        const data = transactions ? grid.dataWithAddedInTransactionRows : grid.flatData;
-        return data ? data : [];
+        let data = grid && grid.flatData ? grid.flatData : [];
+        data = transactions ? grid.dataWithAddedInTransactionRows : data;
+        return data;
     }
 
     public get_summary_data() {
@@ -61,7 +62,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         grid.expansionStates = expandedStates;
 
         if (grid.rowEditable) {
-            grid.endEdit(false);
+            grid.gridAPI.crudService.endEdit(false);
         }
     }
 

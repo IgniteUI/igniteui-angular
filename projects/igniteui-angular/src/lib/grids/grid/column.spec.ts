@@ -683,7 +683,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((input as any).value).toEqual('0.33');
             expect((suffix as HTMLElement).innerText).toEqual('33%');
 
-            grid.endEdit(true);
+            grid.gridAPI.crudService.endEdit(true);
             fix.detectChanges();
 
             firstCell = discountColumn.cells[0];
