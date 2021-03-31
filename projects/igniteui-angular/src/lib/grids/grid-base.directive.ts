@@ -6244,8 +6244,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected getExtremumBasedColWidth(column: IgxColumnComponent): string {
         let width = this._columnWidth;
-        const minWidth = this._columnWidth.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
-        const maxWidth = this._columnWidth.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
+        if (width && typeof width !== 'string') {
+            width = String(width);
+        }
+        const minWidth = this.width.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
+        const maxWidth = this.width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
         if (column.hidden) {
             return width;
         }
@@ -6256,9 +6259,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             width = column.maxWidth;
         }
 
-        if (width && typeof width !== 'string') {
-            width = String(width);
-        }
         // if no px or % are defined in maxWidth/minWidth consider it px
         if (width.indexOf('%') === -1 && width.indexOf('px') === -1) {
             width += 'px';
