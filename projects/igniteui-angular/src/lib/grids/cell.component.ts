@@ -673,10 +673,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.grid.rowEditable && this.row.addRow) {
+        if (this.grid.rowEditable && this.intRow.addRow) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
-        if (this.editable && !this.editMode && !this.row.deleted && !this.grid.crudService.rowEditingBlocked) {
+        if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
 
@@ -884,7 +884,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
             const activeElement = this.selectionService.activeElement;
             const row = activeElement ? this.gridAPI.get_row_by_index(activeElement.row) : null;
-            if ((this.grid.crudService.rowEditingBlocked && row && this.row.rowID !== row.rowID) ||
+            if ((this.grid.crudService.rowEditingBlocked && row && this.intRow.rowID !== row.rowID) ||
                 (this.grid.crudService.cell && this.grid.crudService.cellEditingBlocked)) {
                 return;
             }
