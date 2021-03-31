@@ -4843,8 +4843,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (width && typeof width !== 'string') {
             width = String(width);
         }
-        const minWidth = this._columnWidth.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
-        const maxWidth = this._columnWidth.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
+        const minWidth = this.width.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
+        const maxWidth = this.width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
         if (column.hidden) {
             return width;
         }
