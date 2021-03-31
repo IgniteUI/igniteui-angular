@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IRowSelectionEventArgs } from 'igniteui-angular';
 import { IgxGridComponent } from 'projects/igniteui-angular/src/lib/grids/grid/grid.component';
 import { AMINO_DATA } from './aminoData';
@@ -8,14 +8,14 @@ import { AMINO_DATA } from './aminoData';
   styleUrls: ['./grid-updates.component.scss'],
   templateUrl: './grid-updates.component.html'
 })
-export class GridUpdatesComponent {
+export class GridUpdatesComponent implements OnInit {
   @ViewChild('grid') public grid: IgxGridComponent;
   public data = [...AMINO_DATA];
 
   public nestedConfigColumns = [
     { field: 'name', header: 'Name' },
     { field: 'abbreviation.long', header: 'Abbr. (long)' },
-    { field: "abbreviation.owner.name", header: "Abbr. (owner name)" }
+    { field: 'abbreviation.owner.name', header: 'Abbr. (owner name)' }
   ];
 
   public counter = 0;
@@ -60,6 +60,7 @@ export class GridUpdatesComponent {
 }
 
 class ItemUpdater {
+    public counter = 0;
     private _update;
 
     constructor(private item: any, private cb: (i: any) => void) {}
@@ -71,8 +72,6 @@ class ItemUpdater {
     public stop(): void {
       clearInterval(this._update);
     }
-
-    public counter = 0;
 
     public updateData(counter: number): void {
       this.counter++;

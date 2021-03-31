@@ -1,12 +1,12 @@
 export const AMINO_DATA = [
     {
       id: 1,
-      name: "Alanine",
+      name: 'Alanine',
       abbreviation: {
-        short: "A",
-        long: "Ala",
+        short: 'A',
+        long: 'Ala',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -14,8 +14,8 @@ export const AMINO_DATA = [
         residue: 71.08
       },
       formula: {
-        molecular: "C3H7NO2",
-        residue: "C3H5NO"
+        molecular: 'C3H7NO2',
+        residue: 'C3H5NO'
       },
       p: {
         Ka: 2.34,
@@ -26,12 +26,12 @@ export const AMINO_DATA = [
     },
     {
       id: 2,
-      name: "Arginine",
+      name: 'Arginine',
       abbreviation: {
-        short: "R",
-        long: "Arg",
+        short: 'R',
+        long: 'Arg',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -39,8 +39,8 @@ export const AMINO_DATA = [
         residue: 156.19
       },
       formula: {
-        molecular: "C6H14N4O2",
-        residue: "C6H12N4O"
+        molecular: 'C6H14N4O2',
+        residue: 'C6H12N4O'
       },
       p: {
         Ka: 2.17,
@@ -51,12 +51,12 @@ export const AMINO_DATA = [
     },
     {
       id: 3,
-      name: "Asparagine",
+      name: 'Asparagine',
       abbreviation: {
-        short: "N",
-        long: "Asn",
+        short: 'N',
+        long: 'Asn',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -64,8 +64,8 @@ export const AMINO_DATA = [
         residue: 114.11
       },
       formula: {
-        molecular: "C4H8N2O3",
-        residue: "C4H6N2O2"
+        molecular: 'C4H8N2O3',
+        residue: 'C4H6N2O2'
       },
       p: {
         Ka: 2.02,
@@ -76,12 +76,12 @@ export const AMINO_DATA = [
     },
     {
       id: 4,
-      name: "Aspartic acid",
+      name: 'Aspartic acid',
       abbreviation: {
-        short: "D",
-        long: "Asp",
+        short: 'D',
+        long: 'Asp',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -89,8 +89,8 @@ export const AMINO_DATA = [
         residue: 115.09
       },
       formula: {
-        molecular: "C4H7NO4",
-        residue: "C4H5NO3"
+        molecular: 'C4H7NO4',
+        residue: 'C4H5NO3'
       },
       p: {
         Ka: 1.88,
@@ -101,12 +101,12 @@ export const AMINO_DATA = [
     },
     {
       id: 5,
-      name: "Cysteine",
+      name: 'Cysteine',
       abbreviation: {
-        short: "C",
-        long: "Cys",
+        short: 'C',
+        long: 'Cys',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -114,8 +114,8 @@ export const AMINO_DATA = [
         residue: 103.15
       },
       formula: {
-        molecular: "C3H7NO2S",
-        residue: "C3H5NOS"
+        molecular: 'C3H7NO2S',
+        residue: 'C3H5NOS'
       },
       p: {
         Ka: 1.96,
@@ -126,12 +126,12 @@ export const AMINO_DATA = [
     },
     {
       id: 6,
-      name: "Glutamic acid",
+      name: 'Glutamic acid',
       abbreviation: {
-        short: "E",
-        long: "Glu",
+        short: 'E',
+        long: 'Glu',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -139,8 +139,8 @@ export const AMINO_DATA = [
         residue: 129.12
       },
       formula: {
-        molecular: "C5H9NO4",
-        residue: "C5H7NO3"
+        molecular: 'C5H9NO4',
+        residue: 'C5H7NO3'
       },
       p: {
         Ka: 2.19,
@@ -151,12 +151,12 @@ export const AMINO_DATA = [
     },
     {
       id: 7,
-      name: "Glutamine",
+      name: 'Glutamine',
       abbreviation: {
-        short: "Q",
-        long: "Gln",
+        short: 'Q',
+        long: 'Gln',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -164,8 +164,8 @@ export const AMINO_DATA = [
         residue: 128.13
       },
       formula: {
-        molecular: "C5H10N2O3",
-        residue: "C5H8N2O2"
+        molecular: 'C5H10N2O3',
+        residue: 'C5H8N2O2'
       },
       p: {
         Ka: 2.17,
@@ -176,12 +176,12 @@ export const AMINO_DATA = [
     },
     {
       id: 8,
-      name: "Glycine",
+      name: 'Glycine',
       abbreviation: {
-        short: "G",
-        long: "Gly",
+        short: 'G',
+        long: 'Gly',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -189,8 +189,8 @@ export const AMINO_DATA = [
         residue: 57.05
       },
       formula: {
-        molecular: "C2H5NO2",
-        residue: "C2H3NO"
+        molecular: 'C2H5NO2',
+        residue: 'C2H3NO'
       },
       p: {
         Ka: 2.34,
@@ -201,12 +201,12 @@ export const AMINO_DATA = [
     },
     {
       id: 9,
-      name: "Histidine",
+      name: 'Histidine',
       abbreviation: {
-        short: "H",
-        long: "His",
+        short: 'H',
+        long: 'His',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -214,8 +214,8 @@ export const AMINO_DATA = [
         residue: 137.14
       },
       formula: {
-        molecular: "C6H9N3O2",
-        residue: "C6H7N3O"
+        molecular: 'C6H9N3O2',
+        residue: 'C6H7N3O'
       },
       p: {
         Ka: 1.82,
@@ -226,12 +226,12 @@ export const AMINO_DATA = [
     },
     {
       id: 10,
-      name: "Hydroxyproline",
+      name: 'Hydroxyproline',
       abbreviation: {
-        short: "O",
-        long: "Hyp",
+        short: 'O',
+        long: 'Hyp',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -239,8 +239,8 @@ export const AMINO_DATA = [
         residue: 113.11
       },
       formula: {
-        molecular: "C5H9NO3",
-        residue: "C5H7NO2"
+        molecular: 'C5H9NO3',
+        residue: 'C5H7NO2'
       },
       p: {
         Ka: 1.82,
@@ -251,12 +251,12 @@ export const AMINO_DATA = [
     },
     {
       id: 11,
-      name: "Isoleucine",
+      name: 'Isoleucine',
       abbreviation: {
-        short: "I",
-        long: "Ile",
+        short: 'I',
+        long: 'Ile',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -264,8 +264,8 @@ export const AMINO_DATA = [
         residue: 113.16
       },
       formula: {
-        molecular: "C6H13NO2",
-        residue: "C6H11NO"
+        molecular: 'C6H13NO2',
+        residue: 'C6H11NO'
       },
       p: {
         Ka: 2.36,
@@ -276,12 +276,12 @@ export const AMINO_DATA = [
     },
     {
       id: 12,
-      name: "Leucine",
+      name: 'Leucine',
       abbreviation: {
-        short: "L",
-        long: "Leu",
+        short: 'L',
+        long: 'Leu',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -289,8 +289,8 @@ export const AMINO_DATA = [
         residue: 113.16
       },
       formula: {
-        molecular: "C6H13NO2",
-        residue: "C6H11NO"
+        molecular: 'C6H13NO2',
+        residue: 'C6H11NO'
       },
       p: {
         Ka: 2.36,
@@ -301,12 +301,12 @@ export const AMINO_DATA = [
     },
     {
       id: 13,
-      name: "Lysine",
+      name: 'Lysine',
       abbreviation: {
-        short: "K",
-        long: "Lys",
+        short: 'K',
+        long: 'Lys',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -314,8 +314,8 @@ export const AMINO_DATA = [
         residue: 128.18
       },
       formula: {
-        molecular: "C6H14N2O2",
-        residue: "C6H12N2O"
+        molecular: 'C6H14N2O2',
+        residue: 'C6H12N2O'
       },
       p: {
         Ka: 2.18,
@@ -326,12 +326,12 @@ export const AMINO_DATA = [
     },
     {
       id: 14,
-      name: "Methionine",
+      name: 'Methionine',
       abbreviation: {
-        short: "M",
-        long: "Met",
+        short: 'M',
+        long: 'Met',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -339,8 +339,8 @@ export const AMINO_DATA = [
         residue: 131.2
       },
       formula: {
-        molecular: "C5H11NO2S",
-        residue: "C5H9NOS"
+        molecular: 'C5H11NO2S',
+        residue: 'C5H9NOS'
       },
       p: {
         Ka: 2.28,
@@ -351,12 +351,12 @@ export const AMINO_DATA = [
     },
     {
       id: 15,
-      name: "Phenylalanine",
+      name: 'Phenylalanine',
       abbreviation: {
-        short: "F",
-        long: "Phe",
+        short: 'F',
+        long: 'Phe',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -364,8 +364,8 @@ export const AMINO_DATA = [
         residue: 147.18
       },
       formula: {
-        molecular: "C9H11NO2",
-        residue: "C9H9NO"
+        molecular: 'C9H11NO2',
+        residue: 'C9H9NO'
       },
       p: {
         Ka: 1.83,
@@ -376,12 +376,12 @@ export const AMINO_DATA = [
     },
     {
       id: 16,
-      name: "Proline",
+      name: 'Proline',
       abbreviation: {
-        short: "P",
-        long: "Pro",
+        short: 'P',
+        long: 'Pro',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -389,8 +389,8 @@ export const AMINO_DATA = [
         residue: 97.12
       },
       formula: {
-        molecular: "C5H9NO2",
-        residue: "C5H7NO"
+        molecular: 'C5H9NO2',
+        residue: 'C5H7NO'
       },
       p: {
         Ka: 1.99,
@@ -401,12 +401,12 @@ export const AMINO_DATA = [
     },
     {
       id: 17,
-      name: "Pyroglutamatic",
+      name: 'Pyroglutamatic',
       abbreviation: {
-        short: "U",
-        long: "Glp",
+        short: 'U',
+        long: 'Glp',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -414,8 +414,8 @@ export const AMINO_DATA = [
         residue: 121.09
       },
       formula: {
-        molecular: "C5H7NO3",
-        residue: "C5H5NO2"
+        molecular: 'C5H7NO3',
+        residue: 'C5H5NO2'
       },
       p: {
         Ka: null,
@@ -426,12 +426,12 @@ export const AMINO_DATA = [
     },
     {
       id: 18,
-      name: "Serine",
+      name: 'Serine',
       abbreviation: {
-        short: "S",
-        long: "Ser",
+        short: 'S',
+        long: 'Ser',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -439,8 +439,8 @@ export const AMINO_DATA = [
         residue: 87.08
       },
       formula: {
-        molecular: "C3H7NO3",
-        residue: "C3H5NO2"
+        molecular: 'C3H7NO3',
+        residue: 'C3H5NO2'
       },
       p: {
         Ka: 2.21,
@@ -451,12 +451,12 @@ export const AMINO_DATA = [
     },
     {
       id: 19,
-      name: "Threonine",
+      name: 'Threonine',
       abbreviation: {
-        short: "T",
-        long: "Thr",
+        short: 'T',
+        long: 'Thr',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -464,8 +464,8 @@ export const AMINO_DATA = [
         residue: 101.11
       },
       formula: {
-        molecular: "C4H9NO3",
-        residue: "C4H7NO2"
+        molecular: 'C4H9NO3',
+        residue: 'C4H7NO2'
       },
       p: {
         Ka: 2.09,
@@ -476,12 +476,12 @@ export const AMINO_DATA = [
     },
     {
       id: 20,
-      name: "Tryptophan",
+      name: 'Tryptophan',
       abbreviation: {
-        short: "W",
-        long: "Trp",
+        short: 'W',
+        long: 'Trp',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -489,8 +489,8 @@ export const AMINO_DATA = [
         residue: 186.22
       },
       formula: {
-        molecular: "C11H12N2O2",
-        residue: "C11H10N2O"
+        molecular: 'C11H12N2O2',
+        residue: 'C11H10N2O'
       },
       p: {
         Ka: 2.83,
@@ -501,12 +501,12 @@ export const AMINO_DATA = [
     },
     {
       id: 21,
-      name: "Tyrosine",
+      name: 'Tyrosine',
       abbreviation: {
-        short: "Y",
-        long: "Tyr",
+        short: 'Y',
+        long: 'Tyr',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -514,8 +514,8 @@ export const AMINO_DATA = [
         residue: 163.18
       },
       formula: {
-        molecular: "C9H11NO3",
-        residue: "C9H9NO2"
+        molecular: 'C9H11NO3',
+        residue: 'C9H9NO2'
       },
       p: {
         Ka: 2.2,
@@ -526,12 +526,12 @@ export const AMINO_DATA = [
     },
     {
       id: 22,
-      name: "Valine",
+      name: 'Valine',
       abbreviation: {
-        short: "V",
-        long: "Val",
+        short: 'V',
+        long: 'Val',
         owner: {
-          name: "User"
+          name: 'User'
         }
       },
       weight: {
@@ -539,8 +539,8 @@ export const AMINO_DATA = [
         residue: 99.13
       },
       formula: {
-        molecular: "C5H11NO2",
-        residue: "C5H9NO"
+        molecular: 'C5H11NO2',
+        residue: 'C5H9NO'
       },
       p: {
         Ka: 2.32,
@@ -550,4 +550,3 @@ export const AMINO_DATA = [
       }
     }
   ];
-  
