@@ -7,6 +7,13 @@
 
 /// Generates a dark tree schema.
 /// @type {Map}
+/// @prop {Map} background [igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} color-hover [igx-color: ('grays', 900)] - The hover color used for the tree node content.
+/// @prop {Map} color-focused [igx-color: ('grays', 900)] - The color used for the content of the focused tree node
+/// @prop {Map} color-active [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
+/// @prop {Map} color-active-hover [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
+/// @prop {Map} tree-indicator-color-active [igx-color: ('grays', 900)] - The color used for the active tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-focused [igx-color: ('grays', 900)] - The color used for the tree node expand/collapse indicator when the tree node is focused.
 /// @requires {function} extend
 /// @requires $_light-tree
 $_dark-tree: extend(
@@ -44,11 +51,11 @@ $_dark-tree: extend(
 
 /// Generates a dark fluent tree schema.
 /// @type {Map}
-/// @prop {Map} background-selected [igx-color: ('grays', 200)] - The background color in selected state used for the tree node.
-/// @prop {Map} background-selected-hover [igx-color: ('grays', 100)] - The background color on hover in selected state used for the tree node.
+/// @prop {Map} background [igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} background-selected [igx-color: ('grays', 200)] - The background color used for the selected tree node.
+/// @prop {Map} background-selected-hover [igx-color: ('grays', 100)] - The background hover color used for the selected tree node.
 /// @prop {Map} color-selected [igx-color: ('grays', 900)] - The color used for the content of the selected tree node.
-/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 200)] - The color used for the selected tree node expand/collapse indicator.
-
+/// @prop {Map} tree-indicator-color-selected [igx-contrast-color: ('grays', 200)] - The color used for the expand/collapse indicator when the tree node is selected.
 /// @requires {function} extend
 /// @requires $_fluent-tree
 $_dark-fluent-tree: extend(
@@ -78,6 +85,15 @@ $_dark-fluent-tree: extend(
 
 /// Generates a dark bootstrap tree schema.
 /// @type {Map}
+/// @prop {Map} background [igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} background-focused [ igx-color: ('surface')] - The background color used for the focused tree node.
+/// @prop {Color} background-active-focused [#fff] - The background color in active state used for the focused tree node.
+/// @prop {Map} color-hover [igx-color: ('grays', 900)] - The hover color used for the tree node content.
+/// @prop {Map} color-focused [igx-contrast-color: ('surface')] - The color used for the content of the focused tree node
+/// @prop {Map} color-active [igx-color: ('grays', 900)] - The color used for the content in active state of the tree node.
+/// @prop {Color} color-active-hover [#fff] - The color used for the content in active state of the tree node.
+/// @prop {Color} color-active-focused [#fff] - The color used for the content in active state of the tree node.
+/// @prop {Color} tree-indicator-color-selected [#fff] - The color used for the expand/collapse indicator when the tree node is selected.
 /// @requires {function} extend
 /// @requires $_bootstrap-tree
 $_dark-bootstrap-tree: extend(
@@ -96,24 +112,18 @@ $_dark-bootstrap-tree: extend(
         ),
 
         color-focused: (
-            igx-contrast-color: ('surface'),
+            igx-contrast-color: ('surface')
         ),
 
         color-active: (
             igx-color: ('grays', 900)
         ),
 
-        background-active-focused: (
-            igx-color: #fff
-        ),
+        background-active-focused:  #fff,
 
-        color-active-focused: (
-            igx-color: #fff,
-        ),
+        color-active-focused: #fff,
 
-        color-active-hover: (
-            igx-color: #fff,
-        ),
+        color-active-hover: #fff,
 
         tree-indicator-color-selected: #fff,
     )
@@ -121,7 +131,19 @@ $_dark-bootstrap-tree: extend(
 
 /// Generates a dark indigo tree schema.
 /// @type {Map}
+/// @prop {Map} background [igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} background-hover [igx-color: ('grays', 50)] - The background hover color used for the tree node.
+/// @prop {Map} background-focused [igx-color: ('surface')] - The background color used for the focused tree node.
+/// @prop {Map} background-active [igx-color: ('surface')] - The background color used for the active tree node.
+/// @prop {Map} background-active-hover [igx-color: ('grays', 50)] - The background hover color in active state used for the tree node.
+/// @prop {Map} background-active-focused [igx-color: ('surface')] - The background color in active state used for the focused tree node.
+/// @prop {Map} color [igx-contrast-color: ('surface')] - The color used for the tree node content.
+/// @prop {Map} color-hover [igx-color: ('grays', 900)] - The hover color used for the tree node content.
+/// @prop {Map} color-focused [igx-contrast-color: ('surface')] - The color used for the content of the focused tree node
 /// @prop {Map} tree-indicator-color-hover [igx-color: ('primary', 200)] - The hover color used for the tree node expand/collapse indicator.
+/// @prop {Map} tree-indicator-color-focused [igx-color: ('grays', 900)] - The color used for the tree node expand/collapse indicator when the tree node is focused.
+/// @prop {Map} tree-indicator-color-active [igx-color: ('grays', 900)] - The color used for the active tree node expand/collapse indicator.
+
 /// @requires {function} extend
 /// @requires $_indigo-tree
 $_dark-indigo-tree: extend(
@@ -172,7 +194,7 @@ $_dark-indigo-tree: extend(
         ),
 
         background-active-hover: (
-            igx-color: ('grays', 50),
+            igx-color: ('grays', 50)
         ),
     )
 );
