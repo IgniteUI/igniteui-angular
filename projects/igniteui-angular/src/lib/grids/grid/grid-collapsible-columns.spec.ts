@@ -546,11 +546,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
-            expect(grid.crudService.row).not.toBeNull();
+            expect(grid.gridAPI.crudService.row).not.toBeNull();
             addressInf.expanded = true;
             fixture.detectChanges();
 
-            expect(grid.crudService.row).toBeNull();
+            expect(grid.gridAPI.crudService.row).toBeNull();
             GridFunctions.verifyGroupIsExpanded(fixture, addressInf, true, true);
         });
 

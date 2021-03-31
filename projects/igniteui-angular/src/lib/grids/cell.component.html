@@ -90,8 +90,12 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
+        <!-- The additional [checked] binding is needed as after the initial call of the checked getter
+        it is never called again as no change detection is triggered in the grid after that, resulting in wrong
+        rendered state of the checkbox. -->
         <igx-checkbox
             [(ngModel)]="editValue"
+            [checked]="editValue"
             [igxFocus]="true"
             [disableRipple]="true"
         ></igx-checkbox>

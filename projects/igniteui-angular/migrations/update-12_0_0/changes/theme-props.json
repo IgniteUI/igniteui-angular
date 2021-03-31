@@ -322,7 +322,7 @@
             "owner": "igx-button-theme"
         },
         {
-            "name": "$disabled-text-color",
+            "name": "$disabled-color",
             "replaceWith": "$disabled-foreground",
             "owner": "igx-button-theme"
         }
