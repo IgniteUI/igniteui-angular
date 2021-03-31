@@ -37,6 +37,8 @@
             <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
             <button igxButton (click)="changeNodeData()">Change Node Data</button>
             <button igxButton (click)="getNodes()">Nodes</button>
+            <button igxButton (click)="addItem()">Add nodes</button>
+            <button igxButton (click)="resetData()">Reset nodes</button>
         </div>
 
         <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
@@ -46,20 +48,20 @@
                 <p>IgxTree (templated with icon and text)</p>
                 <igx-tree #tree1 [singleBranchExpand]="singleBranchExpand" [animationSettings]="animationSettings"
                     (nodeSelection)="nodeSelection($event)" (keydown)="keydown($event)"
-                    (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">
+                    (nodeCollapsing)="handleEvent($event)" (activeNodeChanged)="activeNodeChanged($event)"
+                    style="height: 300px; overflow: scroll;">
                     <igx-tree-node #test [data]="{ID: 'test'}">asd</igx-tree-node>
-                    <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected"
-                        [expanded]="true">
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true" [(selected)]="node.selected">
                         <div class="sample-template-center">
                             <!-- <a href="www.google.com">test</a> -->
                             <igx-icon>face</igx-icon>
                             <span class="sample-ellipsis">{{ node.CompanyName }}</span>
                         </div>
                         <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child"
-                            [(selected)]="child.selected" [active]="true">
+                            [(selected)]="child.selected" [expanded]="true" [active]="true">
                             {{ child.CompanyName }}
                             <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild"
-                                [(selected)]="leafchild.selected" [active]="true">
+                                [(selected)]="leafchild.selected" [expanded]="true" [active]="true">
                                 {{ leafchild.CompanyName }}
                             </igx-tree-node>
                         </igx-tree-node>

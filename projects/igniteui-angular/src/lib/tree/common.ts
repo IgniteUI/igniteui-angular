@@ -17,6 +17,8 @@ export interface IgxTree {
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
     navService: IgxTreeNavigationService;
+    /** @hidden @internal */
+    disabledChange: EventEmitter<IgxTreeNode<any>>;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;
@@ -38,8 +40,13 @@ export interface IgxTreeNode<T> {
     path: IgxTreeNode<any>[];
     expanded: boolean | null;
     selected: boolean | null;
+    disabled: boolean;
     level: number;
     data: T;
+    /** @hidden @internal */
+    tabIndex: number;
+    /** @hidden @internal */
+    allChildren: QueryList<IgxTreeNode<any>>;
     children: QueryList<IgxTreeNode<any>> | null;
     selectedChange: EventEmitter<boolean>;
     expandedChange: EventEmitter<boolean>;
