@@ -212,7 +212,7 @@
 /// Generates CSS class names for all colors from
 /// for a given property and color palette, with
 /// optional prefix and suffix attached to the class name.
-/// @access private
+/// @access public
 /// @param {string} $prop - The CSS property to assign the palette color to.
 /// @param {string} $prefix [igx] - A prefix to be attached to the class name.
 /// @param {string} $suffix [null] - A suffix to be attached to the class name.
