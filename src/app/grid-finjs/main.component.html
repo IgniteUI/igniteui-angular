@@ -1,9 +1,9 @@
-<div class="grid__wrapper" [class.fin-dark-theme]="theme">
+<div class="grid__wrapper" [class.fin-dark-theme]="darkTheme">
     <app-finjs-controllers #controllers
         (switchChanged)="onSwitchChanged($event)"
         (volumeChanged)="onVolumeChanged($event)"
         (playAction)="onPlayAction($event)">
     </app-finjs-controllers>
-    <app-finjs-grid #grid>
+    <app-finjs-grid #grid [data]="data$ | async">
     </app-finjs-grid>
 </div>
