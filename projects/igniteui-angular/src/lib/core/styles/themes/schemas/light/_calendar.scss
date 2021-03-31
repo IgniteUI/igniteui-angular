@@ -185,7 +185,7 @@ $_light-calendar: extend(
 /// @type {Map}
 /// @prop {Color} date-current-text-color [igx-color: 'surface'] - The text color for the current date.
 /// @prop {Map} date-current-bg-color [igx-color: ('primary', 500)] - The background color for the current date.
-/// @propsivanov-paletteColorThemes {Map} date-selected-background [igx-color: ('primary', 50)] - The background color for the selected date.
+/// @prop {Map} date-selected-background [igx-color: ('primary', 50)] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-color: ('primary', 100)] - The text color for the selected date.
 ///
 /// @prop {Number} border-radius [0] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
