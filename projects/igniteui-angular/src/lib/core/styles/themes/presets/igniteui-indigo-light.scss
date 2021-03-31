@@ -1,9 +1,5 @@
 @import '../index';
 
-:root {
-    @include igx-palette-vars($light-indigo-palette, $contrast: true);
-}
-
 @include igx-core();
 @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
 @include igx-indigo-light-theme($light-indigo-palette);

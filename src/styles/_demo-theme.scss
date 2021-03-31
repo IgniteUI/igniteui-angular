@@ -1,0 +1,22 @@
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
+@import 'variables';
+@import 'mixins';
+@import 'app-layout';
+
+/* autoprefixer grid: on */
+body {
+    background: $igx-background-color;
+    color: $igx-foreground-color;
+}
+
+@include igx-core($direction: $direction);
+@include igx-typography($font-family: $typeface, $type-scale: $type-scale);
+@include igx-theme($palette: $palette, $schema: $schema, $legacy-support: $legacy-support);
+
+.nav-header {
+    @if luminance($igx-background-color) < .5 {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
+    } @else {
+        @include nav-logo('../assets/images/rsrcs/igniteui-logo-light-bg', $igx-background-color);
+    }
+}
