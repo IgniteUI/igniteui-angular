@@ -49,7 +49,6 @@
 
     $drop-indicator-color: null,
     $border-color: null,
-    $_hover-color: null,
 ) {
     $name: 'igx-tree';
     $tree-schema: ();
@@ -73,6 +72,8 @@
     @if not($foreground-active) and $background-active {
         $foreground-active: text-contrast($background-active);
     }
+
+    $_hover-color: --var($theme, '_hover-color');
 
     @return extend($theme, (
         name: $name,
@@ -104,6 +105,12 @@
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+
+    $variant: map-get($theme, variant);
+    $indigo-theme: $variant == 'indigo-design';
+
+    $type: map-get($theme, type);
+    $dark-variant: $type == 'dark';
 
     $node-indent: (
         comfortable: rem(24px),
@@ -163,7 +170,8 @@
     }
 
     %node-content,
-    %node-indicator {
+    %node-indicator,
+    %node-select {
         z-index: 1;
     }
 
@@ -238,10 +246,21 @@
     %node-wrapper--active {
         background: --var($theme, 'background-active');
         color: --var($theme, 'foreground-active');
+    }
 
+    %node-wrapper--selected,
+    %node-wrapper--active-selected {
         &:hover {
             &::after {
-                opacity: .5;
+                @if ($indigo-theme) {
+                    /* stylelint-disable max-nesting-depth */
+                    @if($dark-variant) {
+                        opacity: .8;
+                    } @else {
+                        opacity: .2;
+                    }
+                    /* stylelint-enable max-nesting-depth */
+                }
             }
         }
     }
@@ -288,7 +307,6 @@
         justify-content: center;
         cursor: pointer;
         user-select: none;
-        color: --var($theme, 'foreground');
     }
 
     %node-drop-indicator {

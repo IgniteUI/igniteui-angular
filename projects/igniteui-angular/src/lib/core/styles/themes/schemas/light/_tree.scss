@@ -25,6 +25,8 @@ $_light-tree: extend(
     (
         variant: 'material',
 
+        type: 'light',
+
         background: (
             igx-color: ('surface')
         ),
@@ -42,7 +44,7 @@ $_light-tree: extend(
         ),
 
         background-active: (
-            igx-color: ('grays', 200)
+            igx-color: ('grays', 200),
         ),
 
         foreground-active: (
@@ -57,6 +59,12 @@ $_light-tree: extend(
             igx-contrast-color: ('secondary', 300),
         ),
 
+        border-color: (
+            igx-color: ('secondary')
+        ),
+
+        // Same for all themes
+
         background-disabled: (
             igx-color: ('surface')
         ),
@@ -66,10 +74,6 @@ $_light-tree: extend(
         ),
 
         drop-indicator-color: (
-            igx-color: ('secondary')
-        ),
-
-        border-color: (
             igx-color: ('secondary')
         ),
 
@@ -87,6 +91,42 @@ $_fluent-tree: extend(
     $_light-tree,
     (
         variant: 'fluent',
+
+        background: (
+            igx-color: ('surface')
+        ),
+
+        foreground: (
+            igx-contrast-color: ('surface')
+        ),
+
+        background-selected: (
+            igx-color: ('grays', 100)
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('grays', 100)
+        ),
+
+        background-active: (
+            igx-color: ('surface')
+        ),
+
+        foreground-active: (
+            igx-contrast-color: ('surface'),
+        ),
+
+        background-active-selected: (
+            igx-color: ('grays', 200)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('grays', 200),
+        ),
+
+        border-color: (
+            igx-color: ('grays', 800)
+        ),
     )
 );
 
@@ -99,6 +139,38 @@ $_bootstrap-tree: extend(
     $_light-tree,
     (
         variant: 'bootstrap',
+
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
+        ),
+
+        background-selected: (
+            igx-color: ('primary')
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('primary', 600)
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 600)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 600),
+        ),
+
+        border-color: (
+            igx-color: ('primary' 200)
+        ),
+
+        _hover-color: (
+            igx-color: ('grays', 100)
+        )
     )
 );
 
@@ -111,5 +183,37 @@ $_indigo-tree: extend(
     $_light-tree,
     (
         variant: 'indigo-design',
+
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
+        ),
+
+        background-selected: (
+            igx-color: ('primary')
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('primary')
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 400)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 400),
+        ),
+
+        border-color: (
+            igx-color: ('primary', 300)
+        ),
+
+        _hover-color: (
+            igx-color: ('primary', 50)
+        )
     )
 );
