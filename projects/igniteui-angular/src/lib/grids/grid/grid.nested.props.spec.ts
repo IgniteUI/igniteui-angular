@@ -132,7 +132,7 @@ const DATA2 = [
 })
 class NestedPropertiesGridComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
 }
 
 @Component({
@@ -149,7 +149,7 @@ class NestedPropertiesGridComponent {
 })
 class NestedPropertiesGrid2Component {
     @ViewChild('grid', { static: true, read: IgxGridComponent })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
 }
 
 @Component({
@@ -168,9 +168,10 @@ class NestedPropertiesGrid2Component {
 })
 class NestedPropertyGridComponent {
     @ViewChild('grid', { static: true, read: IgxGridComponent })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
+
     @ViewChild(IgxComboComponent, { read: IgxComboComponent })
-    combo: IgxComboComponent;
+    public combo: IgxComboComponent;
 
     public locations = LOCATIONS;
     public parseArray(arr: { id: number; shop: string }[]): string {
@@ -460,7 +461,7 @@ describe('Grid nested data advanced editing', () => {
         const header = GridFunctions.getColumnHeader('user.age', fixture);
         UIInteractions.simulateClickAndSelectEvent(header);
 
-        expect(grid.headerGroups.toArray()[0].isFiltered).toBeFalsy();
+        expect(grid.headerGroupsList[0].isFiltered).toBeFalsy();
         GridFunctions.verifyHeaderSortIndicator(header, false, false);
 
         GridFunctions.clickHeaderSortIcon(header);

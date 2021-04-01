@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxGridCellComponent,
@@ -54,7 +54,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             });
 
             // Focus and select first cell
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
             fix.detectChanges();
@@ -87,7 +87,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 selectedCell = event.cell;
             });
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
 
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent, false, false, true);
             fix.detectChanges();
@@ -110,7 +110,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.onSelection.subscribe((event: IGridCellEventArgs) => {
                 selectedCell = event.cell;
             });
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent);
@@ -187,7 +187,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.onSelection.subscribe((event: IGridCellEventArgs) => {
                 selectedCell = event.cell;
             });
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             fix.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowright', gridContent);
@@ -234,7 +234,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         it('should focus the first cell when focus the grid body', async () => {
-            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
+            GridFunctions.getGridHeader(grid).nativeElement.focus();
             fix.detectChanges();
             const cols = [];
             for (let i = 0; i < 10; i++) {
@@ -264,7 +264,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         });
 
         it('should allow navigating down', async () => {
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             await wait();
             fix.detectChanges();
 
@@ -307,7 +307,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             await wait();
             fix.detectChanges();
 
@@ -342,7 +342,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             await wait(DEBOUNCETIME);
             fix.detectChanges();
 
@@ -584,7 +584,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
             await wait();
             fix.detectChanges();
 
@@ -609,7 +609,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.componentInstance.data = fix.componentInstance.generateData(25);
             fix.detectChanges();
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
 
             grid.navigateTo(15, 1, (args) => {
                 args.target.activate(null);
@@ -630,7 +630,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
             await wait(DEBOUNCETIME);
 
-            GridFunctions.focusFirstCell(fix);
+            GridFunctions.focusFirstCell(fix, grid);
 
             grid.navigateTo(50, 50, (args) => {
  args.target.activate(null);
@@ -691,7 +691,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
         }));
 
         it('should focus the first cell when focus the grid body and there is a grouped column', async () => {
-            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
+            GridFunctions.getGridHeader(grid).nativeElement.focus();
             fix.detectChanges();
             grid.columnWidth = '200px';
             await wait();

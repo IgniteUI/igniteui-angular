@@ -2406,7 +2406,7 @@ export class IgxGridTestComponent {
     public isHorizontalScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
         if (scrollbar) {
-            return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+            return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
         }
 
         return false;
@@ -2424,7 +2424,7 @@ export class IgxGridTestComponent {
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
-            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+            return scrollbar.offsetHeight < (scrollbar.children.item(0) as HTMLElement).offsetHeight;
         }
         return false;
     }
@@ -2482,7 +2482,7 @@ export class IgxGridDefaultRenderingComponent {
 
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
-        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+        return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
     }
 
     public initColumns(column) {

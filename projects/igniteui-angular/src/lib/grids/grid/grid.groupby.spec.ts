@@ -10,7 +10,7 @@ import { IgxGroupAreaDropDirective } from './grid.directives';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
 import { IgxGridModule } from './public_api';
 import { IgxGridRowComponent } from './grid-row.component';
-import { IgxChipComponent, IChipClickEventArgs } from '../../chips/chip.component';
+import { IgxChipComponent } from '../../chips/chip.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -225,7 +225,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupingExpressions);
     }));
 
-    it('should allow grouping with a custom comparer', fakeAsync(/** height/width setter rAF */() => {
+    it('should allow grouping with a custom comparer', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         fix.componentInstance.data[0].ReleaseDate = new Date(2017, 1, 1, 15, 30, 0, 0);
@@ -246,6 +246,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 return DefaultSortingStrategy.instance().compareValues(a, b);
             }
         });
+        tick();
         fix.detectChanges();
         let groupRows = grid.groupsRowList.toArray();
         // verify groups count
@@ -254,8 +255,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         // the comparer and reapply the same grouping again
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event: IChipClickEventArgs = { owner: chips[0], cancel: false, originalEvent: null };
-        grid.onChipClicked(event);
+        grid.groupArea.handleClick(chips[0].id);
+        tick();
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -771,7 +772,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10);
+        const origScrollHeight = parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10);
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -785,7 +786,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
@@ -796,7 +797,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight);
     }));
 
@@ -2322,8 +2323,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
-        const event: IChipClickEventArgs = { owner: chips[0], originalEvent: null, cancel: false };
-        grid.onChipClicked(event);
+        grid.groupArea.handleClick(chips[0].id);
         tick();
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');

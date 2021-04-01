@@ -172,7 +172,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
 
         const hScroll = hierarchicalGrid.headerContainer.getScroll();
-        expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
+        expect((hScroll.children[0] as HTMLElement).offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
     });
 
     it('should allow extracting child grids using hgridAPI', () => {

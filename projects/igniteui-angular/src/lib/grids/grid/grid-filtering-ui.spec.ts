@@ -45,7 +45,6 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 
 const DEBOUNCETIME = 30;
@@ -1489,7 +1488,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             grid.width = '470px';
             await wait(100);
             fix.detectChanges();
-            GridFunctions.getGridHeader(fix).triggerEventHandler('focus', null);
+            GridFunctions.getGridHeader(grid).nativeElement.focus(); //
             fix.detectChanges();
 
             // Verify 'ReleaseDate' filter chip is not fully visible.
@@ -1673,11 +1672,11 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(conditionChips.length).toBe(0);
         }));
 
-        it('Should open/close filterRow for respective column when pressing \'ctrl + shift + l\' on its filterCell chip.',
+        it(`Should open/close filterRow for respective column when pressing 'ctrl + shift + l' on its filterCell chip.`,
             fakeAsync(() => {
                 // Verify filterRow is not opened.
-                let filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-                expect(filterUIRow).toBeNull();
+                let filterUIRow = grid.theadRow.filterRow;
+                expect(filterUIRow).toBeUndefined();
 
                 const releaseDateColumn = GridFunctions.getColumnHeader('ReleaseDate', fix);
                 UIInteractions.simulateClickAndSelectEvent(releaseDateColumn);
@@ -1688,20 +1687,18 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
 
                 // Verify filterRow is opened for the 'ReleaseDate' column.
-                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-                expect(filterUIRow).not.toBeNull();
-                const headerGroups = fix.debugElement.queryAll(By.directive(IgxGridHeaderGroupComponent));
-                const headerGroupsFiltering = headerGroups.filter(
-                    (hg) => hg.nativeElement.classList.contains('igx-grid__th--filtering'));
+                filterUIRow = grid.theadRow.filterRow;
+                expect(filterUIRow).toBeDefined();
+                const headerGroupsFiltering = grid.headerGroupsList.filter(group => group.isFiltered);
                 expect(headerGroupsFiltering.length).toBe(1);
-                expect(headerGroupsFiltering[0].componentInstance.column.field).toBe('ReleaseDate');
+                expect(headerGroupsFiltering[0].column.field).toMatch('ReleaseDate');
 
                 UIInteractions.triggerKeyDownEvtUponElem('l', filterUIRow.nativeElement, true, false, true, true);
                 tick(200);
                 fix.detectChanges();
 
-                filterUIRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
-                expect(filterUIRow).toBeNull();
+                filterUIRow = grid.theadRow.filterRow;
+                expect(filterUIRow).toBeUndefined();
         }));
 
         it('Should navigate to first cell of grid when pressing \'Tab\' on the last filterCell chip.', fakeAsync(() => {
@@ -1715,7 +1712,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(document.activeElement).toBe(firstCell);
         }));
 
-        it('Should remove first condition chip when click \'clear\' button and focus \'more\' icon.', fakeAsync(() => {
+        it(`Should remove first condition chip when click 'clear' button and focus 'more' icon.`, fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '160px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
@@ -1741,8 +1738,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             tick(50);
             fix.detectChanges();
 
-            const header = GridFunctions.getGridHeader(fix);
-            // const moreIcon = GridFunctions.getFilterIndicatorForColumn('ProductName', fix);
+            const header = GridFunctions.getGridHeader(grid);
             expect(document.activeElement).toBe(header.nativeElement);
 
             // Verify new chip text.
@@ -1750,7 +1746,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(GridFunctions.getChipText(filterCellChip)).toBe('e');
         }));
 
-        it('Should focus \'grid header\' when close filter row.', fakeAsync(() => {
+        it(`Should focus 'grid header' when close filter row.`, fakeAsync(() => {
             grid.getColumnByName('ProductName').width = '80px';
             tick(DEBOUNCETIME);
             fix.detectChanges();
@@ -1783,7 +1779,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.closeFilterRow(fix);
             tick(DEBOUNCETIME);
 
-            const header = GridFunctions.getGridHeader(fix);
+            const header = GridFunctions.getGridHeader(grid);
             expect(document.activeElement).toEqual(header.nativeElement);
         }));
 
@@ -2521,8 +2517,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         // Filtering + Column Groups
-        it('should position filter row correctly when grid has column groups.', fakeAsync(/** showHideArrowButtons rAF */() => {
-            const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
+        it('should position filter row correctly when grid has column groups.', fakeAsync(() => {
+            const thead = GridFunctions.getGridHeader(grid).nativeElement;
 
             const filteringCells = GridFunctions.getFilteringCells(fix);
             const cellElem = filteringCells[0].nativeElement;
@@ -2537,7 +2533,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('should position filter row and chips correctly when grid has column groups and one is hidden.',
-            fakeAsync(/** showHideArrowButtons rAF */() => {
+            fakeAsync(() => {
                 const filteringExpressionsTree = new FilteringExpressionsTree(FilteringLogic.And, 'ProductName');
                 const expression = {
                     fieldName: 'ProductName',

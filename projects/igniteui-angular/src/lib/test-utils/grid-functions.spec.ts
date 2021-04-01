@@ -21,6 +21,7 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 import { parseDate } from '../core/utils';
+import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -116,8 +117,8 @@ export class GridFunctions {
         return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
     }
 
-    public static getGridHeader(fix): DebugElement {
-        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    public static getGridHeader(grid: IgxGridBaseDirective): IgxGridHeaderRowComponent {
+        return grid.theadRow;
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
@@ -156,16 +157,16 @@ export class GridFunctions {
     /**
      * Focus the grid header
      */
-    public static focusHeader(fix: ComponentFixture<any>) {
-        this.getGridHeader(fix).triggerEventHandler('focus', null);
+    public static focusHeader(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+        this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
     }
 
     /**
      * Focus the first cell in the grid
      */
-    public static focusFirstCell(fix: ComponentFixture<any>) {
-        this.getGridHeader(fix).triggerEventHandler('focus', null);
+    public static focusFirstCell(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+        this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
@@ -184,11 +185,6 @@ export class GridFunctions {
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
         const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
-    }
-
-    public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getScroll();
-        hScrollbar.scrollRight = newRight;
     }
 
     public static scrollTop(grid: IgxGridComponent, newTop: number) {
@@ -1959,10 +1955,10 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
-        for (let i = 0; i < headerCells.length; i++) {
-            const widthDiff = headerCells[i].headerCell.elementRef.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerCells[i].headerCell.elementRef.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: IgxGridCellComponent[]) {
+        for (let i = 0; i < headerGroups.length; i++) {
+            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
+            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
@@ -2367,7 +2363,7 @@ export class GridSelectionFunctions {
     public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
         expect(column.selected).toEqual(selected);
         if (!column.hidden) {
-            expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+            expect(column.headerCell.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
         }
     }
 
@@ -2403,6 +2399,6 @@ export class GridSelectionFunctions {
             stopPropagation: () => { }
         };
 
-        column.headerCell.onClick(event);
+        column.headerCell.onClick(event as any);
     }
 }

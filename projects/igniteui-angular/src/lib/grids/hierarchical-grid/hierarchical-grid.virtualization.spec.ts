@@ -354,20 +354,20 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(958);
+                expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
                 done();
             }
         );
 
 
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(510);
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         (row.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
 
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(561);
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
     });
 
     it('should emit onScroll and onDataPreLoad on row island when child grid is scrolled.', async () => {
@@ -460,7 +460,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateData(40, 3);
     }
-    generateData(count: number, level: number, parendID?) {
+    public generateData(count: number, level: number, parendID?) {
         const prods = [];
         const currLevel = level;
         let children;

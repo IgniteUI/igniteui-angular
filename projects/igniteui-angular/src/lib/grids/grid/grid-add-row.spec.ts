@@ -125,7 +125,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should be able to enter add row mode on Alt + plus key.', () => {
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
@@ -137,7 +137,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
@@ -805,7 +805,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            // const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 

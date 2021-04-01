@@ -297,7 +297,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(c.nativeElement.querySelector('.customCellTemplate')).toBeDefined());
 
         grid.headerCellList.forEach(header =>
-            expect(header.elementRef.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
+            expect(header.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
 
         const cell = grid.getCellByColumn(0, 'ID');
         cell.setEditMode(true);
