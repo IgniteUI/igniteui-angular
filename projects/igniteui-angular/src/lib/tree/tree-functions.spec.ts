@@ -43,13 +43,17 @@ export class TreeTestFunctions {
     public static createNodeSpies(
         count: number,
         parentNode?: IgxTreeNodeComponent<any>,
-        children?: any[]
+        children?: any[],
+        allChildren?: any[]
     ): IgxTreeNodeComponent<any>[] {
         const nodesArr = [];
         const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
         for (let i = 0; i < count; i++) {
             nodesArr.push(jasmine.createSpyObj<IgxTreeNodeComponent<any>>(['id', 'selected'], {
-                parentNode: parentNode ? parentNode : null, children: children ? children[i] : null, selectedChange: mockEmitter
+                parentNode: parentNode ? parentNode : null,
+                children: children ? children[i] : null,
+                allChildren: allChildren ? allChildren[i] : null,
+                selectedChange: mockEmitter
             }));
         }
         return nodesArr;
