@@ -18,6 +18,19 @@ enum TabScrollButtonStyle {
     NotDisplayed = 'not_displayed'
 }
 
+const getTabItemsContainerWidth = (tabs: IgxTabsComponent) => {
+    // We use this hacky way to get the width of the itemsContainer,
+    // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
+    const itemsContainerChildrenCount = tabs.itemsContainer.nativeElement.children.length;
+    let itemsContainerWidth = 0;
+    if (itemsContainerChildrenCount > 1) {
+        const lastTab = tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+        itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+    }
+
+    return itemsContainerWidth;
+};
+
 /** @hidden */
 @Directive({
     selector: '[igxRightButtonStyle]'
@@ -43,15 +56,7 @@ export class IgxRightButtonStyleDirective {
 
     private getRightButtonStyle(): string {
         const viewPortWidth = this.tabs.viewPort.nativeElement.offsetWidth;
-
-        // We use this hacky way to get the width of the itemsContainer,
-        // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
-        let itemsContainerWidth = 0;
-        if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
-            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
-        }
+        const itemsContainerWidth = getTabItemsContainerWidth(this.tabs);
         const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
         const offset = this.tabs.offset;
         const total = offset + viewPortWidth;
@@ -94,14 +99,7 @@ export class IgxLeftButtonStyleDirective {
     }
 
     private getLeftButtonStyle(): string {
-        // We use this hacky way to get the width of the itemsContainer,
-        // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
-        let itemsContainerWidth = 0;
-        if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
-            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
-        }
+        const itemsContainerWidth = getTabItemsContainerWidth(this.tabs);
         const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
         const offset = this.tabs.offset;
         if (offset === 0) {
