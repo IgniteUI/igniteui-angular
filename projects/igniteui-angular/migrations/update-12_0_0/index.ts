@@ -161,10 +161,21 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
             applyChanges();
             changes.clear();
+
+            // Insert a comment indicating the change/replacement
+            findElementNodes(parseFile(host, path), comp.component).
+                map(node => getSourceOffset(node as Element)).
+                forEach(offset => {
+                    const { startTag, file } = offset;
+                    const commentText = `<!-- NOTE: This component has been updated by Infragistics migration: v${version} -->\n`;
+                    addChange(file.url, new FileChange(startTag.start, commentText));
+                });
+
+            applyChanges();
+            changes.clear();
         }
     }
 
     // Apply all selector and input changes
-    // update.applyAllOtherChanges();
     update.applyChanges();
 };

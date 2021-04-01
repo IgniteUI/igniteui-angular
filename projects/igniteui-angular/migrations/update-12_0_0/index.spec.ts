@@ -3,7 +3,9 @@ import * as path from 'path';
 import { EmptyTree } from '@angular-devkit/schematics';
 import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/testing';
 
-describe('Update to 12.0.0', () => {
+const version = '12.0.0';
+
+describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
@@ -21,6 +23,7 @@ describe('Update to 12.0.0', () => {
     };
 
     const migrationName = 'migration-20';
+    const noteText = `<!-- NOTE: This component has been updated by Infragistics migration: v${version} -->`;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -99,6 +102,7 @@ $theme: igx-avatar-theme(
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-tabs [selectedIndex]="0" tabAlignment="start">
 <igx-tab-item>
 <igx-tab-header>
@@ -124,6 +128,7 @@ $theme: igx-avatar-theme(
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-tabs tabAlignment="justify">
 <igx-tab-item [selected]="true">
 <igx-tab-header routerLink="view1">
@@ -150,6 +155,7 @@ $theme: igx-avatar-theme(
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-tabs tabAlignment="justify">
 <igx-tab-item>
 <igx-tab-header>
@@ -176,6 +182,7 @@ Some Content
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-bottom-nav>
 <igx-bottom-nav-item [selected]="true">
 <igx-bottom-nav-header>
@@ -201,6 +208,7 @@ Some Content
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-bottom-nav>
 <igx-bottom-nav-item>
 <igx-bottom-nav-header routerLink="view1">
@@ -227,6 +235,7 @@ Some Content
 
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
+${noteText}
 <igx-bottom-nav>
 <igx-bottom-nav-item>
 <igx-bottom-nav-header>
