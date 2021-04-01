@@ -2076,7 +2076,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public get headerGroup(): IgxGridHeaderGroupComponent {
-        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
+        return this.grid.headerGroupsList.find(group => group.column === this);
     }
 
     /**
@@ -2094,6 +2094,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (!this.columnGroup) {
             const size = this.getAutoSize(byHeader);
             this.width = size;
+            // TODO: Dubious usage
             this.grid.reflow();
         }
     }
@@ -2135,23 +2136,23 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public getHeaderCellWidths() {
         const range = this.grid.document.createRange();
         let headerWidth;
-        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-            headerWidth = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
+        if (this.headerTemplate && this.headerCell.nativeElement.children[0].children.length > 0) {
+            headerWidth = Math.max(...Array.from(this.headerCell.nativeElement.children[0].children)
                 .map((child) => getNodeSizeViaRange(range, child)));
         } else {
-            headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+            headerWidth = getNodeSizeViaRange(range, this.headerCell.nativeElement.children[0]);
         }
 
         if (this.sortable || this.filterable) {
-            headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
+            headerWidth += this.headerCell.nativeElement.children[1].getBoundingClientRect().width;
         }
 
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.nativeElement);
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
 
         // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
-        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
+        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement);
         const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
 
         return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};

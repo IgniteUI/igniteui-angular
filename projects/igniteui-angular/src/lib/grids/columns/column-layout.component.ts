@@ -25,14 +25,14 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    get width(): any {
+    public get width(): any {
         const width = this.getFilledChildColumnSizes(this.children).reduce((acc, val) => acc + parseInt(val, 10), 0);
         return width;
     }
 
-    set width(val: any) { }
+    public set width(val: any) { }
 
-    get columnLayout() {
+    public get columnLayout() {
         return true;
     }
 
@@ -43,7 +43,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
-            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement.children[0]);
+            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement.children[0]);
             borderWidth = parseInt(headerStyles.borderRightWidth, 10);
         }
 
@@ -59,7 +59,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnComponent
      */
-    get visibleIndex(): number {
+    public get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
             return this._vIndex;
         }
@@ -86,7 +86,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * @memberof IgxColumnGroupComponent
      */
     @Input()
-    get hidden() {
+    public get hidden() {
         return this._hidden;
     }
 
@@ -98,7 +98,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      *
      * @memberof IgxColumnGroupComponent
      */
-    set hidden(value: boolean) {
+    public set hidden(value: boolean) {
         this._hidden = value;
         this.children.forEach(child => child.hidden = value);
         if (this.grid && this.grid.columns && this.grid.columns.length > 0) {
@@ -115,7 +115,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
     /**
      * @hidden
      */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         super.ngAfterContentInit();
         if (!this.hidden) {
             this.hidden = this.allChildren.some(x => x.hidden);
@@ -135,7 +135,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```
      * @memberof IgxColumnLayoutComponent
      */
-    get hasLastPinnedChildColumn() {
+    public get hasLastPinnedChildColumn() {
         return this.children.some(child => child.isLastPinned);
     }
 
@@ -146,7 +146,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
      * ```
      * @memberof IgxColumnLayoutComponent
      */
-    get hasFirstPinnedChildColumn() {
+    public get hasFirstPinnedChildColumn() {
         return this.children.some(child => child.isFirstPinned);
     }
 

@@ -30,48 +30,47 @@ const Z_INDEX = 9999;
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-header-group',
     templateUrl: './grid-header-group.component.html'
 })
 export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.-ms-grid-row-span')
-    get gridRowSpan(): number {
+    public get gridRowSpan(): number {
         return this.column.gridRowSpan;
     }
 
     @HostBinding('style.-ms-grid-column-span')
-    get gridColumnSpan(): number {
+    public get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
 
 
     @HostBinding('style.grid-row-end')
-    get rowEnd(): number {
+    public get rowEnd(): number {
         return this.column.rowEnd;
     }
 
     @HostBinding('style.grid-column-end')
-    get colEnd(): number {
+    public get colEnd(): number {
         return this.column.colEnd;
     }
 
     @HostBinding('style.-ms-grid-row')
     @HostBinding('style.grid-row-start')
-    get rowStart(): number {
+    public get rowStart(): number {
         return this.column.rowStart;
     }
 
     @HostBinding('style.-ms-grid-column')
     @HostBinding('style.grid-column-start')
-    get colStart(): number {
+    public get colStart(): number {
         return this.column.colStart;
     }
 
     @HostBinding('attr.id')
     public get headerID() {
-        return `${this.gridID}_-1_${this.column.level}_${this.column.visibleIndex}`;
+        return `${this.grid.id}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
 
     /**
@@ -82,37 +81,29 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @Input()
     public column: IgxColumnComponent;
 
-    /**
-     * Gets the `id` of the grid in which the header group is stored.
-     *
-     * @memberof IgxGridHeaderGroupComponent
-     */
-    @Input()
-    public gridID: string;
-
     @HostBinding('class.igx-grid__th--active')
     public get active() {
         const node = this.grid.navigation.activeNode;
-        return  node && !this.column.columnGroup ?
+        return node && !this.column.columnGroup ?
             node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
     }
 
     public get activeGroup() {
         const node = this.grid.navigation.activeNode;
-        return  node ? node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
+        return node ? node.row === -1 && node.column === this.column.visibleIndex && node.level === this.column.level : false;
     }
 
     /**
      * @hidden
      */
     @ViewChild(IgxGridHeaderComponent)
-    public headerCell: IgxGridHeaderComponent;
+    public header: IgxGridHeaderComponent;
 
     /**
      * @hidden
      */
     @ViewChild(IgxGridFilteringCellComponent)
-    public filterCell: IgxGridFilteringCellComponent;
+    public filter: IgxGridFilteringCellComponent;
 
     /**
      * @hidden
@@ -125,43 +116,49 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get width() {
+    public get width() {
         return this.grid.getHeaderGroupWidth(this.column);
     }
 
-    /**
-     * Gets the style classes of the header group.
-     *
-     * @memberof IgxGridHeaderGroupComponent
-     */
-    @HostBinding('class')
-    get styleClasses(): string {
-        const defaultClasses = [
-            'igx-grid__thead-item',
-            this.column.headerGroupClasses
-        ];
+    @HostBinding('class.igx-grid__thead-item')
+    public defaultCss = true;
 
-        const classList = {
-            'igx-grid__th--pinned': this.isPinned,
-            'igx-grid__th--pinned-last': this.isLastPinned,
-            'igx-grid__th--pinned-first': this.isFirstPinned,
-            'igx-grid__drag-col-header': this.isHeaderDragged,
-            'igx-grid__th--filtering': this.isFiltered
-        };
+    constructor(private cdr: ChangeDetectorRef,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        private ref: ElementRef<HTMLElement>,
+        public colResizingService: IgxColumnResizingService,
+        public filteringService: IgxFilteringService) { }
 
-        for (const className of Object.keys(classList)) {
-            if (classList[className]) {
-                defaultClasses.push(className);
-            }
-        }
-        return defaultClasses.join(' ');
+    @HostBinding('class.igx-grid__th--pinned')
+    public get pinnedCss() {
+        return this.isPinned;
+    }
+
+    @HostBinding('class.igx-grid__th--pinned-last')
+    public get pinnedLastCss() {
+        return this.isLastPinned;
+    }
+
+    @HostBinding('class.igx-grid__th--pinned-first')
+    public get pinnedFirstCSS() {
+        return this.isFirstPinned;
+    }
+
+    @HostBinding('class.igx-grid__drag-col-header')
+    public headerDragCss() {
+        return this.isHeaderDragged;
+    }
+
+    @HostBinding('class.igx-grid__th--filtering')
+    public filteringCss() {
+        return this.isFiltered;
     }
 
     /**
      * @hidden
      */
     @HostBinding('style.z-index')
-    get zIndex() {
+    public get zIndex() {
         if (!this.column.pinned) {
             return null;
         }
@@ -173,7 +170,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get grid(): any {
+    public get grid(): any {
         return this.gridAPI.grid;
     }
 
@@ -182,7 +179,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get isFiltered(): boolean {
+    public get isFiltered(): boolean {
         return this.filteringService.filteredColumn === this.column;
     }
 
@@ -191,19 +188,19 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get isLastPinned(): boolean {
+    public get isLastPinned(): boolean {
         return !this.grid.hasColumnLayouts ? this.column.isLastPinned : false;
     }
 
     /**
      * Gets whether the header group is stored in the first column of the right pinned area.
      */
-    get isFirstPinned(): boolean {
+    public get isFirstPinned(): boolean {
         return !this.grid.hasColumnLayouts ? this.column.isFirstPinned : false;
     }
 
     @HostBinding('style.display')
-    get groupDisplayStyle(): string {
+    public get groupDisplayStyle(): string {
         return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
     }
 
@@ -212,7 +209,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get isPinned(): boolean {
+    public get isPinned(): boolean {
         return this.column.pinned;
     }
 
@@ -221,28 +218,28 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
      *
      * @memberof IgxGridHeaderGroupComponent
      */
-    get isHeaderDragged(): boolean {
-        return this.grid.draggedColumn === this.column;
+    public get isHeaderDragged(): boolean {
+        return this.grid.columnInDrag === this.column;
     }
 
     /**
      * @hidden
      */
-    get hasLastPinnedChildColumn(): boolean {
+    public get hasLastPinnedChildColumn(): boolean {
         return this.column.allChildren.some(child => child.isLastPinned);
     }
 
     /**
      * @hidden
      */
-    get hasFirstPinnedChildColumn(): boolean {
+    public get hasFirstPinnedChildColumn(): boolean {
         return this.column.allChildren.some(child => child.isFirstPinned);
     }
 
     /**
      * @hidden
      */
-    get selectable() {
+    public get selectable() {
         const selectableChildren = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup);
         return this.grid.columnSelection !== GridSelectionMode.none &&
             this.column.applySelectableClass
@@ -253,43 +250,41 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     /**
      * @hidden
      */
-    get selected() {
+    public get selected() {
         return this.column.selected;
     }
 
     /**
      * @hidden
      */
-    get height() {
-        return this.element.nativeElement.getBoundingClientRect().height;
+    public get height() {
+        return this.nativeElement.getBoundingClientRect().height;
     }
 
     /**
      * @hidden
      */
-    get columnTitle() {
+    public get title() {
         return this.column.title || this.column.header;
     }
 
-    constructor(private cdr: ChangeDetectorRef,
-        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        public element: ElementRef,
-        public colResizingService: IgxColumnResizingService,
-        public filteringService: IgxFilteringService) { }
+    public get nativeElement() {
+        return this.ref.nativeElement;
+    }
 
     /**
      * @hidden
      */
     @HostListener('mousedown', ['$event'])
-    public onMouseDown(event): void {
-        // hack for preventing text selection in IE and Edge while dragging the resizer
+    public onMouseDown(event: MouseEvent): void {
+        // hack for preventing text selection in IE and Edge while dragging the resize element
         event.preventDefault();
     }
 
     /**
      * @hidden
      */
-    public groupClicked(event): void {
+    public groupClicked(event: MouseEvent): void {
         const columnsToSelect = this.column.allChildren.filter(c => !c.hidden && c.selectable && !c.columnGroup).map(c => c.field);
         if (this.grid.columnSelection !== GridSelectionMode.none
             && columnsToSelect.length > 0 && !this.grid.filteringService.isFilterRowVisible) {
@@ -310,18 +305,17 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    public toggleExpandState(event): void {
+    public toggleExpandState(event: MouseEvent): void {
         event.stopPropagation();
         this.column.expanded = !this.column.expanded;
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
-    // @HostListener('pointerdown', ['$event'])
-    public pointerdown(event): void {
+    public pointerdown(event: PointerEvent): void {
         event.stopPropagation();
         this.activate();
         this.grid.theadRow.nativeElement.focus();
@@ -354,13 +348,16 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     private get activeNode() {
-        return {row: -1, column: this.column.visibleIndex, level: this.column.level,
-            mchCache: {level: this.column.level, visibleIndex: this.column.visibleIndex},
+        return {
+            row: -1, column: this.column.visibleIndex, level: this.column.level,
+            mchCache: { level: this.column.level, visibleIndex: this.column.visibleIndex },
             layout: this.column.columnLayoutChild ? {
-            rowStart: this.column.rowStart,
-            colStart: this.column.colStart,
-            rowEnd: this.column.rowEnd,
-            colEnd: this.column.colEnd,
-            columnVisibleIndex: this.column.visibleIndex} : null };
+                rowStart: this.column.rowStart,
+                colStart: this.column.colStart,
+                rowEnd: this.column.rowEnd,
+                colEnd: this.column.colEnd,
+                columnVisibleIndex: this.column.visibleIndex
+            } : null
+        };
     }
 }

@@ -33,11 +33,11 @@ import { DisplayDensity } from '../../../core/displayDensity';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
 export class IgxGridFilteringRowComponent implements AfterViewInit {
+
     @Input()
     public get column(): IgxColumnComponent {
         return this._column;
@@ -80,6 +80,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
+    @HostBinding('class.igx-grid__filtering-row')
+    public defaultCSSClass = true;
+
+    @HostBinding('class.igx-grid__filtering-row--compact')
+    public get compactCSSClass() {
+        return this.displayDensity === DisplayDensity.compact;
+    }
+
+    @HostBinding('class.igx-grid__filtering-row--cosy')
+    public get cosyCSSClass() {
+        return this.displayDensity === DisplayDensity.cosy;
+    }
+
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -87,7 +100,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected defaultDateUI: TemplateRef<any>;
 
     @ViewChild('input', { read: ElementRef })
-    protected input: ElementRef;
+    protected input: ElementRef<HTMLInputElement>;
 
     @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
     protected dropDownConditions: IgxDropDownComponent;
@@ -99,33 +112,22 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
     @ViewChild('inputGroup', { read: ElementRef })
-    protected inputGroup: ElementRef;
+    protected inputGroup: ElementRef<HTMLElement>;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
-    protected inputGroupPrefix: ElementRef;
+    protected inputGroupPrefix: ElementRef<HTMLElement>;
 
     @ViewChild('container', { static: true })
-    protected container: ElementRef;
+    protected container: ElementRef<HTMLElement>;
 
     @ViewChild('operand')
-    protected operand: ElementRef;
+    protected operand: ElementRef<HTMLElement>;
 
     @ViewChild('closeButton', { static: true })
-    protected closeButton: ElementRef;
+    protected closeButton: ElementRef<HTMLElement>;
 
-    @HostBinding('class')
-    public get styleClasses(): string {
-        let classes = 'igx-grid__filtering-row';
-
-        switch (this.column.grid.displayDensity) {
-            case DisplayDensity.compact:
-                classes = classes + ' igx-grid__filtering-row--compact';
-                break;
-            case DisplayDensity.cosy:
-                classes = classes + ' igx-grid__filtering-row--cosy';
-                break;
-        }
-        return classes;
+    public get nativeElement() {
+        return this.ref.nativeElement;
     }
 
     public showArrows: boolean;
@@ -158,15 +160,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private isComposing = false;
     private _cancelChipClick = false;
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(
+        public filteringService: IgxFilteringService,
+        private ref: ElementRef<HTMLElement>,
+        private cdr: ChangeDetectorRef
+    ) { }
 
     @HostListener('keydown', ['$event'])
     public onKeydownHandler(evt) {
         if (evt.key === KEYS.ESCAPE || evt.key === KEYS.ESCAPE_IE ||
             evt.ctrlKey && evt.shiftKey && evt.key.toLowerCase() === 'l') {
-                evt.preventDefault();
-                evt.stopPropagation();
-                this.close();
+            evt.preventDefault();
+            evt.stopPropagation();
+            this.close();
         }
     }
 
@@ -193,7 +199,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         return this.defaultFilterUI;
     }
 
-     public get type() {
+    public get type() {
         switch (this.column.dataType) {
             case DataType.String:
             case DataType.Boolean:
@@ -263,7 +269,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE ||
             event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'l') {
-                this.close();
+            this.close();
         }
     }
 
@@ -670,8 +676,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges();
-}
+                    this.cdr.detectChanges();
+                }
             }
         });
     }
@@ -797,6 +803,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     public get isNarrowWidth(): boolean {
-        return this.element.nativeElement.offsetWidth < 432;
+        return this.nativeElement.offsetWidth < 432;
     }
 }
