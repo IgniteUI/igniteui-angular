@@ -480,9 +480,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public expand() {
-        if (this.treeService.isExpanded(this)) {
-            return;
-        }
+        // if (this.treeService.isExpanded(this)) {
+        //     return;
+        // }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,
@@ -515,9 +515,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public collapse() {
-        if (!this.treeService.isExpanded(this)) {
-            return;
-        }
+        // if (!this.treeService.isExpanded(this)) {
+        //     return;
+        // }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,

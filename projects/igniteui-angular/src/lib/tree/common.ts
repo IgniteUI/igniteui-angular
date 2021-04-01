@@ -44,6 +44,8 @@ export interface IgxTreeNode<T> {
     level: number;
     data: T;
     /** @hidden @internal */
+    nativeElement: HTMLElement;
+    /** @hidden @internal */
     tabIndex: number;
     /** @hidden @internal */
     allChildren: QueryList<IgxTreeNode<any>>;
