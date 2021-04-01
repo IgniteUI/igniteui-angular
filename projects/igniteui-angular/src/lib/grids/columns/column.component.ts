@@ -2164,7 +2164,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         // We do not cover cases where there are children with width 100% and etc,
         // because then we try to get new column size, based on header content, which is sized based on column size...
-        let headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+        let headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
@@ -2197,12 +2197,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const largest = new Map<number, number>();
 
         if (this.cells.length > 0) {
-            let cellsContentWidths = [];
-            if (this.cells[0].nativeElement.children.length > 0) {
-                this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
-            } else {
-                cellsContentWidths = this.cells.map((cell) => getNodeSizeViaRange(range, cell.nativeElement));
-            }
+            const cellsContentWidths = [];
+            this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);

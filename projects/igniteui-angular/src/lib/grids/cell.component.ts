@@ -929,8 +929,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public calculateSizeToFit(range: any): number {
-        return Math.max(...Array.from(this.nativeElement.children)
-            .map((child) => getNodeSizeViaRange(range, child)));
+        return getNodeSizeViaRange(range, this.nativeElement);
     }
 
     /**
