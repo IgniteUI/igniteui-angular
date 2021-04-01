@@ -19,11 +19,12 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
     const mockQuery3: any = {};
     const mockQuery4: any = {};
     const mockQuery5: any = {};
+    const mockQuery6: any = {};
 
     beforeEach(() => {
         selectionService = new IgxTreeSelectionService();
-        mockNodesLevel1 = TreeTestFunctions.createNodeSpies(3, null, [mockQuery2, mockQuery3]);
-        mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel1[0], [mockQuery4, mockQuery5]);
+        mockNodesLevel1 = TreeTestFunctions.createNodeSpies(3, null, [mockQuery2, mockQuery3], [mockQuery6, mockQuery3]);
+        mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
         mockNodesLevel2_2 = TreeTestFunctions.createNodeSpies(1, mockNodesLevel1[1], null);
         mockNodesLevel3_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[0], null);
         mockNodesLevel3_2 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[1], null);
@@ -43,6 +44,12 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
         Object.assign(mockQuery3, TreeTestFunctions.createQueryListSpy(mockNodesLevel2_2));
         Object.assign(mockQuery4, TreeTestFunctions.createQueryListSpy(mockNodesLevel3_1));
         Object.assign(mockQuery5, TreeTestFunctions.createQueryListSpy(mockNodesLevel3_2));
+        Object.assign(mockQuery6, TreeTestFunctions.createQueryListSpy([
+            mockNodesLevel2_1[0],
+            ...mockNodesLevel3_1,
+            mockNodesLevel2_1[1],
+            ...mockNodesLevel3_2
+        ]));
     });
 
     describe('IgxTreeSelectionService - BiState & None', () => {

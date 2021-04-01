@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
+import { IgxTreeService } from './tree.service';
 
 @Injectable()
 export class IgxTreeNavigationService {
@@ -16,7 +17,7 @@ export class IgxTreeNavigationService {
 
     private _cacheChange = new EventEmitter<void>();
 
-    constructor() {
+    constructor(private treeService: IgxTreeService) {
         this._cacheChange.subscribe(() => {
             this._visibleChildren =
                 this.tree.nodes ?
@@ -146,13 +147,6 @@ export class IgxTreeNavigationService {
 
     public isFocusable(node: IgxTreeNode<any>): boolean {
         return this.visibleChildren.indexOf((node as any).nativeElement) < 0 ? false : true;
-        // if (!node.parentNode) {
-        //     return true;
-        // }
-        // if (!node.parentNode.expanded) {
-        //     return false;
-        // }
-        // return this.isFocusable(node.parentNode);
     }
 
     public dispatchEvent(event: KeyboardEvent) {
@@ -235,6 +229,10 @@ export class IgxTreeNavigationService {
                 this.handleFocusedAndActiveNode(this.focusedNode);
                 this.focusedNode.expand();
             } else {
+                if (this.treeService.collapsingNodes.has(this.focusedNode)) {
+                    this.focusedNode.expand();
+                    return;
+                }
                 const firstChild = this.focusedNode.children.toArray().find(node => node.disabled === false);
                 if (firstChild) {
                     this.handleFocusedAndActiveNode(firstChild);
@@ -244,7 +242,7 @@ export class IgxTreeNavigationService {
     }
 
     protected handleArrowLeft() {
-        if (this.focusedNode.expanded && this.focusedNode.children?.length) {
+        if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode.children?.length) {
             this.handleFocusedAndActiveNode(this.focusedNode);
             this.focusedNode.collapse();
         } else {
