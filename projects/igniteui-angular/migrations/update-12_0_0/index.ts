@@ -79,20 +79,6 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
     for (const comp of COMPONENTS) {
         for (const path of htmlFiles) {
-            // Replace the bottom-nav -> igx-tab with igx-bottom-nav-item
-            if (comp.component === 'igx-bottom-nav') {
-                findElementNodes(parseFile(host, path), comp.tags[2])
-                    .map(node => getSourceOffset(node as Element))
-                    .forEach(offset => {
-                        const tab = offset.file.content.substring(offset.startTag.start, offset.endTag.end);
-                        const replacementText = tab.replace('igx-tab', 'igx-bottom-nav-item').replace('igx-tab', 'igx-bottom-nav-item');
-                        addChange(offset.file.url, new FileChange(offset.startTag.start, replacementText, tab, 'replace'));
-                    });
-
-                applyChanges();
-                changes.clear();
-            }
-
             // Replace the <ng-template igxTab> if any with <igx-tab-item>
             findElementNodes(parseFile(host, path), comp.tags)
                 .map(tab => findElementNodes([tab], 'ng-template'))
