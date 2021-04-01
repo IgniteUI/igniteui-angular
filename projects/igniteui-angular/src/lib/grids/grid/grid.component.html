@@ -167,7 +167,7 @@
             </igx-grid-row>
         </ng-template>
         <ng-template #group_template let-rowIndex="index" let-rowData>
-            <igx-grid-groupby-row role="row" [attr.aria-activedescendant]="activeDescendant"  [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
+            <igx-grid-groupby-row [gridID]="id" [index]="rowIndex" [groupRow]="rowData" #row>
             </igx-grid-groupby-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
