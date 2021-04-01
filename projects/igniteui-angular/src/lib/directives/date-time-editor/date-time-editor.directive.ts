@@ -214,8 +214,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Output()
   public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
-  private _dateValue: Date;
   private _format: string;
+  private _oldValue: Date;
+  private _dateValue: Date;
   private _onClear: boolean;
   private document: Document;
   private _isFocused: boolean;
@@ -223,7 +224,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private _value: Date | string;
   private _minValue: Date | string;
   private _maxValue: Date | string;
-  private _oldValue: Date | string;
   private _inputDateParts: DatePartInfo[];
   private _datePartDeltas: DatePartDeltas = {
     date: 1,
@@ -475,13 +475,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.inputValue = this.getMaskedValue();
       this.setSelectionRange(cursor);
     } else {
-      if (!this.value || !DateTimeUtil.isValidDate(this.value)) {
+      if (!this._dateValue || !DateTimeUtil.isValidDate(this._dateValue)) {
         this.inputValue = '';
         return;
       }
       const format = this.displayFormat || this.inputFormat;
       if (format) {
-        this.inputValue = DateTimeUtil.formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+        this.inputValue = DateTimeUtil.formatDate(this._dateValue, format.replace('tt', 'aa'), this.locale);
       } else {
         // TODO: formatter function?
         this.inputValue = this._dateValue.toLocaleString();
@@ -595,11 +595,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.value = newDate;
 
     // TODO: should we emit events here?
-    if (this.value && !this.valueInRange(this._dateValue)) {
-      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
+    if (this._dateValue && !this.valueInRange(this._dateValue)) {
+      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this._dateValue, userInput: this.inputValue });
     }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
-      this.valueChange.emit(this.value);
+      this.valueChange.emit(this._dateValue);
     }
   }
 

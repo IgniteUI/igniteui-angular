@@ -5,11 +5,12 @@ import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputGroupBase } from '../input-group/input-group.common';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { isDate } from '../core/utils';
 
 /** Represents a range between two dates. */
 export interface DateRange {
-    start: Date;
-    end: Date;
+    start: Date | string;
+    end: Date | string;
 }
 
 /** @hidden @internal */
@@ -23,7 +24,13 @@ export class DateRangePickerFormatPipe implements PipeTransform {
         if (formatter) {
             return formatter(values);
         }
-        const { start, end } = values;
+        let { start, end } = values;
+        if (!isDate(start)) {
+            start = DateTimeUtil.parseIsoDate(start);
+        }
+        if (!isDate(end)) {
+            end = DateTimeUtil.parseIsoDate(end);
+        }
         const startDate = appliedFormat ? DateTimeUtil.formatDate(start, appliedFormat, locale || 'en') : start?.toLocaleDateString();
         const endDate = appliedFormat ? DateTimeUtil.formatDate(end, appliedFormat, locale || 'en') : end?.toLocaleDateString();
         let formatted;
