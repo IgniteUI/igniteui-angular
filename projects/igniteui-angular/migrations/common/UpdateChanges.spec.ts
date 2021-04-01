@@ -182,7 +182,7 @@ describe('UpdateChanges', () => {
         });
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
 
-        const fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
+        let fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -220,6 +220,15 @@ describe('UpdateChanges', () => {
         update4.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
             `<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
+
+
+        fileContent = `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`;
+        appTree.overwrite('test.component.html', fileContent);
+        update4.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`
+        );
+
         done();
     });
 

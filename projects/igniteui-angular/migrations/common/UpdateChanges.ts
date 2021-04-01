@@ -276,6 +276,9 @@ export class UpdateChanges {
             }
 
             const matches = fileContent.match(new RegExp(searchPattern, 'g'));
+            if (!matches) {
+                continue;
+            }
 
             for (const match of matches) {
                 let replaceStatement = replace;
