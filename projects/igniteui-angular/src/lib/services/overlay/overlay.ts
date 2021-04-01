@@ -896,19 +896,7 @@ export class IgxOverlayService implements OnDestroy {
             //  As soon as this is resolved we can remove this hack
             const innerRenderer = (info.openAnimationPlayer as any)._renderer;
             info.openAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
-            info.openAnimationPlayer.onDone(() => {
-                this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
-                if (info.openAnimationPlayer) {
-                    info.openAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
-                    (info.openAnimationPlayer as any)._started = false;
-                }
-                if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
-                    info.closeAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
-                    (info.closeAnimationPlayer as any)._started = false;
-                }
-            });
+            info.openAnimationPlayer.onDone(() => this.openAnimationDone(info));
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
             const animationBuilder = this.builder.build(info.settings.positionStrategy.settings.closeAnimation);
@@ -920,30 +908,54 @@ export class IgxOverlayService implements OnDestroy {
             //  As soon as this is resolved we can remove this hack
             const innerRenderer = (info.closeAnimationPlayer as any)._renderer;
             info.closeAnimationInnerPlayer = innerRenderer.engine.players[innerRenderer.engine.players.length - 1];
-
-            info.closeAnimationPlayer.onDone(() => {
-                this.onCloseDone(info);
-                if (info.closeAnimationPlayer) {
-                    info.closeAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
-                    (info.closeAnimationPlayer as any)._started = false;
-                }
-
-                if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
-                    info.openAnimationPlayer.reset();
-                    // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
-                    (info.openAnimationPlayer as any)._started = false;
-                }
-            });
+            info.closeAnimationPlayer.onDone(() => this.closeAnimationDone(info));
         }
     }
 
-    private finishAnimations(info: OverlayInfo) {
+    private openAnimationDone(info: OverlayInfo){
+        this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
         if (info.openAnimationPlayer) {
-            info.openAnimationPlayer.finish();
+            info.openAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.openAnimationPlayer as any)._started = false;
+        }
+        if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
+            info.closeAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.closeAnimationPlayer as any)._started = false;
+        }
+        // when animation finish angular deletes all onDone handlers so we need to add it again :(
+        info.openAnimationPlayer.onDone(() => this.openAnimationDone(info));
+    }
+
+    private closeAnimationDone(info: OverlayInfo){
+        this.onCloseDone(info);
+        if (info.closeAnimationPlayer) {
+            info.closeAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.closeAnimationPlayer as any)._started = false;
+        }
+
+        if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
+            info.openAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.openAnimationPlayer as any)._started = false;
+        }
+        // when animation finish angular deletes all onDone handlers so we need to add it again :(
+        info.closeAnimationPlayer.onDone(() => this.closeAnimationDone(info));
+    }
+
+    private finishAnimations(info: OverlayInfo) {
+        // TODO: should we emit here onOpened or onClosed events
+        if (info.openAnimationPlayer) {
+            info.openAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.openAnimationPlayer as any)._started = false;
         }
         if (info.closeAnimationPlayer) {
-            info.closeAnimationPlayer.finish();
+            info.closeAnimationPlayer.reset();
+            // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
+            (info.closeAnimationPlayer as any)._started = false;
         }
     }
 }
