@@ -28,6 +28,7 @@ import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
+import { IgxRightButtonStyleDirective } from './tabs.directives';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -1238,6 +1239,20 @@ describe('IgxTabs', () => {
             expect(Math.abs(150 - widths[0])).toBeLessThan(3);
             expect(Math.abs(113 - widths[1])).toBeLessThan(3);
             expect(Math.abs(104 - widths[2])).toBeLessThan(3);
+        });
+
+        it('should hide scroll buttons if visible when alignment is set to "justify".', async () => {
+            fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
+            fixture.detectChanges();
+
+            const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
+            expect(rightScrollButton.clientWidth).toBeTruthy();
+
+            tabs.tabAlignment = IgxTabsAlignment.justify;
+            await wait(200);
+            fixture.detectChanges();
+
+            expect(rightScrollButton.clientWidth).toBeFalsy();
         });
     });
 
