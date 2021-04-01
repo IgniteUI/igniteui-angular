@@ -15,8 +15,7 @@ export class WorksheetData {
                 public columnCount: number,
                 public rootKeys: string[],
                 public indexOfLastPinnedColumn: number,
-                public columnWidths: number[],
-                public maxColumnSize: number) {
+                public columnWidths: number[]) {
             this.initializeData();
     }
 

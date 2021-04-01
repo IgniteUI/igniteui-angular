@@ -348,30 +348,31 @@ export abstract class IgxBaseExporter {
     private addHierarchicalGridData(grid: IgxHierarchicalGridComponent, records: any[], level: number) {
         const childLayoutKeys = grid.childLayoutKeys;
         const childGrids = grid.hgridAPI.getChildGrids(true);
+        const columnFields = this._ownersMap.get(grid).columns.map(col => col.field);
 
         for(const entry of records) {
             const expansionStateVal = grid.expansionStates.has(entry) ? grid.expansionStates.get(entry) : false;
 
             const dataWithoutChildren = Object.keys(entry)
-                .filter(k => !childLayoutKeys.includes(k))
+                .filter(k => columnFields.includes(k))
                 .reduce((obj, key) => {
                     obj[key] = entry[key];
                     return obj;
                 }, {});
 
-            const firstRow: IExportRecord = {
+            const hierarchicalGridRecord: IExportRecord = {
                 data: dataWithoutChildren,
                 level,
                 type: ExportRecordType.HierarchicalGridRecord,
                 owner: grid,
             };
 
-            this.flatRecords.push(firstRow);
+            this.flatRecords.push(hierarchicalGridRecord);
 
             for (const key of childLayoutKeys) {
                 const island = grid.childLayoutList.filter(l => l.key === key)[0];
                 const keyRecordData = entry[key] || [];
-
+                // filter sort island keyrecordadata
                 this.getAllChildColumnsAndData(island, keyRecordData, expansionStateVal, childGrids);
             }
         }
@@ -396,7 +397,7 @@ export abstract class IgxBaseExporter {
                 const exportRecord: IExportRecord = {
                     data: rec,
                     level: island.level,
-                    type: ExportRecordType.DataRecord,
+                    type: ExportRecordType.HierarchicalGridRecord,
                     owner: island,
                     hidden: !expansionStateVal
                 };

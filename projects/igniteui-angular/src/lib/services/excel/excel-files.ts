@@ -62,7 +62,6 @@ export class WorksheetFile implements IExcelFile {
     private freezePane = '';
     private rowHeight = '';
     private globalCounter = 0;
-    private isHierarchicalGrid;
 
     public writeElement() {}
 
@@ -88,22 +87,22 @@ export class WorksheetFile implements IExcelFile {
             this.dimension = 'A1';
             done('', sheetData);
         } else {
-            this.isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
+            const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
 
             const height =  worksheetData.options.rowHeight;
-            const rowStyle = this.isHierarchicalGrid ? ' s="3"' : '';
+            const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
             sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
 
-            for (let i = 0; i < worksheetData.columnCount; i++) {
+            for (let i = 0; i < worksheetData.rootKeys.length; i++) {
                 const column = ExcelStrings.getExcelColumn(i) + 1;
                 const value = dictionary.saveValue(worksheetData.keys[i], i, true);
                 sheetData += `<c r="${column}"${rowStyle} t="s"><v>${value}</v></c>`;
             }
             sheetData += '</row>';
 
-            if (!this.isHierarchicalGrid) {
+            if (!isHierarchicalGrid) {
                 this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
                 cols += '<cols>';
 
@@ -133,7 +132,7 @@ export class WorksheetFile implements IExcelFile {
                         `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
             } else {
-                cols += `<cols><col min="1" max="${worksheetData.maxColumnSize}" width="20" customWidth="1"/></cols>`;
+                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="20" customWidth="1"/></cols>`;
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
@@ -159,39 +158,31 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processRow(worksheetData: WorksheetData, i: number) {
-        const rowData = new Array(worksheetData.columnCount + 2);
         const record = worksheetData.data[i - 1];
-        const sHidden = record.hidden ? ` hidden="1"` : '';
+
+        const isHierarchicalGrid = record.type === ExportRecordType.HeaderRecord || record.type === ExportRecordType.HierarchicalGridRecord;
+        const rowData = new Array(worksheetData.columnCount + 2);
+
         const rowLevel = record.level;
         const outlineLevel = rowLevel > 0 ? ` outlineLevel="${rowLevel}"` : '';
-
         this.maxOutlineLevel = this.maxOutlineLevel < rowLevel ? rowLevel : this.maxOutlineLevel;
+
+        const sHidden = record.hidden ? ` hidden="1"` : '';
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        if (record.type === ExportRecordType.HeaderRecord) {
-            for (let j = 0; j < record.data.length; j++) {
-                const excelColumn = record.level + j;
-                const column = ExcelStrings.getExcelColumn(excelColumn) + (i + 1);
-                const value = worksheetData.dataDictionary.saveValue(record.data[j].header, i, true);
-                rowData[j + 1] = `<c r="${column}" s="3" t="s"><v>${value}</v></c>`;
-            }
+        const keys = Object.keys(record.data);
 
-            rowData[record.data.length + 1] = '</row>';
-        } else {
-            const keys = Object.keys(record.data);
+        for (let j = 0; j < keys.length; j++) {
+            const col = j + (isHierarchicalGrid ? rowLevel : 0);
 
-            for (let j = 0; j < keys.length; j++) {
-                const col = j + (this.isHierarchicalGrid ? record.level : 0);
+            const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j], this.globalCounter);
 
-                const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j], this.globalCounter);
-
-                rowData[j + 1] = cellData;
-                this.globalCounter++;
-            }
-
-            rowData[keys.length + 1] = '</row>';
+            rowData[j + 1] = cellData;
+            this.globalCounter++;
         }
+
+        rowData[keys.length + 1] = '</row>';
 
         return rowData.join('');
     }
@@ -201,10 +192,13 @@ export class WorksheetFile implements IExcelFile {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
         const fullRow = worksheetData.data[row - 1];
+        const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
 
         const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
-            fullRow.data[key];
+            isHeaderRecord ?
+                fullRow.data[key].header :
+                fullRow.data[key];
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
@@ -224,7 +218,7 @@ export class WorksheetFile implements IExcelFile {
 
             const type = isSavedAsString ? ` t="s"` : isSavedAsDate ? ` t="d"` : '';
 
-            const format = isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
+            const format = isHeaderRecord ? ` s="3"` : isSavedAsString ? '' : isSavedAsDate ? ` s="2"` : ` s="1"`;
 
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
