@@ -8,7 +8,7 @@ _igx-bottom-nav represents a single content area with multiple nav items. The bo
 -  *igx-bottom-nav-content* - represents the wrapper of the content that needs to be displayed
 
 Each item (`igx-bottom-nav-item`) contains header (`igx-bottom-nav-header`) and content (`igx-bottom-nav-content`). Header is related to particular content.
-When tab is clicked, the associated content is selected and visualized into single container. There should always be a selected tab. Only one tab can be selected at a time.
+When a tab is clicked, the associated content is selected and visualized into a single container. There should always be a selected tab. Only one tab can be selected at a time.
 A walkthrough of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabbar).
 
 ----------
