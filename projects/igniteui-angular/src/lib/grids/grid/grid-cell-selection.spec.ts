@@ -1487,7 +1487,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 10, 1, 2);
         }));
 
-        it('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
+        xit('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.getColumnByName('ParentID').groupable = true;
             grid.getColumnByName('Name').hasSummary = true;
