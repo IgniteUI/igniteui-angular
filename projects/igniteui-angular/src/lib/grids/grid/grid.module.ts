@@ -17,6 +17,7 @@ import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
+import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-area/group-by-area.component';
 /**
  * @hidden
  */
@@ -34,7 +35,9 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
-    IgxGridExpandableCellComponent
+    IgxGridExpandableCellComponent,
+    IgxGridGroupByAreaComponent,
+    IgxGroupByMetaPipe
   ],
   exports: [
     IgxGridComponent,
@@ -50,6 +53,8 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
+    IgxGridGroupByAreaComponent,
+    IgxGroupByMetaPipe,
     IgxGridCommonModule
   ],
   imports: [

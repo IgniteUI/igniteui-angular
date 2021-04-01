@@ -1,0 +1,138 @@
+<div role="rowgroup" class="igx-grid__thead-wrapper" [style.width.px]="width"
+    [attr.aria-activedescendant]="activeDescendant" [class.igx-grid__tr--mrl]="hasMRL">
+
+    <!-- Column headers area -->
+    <div class="igx-grid__tr" role="row" [style.width.px]="width">
+
+        <!-- Left column moving area -->
+        <ng-container *ngIf="grid.hasMovableColumns && grid.columnInDrag && pinnedColumnCollection.length <= 0">
+            <span id="left" class="igx-grid__scroll-on-drag-left" droppable="true" [style.left.px]="grid.pinnedWidth"
+                [igxColumnMovingDrop]="headerContainer"></span>
+        </ng-container>
+        <ng-container *ngIf="grid.hasMovableColumns && grid.columnInDrag && pinnedColumnCollection.length > 0">
+            <span id="left" class="igx-grid__scroll-on-drag-pinned" droppable="true" [style.left.px]="grid.pinnedWidth"
+                [igxColumnMovingDrop]="headerContainer"></span>
+        </ng-container>
+
+        <!-- Row dragging area -->
+        <ng-container *ngIf="grid.rowDraggable">
+            <div #headerDragContainer class="igx-grid__drag-indicator igx-grid__tr-action" (pointerdown)="$event.preventDefault()" [class.igx-grid__drag-indicator--header]="!grid.isRowSelectable">
+                <div style="visibility: hidden;">
+                    <ng-container *ngTemplateOutlet="grid.dragIndicatorIconTemplate || grid.dragIndicatorIconBase"></ng-container>
+                </div>
+            </div>
+        </ng-container>
+
+        <!-- Row selectors area -->
+        <ng-container *ngIf="grid.showRowSelectors">
+            <div #headerSelectorContainer class="igx-grid__cbx-selection igx-grid__tr-action"
+                [class.igx-grid__cbx-selection--push]="grid.filteringService.isFilterRowVisible"
+                (click)="headerRowSelection($event)"
+                (pointerdown)="$event.preventDefault()">
+                <ng-container #headSelector
+                    *ngTemplateOutlet="grid.headSelectorTemplate || headSelectorBaseTemplate; context: rowSelectorsContext">
+                </ng-container>
+            </div>
+        </ng-container>
+
+        <!-- Hierarchical grids expand all area -->
+        <ng-container *ngIf="isHierarchicalGrid">
+            <div #headerHierarchyExpander
+                (click)="grid.toggleAll()"
+                (pointerdown)="$event.preventDefault()"
+                [hidden]="!grid.hasExpandableChildren || !grid.hasVisibleColumns"
+                [ngClass]="{
+                    'igx-grid__hierarchical-expander igx-grid__hierarchical-expander--header igx-grid__tr-action': grid.hasExpandableChildren,
+                    'igx-grid__hierarchical-expander--push': grid.filteringService.isFilterRowVisible,
+                    'igx-grid__hierarchical-expander--no-border': grid.isRowSelectable || grid.rowDraggable
+                }">
+                <ng-container *ngTemplateOutlet="grid.iconTemplate; context: { $implicit: grid }"></ng-container>
+            </div>
+        </ng-container>
+
+
+        <!-- Grouping icon toggle area -->
+        <ng-container *ngIf="grid?.groupingExpressions?.length">
+            <div #headerGroupContainer class="{{ indentationCSSClasses }}"
+                (click)="grid.toggleAllGroupRows()"
+                (pointerdown)="$event.preventDefault()">
+                <ng-container *ngTemplateOutlet="grid.iconTemplate"></ng-container>
+            </div>
+        </ng-container>
+
+        <!-- Pinned columns collection from the start -->
+        <ng-container *ngIf="pinnedColumnCollection.length && grid.isPinningToStart">
+            <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
+                <igx-grid-header-group
+                    [ngClass]="column.headerGroupClasses"
+                    [column]="column"
+                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+                </igx-grid-header-group>
+            </ng-container>
+        </ng-container>
+
+        <!-- Unpinned columns collection -->
+        <ng-template igxGridFor #headerVirtualContainer let-column
+            [igxGridForOf]="unpinnedColumnCollection | igxTopLevel"
+            [igxForScrollContainer]="grid.parentVirtDir"
+            [igxForContainerSize]="grid.unpinnedWidth"
+            [igxForTrackBy]="grid.trackColumnChanges"
+            [igxForSizePropName]="'calcPixelWidth'"
+            [igxForScrollOrientation]="'horizontal'"
+        >
+            <igx-grid-header-group
+                [ngClass]="column.headerGroupClasses"
+                [column]="column"
+                [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL">
+            </igx-grid-header-group>
+        </ng-template>
+
+        <!-- Pinned columns collection at the end -->
+        <ng-container *ngIf="pinnedColumnCollection.length && !grid.isPinningToStart">
+            <ng-container *ngFor="let column of pinnedColumnCollection | igxTopLevel">
+                <igx-grid-header-group
+                    [ngClass]="column.headerGroupClasses"
+                    [column]="column"
+                    [style.min-width]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.flex-basis]="column.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:hasMRL"
+                    [style.left]="column.rightPinnedOffset">
+                </igx-grid-header-group>
+            </ng-container>
+        </ng-container>
+    </div>
+
+    <!-- Filter row area -->
+    <ng-container *ngIf="grid.filteringService.isFilterRowVisible">
+        <igx-grid-filtering-row #filteringRow
+            [column]="grid.filteringService.filteredColumn"
+            [style.width.px]="width">
+        </igx-grid-filtering-row>
+    </ng-container>
+
+    <!-- Right column moving area -->
+    <ng-container *ngIf="grid.hasMovableColumns && grid.columnInDrag">
+        <span id="right" class="igx-grid__scroll-on-drag-right" droppable="true" [igxColumnMovingDrop]="headerContainer"></span>
+    </ng-container>
+
+    <!-- Header thumb area -->
+    <div class="igx-grid__thead-thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
+</div>
+
+
+<!-- Default row selection header checkbox template -->
+<ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
+    <div class="igx-grid__cbx-padding">
+        <igx-checkbox
+            [tabindex]="-1"
+            [readonly]="true"
+            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
+            [disableRipple]="true"
+            [ngStyle]="{'visibility': grid.isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
+            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
+            [aria-label]="grid.headSelectorBaseAriaLabel"
+            #headerCheckbox>
+        </igx-checkbox>
+    </div>
+</ng-template>
