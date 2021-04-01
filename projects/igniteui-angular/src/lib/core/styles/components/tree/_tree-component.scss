@@ -8,10 +8,6 @@
 
 @include b(igx-tree) {
     @extend %tree-display !optional;
-
-    @include e(root) {
-        @extend %node-root !optional;
-    }
 }
 
 @include b(igx-tree-node) {

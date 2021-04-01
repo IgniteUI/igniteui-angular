@@ -149,15 +149,6 @@
         flex-direction: column;
     }
 
-    %tree-display,
-    %node-root,
-    %tree-node,
-    %node-wrapper {
-        &:focus {
-            outline-width: 0;
-        }
-    }
-
     %node-wrapper,
     %node-toggle-button,
     %node-select {
@@ -208,6 +199,10 @@
             &::after {
                 background: --var($theme, '_hover-color');
             }
+        }
+
+        &:focus {
+            outline-width: 0;
         }
 
         &--cosy {
