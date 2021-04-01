@@ -65,6 +65,10 @@ describe('UpdateChanges', () => {
             'test2.component.html',
             '<igx-remove attr></igx-remove><igx-component>'
         );
+        appTree.create(
+            'test3.component.html',
+            '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>'
+        );
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -74,6 +78,9 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual('<igx-replaced> <content>  </igx-replaced> ');
         expect(appTree.readContent('test2.component.html')).toEqual('<igx-replaced>');
+        expect(appTree.readContent('test3.component.html')).toEqual(
+            '<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>'
+        );
         done();
     });
 
