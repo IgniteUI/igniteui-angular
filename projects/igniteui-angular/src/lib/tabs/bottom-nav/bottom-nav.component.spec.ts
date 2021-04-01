@@ -24,7 +24,7 @@ import { RoutingView1Component,
     RoutingView5Component,
     RoutingViewComponentsModule } from '../../test-utils/routing-view-components.spec';
 
-fdescribe('IgxBottomNav', () => {
+describe('IgxBottomNav', () => {
     configureTestSuite();
 
     const tabItemNormalCssClass = 'igx-bottom-nav__menu-item';

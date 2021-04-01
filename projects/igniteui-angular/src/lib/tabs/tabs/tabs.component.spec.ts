@@ -14,7 +14,7 @@ import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutin
     TabsWithPrefixSuffixTestComponent, TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { UIInteractions } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxTabContentComponent } from './tab-content.component';
 import { RoutingTestGuard } from '../../test-utils/routing-test-guard.spec';
 import { RoutingView1Component,
@@ -36,11 +36,12 @@ const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true }
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
 const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
 
-fdescribe('IgxTabs', () => {
+describe('IgxTabs', () => {
     configureTestSuite();
 
-    const tabItemNormalCssClass = 'igx-tabs__header-menu-item';
-    const tabItemSelectedCssClass = 'igx-tabs__header-menu-item--selected';
+    const tabItemNormalCssClass = 'igx-tabs__header-item';
+    const tabItemSelectedCssClass = 'igx-tabs__header-item--selected';
+    const headerScrollCssClass = 'igx-tabs__header-scroll';
 
     beforeAll(waitForAsync(() => {
         const testRoutes = [
@@ -68,13 +69,13 @@ fdescribe('IgxTabs', () => {
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsTestHtmlAttributesComponent);
+            fixture.detectChanges();
         }));
 
         it('should set the correct attributes on the html elements', fakeAsync(() => {
-            fixture.detectChanges();
-
             const igxTabs = document.querySelectorAll('igx-tabs');
             expect(igxTabs.length).toBe(2);
+            const initialIndex = parseInt(document.querySelector('igx-tab-header').id.replace('igx-tabs-header-', ''), 10);
 
             igxTabs.forEach((tab, i) => {
                 const tabHeaders = tab.querySelectorAll('igx-tab-header');
@@ -83,8 +84,8 @@ fdescribe('IgxTabs', () => {
                 expect(tabPanels.length).toBe(3);
 
                 for (let itemIndex = 0; itemIndex < 3; itemIndex++) {
-                    const headerId = `igx-tabs-header-${itemIndex + 3 * i}`;
-                    const panelId = `igx-tabs-panel-${itemIndex + 3 * i}`;
+                    const headerId = `igx-tabs-header-${initialIndex + itemIndex + 3 * i}`;
+                    const panelId = `igx-tabs-content-${initialIndex + itemIndex + 3 * i}`;
 
                     expect(tabHeaders[itemIndex].id).toEqual(headerId);
                     expect(tabPanels[itemIndex].id).toEqual(panelId);
@@ -471,7 +472,7 @@ fdescribe('IgxTabs', () => {
             expect(tabs.selectedIndex).toBe(1);
             const selectedPanel = document.getElementsByTagName('igx-tab-content')[1] as HTMLElement;
             expect(selectedPanel.innerText.trim()).toEqual('Tab content 2');
-            const indicator = dom.query(By.css('.igx-tabs__header-menu-item-indicator'));
+            const indicator = dom.query(By.css('.igx-tabs__header-active-indicator'));
             expect(indicator.nativeElement.style.width).toBe('90px');
         }));
 
@@ -1101,6 +1102,7 @@ fdescribe('IgxTabs', () => {
         let tabs;
         let tabItems;
         let headers;
+        let actualHeadersContainer;
 
         beforeEach(waitForAsync(() => {
             fixture = TestBed.createComponent(TabsWithPrefixSuffixTestComponent);
@@ -1108,6 +1110,7 @@ fdescribe('IgxTabs', () => {
             tabs = fixture.componentInstance.tabs;
             tabItems = tabs.items.toArray();
             headers = tabItems.map(item => item.headerComponent.nativeElement);
+            actualHeadersContainer = fixture.debugElement.query(By.css('.' + headerScrollCssClass)).nativeNode;
         }));
 
         it('show tabs prefix and suffix properly.', () => {
@@ -1140,7 +1143,8 @@ fdescribe('IgxTabs', () => {
 
         it('tabAlignment is set to "start" by default.', () => {
             expect(tabs.tabAlignment).toBe(IgxTabsAlignment.start);
-            expect(tabs.startAlignmentClass).toBeTrue();
+            expect(actualHeadersContainer).toBeTruthy();
+            expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--start')).toBeTruthy();
         });
 
         it('tabAlignment changes in runtime are properly applied.', () => {
@@ -1148,62 +1152,92 @@ fdescribe('IgxTabs', () => {
             fixture.detectChanges();
 
             expect(tabs.tabAlignment).toBe(IgxTabsAlignment.justify);
-            expect(tabs.justifyAlignmentClass).toBeTrue();
+            expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--justify')).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.end;
             fixture.detectChanges();
 
             expect(tabs.tabAlignment).toBe(IgxTabsAlignment.end);
-            expect(tabs.endAlignmentClass).toBeTrue();
+            expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--end')).toBeTruthy();
         });
 
-        it('aligns tab header content properly when tabAlignment="justify".', () => {
+        it('aligns tab headers properly when tabAlignment="justify".', async () => {
             tabs.tabAlignment = IgxTabsAlignment.justify;
             fixture.detectChanges();
-            // const headerContainerWidth = tabs.headerContainer.nativeElement.clientWidth;
+            await wait(200);
 
-            expect(tabs.justifyAlignmentClass).toBeTrue();
-            const headerWidths = new Set<number>();
-            headers.every((elem) => headerWidths.add(elem.clientWidth));
-
-            expect(headerWidths.size).toBe(1);
-            // expect([...headerWidths][0]).toBeCloseTo(headerContainerWidth / tabItems.length);
+            const diffs: number[] = [];
+            const expectedWidth = Math.round(actualHeadersContainer.offsetWidth / tabItems.length);
+            headers.map((elem) => diffs.push(elem.offsetWidth - expectedWidth));
+            const result = diffs.reduce((a, b) => a - b);
+            expect(result).toBeLessThan(3);
         });
 
-        it('aligns tab header content properly when tabAlignment="center".', () => {
+        it('aligns tab headers properly when tabAlignment="center".', async () => {
             tabs.tabAlignment = IgxTabsAlignment.center;
             fixture.detectChanges();
+            await wait(200);
+            expect(actualHeadersContainer.classList.contains(headerScrollCssClass + '--center')).toBeTruthy();
 
-            expect(tabs.centerAlignmentClass).toBeTrue();
+            const widths = [];
+            headers.map((elem) => {
+                widths.push(elem.offsetWidth);
+            });
 
-            const headerWidths = new Set<number>();
-            headers.every((elem) => headerWidths.add(elem.clientWidth));
+            const result = widths.reduce((a, b) => a + b);
+            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
+            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
 
-            expect(headerWidths.size).toBe(3);
+            expect(Math.round(noTabsAreaWidth / 2) - headers[0].offsetLeft).toBeLessThan(3);
+            expect(offsetRight - headers[0].offsetLeft).toBeGreaterThanOrEqual(0);
+            expect(offsetRight - headers[0].offsetLeft).toBeLessThan(3);
+            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
+            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
+            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
 
-        it('aligns tab header content properly when tabAlignment="start".', () => {
+        it('aligns tab headers properly when tabAlignment="start".', async () => {
             tabs.tabAlignment = IgxTabsAlignment.start;
             fixture.detectChanges();
+            await wait(200);
 
-            expect(tabs.startAlignmentClass).toBeTrue();
+            const widths = [];
+            headers.map((elem) => {
+                widths.push(elem.offsetWidth);
+            });
 
-            const headerWidths = new Set<number>();
-            headers.every((elem) => headerWidths.add(elem.clientWidth));
+            const result = widths.reduce((a, b) => a + b);
+            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
+            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
 
-            expect(headerWidths.size).toBe(3);
+            expect(headers[0].offsetLeft).toBe(0);
+            expect(offsetRight - noTabsAreaWidth).toBeGreaterThanOrEqual(0);
+            expect(offsetRight - noTabsAreaWidth).toBeLessThan(3);
+            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
+            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
+            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
 
-        it('aligns tab header content properly when tabAlignment="end".', () => {
+        it('aligns tab headers properly when tabAlignment="end".', async () => {
             tabs.tabAlignment = IgxTabsAlignment.end;
             fixture.detectChanges();
+            await wait(200);
 
-            expect(tabs.endAlignmentClass).toBeTrue();
+            const widths = [];
+            headers.map((elem) => {
+                widths.push(elem.offsetWidth);
+            });
 
-            const headerWidths = new Set<number>();
-            headers.every((elem) => headerWidths.add(elem.clientWidth));
+            const result = widths.reduce((a, b) => a + b);
+            const noTabsAreaWidth = actualHeadersContainer.offsetWidth - result;
+            const offsetRight = actualHeadersContainer.offsetWidth - headers[2].offsetLeft - headers[2].offsetWidth;
 
-            expect(headerWidths.size).toBe(3);
+            expect(offsetRight).toBe(0);
+            expect(headers[0].offsetLeft - noTabsAreaWidth).toBeGreaterThanOrEqual(0);
+            expect(headers[0].offsetLeft - noTabsAreaWidth).toBeLessThan(3);
+            expect(Math.abs(150 - widths[0])).toBeLessThan(3);
+            expect(Math.abs(113 - widths[1])).toBeLessThan(3);
+            expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
     });
 

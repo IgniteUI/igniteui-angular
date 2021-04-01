@@ -6,7 +6,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabsOldComponent, IgxTabsOldModule } from '../tabs-old/tabs.component';
+import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -31,7 +31,7 @@ const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
 const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
-const CSS_CLASS_TABS = '.igx-tabs__header-menu-item';
+const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
 describe('IgxDropDown ', () => {
     let fixture;
@@ -757,7 +757,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsOldModule,
+                        IgxTabsModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -951,7 +951,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsOldModule,
+                        IgxTabsModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -1159,7 +1159,7 @@ describe('IgxDropDown ', () => {
                         IgxDropDownModule,
                         NoopAnimationsModule,
                         IgxToggleModule,
-                        IgxTabsOldModule,
+                        IgxTabsModule,
                         IgxForOfModule
                     ]
                 }).compileComponents();
@@ -1293,26 +1293,32 @@ class DoubleIgxDropDownComponent implements OnInit {
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs-old (tabItemSelected)="toggleDropDown()" tabsType="fixed">
-        <igx-tabs-group label="Tab111111111111111111111111">
-            <ng-template igxTab>
-                <div>T1</div>
-                </ng-template>
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="justify">
+        <igx-tab-item>
+            <igx-tab-header>
+                Tab111111111111111111111111
+            </igx-tab-header>
+            <igx-tab-content>
                 <h1>Tab 1 Content</h1>
-            </igx-tabs-group>
-        <igx-tabs-group label="Tab 2">
-            <ng-template igxTab>
-                <div>T2</div>
-            </ng-template>
-            <h1>Tab 2 Content</h1>
-        </igx-tabs-group>
-        <igx-tabs-group label="Tab 3">
-            <ng-template igxTab>
-                <div>T3</div>
-            </ng-template>
-            <h1>Tab 3 Content</h1>
-        </igx-tabs-group>
-    </igx-tabs-old>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item [selected]="true">
+            <igx-tab-header>
+                Tab 2
+            </igx-tab-header>
+            <igx-tab-content>
+                <h1>Tab 2 Content</h1>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                Tab 3
+            </igx-tab-header>
+            <igx-tab-content>
+                <h1>Tab 3 Content</h1>
+            </igx-tab-content>
+        </igx-tab-item>
+    </igx-tabs>
     <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
     (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"
     (onClosing)="onToggleClosing()" (onClosed)="onToggleClosed()" [width]="'400px'" [height]="'400px'">
@@ -1322,8 +1328,8 @@ class DoubleIgxDropDownComponent implements OnInit {
     </igx-drop-down>`
 })
 class IgxDropDownAnchorTestComponent {
-    @ViewChild(IgxTabsOldComponent, { static: true })
-    public tabs: IgxTabsOldComponent;
+    @ViewChild(IgxTabsComponent, { static: true })
+    public tabs: IgxTabsComponent;
     @ViewChild(IgxDropDownComponent, { read: IgxDropDownComponent, static: true })
     public dropdown: IgxDropDownComponent;
 
