@@ -28,7 +28,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
     private _detached = false;
 
     constructor(
-        public elementRef: ElementRef,
+        public elementRef: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
         protected _zone: NgZone,
         @Inject(DOCUMENT) public document: any,
@@ -56,7 +56,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         });
     }
 
-    get nativeElement() {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 

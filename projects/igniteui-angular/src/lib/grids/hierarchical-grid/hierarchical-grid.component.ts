@@ -6,7 +6,6 @@ import {
     ContentChild,
     ContentChildren,
     DoCheck,
-    ElementRef,
     forwardRef,
     HostBinding,
     Input,
@@ -106,8 +105,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     @ViewChild('child_record_template', { read: TemplateRef, static: true })
     protected childTemplate: TemplateRef<any>;
 
-    @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
-    protected headerHierarchyExpander: ElementRef;
+    // @ViewChild('headerHierarchyExpander', { read: ElementRef, static: true })
+    protected get headerHierarchyExpander() {
+        return this.theadRow.headerHierarchyExpander;
+    }
 
     /**
      * @hidden
@@ -289,9 +290,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return !!this.childLayoutKeys.length;
     }
 
-    /**
-     * @hidden
-     */
+    /** @hidden */
     public hideActionStrip() {
         if (!this.parent) {
             // hide child layout actions strips when

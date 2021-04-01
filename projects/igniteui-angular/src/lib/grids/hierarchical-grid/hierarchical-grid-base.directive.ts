@@ -97,7 +97,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
-    get maxLevelHeaderDepth() {
+    public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -110,14 +110,14 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    get outlet() {
+    public get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-    set outlet(val: any) {
+    public set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
@@ -184,7 +184,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public createColumnsList(cols: Array<any>) {
         const columns = [];
-        const topLevelCols = this.onlyTopLevel(cols);
+        const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();

@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding,
+    QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     forwardRef, OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
@@ -14,8 +14,6 @@ import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from '
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
-import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -29,6 +27,7 @@ import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridGroupByAreaComponent } from '../group-by-area/group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -163,8 +162,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ViewChild('groupArea')
-    public groupArea: ElementRef;
+    @ViewChild(IgxGridGroupByAreaComponent)
+    public groupArea: IgxGridGroupByAreaComponent;
 
     /**
      * @hidden @internal
@@ -366,7 +365,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.groupingExpressionsChange.emit(this._groupingExpressions);
-        this.chipsGoupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
@@ -566,12 +564,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isDetailActive(rowIndex) {
         return this.navigation.activeNode ? this.navigation.activeNode.row === rowIndex : false;
-    }
-    /**
-     * @hidden @internal
-     */
-    public get groupAreaHostClass(): string {
-        return this.getComponentDensityClass('igx-drop-area');
     }
 
     /**
@@ -792,8 +784,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     public get dropAreaVisible(): boolean {
-        return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGoupingExpressions.length;
+        return this.columnInDrag?.groupable || !this.groupingExpressions.length;
     }
 
     /**
@@ -862,101 +853,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public onChipRemoved(event: IBaseChipEventArgs) {
-        this.clearGrouping(event.owner.id);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newGrouping = [];
-        for (const chip of event.chipsArray) {
-            const expr = this.groupingExpressions.filter((item) => item.fieldName === chip.id)[0];
-
-            if (!this.getColumnByName(expr.fieldName).groupable) {
-                // disallow changing order if there are columns with groupable: false
-                return;
-            }
-            newGrouping.push(expr);
-        }
-        this.groupingExpansionState = [];
-        this.chipsGoupingExpressions = newGrouping;
-
-        if (event.originalEvent instanceof KeyboardEvent) {
-            // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
-            this.groupingExpressions = this.chipsGoupingExpressions;
-        }
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public chipsMovingEnded() {
-        this.groupingExpressions = this.chipsGoupingExpressions;
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onChipClicked(event: IChipClickEventArgs) {
-        const sortingExpr = this.sortingExpressions;
-        const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
-        columnExpr.dir = 3 - columnExpr.dir;
-        this.sort(columnExpr);
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onChipKeyDown(event: IChipKeyDownEventArgs) {
-        if (event.originalEvent.key === ' ' || event.originalEvent.key === 'Spacebar' || event.originalEvent.key === 'Enter') {
-            const sortingExpr = this.sortingExpressions;
-            const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
-            columnExpr.dir = 3 - columnExpr.dir;
-            this.sort(columnExpr);
-            this.notifyChanges();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public getGroupByChipTitle(expression: IGroupingExpression): string {
-        const column = this.getColumnByName(expression.fieldName);
-        return (column && column.header) || expression.fieldName;
-    }
-    /**
-     * @hidden @internal
-     */
     public get iconTemplate() {
         if (this.groupsExpanded) {
             return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
             return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public getColumnGroupable(fieldName: string): boolean {
-        const column = this.getColumnByName(fieldName);
-        return column && column.groupable;
     }
 
     /**
