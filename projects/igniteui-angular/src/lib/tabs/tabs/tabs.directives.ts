@@ -49,7 +49,7 @@ export class IgxRightButtonStyleDirective {
         const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
         let itemsContainerWidth = 0;
         if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
+            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
             itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
         }
         const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;
@@ -99,7 +99,7 @@ export class IgxLeftButtonStyleDirective {
         const itemsContainerChildrenCount = this.tabs.itemsContainer.nativeElement.children.length;
         let itemsContainerWidth = 0;
         if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2];
+            const lastTab = this.tabs.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
             itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
         }
         const headerContainerWidth = this.tabs.headerContainer.nativeElement.offsetWidth;

@@ -68,19 +68,19 @@ export class IgxTabsComponent extends IgxTabsDirective {
 
     /** @hidden */
     @ViewChild('headerContainer', { static: true })
-    public headerContainer: ElementRef;
+    public headerContainer: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('viewPort', { static: true })
-    public viewPort: ElementRef;
+    public viewPort: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsContainer', { static: true })
-    public itemsContainer: ElementRef;
+    public itemsContainer: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('selectedIndicator')
-    public selectedIndicator: ElementRef;
+    public selectedIndicator: ElementRef<HTMLElement>;
 
     /** @hidden */
     @HostBinding('class.igx-tabs')
@@ -107,8 +107,7 @@ export class IgxTabsComponent extends IgxTabsDirective {
     /** @hidden */
     public realignSelectedIndicator() {
         if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
-            const tabItems = this.items.toArray();
-            const header = tabItems[this.selectedIndex].headerComponent.nativeElement;
+            const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
             this.alignSelectedIndicator(header, 0);
         }
     }

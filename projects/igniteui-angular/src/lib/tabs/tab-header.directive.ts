@@ -11,7 +11,7 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     public role = 'tab';
 
     /** @hidden */
-    constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef) {
+    constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef<HTMLElement>) {
     }
 
     /** @hidden */
@@ -41,7 +41,7 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     }
 
     /** @hidden */
-    public get nativeElement(): HTMLElement {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     };
 }

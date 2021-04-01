@@ -32,7 +32,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     private _resizeObserver: ResizeObserver;
 
     /** @hidden */
-    constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef, private ngZone: NgZone) {
+    constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef<HTMLElement>, private ngZone: NgZone) {
         super(tabs, tab, elementRef);
     }
 

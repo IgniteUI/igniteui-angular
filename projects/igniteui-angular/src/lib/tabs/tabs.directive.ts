@@ -102,7 +102,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
      */
     public get selectedItem(): IgxTabItemDirective {
         return this.items && this.selectedIndex >= 0 && this.selectedIndex < this.items.length ?
-            this.items.toArray()[this.selectedIndex] : null;
+            this.items.get(this.selectedIndex) : null;
     }
 
     /** @hidden */
@@ -226,17 +226,16 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
             return;
         }
 
-        const tabs = this.items.toArray();
         let newTab: IgxTabItemDirective;
         const oldTab = this.currentSlide;
 
         // First select the new tab
-        if (this._selectedIndex >= 0 && this._selectedIndex < tabs.length) {
-            newTab = tabs[this._selectedIndex];
+        if (this._selectedIndex >= 0 && this._selectedIndex < this.items.length) {
+            newTab = this.items.get(this._selectedIndex);
             newTab.selected = true;
         }
         // Then unselect the other tabs
-        tabs.forEach((tab, i) => {
+        this.items.forEach((tab, i) => {
             if (i !== this._selectedIndex) {
                 tab.selected = false;
             }
@@ -257,10 +256,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     private onItemChanges() {
-        const tabs = this.items.toArray();
         this.setAttributes();
 
-        if (this.selectedIndex >= 0 && this.selectedIndex < tabs.length) {
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
 
             // Check if there is selected tab
             let selectedIndex = -1;
@@ -282,17 +280,16 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                     this.updateSelectedTabs(null);
                 });
             }
-        } else if (this.selectedIndex >= tabs.length) {
+        } else if (this.selectedIndex >= this.items.length) {
             // Select the last tab
             Promise.resolve().then(() => {
-                this.selectedIndex = tabs.length - 1;
+                this.selectedIndex = this.items.length - 1;
             });
         }
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
-        const tabs = this.items.toArray();
-        const slide = tabs[this._selectedIndex];
+        const slide = this.items.get(this._selectedIndex);
 
         if (!this.disableAnimation &&
             this.hasPanels &&

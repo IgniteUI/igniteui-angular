@@ -10,7 +10,7 @@ export abstract class IgxTabContentDirective implements IgxTabContentBase {
     public role = 'tabpanel';
 
     /** @hidden */
-    constructor(public tab: IgxTabItemDirective, private elementRef: ElementRef) {
+    constructor(public tab: IgxTabItemDirective, private elementRef: ElementRef<HTMLElement>) {
     }
 
     /** @hidden */
@@ -26,7 +26,7 @@ export abstract class IgxTabContentDirective implements IgxTabContentBase {
     }
 
     /** @hidden */
-    public get nativeElement(): HTMLElement {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     };
 }
