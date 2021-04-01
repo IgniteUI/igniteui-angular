@@ -172,14 +172,16 @@
 ///
 @mixin igx-palette-vars($palette, $contrast: true) {
     $scope: if(is-root(), ':root', '&');
-    $theme: map-get(map-get($palette, '_meta'), 'variant');
+    $_meta: map-get($palette, '_meta');
+    $theme: if($_meta, map-get($_meta, 'variant'), null);
 
     #{$scope} {
         @each $name, $color in $palette {
             @each $variant, $value in $color {
-                $valid: not(str-index(#{$variant}, 'contrast')) and not(str-index(#{$variant}, 'variant'));
+                $_valid-base: type-of(map-get($color, 500)) == 'color' and $theme;
+                $_valid-variant: not(str-index(#{$variant}, 'contrast')) and not(str-index(#{$variant}, 'variant')) and $theme;
 
-                @if($variant == 500) {
+                @if $_valid-base and $variant == 500 {
                     --igx-#{$name}-h: #{round(hue($value))};
                     --igx-#{$name}-s: #{round(saturation($value))};
                     --igx-#{$name}-l: #{round(lightness($value))};
@@ -191,7 +193,7 @@
                     }
                 }
 
-                @if $valid {
+                @if $_valid-base and $_valid-variant {
                     --igx-#{$name}-#{$variant}: #{_gen-hsla-color($name, $variant, $theme)};
                 } @else if $name != '_meta' {
                     --igx-#{$name}-#{$variant}: #{$value};
