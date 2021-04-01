@@ -90,7 +90,9 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        @if type-of($button-disabled-background) == 'color' {
+            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        }
     }
 
     @return extend($theme, (

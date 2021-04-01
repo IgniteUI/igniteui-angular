@@ -62,11 +62,15 @@
     }
 
     @if not($border-color) and $background-color {
-        $border-color: rgba(text-contrast($background-color), .26);
+        @if type-of($background-color) == 'color' {
+            $border-color: rgba(text-contrast($background-color), .26);
+        }
     }
 
     @if not($pinned-border-color) and $background-color {
-        $pinned-border-color: rgba(text-contrast($background-color), .26);
+        @if type-of($background-color) == 'color' {
+            $pinned-border-color: rgba(text-contrast($background-color), .26);
+        }
     }
 
     @return extend($theme, (
