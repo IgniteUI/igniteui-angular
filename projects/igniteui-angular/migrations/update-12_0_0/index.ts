@@ -153,7 +153,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 map(node => getSourceOffset(node as Element)).
                 forEach(offset => {
                     const { startTag, file } = offset;
-                    const commentText = `<!-- NOTE: This component has been updated by Infragistics migration: v${version} -->\n`;
+                    // eslint-disable-next-line max-len
+                    const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
                     addChange(file.url, new FileChange(startTag.start, commentText));
                 });
 

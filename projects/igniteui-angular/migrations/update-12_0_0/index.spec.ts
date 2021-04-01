@@ -23,7 +23,8 @@ describe(`Update to ${version}`, () => {
     };
 
     const migrationName = 'migration-20';
-    const noteText = `<!-- NOTE: This component has been updated by Infragistics migration: v${version} -->`;
+    // eslint-disable-next-line max-len
+    const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
