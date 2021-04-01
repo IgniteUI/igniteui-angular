@@ -1,5 +1,6 @@
 import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { IgxTabItemComponent, IgxTabsComponent } from '../tabs/tabs/public_api';
+import { SampleTestData } from './sample-test-data.spec';
 
 @Component({
     template: `
@@ -483,4 +484,22 @@ export class TabsTestHtmlAttributesComponent {
         </div>`
 })
 export class TabsWithPrefixSuffixTestComponent extends TabsTestComponent {
+}
+
+@Component({
+    template: `
+    <div #wrapperDiv>
+    <igx-tabs>
+        <igx-tab-item *ngFor="let contact of contacts">
+            <igx-tab-header>
+                <span igxTabHeaderLabel>{{contact.Name}}</span>
+            </igx-tab-header>
+            <igx-tab-content>
+            </igx-tab-content>
+        </igx-tab-item>
+    </igx-tabs>
+    </div>`
+})
+export class TabsContactsComponent extends TabsTestComponent {
+    public contacts = SampleTestData.personAvatarData();
 }

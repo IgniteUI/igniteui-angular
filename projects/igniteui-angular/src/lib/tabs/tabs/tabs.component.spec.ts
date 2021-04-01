@@ -8,9 +8,9 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent, TabsRoutingTestComponent,
-    TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsTest2Component, TabsTestBug4420Component, TabsTestComponent,
-    TabsTestCustomStylesComponent, TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent,
+import { TabsContactsComponent, TabsDisabledTestComponent, TabsRoutingDisabledTestComponent, TabsRoutingGuardTestComponent,
+    TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsTest2Component, TabsTestBug4420Component,
+    TabsTestComponent, TabsTestCustomStylesComponent, TabsTestHtmlAttributesComponent, TabsTestSelectedTabComponent,
     TabsWithPrefixSuffixTestComponent, TemplatedTabsTestComponent } from '../../test-utils/tabs-components.spec';
 import { IgxTabsModule } from './tabs.module';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -57,7 +57,7 @@ describe('IgxTabs', () => {
             declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent],
+                TabsRoutingGuardTestComponent, TabsWithPrefixSuffixTestComponent, TabsContactsComponent],
             imports: [IgxTabsModule, BrowserAnimationsModule,
                 IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
                 RoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
@@ -1256,4 +1256,20 @@ describe('IgxTabs', () => {
         });
     });
 
+
+    it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
+        pending('Known issue - postponed!');
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        fixture.detectChanges();
+
+        const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
+        expect(rightScrollButton.clientWidth).toBeTruthy();
+
+        fixture.componentInstance.contacts.splice(0, 1);
+        fixture.detectChanges();
+        await wait();
+
+        expect(rightScrollButton.clientWidth).toBeFalsy();
+    });
 });
