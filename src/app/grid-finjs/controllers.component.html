@@ -2,7 +2,7 @@
     <div class="controls-holder">
         <div class="switches">
             <div class="control-item">
-                <igx-switch [checked]="false" [(ngModel)]="theme" (change)="onChange('theme', $event)">Dark</igx-switch>
+                <igx-switch [checked]="false" (change)="onChange('theme', $event)">Dark</igx-switch>
             </div>
             <div class="control-item">
                 <igx-switch [checked]="true" (change)="onChange('grouped', $event)" color="blue" cssClass="finjs-sample-switch">
