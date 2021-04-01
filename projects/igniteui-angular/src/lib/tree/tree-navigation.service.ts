@@ -5,12 +5,12 @@ import { IgxTreeService } from './tree.service';
 
 @Injectable()
 export class IgxTreeNavigationService {
-    public _activeNode: IgxTreeNode<any> = null;
-    public _focusedNode: IgxTreeNode<any> = null;
-    protected pendingNavigation = false;
     private tree: IgxTree;
-    private lastActiveNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
-    private lastFocusedNode: IgxTreeNode<any> = {} as IgxTreeNode<any>;
+
+    private _focusedNode: IgxTreeNode<any> = null;
+    private _lastFocusedNode: IgxTreeNode<any> = null;
+    private _activeNode: IgxTreeNode<any> = null;
+
     private _visibleChildren: IgxTreeNode<any>[] = [];
     private _invisibleChildren: Set<IgxTreeNode<any>> = new Set();
     private _disabledChildren: Set<IgxTreeNode<any>> = new Set();
@@ -26,6 +26,48 @@ export class IgxTreeNavigationService {
         });
     }
 
+    /** @hidden @internal */
+    public register(tree: IgxTree) {
+        this.tree = tree;
+    }
+
+    public get focusedNode() {
+        return this._focusedNode;
+    }
+
+    public set focusedNode(value: IgxTreeNode<any>) {
+        if (this._focusedNode === value) {
+            return;
+        }
+        this._lastFocusedNode = this._focusedNode;
+        if (this._lastFocusedNode) {
+            this._lastFocusedNode.tabIndex = -1;
+        }
+        this._focusedNode = value;
+        if (this._focusedNode !== null) {
+            this._focusedNode.tabIndex = 0;
+            (this._focusedNode as any).header.nativeElement.focus();
+        }
+    }
+
+    public get activeNode() {
+        return this._activeNode;
+    }
+
+    public set activeNode(value: IgxTreeNode<any>) {
+        if (this._activeNode === value) {
+            return;
+        }
+        this._activeNode = value;
+        this.tree.activeNodeChanged.emit(this._activeNode);
+    }
+
+    /** @hidden @internal */
+    public get visibleChildren(): IgxTreeNode<any>[] {
+        return this._visibleChildren;
+    }
+
+    /** @hidden @internal */
     public update_disabled_cache(node: IgxTreeNode<any>): void {
         if (node.disabled) {
             this._disabledChildren.add(node);
@@ -35,10 +77,7 @@ export class IgxTreeNavigationService {
         this._cacheChange.emit();
     }
 
-    public get visibleChildren(): IgxTreeNode<any>[] {
-        return this._visibleChildren;
-    }
-
+    /** @hidden @internal */
     public init_invisible_cache() {
         this.tree.nodes.filter(e => e.level === 0).forEach(node => {
             this.update_visible_cache(node, node.expanded, false);
@@ -46,6 +85,7 @@ export class IgxTreeNavigationService {
         this._cacheChange.emit();
     }
 
+    /** @hidden @internal */
     public update_visible_cache(node: IgxTreeNode<any>, expanded: boolean, shouldEmit = true): void {
         if (expanded) {
             node.children.forEach(child => {
@@ -61,122 +101,44 @@ export class IgxTreeNavigationService {
         }
     }
 
-    public get_all_children(node: IgxTreeNode<any>): IgxTreeNode<any>[] {
-        const children = [];
-        if (node && node.children && node.children.length) {
-            node.children.forEach((child) => {
-                children.push(...this.get_all_children(child));
-                children.push(child);
-            });
-        }
-        return children;
-    }
-
-    public get activeNode() {
-        return this._activeNode;
-    }
-
-    public set activeNode(value: IgxTreeNode<any>) {
-        if (this._activeNode === value) {
-            return;
-        }
-        this.lastActiveNode = this._activeNode;
-        this._activeNode = value;
-
-        if (this.lastActiveNode?.id) {
-            (this.lastActiveNode as any).cdr.markForCheck();
-        }
-
-        if (this._activeNode !== this.lastActiveNode) {
-            this.tree.activeNodeChanged.emit(this._activeNode);
-        }
-    }
-
-    public get focusedNode() {
-        return this._focusedNode;
-    }
-
-    public set focusedNode(value: IgxTreeNode<any>) {
-        if (this._focusedNode === value) {
-            return;
-        }
-        this.lastFocusedNode = this._focusedNode;
-        if (this.lastFocusedNode) {
-            this.lastFocusedNode.tabIndex = -1;
-        }
-        this._focusedNode = value;
-        if (this._focusedNode !== null) {
-            this._focusedNode.tabIndex = 0;
-            (this._focusedNode as any).header.nativeElement.focus();
-        }
-    }
-
-    public handleFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
+    /** @hidden @internal */
+    public setFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
         if (isActive) {
             this.activeNode = node;
         }
         this.focusedNode = node;
     }
 
-    public register(tree: IgxTree) {
-        this.tree = tree;
-    }
-
-    public isActiveNode(node: IgxTreeNode<any>): boolean {
-        return this._activeNode === node;
-    }
-
-    public isFocusedNode(node: IgxTreeNode<any>): boolean {
-        return this._focusedNode === node;
-    }
-
-    public handleNavigation(event: KeyboardEvent) {
+    /** @hidden @internal */
+    public handleKeydown(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
-        if (key === 'tab') {
+        if (!this.focusedNode) {
             return;
         }
-        if (event.repeat && NAVIGATION_KEYS.has(key)) {
-            event.preventDefault();
-        }
-        if (event.repeat) {
-            setTimeout(() => this.dispatchEvent(event), 1);
-        } else {
-            this.dispatchEvent(event);
-        }
-    }
-
-    public isFocusable(node: IgxTreeNode<any>): boolean {
-        return this.visibleChildren.indexOf((node as any).nativeElement) < 0 ? false : true;
-    }
-
-    public dispatchEvent(event: KeyboardEvent) {
-        const key = event.key.toLowerCase();
-        if (!this.focusedNode || !(NAVIGATION_KEYS.has(key) || key === '*' || key === 'enter')) {
+        if (!(NAVIGATION_KEYS.has(key) || key === '*')) {
+            if (key === 'enter') {
+                this.setFocusedAndActiveNode(this.focusedNode);
+            }
             return;
         }
-
-        this.getNextPosition(this.focusedNode, key, event);
-        if (NAVIGATION_KEYS.has(key)) {
-            event.preventDefault();
-        }
-    }
-
-    public focusNode(event: FocusEvent) {
         event.preventDefault();
-        if ((this.tree as any).nativeElement.parentElement.nextSibling.contains(event.relatedTarget)) {
-            this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1], false);
+        // if (event.repeat && NAVIGATION_KEYS.has(key)) {
+        //     event.preventDefault();
+        // }
+        if (event.repeat) {
+            setTimeout(() => this.handleNavigation(event), 1);
         } else {
-            this.handleFocusedAndActiveNode(this.tree.nodes.first, false);
+            this.handleNavigation(event);
         }
     }
 
-    protected getNextPosition(node: IgxTreeNode<any>, key: string, event: KeyboardEvent) {
-        switch (key) {
+    private handleNavigation(event: KeyboardEvent) {
+        switch (event.key.toLowerCase()) {
             case 'home':
-                this.handleFocusedAndActiveNode(this.tree.nodes.first);
+                this.setFocusedAndActiveNode(this.tree.nodes.first);
                 break;
             case 'end':
-                this.handleFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1]);
+                this.setFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1]);
                 break;
             case 'arrowleft':
             case 'left':
@@ -205,28 +167,23 @@ export class IgxTreeNavigationService {
             default:
                 return;
         }
-        return node;
     }
 
-    protected handleUpDownArrow(isUp: boolean, event: KeyboardEvent) {
-        const next = isUp ? this.tree.getPreviousNode(this.focusedNode) :
-            this.tree.getNextNode(this.focusedNode);
-        if (next === this.focusedNode) {
-            return;
-        }
-        event.preventDefault();
-
-        if (event.ctrlKey) {
-            this.handleFocusedAndActiveNode(next, false);
+    private handleArrowLeft() {
+        if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode.children?.length) {
+            this.setFocusedAndActiveNode(this.focusedNode);
+            this.focusedNode.collapse();
         } else {
-            this.handleFocusedAndActiveNode(next);
+            if (this.focusedNode.parentNode && !this.focusedNode.parentNode.disabled) {
+                this.setFocusedAndActiveNode(this.focusedNode.parentNode);
+            }
         }
     }
 
-    protected handleArrowRight() {
+    private handleArrowRight() {
         if (this.focusedNode.children.length > 0) {
             if (!this.focusedNode.expanded) {
-                this.handleFocusedAndActiveNode(this.focusedNode);
+                this.setFocusedAndActiveNode(this.focusedNode);
                 this.focusedNode.expand();
             } else {
                 if (this.treeService.collapsingNodes.has(this.focusedNode)) {
@@ -235,47 +192,51 @@ export class IgxTreeNavigationService {
                 }
                 const firstChild = this.focusedNode.children.toArray().find(node => node.disabled === false);
                 if (firstChild) {
-                    this.handleFocusedAndActiveNode(firstChild);
+                    this.setFocusedAndActiveNode(firstChild);
                 }
             }
         }
     }
 
-    protected handleArrowLeft() {
-        if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode.children?.length) {
-            this.handleFocusedAndActiveNode(this.focusedNode);
-            this.focusedNode.collapse();
+    private handleUpDownArrow(isUp: boolean, event: KeyboardEvent) {
+        const next = isUp ? this.tree.getPreviousNode(this.focusedNode) :
+            this.tree.getNextNode(this.focusedNode);
+        if (next === this.focusedNode) {
+            return;
+        }
+        // event.preventDefault();
+
+        if (event.ctrlKey) {
+            this.setFocusedAndActiveNode(next, false);
         } else {
-            if (this.focusedNode.parentNode && !this.focusedNode.parentNode.disabled) {
-                this.handleFocusedAndActiveNode(this.focusedNode.parentNode);
-            }
+            this.setFocusedAndActiveNode(next);
         }
     }
 
-    protected handleAsterisk() {
+    private handleAsterisk() {
         if (this.focusedNode.parentNode) {
             const children = this.focusedNode.parentNode.children;
             children.forEach(child => {
-                if (!child.disabled) {
-                    child.expanded = true;
+                if (!child.disabled && (!child.expanded || this.treeService.collapsingNodes.has(child))) {
+                    child.expand();
                 }
             });
         } else {
             const rootNodes = this.tree.nodes.filter(node => node.level === 0);
             rootNodes.forEach(node => {
-                if (!node.disabled) {
-                    node.expanded = true;
+                if (!node.disabled && (!node.expanded || this.treeService.collapsingNodes.has(node))) {
+                    node.expand();
                 }
             });
         }
     }
 
-    protected handleSpace(shiftKey = false) {
+    private handleSpace(shiftKey = false) {
         if (this.tree.selection === IGX_TREE_SELECTION_TYPE.None) {
             return;
         }
 
-        this.handleFocusedAndActiveNode(this.focusedNode);
+        this.setFocusedAndActiveNode(this.focusedNode);
         if (shiftKey) {
             (this.tree as any).selectionService.selectMultipleNodes(this.focusedNode);
             return;

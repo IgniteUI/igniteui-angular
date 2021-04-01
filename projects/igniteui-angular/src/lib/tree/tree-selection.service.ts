@@ -287,12 +287,11 @@ export class IgxTreeSelectionService {
         };
 
         Array.from(collection.nodes).forEach((node) => {
-            const nodeAndAllChildren = node.allChildren?.toArray();
-            if (nodeAndAllChildren && nodeAndAllChildren.length) {
-                nodeAndAllChildren?.forEach(n => {
-                    collection.nodes.add(n);
-                });
-            }
+            const nodeAndAllChildren = node.allChildren?.toArray() || [];
+            nodeAndAllChildren.forEach(n => {
+                collection.nodes.add(n);
+            });
+
             if (node && node.parentNode) {
                 collection.parents.add(node.parentNode);
             }
