@@ -918,14 +918,14 @@ export class IgxOverlayService implements OnDestroy {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
+            // when animation finish angular deletes all onDone handlers so we need to add it again :(
+            info.openAnimationPlayer.onDone(() => this.openAnimationDone(info));
         }
         if (info.closeAnimationPlayer && info.closeAnimationPlayer.hasStarted()) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.closeAnimationPlayer as any)._started = false;
         }
-        // when animation finish angular deletes all onDone handlers so we need to add it again :(
-        info.openAnimationPlayer.onDone(() => this.openAnimationDone(info));
     }
 
     private closeAnimationDone(info: OverlayInfo){
@@ -934,6 +934,8 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.closeAnimationPlayer as any)._started = false;
+            // when animation finish angular deletes all onDone handlers so we need to add it again :(
+            info.closeAnimationPlayer.onDone(() => this.closeAnimationDone(info));
         }
 
         if (info.openAnimationPlayer && info.openAnimationPlayer.hasStarted()) {
@@ -941,8 +943,6 @@ export class IgxOverlayService implements OnDestroy {
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
             (info.openAnimationPlayer as any)._started = false;
         }
-        // when animation finish angular deletes all onDone handlers so we need to add it again :(
-        info.closeAnimationPlayer.onDone(() => this.closeAnimationDone(info));
     }
 
     private finishAnimations(info: OverlayInfo) {
