@@ -2,6 +2,7 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate, parseDate } from '../../core/utils';
+import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
 const enum FormatDesc {
@@ -337,6 +338,30 @@ export abstract class DateTimeUtil {
         }
 
         return errors;
+    }
+
+    /** Parse an ISO string to a Date */
+    public static parseIsoDate(value: string): Date {
+        let regex = /^\d{4}/g;
+        const timeLiteral = 'T';
+        if (regex.test(value)) {
+            return new Date(value + `${value.indexOf(timeLiteral) === -1 ? 'T00:00' : ''}`);
+        }
+
+        regex = /^\d{2}/g;
+        if (regex.test(value)) {
+            const dateNow = new Date().toISOString();
+            // eslint-disable-next-line prefer-const
+            let [datePart, timePart] = dateNow.split(timeLiteral);
+            // transform the provided value to a numeric mask
+            // and use the mask parser to update it with the value
+            const format = timePart.replace(/\d/g, '0');
+            timePart = new MaskParsingService().replaceInMask(timePart, value,
+                { format, promptChar: '' }, 0, value.length).value;
+            return new Date(`${datePart}T${timePart}`);
+        }
+
+        return null;
     }
 
     /**
