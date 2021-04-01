@@ -397,14 +397,14 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
     }
 
     public ngAfterContentInit() {
-        this.scrollActiveIntoView();
+        this.expandToNode(this.navService.activeNode);
     }
 
     public ngAfterViewInit() {
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
-        this.scrollIntoView();
+        this.scrollNodeIntoView(this.navService.activeNode);
         this.subToChanges();
     }
 
@@ -416,11 +416,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
         this.destroy$.complete();
     }
 
-    private scrollActiveIntoView() {
-        if (this.navService.activeNode && this.navService.activeNode?.parentNode) {
-            this.navService.activeNode.path.forEach(node => {
-                if (node !== this.navService.activeNode && !node.expanded) {
-                    node.expanded = true;
+    private expandToNode(node: IgxTreeNode<any>) {
+        if (node && node.parentNode) {
+            node.path.forEach(n => {
+                if (n !== node && !n.expanded) {
+                    n.expanded = true;
                 }
             });
         }
@@ -433,6 +433,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
             }
             this.navService.update_visible_cache(event.node, false);
         });
+        this.nodeExpanding.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            this.navService.update_visible_cache(event.node, true);
+        });
     }
 
     private subToChanges() {
@@ -441,12 +444,35 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
             node.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
                 this.navService.update_visible_cache(node, nodeState);
             });
+            node.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+                console.log('Scroll, lol');
+                const targetElement = (this.navService.focusedNode as any).header.nativeElement;
+                this.scrollElementIntoView(targetElement);
+            });
+            node.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
+                const targetElement = (this.navService.focusedNode as any).header.nativeElement;
+                this.scrollElementIntoView(targetElement);
+            });
         });
         this.navService.init_invisible_cache();
     }
-    private scrollIntoView() {
+    private scrollNodeIntoView(node: IgxTreeNode<any>) {
         if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
-            this.nativeElement.scrollTop = (this.navService.activeNode as any).nativeElement.offsetTop;
+            this.nativeElement.scrollTop = node.nativeElement.offsetTop;
+        }
+    }
+
+    private scrollElementIntoView(el: HTMLElement): void {
+        const rect = this.nativeElement.getBoundingClientRect();
+        const targetRect = el.getBoundingClientRect();
+        let scrollFlag;
+        if (rect.top > targetRect.top) {
+            scrollFlag = true;
+        } else if (rect.bottom < targetRect.bottom) {
+            scrollFlag = false;
+        }
+        if (scrollFlag !== undefined) {
+            el.scrollIntoView(scrollFlag);
         }
     }
 

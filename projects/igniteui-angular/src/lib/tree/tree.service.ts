@@ -4,8 +4,8 @@ import { IgxTree, IgxTreeNode } from './common';
 /** @hidden @internal */
 @Injectable()
 export class IgxTreeService {
-    public expandedNodes: Set<string> = new Set<string>();
-    public collapsingNodes: Set<string> = new Set<string>();
+    public expandedNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
+    public collapsingNodes: Set<IgxTreeNode<any>> = new Set<IgxTreeNode<any>>();
     private tree: IgxTree;
 
     /**
@@ -16,13 +16,13 @@ export class IgxTreeService {
      * @returns void
      */
     public expand(node: IgxTreeNode<any>, uiTrigger?: boolean): void {
-        if (!this.expandedNodes.has(node.id)) {
+        this.collapsingNodes.delete(node);
+        if (!this.expandedNodes.has(node)) {
             node.expandedChange.emit(true);
         } else {
             return;
         }
-        this.expandedNodes.add(node.id);
-        this.collapsingNodes.delete(node.id);
+        this.expandedNodes.add(node);
         if (this.tree.singleBranchExpand) {
             this.tree.findNodes(node, this.siblingComparer)?.forEach(e => {
                 if (uiTrigger) {
@@ -35,7 +35,7 @@ export class IgxTreeService {
     }
 
     public collapsing(node: IgxTreeNode<any>) {
-        this.collapsingNodes.add(node.id);
+        this.collapsingNodes.add(node);
     }
 
     /**
@@ -45,18 +45,15 @@ export class IgxTreeService {
      * @returns void
      */
     public collapse(node: IgxTreeNode<any>): void {
-        const id = node.id;
-        if (this.expandedNodes.has(id)) {
+        if (this.expandedNodes.has(node)) {
             node.expandedChange.emit(false);
-        } else {
-            return;
         }
-        this.collapsingNodes.delete(id);
-        this.expandedNodes.delete(id);
+        this.collapsingNodes.delete(node);
+        this.expandedNodes.delete(node);
     }
 
     public isExpanded(node: IgxTreeNode<any>): boolean {
-        return this.expandedNodes.has(node.id);
+        return this.expandedNodes.has(node);
     }
 
     public register(tree: IgxTree) {
