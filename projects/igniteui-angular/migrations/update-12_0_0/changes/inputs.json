@@ -56,6 +56,22 @@
                 "selector": "igx-bottom-nav-item",
                 "type": "component"
             }
+        },
+        {
+            "name": "isSelected",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "isSelected",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
         }
     ]
 }

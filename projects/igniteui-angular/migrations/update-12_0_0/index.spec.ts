@@ -125,7 +125,7 @@ $theme: igx-avatar-theme(
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
 <igx-tabs tabAlignment="justify">
-<igx-tab-item [isSelected]="true">
+<igx-tab-item [selected]="true">
 <igx-tab-header routerLink="view1">
 <igx-icon igxTabHeaderIcon>folder</igx-icon>
 <span igxTabHeaderLabel>Tab1</span>
@@ -167,7 +167,7 @@ $theme: igx-avatar-theme(
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
-<igx-tab-panel label="Tab1" icon="folder">
+<igx-tab-panel label="Tab1" icon="folder" [isSelected]="true">
 Some Content
 </igx-tab-panel>
 </igx-bottom-nav>`);
@@ -177,7 +177,7 @@ Some Content
         expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
             .toEqual(`
 <igx-bottom-nav>
-<igx-bottom-nav-item>
+<igx-bottom-nav-item [selected]="true">
 <igx-bottom-nav-header>
 <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
 <span igxBottomNavHeaderLabel>Tab1</span>
