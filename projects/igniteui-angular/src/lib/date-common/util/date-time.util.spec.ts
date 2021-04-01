@@ -466,40 +466,51 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 16, 11, 11), minValue, maxValue)).toEqual({ maxValue: true });
     });
 
-    it('should parse dates correctly with parseDate', () => {
-        pending('TODO');
-        const updatedDate = (dateValue: Date, stringValue: string): Date => {
+    it('should parse dates correctly with parseIsoDate', () => {
+        const updateDate = (dateValue: Date, stringValue: string): Date => {
             const [datePart, timePart] = dateValue.toISOString().split('T');
-            return new Date(`${datePart}T${stringValue + timePart.substr(stringValue.length, timePart.length)}`);
+            const date = new Date(`${datePart}T${stringValue + timePart.substr(stringValue.length, timePart.length)}`);
+            date.setMilliseconds(0);
+            return date;
         };
 
+        let date = new Date();
+        date.setMilliseconds(0);
         // full iso string
-        expect(DateTimeUtil.parseIsoDate(new Date().toISOString()).getTime()).toEqual(new Date().getTime());
+        expect(DateTimeUtil.parseIsoDate(date.toISOString()).getTime()).toEqual(date.getTime());
 
         // date only
-        expect(DateTimeUtil.parseIsoDate('2012-12-10').getTime()).toEqual(new Date('2012-12-10T00:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('2023-13-15').getTime()).toEqual(new Date('2023-13-15T00:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('1524-01-02').getTime()).toEqual(new Date('1524-01-02T00:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('2012').getTime()).toEqual(new Date('2012-01-01T00:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('2012-02').getTime()).toEqual(new Date('2012-02-01T00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2012-12-10').getTime()).toEqual(new Date('2012-12-10T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2023-13-15').getTime()).toEqual(new Date('2023-13-15T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('1524-01-02').getTime()).toEqual(new Date('1524-01-02T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2012').getTime()).toEqual(new Date('2012-01-01T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2012-02').getTime()).toEqual(new Date('2012-02-01T00:00:00').getTime());
 
         // time only
-        expect(DateTimeUtil.parseIsoDate('12:14').getTime()).toEqual(updatedDate(new Date(), '12:14').getTime());
-        expect(DateTimeUtil.parseIsoDate('15:18').getTime()).toEqual(updatedDate(new Date(), '15:18').getTime());
-        expect(DateTimeUtil.parseIsoDate('06:03').getTime()).toEqual(updatedDate(new Date(), '06:03').getTime());
-        expect(DateTimeUtil.parseIsoDate('00:00').getTime()).toEqual(updatedDate(new Date(), '00:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('04').getTime()).toEqual(updatedDate(new Date(), '04:00').getTime());
-        expect(DateTimeUtil.parseIsoDate('03:00:35.957Z').getTime()).toEqual(updatedDate(new Date(), '09:00:35.957Z').getTime());
+        date = DateTimeUtil.parseIsoDate('12:14');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '12:14').getTime());
+
+        date = DateTimeUtil.parseIsoDate('15:18');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '15:18').getTime());
+
+        date = DateTimeUtil.parseIsoDate('06:03');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '06:03').getTime());
+
+        date = DateTimeUtil.parseIsoDate('00:00');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '00:00').getTime());
 
         // falsy values
-        // TODO: test invalid date strings, test invalid time strings, test falsy values
         expect(DateTimeUtil.parseIsoDate('')).toEqual(null);
         expect(DateTimeUtil.parseIsoDate('false')).toEqual(null);
         expect(DateTimeUtil.parseIsoDate('true')).toEqual(null);
         expect(DateTimeUtil.parseIsoDate('NaN')).toEqual(null);
         expect(DateTimeUtil.parseIsoDate(undefined)).toEqual(null);
         expect(DateTimeUtil.parseIsoDate(null)).toEqual(null);
-        expect(DateTimeUtil.parseIsoDate(new Date().getTime().toString())).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate(new Date().getTime().toString()).getTime()).toEqual(NaN);
     });
 
     it('isValidDate should properly determine if a date is valid or not', () => {

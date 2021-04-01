@@ -341,11 +341,11 @@ export abstract class DateTimeUtil {
     }
 
     /** Parse an ISO string to a Date */
-    public static parseIsoDate(value: string): Date {
+    public static parseIsoDate(value: string): Date | null {
         let regex = /^\d{4}/g;
         const timeLiteral = 'T';
         if (regex.test(value)) {
-            return new Date(value + `${value.indexOf(timeLiteral) === -1 ? 'T00:00' : ''}`);
+            return new Date(value + `${value.indexOf(timeLiteral) === -1 ? 'T00:00:00' : ''}`);
         }
 
         regex = /^\d{2}/g;
