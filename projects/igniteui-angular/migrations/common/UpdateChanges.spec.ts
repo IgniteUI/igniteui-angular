@@ -65,6 +65,10 @@ describe('UpdateChanges', () => {
             'test2.component.html',
             '<igx-remove attr></igx-remove><igx-component>'
         );
+        appTree.create(
+            'test3.component.html',
+            '<igx-remove-me-not attr></igx-remove-me-not> <igx-component> <igx-component-child></igx-component-child> </igx-component>'
+        );
 
         const update = new UnitUpdateChanges(__dirname, appTree);
         expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
@@ -74,6 +78,9 @@ describe('UpdateChanges', () => {
         update.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual('<igx-replaced> <content>  </igx-replaced> ');
         expect(appTree.readContent('test2.component.html')).toEqual('<igx-replaced>');
+        expect(appTree.readContent('test3.component.html')).toEqual(
+            '<igx-remove-me-not attr></igx-remove-me-not> <igx-replaced> <igx-component-child></igx-component-child> </igx-replaced>'
+        );
         done();
     });
 
@@ -175,7 +182,7 @@ describe('UpdateChanges', () => {
         });
         spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(inputJson));
 
-        const fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
+        let fileContent = `<one [replaceMe]="a"> <comp\r\ntag [replaceMe]="dwdw" [oldProp]=''> </other> <another oldProp="b" />`;
         appTree.create('test.component.html', fileContent);
 
         const update = new UnitUpdateChanges(__dirname, appTree);
@@ -213,6 +220,15 @@ describe('UpdateChanges', () => {
         update4.applyChanges();
         expect(appTree.readContent('test.component.html')).toEqual(
             `<comp\r\ntag [oldProp]="g" [replaced]="NOT.replaceMe" ><another [otherProp]="oldProp" /></comp>`);
+
+
+        fileContent = `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`;
+        appTree.overwrite('test.component.html', fileContent);
+        update4.applyChanges();
+        expect(appTree.readContent('test.component.html')).toEqual(
+            `<span [bait]="replaceMe"><ng-container ngProjectAs="comp"> sike! </ng-container></span>`
+        );
+
         done();
     });
 
