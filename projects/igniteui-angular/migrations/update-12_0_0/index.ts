@@ -60,9 +60,9 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     for (const path of htmlFiles) {
         findElementNodes(parseFile(host, path), 'igx-tabs')
             .forEach(node => {
-                if (hasAttribute(node as Element, 'tabsType')) {
+                if (hasAttribute(node as Element, 'type')) {
                     const { startTag, file } = getSourceOffset(node as Element);
-                    const tabsType = getAttribute(node as Element, 'tabsType')[0];
+                    const tabsType = getAttribute(node as Element, 'type')[0];
                     let alignment;
                     if (tabsType.value.toLowerCase() === 'fixed') {
                         alignment = 'justify';

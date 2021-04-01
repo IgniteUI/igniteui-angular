@@ -92,7 +92,7 @@ $theme: igx-avatar-theme(
     it('Should update igx-tab-group to igx-tab-item', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
-<igx-tabs tabsType="contentFit" [selectedIndex]="0">
+<igx-tabs type="contentFit" [selectedIndex]="0">
 <igx-tabs-group label="Tab1" icon="home">
     <div>Some Content</div>
 </igx-tabs-group>
@@ -119,7 +119,7 @@ ${noteText}
     it('Should insert routerLink to igx-tab-header', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
-<igx-tabs tabsType="fixed">
+<igx-tabs type="fixed">
 <igx-tab-item label="Tab1" icon="folder" routerLink="view1" [isSelected]="true">
 </igx-tab-item>
 </igx-tabs>`);
@@ -142,7 +142,7 @@ ${noteText}
     it('Should insert ng-template content into igx-tab-header', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
-<igx-tabs tabsType="fixed">
+<igx-tabs type="fixed">
 <igx-tabs-group>
 <ng-template igxTab>
     <span>Tab1</span>

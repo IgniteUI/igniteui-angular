@@ -2,7 +2,7 @@
     "@scheme": "../../common/schema/binding.schema.json",
     "changes": [
         {
-            "name": "tabsType",
+            "name": "type",
             "remove": true,
             "owner": {
                 "selector": "igx-tabs",
