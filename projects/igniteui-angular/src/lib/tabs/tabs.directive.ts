@@ -112,11 +112,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     /** @hidden */
     protected _disableAnimation = false;
     /** @hidden */
-    protected currentSlide: IgxTabItemDirective;
+    protected currentItem: IgxTabItemDirective;
     /** @hidden */
-    protected previousSlide: IgxTabItemDirective;
-    /** @hidden */
-    protected nextSlide: IgxTabItemDirective;
+    protected previousItem: IgxTabItemDirective;
     /** @hidden */
     protected componentName: string;
 
@@ -182,12 +180,12 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     /** @hidden */
     protected getPreviousElement(): HTMLElement {
-        return this.previousSlide.panelComponent.nativeElement;
+        return this.previousItem.panelComponent.nativeElement;
     }
 
     /** @hidden */
     protected getCurrentElement(): HTMLElement {
-        return this.currentSlide.panelComponent.nativeElement;
+        return this.currentItem.panelComponent.nativeElement;
     }
 
     /** @hidden */
@@ -227,7 +225,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
         }
 
         let newTab: IgxTabItemDirective;
-        const oldTab = this.currentSlide;
+        const oldTab = this.currentItem;
 
         // First select the new tab
         if (this._selectedIndex >= 0 && this._selectedIndex < this.items.length) {
@@ -289,24 +287,24 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     }
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
-        const slide = this.items.get(this._selectedIndex);
+        const item = this.items.get(this._selectedIndex);
 
         if (!this.disableAnimation &&
             this.hasPanels &&
-            this.currentSlide &&
-            !this.currentSlide.selected) {
-            slide.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
+            this.currentItem &&
+            !this.currentItem.selected) {
+            item.direction = this._selectedIndex > oldSelectedIndex ? Direction.NEXT : Direction.PREV;
 
-            if (this.previousSlide && this.previousSlide.previous) {
-                this.previousSlide.previous = false;
+            if (this.previousItem && this.previousItem.previous) {
+                this.previousItem.previous = false;
             }
-            this.currentSlide.direction = slide.direction;
+            this.currentItem.direction = item.direction;
 
-            this.previousSlide = this.currentSlide;
-            this.currentSlide = slide;
+            this.previousItem = this.currentItem;
+            this.currentItem = item;
             this.triggerAnimations();
         } else {
-            this.currentSlide = slide;
+            this.currentItem = item;
         }
     }
 

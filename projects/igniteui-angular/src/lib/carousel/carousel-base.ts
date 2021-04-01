@@ -28,9 +28,13 @@ export abstract class IgxCarouselComponentBase {
     /** @hidden */
     public animationType: CarouselAnimationType = CarouselAnimationType.slide;
 
-    protected currentSlide: IgxSlideComponentBase;
-    protected previousSlide: IgxSlideComponentBase;
+    /** @hidden */
+    protected currentItem: IgxSlideComponentBase;
+    /** @hidden */
+    protected previousItem: IgxSlideComponentBase;
+    /** @hidden */
     protected enterAnimationPlayer?: AnimationPlayer;
+    /** @hidden */
     protected leaveAnimationPlayer?: AnimationPlayer;
 
     private animationDuration = 320;
@@ -91,7 +95,7 @@ export abstract class IgxCarouselComponentBase {
                                 duration: `${duration}ms`,
                                 endOpacity: 1,
                                 startOpacity: 1,
-                                fromPosition: `translateX(${this.currentSlide.direction === 1 ? trans : -trans}%)`,
+                                fromPosition: `translateX(${this.currentItem.direction === 1 ? trans : -trans}%)`,
                                 toPosition: 'translateX(0%)'
                             }
                         }),
@@ -103,7 +107,7 @@ export abstract class IgxCarouselComponentBase {
                                 endOpacity: 1,
                                 startOpacity: 1,
                                 fromPosition: `translateX(0%)`,
-                                toPosition: `translateX(${this.currentSlide.direction === 1 ? -trans : trans}%)`,
+                                toPosition: `translateX(${this.currentItem.direction === 1 ? -trans : trans}%)`,
                             }
                         })
                 };
@@ -136,9 +140,9 @@ export abstract class IgxCarouselComponentBase {
             }
             this.animationPosition = 0;
             this.newDuration = 0;
-            this.previousSlide.previous = false;
+            this.previousItem.previous = false;
         });
-        this.previousSlide.previous = true;
+        this.previousItem.previous = true;
         this.enterAnimationPlayer.play();
     }
 
