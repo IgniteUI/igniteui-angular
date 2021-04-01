@@ -326,51 +326,43 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     }
 
     private getRowData(index: number): any {
-        let res = { reps: 0 } as { reps: number; rec: ITreeGridRecord };
-        let reps = 0;
-        let rootIndex = 0;
+        let res = {} as { reps: number; rec: ITreeGridRecord };
 
-        if (index === 0) {
-            return this.grid.rootRecords[0].data;
-        }
         // TODO row
         if (index === this.grid.filteredSortedData.length - 1) {
             return this.grid.filteredSortedData[index];
         }
 
-        while (!res.rec && rootIndex < this.grid.rootRecords.length) {
-            res = this.lookInChildren(this.grid.rootRecords[rootIndex], index - reps);
-            reps+= res.reps;
-            rootIndex++;
-        }
+        res = this.lookInChildren(this.grid.rootRecords, index);
 
         return res.rec.data;
     }
 
-    private lookInChildren(rec: ITreeGridRecord, index: number): { reps: number; rec: ITreeGridRecord} {
-        let rowData: any;
+    private lookInChildren(records: ITreeGridRecord[], index: number): { reps: number; rec: ITreeGridRecord } {
+        let rowData: ITreeGridRecord;
         let i = 0;
-        const children = rec.children;
+        let corrector = 0;
+        let reps = 0;
 
-        if (index === 0) {
-            return { reps: i + 1, rec };
-            // return { reps: i + 1, rec: children[0] };
-        }
-
-        while (!rowData && i < children.length) {
-            const child = children[i];
-            // TODO
-            if (i + 1 === index) {
-                rowData = child;
+        while (!rowData && i < records.length) {
+            const rec = records[i];
+            if (i - corrector === index) {
+                rowData = rec;
                 break;
             }
             i++;
-            if (child.expanded && child.children && child.children.length) {
-                const res = this.lookInChildren(child, index - 1);
-                rowData = res.rec;
+            if (rec.expanded && rec.children && rec.children.length) {
+                const res = this.lookInChildren(rec.children, index - 1);
+                if (res.rec) {
+                    rowData = res.rec;
+                } else {
+                    index -= res.reps + 1;
+                    reps += res.reps;
+                    corrector++;
+                }
             }
         }
 
-        return { reps: i + 1, rec: rowData };
+        return { reps: i + reps, rec: rowData };
     }
 }
