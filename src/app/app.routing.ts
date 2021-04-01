@@ -86,6 +86,7 @@ import { GridFormattingComponent } from './grid-formatting/grid-formatting.compo
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
+import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 
 const appRoutes = [
     {
@@ -409,6 +410,10 @@ const appRoutes = [
     {
         path: 'gridEvents',
         component: GridEventsComponent
+    },
+    {
+        path: 'gridUpdates',
+        component: GridUpdatesComponent
     },
 ];
 
