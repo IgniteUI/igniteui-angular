@@ -62,12 +62,12 @@
         @extend %node-spacer !optional;
     }
 
-    @include e(indicator) {
-        @extend %node-indicator !optional;
+    @include e(toggle-button) {
+        @extend %node-toggle-button !optional;
     }
 
-    @include e(indicator, $m: hidden) {
-        @extend %node-indicator--hidden !optional;
+    @include e(toggle-button, $m: hidden) {
+        @extend %node-toggle-button--hidden !optional;
     }
 
     @include e(drop-indicator) {

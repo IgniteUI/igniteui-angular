@@ -139,7 +139,7 @@
 
     %tree-node,
     %node-wrapper,
-    %node-indicator,
+    %node-toggle-button,
     %node-content,
     %node-select {
         display: flex;
@@ -159,23 +159,23 @@
     }
 
     %node-wrapper,
-    %node-indicator,
+    %node-toggle-button,
     %node-select {
         align-items: center;
     }
 
-    %node-indicator,
+    %node-toggle-button,
     %node-select {
         margin-#{$right}: $icon-space;
     }
 
     %node-content,
-    %node-indicator,
+    %node-toggle-button,
     %node-select {
         z-index: 1;
     }
 
-    %node-indicator--hidden {
+    %node-toggle-button--hidden {
         visibility: hidden;
     }
 
@@ -286,7 +286,7 @@
             display: none;
         }
 
-        %node-indicator {
+        %node-toggle-button {
             color: --var($theme, 'foreground-disabled') !important;
         }
     }
@@ -303,7 +303,7 @@
         @include ellipsis();
     }
 
-    %node-indicator {
+    %node-toggle-button {
         justify-content: center;
         cursor: pointer;
         user-select: none;
