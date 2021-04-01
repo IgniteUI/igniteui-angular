@@ -9,20 +9,13 @@ import { IgxColumnMovingService } from './moving.service';
  * @hidden
  * @internal
  */
-@Directive({
-    selector: '[igxColumnMovingDrag]',
-
-})
+@Directive({ selector: '[igxColumnMovingDrag]' })
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public data: any;
+    public column: IgxColumnComponent;
 
-    get column(): IgxColumnComponent {
-        return this.data;
-    }
-
-    get draggable(): boolean {
+    public get draggable(): boolean {
         return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
     }
 
@@ -70,8 +63,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.ghostClass = this._ghostClass;
 
         super.onPointerDown(event);
-
-        this.cms.isColumnMoving = true;
         this.column.grid.cdr.detectChanges();
 
         const args = {
@@ -90,12 +81,12 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         event.preventDefault();
         super.onPointerMove(event);
 
-        if (this._dragStarted && this.ghostElement && !this.column.grid.draggedColumn) {
-            this.column.grid.draggedColumn = this.column;
+        if (this._dragStarted && this.ghostElement && !this.cms.column) {
+            this.cms.column = this.column;
             this.column.grid.cdr.detectChanges();
         }
 
-        if (this.cms.isColumnMoving) {
+        if (this.cms.column) {
             const args = {
                 source: this.column,
                 cancel: false
@@ -112,16 +103,14 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         // Run it explicitly inside the zone because sometimes onPointerUp executes after the code below.
         this.zone.run(() => {
             super.onPointerUp(event);
-
-            this.cms.isColumnMoving = false;
-            this.column.grid.draggedColumn = null;
+            this.cms.column = null;
             this.column.grid.cdr.detectChanges();
         });
 
         this._unsubscribe();
     }
 
-    protected createGhost(pageX, pageY) {
+    protected createGhost(pageX: number, pageY: number) {
         super.createGhost(pageX, pageY);
 
         this.ghostElement.style.height = null;

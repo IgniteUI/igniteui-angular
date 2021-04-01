@@ -15,31 +15,9 @@ export enum DropPosition {
  * @hidden
  * @internal
  */
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class IgxColumnMovingService {
     public cancelDrop: boolean;
-    public isColumnMoving: boolean;
-
-    private _icon: any;
-    private _column: IgxColumnComponent;
-
-    get column(): IgxColumnComponent {
-        return this._column;
-    }
-    set column(val: IgxColumnComponent) {
-        if (val) {
-            this._column = val;
-        }
-    }
-
-    get icon(): any {
-        return this._icon;
-    }
-    set icon(val: any) {
-        if (val) {
-            this._icon = val;
-        }
-    }
+    public icon: HTMLElement;
+    public column: IgxColumnComponent;
 }
