@@ -527,8 +527,8 @@ export class IgxGridNavigationService {
     protected handleEditing(shift: boolean, event: KeyboardEvent) {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
-        if (!this.grid.crudService.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.crudService.endEdit(true, event);
+        if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
+            this.grid.endEdit(true, event);
             this.grid.tbody.nativeElement.focus();
             return;
         }
