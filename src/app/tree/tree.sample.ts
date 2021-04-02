@@ -63,14 +63,25 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         this.mapData(this.data);
     }
 
+    public setDummy() {
+        this.data = generateHierarchicalData('ChildCompanies', 3, 6, 0);
+    }
+
     public handleEvent(event: any) {
         // event.cancel = true;
+    }
+
+    public handleActive(event: any) {
+        const activeNodes = this.tree.findNodes(true, (_anything, node) => node.active);
+        if (activeNodes) {
+            activeNodes.forEach(e => e.active = false);
+        }
     }
 
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
             node.selectedChange.subscribe((ev) => {
-                console.log(ev);
+                // console.log(ev);
             });
         });
         // if (localStorage.getItem('activeNode')) {
@@ -169,7 +180,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     }
 
     public nodeSelection(event) {
-        console.log(event);
+        // console.log(event);
         if (event.newSelection.find(x => x.id === 'igxTreeNode_1')) {
             //event.newSelection = [...event.newSelection, this.tree.nodes.toArray()[0]];
         }
@@ -177,7 +188,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public customSearch(term: string) {
         const searchResult = this.tree.findNodes(term, this.containsComparer);
-        console.log(searchResult);
+        // console.log(searchResult);
         return searchResult;
     }
 
@@ -186,11 +197,11 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     }
 
     public activeNodeChanged(evt) {
-        console.log(evt);
+        // console.log(evt);
     }
 
     public keydown(evt) {
-        console.log(evt);
+        // console.log(evt);
     }
 
     private mapData(data: any[]) {
@@ -205,3 +216,18 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     private containsComparer: IgxTreeSearchResolver =
         (term: any, node: IgxTreeNodeComponent<any>) => node.data?.ID?.toLowerCase()?.indexOf(term.toLowerCase()) > -1;
 }
+
+
+const generateHierarchicalData = (childKey: string, level = 7, children = 6, iter = 0): any[] => {
+    const returnArray = [];
+    if (level === 0) {
+        return returnArray;
+    }
+    for (let i = 0; i < children; i++) {
+        // create Root member
+        iter++;
+        returnArray.push({ ID: `Dummy${iter}`, CompanyName: `Dummy-${iter}`,
+        [childKey]: generateHierarchicalData(childKey, children, level - 1) });
+    }
+    return returnArray;
+};

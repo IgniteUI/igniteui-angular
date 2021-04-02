@@ -42,7 +42,7 @@ export class IgxTreeNodeLinkDirective {
     /** @hidden @internal */
     @HostBinding('attr.tabindex')
     public get tabIndex(): number {
-        return this.navService.focusedNode === this.node ? 0 : -1;
+        return this.navService.focusedNode === this.node ? (this.node?.disabled ? -1 : 0) : -1;
     }
 
     /**
@@ -60,10 +60,12 @@ export class IgxTreeNodeLinkDirective {
      */
     @HostListener('focus')
     public handleFocus() {
-        if (this.navService.focusedNode !== this.node) {
-            this.navService.focusedNode = this.node;
+        if (!this.node.disabled) {
+            if (this.navService.focusedNode !== this.node) {
+                this.navService.focusedNode = this.node;
+            }
+            this.node.isFocused = true;
         }
-        this.node.isFocused = true;
     }
 }
 
@@ -103,6 +105,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public get tabIndex(): number {
+        if (this.disabled) {
+            return -1;
+        }
         if (this._tabIndex === null) {
             if (this.navService.focusedNode === null) {
                 return this.linkChildren?.length ? -1 : 0;
@@ -424,6 +429,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * Marks the node as the current active element
      */
     public handleFocus(): void {
+        if (this.disabled) {
+            return;
+        }
         if (this.navService.focusedNode !== this) {
             this.navService.focusedNode = this;
         }
