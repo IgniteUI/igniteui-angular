@@ -75,7 +75,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
                 break;
             case KEYS.ENTER:
                 if (!this.tab.panelComponent) {
-                    this.tabs.selectTab(this.tab, true);
+                    this.nativeElement.click();
                 }
                 unsupportedKey = true;
                 break;
@@ -83,7 +83,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
             case KEYS.SPACE_IE:
                 event.preventDefault();
                 if (!this.tab.panelComponent) {
-                    this.tabs.selectTab(this.tab, true);
+                    this.nativeElement.click();
                 }
                 unsupportedKey = true;
                 break;
