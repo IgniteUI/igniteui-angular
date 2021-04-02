@@ -7,7 +7,8 @@ import {
     ChangeDetectorRef,
     Output,
     EventEmitter,
-    Directive
+    Directive,
+    HostListener
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -29,23 +30,87 @@ import { CurrentResourceStrings } from '../../core/i18n/resources';
 @Directive({
     selector: `[igxTreeNodeLink]`
 })
-export class IgxTreeNodeLinkDirective {
+export class IgxTreeNodeLinkDirective implements OnDestroy {
+
     @HostBinding('attr.role')
     public role = 'treeitem';
 
-    constructor(@Inject(IGX_TREE_NODE_COMPONENT)
+    /**
+     * The node's parent. Should be used only when the link is defined
+     * in `<ng-template>` tag outside of its parent, as Angular DI will not properly provide a reference
+     *
+     * ```html
+     * <igx-tree>
+     *     <igx-tree-node #myNode *ngFor="let node of data" [data]="node">
+     *         <ng-template *ngTemplateOutlet="nodeTemplate; context: { $implicit: data, parentNode: myNode }">
+     *         </ng-template>
+     *     </igx-tree-node>
+     *     ...
+     *     <!-- node template is defined under tree to access related services -->
+     *     <ng-template #nodeTemplate let-data let-node="parentNode">
+     *         <a [igxTreeNodeLink]="node">{{ data.label }}</a>
+     *     </ng-template>
+     * </igx-tree>
+     * ```
+     */
+    @Input('igxTreeNodeLink')
+    public set parentNode(val: any) {
+        if (val) {
+            this._parentNode = val;
+            (this._parentNode as any).addLinkChild(this);
+        }
+    }
+
+    public get parentNode(): any {
+        return this._parentNode;
+    }
+
+    /** A pointer to the parent node */
+    private get target(): IgxTreeNode<any> {
+        return this.node || this.parentNode;
+    }
+
+    private _parentNode: IgxTreeNode<any> = null;
+
+    constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
     private node: IgxTreeNode<any>,
-        private navService: IgxTreeNavigationService) {
+        private navService: IgxTreeNavigationService,
+        public elementRef: ElementRef) {
     }
 
     /** @hidden @internal */
     @HostBinding('attr.tabindex')
     public get tabIndex(): number {
-        return this.navService.focusedNode === this.node ? 0 : -1;
+        return this.navService.focusedNode === this.target ? (this.target?.disabled ? -1 : 0) : -1;
+    }
+
+    /**
+     * @hidden @internal
+     * Clear the node's focused state
+     */
+    @HostListener('blur')
+    public handleBlur() {
+        this.target.isFocused = false;
+    }
+
+    /**
+     * @hidden @internal
+     * Set the node as focused
+     */
+    @HostListener('focus')
+    public handleFocus() {
+        if (this.target && !this.target.disabled) {
+            if (this.navService.focusedNode !== this.target) {
+                this.navService.focusedNode = this.target;
+            }
+            this.target.isFocused = true;
+        }
+    }
+
+    public ngOnDestroy() {
+        this.target.removeLinkChild(this);
     }
 }
-
-let nodeId = 0;
 
 /**
  *
@@ -81,19 +146,17 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     public get tabIndex(): number {
+        if (this.disabled) {
+            return -1;
+        }
         if (this._tabIndex === null) {
             if (this.navService.focusedNode === null) {
-                return 0;
+                return this.hasLinkChildren ? -1 : 0;
             }
             return -1;
         }
-        if (this.linkChildren?.length) {
-            return -1;
-        }
-        return this._tabIndex;
+        return this.hasLinkChildren ? -1 : this._tabIndex;
     }
-
-    public set animationSettings(val: ToggleAnimationSettings) { }
 
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
@@ -127,6 +190,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public set active(value: boolean) {
         if (value) {
             this.navService.activeNode = this;
+            this.tree.activeNodeBindingChange.emit(this);
         }
     }
 
@@ -169,29 +233,38 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public expandedChange = new EventEmitter<boolean>();
 
     public get focused() {
-        //console.log(this.navService.isActiveNode(this));
-        return this.navService.focusedNode === this;
+        return this.isFocused &&
+            this.navService.focusedNode === this;
     }
 
     // TODO: Add API docs
     /**
-     * Retrieves the full path to the node
+     * Retrieves the full path to the node incuding itself
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * const path: IgxTreeNode<any>[] = node.path;
+     * ```
      */
     public get path(): IgxTreeNode<any>[] {
         return this.parentNode?.path ? [...this.parentNode.path, this] : [this];
     }
 
     // TODO: bind to disabled state when node is dragged
-    /** @hidden @internal */
+    /**
+     * Gets/Sets the disabled state of the node
+     *
+     * @param value: boolean
+     */
     @Input()
     @HostBinding('class.igx-tree-node--disabled')
     public get disabled(): boolean {
         return this._disabled;
     }
 
-    public set disabled(val: boolean) {
-        if (val !== this._disabled) {
-            this._disabled = val;
+    public set disabled(value: boolean) {
+        if (value !== this._disabled) {
+            this._disabled = value;
             this.tree.disabledChange.emit(this);
         }
     }
@@ -202,7 +275,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     @HostBinding('attr.role')
-    public roleAttr = 'treeitem';
+    public get roleAttr() {
+        return this.linkChildren ? 'none' : 'treeitem';
+    };
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeLinkDirective, { read: ElementRef })
@@ -232,21 +307,26 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.children?.length ? this.children.toArray() : null;
     }
 
+    // TODO: will be used in Drag and Drop implementation
+    /** @hidden @internal */
+    @ViewChild('ghostTemplate', { read: ElementRef })
+    public header: ElementRef;
+
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
     private _defaultExpandIndicatorTemplate: TemplateRef<any>;
 
     @ViewChild('childrenContainer', { read: ElementRef })
     private childrenContainer: ElementRef;
 
-    // TODO: will be used in Drag and Drop implementation
-    @ViewChild('ghostTemplate', { read: ElementRef })
-    private header: ElementRef;
+    private get hasLinkChildren(): boolean {
+        return this.linkChildren?.length > 0 || this.registeredChildren?.length > 0;
+    }
 
-    // TODO: this should probably be dropped from the API
-    /**
-     * The unique ID of the node
-     */
-    public id = `igxTreeNode_${nodeId++}`;
+    /** @hidden @internal */
+    public isFocused: boolean;
+
+    /** @hidden @internal */
+    public registeredChildren: IgxTreeNodeLinkDirective[] = [];
 
     /** @hidden @internal */
     private _resourceStrings = CurrentResourceStrings.TreeResStrings;
@@ -396,14 +476,36 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public ngAfterViewInit() { }
 
-    /** @hidden @internal */
-    public divertFocus(): void {
+    /**
+     * @hidden @internal
+     * Sets the focus to the node's <a> child, if present
+     * Sets the node as the tree service's focusedNode
+     * Marks the node as the current active element
+     */
+    public handleFocus(): void {
+        if (this.disabled) {
+            return;
+        }
         if (this.navService.focusedNode !== this) {
             this.navService.focusedNode = this;
         }
+        this.isFocused = true;
         if (this.linkChildren?.length) {
             this.linkChildren.first.nativeElement.focus();
+            return;
         }
+        if (this.registeredChildren.length) {
+            this.registeredChildren[0].elementRef.nativeElement.focus();
+            return;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * Clear the node's focused status
+     */
+    public clearFocus(): void {
+        this.isFocused = false;
     }
 
     /**
@@ -531,6 +633,20 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
             this.playCloseAnimation(
                 this.childrenContainer
             );
+        }
+    }
+
+    /** @hidden @internal */
+    public addLinkChild(link: IgxTreeNodeLinkDirective) {
+        this._tabIndex = -1;
+        this.registeredChildren.push(link);
+    };
+
+    /** @hidden @internal */
+    public removeLinkChild(link: IgxTreeNodeLinkDirective) {
+        const index = this.registeredChildren.indexOf(link);
+        if (index !== -1) {
+            this.registeredChildren.splice(index, 1);
         }
     }
 }
