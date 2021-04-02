@@ -30,7 +30,8 @@
             'igx-tree-node__wrapper--disabled' : this.disabled
         }"
         (pointerdown)="onPointerDown($event)"
-        (focus)="divertFocus()"
+        (focus)="handleFocus()"
+        (blur)="clearFocus()"
         >
         <div aria-hidden="true">
             <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>

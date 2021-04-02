@@ -7,7 +7,8 @@ import {
     ChangeDetectorRef,
     Output,
     EventEmitter,
-    Directive
+    Directive,
+    HostListener
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
@@ -42,6 +43,27 @@ export class IgxTreeNodeLinkDirective {
     @HostBinding('attr.tabindex')
     public get tabIndex(): number {
         return this.navService.focusedNode === this.node ? 0 : -1;
+    }
+
+    /**
+     * @hidden @internal
+     * Clear the node's focused state
+     */
+    @HostListener('blur')
+    public handleBlur() {
+        this.node.isFocused = false;
+    }
+
+    /**
+     * @hidden @internal
+     * Set the node as focused
+     */
+    @HostListener('focus')
+    public handleFocus() {
+        if (this.navService.focusedNode !== this.node) {
+            this.navService.focusedNode = this.node;
+        }
+        this.node.isFocused = true;
     }
 }
 
@@ -83,17 +105,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public get tabIndex(): number {
         if (this._tabIndex === null) {
             if (this.navService.focusedNode === null) {
-                return 0;
+                return this.linkChildren?.length ? -1 : 0;
             }
             return -1;
         }
-        if (this.linkChildren?.length) {
-            return -1;
-        }
-        return this._tabIndex;
+        return this.linkChildren?.length ? -1 : this._tabIndex;
     }
-
-    public set animationSettings(val: ToggleAnimationSettings) { }
 
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
@@ -170,7 +187,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public get focused() {
         //console.log(this.navService.isActiveNode(this));
-        return this.navService.focusedNode === this;
+        return this.isFocused &&
+        this.navService.focusedNode === this;
     }
 
     // TODO: Add API docs
@@ -202,7 +220,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     @HostBinding('attr.role')
-    public roleAttr = 'treeitem';
+    public get roleAttr() {
+        return this.linkChildren ? 'none' : 'treeitem';
+    };
 
     /** @hidden @internal */
     @ContentChildren(IgxTreeNodeLinkDirective, { read: ElementRef })
@@ -247,6 +267,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * The unique ID of the node
      */
     public id = `igxTreeNode_${nodeId++}`;
+
+    public isFocused: boolean;
 
     /** @hidden @internal */
     private _resourceStrings = CurrentResourceStrings.TreeResStrings;
@@ -395,14 +417,28 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public ngAfterViewInit() { }
 
-    /** @hidden @internal */
-    public divertFocus(): void {
+    /**
+     * @hidden @internal
+     * Sets the focus to the node's <a> child, if present
+     * Sets the node as the tree service's focusedNode
+     * Marks the node as the current active element
+     */
+    public handleFocus(): void {
         if (this.navService.focusedNode !== this) {
             this.navService.focusedNode = this;
         }
+        this.isFocused = true;
         if (this.linkChildren?.length) {
             this.linkChildren.first.nativeElement.focus();
         }
+    }
+
+    /**
+     * @hidden @internal
+     * Clear the node's focused status
+     */
+    public clearFocus(): void {
+        this.isFocused = false;
     }
 
     /**

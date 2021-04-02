@@ -41,6 +41,9 @@ export interface IgxTreeNode<T> {
     expanded: boolean | null;
     selected: boolean | null;
     disabled: boolean;
+    /** @hidden @internal */
+    isFocused: boolean;
+    active: boolean;
     level: number;
     data: T;
     /** @hidden @internal */
