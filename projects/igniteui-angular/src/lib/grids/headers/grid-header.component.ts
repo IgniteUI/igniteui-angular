@@ -31,6 +31,8 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
     templateUrl: './grid-header.component.html'
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
+    @HostBinding('attr.role')
+    public hostRole = 'columnheader';
 
     private _destroy$ = new Subject<boolean>();
 
