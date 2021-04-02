@@ -39,11 +39,15 @@ All notable changes for each version of this project will be documented in this 
                 [summaryFormatter]="dateSummaryFormat">
             </igx-column>
         ```
+    - **Behavioral Change** - `Column Autosize` feature now does not handle templated headers where the first level children are sized based on parent like default `div` and etc. Autosizing for such headers will not result in change.
+    - **Behavioral Change** - Calling `autosize` through the `IgxColumnComponent` API now takes into consideration the `minWidth` and `maxWidth` of the column.
+    - A new `IgxColumnComponent` input property is exposed called `autosizeHeader`, which if false, allows the autosizing to ignore the header cell and autosize only based on content cells.
 - `IgxTabs`
     - The `tabAlignment` property of the `IgxTabs` component replaces the `type` property and enables you to set the tab alignment to `start`, `center`, `end` and `justify`.
     - The `igx-tab-header` supports `igx-prefix` and `igx-suffix` directives in its `ng-content`.
 - `IgxBottomNav`
-    - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled.
+    - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled. 
+    
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
