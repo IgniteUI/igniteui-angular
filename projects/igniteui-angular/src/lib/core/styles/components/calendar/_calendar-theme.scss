@@ -212,9 +212,7 @@
         }
 
         @if not($date-selected-background) and $header-background {
-            @if type-of($header-background) == 'color' {
-                $date-selected-background: $header-background;
-            }
+            $date-selected-background: $header-background;
         }
 
         @if not($date-current-bg-color) and $header-background {
@@ -801,6 +799,8 @@
             ::after {
                 @if type-of($selected-hover-color) == 'color' {
                     background: rgba($selected-hover-color, .18);
+                } @else {
+                    background: $selected-hover-color;
                 }
             }
         }

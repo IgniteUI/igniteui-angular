@@ -182,12 +182,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            @if type-of(map-get($theme, 'size')) == 'number' {
-                top: calc(100% - #{map-get($theme, 'size')});
-                left: calc(100% - #{map-get($theme, 'size') * 2});
-                width: #{map-get($theme, 'size') * 4};
-                height: #{map-get($theme, 'size') * 3};
-            }
+            top: calc(100% - #{map-get($theme, 'size')});
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: (#{map-get($theme, 'size')} * 4);
+            height: (#{map-get($theme, 'size')} * 3);
         }
     }
 
@@ -197,12 +195,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            @if type-of(map-get($theme, 'size')) == 'number' {
-                top: calc(100% - #{map-get($theme, 'size') * 2});
-                left: calc(100% - #{map-get($theme, 'size') * 2});
-                width: #{map-get($theme, 'size') * 4};
-                height: #{map-get($theme, 'size') * 3};
-            }
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: (#{map-get($theme, 'size')} * 4);
+            height: (#{map-get($theme, 'size')} * 3);
         }
     }
 
@@ -214,12 +210,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            @if type-of(map-get($theme, 'size')) == 'number' {
-                top: calc(100% - #{map-get($theme, 'size') * 2});
-                left: calc(100% - #{map-get($theme, 'size')});
-                width: #{map-get($theme, 'size') * 3};
-                height: #{map-get($theme, 'size') * 4};
-            }
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: (#{map-get($theme, 'size')} * 3);
+            height: (#{map-get($theme, 'size')} * 4);
         }
     }
 
@@ -231,12 +225,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            @if type-of(map-get($theme, 'size')) == 'number' {
-                left: calc(100% - #{map-get($theme, 'size') * 2});
-                top: calc(100% - #{map-get($theme, 'size') * 2});
-                height: #{map-get($theme, 'size') * 4};
-                width: #{map-get($theme, 'size') * 3};
-            }
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            height: (#{map-get($theme, 'size')} * 4);
+            width: (#{map-get($theme, 'size')} * 3);
         }
     }
 }
