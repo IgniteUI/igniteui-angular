@@ -7,6 +7,11 @@
     }
 }
 
+.sample-scroll {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 .sample-ellipsis {
     white-space: nowrap;
     text-overflow: ellipsis;
