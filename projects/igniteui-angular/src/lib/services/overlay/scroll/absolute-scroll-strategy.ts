@@ -1,6 +1,6 @@
+import { NgZone } from '@angular/core';
 import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
-import { NgZone } from '@angular/core';
 
 /**
  * On scroll reposition the overlay content.
@@ -14,7 +14,7 @@ export class AbsoluteScrollStrategy extends ScrollStrategy {
     private _zone: NgZone;
 
     constructor(scrollContainer?: HTMLElement) {
-        super(scrollContainer);
+        super();
         this._scrollContainer = scrollContainer;
     }
 

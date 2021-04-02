@@ -107,31 +107,31 @@
     }
 
     @if not($item-text-color) and $item-background {
-        @if type_of($item-background) == 'color' {
+        @if type-of($item-background) == 'color' {
             $item-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-hover-text-color) and $item-hover-background {
-        @if type_of($item-hover-background) == 'color' {
+        @if type-of($item-hover-background) == 'color' {
             $item-hover-text-color: text-contrast($item-hover-background);
         }
     }
 
     @if not($item-selected-background) and $item-background {
-        @if type_of($item-background) == 'color' {
+        @if type-of($item-background) == 'color' {
             $item-selected-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-selected-text-color) and $item-selected-background {
-        @if type_of($item-selected-background) == 'color' {
+        @if type-of($item-selected-background) == 'color' {
             $item-selected-text-color: text-contrast($item-selected-background);
         }
     }
 
     @if not($disabled-text-color) and $disabled-background-color {
-        @if type_of($disabled-background-color) == 'color' {
+        @if type-of($disabled-background-color) == 'color' {
             $disabled-text-color: rgba(text-contrast($item-background), .3);
         }
     }

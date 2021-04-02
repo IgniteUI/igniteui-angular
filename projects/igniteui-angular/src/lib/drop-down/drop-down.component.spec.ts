@@ -850,14 +850,14 @@ describe('IgxDropDown ', () => {
         it('should properly scroll when virtualized', async () => {
             dropdown.toggle();
             fixture.detectChanges();
-            await wait(30);
+            await wait(50);
             let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(lastItemElement.textContent.trim()).toEqual('Item 11');
             expect(firstItemElement.textContent.trim()).toEqual('Item 1');
             scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
             fixture.detectChanges();
-            await wait(30);
+            await wait(50);
             firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
@@ -890,12 +890,12 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem.value).toEqual({ name: fixture.componentInstance.items[5].name, id: 5 });
             expect(dropdown.items[5].selected).toBeTruthy();
             scroll.scrollTo(412);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeFalsy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(0);
             scroll.scrollTo(0);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeTruthy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(1);
@@ -914,7 +914,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem as any).toEqual(selectedItem);
             expect(items.toArray()[5].selected).toEqual(false);
             scroll.scrollTo(412);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             const selectedEntry = items.find(e => e.value === selectedItem.value && e.index === selectedItem.index);
             expect(selectedEntry).toBeTruthy();
@@ -928,9 +928,9 @@ describe('IgxDropDown ', () => {
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             dropdown.toggle();
-            await wait(30);
+            await wait(50);
             dropdown.toggle();
-            await wait(30);
+            await wait(50);
             const itemsInView = virtualScroll.igxForContainerSize / virtualScroll.igxForItemSize;
             const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
                 - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
