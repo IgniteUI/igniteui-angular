@@ -141,8 +141,9 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get rowID(): any {
+        const data = this.data;
         const primaryKey = this.grid.primaryKey;
-        return primaryKey ? this.data[primaryKey] : this.data;
+        return primaryKey ? data[primaryKey] : data;
     }
 
     /**
@@ -326,7 +327,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     }
 
     private getRowData(index: number): any {
-        let res = {} as { reps: number; rec: ITreeGridRecord };
+        let res = {} as { globalI: number; rec: ITreeGridRecord };
 
         // TODO row
         if (index === this.grid.filteredSortedData.length - 1) {
@@ -338,31 +339,34 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
         return res.rec.data;
     }
 
-    private lookInChildren(records: ITreeGridRecord[], index: number): { reps: number; rec: ITreeGridRecord } {
+    private lookInChildren(records: ITreeGridRecord[], index: number, globalI?: number): { globalI: number; rec: ITreeGridRecord } {
         let rowData: ITreeGridRecord;
         let i = 0;
-        let corrector = 0;
-        let reps = 0;
+        globalI = globalI ? globalI : 0;
+
+        if (globalI === index) {
+            return { globalI, rec: records[0] };
+        }
 
         while (!rowData && i < records.length) {
             const rec = records[i];
-            if (i - corrector === index) {
+            if (globalI === index) {
                 rowData = rec;
                 break;
             }
-            i++;
             if (rec.expanded && rec.children && rec.children.length) {
-                const res = this.lookInChildren(rec.children, index - 1);
+                const res = this.lookInChildren(rec.children, index, globalI + 1);
                 if (res.rec) {
                     rowData = res.rec;
                 } else {
-                    index -= res.reps + 1;
-                    reps += res.reps;
-                    corrector++;
+                    globalI = res.globalI;
                 }
+            } else {
+                globalI++;
             }
+            i++;
         }
 
-        return { reps: i + reps, rec: rowData };
+        return { globalI, rec: rowData };
     }
 }
