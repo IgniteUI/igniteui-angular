@@ -14,77 +14,6 @@
     (focus)="navigation.focusFirstCell()"
 >
 </igx-grid-header-row>
-<!-- <div class="igx-grid__thead">
-    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" role="rowgroup" [style.width.px]='calcWidth' tabindex="0" [attr.aria-activedescendant]="activeDescendant" (focus)="navigation.focusFirstCell()" (keydown)="navigation.headerNavigation($event)" #theadRow>
-        <div class="igx-grid__tr" [style.width.px]='calcWidth' role="row">
-            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
-                [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-left" [style.left.px]="featureColumnsWidth"></span>
-            <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length > 0"
-                [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
-                class="igx-grid__scroll-on-drag-pinned" [style.left.px]="pinnedWidth"></span>
-            <ng-container *ngIf="rowDraggable">
-                <div class="igx-grid__drag-indicator igx-grid__tr-action" (pointerdown)="$event.preventDefault()" #headerDragContainer>
-                    <div style="visibility: hidden;">
-                        <ng-container
-                            *ngTemplateOutlet="this.dragIndicatorIconTemplate ? this.dragIndicatorIconTemplate : this.dragIndicatorIconBase">
-                        </ng-container>
-                    </div>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="showRowSelectors">
-                <div class="igx-grid__cbx-selection igx-grid__tr-action" (click)="onHeaderSelectorClick($event)" #headerSelectorContainer [ngClass]="{
-                    'igx-grid__cbx-selection--push': filteringService.isFilterRowVisible }" (pointerdown)="$event.preventDefault()">
-                    <ng-template #headSelector
-                        *ngTemplateOutlet="
-                        this.headSelectorTemplate ? this.headSelectorTemplate : headSelectorBaseTemplate;
-                        context: { $implicit: {
-                                        selectedCount: this.selectionService.filteredSelectedRowIds.length,
-                                        totalCount: this.totalRowsCountAfterFilter }}">
-                    </ng-template>
-                </div>
-            </ng-container>
-            <ng-container *ngIf="pinnedColumns.length > 0 && isPinningToStart">
-                <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group
-                        [column]="col"
-                        [style.min-width]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts"
-                        [style.flex-basis]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts">
-                    </igx-grid-header-group>
-                </ng-template>
-            </ng-container>
-            <ng-template igxGridFor let-col [igxGridForOf]="unpinnedColumns | igxTopLevel"
-                [igxForScrollOrientation]="'horizontal'" [igxForScrollContainer]="parentVirtDir"
-                [igxForContainerSize]='unpinnedWidth' [igxForTrackBy]='trackColumnChanges'
-                [igxForSizePropName]="'calcPixelWidth'" #hContainer>
-                <igx-grid-header-group
-                    [column]="col"
-                    [style.min-width]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts"
-                    [style.flex-basis]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts">
-                </igx-grid-header-group>
-            </ng-template>
-            <ng-container *ngIf="pinnedColumns.length > 0 && !isPinningToStart">
-                <ng-template ngFor let-col [ngForOf]="pinnedColumns | igxTopLevel">
-                    <igx-grid-header-group
-                        [column]="col"
-                        [style.min-width]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts"
-                        [style.flex-basis]="col.calcWidth | igxHeaderGroupWidth:defaultHeaderGroupMinWidth:hasColumnLayouts"
-                        [style.left]="col.rightPinnedOffset">
-                    </igx-grid-header-group>
-                </ng-template>
-            </ng-container>
-        </div>
-        <igx-grid-filtering-row #filteringRow *ngIf="filteringService.isFilterRowVisible"
-            [column]="filteringService.filteredColumn"></igx-grid-filtering-row>
-    </div>
-    <div class="igx-grid__thead-thumb" [hidden]='!hasVerticalScroll()' [style.width.px]="scrollSize"></div>
-    <div igxToggle #loadingOverlay>
-        <igx-circular-bar [indeterminate]="true" *ngIf='shouldOverlayLoading'>
-        </igx-circular-bar>
-    </div>
-    <span *ngIf="hasMovableColumns && draggedColumn" [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true"
-        id="right" class="igx-grid__scroll-on-drag-right"></span>
-</div> -->
 
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)" (keydown)="navigation.handleNavigation($event)"
@@ -282,21 +211,6 @@
 <ng-template #dragIndicatorIconBase>
     <igx-icon>drag_indicator</igx-icon>
 </ng-template>
-
-<!-- <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
-    <div class="igx-grid__cbx-padding">
-        <igx-checkbox
-            [tabindex]="-1"
-            [checked]="context.selectedCount > 0 && context.totalCount === context.selectedCount"
-            [ngStyle]="{'visibility': isMultiRowSelectionEnabled? 'visible' : 'hidden' }"
-            [readonly]="true"
-            [disableRipple]="true"
-            [indeterminate]="context.selectedCount > 0 && context.selectedCount !== context.totalCount"
-            [aria-label]="headSelectorBaseAriaLabel"
-            #headerCheckbox>
-        </igx-checkbox>
-    </div>
-</ng-template> -->
 
 <igx-grid-column-resizer *ngIf="colResizingService.showResizer"></igx-grid-column-resizer>
 <div class="igx-grid__loading-outlet" #igxLoadingOverlayOutlet igxOverlayOutlet></div>

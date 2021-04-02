@@ -21,6 +21,8 @@ export interface IgxGridRowSelectorsTemplateContext {
     $implicit: {
         selectedCount: number;
         totalCount: number;
+        selectAll?: () => void;
+        deselectAll?: () => void;
     };
 }
 
@@ -144,12 +146,19 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     }
 
     public get rowSelectorsContext(): IgxGridRowSelectorsTemplateContext {
-        return {
+        const ctx = {
             $implicit: {
                 selectedCount: this.grid.selectionService.filteredSelectedRowIds.length as number,
                 totalCount: this.grid.totalRowsCountAfterFilter as number
             }
-        };
+        } as IgxGridRowSelectorsTemplateContext;
+
+        if (this.isHierarchicalGrid) {
+            ctx.$implicit.selectAll = () => this.grid.selectAllRows();
+            ctx.$implicit.deselectAll = () => this.grid.deselectAllRows();
+        }
+
+        return ctx;
     }
 
     constructor(
