@@ -135,7 +135,7 @@ export class IgxTreeNavigationService {
     private handleNavigation(event: KeyboardEvent) {
         switch (event.key.toLowerCase()) {
             case 'home':
-                this.setFocusedAndActiveNode(this.tree.nodes.first);
+                this.setFocusedAndActiveNode(this.visibleChildren[0]);
                 break;
             case 'end':
                 this.setFocusedAndActiveNode(this.visibleChildren[this.visibleChildren.length - 1]);

@@ -149,6 +149,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public set active(value: boolean) {
         if (value) {
             this.navService.activeNode = this;
+            this.tree.activeNodeBindingChange.emit(this);
         }
     }
 

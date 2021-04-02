@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, AfterContentInit
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
@@ -53,7 +53,7 @@ export class IgxTreeExpandIndicatorDirective {
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
-export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, AfterViewInit, OnDestroy {
+export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -263,6 +263,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
     /** @hidden @internal */
     public id = `tree-${init_id++}`;
 
+    /** @hidden @internal */
+    public activeNodeBindingChange = new EventEmitter<IgxTreeNode<any>>();
+
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
@@ -393,11 +396,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterContentInit, Afte
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);
         });
+        this.activeNodeBindingChange.pipe(takeUntil(this.destroy$)).subscribe((node) => {
+            this.expandToNode(this.navService.activeNode);
+            this.scrollNodeIntoView(node);
+        });
         this.subToCollapsing();
-    }
-
-    public ngAfterContentInit() {
-        this.expandToNode(this.navService.activeNode);
     }
 
     public ngAfterViewInit() {

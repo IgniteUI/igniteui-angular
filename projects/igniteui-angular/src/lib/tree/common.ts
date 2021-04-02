@@ -19,6 +19,8 @@ export interface IgxTree {
     navService: IgxTreeNavigationService;
     /** @hidden @internal */
     disabledChange: EventEmitter<IgxTreeNode<any>>;
+    /** @hidden @internal */
+    activeNodeBindingChange: EventEmitter<IgxTreeNode<any>>;
     nodeSelection: EventEmitter<ITreeNodeSelectionEvent>;
     nodeExpanding: EventEmitter<ITreeNodeTogglingEventArgs>;
     nodeExpanded: EventEmitter<ITreeNodeToggledEventArgs>;
