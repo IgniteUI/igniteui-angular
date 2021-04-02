@@ -666,10 +666,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const index = this.primaryKey ?
-            this.data.map(rec => rec[this.primaryKey]).indexOf(key) :
-            this.data.indexOf(key);
-        if (index < 0) {
+       const index = this.getRowIndexByKey(key);
+        if (index === undefined) {
             return undefined;
         }
         return new IgxTreeGridRow(index, this);
@@ -850,5 +848,43 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 this.notifyChanges();
             }
         });
+    }
+
+    private getRowIndexByKey(key: any): number {
+        let res = {} as { rowIndex: number; rec: ITreeGridRecord };
+        res = this.lookInChildren(this.rootRecords, key);
+        return res.rowIndex;
+    }
+
+    private lookInChildren(records: ITreeGridRecord[], key: any, globalI?: number): { rowIndex: number; rec: ITreeGridRecord } {
+        let i = 0;
+        let rowData;
+        let rowIndex = 0;
+        globalI = globalI ? globalI : 0;
+
+        if (records[0].rowID === key) {
+            return { rowIndex, rec: records[0] };
+        }
+
+        while (!rowIndex && i < records.length) {
+            const rec = records[i];
+            if (rec.rowID === key) {
+                rowIndex = globalI;
+                break;
+            }
+            if (rec.expanded && rec.children && rec.children.length) {
+                const res = this.lookInChildren(rec.children, key, globalI + 1);
+                if (res.rowIndex) {
+                    rowIndex = res.rowIndex;
+                } else {
+                    rowData = res.rec;
+                }
+            } else {
+                globalI++;
+            }
+            i++;
+        }
+
+        return { rowIndex, rec: rowData };
     }
 }

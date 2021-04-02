@@ -242,9 +242,9 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     public get data(): any {
         let data;
         if (this._tgrid.foreignKey) {
-            data = this._tgrid.filteredSortedData[this.index];
-        } else {
             data = this.getRowData(this.index);
+        } else {
+            data = this._tgrid.filteredSortedData[this.index];
         }
         return data;
     }
