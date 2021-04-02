@@ -1,0 +1,20 @@
+{
+    "$schema": "../../common/schema/selector.schema.json",
+    "changes": [
+        {
+            "type": "component",
+            "selector": "igx-tab-panel",
+            "replaceWith": "igx-bottom-nav-item"
+        },
+        {
+            "type": "component",
+            "selector": "igx-tab",
+            "replaceWith": "igx-bottom-nav-item"
+        },
+        {
+            "type": "component",
+            "selector": "igx-tabs-group",
+            "replaceWith": "igx-tab-item"
+        }
+    ]
+}

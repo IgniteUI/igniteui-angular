@@ -246,6 +246,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public resizable = false;
+
+    /**
+     * Sets/gets whether the column header is included in autosize logic.
+     * Useful when template for a column header is sized based on parent, for example a default `div`.
+     * Default value is `false`.
+     * ```typescript
+     * let isResizable = this.column.resizable;
+     * ```
+     * ```html
+     * <igx-column [resizable] = "true"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @WatchColumnChanges()
+    @Input()
+    public autosizeHeader = true;
+
     /**
      * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
@@ -2088,13 +2106,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      *
      * @memberof IgxColumnComponent
-     * @param byHeader Set if column should be autized based only on the header content
+     * @param byHeaderOnly Set if column should be autosized based only on the header content.
      */
-    public autosize(byHeader = false) {
+    public autosize(byHeaderOnly = false) {
         if (!this.columnGroup) {
-            const size = this.getAutoSize(byHeader);
-            this.width = size;
-            // TODO: Dubious usage
+            this.width = this.getAutoSize(byHeaderOnly);
             this.grid.reflow();
         }
     }
@@ -2105,15 +2121,25 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public getAutoSize(byHeader = false) {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
-        const gridAvailableSize = this.grid.calcWidth;
-        let newWidth;
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
+
+        let newWidth;
         if (isPercentageWidth) {
+            const gridAvailableSize = this.grid.calcWidth;
             const percentageSize =  parseFloat(size) / gridAvailableSize * 100;
             newWidth = percentageSize + '%';
         } else {
             newWidth = size;
         }
+
+        const maxWidth = isPercentageWidth ? this.maxWidthPercent : this.maxWidthPx;
+        const minWidth = isPercentageWidth ? this.minWidthPercent : this.minWidthPx;
+        if (this.maxWidth && (parseFloat(newWidth) > maxWidth)) {
+            newWidth = isPercentageWidth ? maxWidth + '%' : maxWidth + 'px';
+        } else if (parseFloat(newWidth) < minWidth) {
+            newWidth = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
+        }
+
         return newWidth;
     }
 
@@ -2135,13 +2161,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     public getHeaderCellWidths() {
         const range = this.grid.document.createRange();
-        let headerWidth;
-        if (this.headerTemplate && this.headerCell.nativeElement.children[0].children.length > 0) {
-            headerWidth = Math.max(...Array.from(this.headerCell.nativeElement.children[0].children)
-                .map((child) => getNodeSizeViaRange(range, child)));
-        } else {
-            headerWidth = getNodeSizeViaRange(range, this.headerCell.nativeElement.children[0]);
-        }
+
+        // We do not cover cases where there are children with width 100% and etc,
+        // because then we try to get new column size, based on header content, which is sized based on column size...
+        let headerWidth = getNodeSizeViaRange(range, this.headerCell.nativeElement.children[0]);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.nativeElement.children[1].getBoundingClientRect().width;
@@ -2189,7 +2212,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
 
-        if (this.headerCell) {
+        if (this.headerCell && this.autosizeHeader) {
             const headerCellWidths = this.getHeaderCellWidths();
             largest.set(headerCellWidths.width, headerCellWidths.padding);
         }

@@ -80,16 +80,7 @@ export class IgxColumnResizingService {
      */
     public autosizeColumnOnDblClick() {
         const currentColWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
-        const isPercentageWidth = this.column.width && typeof this.column.width === 'string' && this.column.width.indexOf('%') !== -1;
-        let size = this.column.getAutoSize();
-        const maxWidth = isPercentageWidth ? this.column.maxWidthPercent : this.column.maxWidthPx;
-        const minWidth = isPercentageWidth ? this.column.minWidthPercent : this.column.minWidthPx;
-        if (this.column.maxWidth && (parseFloat(size) > maxWidth)) {
-            size = isPercentageWidth ? maxWidth + '%' : maxWidth + 'px';
-        } else if (parseFloat(size) < minWidth) {
-            size = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
-        }
-        this.column.width = size;
+        this.column.width = this.column.getAutoSize();
 
         this.zone.run(() => {});
 
