@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild, TemplateRef } from '@angular/core';
+﻿import { Component, ViewChild, TemplateRef, QueryList } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -19,6 +19,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -67,22 +68,22 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     };
 
-    const checkChips = (chips, grExpr, sortExpr) => {
-        for (let i = 0; i < chips.length; i++) {
-            const chip = chips[i].querySelector('div.igx-chip__content').innerText;
-            const chipDirection = chips[i].querySelector('[igxsuffix]').innerText;
-            const grp = grExpr[i];
-            const s = sortExpr[i];
-            expect(chip).toBe(grp.fieldName);
-            expect(chip).toBe(s.fieldName);
-            if (chipDirection === SORTING_ICON_ASC_CONTENT) {
-                expect(grp.dir).toBe(SortingDirection.Asc);
-                expect(s.dir).toBe(SortingDirection.Asc);
+    const checkChips = (chips: QueryList<IgxChipComponent>, grouping: IGroupingExpression[], sorting: ISortingExpression[]) => {
+        chips.forEach((chip, index) => {
+            const content = chip.nativeElement.querySelector('.igx-chip__content').textContent.trim();
+            const icon = chip.nativeElement.querySelector('[igxsuffix]').textContent.trim();
+
+            expect(content).toBe(grouping[index].fieldName);
+            expect(content).toBe(sorting[index].fieldName);
+
+            if (icon === SORTING_ICON_ASC_CONTENT) {
+                expect(grouping[index].dir).toBe(SortingDirection.Asc);
+                expect(sorting[index].dir).toBe(SortingDirection.Asc);
             } else {
-                expect(grp.dir).toBe(SortingDirection.Desc);
-                expect(s.dir).toBe(SortingDirection.Desc);
+                expect(grouping[index].dir).toBe(SortingDirection.Desc);
+                expect(sorting[index].dir).toBe(SortingDirection.Desc);
             }
-        }
+        });
     };
 
     it('should allow grouping by different data types.', fakeAsync(() => {
@@ -253,15 +254,15 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(5);
         // now click the chip to change sorting, the grouping expression should hold
         // the comparer and reapply the same grouping again
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         // click grouping direction arrow
-        grid.groupArea.handleClick(chips[0].id);
+        grid.groupArea.handleClick(chips.get(0).id);
         tick();
         fix.detectChanges();
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
+        // chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
         groupRows = grid.groupsRowList.toArray();
         expect(groupRows.length).toEqual(5);
     }));
@@ -2252,7 +2253,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             ['NetAdvantage', true, false, 'Ignite UI for JavaScript', true,
                 false, 'Ignite UI for Angular', false, null, '', true, null, true],
             grid.groupingExpressions);
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
         // change order
@@ -2274,7 +2275,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             [null, 'Ignite UI for Angular', false, 'Ignite UI for Angular', 'Ignite UI for JavaScript',
                 'NetAdvantage', true, null, '', 'Ignite UI for JavaScript', 'NetAdvantage'],
             grid.groupingExpressions);
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
 
@@ -2321,16 +2321,15 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
         });
         fix.detectChanges();
-        let chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         // click grouping direction arrow
-        grid.groupArea.handleClick(chips[0].id);
+        grid.groupArea.handleClick(chips.get(0).id);
         tick();
         fix.detectChanges();
-        chips = fix.nativeElement.querySelectorAll('igx-chip');
         tick();
         expect(chips.length).toBe(1);
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
-        expect(chips[0].querySelectorAll('igx-icon')[1].innerText.trim()).toBe('arrow_upward');
+        expect(chips.get(0).nativeElement.querySelectorAll('igx-icon')[1].textContent.trim()).toBe('arrow_upward');
     }));
 
     it('should change grouping direction when sorting changes direction', fakeAsync(() => {
@@ -2340,15 +2339,13 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
 
-        grid.groupBy({
-            fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
-        });
+        grid.groupBy({ fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false });
         fix.detectChanges();
-        const productNameCol = fix.nativeElement.querySelector('igx-grid-header-group[id$="_-1_0_2"]');
-        UIInteractions.simulateMouseEvent('click', productNameCol,0, 0);
+        const productNameCol = grid.headerGroupsList.find(header => header.column.field === 'ProductName');
+        UIInteractions.simulateClickEvent(productNameCol.nativeElement);
         tick();
         fix.detectChanges();
-        const chips = fix.nativeElement.querySelectorAll('igx-chip');
+        const chips = grid.groupArea.chips;
         tick();
         checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
     }));
@@ -2639,8 +2636,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         UIInteractions.simulatePointerEvent('pointerup', chipComponents[0].componentInstance.dragDirective.ghostElement, 250, 30);
         await wait();
         fix.detectChanges();
-        const chipsElems = fix.nativeElement.querySelectorAll('igx-chip');
-        checkChips(chipsElems, grid.groupingExpressions, grid.sortingExpressions);
+        const chips = grid.groupArea.chips;
+        checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
         // verify groups
         const groupRows = grid.groupsRowList.toArray();
@@ -2989,7 +2986,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(groupRows.length).toEqual(3);
 
-            const chips = fix.nativeElement.querySelectorAll('igx-chip');
+            const chips = grid.groupArea.chips;
             checkChips(chips, grid.groupingExpressions, grid.sortingExpressions);
 
             const sortingIcon = fix.debugElement.query(By.css('.sort-icon'));

@@ -1,17 +1,18 @@
 import {
     ChangeDetectionStrategy,
-    ChangeDetectorRef,
     Component,
-    DoCheck,
     ElementRef,
     Input,
     Pipe,
     PipeTransform,
-    TemplateRef
+    QueryList,
+    TemplateRef,
+    ViewChildren
 } from '@angular/core';
-import { IChipsAreaReorderEventArgs } from '../../chips/public_api';
+import { IChipsAreaReorderEventArgs, IgxChipComponent } from '../../chips/public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { FlatGridType } from '../common/grid.interface';
 
 /**
@@ -24,13 +25,16 @@ import { FlatGridType } from '../common/grid.interface';
     selector: 'igx-grid-group-by-area',
     templateUrl: 'group-by-area.component.html'
 })
-export class IgxGridGroupByAreaComponent implements DoCheck {
+export class IgxGridGroupByAreaComponent {
 
     /**
      * The group-by expressions provided by the parent grid.
      */
     @Input()
     public expressions: IGroupingExpression[] = [];
+
+    @Input()
+    public sortingExpressions: ISortingExpression[] = [];
 
     /**
      * The drop area template if provided by the parent grid.
@@ -59,18 +63,16 @@ export class IgxGridGroupByAreaComponent implements DoCheck {
     @Input()
     public grid: FlatGridType;
 
+    /** @hidden @internal */
+    @ViewChildren(IgxChipComponent)
+    public chips: QueryList<IgxChipComponent>;
+
     /** The native DOM element. Used in sizing calculations. */
     public get nativeElement() {
         return this.ref.nativeElement;
     }
 
-    constructor(private ref: ElementRef<HTMLElement>, private cdr: ChangeDetectorRef) { }
-
-    public ngDoCheck() {
-        if (this.expressions.length) {
-            // this.cdr.markForCheck();
-        }
-    }
+    constructor(private ref: ElementRef<HTMLElement>) { }
 
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
@@ -110,6 +112,9 @@ export class IgxGridGroupByAreaComponent implements DoCheck {
     }
 
     public handleClick(id: string) {
+        if (!this.grid.getColumnByName(id).groupable) {
+            return;
+        }
         this.updateSorting(id);
     }
 
@@ -119,6 +124,7 @@ export class IgxGridGroupByAreaComponent implements DoCheck {
         this.grid.sort(expr);
     }
 }
+
 
 /**
  * A pipe to circumvent the use of getters/methods just to get some additional
@@ -132,6 +138,6 @@ export class IgxGroupByMetaPipe implements PipeTransform {
 
     public transform(key: string, grid: FlatGridType) {
         const column = grid.getColumnByName(key);
-        return { groupable: column.groupable, title: column?.header ?? key };
+        return { groupable: column.groupable, title: column.header || key };
     }
 }

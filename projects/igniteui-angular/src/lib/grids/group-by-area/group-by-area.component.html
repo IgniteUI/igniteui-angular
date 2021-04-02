@@ -1,14 +1,15 @@
 <igx-chips-area (reorder)="handleReorder($event)" (moveEnd)="handleMoveEnd()">
     <ng-container *ngFor="let expression of expressions; let last = last;">
-        <igx-chip #chip
+        <igx-chip
             [id]="expression.fieldName"
             [title]="(expression.fieldName | igxGroupByMeta:grid).title"
+            [displayDensity]="grid.displayDensity"
             [removable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
             [draggable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
             [disabled]="!(expression.fieldName | igxGroupByMeta:grid).groupable"
             (keyDown)="handleKeyDown($event.owner.id, $event.originalEvent.key)"
             (remove)="grid.clearGrouping($event.owner.id)"
-            (chipClick)="chip.removable ? handleClick(expression.fieldName) : null"
+            (chipClick)="handleClick(expression.fieldName)"
         >
             <span>{{ (expression.fieldName | igxGroupByMeta:grid).title }}</span>
             <igx-icon igxSuffix>{{ expression.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>

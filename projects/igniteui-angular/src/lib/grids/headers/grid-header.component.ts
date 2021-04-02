@@ -28,7 +28,7 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-header',
-    templateUrl: './grid-header.component.html'
+    templateUrl: 'grid-header.component.html'
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
