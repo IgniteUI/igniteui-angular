@@ -3255,7 +3255,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                    || (event.target === this.tfoot.nativeElement.children[0] &&
+                        this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
@@ -6081,11 +6082,40 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 const columnWidthCombined = parseInt(this._columnWidth, 10) * (column.colEnd ? column.colEnd - column.colStart : 1);
                 column.defaultWidth = columnWidthCombined + 'px';
             } else {
-                column.defaultWidth = this._columnWidth;
+                // D.K. March 29th, 2021 #9145 Consider min/max width when setting defaultWidth property
+                column.defaultWidth = this.getExtremumBasedColWidth(column);
                 column.resetCaches();
             }
         });
         this.resetCachedWidths();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    protected getExtremumBasedColWidth(column: IgxColumnComponent): string {
+        let width = this._columnWidth;
+        if (width && typeof width !== 'string') {
+            width = String(width);
+        }
+        const minWidth = width.indexOf('%') === -1 ? column.minWidthPx : column.minWidthPercent;
+        const maxWidth = width.indexOf('%') === -1 ? column.maxWidthPx : column.maxWidthPercent;
+        if (column.hidden) {
+            return width;
+        }
+
+        if (minWidth > parseFloat(width)) {
+            width = String(column.minWidth);
+        } else if (maxWidth < parseFloat(width)) {
+            width = String(column.maxWidth);
+        }
+
+        // if no px or % are defined in maxWidth/minWidth consider it px
+        if (width.indexOf('%') === -1 && width.indexOf('px') === -1) {
+            width += 'px';
+        }
+        return width;
     }
 
     protected resetNotifyChanges() {
