@@ -1,10 +1,9 @@
-import { IPositionStrategy } from './position/IPositionStrategy';
-
-import { IScrollStrategy } from './scroll';
-import { AnimationReferenceMetadata, AnimationPlayer } from '@angular/animations';
+import { AnimationPlayer, AnimationReferenceMetadata } from '@angular/animations';
 import { ComponentRef, ElementRef, NgZone } from '@angular/core';
+import { CancelableBrowserEventArgs, CancelableEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
 import { IgxOverlayOutletDirective } from '../../directives/toggle/toggle.directive';
-import { CancelableEventArgs, CancelableBrowserEventArgs, cloneValue, IBaseEventArgs } from '../../core/utils';
+import { IPositionStrategy } from './position/IPositionStrategy';
+import { IScrollStrategy } from './scroll';
 
 export enum HorizontalAlignment {
     Left = -1,
@@ -47,6 +46,7 @@ export enum AbsolutePosition {
     Center = 'center'
 }
 
+// TODO: make this interface
 export class Point {
     constructor(public x: number, public y: number) { }
 }
@@ -139,6 +139,8 @@ export interface Size {
 /** @hidden */
 export interface OverlayInfo {
     id?: string;
+    visible?: boolean;
+    detached?: boolean;
     elementRef?: ElementRef;
     componentRef?: ComponentRef<any>;
     settings?: OverlaySettings;
@@ -151,6 +153,8 @@ export interface OverlayInfo {
     ngZone: NgZone;
     transformX?: number;
     transformY?: number;
+    event?: Event;
+    wrapperElement?: HTMLElement;
 }
 
 /** @hidden */
@@ -168,15 +172,15 @@ export interface ConnectedFit {
     verticalOffset?: number;
 }
 
-/** @hidden */
+/** @hidden @internal */
 export class Util {
     /**
-     * @hidden
      * Calculates the rectangle of target for provided overlay settings. Defaults to 0,0,0,0,0,0 rectangle
      * if no target is provided
+     *
      * @param settings Overlay settings for which to calculate target rectangle
      */
-    static getTargetRect(target?: Point | HTMLElement): ClientRect {
+    public static getTargetRect(target?: Point | HTMLElement): ClientRect {
         let targetRect: ClientRect = {
             bottom: 0,
             height: 0,
@@ -203,8 +207,7 @@ export class Util {
         return targetRect;
     }
 
-    /** @hidden @internal */
-    static getViewportRect(document: Document): ClientRect {
+    public static getViewportRect(document: Document): ClientRect {
         const width = document.documentElement.clientWidth;
         const height = document.documentElement.clientHeight;
         const scrollPosition = Util.getViewportScrollPosition(document);
@@ -219,8 +222,7 @@ export class Util {
         };
     }
 
-    /** @hidden @internal */
-    static getViewportScrollPosition(document: Document): Point {
+    public static getViewportScrollPosition(document: Document): Point {
         const documentElement = document.documentElement;
         const documentRect = documentElement.getBoundingClientRect();
 
@@ -231,8 +233,7 @@ export class Util {
         return new Point(horizontalScrollPosition, verticalScrollPosition);
     }
 
-    /** @hidden @internal */
-    static cloneInstance(object) {
+    public static cloneInstance(object) {
         const clonedObj = Object.assign(Object.create(Object.getPrototypeOf(object)), object);
         clonedObj.settings = cloneValue(clonedObj.settings);
         return clonedObj;
