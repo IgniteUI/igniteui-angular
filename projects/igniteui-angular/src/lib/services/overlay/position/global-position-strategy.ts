@@ -1,6 +1,6 @@
-import { IPositionStrategy } from './IPositionStrategy';
-import { PositionSettings, HorizontalAlignment, VerticalAlignment, Size, Util, OverlaySettings } from './../utilities';
 import { fadeIn, fadeOut } from '../../../animations/main';
+import { HorizontalAlignment, PositionSettings, Util, VerticalAlignment } from './../utilities';
+import { IPositionStrategy } from './IPositionStrategy';
 
 /**
  * Positions the element based on the directions passed in trough PositionSettings.
@@ -25,18 +25,18 @@ export class GlobalPositionStrategy implements IPositionStrategy {
     }
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
+    public position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex');
-        this.setPosition(contentElement, this.settings);
+        this.setPosition(contentElement);
     }
 
     /** @inheritdoc */
-    clone(): IPositionStrategy {
+    public clone(): IPositionStrategy {
         return Util.cloneInstance(this);
     }
 
-    protected setPosition(contentElement: HTMLElement, settings: PositionSettings) {
+    protected setPosition(contentElement: HTMLElement) {
         switch (this.settings.horizontalDirection) {
             case HorizontalAlignment.Left:
                 contentElement.parentElement.style.justifyContent = 'flex-start';
