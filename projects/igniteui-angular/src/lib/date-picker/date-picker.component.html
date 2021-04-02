@@ -8,7 +8,7 @@
         <igx-prefix>
             <igx-icon>today</igx-icon>
         </igx-prefix>
-        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{label}}</label>
+        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{labelInternal}}</label>
         <input
             class="igx-date-picker__input-date"
             igxInput
@@ -27,7 +27,7 @@
         <igx-prefix (click)="onOpenClick($event)">
             <igx-icon>today</igx-icon>
         </igx-prefix>
-        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{label}}</label>
+        <label *ngIf="labelVisibility&&!_labelDirectiveUserTemplate" igxLabel>{{labelInternal}}</label>
         <input
             class="igx-date-picker__input-date"
             igxInput

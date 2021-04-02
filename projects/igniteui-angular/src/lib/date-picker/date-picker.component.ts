@@ -182,7 +182,22 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         <label igxLabel>Custom label</label>
     </igx-date-picker> `)
     @Input()
-    public label = 'Date';
+    public get label(): string {
+        return this._label;
+    }
+
+    public set label(v: string) {
+        this._label = v;
+    }
+
+    public get labelInternal() {
+        return this._label;
+    }
+
+    /** @hidden @internal */
+    public get labelTemplate(): IgxLabelDirective {
+        return this._labelDirectiveUserTemplate;
+    }
 
     /**
      * Gets/Sets the `IgxDatePickerComponent` label visibility.
@@ -459,7 +474,6 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             displayData: this.displayData,
             format: this.format,
             isSpinLoop: this.isSpinLoop,
-            label: this.label,
             labelVisibility: this.labelVisibility,
             locale: this.locale,
             mask: this.mask,
@@ -784,6 +798,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private _onOpen = new EventEmitter<IgxDatePickerComponent>();
     private _onClose = new EventEmitter<IgxDatePickerComponent>();
     private _ngControl: NgControl = null;
+    private _label = 'Date';
 
     //#region ControlValueAccessor
 

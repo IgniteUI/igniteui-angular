@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxTimePickerComponent } from './time-picker.component';
-import { InteractionMode } from '../core/enums';
+import { DatePickerUtil } from '../date-picker/date-picker.utils';
 
 /** @hidden */
 @Directive({
@@ -77,7 +77,7 @@ export class IgxItemListDirective {
     public onKeydownArrowDown(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.nextItem();
+        this.nextItem(1);
     }
 
     /**
@@ -87,7 +87,7 @@ export class IgxItemListDirective {
     public onKeydownArrowUp(event: KeyboardEvent) {
         event.preventDefault();
 
-        this.prevItem();
+        this.nextItem(-1);
     }
 
     /**
@@ -136,7 +136,7 @@ export class IgxItemListDirective {
     @HostListener('keydown.enter', ['$event'])
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
-            this.timePicker.close();
+        this.timePicker.close();
     }
 
     /**
@@ -165,11 +165,31 @@ export class IgxItemListDirective {
         event.preventDefault();
         event.stopPropagation();
 
-        if (event.deltaY > 0) {
-            this.nextItem();
-        } else if (event.deltaY < 0) {
-            this.prevItem();
+        const delta = event.deltaY;
+        switch (this.type) {
+            case 'hourList': {
+                this.timePicker.nextHour(delta);
+                break;
+            }
+            case 'minuteList': {
+                this.timePicker.nextMinute(delta);
+                break;
+            }
+            case 'secondsList': {
+                this.timePicker.nextSeconds(delta);
+                break;
+            }
+            case 'ampmList': {
+                this.timePicker.nextAmPm(delta);
+                break;
+            }
         }
+
+        // if (event.deltaY > 0) {
+        //     this.nextItem();
+        // } else if (event.deltaY < 0) {
+        //     this.prevItem();
+        // }
     }
 
     /**
@@ -177,50 +197,48 @@ export class IgxItemListDirective {
      */
     @HostListener('panmove', ['$event'])
     public onPanMove(event) {
-        if (event.deltaY < 0) {
-            this.nextItem();
-        } else if (event.deltaY > 0) {
-            this.prevItem();
-        }
-    }
-
-    private nextItem(): void {
+        const delta = event.deltaY;
         switch (this.type) {
             case 'hourList': {
-                this.timePicker.nextHour();
+                this.timePicker.nextHour(delta);
                 break;
             }
             case 'minuteList': {
-                this.timePicker.nextMinute();
+                this.timePicker.nextMinute(delta);
                 break;
             }
             case 'secondsList': {
-                this.timePicker.nextSeconds();
+                this.timePicker.nextSeconds(delta);
                 break;
             }
             case 'ampmList': {
-                this.timePicker.nextAmPm();
+                this.timePicker.nextAmPm(delta);
                 break;
             }
         }
+        // if (event.deltaY < 0) {
+        //     this.nextItem();
+        // } else if (event.deltaY > 0) {
+        //     this.prevItem();
+        // }
     }
 
-    private prevItem(): void {
+    private nextItem(delta : number): void {
         switch (this.type) {
             case 'hourList': {
-                this.timePicker.prevHour();
+                this.timePicker.nextHour(delta);
                 break;
             }
             case 'minuteList': {
-                this.timePicker.prevMinute();
+                this.timePicker.nextMinute(delta);
                 break;
             }
             case 'secondsList': {
-                this.timePicker.prevSeconds();
+                this.timePicker.nextSeconds(delta);
                 break;
             }
             case 'ampmList': {
-                this.timePicker.prevAmPm();
+                this.timePicker.nextAmPm(delta);
                 break;
             }
         }
@@ -231,11 +249,11 @@ export class IgxItemListDirective {
  * @hidden
  */
 @Directive({
-    selector: '[igxHourItem]'
+    selector: '[igxTimeItem]'
 })
-export class IgxHourItemDirective {
+export class IgxTimeItemDirective {
 
-    @Input('igxHourItem')
+    @Input('igxTimeItem')
     public value: string;
 
     @HostBinding('class.igx-time-picker__item')
@@ -245,16 +263,34 @@ export class IgxHourItemDirective {
 
     @HostBinding('class.igx-time-picker__item--selected')
     public get selectedCSS(): boolean {
-        return this.isSelectedHour;
+        return this.isSelectedTime;
     }
 
     @HostBinding('class.igx-time-picker__item--active')
     public get activeCSS(): boolean {
-        return this.isSelectedHour && this.itemList.isActive;
+        return this.isSelectedTime && this.itemList.isActive;
     }
 
-    public get isSelectedHour(): boolean {
-        return this.timePicker.selectedHour === this.value;
+    public get isSelectedTime(): boolean {
+        const dateType = this.itemList.type;
+        const inputDateParts = DatePickerUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        switch (dateType) {
+            case 'hourList':
+                const hourPart = inputDateParts.find(element => element.type === 'hour');
+                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+            case 'minuteList': {
+                const minutePart = inputDateParts.find(element => element.type === 'minute');
+                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === this.value;
+            }
+            case 'secondsList': {
+                const hourPart = inputDateParts.find(element => element.type === 'second');
+                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+            }
+            case 'ampmList': {
+                const ampmPart = inputDateParts.find(element => element.format === 'tt');
+                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;
+            }
+        }
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
@@ -264,136 +300,179 @@ export class IgxHourItemDirective {
     @HostListener('click', ['value'])
     public onClick(item) {
         if (item !== '') {
-            this.timePicker.scrollHourIntoView(item);
+            const dateType = this.itemList.type;
+            this.timePicker.scrollItem(item, dateType);
         }
     }
 }
 
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxMinuteItem]'
-})
-export class IgxMinuteItemDirective {
+// /**
+//  * @hidden
+//  */
+// @Directive({
+//     selector: '[igxHourItem]'
+// })
+// export class IgxHourItemDirective {
 
-    @Input('igxMinuteItem')
-    public value: string;
+//     @Input('igxHourItem')
+//     public value: string;
 
-    @HostBinding('class.igx-time-picker__item')
-    public get defaultCSS(): boolean {
-        return true;
-    }
+//     @HostBinding('class.igx-time-picker__item')
+//     public get defaultCSS(): boolean {
+//         return true;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--selected')
-    public get selectedCSS(): boolean {
-        return this.isSelectedMinute;
-    }
+//     @HostBinding('class.igx-time-picker__item--selected')
+//     public get selectedCSS(): boolean {
+//         return this.isSelectedHour;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--active')
-    public get activeCSS(): boolean {
-        return this.isSelectedMinute && this.itemList.isActive;
-    }
+//     @HostBinding('class.igx-time-picker__item--active')
+//     public get activeCSS(): boolean {
+//         return this.isSelectedHour && this.itemList.isActive;
+//     }
 
-    public get isSelectedMinute(): boolean {
-        return this.timePicker.selectedMinute === this.value;
-    }
+//     public get isSelectedHour(): boolean {
+//         return this.timePicker.selectedHour === this.value;
+//     }
 
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerComponent,
-        private itemList: IgxItemListDirective) { }
+//     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+//     public timePicker: IgxTimePickerComponent,
+//         private itemList: IgxItemListDirective) { }
 
-    @HostListener('click', ['value'])
-    public onClick(item) {
-        if (item !== '') {
-            this.timePicker.scrollMinuteIntoView(item);
-        }
-    }
-}
+//     @HostListener('click', ['value'])
+//     public onClick(item) {
+//         if (item !== '') {
+//             this.timePicker.scrollHourIntoView(item);
+//         }
+//     }
+// }
 
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxSecondsItem]'
-})
-export class IgxSecondsItemDirective {
+// /**
+//  * @hidden
+//  */
+// @Directive({
+//     selector: '[igxMinuteItem]'
+// })
+// export class IgxMinuteItemDirective {
 
-    @Input('igxSecondsItem')
-    public value: string;
+//     @Input('igxMinuteItem')
+//     public value: string;
 
-    @HostBinding('class.igx-time-picker__item')
-    public get defaultCSS(): boolean {
-        return true;
-    }
+//     @HostBinding('class.igx-time-picker__item')
+//     public get defaultCSS(): boolean {
+//         return true;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--selected')
-    public get selectedCSS(): boolean {
-        return this.isSelectedSeconds;
-    }
+//     @HostBinding('class.igx-time-picker__item--selected')
+//     public get selectedCSS(): boolean {
+//         return this.isSelectedMinute;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--active')
-    public get activeCSS(): boolean {
-        return this.isSelectedSeconds && this.itemList.isActive;
-    }
+//     @HostBinding('class.igx-time-picker__item--active')
+//     public get activeCSS(): boolean {
+//         return this.isSelectedMinute && this.itemList.isActive;
+//     }
 
-    public get isSelectedSeconds(): boolean {
-        return this.timePicker.selectedSeconds === this.value;
-    }
+//     public get isSelectedMinute(): boolean {
+//         return this.timePicker.selectedMinute === this.value;
+//     }
 
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerComponent,
-        private itemList: IgxItemListDirective) { }
+//     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+//     public timePicker: IgxTimePickerComponent,
+//         private itemList: IgxItemListDirective) { }
 
-    @HostListener('click', ['value'])
-    public onClick(item) {
-        if (item !== '') {
-            this.timePicker.scrollSecondsIntoView(item);
-        }
-    }
-}
+//     @HostListener('click', ['value'])
+//     public onClick(item) {
+//         if (item !== '') {
+//             this.timePicker.scrollMinuteIntoView(item);
+//         }
+//     }
+// }
 
-/**
- * @hidden
- */
-@Directive({
-    selector: '[igxAmPmItem]'
-})
-export class IgxAmPmItemDirective {
+// /**
+//  * @hidden
+//  */
+// @Directive({
+//     selector: '[igxSecondsItem]'
+// })
+// export class IgxSecondsItemDirective {
 
-    @Input('igxAmPmItem')
-    public value: string;
+//     @Input('igxSecondsItem')
+//     public value: string;
 
-    @HostBinding('class.igx-time-picker__item')
-    public get defaultCSS(): boolean {
-        return true;
-    }
+//     @HostBinding('class.igx-time-picker__item')
+//     public get defaultCSS(): boolean {
+//         return true;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--selected')
-    public get selectedCSS(): boolean {
-        return this.isSelectedAmPm;
-    }
+//     @HostBinding('class.igx-time-picker__item--selected')
+//     public get selectedCSS(): boolean {
+//         return this.isSelectedSeconds;
+//     }
 
-    @HostBinding('class.igx-time-picker__item--active')
-    public get activeCSS(): boolean {
-        return this.isSelectedAmPm && this.itemList.isActive;
-    }
+//     @HostBinding('class.igx-time-picker__item--active')
+//     public get activeCSS(): boolean {
+//         return this.isSelectedSeconds && this.itemList.isActive;
+//     }
 
-    public get isSelectedAmPm(): boolean {
-        return this.timePicker.selectedAmPm === this.value;
-    }
+//     public get isSelectedSeconds(): boolean {
+//         return this.timePicker.selectedSeconds === this.value;
+//     }
 
-    constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
-    public timePicker: IgxTimePickerComponent,
-        private itemList: IgxItemListDirective) { }
+//     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+//     public timePicker: IgxTimePickerComponent,
+//         private itemList: IgxItemListDirective) { }
 
-    @HostListener('click', ['value'])
-    public onClick(item) {
-        if (item !== '') {
-            this.timePicker.scrollAmPmIntoView(item);
-        }
-    }
-}
+//     @HostListener('click', ['value'])
+//     public onClick(item) {
+//         if (item !== '') {
+//             this.timePicker.scrollSecondsIntoView(item);
+//         }
+//     }
+// }
+
+// /**
+//  * @hidden
+//  */
+// @Directive({
+//     selector: '[igxAmPmItem]'
+// })
+// export class IgxAmPmItemDirective {
+
+//     @Input('igxAmPmItem')
+//     public value: string;
+
+//     @HostBinding('class.igx-time-picker__item')
+//     public get defaultCSS(): boolean {
+//         return true;
+//     }
+
+//     @HostBinding('class.igx-time-picker__item--selected')
+//     public get selectedCSS(): boolean {
+//         return this.isSelectedAmPm;
+//     }
+
+//     @HostBinding('class.igx-time-picker__item--active')
+//     public get activeCSS(): boolean {
+//         return this.isSelectedAmPm && this.itemList.isActive;
+//     }
+
+//     public get isSelectedAmPm(): boolean {
+//         return this.timePicker.selectedAmPm === this.value;
+//     }
+
+//     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
+//     public timePicker: IgxTimePickerComponent,
+//         private itemList: IgxItemListDirective) { }
+
+//     @HostListener('click', ['value'])
+//     public onClick(item) {
+//         if (item !== '') {
+//             this.timePicker.scrollAmPmIntoView(item);
+//         }
+//     }
+// }
 
 /**
  * This directive should be used to mark which ng-template will be used from IgxTimePicker when re-templating its input group.

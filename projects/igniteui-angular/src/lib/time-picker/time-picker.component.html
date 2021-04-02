@@ -1,6 +1,7 @@
+<!-- [preventSpinOnWheel]="!this.isDropdown" -->
 <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && this.open()">
     <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text" [readonly]="!this.isDropdown"
-        [preventSpinOnWheel]="!this.isDropdown" [disabled]="this.disabled" [displayFormat]="this.displayFormat"
+        [disabled]="this.disabled" [displayFormat]="this.displayFormat" [spinDelta]="this.itemsDelta"
         [placeholder]="this.placeholder" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
@@ -53,32 +54,29 @@
 <div #toggleDirective="toggle" igxToggle class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': this.isVertical && !this.isDropdown}">
     <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
-        <h5 class="igx-time-picker__header-ampm">{{ selectedAmPm }}</h5>
         <h2 class="igx-time-picker__header-hour">
-            <span *ngIf="this.showHoursList">{{ this.selectedHour }}</span><span
-                *ngIf="this.showMinutesList">:{{ this.selectedMinute }}</span><span
-                *ngIf="this.showSecondsList">:{{ this.selectedSeconds }}</span>
+            <span>{{ this.selectedDate | timeFormatPipe }}</span>
         </h2>
     </div>
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
             <div *ngIf="this.showHoursList" #hourList [igxItemList]="'hourList'">
-                <span [igxHourItem]="hour"
+                <span [igxTimeItem]="hour"
                     [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem('hour', hour)}"
                     *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span [igxMinuteItem]="minute"
+                <span [igxTimeItem]="minute"
                     [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem('minute', minute)}"
                     *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
             <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span [igxSecondsItem]="seconds"
+                <span [igxTimeItem]="seconds"
                     [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem('second', seconds)}"
                     *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span [igxAmPmItem]="ampm"
+                <span [igxTimeItem]="ampm"
                     [ngClass]="{'igx-time-picker__item--disabled': applyDisabledStyleForItem('ampm', ampm)}"
                     *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>

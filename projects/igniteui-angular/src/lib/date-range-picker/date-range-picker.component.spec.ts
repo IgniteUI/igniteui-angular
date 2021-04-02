@@ -18,6 +18,7 @@ import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { AutoPositionStrategy } from '../services/public_api';
+import { IgxPickerIconsModule } from '../date-common/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -32,6 +33,7 @@ const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
+const CSS_RANGE_PICKER = 'igx-date-range-picker';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -219,7 +221,8 @@ describe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule,
+                        IgxPickerIconsModule]
                 })
                     .compileComponents();
             }));
@@ -556,8 +559,35 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Keyboard navigation', () => {
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
+                    fixture.detectChanges();
+
+                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
+                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    expect(dateRange.collapsed).toBeTruthy();
+
+                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    tick(DEBOUNCE_TIME * 2);
+                    fixture.detectChanges();
+
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                }));
+
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
+                    fixture.componentInstance.mode = InteractionMode.Dialog;
                     fixture.detectChanges();
 
                     spyOn(dateRange.onOpening, 'emit').and.callThrough();
@@ -565,8 +595,9 @@ describe('IgxDateRangePicker', () => {
                     spyOn(dateRange.onClosing, 'emit').and.callThrough();
                     spyOn(dateRange.onClosed, 'emit').and.callThrough();
 
+                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
                     expect(dateRange.collapsed).toBeTruthy();
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
@@ -650,7 +681,7 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsNgModelTestComponent
                     ],
                     imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
-                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
+                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule, IgxPickerIconsModule]
                 })
                     .compileComponents();
             }));
@@ -868,7 +899,7 @@ describe('IgxDateRangePicker', () => {
             });
 
             describe('Keyboard navigation', () => {
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
 
                     spyOn(dateRange.onOpening, 'emit').and.callThrough();
@@ -877,7 +908,35 @@ describe('IgxDateRangePicker', () => {
                     spyOn(dateRange.onClosed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+                    tick(DEBOUNCE_TIME * 2);
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
+                    tick();
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                }));
+
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
+                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.detectChanges();
+                    expect(dateRange.collapsed).toBeTruthy();
+
+                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
+                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
+                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+
+                    expect(dateRange.collapsed).toBeTruthy();
+                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
@@ -930,19 +989,17 @@ describe('IgxDateRangePicker', () => {
             });
 
             it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
-                fixture.componentInstance.mode = InteractionMode.DropDown;
-                fixture.detectChanges();
-
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+                fixture.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
                 tick();
                 fixture.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
-                fixture.detectChanges();
                 tick(100);
+                fixture.detectChanges();
 
                 expect(fixture.componentInstance.dateRange.projectedInputs
                     .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
@@ -950,6 +1007,8 @@ describe('IgxDateRangePicker', () => {
             }));
 
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
+                fixture.componentInstance.mode = InteractionMode.Dialog;
+                fixture.detectChanges();
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
 
@@ -958,8 +1017,8 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
-                fixture.detectChanges();
                 tick(100);
+                fixture.detectChanges();
 
                 expect(fixture.componentInstance.dateRange.projectedInputs
                     .find(i => i instanceof IgxDateRangeEndComponent).isFocused)
@@ -1013,7 +1072,7 @@ describe('IgxDateRangePicker', () => {
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule, IgxPickerIconsModule]
                 })
                     .compileComponents();
             }));
@@ -1152,7 +1211,7 @@ export class DateRangeTestComponent implements OnInit {
     public dateRange: IgxDateRangePickerComponent;
 
     public doneButtonText: string;
-    public mode: InteractionMode;
+    public mode = InteractionMode.DropDown;
     public disabled = false;
     public minValue: Date | string;
     public maxValue: Date | string;
