@@ -58,7 +58,7 @@
             <button #addConditionButton
                     igxButton="outlined"
                     [displayDensity]="displayDensity"
-                    [disabled]="editedExpression"
+                    [disabled]="hasEditedExpression"
                     (click)="addCondition(expressionItem, afterExpression)"
             >
                 <igx-icon>add</igx-icon>
@@ -67,7 +67,7 @@
 
             <button igxButton="outlined"
                     [displayDensity]="displayDensity"
-                    [disabled]="editedExpression"
+                    [disabled]="hasEditedExpression"
                     (click)="addAndGroup(expressionItem, afterExpression)">
                 <igx-icon>add</igx-icon>
                 <span>{{grid.resourceStrings.igx_grid_advanced_filter_and_group}}</span>
@@ -75,7 +75,7 @@
 
             <button igxButton="outlined"
                     [displayDensity]="displayDensity"
-                    [disabled]="editedExpression"
+                    [disabled]="hasEditedExpression"
                     (click)="addOrGroup(expressionItem, afterExpression)">
                 <igx-icon>add</igx-icon>
                 <span>{{grid.resourceStrings.igx_grid_advanced_filter_or_group}}</span>
@@ -261,7 +261,7 @@
                         <button igxButton="outlined"
                                 *ngIf="expressionItem !== rootGroup"
                                 [displayDensity]="displayDensity"
-                                [disabled]="editedExpression || expressionItem.children.length < 2"
+                                [disabled]="hasEditedExpression || expressionItem.children.length < 2"
                                 (click)="endGroup(expressionItem)">
                             <span>{{grid.resourceStrings.igx_grid_advanced_filter_end_group}}</span>
                         </button>

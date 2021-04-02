@@ -26,7 +26,14 @@ export const configureTestSuite = () => {
     }
   };
 
+  /** Clear the svg tags from the svgContainer created by the IconService
+    to avoid increasing their count to over 10000. */
+  const clearSVGContainer = () => {
+    document.querySelectorAll('svg').forEach((tag) => tag.remove());
+  };
+
   afterEach(() => {
+    clearSVGContainer();
     const testBedApi: any = getTestBed();
     testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
       try {

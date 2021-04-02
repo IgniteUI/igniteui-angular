@@ -1,5 +1,5 @@
 <igx-grid #grid1 [pinning]="pinningConfig" [data]="data" [autoGenerate]="false" [displayDensity]="'compact'" [width]="w" [height]="h"
-    [paging]="false" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
+    [paging]="false" [allowFiltering]="true" [filterMode]="'excelStyleFilter'" [summaryCalculationMode]="'rootAndChildLevels'">
     <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">
         <igx-grid-toolbar-title>Grid Toolbar</igx-grid-toolbar-title>
         <igx-grid-toolbar-actions>
@@ -16,17 +16,17 @@
     </igx-column>
     <igx-column field="ProductID" header="Product ID" [width]="cw" [headerClasses]="'prodId'" [groupable]="groupable">
         <ng-template igxCell let-cell="cell" let-val>
-            <button (click)="viewRecord(grid1.data)">{{val}}</button>
+            <button (click)="viewRecord()">{{val}}</button>
         </ng-template>
     </igx-column>
     <igx-column field="ReorderLevel" [width]="cw" [sortable]="true" [groupable]="groupable" [filterable]="filterable"
-        editable="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
+        [editable]="true" [dataType]="'number'" [disableHiding]="disableHiding" [disablePinning]="disablePinning">
     </igx-column>
     <igx-column field="QuantityPerUnit" [width]="cw" header="QuantityPerUnit" [sortable]="true" [dataType]="'string'"
         [editable]="true">
     </igx-column>
     <igx-column field="UnitsInStock" header="UnitsInStock" [width]="cw" [dataType]="'number'"
-        [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" editable="true" [sortable]="true">
+        [hasSummary]="hasSummaryUnit" [hidden]="hasHidden" [editable]="true" [sortable]="true">
         <ng-template igxCell let-cell="cell" let-val let-row>
             ${{val}}
         </ng-template>
@@ -34,7 +34,7 @@
     <igx-column field="OrderDate" [width]="cw" [dataType]="'date'" [hasSummary]="false" [sortable]="true">
     </igx-column>
     <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [width]="cw" [hasSummary]="false"
-        editable="true">
+        [editable]="true">
         <ng-template igxCell let-cell="cell" let-val>
             {{val}}
         </ng-template>

@@ -5,10 +5,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
-    IgxIconModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
+    IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
     IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
-    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService
+    IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
+    IgxListModule,
+    IgxTextSelectionModule
 } from 'igniteui-angular';
 import { SharedModule } from './shared/shared.module';
 
@@ -142,6 +144,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -258,6 +261,7 @@ const components = [
     GridEventsComponent,
     GridFilteringComponent,
     GridFinJSComponent,
+    GridUpdatesComponent,
     MainComponent,
     ControllerComponent,
     GridExternalFilteringComponent,
@@ -281,6 +285,7 @@ const components = [
         CommonModule,
         ReactiveFormsModule,
         HttpClientModule,
+        IgxBottomNavModule,
         IgxIconModule,
         IgxInputGroupModule,
         IgxActionStripModule,
@@ -290,6 +295,9 @@ const components = [
         IgxDragDropModule,
         IgxDateRangePickerModule,
         IgxDividerModule,
+        IgxButtonGroupModule,
+        IgxListModule,
+        IgxTextSelectionModule,
         SharedModule,
         routing,
         HammerModule,

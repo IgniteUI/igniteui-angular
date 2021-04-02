@@ -1,8 +1,5 @@
 @import '../index';
 
-:root {
-    @include igx-palette-vars($dark-fluent-excel-palette, $contrast: true);
-}
-
 @include igx-core();
+@include igx-typography($font-family: $fluent-typeface, $type-scale: $fluent-type-scale);
 @include igx-fluent-dark-theme($dark-fluent-excel-palette);

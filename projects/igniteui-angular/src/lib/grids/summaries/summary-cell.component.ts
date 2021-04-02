@@ -1,8 +1,15 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { IgxSummaryResult } from './grid-summary';
+import { IgxCurrencySummaryOperand,
+         IgxDateSummaryOperand,
+         IgxNumberSummaryOperand,
+         IgxPercentSummaryOperand,
+         IgxSummaryOperand,
+         IgxSummaryResult } from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
+import { getLocaleCurrencyCode } from '@angular/common';
+import { IColumnPipeArgs } from '../columns/interfaces';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,6 +34,9 @@ export class IgxSummaryCellComponent {
     @Input()
     public density;
 
+    @Input()
+    public summaryFormatter: (summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
     /** @hidden */
     @Input()
     @HostBinding('class.igx-grid-summary--active')
@@ -40,7 +50,7 @@ export class IgxSummaryCellComponent {
     }
 
     @HostBinding('attr.data-visibleIndex')
-    get visibleColumnIndex(): number {
+    public get visibleColumnIndex(): number {
         return this.column.visibleIndex;
     }
 
@@ -68,19 +78,19 @@ export class IgxSummaryCellComponent {
         };
     }
 
-    get width() {
+    public get width() {
         return this.column.getCellWidth();
     }
 
-    get nativeElement(): any {
+    public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
-    get columnDatatype(): DataType {
+    public get columnDatatype(): DataType {
         return this.column.dataType;
     }
 
-    get itemHeight() {
+    public get itemHeight() {
         return this.column.grid.defaultSummaryHeight;
     }
 
@@ -91,7 +101,43 @@ export class IgxSummaryCellComponent {
         return (this.column.grid as any);
     }
 
+    /**
+     * @hidden @internal
+     */
+    public get currencyCode(): string {
+        return this.column.pipeArgs.currencyCode ?
+            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
+    }
+
     public translateSummary(summary: IgxSummaryResult): string {
         return this.grid.resourceStrings[`igx_grid_summary_${summary.key}`] || summary.label;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isNumberOperand(): boolean {
+        return this.column.summaries?.constructor === IgxNumberSummaryOperand;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isDateOperand(): boolean {
+        return this.column.summaries?.constructor === IgxDateSummaryOperand;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isCurrencyOperand(): boolean {
+        return this.column.summaries?.constructor === IgxCurrencySummaryOperand;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isPercentOperand(): boolean {
+        return this.column.summaries?.constructor === IgxPercentSummaryOperand;
     }
 }

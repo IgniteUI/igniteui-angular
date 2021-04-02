@@ -125,8 +125,12 @@ export class GridFunctions {
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
-    public static getGridFooter(fix): DebugElement {
+    public static getGridFooterWrapper(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS)).children[0];
     }
 
     public static getGridScroll(fix): DebugElement {
@@ -702,6 +706,13 @@ export class GridFunctions {
         fix.detectChanges();
     }
 
+    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+        const event = { stopPropagation: () => { }, preventDefault: () => { } };
+        const header = grid.getColumnByName(columnField).headerCell;
+        header.onFilteringIconClick(event);
+        fix.detectChanges();
+    }
+
     public static getApplyButtonExcelStyleFiltering(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid') {
         const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         const raisedButtons = Array.from(excelMenu.querySelectorAll('.igx-button--raised'));
@@ -974,8 +985,8 @@ export class GridFunctions {
         }
         return excelMenu;
     }
-    public static getExcelStyleFilteringCheckboxes(fix, menu = null): HTMLElement[] {
-        const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu);
+    public static getExcelStyleFilteringCheckboxes(fix, menu = null, grid = 'igx-grid'): HTMLElement[] {
+        const searchComp = GridFunctions.getExcelStyleSearchComponent(fix, menu, grid);
         return GridFunctions.sortNativeElementsVertically(Array.from(searchComp.querySelectorAll(CHECKBOX_INPUT_CSS_CLASS)));
     }
 
@@ -1162,8 +1173,8 @@ export class GridFunctions {
         return excelMenu.querySelector('igx-excel-style-conditional-filter');
     }
 
-    public static getExcelFilteringSearchComponent(fix: ComponentFixture<any>, menu = null): HTMLElement {
-        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix);
+    public static getExcelFilteringSearchComponent(fix: ComponentFixture<any>, menu = null, grid = 'igx-grid'): HTMLElement {
+        const excelMenu = menu ? menu : GridFunctions.getExcelStyleFilteringComponent(fix, grid);
         return excelMenu.querySelector('igx-excel-style-search');
     }
 

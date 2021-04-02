@@ -1,7 +1,8 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode,
-    FormattedValuesFilteringStrategy } from 'igniteui-angular';
+    FormattedValuesFilteringStrategy,
+    DisplayDensity} from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -20,7 +21,7 @@ export class GridFilteringComponent implements OnInit {
     public columns: Array<any>;
     public displayDensities;
     public filterModes;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public advancedFilteringTree: FilteringExpressionsTree;
     public selectionMode;
     public filterStrategy = new FormattedValuesFilteringStrategy();

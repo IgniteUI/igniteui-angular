@@ -1,0 +1,14 @@
+<ng-container *ngFor="let tab of items; let i = index">
+    <ng-container *ngTemplateOutlet="tab.panelTemplate"></ng-container>
+</ng-container>
+
+<div
+    #tablist
+    role="tablist"
+    class="igx-bottom-nav__menu igx-bottom-nav__menu--bottom"
+    aria-orientation="horizontal"
+>
+    <ng-container *ngFor="let tab of items; let i = index">
+        <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
+    </ng-container>
+</div>

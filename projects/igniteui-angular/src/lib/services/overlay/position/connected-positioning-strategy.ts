@@ -1,4 +1,5 @@
-import { IPositionStrategy } from './IPositionStrategy';
+import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
+import { ConnectedFit } from '../utilities';
 import {
   HorizontalAlignment,
   Point,
@@ -7,8 +8,7 @@ import {
   Util,
   VerticalAlignment
 } from './../utilities';
-import { scaleInVerTop, scaleOutVerTop } from '../../../animations/main';
-import { ConnectedFit } from '../utilities';
+import { IPositionStrategy } from './IPositionStrategy';
 
 /**
  * Positions the element based on the directions and start point passed in trough PositionSettings.
@@ -33,7 +33,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
   }
 
   /** @inheritdoc */
-  position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+  public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
     const targetElement = target || this.settings.target;
     const rects =  this.calculateElementRectangles(contentElement, targetElement);
     this.setStyle(contentElement, rects.targetRect, rects.elementRect, {});
@@ -44,7 +44,7 @@ export class ConnectedPositioningStrategy implements IPositionStrategy {
    * Creates clone of this position strategy
    * @returns clone of this position strategy
    */
-  clone(): IPositionStrategy {
+  public clone(): IPositionStrategy {
     return Util.cloneInstance(this);
   }
 

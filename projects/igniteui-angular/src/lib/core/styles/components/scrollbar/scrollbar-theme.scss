@@ -5,7 +5,7 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $thumb-background [null] - The background color used for the thumb.
 /// @param {Color} $track-background [null] - The background color used for the track.
@@ -21,13 +21,14 @@
 ///   // Pass the theme to the igx-scrollbar component mixin
 ///   @include igx-scrollbar($my-avatar-theme);
 @function igx-scrollbar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $size: null,
     $thumb-background: null,
     $track-background: null,
 ) {
     $name: 'igx-scrollbar';
+    $selector: '.igx-scrollbar';
     $scrollbar-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -40,6 +41,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         thumb-background: $thumb-background,
         track-background: $track-background,
@@ -48,11 +50,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-scrollbar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %scrollbar-display {
         @if type-of(map-get($theme, 'size') == 'string') {
@@ -69,6 +71,13 @@
 
         ::-webkit-scrollbar-thumb {
             background: --var($theme, 'thumb-background');
+        }
+    }
+
+    @media (hover: none) {
+        %scrollbar-display ::-webkit-scrollbar {
+            width: auto;
+            height: auto;
         }
     }
 }
