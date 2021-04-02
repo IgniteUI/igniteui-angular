@@ -4,12 +4,7 @@
 
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper"  tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
-    (keydown)="navigation.headerNavigation($event)" [style.width.px]='calcWidth' #theadRow>
-       <div class="igx-grid__tr" role="row" [attr.aria-activedescendant]="activeDescendant" [style.width.px]='calcWidth'>
-<div class="igx-grid__thead" role="rowgroup">
-    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" 
-        tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
-        (keydown)="navigation.headerNavigation($event)" [style.width.px]='calcWidth' #theadRow>
+     (keydown)="navigation.headerNavigation($event)" [style.width.px]='calcWidth' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
             <span *ngIf="hasMovableColumns && draggedColumn && pinnedColumns.length <= 0"
                 [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
