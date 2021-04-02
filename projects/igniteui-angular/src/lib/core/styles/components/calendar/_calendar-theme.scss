@@ -212,7 +212,9 @@
         }
 
         @if not($date-selected-background) and $header-background {
-            $date-selected-background: $header-background;
+            @if type-of($header-background) == 'color' {
+                $date-selected-background: $header-background;
+            }
         }
 
         @if not($date-current-bg-color) and $header-background {
@@ -261,7 +263,9 @@
     }
 
     @if not($date-disabled-text-color) and $date-disabled-background {
-        $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
+        @if type-of($date-disabled-background) == 'color' {
+            $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
+        }
     }
 
     @if not($week-number-color) and $week-number-background {
@@ -795,7 +799,9 @@
     %cal-value--selected--hover {
         %cal-value-content {
             ::after {
-                background: rgba($selected-hover-color, .18);
+                @if type-of($selected-hover-color) == 'color' {
+                    background: rgba($selected-hover-color, .18);
+                }
             }
         }
     }
