@@ -520,7 +520,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.elementRef);
+        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.nativeElement);
     }
 
     public static isInView(index, state): boolean {

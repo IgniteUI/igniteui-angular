@@ -694,7 +694,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 // check correct headers have left border
                 const pinnedHeaders = grid.headerGroupsList.filter(group => group.isPinned);
-                expect(pinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
+                expect(pinnedHeaders[0].nativeElement.querySelector('[aria-label="General Information"]')).not.toBeNull();
                 expect(pinnedHeaders[1].column.field).toBe('CompanyName');
             }));
 
@@ -714,6 +714,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 // check correct headers have left border
                 const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
+                console.log(firstPinnedHeader.nativeElement.classList, firstPinnedHeader.nativeElement.tagName);
                 expect(firstPinnedHeader.nativeElement.classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTrue();
                 expect(firstPinnedHeader.nativeElement.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
             }));
