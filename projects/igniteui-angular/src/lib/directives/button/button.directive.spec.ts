@@ -7,17 +7,14 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxIconComponent, IgxIconService } from '../../icon/public_api';
 import { DisplayDensity } from '../../core/density';
 
-const FLAT_RAISED_BUTTON_COMPACT = 'igx-button--compact';
-const FLAT_RAISED_BUTTON_COSY = 'igx-button--cosy';
-const OUTLINED_BUTTON_COMPACT = 'igx-button--outlined-compact';
-const OUTLINED_BUTTON_COSY = 'igx-button--outlined-cosy';
-const FAB_BUTTON_COMPACT = 'igx-button--fab-compact';
-const FAB_BUTTON_COSY = 'igx-button--fab-cosy';
+const BUTTON_COMFORTABLE = 'igx-button';
+const BUTTON_COSY = 'igx-button--cosy';
+const BUTTON_COMPACT = 'igx-button--compact';
 
 describe('IgxButton', () => {
     configureTestSuite();
 
-    const baseClass = 'igx-button';
+    const baseClass = BUTTON_COMFORTABLE;
     const classes = {
         flat: `${baseClass}--flat`,
         raised: `${baseClass}--raised`,
@@ -123,32 +120,32 @@ describe('IgxButton', () => {
         fixture.detectChanges();
         const theButton = fixture.componentInstance.button;
         const theButtonNativeEl = theButton.nativeElement;
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
 
         theButton.type = 'raised';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.raised);
 
         theButton.type = 'outlined';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.outlined);
 
         theButton.type = 'fab';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.fab);
 
         theButton.type = 'icon';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.icon);
 
         theButton.type = 'flat';
         fixture.detectChanges();
-        expect(theButtonNativeEl.classList.length).toEqual(1);
+        expect(theButtonNativeEl.classList.length).toEqual(2);
         expect(theButtonNativeEl.classList).toContain(classes.flat);
     });
 });
@@ -208,41 +205,25 @@ const verifyDisplayDensity = (buttonDirective, buttonDebugEl, buttonType, expect
     let expectedButtonDensityClass = '';
 
     switch (expectedDisplayDensity) {
-        case DisplayDensity.compact: {
-            if (buttonType === 'flat' || buttonType === 'raised') {
-                expectedButtonDensityClass = FLAT_RAISED_BUTTON_COMPACT;
-            } else if (buttonType === 'outlined') {
-                expectedButtonDensityClass = OUTLINED_BUTTON_COMPACT;
-            } else if (buttonType === 'fab') {
-                expectedButtonDensityClass = FAB_BUTTON_COMPACT;
-            }
-        } break;
-        case DisplayDensity.cosy: {
-            if (buttonType === 'flat' || buttonType === 'raised') {
-                expectedButtonDensityClass = FLAT_RAISED_BUTTON_COSY;
-            } else if (buttonType === 'outlined') {
-                expectedButtonDensityClass = OUTLINED_BUTTON_COSY;
-            } else if (buttonType === 'fab') {
-                expectedButtonDensityClass = FAB_BUTTON_COSY;
-            }
-        } break;
-        default: break;
+        case DisplayDensity.compact:
+            expectedButtonDensityClass = BUTTON_COMPACT;
+            break;
+        case DisplayDensity.cosy:
+            expectedButtonDensityClass = BUTTON_COSY;
+            break;
+        default:
+            expectedButtonDensityClass = BUTTON_COMFORTABLE;
     }
 
     const buttonNativeElement = buttonDebugEl.nativeElement;
-    if (buttonType === 'icon') {
-        // Icon buttons do not have visual changes for displayDensity.
-        expect(buttonNativeElement.classList.length).toBe(2);
+    if (expectedDisplayDensity === DisplayDensity.comfortable) {
+        // For 'comfortable', the buttons should have no additional CSS classes added.
+        expect(buttonNativeElement.classList.length).toBe(3);
+        expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(true, 'Contains density class!');
     } else {
-        if (expectedDisplayDensity === DisplayDensity.comfortable) {
-            // For 'comfortable', the buttons should have no additional css class added.
-            expect(buttonNativeElement.classList.length).toBe(2);
-            expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(false, 'Contains density class!');
-        } else {
-            // For 'compact' and 'cosy', the buttons should have an additional css class added.
-            expect(buttonNativeElement.classList.length).toBe(3);
-            expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(true, 'Missing density class!');
-        }
+        // For 'compact' and 'cosy', the buttons should have an additional CSS class added.
+        expect(buttonNativeElement.classList.length).toBe(4);
+        expect(buttonNativeElement.classList.contains(expectedButtonDensityClass)).toBe(true, 'Missing density class!');
     }
     expect(buttonDirective.displayDensity).toBe(expectedDisplayDensity);
 };

@@ -18,7 +18,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
     private _scrollContainer: HTMLElement;
 
     constructor(scrollContainer?: HTMLElement) {
-        super(scrollContainer);
+        super();
         this._scrollContainer = scrollContainer;
         this._threshold = 10;
         this.cumulativeScrollTop = 0;
@@ -76,7 +76,7 @@ export class CloseScrollStrategy extends ScrollStrategy {
         this._initialized = false;
     }
 
-    private onScroll = (ev: Event) => {
+    private onScroll = () => {
         if (!this._sourceElement) {
             return;
         }

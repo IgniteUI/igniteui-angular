@@ -6,7 +6,7 @@
 ////
 
 /// If only background color is specified, text/icon color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $color [null] - The color used for the actions icons.
@@ -25,7 +25,7 @@
 ///   // Pass the theme to the igx-action-strip component mixin
 ///   @include igx-action-strip($my-action-strip-theme);
 @function igx-action-strip-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $background: null,
@@ -65,11 +65,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-action-strip($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $padding: (
         comfortable: 0 rem(24px),
@@ -189,6 +189,10 @@
         }
 
         [igxButton='icon'] {
+            igx-icon {
+                color: --var($theme, 'color');
+            }
+
             @if $variant == 'indigo-design' {
                 border-radius: --var($theme, 'actions-border-radius');
             }

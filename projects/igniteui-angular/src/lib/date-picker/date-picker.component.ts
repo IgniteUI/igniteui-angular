@@ -220,7 +220,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * <igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      * ```
      */
-    @Input() public locale: 'en';
+    @Input() public locale = 'en';
 
     /**
      * Gets/Sets the default template editor's tabindex.
@@ -998,7 +998,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden @internal */
     public ngOnDestroy(): void {
         if (this._componentID) {
-            this._overlayService.hide(this._componentID);
+            this._overlayService.detach(this._componentID);
         }
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
@@ -1072,7 +1072,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (!this.collapsed || this.disabled) {
             return;
         }
-
+        if (this._componentID) {
+            this._overlayService.detach(this._componentID);
+        }
         switch (this.mode) {
             case InteractionMode.Dialog: {
                 this.hasHeader = true;
@@ -1362,6 +1364,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _onClosed(): void {
+        this._overlayService.detach(this._componentID);
         this.collapsed = true;
         this._componentID = null;
         this.onClosed.emit(this);

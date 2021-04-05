@@ -36,7 +36,7 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -217,7 +217,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -237,7 +236,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
-            crudService,
             colResizingService,
             gridAPI,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -291,14 +289,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             });
         });
 
-        // handle column changes so that they are passed to child grid instances when onColumnChange is emitted.
+        // handle column changes so that they are passed to child grid instances when columnChange is emitted.
         this.ri_columnListDiffer.diff(this.childColumns);
-        this.childColumns.toArray().forEach(x => x.onColumnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this.childColumns.toArray().forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
                 diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    record.item.onColumnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
+                    record.item.columnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
                 });
             }
          });

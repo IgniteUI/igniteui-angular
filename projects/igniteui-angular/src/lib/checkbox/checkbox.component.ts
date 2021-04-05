@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { CheckboxRequiredValidator, ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -47,7 +47,7 @@ let nextId = 0;
  *
  * @example
  * ```html
- * <igx-checkbox checked="true">
+ * <igx-checkbox [checked]="true">
  *   simple checkbox
  * </igx-checkbox>
  * ```
@@ -59,6 +59,8 @@ let nextId = 0;
     templateUrl: 'checkbox.component.html'
 })
 export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvider {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * An event that is emitted after the checkbox state is changed.
      * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
@@ -191,13 +193,19 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      *
      * @example
      * ```html
-     * <igx-checkbox [required] = "true"></igx-checkbox>
+     * <igx-checkbox required></igx-checkbox>
      * ```
      * ```typescript
      * let isRequired =  this.checkbox.required;
      * ```
      */
-    @Input() public required = false;
+     @Input()
+     public get required(): boolean {
+         return this._required;
+     }
+     public set required(value: boolean) {
+         this._required = (value as any === '') || value;
+     }
     /**
      * Sets/gets the `aria-labelledby` attribute.
      * If not set, the `aria-labelledby` will be equal to the value of `labelId` attribute.
@@ -278,14 +286,23 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     @HostBinding('class.igx-checkbox--checked')
     @Input()
-    public checked = false;
+    public get checked() {
+        return this._checked;
+    }
+    public set checked(value: boolean) {
+        if(this._checked !== value) {
+            this._checked = value;
+            this._onChangeCallback(this._checked);
+        }
+    }
+
     /**
      * Sets/gets whether the checkbox is disabled.
      * Default value is `false`.
      *
      * @example
      * ```html
-     * <igx-checkbox [disabled] = "true"></igx-checkbox>
+     * <igx-checkbox disabled></igx-checkbox>
      * ```
      * ```typescript
      * let isDisabled = this.checkbox.disabled;
@@ -293,7 +310,12 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      */
     @HostBinding('class.igx-checkbox--disabled')
     @Input()
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+    }
     /**
      * Sets/gets whether the checkbox is readonly.
      * Default value is `false`.
@@ -326,8 +348,19 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     public inputId = `${this.id}-input`;
     /**
      * @hidden
+     * @internal
      */
-    protected _value: string;
+    private _checked = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _disabled = false;
     /**
      * @hidden
      */
@@ -336,25 +369,26 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * @hidden
      */
     private _onChangeCallback: (_: any) => void = noop;
-    /**
-     * @hidden
-     * @internal
-     */
+    /** @hidden @internal */
     @HostListener('keyup', ['$event'])
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
     }
-    /**
-     * If `disabled` is `false`, switches the `checked` state.
-     *
-     * @example
-     * ```typescript
-     * this.checkbox.toggle();
-     * ```
-     */
-    public toggle() {
+    /** @hidden @internal */
+    @HostListener('click', ['$event'])
+    public _onCheckboxClick(event: MouseEvent) {
+        // Since the original checkbox is hidden and the label
+        // is used for styling and to change the checked state of the checkbox,
+        // we need to prevent the checkbox click event from bubbling up
+        // as it gets triggered on label click
+        // NOTE: The above is no longer valid, as the native checkbox is not labeled
+        // by the SVG anymore.
         if (this.disabled || this.readonly) {
+            // readonly prevents the component from changing state (see toggle() method).
+            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
+            // Prevent the native change so the input remains in sync
+            event.preventDefault();
             return;
         }
 
@@ -362,8 +396,22 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
 
         this.indeterminate = false;
         this.checked = !this.checked;
-        this.change.emit({ checked: this.checked, checkbox: this });
-        this._onChangeCallback(this.checked);
+        // K.D. March 23, 2021 Emitting on click and not on the setter because otherwise every component
+        // bound on change would have to perform self checks for weather the value has changed because
+        // of the initial set on initialization
+        this.change.emit({ checked: this._checked, checkbox: this });
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get ariaChecked() {
+       if (this.indeterminate) {
+           return 'mixed';
+       } else {
+           return this.checked;
+       }
     }
 
     /** @hidden @internal */
@@ -374,46 +422,16 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
 
     /** @hidden @internal */
-    public _onCheckboxClick(event: Event) {
-        // Since the original checkbox is hidden and the label
-        // is used for styling and to change the checked state of the checkbox,
-        // we need to prevent the checkbox click event from bubbling up
-        // as it gets triggered on label click
-        event.stopPropagation();
-
-        if (this.readonly) {
-            // readonly prevents the component from changing state (see toggle() method).
-            // However, the native checkbox can still be activated through user interaction (focus + space, label click)
-            // Prevent the native change so the input remains in sync
-            event.preventDefault();
-        }
-
-        this.toggle();
-
-        if (isIE()) {
-            this.nativeCheckbox.nativeElement.blur();
-        }
-    }
-
-    /** @hidden @internal */
-    public _onLabelClick() {
-        // We use a span element as a placeholder label
-        // in place of the native label, we need to emit
-        // the change event separately here alongside
-        // the click event emitted on click
-        this.toggle();
-    }
-
-    /** @hidden @internal */
     public onBlur() {
         this.focused = false;
         this._onTouchedCallback();
     }
 
     /** @hidden @internal */
-    public writeValue(value: string) {
-        this._value = value;
-        this.checked = !!this._value;
+    public writeValue(value: boolean) {
+        if (typeof value === 'boolean') {
+            this._checked = value;
+        }
     }
 
     /** @hidden @internal */

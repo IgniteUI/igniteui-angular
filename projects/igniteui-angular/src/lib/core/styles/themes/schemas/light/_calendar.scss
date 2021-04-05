@@ -43,7 +43,7 @@
 /// @prop {Map} date-special-background [igx-color: ('grays', 100)] - The background color used for special dates.
 /// @prop {Map} date-special-text-color [igx-color: ('grays', 900)] - The text color used for special dates.
 ///
-/// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), hexrgba: (), rgba: .6] - The text color for disabled dates.
+/// @prop {Map} date-disabled-text-color [igx-color: ('grays', 500), to-opaque: (), rgba: .6] - The text color for disabled dates.
 /// @prop {Map} date-disabled-background [igx-color: ('grays', 100)] - The background color for disabled dates.
 ///
 /// @prop {Color} picker-background-color [transparent] - The igx calendar picker background color.
@@ -178,7 +178,7 @@ $_light-calendar: extend(
 
         date-disabled-text-color: (
             igx-color: ('grays', 500),
-            hexrgba: (),
+            to-opaque: (),
             rgba: .6
         ),
 
@@ -200,7 +200,7 @@ $_light-calendar: extend(
 /// @type {Map}
 /// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
 /// @prop {Map} date-current-bg-color [igx-color: ('primary', 500)] - The background color for the current date.
-/// @prop {Map} date-selected-background [igx-color: ('primary', 100), rgba: .5, hexrgba: #fff] - The background color for the selected date.
+/// @prop {Map} date-selected-background [igx-color: ('primary', 100), rgba: .5, to-opaque: #fff] - The background color for the selected date.
 /// @prop {Map} date-selected-text-color [igx-color: ('primary', 100)] - The text color for the selected date.
 ///
 /// @prop {Number} border-radius [0] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
@@ -223,7 +223,7 @@ $_fluent-calendar: extend(
         date-selected-background: (
             igx-color: ('primary', 100),
             rgba: .5,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         date-selected-text-color: (
@@ -251,12 +251,12 @@ $_fluent-calendar: extend(
 /// @prop {Map} year-current-text-color [igx-color: ('primary', 500)] - The text color for the current/selected year.
 /// @prop {Map} month-current-text-color [igx-color: ('primary', 500)]- The text color for the current/selected month.
 ///
-/// @prop {Map} label-color [igx-color: 'info', rgba: .5, hexrgba: #fff] - The text color for weekday labels.
+/// @prop {Map} label-color [igx-color: 'info', rgba: .5, to-opaque: #fff] - The text color for weekday labels.
 /// @prop {Color} date-current-text-color [#fff] - The text color for the current date.
 ///
 /// @prop {Map} date-hover-background [igx-color: ('primary', 500)] - The hover date background color.
 /// @prop {Map} date-current-bg-color [igx-color: ('primary', 600)] - The background color for the current date.
-/// @prop {Map} date-selected-background [igx-color: ('primary', 500), rgba: .8, hexrgba: #fff] - The background color for the selected date.
+/// @prop {Map} date-selected-background [igx-color: ('primary', 500), rgba: .8, to-opaque: #fff] - The background color for the selected date.
 /// @prop {Color} date-selected-text-color [#fff] - The text color for the selected date.
 /// @prop {Color} content-background [#fff] - The main content background color.
 ///
@@ -320,7 +320,7 @@ $_bootstrap-calendar: extend(
         label-color: (
             igx-color: 'info',
             rgba: .5,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         date-current-text-color: #fff,
@@ -336,7 +336,7 @@ $_bootstrap-calendar: extend(
         date-selected-background: (
             igx-color: ('primary', 500),
             rgba: .8,
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         date-selected-text-color: #fff,

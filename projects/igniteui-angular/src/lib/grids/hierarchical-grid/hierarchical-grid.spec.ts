@@ -397,7 +397,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         wait();
 
-        expect(childGrid.crudService.cellInEditMode).toBeFalsy();
+        expect(childGrid.gridAPI.crudService.cellInEditMode).toBeFalsy();
         expect(childGridSecondRow.inEditMode).toBeFalsy();
     });
 
@@ -1590,11 +1590,11 @@ export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalG
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [showExpandAll]='true'
-        [autoGenerate]="false" [height]="'400px'" [width]="width" [allowFiltering]='true' filterMode="excelStyleFilter" #hierarchicalGrid>
+        [autoGenerate]="false" [height]="'400px'" [width]="width" [allowFiltering]="true" filterMode="excelStyleFilter" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
     <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false"
-        [allowFiltering]='true' filterMode="excelStyleFilter" #rowIsland>
+        [allowFiltering]="true" filterMode="excelStyleFilter" #rowIsland>
         <ng-template igxExcelStyleHeaderIcon>
             <igx-icon>filter_alt</igx-icon>
         </ng-template>

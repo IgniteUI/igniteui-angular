@@ -3,7 +3,8 @@
         #grid
         [data]="data"
         [width]="'800px'"
-        [paging]="true"
+        [paging]="paging"
+        [perPage]="perPage"
         [height]="'500px'"
         [primaryKey]="'ID'"
         (mouseleave)="onMouseLeave(actionstrip)"
@@ -19,7 +20,7 @@
             [width]="c.width"
             [pinned]="c.pinned"
             [hidden]="c.hidden"
-            [groupable]='true'
+            [groupable]="true"
             [hasSummary]="true"
         >
         </igx-column>
@@ -30,5 +31,16 @@
         </igx-action-strip>
     </igx-grid>
 
-    <button igxButton="raised" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
+    <igx-card style="width: 360px; margin-top: 12px">
+        <igx-card-header>
+            <h1 igxCardHeaderTitle>Settings</h1>
+        </igx-card-header>
+        <igx-card-content>
+            <button igxButton="raised" (click)="data = data.length ? [] : dataFull">Switch Data/No Data</button>
+            <button igxButton="raised" (click)="paging = !paging">Paging {{paging}}</button>
+            <igx-select [(ngModel)]="perPage">
+                <igx-select-item *ngFor="let value of selectOptions" [value]="value">{{value}}</igx-select-item>
+            </igx-select>
+        </igx-card-content>
+    </igx-card>
 </div>

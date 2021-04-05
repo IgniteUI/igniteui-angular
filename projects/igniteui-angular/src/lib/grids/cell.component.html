@@ -73,8 +73,7 @@
         <igx-input-group displayDensity="compact">
             <input
                 igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
             />
         </igx-input-group>
@@ -83,8 +82,7 @@
         <igx-input-group displayDensity="compact">
             <input
                 igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -92,9 +90,11 @@
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'boolean'">
+        <!-- The additional [checked] binding is needed as after the initial call of the checked getter
+        it is never called again as no change detection is triggered in the grid after that, resulting in wrong
+        rendered state of the checkbox. -->
         <igx-checkbox
-            (change)="editValue = $event.checked"
-            [value]="editValue"
+            [(ngModel)]="editValue"
             [checked]="editValue"
             [igxFocus]="true"
             [disableRipple]="true"
@@ -117,8 +117,7 @@
             <igx-prefix *ngIf="grid.currencyPositionLeft">{{ currencyCodeSymbol }}</igx-prefix>
             <input
                 igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"
@@ -130,8 +129,7 @@
         <igx-input-group displayDensity="compact">
             <input
                 igxInput
-                [value]="editValue"
-                (input)="editValue = $event.target.value"
+                [(ngModel)]="editValue"
                 [igxFocus]="true"
                 [step]="step"
                 type="number"

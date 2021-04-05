@@ -1480,7 +1480,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.selectRows([grRow.groupRow.records[0]]);
             fix.detectChanges();
 
-            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('false');
+            expect(groupByRowCheckboxElement.getAttribute('aria-checked')).toMatch('mixed');
             expect(groupByRowCheckboxElement.getAttribute('aria-label'))
                 .toMatch('Select all rows in the group with field name ProductName and value NetAdvantage');
 
@@ -2344,7 +2344,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
-        UIInteractions.simulateMouseEvent('click', fix.nativeElement.querySelector('igx-grid-header[id$="_ProductName"]'), 0, 0);
+        const productNameCol = fix.nativeElement.querySelector('igx-grid-header-group[id$="_-1_0_2"]');
+        UIInteractions.simulateMouseEvent('click', productNameCol,0, 0);
         tick();
         fix.detectChanges();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
@@ -3540,7 +3541,7 @@ export class GroupByDataMoreColumnsComponent extends DataParent {
             [width]='width'
             [autoGenerate]='false'
             [data]='data'>
-            <igx-column [width]='width' [groupable]='true'>
+            <igx-column [width]='width' [groupable]="true">
                 <ng-template igxCell>
                     <button>Dummy button</button>
                 </ng-template>
