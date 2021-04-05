@@ -159,15 +159,15 @@
     $success-shadow-color: rgba(map-get($theme, 'success-secondary-color'), .5);
     $error-shadow-color: rgba(map-get($theme, 'error-secondary-color'), .5);
 
-    @if $focused-secondary-color {
+    @if $focused-secondary-color and type-of($focused-secondary-color) == 'color' {
         $focused-shadow-color: rgba($focused-secondary-color, .5);
     }
 
-    @if $success-secondary-color {
+    @if $success-secondary-color and type-of($success-secondary-color) == 'color' {
         $success-shadow-color: rgba($success-secondary-color, .5);
     }
 
-    @if $error-secondary-color {
+    @if $error-secondary-color and type-of($error-secondary-color) == 'color' {
         $error-shadow-color: rgba($error-secondary-color, .5);
     }
 

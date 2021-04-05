@@ -5,29 +5,26 @@
         </div>
         <div class="tabbar-wrapper" #tabbarEl>
             <igx-bottom-nav>
+                <igx-bottom-nav-item routerLinkActive #rla1="routerLinkActive" [selected]="rla1.isActive">
+                    <igx-bottom-nav-header routerLink="/bottom-navigation-routing/view1">
+                        <igx-icon igxBottomNavHeaderIcon>phone</igx-icon>
+                        <span igxBottomNavHeaderLabel>Dial</span>
+                    </igx-bottom-nav-header>
+                </igx-bottom-nav-item>
 
-                <igx-tab icon="phone" label="Dial"
-                    routerLink="/bottom-navigation-routing/view1"
-                    routerLinkActive #rla1="routerLinkActive"
-                    [isSelected]="rla1.isActive">
-                </igx-tab>
+                <igx-bottom-nav-item routerLinkActive #rla2="routerLinkActive" [selected]="rla2.isActive">
+                    <igx-bottom-nav-header routerLink="/bottom-navigation-routing/view2">
+                        <igx-icon igxBottomNavHeaderIcon>supervisor_account</igx-icon>
+                        <span igxBottomNavHeaderLabel>Contacts</span>
+                    </igx-bottom-nav-header>
+                </igx-bottom-nav-item>
 
-                <igx-tab icon="supervisor_account" label="Contacts"
-                    routerLink="/bottom-navigation-routing/view2"
-                    routerLinkActive #rla2="routerLinkActive"
-                    [isSelected]="rla2.isActive">
-                </igx-tab>
-
-                <igx-tab icon="format_list_bulleted" label="Recent"
-                    routerLink="/bottom-navigation-routing/view3"
-                    routerLinkActive #rla3="routerLinkActive"
-                    [isSelected]="rla3.isActive">
-                    <!-- <ng-template igxTab let-context>
-                        <span>{{context.label}}</span>
-                        <span>[Retemplated tab]</span>
-                    </ng-template> -->
-                </igx-tab>
-
+                <igx-bottom-nav-item routerLinkActive #rla3="routerLinkActive" [selected]="rla3.isActive">
+                    <igx-bottom-nav-header routerLink="/bottom-navigation-routing/view3">
+                        <igx-icon igxBottomNavHeaderIcon>format_list_bulleted</igx-icon>
+                        <span igxBottomNavHeaderLabel>Recent</span>
+                    </igx-bottom-nav-header>
+                </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
     </article>

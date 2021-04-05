@@ -1,19 +1,18 @@
-import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
 /**
  * Empty scroll strategy. Does nothing.
  */
 export class NoOpScrollStrategy extends ScrollStrategy {
-    constructor(scrollContainer?: HTMLElement) {
-        super(scrollContainer);
+    constructor() {
+        super();
     }
     /** @inheritdoc */
-    public initialize(document: Document, overlayService: IgxOverlayService, id: string) { }
+    public initialize() { }
 
     /** @inheritdoc */
-    attach(): void { }
+    public attach(): void { }
 
     /** @inheritdoc */
-    detach(): void { }
+    public detach(): void { }
 }
