@@ -669,7 +669,7 @@ describe('Column Hiding UI #grid', () => {
             const toolbar = GridFunctions.getToolbar(fix);
             const gridHeader = GridFunctions.getGridHeader(fix);
             const gridScroll = GridFunctions.getGridScroll(fix);
-            const gridFooter = GridFunctions.getGridFooter(fix);
+            const gridFooter = GridFunctions.getGridFooterWrapper(fix);
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(toolbar.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
