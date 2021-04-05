@@ -3,12 +3,11 @@ import { DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IColumnVisibilityChangedEventArgs } from '../hiding/column-hiding-item.directive';
 import { IgxGridModule } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { ColumnHidingTestComponent, ColumnGroupsHidingTestComponent } from '../../test-utils/grid-base-components.spec';
-import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -632,7 +631,7 @@ describe('Column Hiding UI #grid', () => {
             expect(grid.scr.nativeElement.hidden).toBe(false);
             const gridHeader = GridFunctions.getGridHeader(fix);
             const gridScroll = GridFunctions.getGridScroll(fix);
-            const gridFooter = GridFunctions.getGridFooter(fix);
+            const gridFooter = GridFunctions.getGridFooterWrapper(fix);
             let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridHeader.nativeElement).height, 10)
                 - parseInt(window.getComputedStyle(gridFooter.nativeElement).height, 10)

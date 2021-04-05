@@ -2072,11 +2072,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     get activeDescendant() {
         const activeElem = this.navigation.activeNode;
-        if (activeElem) {
-            return !this.navigation.isDataRow(activeElem.row, true) ? this.id + '_' + activeElem.row :
-                this.id + '_' + activeElem.row + '_' + activeElem.column;
+
+        if (!Object.keys(activeElem).length) {
+            return this.id;
         }
-        return null;
+
+        return !this.navigation.isDataRow(activeElem.row, true) ? this.id + '_' + activeElem.row :
+            this.id + '_' + activeElem.row + '_' + activeElem.column;
     }
 
     /**
