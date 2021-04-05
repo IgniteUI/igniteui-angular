@@ -9,6 +9,7 @@
 /// @param {String} $font-family [null] - The font size of the type style.
 /// @param {String} $font-size [null] - The font size of the type style.
 /// @param {Number|String} $font-weight [null] - The font weight of the type style.
+/// @param {String} $font-style [null] - The font style of the type style.
 /// @param {Number|string} $line-height [null] - The line height of the type style.
 /// @param {Number|String} $letter-spacing [null] - The letter spacing of the type style.
 /// @param {String} $text-transform [null] - The text-transform property of the type style.
@@ -17,17 +18,18 @@
     $font-family: null,
     $font-size: null,
     $font-weight: null,
+    $font-style: null,
     $line-height: null,
     $letter-spacing: null,
     $text-transform: null,
     $margin-top: null,
     $margin-bottom: null,
-    //TODO Add font style rule $font-style: null
 ) {
     @return (
         font-family: $font-family,
         font-weight: $font-weight,
         font-size: $font-size,
+        font-style: $font-style,
         letter-spacing: $letter-spacing,
         text-transform: $text-transform,
         line-height: $line-height,
@@ -85,6 +87,7 @@
         h1: igx-type-style(
             $font-size: rem(96px),
             $font-weight: 300,
+            $font-style: normal,
             $letter-spacing: rem(-1.5px),
             $line-height: rem(112px),
             $text-transform: none,
@@ -94,6 +97,7 @@
         h2: igx-type-style(
             $font-size: rem(60px),
             $font-weight: 300,
+            $font-style: normal,
             $letter-spacing: rem(-.5px),
             $line-height: rem(71px),
             $text-transform: none,
@@ -103,6 +107,7 @@
         h3: igx-type-style(
             $font-size: rem(48px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: 0,
             $line-height: rem(57px),
             $text-transform: none,
@@ -112,6 +117,7 @@
         h4: igx-type-style(
             $font-size: rem(34px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(.25px),
             $line-height: rem(40px),
             $text-transform: none,
@@ -121,6 +127,7 @@
         h5: igx-type-style(
             $font-size: rem(24px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: 0,
             $line-height: rem(28px),
             $text-transform: none,
@@ -130,6 +137,7 @@
         h6: igx-type-style(
             $font-size: rem(20px),
             $font-weight: 600,
+            $font-style: normal,
             $letter-spacing: rem(.15px),
             $line-height: rem(24px),
             $text-transform: none,
@@ -139,20 +147,23 @@
         subtitle-1: igx-type-style(
             $font-size: rem(16px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(.15px),
             $line-height: rem(24px),
             $text-transform: none
         ),
         subtitle-2: igx-type-style(
             $font-size: rem(14px),
-            $letter-spacing: rem(.1px),
             $font-weight: 600,
+            $font-style: normal,
+            $letter-spacing: rem(.1px),
             $line-height: rem(24px),
             $text-transform: none
         ),
         body-1: igx-type-style(
             $font-size: rem(16px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(.5px),
             $line-height: rem(28px),
             $text-transform: none,
@@ -162,6 +173,7 @@
         body-2: igx-type-style(
             $font-size: rem(14px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(.25px),
             $line-height: rem(20px),
             $text-transform: none
@@ -169,6 +181,7 @@
         button: igx-type-style(
             $font-size: rem(14px),
             $font-weight: 600,
+            $font-style: normal,
             $letter-spacing: rem(.75px),
             $line-height: rem(16px),
             $text-transform: uppercase
@@ -176,6 +189,7 @@
         caption: igx-type-style(
             $font-size: rem(12px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(.4px),
             $line-height: rem(16px),
             $text-transform: none
@@ -183,6 +197,7 @@
         overline: igx-type-style(
             $font-size: rem(10px),
             $font-weight: 400,
+            $font-style: normal,
             $letter-spacing: rem(1.5px),
             $line-height: rem(16px),
             $text-transform: uppercase
