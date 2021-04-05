@@ -125,8 +125,12 @@ export class GridFunctions {
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
-    public static getGridFooter(fix): DebugElement {
+    public static getGridFooterWrapper(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS)).children[0];
     }
 
     public static getGridScroll(fix): DebugElement {
@@ -699,6 +703,13 @@ export class GridFunctions {
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
         tick(50);
+        fix.detectChanges();
+    }
+
+    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+        const event = { stopPropagation: () => { }, preventDefault: () => { } };
+        const header = grid.getColumnByName(columnField).headerCell;
+        header.onFilteringIconClick(event);
         fix.detectChanges();
     }
 

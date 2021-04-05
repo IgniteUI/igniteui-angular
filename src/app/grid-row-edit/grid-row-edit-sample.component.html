@@ -141,10 +141,10 @@
                         </div>
                         <div class="igx-banner__actions">
                             <div class="igx-banner__row">
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit()">Cancel</button>
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit()">Cancel</button>
                                 <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                     Changes</button>
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(true)">Apply</button>
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit(true)">Apply</button>
                             </div>
                         </div>
                     </div>

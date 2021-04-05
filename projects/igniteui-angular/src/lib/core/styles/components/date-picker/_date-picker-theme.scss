@@ -12,14 +12,17 @@
 /// @requires --var
 /// @requires rem
 @mixin igx-date-picker($theme) {
-    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
+    $palette: map-get($theme, 'palette');
+    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'), $palette: $palette);
+
+    @include igx-css-vars($theme, '.igx-date-picker');
 
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
         min-width: 200px;
-        box-shadow: igx-elevation($elevations, 24);
+        box-shadow: igx-elevation($elevation: 24);
         border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'content-background');
         overflow: hidden;
@@ -143,7 +146,7 @@
         display: flex;
         flex: 1 0 0;
         flex-direction: column;
-        box-shadow: igx-elevation($elevations, 3);
+        box-shadow: igx-elevation($elevation: 3);
     }
 
     %date-picker__buttons {

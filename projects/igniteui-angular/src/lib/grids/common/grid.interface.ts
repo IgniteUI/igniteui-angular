@@ -54,7 +54,6 @@ export interface GridType extends IGridDataBindable {
     transactions: TransactionService<Transaction, State>;
     defaultSummaryHeight: number;
 
-    rowInEditMode: any;
     rowEditTabs: any;
 
     firstEditableColumnIndex: number;
@@ -68,7 +67,6 @@ export interface GridType extends IGridDataBindable {
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
 
-    endEdit(commit: boolean, event?: Event): void;
     getColumnByName(name: string): any;
     sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     clearSort(name?: string): void;

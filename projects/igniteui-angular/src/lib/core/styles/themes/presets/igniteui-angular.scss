@@ -1,9 +1,5 @@
 @import '../index';
 
-:root {
-    @include igx-palette-vars($light-material-palette, $contrast: true);
-}
-
 @include igx-core();
 @include igx-typography($font-family: $material-typeface, $type-scale: $material-type-scale);
 @include igx-theme($light-material-palette);

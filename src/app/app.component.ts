@@ -269,6 +269,11 @@ export class AppComponent implements OnInit {
             name: 'Grid FinJS'
         },
         {
+            link: '/gridUpdates',
+            icon: 'view_column',
+            name: 'Grid Nested Props Update'
+        },
+        {
             link: '/gridRemoteVirtualization',
             icon: 'view_column',
             name: 'Grid Remote Virtualization'

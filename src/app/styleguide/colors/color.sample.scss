@@ -1,4 +1,7 @@
 @import '../../../../projects/igniteui-angular/src/lib/core/styles/themes/utilities';
+@import '../../../styles/variables';
+
+$igx-legacy-support: $legacy-support;
 
 .sample-wrapper {
     display: grid;
@@ -32,11 +35,10 @@
 }
 
 .color-title {
-    font-size: 18px;
-    line-height: 54px;
-    margin: 0;
-    padding: 8px 16px;
+    @include igx-type-style($type-scale, 'h6');
     text-transform: capitalize;
+    line-height: 3rem;
+    padding: 8px 16px;
 }
 
 .color-values {
@@ -45,23 +47,21 @@
     padding: 8px 16px;
 }
 
-.igx-success-500 {
-    background: var(--igx-success-500);
-    color: var(--igx-success-500-contrast);
+.color-container {
+    overflow: hidden;
+    border-radius: rem(8px);
+    border: 1px solid igx-color($color: 'grays', $variant: 400);
+    margin: 8px 0;
 }
 
-.igx-info-500 {
-    background: var(--igx-info-500);
-    color: var(--igx-info-500-contrast);
-}
+@include igx-color-classes(
+    $palette: $palette,
+    $prop: 'background',
+    $prefix: 'bg'
+);
 
-.igx-warn-500 {
-    background: var(--igx-warn-500);
-    color: var(--igx-warn-500-contrast);
-}
-
-.igx-error-500 {
-    background: var(--igx-error-500);
-    color: var(--igx-error-500-contrast);
-}
-
+@include igx-color-classes(
+    $palette: $palette,
+    $prop: 'color',
+    $prefix: 'color'
+);
