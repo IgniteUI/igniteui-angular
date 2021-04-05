@@ -874,10 +874,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
             if (rec.expanded && rec.children && rec.children.length) {
                 const res = this.lookInChildren(rec.children, key, globalI + 1);
-                if (res.rowIndex) {
+                if (res.rec) {
                     rowIndex = res.rowIndex;
                 } else {
-                    rowData = res.rec;
+                    globalI = res.rowIndex;
                 }
             } else {
                 globalI++;
@@ -885,6 +885,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             i++;
         }
 
-        return { rowIndex, rec: rowData };
+        return { rowIndex: globalI, rec: rowData };
     }
 }
