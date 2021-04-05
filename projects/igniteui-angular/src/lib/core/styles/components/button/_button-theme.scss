@@ -820,16 +820,10 @@
             }
         }
 
-        igx-icon {
-            display: inline-flex;
-            order: -1;
-            margin: rem(8px) 0;
-        }
-
-        * + igx-icon {
-            margin: 0;
-            margin-#{$right}: rem(12px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'comfortable'),
+            $left
+        );
     }
 
     %igx-button--fab-cosy {
@@ -837,9 +831,10 @@
         min-width: map-get($button-floating-size, 'cosy');
         min-height: map-get($button-floating-size, 'cosy');
 
-        * + igx-icon {
-            margin-#{$right}: rem(8px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'cosy'),
+            $left
+        );
     }
 
     %igx-button--fab-compact {
@@ -847,9 +842,10 @@
         min-width: map-get($button-floating-size, 'compact');
         min-height: map-get($button-floating-size, 'compact');
 
-        * + igx-icon {
-            margin-#{$right}: rem(4px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'compact'),
+            $left
+        );
     }
 
     %igx-button--icon {
@@ -932,13 +928,9 @@
     }
 
     %igx-button--fab {
-        p,
-        span,
-        div {
-            @include igx-type-style($type-scale, $text) {
-                text-align: center;
-                margin: 0;
-            }
+        @include igx-type-style($type-scale, $text) {
+            text-align: center;
+            margin: 0;
         }
     }
 }
