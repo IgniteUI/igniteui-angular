@@ -60,6 +60,10 @@ export interface IgxTreeNode<T> {
     expand(): void;
     collapse(): void;
     toggle(): void;
+    /** @hidden @internal */
+    addLinkChild(node: any): void;
+    /** @hidden @internal */
+    removeLinkChild(node: any): void;
 }
 
 // Events

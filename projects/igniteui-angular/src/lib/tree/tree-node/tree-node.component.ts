@@ -30,19 +30,58 @@ import { CurrentResourceStrings } from '../../core/i18n/resources';
 @Directive({
     selector: `[igxTreeNodeLink]`
 })
-export class IgxTreeNodeLinkDirective {
+export class IgxTreeNodeLinkDirective implements OnDestroy {
+
     @HostBinding('attr.role')
     public role = 'treeitem';
 
-    constructor(@Inject(IGX_TREE_NODE_COMPONENT)
+    /**
+     * The node's parent. Should be used only when the link is defined
+     * in `<ng-template>` tag outside of its parent, as Angular DI will not properly provide a reference
+     *
+     * ```html
+     * <igx-tree>
+     *     <igx-tree-node #myNode *ngFor="let node of data" [data]="node">
+     *         <ng-template *ngTemplateOutlet="nodeTemplate; context: { $implicit: data, parentNode: myNode }">
+     *         </ng-template>
+     *     </igx-tree-node>
+     *     ...
+     *     <!-- node template is defined under tree to access related services -->
+     *     <ng-template #nodeTemplate let-data let-node="parentNode">
+     *         <a [igxTreeNodeLink]="node">{{ data.label }}</a>
+     *     </ng-template>
+     * </igx-tree>
+     * ```
+     */
+    @Input('igxTreeNodeLink')
+    public set parentNode(val: IgxTreeNode<any>) {
+        if (val) {
+            this._parentNode = val;
+            (this._parentNode as any).addLinkChild(this);
+        }
+    }
+
+    public get parentNode(): IgxTreeNode<any> {
+        return this._parentNode;
+    }
+
+    /** A pointer to the parent node */
+    private get target(): IgxTreeNode<any> {
+        return this.node || this.parentNode;
+    }
+
+    private _parentNode: IgxTreeNode<any> = null;
+
+    constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
     private node: IgxTreeNode<any>,
-        private navService: IgxTreeNavigationService) {
+    private navService: IgxTreeNavigationService,
+    public elementRef: ElementRef) {
     }
 
     /** @hidden @internal */
     @HostBinding('attr.tabindex')
     public get tabIndex(): number {
-        return this.navService.focusedNode === this.node ? (this.node?.disabled ? -1 : 0) : -1;
+        return this.navService.focusedNode === this.target ? (this.target?.disabled ? -1 : 0) : -1;
     }
 
     /**
@@ -51,7 +90,7 @@ export class IgxTreeNodeLinkDirective {
      */
     @HostListener('blur')
     public handleBlur() {
-        this.node.isFocused = false;
+        this.target.isFocused = false;
     }
 
     /**
@@ -60,12 +99,16 @@ export class IgxTreeNodeLinkDirective {
      */
     @HostListener('focus')
     public handleFocus() {
-        if (!this.node.disabled) {
-            if (this.navService.focusedNode !== this.node) {
-                this.navService.focusedNode = this.node;
+        if (this.target && !this.target.disabled) {
+            if (this.navService.focusedNode !== this.target) {
+                this.navService.focusedNode = this.target;
             }
-            this.node.isFocused = true;
+            this.target.isFocused = true;
         }
+    }
+
+    public ngOnDestroy() {
+        this.target.removeLinkChild(this);
     }
 }
 
@@ -277,6 +320,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public isFocused: boolean;
 
     /** @hidden @internal */
+    public registeredChildren: IgxTreeNodeLinkDirective[] = [];
+
+    /** @hidden @internal */
     private _resourceStrings = CurrentResourceStrings.TreeResStrings;
 
     private _tabIndex = null;
@@ -439,6 +485,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         this.isFocused = true;
         if (this.linkChildren?.length) {
             this.linkChildren.first.nativeElement.focus();
+            return;
+        }
+        if (this.registeredChildren.length) {
+            this.registeredChildren[0].elementRef.nativeElement.focus();
+            return;
         }
     }
 
@@ -575,6 +626,20 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
             this.playCloseAnimation(
                 this.childrenContainer
             );
+        }
+    }
+
+    /** @hidden @internal */
+    public addLinkChild(link: IgxTreeNodeLinkDirective) {
+        this._tabIndex = -1;
+        this.registeredChildren.push(link);
+    };
+
+    /** @hidden @internal */
+    public removeLinkChild(link: IgxTreeNodeLinkDirective) {
+        const index = this.registeredChildren.indexOf(link);
+        if (index !== -1) {
+            this.registeredChildren.splice(index, 1);
         }
     }
 }
