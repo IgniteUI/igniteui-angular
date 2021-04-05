@@ -27,7 +27,7 @@ import {
 import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridCRUDService, IgxGridSelectionService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
@@ -95,6 +95,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'treegrid';
+
+    /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
      * ```html
      * <igx-tree-grid [data]="Data" [autoGenerate]="true"></igx-tree-grid>
@@ -133,8 +139,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      *       ID: 1,
      *       Name: "A"
      * }];
-     * ```
-     * @memberof IgxTreeGridComponent
+     * @hidden @internal
      */
     set filteredData(value) {
         this._filteredData = value;

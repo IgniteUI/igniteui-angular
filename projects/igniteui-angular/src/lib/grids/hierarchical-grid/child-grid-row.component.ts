@@ -76,12 +76,6 @@ private resolver;
     public hGrid: any/* TODO: IgxHierarchicalGridComponent*/;
 
     /**
-     * @hidden
-     */
-    @HostBinding('attr.role')
-    public role = 'row';
-
-    /**
      * Get a reference to the grid that contains the selected row.
      *
      * ```typescript
@@ -103,7 +97,7 @@ private resolver;
         return this.gridAPI.grid;
     }
 
-    @HostBinding('attr.data-level')
+    @HostBinding('attr.aria-level')
     get level() {
         return this.layout.level;
     }

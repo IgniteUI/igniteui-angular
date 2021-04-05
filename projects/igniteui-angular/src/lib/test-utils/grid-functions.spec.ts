@@ -124,8 +124,12 @@ export class GridFunctions {
         return gridBody.query(By.css(DISPLAY_CONTAINER));
     }
 
-    public static getGridFooter(fix): DebugElement {
+    public static getGridFooterWrapper(fix): DebugElement {
         return fix.debugElement.query(By.css(GRID_FOOTER_CLASS));
+    }
+
+    public static getGridFooter(fix): DebugElement {
+        return fix.debugElement.query(By.css(GRID_FOOTER_CLASS)).children[0];
     }
 
     public static getGridScroll(fix): DebugElement {

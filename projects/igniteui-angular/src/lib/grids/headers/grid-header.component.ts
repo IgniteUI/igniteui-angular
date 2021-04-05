@@ -31,6 +31,8 @@ import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/gr
     templateUrl: './grid-header.component.html'
 })
 export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
+    @HostBinding('attr.role')
+    public hostRole = 'columnheader';
 
     private _destroy$ = new Subject<boolean>();
 
@@ -122,14 +124,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     get columnTitle() {
         return this.column.title || this.column.header || this.column.field;
-    }
-
-    @HostBinding('attr.role')
-    public hostRole = 'columnheader';
-
-    @HostBinding('attr.id')
-    get headerID() {
-        return `${this.gridID}_${this.column.field}`;
     }
 
     protected sortDirection = SortingDirection.None;
