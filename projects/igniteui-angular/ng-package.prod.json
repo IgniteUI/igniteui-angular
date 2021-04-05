@@ -7,7 +7,7 @@
       "resize-observer-polyfill": "ResizeObserver"
     }
   },
-  "whitelistedNonPeerDependencies": [
+  "allowedNonPeerDependencies": [
       "@types/hammerjs",
       "hammerjs",
       "jszip",
