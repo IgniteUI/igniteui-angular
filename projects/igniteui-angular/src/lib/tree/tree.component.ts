@@ -21,8 +21,6 @@ import { IgxTreeNodeComponent, IgxTreeNodeLinkDirective } from './tree-node/tree
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 
-let init_id = 0;
-
 /**
  * @hidden @internal
  * Used for templating the select marker of the tree
@@ -247,7 +245,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     @ContentChildren(IgxTreeNodeComponent, { descendants: true })
     public nodes: QueryList<IgxTreeNodeComponent<any>>;
 
+    /** @hidden @internal */
     public disabledChange = new EventEmitter<IgxTreeNode<any>>();
+
     /**
      * Returns all **root level** nodes
      *
@@ -260,10 +260,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return this.nodes?.filter(node => node.level === 0);
     }
 
-    /** @hidden @internal */
-    public id = `tree-${init_id++}`;
-
-    /** @hidden @internal */
+    /**
+     * Emitted when the active node is set through API
+     *
+     * @hidden @internal
+     */
     public activeNodeBindingChange = new EventEmitter<IgxTreeNode<any>>();
 
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
@@ -272,7 +273,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     constructor(
         public navService: IgxTreeNavigationService,
-        private selectionService: IgxTreeSelectionService,
+        public selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>) {
         this.selectionService.register(this);
@@ -280,6 +281,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.navService.register(this);
     }
 
+    /** @hidden @internal */
     public get nativeElement() {
         return this.element.nativeElement;
     }
@@ -374,8 +376,8 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return this.nodes.filter(node => compareFunc(searchTerm, node));
     }
 
-    public getPreviousNode(node: IgxTreeNodeComponent<any>) {
-        //const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
+    /** @hidden @internal */
+    public getPreviousVisibleNode(node: IgxTreeNodeComponent<any>) {
         const nodeIndex = this.navService.visibleChildren.indexOf(node);
         if (nodeIndex > 0) {
             return this.navService.visibleChildren[nodeIndex - 1];
@@ -383,8 +385,8 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return node;
     }
 
-    public getNextNode(node: IgxTreeNodeComponent<any>) {
-        // const visibleChildren: IgxTreeNodeComponent<any>[] = this.nodes.filter(n => this.navService.isFocusable(n));
+    /** @hidden @internal */
+    public getNextVisibleNode(node: IgxTreeNodeComponent<any>) {
         const nodeIndex = this.navService.visibleChildren.indexOf(node);
         if (nodeIndex < this.navService.visibleChildren.length - 1) {
             return this.navService.visibleChildren[nodeIndex + 1];
@@ -410,7 +412,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.scrollNodeIntoView(this.navService.activeNode);
         this.subToChanges();
     }
-
 
     public ngOnDestroy() {
         this.unsubChildren$.next();
@@ -448,17 +449,17 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
                 this.navService.update_visible_cache(node, nodeState);
             });
             node.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                console.log('Scroll, lol');
-                const targetElement = (this.navService.focusedNode as any).header.nativeElement;
+                const targetElement = this.navService.focusedNode.header.nativeElement;
                 this.scrollElementIntoView(targetElement);
             });
             node.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                const targetElement = (this.navService.focusedNode as any).header.nativeElement;
+                const targetElement = this.navService.focusedNode.header.nativeElement;
                 this.scrollElementIntoView(targetElement);
             });
         });
         this.navService.init_invisible_cache();
     }
+
     private scrollNodeIntoView(node: IgxTreeNode<any>) {
         if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
             this.nativeElement.scrollTop = node.nativeElement.offsetTop;

@@ -1,22 +1,27 @@
-import { EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
+import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxTreeNavigationService } from './tree-navigation.service';
+import { IgxTreeSelectionService } from './tree-selection.service';
 
 // Component interfaces
 
 /** Comparer function that can be used when searching through IgxTreeNode<any>[] */
 export type IgxTreeSearchResolver = (data: any, node: IgxTreeNode<any>) => boolean;
 export interface IgxTree {
-    id: string;
     /** @hidden @internal */
     nodes: QueryList<IgxTreeNode<any>>;
+    /** @hidden @internal */
+    rootNodes: IgxTreeNode<any>[];
     singleBranchExpand: boolean;
     selection: IGX_TREE_SELECTION_TYPE;
     selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
+    /** @hidden @internal */
     navService: IgxTreeNavigationService;
+    /** @hidden @internal */
+    selectionService: IgxTreeSelectionService;
     /** @hidden @internal */
     disabledChange: EventEmitter<IgxTreeNode<any>>;
     /** @hidden @internal */
@@ -30,14 +35,13 @@ export interface IgxTree {
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
-    getPreviousNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
-    getNextNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
+    getPreviousVisibleNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
+    getNextVisibleNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 
 // Item interfaces
 export interface IgxTreeNode<T> {
-    id: any;
     parentNode?: IgxTreeNode<any> | null;
     path: IgxTreeNode<any>[];
     expanded: boolean | null;
@@ -50,6 +54,8 @@ export interface IgxTreeNode<T> {
     data: T;
     /** @hidden @internal */
     nativeElement: HTMLElement;
+    /** @hidden @internal */
+    header: ElementRef;
     /** @hidden @internal */
     tabIndex: number;
     /** @hidden @internal */

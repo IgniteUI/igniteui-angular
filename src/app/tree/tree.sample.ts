@@ -193,7 +193,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     }
 
     public getNodes() {
-        this.tree.getNextNode(this.tree.nodes.toArray()[0]);
+        this.tree.getNextVisibleNode(this.tree.nodes.toArray()[0]);
     }
 
     public activeNodeChanged(evt) {
@@ -226,8 +226,10 @@ const generateHierarchicalData = (childKey: string, level = 7, children = 6, ite
     for (let i = 0; i < children; i++) {
         // create Root member
         iter++;
-        returnArray.push({ ID: `Dummy${iter}`, CompanyName: `Dummy-${iter}`,
-        [childKey]: generateHierarchicalData(childKey, children, level - 1) });
+        returnArray.push({
+            ID: `Dummy${iter}`, CompanyName: `Dummy-${iter}`,
+            [childKey]: generateHierarchicalData(childKey, children, level - 1)
+        });
     }
     return returnArray;
 };

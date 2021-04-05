@@ -26,7 +26,6 @@ export class IgxTreeNavigationService {
         });
     }
 
-    /** @hidden @internal */
     public register(tree: IgxTree) {
         this.tree = tree;
     }
@@ -46,7 +45,7 @@ export class IgxTreeNavigationService {
         this._focusedNode = value;
         if (this._focusedNode !== null) {
             this._focusedNode.tabIndex = 0;
-            (this._focusedNode as any).header.nativeElement.focus();
+            this._focusedNode.header.nativeElement.focus();
         }
     }
 
@@ -62,12 +61,10 @@ export class IgxTreeNavigationService {
         this.tree.activeNodeChanged.emit(this._activeNode);
     }
 
-    /** @hidden @internal */
     public get visibleChildren(): IgxTreeNode<any>[] {
         return this._visibleChildren;
     }
 
-    /** @hidden @internal */
     public update_disabled_cache(node: IgxTreeNode<any>): void {
         if (node.disabled) {
             this._disabledChildren.add(node);
@@ -77,7 +74,6 @@ export class IgxTreeNavigationService {
         this._cacheChange.emit();
     }
 
-    /** @hidden @internal */
     public init_invisible_cache() {
         this.tree.nodes.filter(e => e.level === 0).forEach(node => {
             this.update_visible_cache(node, node.expanded, false);
@@ -85,7 +81,6 @@ export class IgxTreeNavigationService {
         this._cacheChange.emit();
     }
 
-    /** @hidden @internal */
     public update_visible_cache(node: IgxTreeNode<any>, expanded: boolean, shouldEmit = true): void {
         if (expanded) {
             node.children.forEach(child => {
@@ -101,7 +96,6 @@ export class IgxTreeNavigationService {
         }
     }
 
-    /** @hidden @internal */
     public setFocusedAndActiveNode(node: IgxTreeNode<any>, isActive: boolean = true) {
         if (isActive) {
             this.activeNode = node;
@@ -109,7 +103,6 @@ export class IgxTreeNavigationService {
         this.focusedNode = node;
     }
 
-    /** @hidden @internal */
     public handleKeydown(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.focusedNode) {
@@ -117,14 +110,11 @@ export class IgxTreeNavigationService {
         }
         if (!(NAVIGATION_KEYS.has(key) || key === '*')) {
             if (key === 'enter') {
-                this.setFocusedAndActiveNode(this.focusedNode);
+                this.activeNode = this.focusedNode;
             }
             return;
         }
         event.preventDefault();
-        // if (event.repeat && NAVIGATION_KEYS.has(key)) {
-        //     event.preventDefault();
-        // }
         if (event.repeat) {
             setTimeout(() => this.handleNavigation(event), 1);
         } else {
@@ -171,7 +161,7 @@ export class IgxTreeNavigationService {
 
     private handleArrowLeft() {
         if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode.children?.length) {
-            this.setFocusedAndActiveNode(this.focusedNode);
+            this.activeNode = this.focusedNode;
             this.focusedNode.collapse();
         } else {
             if (this.focusedNode.parentNode && !this.focusedNode.parentNode.disabled) {
@@ -183,7 +173,7 @@ export class IgxTreeNavigationService {
     private handleArrowRight() {
         if (this.focusedNode.children.length > 0) {
             if (!this.focusedNode.expanded) {
-                this.setFocusedAndActiveNode(this.focusedNode);
+                this.activeNode = this.focusedNode;
                 this.focusedNode.expand();
             } else {
                 if (this.treeService.collapsingNodes.has(this.focusedNode)) {
@@ -199,12 +189,11 @@ export class IgxTreeNavigationService {
     }
 
     private handleUpDownArrow(isUp: boolean, event: KeyboardEvent) {
-        const next = isUp ? this.tree.getPreviousNode(this.focusedNode) :
-            this.tree.getNextNode(this.focusedNode);
+        const next = isUp ? this.tree.getPreviousVisibleNode(this.focusedNode) :
+            this.tree.getNextVisibleNode(this.focusedNode);
         if (next === this.focusedNode) {
             return;
         }
-        // event.preventDefault();
 
         if (event.ctrlKey) {
             this.setFocusedAndActiveNode(next, false);
@@ -214,21 +203,12 @@ export class IgxTreeNavigationService {
     }
 
     private handleAsterisk() {
-        if (this.focusedNode.parentNode) {
-            const children = this.focusedNode.parentNode.children;
-            children.forEach(child => {
-                if (!child.disabled && (!child.expanded || this.treeService.collapsingNodes.has(child))) {
-                    child.expand();
-                }
-            });
-        } else {
-            const rootNodes = this.tree.nodes.filter(node => node.level === 0);
-            rootNodes.forEach(node => {
-                if (!node.disabled && (!node.expanded || this.treeService.collapsingNodes.has(node))) {
-                    node.expand();
-                }
-            });
-        }
+        const nodes = this.focusedNode.parentNode ? this.focusedNode.parentNode.children : this.tree.rootNodes;
+        nodes?.forEach(node => {
+            if (!node.disabled && (!node.expanded || this.treeService.collapsingNodes.has(node))) {
+                node.expand();
+            }
+        });
     }
 
     private handleSpace(shiftKey = false) {
@@ -236,16 +216,16 @@ export class IgxTreeNavigationService {
             return;
         }
 
-        this.setFocusedAndActiveNode(this.focusedNode);
+        this.activeNode = this.focusedNode;
         if (shiftKey) {
-            (this.tree as any).selectionService.selectMultipleNodes(this.focusedNode);
+            this.tree.selectionService.selectMultipleNodes(this.focusedNode);
             return;
         }
 
         if (this.focusedNode.selected) {
-            (this.tree as any).selectionService.deselectNode(this.focusedNode);
+            this.tree.selectionService.deselectNode(this.focusedNode);
         } else {
-            (this.tree as any).selectionService.selectNode(this.focusedNode);
+            this.tree.selectionService.selectNode(this.focusedNode);
         }
     }
 }

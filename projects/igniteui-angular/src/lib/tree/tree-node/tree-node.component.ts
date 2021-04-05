@@ -112,8 +112,6 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     }
 }
 
-let nodeId = 0;
-
 /**
  *
  * The tree node component represents a child node of the tree component or another tree node.
@@ -235,30 +233,38 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public expandedChange = new EventEmitter<boolean>();
 
     public get focused() {
-        //console.log(this.navService.isActiveNode(this));
         return this.isFocused &&
             this.navService.focusedNode === this;
     }
 
     // TODO: Add API docs
     /**
-     * Retrieves the full path to the node
+     * Retrieves the full path to the node incuding itself
+     *
+     * ```typescript
+     * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
+     * const path: IgxTreeNode<any>[] = node.path;
+     * ```
      */
     public get path(): IgxTreeNode<any>[] {
         return this.parentNode?.path ? [...this.parentNode.path, this] : [this];
     }
 
     // TODO: bind to disabled state when node is dragged
-    /** @hidden @internal */
+    /**
+     * Gets/Sets the disabled state of the node
+     *
+     * @param value: boolean
+     */
     @Input()
     @HostBinding('class.igx-tree-node--disabled')
     public get disabled(): boolean {
         return this._disabled;
     }
 
-    public set disabled(val: boolean) {
-        if (val !== this._disabled) {
-            this._disabled = val;
+    public set disabled(value: boolean) {
+        if (value !== this._disabled) {
+            this._disabled = value;
             this.tree.disabledChange.emit(this);
         }
     }
@@ -301,26 +307,22 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.children?.length ? this.children.toArray() : null;
     }
 
+    // TODO: will be used in Drag and Drop implementation
+    /** @hidden @internal */
+    @ViewChild('ghostTemplate', { read: ElementRef })
+    public header: ElementRef;
+
     @ViewChild('defaultIndicator', { read: TemplateRef, static: true })
     private _defaultExpandIndicatorTemplate: TemplateRef<any>;
 
     @ViewChild('childrenContainer', { read: ElementRef })
     private childrenContainer: ElementRef;
 
-    // TODO: will be used in Drag and Drop implementation
-    @ViewChild('ghostTemplate', { read: ElementRef })
-    private header: ElementRef;
-
     private get hasLinkChildren(): boolean {
         return this.linkChildren?.length > 0 || this.registeredChildren?.length > 0;
     }
 
-    // TODO: this should probably be dropped from the API
-    /**
-     * The unique ID of the node
-     */
-    public id = `igxTreeNode_${nodeId++}`;
-
+    /** @hidden @internal */
     public isFocused: boolean;
 
     /** @hidden @internal */
