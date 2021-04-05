@@ -48,20 +48,21 @@
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
-                <igx-tree #tree1 (blur)="handleActive($event)" [singleBranchExpand]="singleBranchExpand" [animationSettings]="animationSettings"
-                    (nodeSelection)="nodeSelection($event)" (keydown)="keydown($event)"
-                    (nodeCollapsing)="handleEvent($event)" (activeNodeChanged)="activeNodeChanged($event)"
-                    style="height: 300px; overflow: scroll;">
+                <igx-tree #tree1 (blur)="handleActive($event)" [singleBranchExpand]="singleBranchExpand"
+                    [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)"
+                    (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
+                    (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">
                     <igx-tree-node [disabled]="true">Disabled node</igx-tree-node>
                     <igx-tree-node [disabled]="true">
                         <a igxTreeNodeLink href="www.google.com">Disabled Link</a>
                     </igx-tree-node>
                     <igx-tree-node>Link children
-                        <igx-tree-node *ngFor="let node of [].constructor(7); let i = index">
-                            <a igxTreeNodeLink href="www.google.com">Link {{ i }}</a>
+                        <igx-tree-node #myNode *ngFor="let node of [].constructor(7); let i = index">
+                            <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNode }"></ng-template>
                         </igx-tree-node>
                     </igx-tree-node>
-                    <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true" [(selected)]="node.selected">
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true"
+                        [(selected)]="node.selected">
                         <div class="sample-template-center">
                             <igx-icon>face</igx-icon>
                             <span class="sample-ellipsis">{{ node.CompanyName }}</span>
@@ -75,6 +76,9 @@
                             </igx-tree-node>
                         </igx-tree-node>
                     </igx-tree-node>
+                    <ng-template #nodeTemplate let-node>
+                        <a [igxTreeNodeLink]="node" href="https://google.com">Link to Google</a>
+                    </ng-template>
                 </igx-tree>
             </div>
 

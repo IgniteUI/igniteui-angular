@@ -54,14 +54,14 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
      * ```
      */
     @Input('igxTreeNodeLink')
-    public set parentNode(val: IgxTreeNode<any>) {
+    public set parentNode(val: any) {
         if (val) {
             this._parentNode = val;
             (this._parentNode as any).addLinkChild(this);
         }
     }
 
-    public get parentNode(): IgxTreeNode<any> {
+    public get parentNode(): any {
         return this._parentNode;
     }
 
@@ -74,8 +74,8 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
 
     constructor(@Optional() @Inject(IGX_TREE_NODE_COMPONENT)
     private node: IgxTreeNode<any>,
-    private navService: IgxTreeNavigationService,
-    public elementRef: ElementRef) {
+        private navService: IgxTreeNavigationService,
+        public elementRef: ElementRef) {
     }
 
     /** @hidden @internal */
@@ -153,11 +153,11 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         }
         if (this._tabIndex === null) {
             if (this.navService.focusedNode === null) {
-                return this.linkChildren?.length ? -1 : 0;
+                return this.hasLinkChildren ? -1 : 0;
             }
             return -1;
         }
-        return this.linkChildren?.length ? -1 : this._tabIndex;
+        return this.hasLinkChildren ? -1 : this._tabIndex;
     }
 
     public get animationSettings(): ToggleAnimationSettings {
@@ -237,7 +237,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public get focused() {
         //console.log(this.navService.isActiveNode(this));
         return this.isFocused &&
-        this.navService.focusedNode === this;
+            this.navService.focusedNode === this;
     }
 
     // TODO: Add API docs
@@ -310,6 +310,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     // TODO: will be used in Drag and Drop implementation
     @ViewChild('ghostTemplate', { read: ElementRef })
     private header: ElementRef;
+
+    private get hasLinkChildren(): boolean {
+        return this.linkChildren?.length > 0 || this.registeredChildren?.length > 0;
+    }
 
     // TODO: this should probably be dropped from the API
     /**
