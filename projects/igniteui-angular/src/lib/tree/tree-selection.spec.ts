@@ -1,9 +1,8 @@
 import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { ChangeDetectorRef, Component, EventEmitter, QueryList, ViewChild } from '@angular/core';
+import { EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent, IgxTreeModule } from './tree.component';
-import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
 import { IgxTree, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './common';
@@ -11,6 +10,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 import { IgxTreeNavigationService } from './tree-navigation.service';
+import { IgxTreeSelectionSampleComponent, IgxTreeSimpleComponent } from './tree-samples.spec';
 
 describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
@@ -557,7 +557,7 @@ describe('IgxTree - Selection #treeView', () => {
         const tree = new IgxTreeComponent(navService, selectionService, treeService, null);
 
         beforeEach(() => {
-            mockNodes = TreeTestFunctions.createNodeSpies(5);
+            mockNodes = TreeTestFunctions.createNodeSpies(0, 5);
             mockQuery = TreeTestFunctions.createQueryListSpy(mockNodes);
             mockQuery.toArray.and.returnValue(mockNodes);
             mockQuery.forEach.and.callFake((cb) => mockNodes.forEach(cb));
@@ -638,54 +638,3 @@ describe('IgxTree - Selection #treeView', () => {
     });
 });
 
-@Component({
-    template: `
-    <igx-tree #tree1 class="medium">
-            <igx-tree-node *ngFor="let node of data" [selected]="node.ID === 'ALFKI'" [data]="node">
-                {{ node.CompanyName }}
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
-                    {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
-                        {{ leafchild.CompanyName }}
-                    </igx-tree-node>
-                </igx-tree-node>
-            </igx-tree-node>
-        </igx-tree>
-    `
-})
-export class IgxTreeSimpleComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data = HIERARCHICAL_SAMPLE_DATA;
-}
-
-@Component({
-    template: `
-    <igx-tree #tree1 class="medium">
-            <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
-                {{ node.CompanyName }}
-                <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child" [(selected)]="child.selected">
-                    {{ child.CompanyName }}
-                    <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild" [(selected)]="leafchild.selected">
-                        {{ leafchild.CompanyName }}
-                    </igx-tree-node>
-                </igx-tree-node>
-            </igx-tree-node>
-        </igx-tree>
-    `
-})
-export class IgxTreeSelectionSampleComponent {
-    @ViewChild(IgxTreeComponent, { static: true }) public tree: IgxTreeComponent;
-    public data;
-    constructor(public cdr: ChangeDetectorRef) {
-        this.data = HIERARCHICAL_SAMPLE_DATA;
-        this.mapData(this.data);
-    }
-    private mapData(data: any[]) {
-        data.forEach(x => {
-            x.selected = false;
-            if (x.hasOwnProperty('ChildCompanies') && x.ChildCompanies.length) {
-                this.mapData(x.ChildCompanies);
-            }
-        });
-    }
-}

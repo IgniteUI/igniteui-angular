@@ -3,7 +3,7 @@ import { Component, ElementRef, ViewChild, QueryList, EventEmitter, ChangeDetect
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
-import { IDisplayDensityOptions } from '../core/displayDensity';
+import { DisplayDensity, IDisplayDensityOptions } from '../core/displayDensity';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
@@ -125,7 +125,7 @@ describe('IgxTree #treeView', () => {
                 tree.nodes = mockNodes;
                 let id = 0;
                 let itemRef = {} as any;
-                mockNodesArray = TreeTestFunctions.createNodeSpies(5);
+                mockNodesArray = TreeTestFunctions.createNodeSpies(0, 5);
                 mockNodesArray.forEach(n => {
                     itemRef = { id: id++ };
                     n.data = itemRef;
@@ -157,6 +157,8 @@ describe('IgxTree #treeView', () => {
                     (n as any).level = 0;
                 });
                 expect(tree.rootNodes.length).toBe(7);
+                tree.nodes = null;
+                expect(tree.rootNodes).toBe(undefined);
             });
             it('Should expandAll nodes nodes w/ proper methods', () => {
                 tree.nodes = mockNodes;
@@ -237,12 +239,16 @@ describe('IgxTree #treeView', () => {
             let mockBuilder: AnimationBuilder;
 
             beforeEach(() => {
-                mockTree = jasmine.createSpyObj<IgxTreeComponent>('mockTree', ['findNodes'],
+                mockTree = jasmine.createSpyObj<any>('mockTree', ['findNodes'],
                 {
                     nodeCollapsing: jasmine.createSpyObj('spy', ['emit']),
                     nodeExpanding: jasmine.createSpyObj('spy', ['emit']),
                     nodeCollapsed: jasmine.createSpyObj('spy', ['emit']),
                     nodeExpanded: jasmine.createSpyObj('spy', ['emit']),
+                    _displayDensity: DisplayDensity.comfortable,
+                    get displayDensity() {
+                        return this._displayDensity;
+                    }
                 });
                 mockCdr = jasmine.createSpyObj<ChangeDetectorRef>('mockCdr', ['detectChanges', 'markForCheck'], {});
                 mockBuilder = jasmine.createSpyObj<AnimationBuilder>('mockAB', ['build'], {});
@@ -331,10 +337,25 @@ describe('IgxTree #treeView', () => {
                 expect(node.collapse).toHaveBeenCalledTimes(1);
             });
             it('Should properly get tree display density token', () => {
-                pending('Test not implemented');
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                mockNavService, mockCdr, mockBuilder, mockElementRef, null);
+                expect(node.isCosy).toBeFalse();
+                expect(node.isCompact).toBeFalse();
+                spyOnProperty(mockTree, 'displayDensity', 'get').and.returnValue(DisplayDensity.cosy);
+                expect(node.isCosy).toBeTrue();
+                expect(node.isCompact).toBeFalse();
+                spyOnProperty(mockTree, 'displayDensity', 'get').and.returnValue(DisplayDensity.compact);
+                expect(node.isCosy).toBeFalse();
+                expect(node.isCompact).toBeTrue();
             });
+
             it('Should have correct path to node, regardless if node has parent or not', () => {
-                pending('Test not implemented');
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                mockNavService, mockCdr, mockBuilder, mockElementRef, null);
+                expect(node.path).toEqual([node]);
+                const childNode = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                mockNavService, mockCdr, mockBuilder, mockElementRef, node);
+                expect(childNode.path).toEqual([node, childNode]);
             });
         });
         describe('IgxTreeService', () => {
@@ -415,10 +436,19 @@ describe('IgxTree #treeView', () => {
                 service.expand(mockNode, true);
                 mockArray.forEach(n => {
                     expect(n.collapse).toHaveBeenCalled();
+                    expect(n.collapse).toHaveBeenCalledTimes(1);
                 });
                 expect(service.collapsingNodes.size).toBe(0);
                 service.collapsing(mockNode);
                 expect(service.collapsingNodes.size).toBe(1);
+                service.collapse(mockNode);
+                spyOnProperty(mockTree, 'singleBranchExpand', 'get').and.returnValue(true);
+                spyOn(mockTree, 'findNodes').and.returnValue(null);
+                service.expand(mockNode, true);
+                expect(mockTree.findNodes).toHaveBeenCalledWith(mockNode, (service as any).siblingComparer);
+                mockArray.forEach(n => {
+                    expect(n.collapse).toHaveBeenCalledTimes(1);
+                });
             });
         });
     });
