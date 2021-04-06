@@ -188,23 +188,23 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     /** Emitted when a node is collapsed, after it finishes
      *
+     * @example
      * ```html
      * <igx-tree (nodeCollapsed)="handleNodeCollapsed($event)">
      * </igx-tree>
      * ```
-     *
-     *```typescript
+     * ```typescript
      * public handleNodeCollapsed(event: ITreeNodeToggledEventArgs) {
      *  const collapsedNode: IgxTreeNode<any> = event.node;
      *  console.log("Node is collapsed: ", collapsedNode.data);
      * }
-     *```
+     * ```
      */
     @Output()
     public nodeCollapsed = new EventEmitter<ITreeNodeToggledEventArgs>();
 
     /**
-     * Emmited when the active node is changed.
+     * Emitted when the active node is changed.
      *
      * @example
      * ```
@@ -213,20 +213,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
      */
     @Output()
     public activeNodeChanged = new EventEmitter<IgxTreeNode<any>>();
-
-    // TODO: should we remove this thus checkbox aren't templatable
-    /**
-     * A custom template to be used for the expand indicator of nodes
-     * ```html
-     * <igx-tree>
-     *  <ng-template igxTreeExpandIndicator let-expanded>
-     *      <igx-icon>{{ expanded ? "close_fullscreen": "open_in_full"}}</igx-icon>
-     *  </ng-template>
-     * </igx-tree>
-     * ```
-     */
-    @ContentChild(IgxTreeSelectMarkerDirective, { read: TemplateRef })
-    public selectMarker: TemplateRef<any>;
 
     /**
      * A custom template to be used for the expand indicator of nodes
@@ -272,8 +258,8 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     private unsubChildren$ = new Subject<void>();
 
     constructor(
-        public navService: IgxTreeNavigationService,
-        public selectionService: IgxTreeSelectionService,
+        private navService: IgxTreeNavigationService,
+        private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
         private element: ElementRef<HTMLElement>) {
         this.selectionService.register(this);
@@ -374,6 +360,11 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
     public findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNodeComponent<any>[] | null {
         const compareFunc = comparer || this._comparer;
         return this.nodes.filter(node => compareFunc(searchTerm, node));
+    }
+
+    /** @hidden @internal */
+    public handleKeydown(event: KeyboardEvent) {
+        this.navService.handleKeydown(event);
     }
 
     public ngOnInit() {

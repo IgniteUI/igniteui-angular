@@ -6,6 +6,7 @@ import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-com
 
 /** Comparer function that can be used when searching through IgxTreeNode<any>[] */
 export type IgxTreeSearchResolver = (data: any, node: IgxTreeNode<any>) => boolean;
+
 export interface IgxTree {
     /** @hidden @internal */
     nodes: QueryList<IgxTreeNode<any>>;
@@ -13,7 +14,6 @@ export interface IgxTree {
     rootNodes: IgxTreeNode<any>[];
     singleBranchExpand: boolean;
     selection: IGX_TREE_SELECTION_TYPE;
-    selectMarker: TemplateRef<any>;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
     /** @hidden @internal */

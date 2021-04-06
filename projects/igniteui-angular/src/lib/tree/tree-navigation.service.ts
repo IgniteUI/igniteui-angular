@@ -1,8 +1,9 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeSelectionService } from './tree-selection.service';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class IgxTreeNavigationService {
@@ -16,7 +17,7 @@ export class IgxTreeNavigationService {
     private _invisibleChildren: Set<IgxTreeNode<any>> = new Set();
     private _disabledChildren: Set<IgxTreeNode<any>> = new Set();
 
-    private _cacheChange = new EventEmitter<void>();
+    private _cacheChange = new Subject<void>();
 
     constructor(private treeService: IgxTreeService, private selectionService: IgxTreeSelectionService) {
         this._cacheChange.subscribe(() => {
@@ -72,14 +73,14 @@ export class IgxTreeNavigationService {
         } else {
             this._disabledChildren.delete(node);
         }
-        this._cacheChange.emit();
+        this._cacheChange.next();
     }
 
     public init_invisible_cache() {
         this.tree.nodes.filter(e => e.level === 0).forEach(node => {
             this.update_visible_cache(node, node.expanded, false);
         });
-        this._cacheChange.emit();
+        this._cacheChange.next();
     }
 
     public update_visible_cache(node: IgxTreeNode<any>, expanded: boolean, shouldEmit = true): void {
@@ -93,7 +94,7 @@ export class IgxTreeNavigationService {
         }
 
         if (shouldEmit) {
-            this._cacheChange.emit();
+            this._cacheChange.next();
         }
     }
 
@@ -110,6 +111,7 @@ export class IgxTreeNavigationService {
         this.focusedNode = node;
     }
 
+    /** Handler for keydown events. Used in tree.component.ts */
     public handleKeydown(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.focusedNode) {
