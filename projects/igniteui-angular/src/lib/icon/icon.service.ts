@@ -141,6 +141,10 @@ export class IgxIconService implements OnDestroy {
      */
     public addSvgIconFromText(name: string, iconText: string, family: string = '') {
         if (name && iconText) {
+            if(this.isSvgIconCached(name, family)) {
+                return;
+            }
+
             this.cacheSvgIcon(name, iconText, family);
         } else {
             throw new Error('You should provide at least `name` and `iconText` to register an svg icon.');

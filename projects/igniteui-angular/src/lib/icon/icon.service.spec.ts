@@ -61,7 +61,13 @@ describe('Icon Service', () => {
         const family = 'svg-icons';
         const iconKey = family + '_' + name;
 
+        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
+        spyOn(XMLHttpRequest.prototype, 'send');
+
         iconService.addSvgIcon(name, 'test.svg', family);
+
+        expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
+        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
