@@ -21,7 +21,7 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
+/// @requires $igx-elevations
 ///
 /// @example scss Set a custom background color
 ///   $my-bottom-nav-theme: igx-bottom-nav-theme($background: black);
@@ -56,7 +56,7 @@
 
     @if not($shadow) {
         $elevation: map-get($bottom-nav-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: igx-elevation($igx-elevations, $elevation);
     }
 
     @return extend($theme, (

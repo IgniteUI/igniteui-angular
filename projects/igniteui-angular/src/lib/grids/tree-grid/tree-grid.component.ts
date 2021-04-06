@@ -52,7 +52,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <igx-tree-grid [data]="employeeData" primaryKey="employeeID" foreignKey="PID" autoGenerate="false">
+ * <igx-tree-grid [data]="employeeData" primaryKey="employeeID" foreignKey="PID" [autoGenerate]="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
