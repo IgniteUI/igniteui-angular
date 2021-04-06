@@ -339,8 +339,8 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
     it('should prepare MSGesture on PointerDown to handle touch interactions on IE/Edge and should release them on PointerUp.', () => {
         const targetElem = {
-            setPointerCapture: (arg) => {},
-            releasePointerCapture: (arg) => {}
+            setPointerCapture: () => {},
+            releasePointerCapture: () => {}
         };
         const pointerId = 100;
         spyOn(targetElem, 'setPointerCapture');
@@ -447,7 +447,7 @@ export class ScrollInertiaComponent implements OnInit {
     public scrLeftArray = [];
     public scrLeftStepArray = [];
 
-    ngOnInit() {
+   public ngOnInit() {
         this.scrInertiaDir.IgxScrollInertiaScrollContainer = this.scrollContainer.nativeElement;
 
         this.scrollContainer.nativeElement.addEventListener('scroll', (evt) => {
