@@ -47,7 +47,7 @@ export class WorksheetData {
         if (!this._data || this._data.length === 0) {
             return;
         }
-        debugger
+
         const actualData = this._data.filter(item => item.type !== ExportRecordType.HeaderRecord).map(item => item.data);
 
         if (this._data[0].type === ExportRecordType.HierarchicalGridRecord) {
