@@ -339,8 +339,8 @@ describe('Scroll Inertia Directive - Scrolling', () => {
     // Unit tests for Pointer Down/Pointer Up - IE/Edge specific
     it('should prepare MSGesture on PointerDown to handle touch interactions on IE/Edge and should release them on PointerUp.', () => {
         const targetElem = {
-            setPointerCapture: () => {},
-            releasePointerCapture: () => {}
+            setPointerCapture: (_args) => {},
+            releasePointerCapture: (_args) => {}
         };
         const pointerId = 100;
         spyOn(targetElem, 'setPointerCapture');
