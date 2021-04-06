@@ -155,7 +155,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   public get inputFormat(): string {
-    return this._format;
+    return this._format || this._inputFormat;
   }
 
   /**
@@ -295,7 +295,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['inputFormat'] || changes['locale']) {
+    if (changes['locale'] && !this._format) {
+      this._inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    }
+    if (changes['inputFormat']) {
       this.updateInputFormat();
     }
   }
