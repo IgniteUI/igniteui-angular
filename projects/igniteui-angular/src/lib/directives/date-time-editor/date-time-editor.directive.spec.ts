@@ -194,7 +194,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = '31/03/2020';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
-                dateTimeEditor.isSpinLoop = false;
+                dateTimeEditor.spinLoop = false;
 
                 dateTimeEditor.value = new Date(2020, 2, 31);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
@@ -310,7 +310,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = '20/01/2019 23:13:12';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
-                dateTimeEditor.isSpinLoop = false;
+                dateTimeEditor.spinLoop = false;
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 0, 12);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
