@@ -1,6 +1,7 @@
 import { EventEmitter, QueryList } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { IgxTreeNode } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
 export const TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-tree-node__select';
@@ -40,6 +41,14 @@ export class TreeTestFunctions {
         }
     }
 
+    public static createNodeSpy(
+    properties: { [key: string]: any } = null, methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
+        if (!properties) {
+            return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames);
+        }
+        return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames, properties);
+    }
+
     public static createNodeSpies(
         count: number,
         parentNode?: IgxTreeNodeComponent<any>,
@@ -49,7 +58,7 @@ export class TreeTestFunctions {
         const nodesArr = [];
         const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
         for (let i = 0; i < count; i++) {
-            nodesArr.push(jasmine.createSpyObj<IgxTreeNodeComponent<any>>(['id', 'selected'], {
+            nodesArr.push(this.createNodeSpy({
                 parentNode: parentNode ? parentNode : null,
                 children: children ? children[i] : null,
                 allChildren: allChildren ? allChildren[i] : null,

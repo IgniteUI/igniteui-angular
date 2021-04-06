@@ -76,8 +76,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
             spyOn(selectionSet, 'clear').and.callThrough();
 
-            const mockNode1 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected']);
-            const mockNode2 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected']);
+            const mockNode1 = TreeTestFunctions.createNodeSpy();
+            const mockNode2 = TreeTestFunctions.createNodeSpy();
             expect(selectionService.isNodeSelected(mockNode1)).toBeFalsy();
             expect(selectionService.isNodeSelected(mockNode2)).toBeFalsy();
 
@@ -97,7 +97,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
         it('Should handle selection based on tree.selection', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
-            const mockNode = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
+            const mockNode = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             // None
             (Object.getOwnPropertyDescriptor(mockTree, 'selection').get as jasmine.Spy<any>).and.returnValue(IGX_TREE_SELECTION_TYPE.None);
@@ -148,8 +148,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
         it('Should deselect nodes', () => {
             const mockSelectedChangeEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
-            const mockNode1 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
-            const mockNode2 = jasmine.createSpyObj<IgxTreeNode<any>>(['id', 'selected'], { selectedChange: mockSelectedChangeEmitter });
+            const mockNode1 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
+            const mockNode2 = TreeTestFunctions.createNodeSpy({ selectedChange: mockSelectedChangeEmitter });
 
             selectionService.deselectNode(mockNode1);
 
