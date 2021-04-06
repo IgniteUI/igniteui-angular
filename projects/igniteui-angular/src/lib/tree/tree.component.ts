@@ -376,24 +376,6 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return this.nodes.filter(node => compareFunc(searchTerm, node));
     }
 
-    /** @hidden @internal */
-    public getPreviousVisibleNode(node: IgxTreeNodeComponent<any>) {
-        const nodeIndex = this.navService.visibleChildren.indexOf(node);
-        if (nodeIndex > 0) {
-            return this.navService.visibleChildren[nodeIndex - 1];
-        }
-        return node;
-    }
-
-    /** @hidden @internal */
-    public getNextVisibleNode(node: IgxTreeNodeComponent<any>) {
-        const nodeIndex = this.navService.visibleChildren.indexOf(node);
-        if (nodeIndex < this.navService.visibleChildren.length - 1) {
-            return this.navService.visibleChildren[nodeIndex + 1];
-        }
-        return node;
-    }
-
     public ngOnInit() {
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);

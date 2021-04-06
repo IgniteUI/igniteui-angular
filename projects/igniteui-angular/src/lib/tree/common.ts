@@ -1,8 +1,6 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxTreeNavigationService } from './tree-navigation.service';
-import { IgxTreeSelectionService } from './tree-selection.service';
 
 // Component interfaces
 
@@ -19,10 +17,6 @@ export interface IgxTree {
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
     /** @hidden @internal */
-    navService: IgxTreeNavigationService;
-    /** @hidden @internal */
-    selectionService: IgxTreeSelectionService;
-    /** @hidden @internal */
     disabledChange: EventEmitter<IgxTreeNode<any>>;
     /** @hidden @internal */
     activeNodeBindingChange: EventEmitter<IgxTreeNode<any>>;
@@ -35,8 +29,6 @@ export interface IgxTree {
     expandAll(nodes: IgxTreeNode<any>[]): void;
     collapseAll(nodes: IgxTreeNode<any>[]): void;
     deselectAll(node?: IgxTreeNode<any>[]): void;
-    getPreviousVisibleNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
-    getNextVisibleNode(node: IgxTreeNode<any>): IgxTreeNode<any>;
     findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNode<any>[] | null;
 }
 

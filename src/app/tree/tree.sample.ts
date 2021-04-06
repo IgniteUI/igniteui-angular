@@ -192,10 +192,6 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         return searchResult;
     }
 
-    public getNodes() {
-        this.tree.getNextVisibleNode(this.tree.nodes.toArray()[0]);
-    }
-
     public activeNodeChanged(evt) {
         // console.log(evt);
     }

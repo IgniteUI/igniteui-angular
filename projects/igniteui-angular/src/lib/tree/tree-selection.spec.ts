@@ -553,7 +553,7 @@ describe('IgxTree - Selection #treeView', () => {
         let mockQuery: jasmine.SpyObj<QueryList<any>>;
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const navService = new IgxTreeNavigationService(treeService);
+        const navService = new IgxTreeNavigationService(treeService, selectionService);
         const tree = new IgxTreeComponent(navService, selectionService, treeService, null);
 
         beforeEach(() => {
@@ -593,7 +593,7 @@ describe('IgxTree - Selection #treeView', () => {
         const elementRef = { nativeElement: null };
         const selectionService = new IgxTreeSelectionService();
         const treeService = new IgxTreeService();
-        const navService = new IgxTreeNavigationService(treeService);
+        const navService = new IgxTreeNavigationService(treeService, selectionService);
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);;
         const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
             { selection: IGX_TREE_SELECTION_TYPE.BiState, nodeSelection: mockEmitter });
