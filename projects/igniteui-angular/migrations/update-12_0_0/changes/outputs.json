@@ -32,6 +32,14 @@
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
         }
     ]
 }
