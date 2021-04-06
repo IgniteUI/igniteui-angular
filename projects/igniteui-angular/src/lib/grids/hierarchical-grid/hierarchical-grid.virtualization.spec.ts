@@ -348,7 +348,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
-        fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
+        fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)).subscribe(
             async (args) => {
                 args.grid.data = fixture.componentInstance.generateData(10, 0);
                 await wait(200);
@@ -460,7 +460,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateData(40, 3);
     }
-    generateData(count: number, level: number, parendID?) {
+    public generateData(count: number, level: number, parendID?) {
         const prods = [];
         const currLevel = level;
         let children;

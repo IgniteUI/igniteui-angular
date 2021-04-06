@@ -46,25 +46,25 @@ export class IgxRowIslandAPIService {
         }
     }
 
-    registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
+    public registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
         this.childRowIslands.set(rowIsland.key, rowIsland);
         this.destroyMap.set(rowIsland.key, new Subject<boolean>());
     }
 
-    unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
+    public unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
         this.childRowIslands.delete(rowIsland.key);
         this.destroyMap.delete(rowIsland.key);
     }
 
-    getChildRowIsland(rowIslandKey: string) {
+    public getChildRowIsland(rowIslandKey: string) {
         return this.childRowIslands.get(rowIslandKey);
     }
 
-    registerChildGrid(parentRowID: any, grid: IgxHierarchicalGridComponent) {
+    public registerChildGrid(parentRowID: any, grid: IgxHierarchicalGridComponent) {
         this.childGrids.set(parentRowID, grid);
     }
 
-    getChildGrids(inDepth?: boolean) {
+    public getChildGrids(inDepth?: boolean) {
         let allChildren = [];
         this.childGrids.forEach((grid) => {
             allChildren.push(grid);
@@ -78,7 +78,7 @@ export class IgxRowIslandAPIService {
         return allChildren;
     }
 
-    getChildGridByID(rowID) {
+    public getChildGridByID(rowID) {
         return this.childGrids.get(rowID);
     }
 }

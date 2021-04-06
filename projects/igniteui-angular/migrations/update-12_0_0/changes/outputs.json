@@ -8,6 +8,30 @@
                 "selector": "igx-column",
                 "type": "component"
             }
+        },
+        {
+            "name": "onGridCreated",
+            "replaceWith": "gridCreated",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridInitialized",
+            "replaceWith": "gridInitialized",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
         }
     ]
 }
