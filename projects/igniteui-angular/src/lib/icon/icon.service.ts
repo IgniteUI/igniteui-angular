@@ -58,6 +58,10 @@ export class IgxIconService implements OnDestroy {
         this.iconLoaded = this._iconLoaded.asObservable();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public ngOnDestroy(): void {
         this.cleanSvgContainer();
     }
