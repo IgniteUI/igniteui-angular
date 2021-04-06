@@ -34,7 +34,7 @@ export class IgxColumnResizingService {
     /**
      * @hidden
      */
-    get resizerHeight(): number {
+     public get resizerHeight(): number {
         let height = this.column.grid.getVisibleContentHeight();
 
         // Column height multiplier in case there are Column Layouts. The resizer height need to take into account rowStart.
@@ -53,7 +53,7 @@ export class IgxColumnResizingService {
     /**
      * Returns the minimal possible width to which the column can be resized.
      */
-    get restrictResizeMin(): number {
+     public get restrictResizeMin(): number {
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         const minWidth = this.column.minWidthPx < actualWidth ? this.column.minWidthPx : actualWidth;
 
@@ -63,7 +63,7 @@ export class IgxColumnResizingService {
     /**
      * Returns the maximal possible width to which the column can be resized.
      */
-    get restrictResizeMax(): number {
+     public get restrictResizeMax(): number {
         const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
         const maxWidth = this.column.maxWidthPx;
         if (this.column.maxWidth) {

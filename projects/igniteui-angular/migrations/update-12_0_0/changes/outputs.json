@@ -40,6 +40,14 @@
                 "selector": "igx-grid",
                 "type": "component"
             }
+        },
+        {
+            "name": "onColumnToggled",
+            "replaceWith": "columnToggled",
+            "owner": {
+                "selector": "igx-column-actions",
+                "type": "component"
+            }
         }
     ]
 }
