@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('Icon Service', () => {
     configureTestSuite();
@@ -17,6 +18,7 @@ describe('Icon Service', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientModule],
             providers: [IgxIconService]
         }).compileComponents();
     });
@@ -59,13 +61,7 @@ describe('Icon Service', () => {
         const family = 'svg-icons';
         const iconKey = family + '_' + name;
 
-        spyOn(XMLHttpRequest.prototype, 'open').and.callThrough();
-        spyOn(XMLHttpRequest.prototype, 'send');
-
         iconService.addSvgIcon(name, 'test.svg', family);
-
-        expect(XMLHttpRequest.prototype.open).toHaveBeenCalledTimes(1);
-        expect(XMLHttpRequest.prototype.send).toHaveBeenCalledTimes(1);
 
         const svgElement = document.querySelector(`svg[id='${iconKey}']`);
         expect(svgElement).toBeDefined();
