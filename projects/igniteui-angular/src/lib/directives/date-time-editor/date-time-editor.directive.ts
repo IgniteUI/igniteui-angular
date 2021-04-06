@@ -438,6 +438,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onFocus(): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     this._isFocused = true;
     this.onTouchCallback();
     this.updateMask();
@@ -453,6 +456,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.updateMask();
     }
 
+    // TODO: think of a better way to set displayValuePipe in mask directive
+    if (this.displayValuePipe) {
+      return;
+    }
+
     super.onBlur(value);
   }
 
@@ -466,6 +474,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     } else {
       if (!this.value || !DateTimeUtil.isValidDate(this.value)) {
         this.inputValue = '';
+        return;
+      }
+      if (this.displayValuePipe) {
+        // TODO: remove when formatter func has been deleted
+        this.inputValue = this.displayValuePipe.transform(this.value);
         return;
       }
       const format = this.displayFormat || this.inputFormat;
