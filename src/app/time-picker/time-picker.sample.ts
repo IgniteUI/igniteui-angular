@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxTimePickerComponent, InteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular';
+import { IgxTimePickerComponent, PickerInteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -20,7 +20,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     public format = 'hh:mm:ss tt';
     public isSpinLoop = true;
     public isVertical = true;
-    public mode: InteractionMode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
 
     public date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     public date = new Date(2018, 10, 27, 9, 45, 0, 0);

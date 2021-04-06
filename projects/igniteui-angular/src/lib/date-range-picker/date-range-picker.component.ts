@@ -15,13 +15,12 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
-import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IBaseCancelableBrowserEventArgs, KEYS, parseDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
-import { PickersBaseDirective } from '../date-common/pickers-base.directive';
+import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
     IgxInputDirective, IgxInputGroupComponent, IgxInputGroupType, IgxInputState,
@@ -68,22 +67,8 @@ const SingleInputDatesConcatenationString = ' - ';
         { provide: NG_VALIDATORS, useExisting: IgxDateRangePickerComponent, multi: true }
     ]
 })
-export class IgxDateRangePickerComponent extends PickersBaseDirective
+export class IgxDateRangePickerComponent extends PickerBaseDirective
     implements OnChanges, OnInit, AfterViewInit, OnDestroy, ControlValueAccessor, Validator {
-    /**
-     * Display calendar in either `dialog` or `dropdown` mode.
-     *
-     * @remarks
-     * Default mode is `dialog`
-     *
-     * @example
-     * ```html
-     * <igx-date-range-picker mode="dropdown"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public mode = InteractionMode.DropDown;
-
     /**
      * The number of displayed month views.
      *
@@ -393,10 +378,6 @@ export class IgxDateRangePickerComponent extends PickersBaseDirective
 
     private get calendar(): IgxCalendarComponent {
         return this._calendar;
-    }
-
-    private get isDropdown() {
-        return this.mode === InteractionMode.DropDown;
     }
 
     private get dropdownOverlaySettings(): OverlaySettings {

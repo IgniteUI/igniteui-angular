@@ -16,7 +16,7 @@ import { scaleInVerTop, scaleOutVerTop } from '../../animations/main';
 import { IgxAvatarComponent, IgxAvatarModule } from '../../avatar/avatar.component';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
 import { IgxCalendarContainerComponent } from '../../date-common/calendar-container/calendar-container.component';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/date-picker.component';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../../date-picker/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxOverlayOutletDirective, IgxToggleDirective, IgxToggleModule } from './../../directives/toggle/toggle.directive';

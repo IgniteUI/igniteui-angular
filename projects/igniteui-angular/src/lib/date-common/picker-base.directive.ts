@@ -1,7 +1,7 @@
 import { ElementRef, EventEmitter, Inject, LOCALE_ID, Optional, Input, Directive, Output } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from './types';
 import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { DateRange } from '../date-range-picker/public_api';
@@ -10,7 +10,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_a
 import { OverlaySettings } from '../services/overlay/utilities';
 
 @Directive()
-export abstract class PickersBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider {
+export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider {
     /**
      * The editor's input mask.
      *
@@ -64,7 +64,7 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Input()
-    public mode = InteractionMode.DropDown;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
      * Overlay settings used to display the pop-up element.
@@ -139,6 +139,17 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * Gets/Sets the default template editor's tabindex.
+     *
+     * @example
+     * ```html
+     * <igx-date-picker [tabIndex]="1"></igx-date-picker>
+     * ```
+     */
+    @Input()
+    public tabIndex: number | string;
+
+    /**
      * Emitted when the calendar has started opening, cancelable.
      *
      * @example
@@ -199,6 +210,11 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
         return this._collapsed;
     }
 
+    /** @hidden @internal */
+    public get isDropdown(): boolean {
+        return this.mode === PickerInteractionMode.DropDown;
+    }
+
     public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
 
     constructor(public element: ElementRef,
@@ -213,5 +229,5 @@ export abstract class PickersBaseDirective extends DisplayDensityBase implements
     public abstract open(settings?: OverlaySettings): void;
     public abstract toggle(settings?: OverlaySettings): void;
     public abstract close(): void;
-    public abstract getEditElement();
+    public abstract getEditElement(): HTMLInputElement;
 }

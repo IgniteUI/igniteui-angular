@@ -9,7 +9,7 @@ import { IgxTimePickerComponent, IgxTimePickerModule } from './time-picker.compo
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
@@ -49,7 +49,7 @@ describe('IgxTimePicker', () => {
     it('Should display default and custom label', (() => {
         const fixture = TestBed.createComponent(IgxTimePickerCustomLabelComponent);
         const testComponent = fixture.componentInstance;
-        testComponent.mode = InteractionMode.DropDown;
+        testComponent.mode = PickerInteractionMode.DropDown;
         fixture.detectChanges();
 
         const dom = fixture.debugElement;
@@ -61,7 +61,7 @@ describe('IgxTimePicker', () => {
         label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
         expect(label).toEqual('Time');
 
-        testComponent.mode = InteractionMode.Dialog;
+        testComponent.mode = PickerInteractionMode.Dialog;
         fixture.detectChanges();
         label = dom.query(By.directive(IgxLabelDirective)).nativeElement.innerText;
         expect(label).toEqual('Time');
@@ -1523,7 +1523,7 @@ describe('IgxTimePicker', () => {
 
             expect(dom.query(By.css('.igx-time-picker--dropdown'))).toBeDefined();
 
-            fixture.componentInstance.timePicker.mode = InteractionMode.Dialog;
+            fixture.componentInstance.timePicker.mode = PickerInteractionMode.Dialog;
             fixture.detectChanges();
 
             UIInteractions.simulateClickAndSelectEvent(iconTime);
@@ -2049,7 +2049,7 @@ describe('IgxTimePicker', () => {
 
         it('Should render dialog and input group correctly when format contains only minutes.', fakeAsync(() => {
             fixture.componentInstance.format = 'mm';
-            fixture.componentInstance.mode = InteractionMode.Dialog;
+            fixture.componentInstance.mode = PickerInteractionMode.Dialog;
             fixture.detectChanges();
 
             input = dom.query(By.directive(IgxInputDirective));
@@ -2077,7 +2077,7 @@ describe('IgxTimePicker', () => {
 
         it('Should render dialog and input group correctly when format contains only hours.', fakeAsync(() => {
             fixture.componentInstance.format = 'hh tt';
-            fixture.componentInstance.mode = InteractionMode.Dialog;
+            fixture.componentInstance.mode = PickerInteractionMode.Dialog;
             fixture.detectChanges();
 
             input = dom.query(By.directive(IgxInputDirective));
@@ -2136,7 +2136,7 @@ describe('IgxTimePicker', () => {
         }));
 
         it('Should set time picker status to invalid when it is required and has no value onBlur', fakeAsync(() => {
-            timePickerOnBlurComponent.mode = InteractionMode.DropDown;
+            timePickerOnBlurComponent.mode = PickerInteractionMode.DropDown;
             timePickerOnBlurComponent.mask = 'dd/mm/yyyy';
 
             fixture.detectChanges();
@@ -2365,7 +2365,7 @@ export class IgxTimePickerRetemplatedComponent { }
 })
 export class IgxTimePickerCustomLabelComponent {
     public customLabel = true;
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
 }
 
 
@@ -2401,7 +2401,7 @@ export class IgxTimePickerDropDownComponent {
 export class IgxTimePickerDropDownSingleHourComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     public customDate = new Date(2018, 10, 27, 4, 5);
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
     public format = 'H:m';
 }
 @Component({
@@ -2414,7 +2414,7 @@ export class IgxTimePickerDropDownSingleHourComponent {
 })
 export class IgxTimePickerDropDownNoValueComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
 }
 
 

@@ -164,20 +164,20 @@ export abstract class DateTimeUtil {
     }
 
     /** Spins the date portion in a date-time editor. */
-    public static spinDate(delta: number, newDate: Date, isSpinLoop: boolean): void {
+    public static spinDate(delta: number, newDate: Date, spinLoop: boolean): void {
         const maxDate = DateTimeUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth());
         let date = newDate.getDate() + delta;
         if (date > maxDate) {
-            date = isSpinLoop ? date % maxDate : maxDate;
+            date = spinLoop ? date % maxDate : maxDate;
         } else if (date < 1) {
-            date = isSpinLoop ? maxDate + (date % maxDate) : 1;
+            date = spinLoop ? maxDate + (date % maxDate) : 1;
         }
 
         newDate.setDate(date);
     }
 
     /** Spins the month portion in a date-time editor. */
-    public static spinMonth(delta: number, newDate: Date, isSpinLoop: boolean): void {
+    public static spinMonth(delta: number, newDate: Date, spinLoop: boolean): void {
         const maxDate = DateTimeUtil.daysInMonth(newDate.getFullYear(), newDate.getMonth() + delta);
         if (newDate.getDate() > maxDate) {
             newDate.setDate(maxDate);
@@ -187,9 +187,9 @@ export abstract class DateTimeUtil {
         const minMonth = 0;
         let month = newDate.getMonth() + delta;
         if (month > maxMonth) {
-            month = isSpinLoop ? (month % maxMonth) - 1 : maxMonth;
+            month = spinLoop ? (month % maxMonth) - 1 : maxMonth;
         } else if (month < minMonth) {
-            month = isSpinLoop ? maxMonth + (month % maxMonth) + 1 : minMonth;
+            month = spinLoop ? maxMonth + (month % maxMonth) + 1 : minMonth;
         }
 
         newDate.setMonth(month);
@@ -206,42 +206,42 @@ export abstract class DateTimeUtil {
     }
 
     /** Spins the hours portion in a date-time editor. */
-    public static spinHours(delta: number, newDate: Date, isSpinLoop: boolean): void {
+    public static spinHours(delta: number, newDate: Date, spinLoop: boolean): void {
         const maxHour = 23;
         const minHour = 0;
         let hours = newDate.getHours() + delta;
         if (hours > maxHour) {
-            hours = isSpinLoop ? hours % maxHour - 1 : maxHour;
+            hours = spinLoop ? hours % maxHour - 1 : maxHour;
         } else if (hours < minHour) {
-            hours = isSpinLoop ? maxHour + (hours % maxHour) + 1 : minHour;
+            hours = spinLoop ? maxHour + (hours % maxHour) + 1 : minHour;
         }
 
         newDate.setHours(hours);
     }
 
     /** Spins the minutes portion in a date-time editor. */
-    public static spinMinutes(delta: number, newDate: Date, isSpinLoop: boolean): void {
+    public static spinMinutes(delta: number, newDate: Date, spinLoop: boolean): void {
         const maxMinutes = 59;
         const minMinutes = 0;
         let minutes = newDate.getMinutes() + delta;
         if (minutes > maxMinutes) {
-            minutes = isSpinLoop ? minutes % maxMinutes - 1 : maxMinutes;
+            minutes = spinLoop ? minutes % maxMinutes - 1 : maxMinutes;
         } else if (minutes < minMinutes) {
-            minutes = isSpinLoop ? maxMinutes + (minutes % maxMinutes) + 1 : minMinutes;
+            minutes = spinLoop ? maxMinutes + (minutes % maxMinutes) + 1 : minMinutes;
         }
 
         newDate.setMinutes(minutes);
     }
 
     /** Spins the seconds portion in a date-time editor. */
-    public static spinSeconds(delta: number, newDate: Date, isSpinLoop: boolean): void {
+    public static spinSeconds(delta: number, newDate: Date, spinLoop: boolean): void {
         const maxSeconds = 59;
         const minSeconds = 0;
         let seconds = newDate.getSeconds() + delta;
         if (seconds > maxSeconds) {
-            seconds = isSpinLoop ? seconds % maxSeconds - 1 : maxSeconds;
+            seconds = spinLoop ? seconds % maxSeconds - 1 : maxSeconds;
         } else if (seconds < minSeconds) {
-            seconds = isSpinLoop ? maxSeconds + (seconds % maxSeconds) + 1 : minSeconds;
+            seconds = spinLoop ? maxSeconds + (seconds % maxSeconds) + 1 : minSeconds;
         }
 
         newDate.setSeconds(seconds);

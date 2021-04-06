@@ -110,7 +110,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     protected get inputValuesElement() {
-        return this.inputValuesDirective;
+        return this.inputValuesDirective.nativeElement;
     }
 
     public ngAfterViewInit(): void {
