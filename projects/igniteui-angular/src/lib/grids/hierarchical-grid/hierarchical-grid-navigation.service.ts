@@ -52,7 +52,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 scrollAmount += isNext ? 1 : -1;
                 this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
                 this._pendingNavigation = true;
-                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                     this._moveToChild(rowIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
                     this._pendingNavigation = false;
                 });
@@ -171,7 +171,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
-            scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+            scrollableGrid.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 this._pendingNavigation = false;
                 if (cb) {
                     cb();

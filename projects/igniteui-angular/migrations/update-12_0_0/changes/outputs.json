@@ -8,6 +8,62 @@
                 "selector": "igx-column",
                 "type": "component"
             }
+        },
+        {
+            "name": "onChunkLoad",
+            "replaceWith": "chunkLoad",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onScrollbarVisibilityChanged",
+            "replaceWith": "scrollbarVisibilityChanged",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onContentSizeChange",
+            "replaceWith": "contentSizeChange",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanging",
+            "replaceWith": "dataChanging",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
         }
     ]
 }

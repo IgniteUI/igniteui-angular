@@ -1413,7 +1413,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     });
 
     // Note: Some tests execute await wait() and etc two times, because the grid scrolls two times.
-    // This means that we need to wait onChunkLoad event from the igxForOf two times.
+    // This means that we need to wait chunkLoad event from the igxForOf two times.
     describe('Navigation with scrolling', () => {
         describe('General', () => {
             it('should allow navigating down with scrolling', async () => {
