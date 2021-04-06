@@ -1,4 +1,4 @@
-import { Injectable, SecurityContext, Inject, isDevMode, OnDestroy } from '@angular/core';
+import { Injectable, SecurityContext, Inject, OnDestroy, Optional } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
@@ -50,14 +50,16 @@ export class IgxIconService implements OnDestroy {
     private _cachedSvgIcons: Set<string> = new Set<string>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
 
-    constructor(private _sanitizer: DomSanitizer, private _httpClient: HttpClient, @Inject(DOCUMENT) private _document: any) {
+    constructor(
+        @Optional() private _sanitizer: DomSanitizer,
+        @Optional() private _httpClient: HttpClient,
+        @Optional() @Inject(DOCUMENT) private _document: any
+    ) {
         this.iconLoaded = this._iconLoaded.asObservable();
     }
 
     public ngOnDestroy(): void {
-        if (isDevMode()) {
-            this.cleanSvgContainer();
-        }
+        this.cleanSvgContainer();
     }
 
     /**
@@ -119,12 +121,12 @@ export class IgxIconService implements OnDestroy {
                 throw new Error(`The URL provided was not trusted as a resource URL: "${url}".`);
             }
 
-            this.fetchSvg(url).subscribe(
-                (res) => {
+            if (!this.isSvgIconCached(name, family)) {
+                this.fetchSvg(url).subscribe((res) => {
                     this.cacheSvgIcon(name, res, family);
                     this._iconLoaded.next({ name, value: res, family });
-                }
-            );
+                });
+            }
         } else {
             throw new Error('You should provide at least `name` and `url` to register an svg icon.');
         }
