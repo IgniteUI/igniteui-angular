@@ -16,8 +16,8 @@ import {
     IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
     IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IGX_TREE_SELECTION_TYPE
 } from '../common';
-import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeSelectionService } from '../tree-selection.service';
+import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeService } from '../tree.service';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
@@ -341,7 +341,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         protected navService: IgxTreeNavigationService,
         protected cdr: ChangeDetectorRef,
         protected builder: AnimationBuilder,
-        protected zone: NgZone,
         private element: ElementRef<HTMLElement>,
         @Optional() @SkipSelf() @Inject(IGX_TREE_NODE_COMPONENT) public parentNode: IgxTreeNode<any>
     ) {

@@ -34,19 +34,16 @@
 @function igx-tree-theme(
     $palette: $default-palette,
     $schema: $light-schema,
-
     $background: null,
     $background-selected: null,
     $background-active: null,
     $background-active-selected: null,
     $background-disabled: null,
-
     $foreground: null,
     $foreground-selected: null,
     $foreground-active: null,
     $foreground-active-selected: null,
     $foreground-disabled: null,
-
     $drop-indicator-color: null,
     $border-color: null,
 ) {
@@ -98,10 +95,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-tree($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -260,20 +257,6 @@
         }
     }
 
-    %tree-node-wrapper--focused {
-        background: --var($theme, 'background-focused');
-        color: --var($theme, 'color-focused');
-
-        box-shadow: inset 0 0 0 1px --var($theme, 'border-focused');
-
-        &:hover {
-            background: --var($theme, 'background-active-hover');
-            color: --var($theme, 'color-active-hover');
-        }
-
-        %tree-node-indicator {
-            color: --var($theme, 'tree-indicator-color-focused');
-        }
     %node-wrapper--active-selected {
         background: --var($theme, 'background-active-selected');
         color: --var($theme, 'foreground-active-selected');
@@ -354,5 +337,4 @@
         @include igx-type-style($type-scale, $text)
     }
 }
-
 

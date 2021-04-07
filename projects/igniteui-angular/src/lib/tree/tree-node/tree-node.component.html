@@ -6,23 +6,29 @@
 <ng-template *ngTemplateOutlet="noDragTemplate">
 </ng-template>
 
-<div #childrenContainer *ngIf="expanded" class="igx-tree-node__group" role="group">
+<div #childrenContainer 
+    *ngIf="expanded" 
+    class="igx-tree-node__group"
+    role="group"
+>
     <ng-content select="igx-tree-node"></ng-content>
 </div>
 
-<ng-template #defaultIndicator let-item>
+<ng-template #defaultIndicator>
     <igx-icon [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand">
         {{ expanded ? "keyboard_arrow_down" : "keyboard_arrow_right" }}
     </igx-icon>
 </ng-template>
 
-<ng-template #selectMarkerTemplate let-item>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" tabindex="-1">
+<!-- separated in a template in case this ever needs to be templatable -->
+<ng-template #selectMarkerTemplate>
+    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate">
     </igx-checkbox>
 </ng-template>
 
 <ng-template #headerTemplate>
-    <div #ghostTemplate class="igx-tree-node__wrapper" [tabIndex]="tabIndex"
+    <div #ghostTemplate class="igx-tree-node__wrapper"
+        [tabIndex]="tabIndex"
         [ngClass]="{
             'igx-tree-node__wrapper--selected': selected,
             'igx-tree-node__wrapper--active' : this.active,
@@ -32,39 +38,43 @@
         (pointerdown)="onPointerDown($event)"
         (focus)="handleFocus()"
         (blur)="clearFocus()"
-        >
+    >
         <div aria-hidden="true">
-            <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
+            <span *ngFor="let item of [].constructor(level)"
+                aria-hidden="true"
+                class="igx-tree-node__spacer"
+            ></span>
         </div>
 
         <!-- Expand/Collapse indicator -->
-        <span [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !children?.length }" class="igx-tree-node__toggle-button"
-            (click)="indicatorClick()">
-            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: selected }">
+        <span class="igx-tree-node__toggle-button"
+            [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !children?.length }"
+            (click)="indicatorClick()"
+        >
+            <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: expanded }">
             </ng-container>
         </span>
 
         <!-- Item selection -->
-        <div class="igx-tree-node__select" *ngIf="showSelectors"
-             (pointerdown)="$event.preventDefault()"
-             (click)="onSelectorClick($event)"
-        >
-            <ng-container *ngTemplateOutlet="selectMarkerTemplate, context: templateContext">
+        <div *ngIf="showSelectors"
+            class="igx-tree-node__select" 
+            (pointerdown)="$event.preventDefault()"
+            (click)="onSelectorClick($event)">
+            <ng-container *ngTemplateOutlet="selectMarkerTemplate">
             </ng-container>
         </div>
 
         <div class="igx-tree-node__content">
             <!-- Ghost content -->
-            <div #test [ngClass]="{'igx-tree-node--focused' : this.focused, 'igx-tree-node--active' : this.active}" (pointerdown)="onPointerDown($event)">
-                <ng-content></ng-content>
-            </div>
+            <ng-content></ng-content>
         </div>
+    </div>
 
-        <!--  Buffer element for 'move after' when D&D is implemented-->
-        <div class="igx-tree-node__drop-indicator">
-            <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
-            <div></div>
-        </div>
+    <!--  Buffer element for 'move after' when D&D is implemented-->
+    <div class="igx-tree-node__drop-indicator">
+        <span aria-hidden="true" class="igx-tree-node__spacer" *ngFor="let item of [].constructor(level)"></span>
+        <!-- style rules target this div, do not delete it -->
+        <div></div>
     </div>
 </ng-template>
 

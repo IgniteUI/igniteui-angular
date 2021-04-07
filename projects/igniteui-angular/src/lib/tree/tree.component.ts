@@ -272,7 +272,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         return this.element.nativeElement;
     }
 
-     /**
+    /**
      * Expands all of the passed nodes.
      * If no nodes are passed, expands ALL nodes
      *

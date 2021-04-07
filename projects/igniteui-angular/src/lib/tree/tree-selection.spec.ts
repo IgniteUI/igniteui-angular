@@ -10,6 +10,7 @@ import { IgxTree, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './com
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
+import { IgxTreeNavigationService } from './tree-navigation.service';
 
 describe('IgxTree - Selection #treeView', () => {
     configureTestSuite();
@@ -599,7 +600,7 @@ describe('IgxTree - Selection #treeView', () => {
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);
         selectionService.register(mockTree);
 
-        const node = new IgxTreeNodeComponent(mockTree, selectionService, treeService, mockCdr, null, elementRef, null);
+        const node = new IgxTreeNodeComponent(mockTree, selectionService, treeService, navService, mockCdr, null, elementRef, null);
 
         it('Should call selectNodesWithNoEvent when seting node`s selected property to true', () => {
             spyOn(selectionService, 'selectNodesWithNoEvent').and.callThrough();
