@@ -622,7 +622,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public select(value: Date): void {
         const oldValue = this.dateValue;
         this.value = value;
-        if (DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue)) {
+        if (DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, false)) {
             this.validationFailed.emit({
                 owner: this,
                 prevValue: oldValue
@@ -735,7 +735,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (value && this.disabledDates && isDateInRanges(value, this.disabledDates)) {
             Object.assign(errors, { dateIsDisabled: true });
         }
-        Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue));
+        Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, false));
 
         return Object.keys(errors).length > 0 ? errors : null;
     }

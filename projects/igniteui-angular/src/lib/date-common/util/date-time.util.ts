@@ -1,7 +1,7 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
-import { isDate, parseDate } from '../../core/utils';
+import { isDate } from '../../core/utils';
 import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
@@ -324,16 +324,17 @@ export abstract class DateTimeUtil {
      * @param minValue The lowest possible value that `value` can take
      * @param maxValue The largest possible value that `value` can take
      */
-    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string): ValidationErrors | null {
+    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
+        includeTime = true, includeDate = true): ValidationErrors {
         const errors = {};
-        const min = parseDate(minValue);
-        const max = parseDate(maxValue);
-        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, false))
-            || (min && value && DateTimeUtil.lessThanMinValue(value, min, false))) {
+        const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
+        const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
+        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))
+            || (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, false))
-            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, false))) {
+        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
+            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
             Object.assign(errors, { maxValue: true });
         }
 
