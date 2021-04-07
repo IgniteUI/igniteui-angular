@@ -47,6 +47,22 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-tab-header` supports `igx-prefix` and `igx-suffix` directives in its `ng-content`.
 - `IgxBottomNav`
     - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled. 
+- `IgxCombo`
+    - Any changes to `IComboItemAdditionEvent.addedItem` will be reflected in the item added to the data.
+    - `IgxComboComponent.onAddition` is now cancelable. You can prevent the item from being added by setting the event args `cancel` property to `false`.
+    ```typescript
+    public handleComboItemAddition(event: IComboItemAdditionEvent): void {
+        if (event.addedItem[this.combo.valueKey] === 'ForbiddenValue') {
+            event.cancel = true;
+        } else if (event.addedItem[this.combo.valueKey] === 'Change Me') {
+            const index = this.iter++;
+            event.addedItem = {
+                [this.combo.valueKey]: `customId${index}`,
+                [this.combo.displayKey]: `New item ${index}`;
+            }
+        }
+    }
+    ```
     
 ### Themes:
 - Breaking Changes:

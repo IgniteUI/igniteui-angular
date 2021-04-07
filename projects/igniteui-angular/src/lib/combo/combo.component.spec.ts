@@ -8,7 +8,8 @@ import {
     IgxComboModule,
     IComboSelectionChangeEventArgs,
     IgxComboState,
-    IComboSearchInputEventArgs
+    IComboSearchInputEventArgs,
+    IComboItemAdditionEvent
 } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -685,6 +686,106 @@ describe('igxCombo', () => {
             combo.handleClearItems(spyObj);
             expect(combo.value).toEqual(item[0]);
         });
+
+        it('should allow canceling and overwriting of item addition', fakeAsync(() => {
+            const selectionService = new IgxSelectionAPIService();
+            combo = new IgxComboComponent(elementRef, mockCdr, selectionService, mockComboService,
+                mockIconService, null, null, mockInjector);
+            const dropdown = jasmine.createSpyObj('IgxComboDropDownComponent', ['selectItem']);
+            const mockVirtDir = jasmine.createSpyObj('virtDir', ['scrollTo']);
+            const mockInput = jasmine.createSpyObj('mockInput', [], {
+                nativeElement: jasmine.createSpyObj('mockElement', ['focus'])
+            });
+            spyOn(combo.onAddition, 'emit').and.callThrough();
+            spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
+            const subParams: { cancel: boolean; newValue: string; modify: boolean } = {
+                cancel: false,
+                modify: false,
+                newValue: 'mockValue'
+            };
+            const sub = combo.onAddition.subscribe((e) => {
+                if (subParams.cancel) {
+                    e.cancel = true;
+                }
+                if (subParams.modify) {
+                    e.addedItem = subParams.newValue;
+                }
+            });
+
+            combo.ngOnInit();
+            combo.data = ['Item 1', 'Item 2', 'Item 3'];
+            combo.dropdown = dropdown;
+            combo.searchInput = mockInput;
+            (combo as any).virtDir = mockVirtDir;
+            let mockAddParams: IComboItemAdditionEvent = {
+                cancel: false,
+                owner: combo,
+                addedItem: 'Item 99',
+                newCollection: ['Item 1', 'Item 2', 'Item 3', 'Item 99'],
+                oldCollection: ['Item 1', 'Item 2', 'Item 3']
+            };
+
+
+            // handle addition
+
+            combo.searchValue = 'Item 99';
+            combo.addItemToCollection();
+            tick();
+            expect(combo.data.length).toEqual(4);
+            expect(combo.onAddition.emit).toHaveBeenCalledWith(mockAddParams);
+            expect(combo.onAddition.emit).toHaveBeenCalledTimes(1);
+            expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(1);
+            expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(1);
+            expect(combo.data[combo.data.length - 1]).toBe('Item 99');
+            expect(selectionService.get(combo.id).size).toBe(1);
+            expect([...selectionService.get(combo.id)][0]).toBe('Item 99');
+
+            // cancel
+            subParams.cancel = true;
+            mockAddParams = {
+                cancel: true,
+                owner: combo,
+                addedItem: 'Item 99',
+                newCollection: ['Item 1', 'Item 2', 'Item 3', 'Item 99', 'Item 99'],
+                oldCollection: ['Item 1', 'Item 2', 'Item 3', 'Item 99']
+            };
+
+            combo.searchValue = 'Item 99';
+            combo.addItemToCollection();
+            tick();
+            expect(combo.onAddition.emit).toHaveBeenCalledWith(mockAddParams);
+            expect(combo.onAddition.emit).toHaveBeenCalledTimes(2);
+            expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(1);
+            expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(1);
+            expect(combo.data.length).toEqual(4);
+            expect(combo.data[combo.data.length - 1]).toBe('Item 99');
+            expect(selectionService.get(combo.id).size).toBe(1);
+            expect([...selectionService.get(combo.id)][0]).toBe('Item 99');
+
+            // overwrite
+            subParams.modify = true;
+            subParams.cancel = false;
+            mockAddParams = {
+                cancel: false,
+                owner: combo,
+                addedItem: 'mockValue',
+                newCollection: ['Item 1', 'Item 2', 'Item 3', 'Item 99', 'Item 99'],
+                oldCollection: ['Item 1', 'Item 2', 'Item 3', 'Item 99']
+            };
+
+            combo.searchValue = 'Item 99';
+            combo.addItemToCollection();
+            tick();
+            expect(combo.onAddition.emit).toHaveBeenCalledWith(mockAddParams);
+            expect(combo.onAddition.emit).toHaveBeenCalledTimes(3);
+            expect(mockVirtDir.scrollTo).toHaveBeenCalledTimes(2);
+            expect(combo.searchInput.nativeElement.focus).toHaveBeenCalledTimes(2);
+            expect(combo.data.length).toEqual(5);
+            expect(combo.data[combo.data.length - 1]).toBe(subParams.newValue);
+            expect(selectionService.get(combo.id).size).toBe(2);
+            expect([...selectionService.get(combo.id)][1]).toBe(subParams.newValue);
+            sub.unsubscribe();
+        }));
     });
     describe('Initialization and rendering tests: ', () => {
         configureTestSuite();
