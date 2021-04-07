@@ -1107,24 +1107,25 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.groupKey) {
             Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
-        // do not allow data to be mutated through event args
+        // expose shallow copy instead of this.data in event args so this.data can't be mutated
         const oldCollection = [...this.data];
         const newCollection = [...this.data, addedItem];
         const args: IComboItemAdditionEvent = {
             oldCollection, addedItem, newCollection, owner: this, cancel: false
         };
         this.onAddition.emit(args);
-        if (!args.cancel) {
-            this.data.push(args.addedItem);
-            // trigger re-render
-            this.data = cloneArray(this.data);
-            this.selectItems(this.valueKey !== null && this.valueKey !== undefined ?
-                [args.addedItem[this.valueKey]] : [args.addedItem], false);
-            this.customValueFlag = false;
-            this.searchInput.nativeElement.focus();
-            this.dropdown.focusedItem = null;
-            this.virtDir.scrollTo(0);
+        if (args.cancel) {
+            return;
         }
+        this.data.push(args.addedItem);
+        // trigger re-render
+        this.data = cloneArray(this.data);
+        this.selectItems(this.valueKey !== null && this.valueKey !== undefined ?
+            [args.addedItem[this.valueKey]] : [args.addedItem], false);
+        this.customValueFlag = false;
+        this.searchInput.nativeElement.focus();
+        this.dropdown.focusedItem = null;
+        this.virtDir.scrollTo(0);
     }
 
     /**
