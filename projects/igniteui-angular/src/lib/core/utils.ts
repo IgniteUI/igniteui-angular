@@ -174,25 +174,6 @@ export const isEqual = (obj1, obj2): boolean => {
     return obj1 === obj2;
 };
 
-// /**
-//  * @hidden
-//  * Returns the actual size of the node content, using Canvas
-//  * ```typescript
-//  * let ctx = document.createElement('canvas').getContext('2d');
-//  * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
-//  *
-//  * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
-//  * ```
-//  */
-// export function getNodeSizeViaCanvas(canvas2dCtx: any, node: Node): number {
-//     const s = this.grid.document.defaultView.getComputedStyle(node);
-
-//     // need to set the font to get correct width
-//     canvas2dCtx.font = s.fontSize + ' ' + s.fontFamily;
-
-//     return canvas2dCtx.measureText(node.textContent).width;
-// }
-
 /**
  * Utility service taking care of various utility functions such as
  * detecting browser features, general cross browser DOM manipulation, etc.
@@ -490,8 +471,6 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
     };
     chunk();
 };
-
-// export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
 export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
     oppositeAnimation.get(animation) ?? animation;

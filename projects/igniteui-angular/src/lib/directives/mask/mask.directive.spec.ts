@@ -398,6 +398,16 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
     let mask: IgxMaskDirective;
     it('Should correctly implement interface methods', () => {
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
+        const platformMock = {
+            isIE: false,
+            KEYMAP: {
+                BACKSPACE: 'Backspace',
+                DELETE: 'Delete',
+                Y: 'y',
+                Z: 'z'
+
+            }
+        };
 
         const mockParser = jasmine.createSpyObj('MaskParsingService', {
             applyMask: 'test____',
@@ -407,7 +417,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         const format = 'CCCCCCCC';
 
         // init
-        mask = new IgxMaskDirective(null, mockParser, null, { isIE: false } as any);
+        mask = new IgxMaskDirective(null, mockParser, null, platformMock as any);
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
