@@ -1,5 +1,5 @@
 import { ElementRef } from '@angular/core';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 
 /** @hidden */
 export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
@@ -25,7 +25,7 @@ export interface IgxTimePickerBase {
     format: string;
     promptChar: string;
     cleared: boolean;
-    mode: InteractionMode;
+    mode: PickerInteractionMode;
     showHoursList: boolean;
     showMinutesList: boolean;
     showSecondsList: boolean;

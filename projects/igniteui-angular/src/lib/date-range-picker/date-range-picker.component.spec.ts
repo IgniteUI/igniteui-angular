@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, FormControl } from '@angular/forms';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
@@ -344,7 +344,7 @@ describe('IgxDateRangePicker', () => {
 
             describe('Selection tests', () => {
                 it('should assign range dates to the input when selecting a range from the calendar', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
@@ -358,7 +358,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should assign range values correctly when selecting dates in reversed order', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
@@ -371,7 +371,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should set start and end dates on single date selection', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
@@ -486,7 +486,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
                     spyOn(dateRange.closing, 'emit').and.callThrough();
@@ -522,7 +522,7 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should show the "Done" button only in dialog mode', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
                     dateRange.open();
@@ -533,7 +533,7 @@ describe('IgxDateRangePicker', () => {
                     tick();
                     fixture.detectChanges();
 
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     dateRange.open();
@@ -544,7 +544,7 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should be able to change the "Done" button text', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
                     dateRange.toggle();
@@ -694,7 +694,7 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
@@ -774,7 +774,7 @@ describe('IgxDateRangePicker', () => {
 
             describe('Selection tests', () => {
                 it('should assign range values correctly when selecting dates from the calendar', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     let dayRange = 15;
@@ -794,7 +794,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should assign range values correctly when selecting dates in reversed order', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const dayRange = -10;
@@ -806,7 +806,7 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should apply selection to start and end dates when single date is selected', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const today = new Date();
@@ -994,7 +994,7 @@ describe('IgxDateRangePicker', () => {
                 }));
 
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
 
@@ -1075,7 +1075,7 @@ describe('IgxDateRangePicker', () => {
             }));
 
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
-                fixture.componentInstance.mode = InteractionMode.Dialog;
+                fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
@@ -1275,7 +1275,7 @@ export class DateRangeTestComponent implements OnInit {
     public dateRange: IgxDateRangePickerComponent;
 
     public doneButtonText: string;
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
     public disabled = false;
     public minValue: Date | string;
     public maxValue: Date | string;

@@ -56,7 +56,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'date'">
         <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown"
-        [locale]="grid.locale" [(value)]="editValue" [igxFocus]="true" [labelVisibility]="false">
+        [locale]="grid.locale" [(value)]="editValue" [igxFocus]="true">
     </igx-date-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">

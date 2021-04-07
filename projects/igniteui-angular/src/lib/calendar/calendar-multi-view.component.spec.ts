@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule } from './public_api';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/public_api';
 import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
