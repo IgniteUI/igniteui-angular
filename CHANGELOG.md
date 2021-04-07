@@ -11,7 +11,11 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `IgxTabs` and `IgxBottomNav` components were completely refactored in order to provide more flexible and descriptive way to define tab headers and contents. Please make sure to update via `ng update` in order to migrate the existing `igx-tabs` and `igx-bottom-nav` definitions to the new ones.
 - `IgxColumnComponent`
     - **Breaking Change** - The `onColumnChange` output is renamed to `columnChange`.
-    
+- **Breaking Change** - `IgxHierarchicalGrid` and `igxRowIsland` events are renamed as follows:
+    - `onGridCreated` -> `gridCreated`
+    - `onGridInitialized` -> `gridInitialized`
+    - `onDataPreLoad` -> `dataPreLoad`
+
 ### New Features
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
