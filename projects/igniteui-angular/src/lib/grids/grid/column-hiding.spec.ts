@@ -150,39 +150,39 @@ describe('Column Hiding UI #grid', () => {
             verifyCheckbox('Released', true, false, columnChooserElement);
         });
 
-        it('onColumnToggled, onColumnVisibilityChanged, onColumnVisibilityChanging event is fired on toggling checkboxes.', () => {
-            spyOn(columnChooser.onColumnToggled, 'emit');
+        it('columnToggled, onColumnVisibilityChanged, onColumnVisibilityChanging event is fired on toggling checkboxes.', () => {
+            spyOn(columnChooser.columnToggled, 'emit');
             spyOn(grid.onColumnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
 
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(1);
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledTimes(1);
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('ReleaseDate'), checked: false });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'ReleaseDate');
 
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(2);
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledTimes(2);
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('ReleaseDate'), checked: true });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(2);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
 
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(3);
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledTimes(3);
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('Downloads'), checked: true });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(3);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(3);
 
             GridFunctions.clickColumnChooserItem(columnChooserElement, 'Downloads');
 
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(4);
-            expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledTimes(4);
+            expect(columnChooser.columnToggled.emit).toHaveBeenCalledWith(
                 { column: grid.getColumnByName('Downloads'), checked: false });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(4);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(4);

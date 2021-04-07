@@ -85,9 +85,9 @@
             <ng-template
                 [igxTemplateOutlet]='getRowTemplate(rowData)'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (onCachedViewLoaded)='cachedViewLoaded($event)'
-                (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)'>
+                (cachedViewLoaded)='cachedViewLoaded($event)'
+                (viewCreated)='viewCreatedHandler($event)'
+                (viewMoved)='viewMovedHandler($event)'>
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">

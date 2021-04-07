@@ -80,12 +80,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      *
      * @example
      * ```typescript
-     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
+     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (dataPreLoad)="handleEvent()">
      *  </igx-hierarchical-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden

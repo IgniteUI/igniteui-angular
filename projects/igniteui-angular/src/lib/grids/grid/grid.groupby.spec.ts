@@ -2148,7 +2148,6 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it('should apply group area if a column is groupable.', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
-        const grid = fix.componentInstance.instance;
         tick();
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
@@ -2161,7 +2160,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
@@ -3370,7 +3368,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));
-        const rows = fix.debugElement.queryAll(By.css('igx-grid-row'));
 
         expect(groupRows.length).toEqual(2);
         expect(grid.groupsRecords.length).toEqual(2);
@@ -3583,5 +3580,5 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(event, context) {}
+    public onGroupByRowClick(_event, _context) {}
 }

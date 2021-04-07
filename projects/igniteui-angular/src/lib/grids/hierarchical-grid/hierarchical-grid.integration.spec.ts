@@ -135,7 +135,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it(`should have separate instances of updating service for
         parent and children and the same for children of the same island`, fakeAsync(() => {
             const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
-            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
             });
             const dataRows = hierarchicalGrid.dataRowList.toArray();
@@ -155,7 +155,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should contain all transactions for a row island', fakeAsync(() => {
             const firstLayoutInstances: IgxHierarchicalGridComponent[] = [];
-            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(2)).subscribe((args) => {
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
             });
             const dataRows = hierarchicalGrid.dataRowList.toArray();
@@ -212,7 +212,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(() => {
             let childGrid;
-            hierarchicalGrid.childLayoutList.first.onGridCreated.pipe(take(1)).subscribe((args) => {
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
                 childGrid = args.grid;
             });
             // expand first row
@@ -998,7 +998,6 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
 
             // check unpinned rows data is sorted
-            const lastIndex = fixture.componentInstance.data.length - 1;
             // Expect 9 since it is a string.
             expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
         });
