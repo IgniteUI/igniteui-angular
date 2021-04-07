@@ -110,11 +110,11 @@ export class IgxColumnActionsComponent implements DoCheck {
      * An event that is emitted after a column's checked state is changed.
      * Provides references to the `column` and the `checked` properties as event arguments.
      * ```html
-     *  <igx-column-actions (onColumnToggled)="onColumnToggled($event)"></igx-column-actions>
+     *  <igx-column-actions (columnToggled)="columnToggled($event)"></igx-column-actions>
      * ```
      */
     @Output()
-    public onColumnToggled = new EventEmitter<IColumnToggledEventArgs>();
+    public columnToggled = new EventEmitter<IColumnToggledEventArgs>();
 
     /**
      * @hidden @internal
@@ -409,7 +409,7 @@ export class IgxColumnActionsComponent implements DoCheck {
     public toggleColumn(event: IChangeCheckboxEventArgs, column: IgxColumnComponent) {
         this.actionsDirective.toggleColumn(column);
 
-        this.onColumnToggled.emit({
+        this.columnToggled.emit({
             column,
             checked: event.checked
         });

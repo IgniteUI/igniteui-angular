@@ -99,13 +99,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     @Output()
-    public onLayoutChange = new EventEmitter<any>();
+    public layoutChange = new EventEmitter<any>();
 
     /**
      * Event emmited when a grid is being created based on this row island.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (onGridCreated)="gridCreated($event)" #rowIsland>
+     *      <igx-row-island [key]="'childData'" (gridCreated)="gridCreated($event)" #rowIsland>
      *          <!-- ... -->
      *      </igx-row-island>
      * </igx-hierarchical-grid>
@@ -114,14 +114,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Output()
-    public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
+    public gridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
      * Emitted after a grid is being initialized for this row island.
      * The emitting is done in `ngAfterViewInit`.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (onGridInitialized)="gridInitialized($event)" #rowIsland>
+     *      <igx-row-island [key]="'childData'" (gridInitialized)="gridInitialized($event)" #rowIsland>
      *          <!-- ... -->
      *      </igx-row-island>
      * </igx-hierarchical-grid>
@@ -130,7 +130,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Output()
-    public onGridInitialized = new EventEmitter<IGridCreatedEventArgs>();
+    public gridInitialized = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
      * @hidden
@@ -319,7 +319,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._init = false;
 
         // Create the child toolbar if the parent island has a toolbar definition
-        this.onGridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
+        this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
                 .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
         });
@@ -329,7 +329,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnChanges(changes) {
-        this.onLayoutChange.emit(changes);
+        this.layoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
         }

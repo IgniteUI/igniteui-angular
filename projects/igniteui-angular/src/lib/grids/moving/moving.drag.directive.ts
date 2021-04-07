@@ -18,11 +18,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     @Input('igxColumnMovingDrag')
     public data: any;
 
-    get column(): IgxColumnComponent {
+    public get column(): IgxColumnComponent {
         return this.data;
     }
 
-    get draggable(): boolean {
+    public get draggable(): boolean {
         return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
     }
 
