@@ -84,6 +84,7 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         return rowInGroup;
     }
 
+    // todo row
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
         if (grid.gridAPI.crudService.cellInEditMode) {
@@ -100,6 +101,29 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
                 hierarchy: DataUtil.getHierarchy(groupRow)
             });
         }
+        this.grid.groupingExpansionState = [...expansionState];
+        if (grid.rowEditable) {
+            grid.repositionRowEditingOverlay(grid.gridAPI.crudService.rowInEditMode);
+        }
+    }
+    public set_grouprow_expansion_state(groupRow: IGroupByRecord, value: boolean) {
+        const grid = this.grid;
+        if (grid.gridAPI.crudService.cellInEditMode) {
+            this.crudService.endEdit(false);
+        }
+
+        const expansionState = grid.groupingExpansionState;
+        const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);
+
+        if (state && state.expanded !== value) {
+            state.expanded = value;
+        } else {
+            expansionState.push({
+                expanded: value,
+                hierarchy: DataUtil.getHierarchy(groupRow)
+            });
+        }
+
         this.grid.groupingExpansionState = [...expansionState];
         if (grid.rowEditable) {
             grid.repositionRowEditingOverlay(grid.gridAPI.crudService.rowInEditMode);

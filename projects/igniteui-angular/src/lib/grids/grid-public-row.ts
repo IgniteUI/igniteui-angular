@@ -1,6 +1,8 @@
+import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
+import { IgxGridAPIService } from './grid/grid-api.service';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
@@ -16,11 +18,10 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get data(): any {
-        return this.grid.filteredSortedData[this.index];
+        return this._data;
     }
-
     public get rowData(): any {
-        return this.grid.filteredSortedData[this.index];
+        return this._data;
     }
 
     /**
@@ -83,7 +84,7 @@ export class IgxGridRow implements RowType {
      * Returns if the row is in delete state.
      */
     public get deleted(): boolean {
-        return this.grid.gridAPI.row_deleted_transaction(this.rowID);
+        return this.gridAPI.row_deleted_transaction(this.rowID);
     }
 
     /**
@@ -116,11 +117,11 @@ export class IgxGridRow implements RowType {
      * Gets/sets the row expanded state.
      */
     public get expanded(): boolean {
-        return this.grid.gridAPI.get_row_expansion_state(this.data);
+        return this.gridAPI.get_row_expansion_state(this.data);
     }
 
     public set expanded(val: boolean) {
-        this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
+        this.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
     /**
@@ -155,7 +156,7 @@ export class IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(index: number, private _grid: IgxGridBaseDirective) {
+    constructor(index: number, private _grid: IgxGridBaseDirective, private _data?: any) {
         this.index = index;
     }
 
@@ -175,7 +176,7 @@ export class IgxGridRow implements RowType {
             this.grid.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
-        this.grid.gridAPI.update_row(row, value);
+        this.gridAPI.update_row(row, value);
         this.grid.cdr.markForCheck();
     }
 
@@ -216,6 +217,10 @@ export class IgxGridRow implements RowType {
      */
     public unpin(): boolean {
         return this.grid.unpinRow(this.rowID);
+    }
+
+    private get gridAPI(): IgxGridAPIService {
+        return this.grid.gridAPI as IgxGridAPIService;
     }
 }
 
@@ -368,5 +373,71 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
         }
 
         return { globalI, rec: rowData };
+    }
+}
+
+export class IgxGroupByRow implements RowType {
+    /**
+     * Returns the row index.
+     */
+    public index: number;
+
+    /**
+     * Returns always true, because this is in instance of an IgxGroupByRow.
+     */
+    public isGroupByRow: boolean;
+
+    /**
+     * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
+     */
+    public groupRow: IGroupByRecord;
+
+    /**
+     * @hidden
+     */
+     constructor(index: number, groupRow: IGroupByRecord, private _grid: IgxGridComponent) {
+        this.index = index;
+        this.groupRow = groupRow;
+        this.isGroupByRow = true;
+    }
+
+    /**
+     * Gets/sets whether the group row is expanded.
+     * ```typescript
+     * const groupRowExpanded = groupRow.expanded;
+     * ```
+     */
+    public get expanded(): boolean {
+        return this.grid.isExpandedGroup(this.groupRow);
+    }
+
+    public set expanded(value: boolean) {
+        this.gridAPI.set_grouprow_expansion_state(this.groupRow, value);
+    }
+
+    public isActive(): boolean {
+        return this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row === this.index : false;
+    }
+
+    // todo TODO ?
+    /**
+     * Toggles the group row expanded/collapsed state.
+     * ```typescript
+     * groupRow.toggle()
+     * ```
+     */
+    public toggle() {
+        this.grid.toggleGroup(this.groupRow);
+    }
+
+    /**
+     * Get a reference to the grid that contains the GroupBy row.
+     */
+    protected get grid(): IgxGridComponent {
+        return this._grid;
+    }
+
+    private get gridAPI(): IgxGridAPIService {
+        return this.grid.gridAPI as IgxGridAPIService;
     }
 }

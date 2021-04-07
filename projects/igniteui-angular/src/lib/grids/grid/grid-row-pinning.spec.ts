@@ -158,14 +158,12 @@ describe('Row Pinning #grid', () => {
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
-                row,
                 rowID,
                 insertAtIndex: undefined,
                 isPinned: true
             });
 
-            row = grid.gridAPI.get_row_by_index(0);
-            rowID = row.rowID;
+            row = grid.getRowByIndex(0);
             row.unpin();
             fix.detectChanges();
 

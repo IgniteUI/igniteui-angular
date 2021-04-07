@@ -88,7 +88,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return new IgxGridRow(this.intRow.index, this.grid);
+        return new IgxGridRow(this.intRow.index, this.grid, this.intRow.rowData);
     }
 
     /**

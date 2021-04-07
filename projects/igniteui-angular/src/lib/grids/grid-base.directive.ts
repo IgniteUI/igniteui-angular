@@ -4059,7 +4059,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
-        return new IgxGridRow(index, this);
+        return new IgxGridRow(index, this, this.filteredSortedData[index]);
     }
 
     /**
@@ -4074,13 +4074,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param keyValue
      */
     public getRowByKey(keyValue: any): RowType {
-        const index = this.primaryKey ?
-             this.filteredSortedData.map(rec => rec[this.primaryKey]).indexOf(keyValue) :
-             this.filteredSortedData.indexOf(keyValue);
-        if (index < 0) {
+        const rec = this.primaryKey ?
+            this.filteredSortedData.find(rec => rec[this.primaryKey] === keyValue) :
+            this.filteredSortedData.find(rec => rec === keyValue);
+        const index = this.filteredSortedData.indexOf(rec);
+        if (index < 0 || !rec) {
             return undefined;
         }
-        return new IgxGridRow(index, this);
+        return new IgxGridRow(index, this, rec);
     }
 
     /**
@@ -4760,13 +4761,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
-        const row = this.getRowByKey(rowID);
-
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
-            rowID,
-            row
+            rowID
         };
         this.onRowPinning.emit(eventArgs);
 
@@ -4778,6 +4776,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.gridAPI.grid) {
             this.notifyChanges();
         }
+        return true;
     }
 
     /**
@@ -4791,16 +4790,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
-    public unpinRow(rowID: any) {
+    public unpinRow(rowID: any): boolean {
         const index = this._pinnedRecordIDs.indexOf(rowID);
         if (index === -1) {
             return false;
         }
-        const row = this.getRowByKey(rowID);
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
-            rowID,
-            row
+            rowID
         };
         this.onRowPinning.emit(eventArgs);
         this.crudService.endEdit(false);
@@ -5898,7 +5895,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const index = args.context.index;
             args.view.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
-                const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+                const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
                     this._restoreVirtState(row);

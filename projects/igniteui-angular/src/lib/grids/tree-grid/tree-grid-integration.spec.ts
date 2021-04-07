@@ -1000,7 +1000,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
 
-            const parentRow = treeGrid.getRowByIndex(0) as IgxTreeGridRowComponent;
+            const parentRow = treeGrid.getRowByIndex(0);
             const addedRowId = treeGrid.rowList.length;
             const newRow = {
                 ID: addedRowId,
@@ -1099,7 +1099,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
 
-            const parentRow = treeGrid.getRowByIndex(1) as IgxTreeGridRowComponent;
+            const parentRow = treeGrid.getRowByIndex(1);
             const addedRowId = treeGrid.rowList.length;
             const newRow = {
                 ID: addedRowId,

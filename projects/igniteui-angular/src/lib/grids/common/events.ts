@@ -172,11 +172,6 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs {
     /**
-     * The row component instance, that was pinned/unpinned.
-     * May be undefined if row does not exist in the current visible data.
-     */
-    readonly row?: RowType;
-    /**
      * The ID of the row, that was pinned/unpinned.
      *   ID is either the primaryKey value or the data record instance.
      */

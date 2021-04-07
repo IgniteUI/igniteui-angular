@@ -1,10 +1,8 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { STATE_POSSIBLE } from 'hammerjs';
 import {
     IgxGridComponent,
     IgxTransactionService,
     IgxGridTransaction,
-    GridSelectionMode,
     RowType,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent
@@ -83,7 +81,7 @@ export class GridRowAPISampleComponent implements OnInit {
             { field: 'ContactName', width: 150, resizable: true, movable: true },
             { field: 'ContactTitle', width: 150, resizable: true, movable: true },
             { field: 'Address', width: 150, resizable: true, movable: true },
-            { field: 'City', width: 150, resizable: true, movable: true },
+            { field: 'City', width: 150, resizable: true, movable: true, summary: true },
             { field: 'Region', width: 150, resizable: true, movable: true },
             { field: 'PostalCode', width: 150, resizable: true, movable: true },
             { field: 'Phone', width: 150, resizable: true, movable: true },
@@ -202,11 +200,13 @@ export class GridRowAPISampleComponent implements OnInit {
 
     public toggle(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
         const row = grid.getRowByIndex(index);
+        const data = row.data;
         row.expanded = !row.expanded;
     }
 
     public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
         const row = grid.getRowByIndex(index);
+        const data = row.data;
         row.selected = !row.selected;
     }
 
@@ -251,7 +251,9 @@ export class GridRowAPISampleComponent implements OnInit {
     public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number, logger: HTMLElement) {
         this.clearLog(logger);
         const row = grid.getRowByIndex(index);
-        const state = `key: ${row.rowID},
+        const state = `
+            groupByRow: ${row.groupRow},
+            key: ${row.rowID},
             pinned: ${row.pinned},
             deleted: ${row.deleted},
             inEditMode: ${row.inEditMode},

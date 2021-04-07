@@ -381,7 +381,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(childGrid).toBeDefined();
 
         childGrid.columnList.find(c => c.index === 1).editable = true;
-        const childGridSecondRow = childGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+        const childGridSecondRow = childGrid.gridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
         expect(childGridSecondRow.expanded).toBeFalsy();
 
         const childGridSecondCell = childGridSecondRow.cells.find(c => c.columnIndex === 1);
@@ -909,7 +909,7 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
         expect(colHeaders.length).toBeGreaterThan(0);
         expect(loadingIndicator).toBeNull();
 
-        const row = grid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        const row = grid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
         tick(1000);

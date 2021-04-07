@@ -33,7 +33,7 @@ import { RowType } from './common/row.interface';
 @Directive({
     selector: '[igxRowBaseComponent]'
 })
-export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements RowType, DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
