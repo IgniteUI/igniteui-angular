@@ -20,12 +20,12 @@ import { IgxIconComponent } from '../icon/public_api';
 /**
  * @hidden
  */
-export const ICON_POSITION = mkenum({
+export const ExpansionPanelHeaderIconPosition = mkenum({
     LEFT: 'left',
     NONE: 'none',
     RIGHT: 'right'
 });
-export type ICON_POSITION = (typeof ICON_POSITION)[keyof typeof ICON_POSITION];
+export type ExpansionPanelHeaderIconPosition = (typeof ExpansionPanelHeaderIconPosition)[keyof typeof ExpansionPanelHeaderIconPosition];
 
 
 @Component({
@@ -39,7 +39,7 @@ export class IgxExpansionPanelHeaderComponent {
      */
     public get iconRef(): ElementRef {
         const renderedTemplate = this.customIconRef  ?? this.defaultIconRef;
-        return this.iconPosition !== ICON_POSITION.NONE ? renderedTemplate : null;
+        return this.iconPosition !== ExpansionPanelHeaderIconPosition.NONE ? renderedTemplate : null;
     }
 
     /**
@@ -115,7 +115,7 @@ export class IgxExpansionPanelHeaderComponent {
      * ```
      */
     @Input()
-    public iconPosition: ICON_POSITION = ICON_POSITION.LEFT;
+    public iconPosition: ExpansionPanelHeaderIconPosition = ExpansionPanelHeaderIconPosition.LEFT;
 
     /**
      * Emitted whenever a user interacts with the header host
@@ -246,11 +246,11 @@ export class IgxExpansionPanelHeaderComponent {
       */
      public get iconPositionClass(): string {
         switch (this.iconPosition) {
-            case (ICON_POSITION.LEFT):
+            case (ExpansionPanelHeaderIconPosition.LEFT):
                 return `igx-expansion-panel__header-icon--start`;
-            case (ICON_POSITION.RIGHT):
+            case (ExpansionPanelHeaderIconPosition.RIGHT):
                 return `igx-expansion-panel__header-icon--end`;
-            case (ICON_POSITION.NONE):
+            case (ExpansionPanelHeaderIconPosition.NONE):
                 return `igx-expansion-panel__header-icon--none`;
             default:
                 return '';

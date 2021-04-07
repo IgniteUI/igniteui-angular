@@ -89,6 +89,7 @@ interface Feature {
     selector: '[igxGridState]'
 })
 export class IgxGridStateDirective {
+    private static ngAcceptInputType_options: IGridStateOptions | '';
 
     private featureKeys: GridFeatures[] = [];
     private state: IGridState;
@@ -237,7 +238,7 @@ export class IgxGridStateDirective {
                 return { rowSelection: selection };
             },
             restoreFeatureState: (context: IgxGridStateDirective, state: any[]): void => {
-                context.currGrid.selectRows(state);
+                context.currGrid.selectRows(state, true);
             }
         },
         cellSelection: {
@@ -331,9 +332,8 @@ export class IgxGridStateDirective {
              * Traverses the hierarchy up to the root grid to return the ID of the expanded row.
              */
             getParentRowID: (grid: IgxHierarchicalGridComponent) => {
-                let childGrid; let childRow;
+                let childGrid;
                 while (grid.parent) {
-                    childRow = grid.childRow;
                     childGrid = grid;
                     grid = grid.parent;
                 }

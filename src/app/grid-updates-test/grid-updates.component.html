@@ -1,0 +1,24 @@
+<button (click)="update()">Update</button>
+<button (click)="stop()">Stop</button>
+
+<igx-grid
+    displayDensity="compact" 
+    width="800px" height = "400px"
+    [data]="data"
+    [allowFiltering]="true"
+    primaryKey = "id"
+    filterMode="excelStyleFilter"
+    (onRowSelectionChange)="handleRowSelectionChange($event)"
+    rowSelection="single"
+    #grid>
+    <igx-column *ngFor="let each of nestedConfigColumns"
+        [sortable]="true"
+        [field]="each.field"
+        [header]="each.header"
+    >
+    </igx-column>
+</igx-grid>
+
+<p>Selected Name: {{selectedItem?.name}}</p>
+<p>Selected Abbr. (long): {{selectedItem?.abbreviation.long}}</p>
+<p>Selected Abbr. (owner name): {{selectedItem?.abbreviation.owner.name}}</p>

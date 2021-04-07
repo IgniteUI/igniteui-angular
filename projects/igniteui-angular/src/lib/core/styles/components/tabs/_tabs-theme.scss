@@ -7,7 +7,7 @@
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $item-text-color [null] - The color used for the tab text color.
@@ -47,9 +47,8 @@
 ///    );
 ///   // Pass the theme to the igx-tabs component mixin
 ///   @include igx-tabs($my-tabs-theme);
-
 @function igx-tabs-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $item-text-color: null,
@@ -95,7 +94,8 @@
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
-    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevations, 1));
+    $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
+    $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
         @if type-of($item-background) == 'color' {
@@ -126,7 +126,6 @@
     @if not($item-active-color) and $item-active-icon-color {
         $item-active-color: $item-active-icon-color;
     }
-
 
     // Button
     @if not($button-color) and $item-background {
@@ -172,7 +171,6 @@
             $button-ripple-color: rgba(255, 255, 255, .4);
         }
     }
-
     // Button end
 
     @if not($tab-ripple-color) and $item-active-background {
@@ -201,23 +199,22 @@
         tab-ripple-color: $tab-ripple-color,
         button-ripple-color: $button-ripple-color,
         tab-area-shadow: $tab-area-shadow,
+        buttons-shadow: $buttons-shadow,
         border-color: $border-color,
         border-radius: $border-radius,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
 /// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-ripple-theme
 /// @requires {mixin} igx-ripple
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires rem
 /// @requires --var
 @mixin igx-tabs($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
@@ -227,49 +224,56 @@
     $item-min-width: 90px;
     $item-max-width: 360px;
 
-    $item-padding: 0 rem(16px);
-    $tabs-height: rem(48px);
-    $tabs-height-icon: rem(72px);
     $tabs-animation-function: cubic-bezier(.35, 0, .25, 1);
-    $icon-label-space: rem(12px);
+
+    $item-padding: rem(11px) rem(16px);
 
     $tabs-ripple-theme: igx-ripple-theme($color: --var($theme, 'tab-ripple-color'));
     $button-ripple-theme: igx-ripple-theme($color: --var($theme, 'button-ripple-color'));
 
-    %igx-tabs {
+    $left: if-ltr(left, right);
+    $right: if-ltr(right, left);
+
+    $icon-space: (
+        comfortable: rem(12px),
+        cosy: rem(8px),
+        compact: rem(4px)
+    );
+
+    %tabs-header,
+    %tabs-header-button,
+    %tabs-header-item-inner,
+    %tabs-header-content {
         display: flex;
-        flex-direction: column;
     }
 
-    %igx-tabs__header {
-        display: flex;
-        align-items: center;
+    %tabs-display {
+        display: block;
+        height: 100%;
+    }
+
+    %tabs-header {
         overflow: hidden;
         background: --var($theme, 'item-background');
         box-shadow: --var($theme, 'tab-area-shadow');
+        min-height: rem(42px);
+        z-index: 1;
 
         @if $bootstrap-theme or $indigo-theme {
             box-shadow: none;
         }
     }
 
-    %igx-tabs__content-fixed,
-    %igx-tabs__header-wrapper-fixed {
+    %tabs-header-content {
         flex: 1 1 auto;
         overflow: hidden;
     }
 
-    // ITEM HOLDER (The element that scrolls)
-    %igx-tabs__content-fluid,
-    %igx-tabs__header-wrapper-fluid {
+    %tabs-header-scroll {
         position: relative;
         flex-wrap: nowrap;
         transition: transform .2s $tabs-animation-function;
-    }
-
-    %igx-tabs__header-wrapper-fluid {
         display: inline-flex;
-        align-items: center;
         min-width: 100%;
 
         @if $bootstrap-theme or $indigo-theme {
@@ -286,20 +290,59 @@
         }
     }
 
-    %igx-tabs__content-fluid {
-        display: flex;
+    %tabs-header-button {
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        border: none;
+        padding: 0;
+        min-width: rem(48px);
+        width: rem(48px);
+        cursor: pointer;
+        position: relative;
+        background: --var($theme, 'button-background');
+        color: --var($theme, 'button-color');
+        outline: 0;
+
+        @if not $indigo-theme {
+            box-shadow: --var($theme, 'buttons-shadow');
+        }
+
+        &:hover {
+            background: --var($theme, 'button-hover-background');
+            color: --var($theme, 'button-hover-color');
+        }
+
+        &:focus {
+            outline: 0;
+            background: --var($theme, 'button-hover-background');
+        }
+
+        &::-moz-focus-inner {
+            // remove focus dotted border in firefox
+            border: 0;
+        }
+
+        &--hidden {
+            visibility: hidden;
+        }
+
+        &--none {
+            display: none;
+        }
+
+        @include igx-ripple($button-ripple-theme);
+        @include igx-css-vars($button-ripple-theme);
     }
 
-    // MENU ITEM
-    %igx-tabs__header-menu-item {
+    %tabs-header-item {
+        @include _icon-w-margin(map-get($icon-space, 'comfortable'), $left);
         display: inline-flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
         min-width: $item-min-width;
         max-width: $item-max-width;
         word-wrap: break-word;
-        height: $tabs-height;
         // Flex basis & shrink are Needed for IE11
         flex-basis: auto;
         flex-shrink: 0;
@@ -371,7 +414,7 @@
         @include igx-css-vars($tabs-ripple-theme);
     }
 
-    %igx-tabs__header-menu-item--selected {
+    %tabs-header-item--selected {
         outline: 0;
         color: --var($theme, 'item-active-color');
 
@@ -389,16 +432,10 @@
             color: --var($theme, 'item-active-color');
         }
 
-        %igx-tabs__header-menu-item-icon {
+        igx-icon {
             color: --var($theme, 'item-active-icon-color');
-
-            igx-icon {
-                color: --var($theme, 'item-active-icon-color');
-            }
         }
-    }
 
-    %igx-tabs__header-menu-item--selected-bootstrap {
         @if $bootstrap-theme {
             background: --var($theme, 'item-active-background');
             position: relative;
@@ -428,13 +465,12 @@
         }
     }
 
-    %igx-tabs__header-menu-item--disabled {
+    %tabs-header-item--disabled {
         outline: 0;
         @if not $indigo-theme {
             opacity: .5;
         } @else  {
-            %igx-tabs__header-menu-item-icon,
-            %igx-tabs__item-label {
+            > * {
                 opacity: .4;
             }
         }
@@ -442,18 +478,22 @@
         pointer-events: none;
     }
 
-    %igx-tabs__header-menu-item-icon {
-        display: flex;
-        justify-content: center;
+    %tabs-header-item-inner {
         align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
 
-        + %igx-tabs__item-label {
-            @include ellipsis();
-            padding-top: $icon-label-space;
+        > [igxtabheadericon] {
+            margin-bottom: rem(8px);
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 
-    %igx-tabs__header-menu-item-indicator {
+    %tabs-header-active-indicator {
         position: absolute;
         bottom: 0;
         // We need to explicitly set the default for IE 11
@@ -468,81 +508,55 @@
         }
     }
 
-    // SCROLL BUTTONS
-    %igx-tabs__header-button {
-        z-index: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        padding: 0;
-        min-width: rem(48px);
-        width: rem(48px);
-        min-height: $tabs-height;
-        height: $tabs-height;
-        cursor: pointer;
+    %tabs-panels {
         position: relative;
-        background: --var($theme, 'button-background');
-        color: --var($theme, 'button-color');
-        outline: 0;
-        @if not $indigo-theme {
-            box-shadow: igx-elevation($elevations, 4);
-        }
+        overflow: hidden;
+        flex-grow: 1;
+    }
 
-        &:hover {
-            background: --var($theme, 'button-hover-background');
-            color: --var($theme, 'button-hover-color');
-        }
-
-        &:focus {
-            outline: 0;
-            background: --var($theme, 'button-hover-background');
-        }
+    %tabs-panel {
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
 
         &::-moz-focus-inner {
             // remove focus dotted border in firefox
             border: 0;
         }
 
-        @include igx-ripple($button-ripple-theme);
-        @include igx-css-vars($button-ripple-theme);
-    }
+        &:focus {
+            outline-width: 0;
+        }
 
-    %igx-tabs__header-button--hidden {
-        visibility: hidden;
-    }
-
-    %igx-tabs__header-button--none {
-        display: none;
-    }
-
-    %igx-tabs__item-label {
-        word-break: break-word;
-        max-width: 100%;
-        text-align: center;
-
-        + %igx-tabs__header-menu-item-icon {
-            padding-top: $icon-label-space;
+        &[tabindex='0'] {
+            position: relative;
         }
     }
 
-    %igx-tabs__group {
-        display: inline-block;
-        min-width: 100%;
+    %tabs-header-scroll--start {
+        justify-content: flex-start;
     }
 
-    %igx-tabs--fixed {
-        %igx-tabs__header-menu-item {
-            flex: 1 1 auto;
-            width: 100%;
-        }
+    %tabs-header-scroll--end {
+        justify-content: flex-end;
     }
 
-    %igx-tabs--icons {
-        %igx-tabs__header-button,
-        %igx-tabs__header-menu-item {
-            min-height: $tabs-height-icon;
-            height: $tabs-height-icon;
+    %tabs-header-scroll--center {
+        justify-content: center;
+    }
+
+    %tabs-header-scroll--justify {
+        %tabs-header-item {
+            flex-basis: 0;
+            flex-grow: 1;
+            max-width: 100%;
         }
     }
 }
@@ -557,7 +571,7 @@
 @mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
     $label: map-get($categories, 'label');
 
-    %igx-tabs__item-label {
+    %tabs-header-item-inner > [igxtabheaderlabel]{
         @include igx-type-style($type-scale, $label) {
             margin-top: 0;
             margin-bottom: 0;

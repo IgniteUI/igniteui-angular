@@ -1,10 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { IgxDatePickerComponent } from 'igniteui-angular';
-import { formatDate } from '@angular/common';
-
-import { registerLocaleData } from '@angular/common';
-// import localeDE from '@angular/common/locales/de';
-import localeJA from '@angular/common/locales/ja';
+import { DateRangeDescriptor, DateRangeType } from 'projects/igniteui-angular/src/lib/core/dates/dateRange';
 
 @Component({
     selector: 'app-date-picker-sample',
@@ -13,90 +9,17 @@ import localeJA from '@angular/common/locales/ja';
 })
 
 export class DatePickerSampleComponent {
-    @ViewChild('datepicker1', { read: IgxDatePickerComponent, static: true })
-    private datepicker1: IgxDatePickerComponent;
+    @ViewChild('dp5')
+    public datePicker: IgxDatePickerComponent;
 
-    @ViewChild('retemplated', { static: true })
-    private retemplatedDP;
+    public date1 = new Date();
+    public date2 = new Date(new Date(this.date1.getFullYear(), this.date1.getMonth(), this.date1.getDate() + 1));
+    public date3 = new Date(new Date(this.date2.getFullYear(), this.date2.getMonth(), this.date2.getDate() + 1));
+    public date4 = new Date(new Date(this.date3.getFullYear(), this.date3.getMonth(), this.date3.getDate() + 1));
+    public date5 = new Date(new Date(this.date4.getFullYear(), this.date4.getMonth(), this.date4.getDate() + 1));
+    public date6 = new Date(new Date(this.date5.getFullYear(), this.date5.getMonth(), this.date5.getDate() + 1));
+    public date7 = new Date(new Date(this.date6.getFullYear(), this.date6.getMonth(), this.date6.getDate() + 1));
 
-    @ViewChild('datePicker', { static: true })
-    private dp: IgxDatePickerComponent;
-
-    public date = new Date('10/3/2018');
-    public formatOptions = {
-        day: 'numeric',
-        month: 'long',
-        weekday: 'short',
-        year: 'numeric'
-    };
-    public date1;
-    public date2;
-    public date3;
-    public date4;
-    public testDate = new Date(2000, 3, 5);
-
-    public date5 = new Date('10/5/2020');
-
-    public range = [
-        new Date(new Date().getFullYear(), new Date().getMonth(), 3),
-        new Date(new Date().getFullYear(), new Date().getMonth(), 8)
-    ];
-
-    constructor() {
-        registerLocaleData(localeJA);
-        // registerLocaleData(localeDE);
-        const date1 = new Date();
-        date1.setDate(8);
-        date1.setMonth(5);
-        date1.setFullYear(1978);
-
-        const date2 = new Date();
-        date2.setDate(6);
-        date2.setMonth(4);
-        date2.setFullYear(2020);
-
-        const date3 = new Date();
-        date3.setDate(14);
-        date3.setMonth(10);
-        date3.setFullYear(2021);
-
-        this.date1 = date1;
-        this.date2 = date2;
-        this.date3 = date3;
-        this.date4 = date3;
-    }
-
-    public formatter = (_: Date) => _.toLocaleString('en');
-
-    public deselect(datePicker) {
-        datePicker.deselectDate();
-    }
-
-    public setMonthsViewNumber(args: HTMLInputElement) {
-        this.datepicker1.monthsViewNumber = parseInt(args.value, 10);
-    }
-
-    public changeDate(event) {
-        const input = event.target.value;
-        const dateParts = input.split(new RegExp('[^0-9]', 'g')).filter((part) => part !== '');
-
-        let date = '';
-        for (let i = 0; i < dateParts.length; i++) {
-            date += dateParts[i];
-            if (i !== dateParts.length - 1) {
-                date += '/';
-            }
-        }
-
-        const parsedDate = (date !== '') ? new Date(formatDate(date, this.retemplatedDP.format, this.retemplatedDP.locale)) : '';
-        this.retemplatedDP.value = parsedDate;
-    }
-
-    public selectToday(picker: IgxDatePickerComponent) {
-        picker.calendar.value = picker.calendar.viewDate = new Date(Date.now());
-    }
-
-    public d() {
-        this.dp.triggerTodaySelection();
-    }
+    public disabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date1, this.date2, this.date3] }];
+    public specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Specific, dateRange: [this.date5, this.date6, this.date7] }];
 }

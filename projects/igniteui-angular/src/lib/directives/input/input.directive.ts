@@ -62,6 +62,8 @@ export enum IgxInputState {
     exportAs: 'igxInput',
 })
 export class IgxInputDirective implements AfterViewInit, OnDestroy {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Sets/gets whether the `"igx-input-group__input"` class is added to the host element.
      * Default value is `false`.
@@ -155,9 +157,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input()
     @HostBinding('disabled')
     public set disabled(value: boolean) {
-        // handle case when disabled attr is set with no value
-        this._disabled = value != null && `${value}` !== 'false';
-        this.inputGroup.disabled = this._disabled;
+        this.nativeElement.disabled = this.inputGroup.disabled = (value as any === '') || value;
     }
     /**
      * Gets the `disabled` property
@@ -182,13 +182,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * @example
      * ```html
      * <input-group>
-     *  <input igxInput #igxInput [required]="true">
+     *  <input igxInput #igxInput required>
      * </input-group>
      * ```
      */
     @Input()
     public set required(value: boolean) {
-        this.nativeElement.required = this.inputGroup.isRequired = value;
+        this.nativeElement.required = this.inputGroup.isRequired = (value as any === '') || value;
     }
 
     /**

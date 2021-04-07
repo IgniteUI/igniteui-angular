@@ -3,28 +3,70 @@
         <h3 class="sample-title">Routing sample</h3>
 
         <igx-buttongroup>
-            <button igxButton (click)="clickHandler0()">
+            <button (click)="clickHandler0()">
                 Root
             </button>
-            <button igxButton (click)="clickHandler1()">
+            <button (click)="clickHandler1()">
                 View 1
             </button>
-            <button igxButton (click)="clickHandler2()">
+            <button (click)="clickHandler2()">
                 View 2
             </button>
-            <button igxButton (click)="clickHandler3()">
+            <button (click)="clickHandler3()">
                 View 3
             </button>
         </igx-buttongroup>
 
         <br/>
 
-        <igx-tabs>
+        <igx-tabs (selectedItemChange)="selectedItemChanged($event)">
+            <igx-tab-item
+                routerLinkActive
+                #rla1="routerLinkActive"
+                [selected]="rla1.isActive"
+            >
+                <igx-tab-header
+                    routerLink="/tabs-routing/view1"
+                >
+                    <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                    <span igxBottomNavHeaderLabel>Tab 1</span>
+                </igx-tab-header>
+            </igx-tab-item>
+
+            <igx-tab-item
+                routerLinkActive
+                #rla2="routerLinkActive"
+                [selected]="rla2.isActive"
+            >
+                <igx-tab-header
+                    routerLink="/tabs-routing/view2"
+                >
+                    <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                    <span igxBottomNavHeaderLabel>Tab 2</span>
+                </igx-tab-header>
+            </igx-tab-item>
+
+            <igx-tab-item
+                routerLinkActive
+                #rla3="routerLinkActive"
+                [selected]="rla3.isActive"
+            >
+                <igx-tab-header
+                    routerLink="/tabs-routing/view3"
+                >
+                    <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                    <span igxBottomNavHeaderLabel>Tab 3</span>
+                </igx-tab-header>
+            </igx-tab-item>
+        </igx-tabs>
+
+        <!-- <igx-tabs>
             <igx-tab-item label="Tab 1" icon="folder"
                 routerLink="/tabs-routing/view1"
                 routerLinkActive #rla1="routerLinkActive"
                 [isSelected]="rla1.isActive">
             </igx-tab-item>
+
             <igx-tab-item label="Tab 2" icon="folder"
                 routerLink="/tabs-routing/view2"
                 routerLinkActive #rla2="routerLinkActive"
@@ -34,12 +76,8 @@
                 routerLink="/tabs-routing/view3"
                 routerLinkActive #rla3="routerLinkActive"
                 [isSelected]="rla3.isActive">
-                <!-- <ng-template igxTab let-context>
-                    <span>{{context.label}}</span>
-                    <span>[Retemplated tab]</span>
-                </ng-template> -->
             </igx-tab-item>
-        </igx-tabs>
+        </igx-tabs> -->
         <div>
             <router-outlet></router-outlet>
         </div>

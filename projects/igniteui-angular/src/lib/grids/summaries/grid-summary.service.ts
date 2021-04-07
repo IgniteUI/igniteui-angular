@@ -131,7 +131,7 @@ export class IgxGridSummaryService {
 
     public resetSummaryHeight() {
         this.summaryHeight = 0;
-        (this.grid as any)._summaryPipeTrigger++;
+        this.grid.summaryPipeTrigger++;
         if (this.grid.rootSummariesEnabled) {
             this.retriggerRootPipe++;
         }
@@ -211,8 +211,8 @@ export class IgxGridSummaryService {
     }
 
     // TODO: remove only deleted rows
-    private removeChildRowSummaries(rowID, columnName?) {
-    }
+    // private removeChildRowSummaries(rowID, columnName?) {
+    // }
 
     private compareGroupingExpressions(current, groupingArgs) {
         const newExpressions = groupingArgs.expressions.map(record => record.fieldName);

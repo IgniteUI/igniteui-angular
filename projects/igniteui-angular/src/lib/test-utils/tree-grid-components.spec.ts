@@ -509,7 +509,7 @@ export class IgxTreeGridWrappedInContComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 

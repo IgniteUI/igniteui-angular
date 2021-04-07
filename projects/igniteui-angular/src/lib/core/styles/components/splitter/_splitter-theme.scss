@@ -3,9 +3,9 @@
 /// @access public
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ///
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {color} $bar-color [null] - The background color of the bar.
 /// @param {color} $handle-color [null] - The color for the bar drag handle.
@@ -15,9 +15,9 @@
 /// @param {number} $size [null] - The size of the splitter, its width for vertical and height for horizontal splitter.
 ///
 @function igx-splitter-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $bar-color: null,
     $handle-color: null,
@@ -64,11 +64,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-splitter($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     $splitter-color: --var($theme, 'bar-color');
     $hitbox-size: 4px;
     $debug-hitbox: false;
@@ -183,9 +183,9 @@
         &::before {
             @extend %igx-splitter-hitbox;
             top: calc(100% - #{map-get($theme, 'size')});
-            left: calc(100% - #{map-get($theme, 'size') * 2});
-            width: #{map-get($theme, 'size') * 4};
-            height: #{map-get($theme, 'size') * 3};
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: calc(#{map-get($theme, 'size')} * 4);
+            height: calc(#{map-get($theme, 'size')} * 3);
         }
     }
 
@@ -195,10 +195,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            top: calc(100% - #{map-get($theme, 'size') * 2});
-            left: calc(100% - #{map-get($theme, 'size') * 2});
-            width: #{map-get($theme, 'size') * 4};
-            height: #{map-get($theme, 'size') * 3};
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: calc(#{map-get($theme, 'size')} * 4);
+            height: calc(#{map-get($theme, 'size')} * 3);
         }
     }
 
@@ -210,10 +210,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            top: calc(100% - #{map-get($theme, 'size') * 2});
-            left: calc(100% - #{map-get($theme, 'size')});
-            width: #{map-get($theme, 'size') * 3};
-            height: #{map-get($theme, 'size') * 4};
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            width: calc(#{map-get($theme, 'size')} * 3);
+            height: calc(#{map-get($theme, 'size')} * 4);
         }
     }
 
@@ -225,10 +225,10 @@
 
         &::before {
             @extend %igx-splitter-hitbox;
-            left: calc(100% - #{map-get($theme, 'size') * 2});
-            top: calc(100% - #{map-get($theme, 'size') * 2});
-            height: #{map-get($theme, 'size') * 4};
-            width: #{map-get($theme, 'size') * 3};
+            left: calc(100% - (#{map-get($theme, 'size')} * 2));
+            top: calc(100% - (#{map-get($theme, 'size')} * 2));
+            height: calc(#{map-get($theme, 'size')} * 4);
+            width: calc(#{map-get($theme, 'size')} * 3);
         }
     }
 }

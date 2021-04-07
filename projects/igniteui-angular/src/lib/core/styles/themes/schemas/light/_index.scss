@@ -103,7 +103,7 @@
 /// @property {Map} igx-list [$_light-list]
 /// @property {Map} geo-map [$_light-geo-map]
 /// @property {Map} igx-navbar [$_light-navbar]
-/// @property {Map} igx-navdrawer [$_light-navdrawer]
+/// @property {Map} igx-nav-drawer [$_light-nav-drawer]
 /// @property {Map} igx-overlay [$_light-overlay]
 /// @property {Map} pie-chart [$_light-pie-chart]
 /// @property {Map} igx-progress-linear [$_light-progress-linear]
@@ -161,7 +161,7 @@ $light-schema: (
     igx-list: $_light-list,
     geo-map: $_light-geo-map,
     igx-navbar: $_light-navbar,
-    igx-navdrawer: $_light-navdrawer,
+    igx-nav-drawer: $_light-navdrawer,
     igx-overlay: $_light-overlay,
     igx-linear-bar: $_light-progress-linear,
     igx-circular-bar: $_light-progress-circular,
@@ -230,7 +230,7 @@ $light-fluent-schema: (
     igx-list: $_fluent-list,
     geo-map: $_fluent-geo-map,
     igx-navbar: $_fluent-navbar,
-    igx-navdrawer: $_fluent-navdrawer,
+    igx-nav-drawer: $_fluent-navdrawer,
     igx-overlay: $_fluent-overlay,
     igx-linear-bar: $_fluent-progress-linear,
     igx-circular-bar: $_fluent-progress-circular,
@@ -294,7 +294,7 @@ $light-bootstrap-schema: (
     igx-list: $_bootstrap-list,
     geo-map: $_bootstrap-geo-map,
     igx-navbar: $_bootstrap-navbar,
-    igx-navdrawer: $_bootstrap-navdrawer,
+    igx-nav-drawer: $_bootstrap-navdrawer,
     igx-overlay: $_bootstrap-overlay,
     igx-linear-bar: $_bootstrap-progress-linear,
     igx-circular-bar: $_bootstrap-progress-circular,
@@ -358,7 +358,7 @@ $light-indigo-schema: (
     igx-list: $_indigo-list,
     geo-map: $_indigo-geo-map,
     igx-navbar: $_indigo-navbar,
-    igx-navdrawer: $_indigo-navdrawer,
+    igx-nav-drawer: $_indigo-navdrawer,
     igx-overlay: $_indigo-overlay,
     igx-linear-bar: $_indigo-progress-linear,
     igx-circular-bar: $_indigo-progress-circular,

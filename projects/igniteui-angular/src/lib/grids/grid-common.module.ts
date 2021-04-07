@@ -7,6 +7,7 @@ import {
 import { IgxGridTransaction } from './grid-base.directive';
 import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
+    IgxRowAddTextDirective,
     IgxRowEditTemplateDirective,
     IgxRowEditActionsDirective,
     IgxRowEditTextDirective,
@@ -42,6 +43,7 @@ import {
     declarations: [
         IgxRowDirective,
         IgxGridCellComponent,
+        IgxRowAddTextDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,
@@ -60,6 +62,7 @@ import {
     ],
     exports: [
         IgxGridCellComponent,
+        IgxRowAddTextDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
         IgxRowEditTextDirective,

@@ -7,27 +7,27 @@
 
 /// Generates a dark highlight schema.
 /// @type {Map}
-/// @property {Map} resting-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-color [igx-color: ('grays', 300), to-opaque: #222, text-contrast: ()] - The icon color used for the highlight in its resting state.
 /// @requires {function} extend
 /// @requires $_light-highlight
 /// @see $default-palette
 $_dark-highlight: extend($_light-highlight, (
     resting-color: (
         igx-color: ('grays', 300),
-        hexrgba: (#222),
+        to-opaque: (#222),
         text-contrast: ()
     ),
 ));
 
 /// Generates a dark fluent highlight schema.
 /// @type {Map}
-/// @property {Map} resting-color [igx-color: ('grays', 300), hexrgba: #222, text-contrast: ()] - The icon color used for the highlight in its resting state.
+/// @property {Map} resting-color [igx-color: ('grays', 300), to-opaque: #222, text-contrast: ()] - The icon color used for the highlight in its resting state.
 /// @requires {function} extend
 /// @requires $_fluent-highlight
 $_dark-fluent-highlight: extend($_fluent-highlight, (
     resting-color: (
         igx-color: ('grays', 300),
-        hexrgba: (#222),
+        to-opaque: (#222),
         text-contrast: ()
     ),
 ));

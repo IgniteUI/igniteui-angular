@@ -14,6 +14,7 @@ export class GridRemotePagingSampleComponent implements OnInit, AfterViewInit, O
     public page = 0;
     public totalCount = 0;
     public pages = [];
+    public paging = true;
     public data: Observable<any[]>;
     public selectOptions = [5, 10, 15, 25, 50];
 

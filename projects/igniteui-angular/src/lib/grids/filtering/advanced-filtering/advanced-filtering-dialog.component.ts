@@ -20,6 +20,7 @@ import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
+import { IgxGridBaseDirective } from '../../public_api';
 
 /**
  * @hidden
@@ -289,7 +290,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _grid: GridType;
+    private _grid: IgxGridBaseDirective;
     private _filteringChange: Subscription;
 
     private _positionSettings = {
@@ -356,7 +357,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * An @Input property that sets the grid.
      */
     @Input()
-    public set grid(grid: GridType) {
+    public set grid(grid: IgxGridBaseDirective) {
         this._grid = grid;
 
         if (this._filteringChange) {
@@ -377,7 +378,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * Returns the grid.
      */
-    public get grid(): GridType {
+    public get grid(): IgxGridBaseDirective {
         return this._grid;
     }
 
@@ -386,6 +387,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public get filterableColumns(): IgxColumnComponent[] {
         return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hasEditedExpression(): boolean {
+        return this.editedExpression !== undefined && this.editedExpression !== null;
     }
 
     /**
@@ -786,7 +794,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public initialize(grid: GridType, overlayService: IgxOverlayService,
+    public initialize(grid: IgxGridBaseDirective, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = false;
         this.grid = grid;
@@ -840,7 +848,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick(event?: Event) {
-        this.grid.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -861,7 +869,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public applyChanges(event?: Event) {
-        this.grid.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }

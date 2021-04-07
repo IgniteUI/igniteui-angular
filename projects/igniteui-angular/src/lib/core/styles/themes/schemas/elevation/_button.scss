@@ -5,50 +5,51 @@
 ////
 
 /// @type Map
-/// @prop {Number} raised-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} raised-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} raised-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-/// @prop {Number} fab-resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} fab-hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} fab-focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
-$_flat-button: (
-    raised-resting-elevation: 0,
-    raised-hover-elevation: 0,
-    raised-focus-elevation: 0,
-
-    fab-resting-elevation: 0,
-    fab-hover-elevation: 0,
-    fab-focus-elevation: 0
+/// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
+$_flat-elevation-button: (
+    resting-elevation: 0,
+    hover-elevation: 0,
+    focus-elevation: 0,
 );
 
 /// @type Map
-/// @prop {Number} raised-resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} raised-hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} raised-focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
-/// @prop {Number} fab-resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
-/// @prop {Number} fab-hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
-/// @prop {Number} fab-focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
-$_default-elevation-button: (
-    raised-resting-elevation: 2,
-    raised-hover-elevation: 4,
-    raised-focus-elevation: 8,
-
-    fab-resting-elevation: 6,
-    fab-hover-elevation: 12,
-    fab-focus-elevation: 12
+/// @prop {Number} resting-elevation [2] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [4] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} focus-elevation [8] - The elevation level, between 0-24, to be used for the focus state.
+$_material-raised-elevation: (
+    resting-elevation: 2,
+    hover-elevation: 4,
+    focus-elevation: 8,
 );
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-button
-$_fluent-elevation-button: extend($_flat-button);
+/// @prop {Number} resting-elevation [6] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [12] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} focus-elevation [12] - The elevation level, between 0-24, to be used for the focus state.
+$_material-fab-elevation: (
+    resting-elevation: 6,
+    hover-elevation: 12,
+    focus-elevation: 12
+);
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-button
-$_bootstrap-elevation-button: extend($_flat-button);
+/// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
+/// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
+/// @prop {Number} focus-elevation [6] - The elevation level, between 0-24, to be used for the focus state.
+$_material-ib-elevation: (
+    resting-elevation: 0,
+    hover-elevation: 0,
+    focus-elevation: 6
+);
 
 /// @type Map
-/// @requires {function} extend
-/// @requires {Map} $_flat-button
-$_indigo-elevation-button: extend($_flat-button);
+/// @see $_flat-elevation-button
+/// @requires $_flat-elevation-button
+$_bootstrap-elevation-button: $_flat-elevation-button;
+
+/// @type Map
+/// @see $_flat-elevation-button
+/// @requires $_flat-elevation-button
+$_indigo-elevation-button: $_flat-elevation-button;

@@ -5,9 +5,9 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $slide-background [null] - The slide background color.
 /// @param {Color} $button-background [null] - The previous/next buttons idle background color.
 /// @param {Color} $button-hover-background [null] - The previous/next buttons hover background color.
@@ -40,9 +40,9 @@
 ///   // Pass the carousel theme to the igx-carousel component mixin
 ///   @include igx-carousel($my-carousel-theme);
 @function igx-carousel-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $button-shadow: null,
@@ -90,7 +90,9 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        @if type-of($button-disabled-background) == 'color' {
+            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        }
     }
 
     @return extend($theme, (
@@ -117,7 +119,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires igx-elevation
 /// @requires $elevations
@@ -126,7 +128,7 @@
 /// @requires {mixin} scale-out-center
 /// @requires --var
 @mixin igx-carousel($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
@@ -267,7 +269,7 @@
         @if $variant != 'indigo-design' {
             border: $indicator-border-style;
             border-color: --var($theme, 'indicator-border-color');
-            box-shadow: igx-elevation($elevations, 1);
+            box-shadow: igx-elevation($elevation: 1);
             opacity: .7;
         }
 

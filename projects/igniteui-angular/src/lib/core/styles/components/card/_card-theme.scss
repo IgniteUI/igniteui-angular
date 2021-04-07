@@ -6,7 +6,7 @@
 ////
 
 ///
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The card background color.
@@ -37,9 +37,9 @@
 ///   // Pass the theme to the igx-card component mixin
 ///   @include igx-card($my-card-theme);
 @function igx-card-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $background: null,
@@ -115,11 +115,11 @@
 
 /// Card Component
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-card($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-material-theme: $variant != 'material';

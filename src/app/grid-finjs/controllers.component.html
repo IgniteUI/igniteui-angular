@@ -2,7 +2,7 @@
     <div class="controls-holder">
         <div class="switches">
             <div class="control-item">
-                <igx-switch [checked]="false" [(ngModel)]="theme" (change)="onChange('theme', $event)">Dark</igx-switch>
+                <igx-switch [checked]="false" (change)="onChange('theme', $event)">Dark</igx-switch>
             </div>
             <div class="control-item">
                 <igx-switch [checked]="true" (change)="onChange('grouped', $event)" color="blue" cssClass="finjs-sample-switch">
@@ -13,11 +13,11 @@
             </div>
             <div class="finjs-slider control-item">
                 <label for="slider">Records: {{volume}}</label>
-                <igx-slider #slider1 id="slider" [minValue]="0" [maxValue]="10000" [(ngModel)]="volume" [step]="100" thumbLabelVisibilityDuration="250" [continuous]="true"></igx-slider>
+                <igx-slider #slider1 id="slider" [minValue]="0" [maxValue]="10000" [(ngModel)]="volume" [step]="100" [thumbLabelVisibilityDuration]="250" [continuous]="true"></igx-slider>
             </div>
             <div class="finjs-slider control-item">
                 <label for="slider">Frequency: {{frequency}} ms</label>
-                <igx-slider #slider2 id="slider" [minValue]="100" [maxValue]="3000" [step]="10" [(ngModel)]="frequency" thumbLabelVisibilityDuration="250" [continuous]="true"></igx-slider>
+                <igx-slider #slider2 id="slider" [minValue]="100" [maxValue]="3000" [step]="10" [(ngModel)]="frequency" [thumbLabelVisibilityDuration]="250" [continuous]="true"></igx-slider>
             </div>
         </div>
         <div class="control-item finjs-play-controls">

@@ -9,16 +9,16 @@
             </igx-column>
             <igx-column field="ProductID" width="60px" header="Product ID"></igx-column>
             <igx-column field="ReorderLevel" width="100px" defaultWidth="150px" header="ReorderLever" [dataType]="'number'"
-                editable=" true"></igx-column>
-            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
-            <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
+                [editable]="true"></igx-column>
+            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" [editable]="true">
                 <ng-template igxCellEditor let-cell="cell">
                     <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue"
                         style="color: black; width: 30px;" />
                 </ng-template>
             </igx-column>
-            <igx-column width="100px" field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
-            <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" editable="true"></igx-column>
+            <igx-column width="100px" field="OrderDate" [dataType]="'date'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true"></igx-column>
         </igx-grid>
     </article>
     <article class="grid-row-edit-wrapper">
@@ -98,10 +98,10 @@
                 <igx-column width="100px" field="ProductID" [editable]="false" [filterable]="true" [sortable]="true"
                     header="Product ID"></igx-column>
                 <igx-column width="100px" field="ReorderLevel" [filterable]="true" [sortable]="true" header="ReorderLever"
-                    [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" editable="true">
+                    [dataType]="'number'" [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true">
                 </igx-column>
                 <igx-column width="100px" field="ProductName" [filterable]="true" [sortable]="true" header="ProductName"
-                    [hidden]="hideFlag" [dataType]="'string'" editable="true"></igx-column>
+                    [hidden]="hideFlag" [dataType]="'string'" [editable]="true"></igx-column>
                 <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                     <ng-template igxCellEditor let-cell="cell">
                         <input name="units" [(ngModel)]="cell.editValue"
@@ -113,24 +113,24 @@
                     [hidden]="hideFlag" [pinned]="pinFlag" [sortable]="true"></igx-column>
                 <igx-column-group [movable]="true" header="Column Group 1">
                     <igx-column width="100px" field="ReorderLevel2" header="ReorderLevel2" [dataType]="'number'"
-                        [hasSummary]="summaryFlag" editable="true"></igx-column>
+                        [hasSummary]="summaryFlag" [editable]="true"></igx-column>
                     <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'"
-                        [hasSummary]="summaryFlag" [hidden]="hideFlag" editable="true"></igx-column>
+                        [hasSummary]="summaryFlag" [hidden]="hideFlag" [editable]="true"></igx-column>
                     <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'"
                         [filterable]="true" [hasSummary]="summaryFlag" [pinned]="pinFlag" [sortable]="true"
-                        editable="true"></igx-column>
+                        [editable]="true"></igx-column>
                 </igx-column-group>
                 <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'"
-                    [hasSummary]="summaryFlag" editable="true" [sortable]="true">
+                    [hasSummary]="summaryFlag" [editable]="true" [sortable]="true">
                     <ng-template igxCellEditor let-cell="cell">
                         <input name="units" [igxFocus]="true" [(ngModel)]="cell.editValue"
                             style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
-                <igx-column width="100px" field="OrderDate2" [dataType]="'date'" header="PINNED DATE" editable="true"
+                <igx-column width="100px" field="OrderDate2" [dataType]="'date'" header="PINNED DATE" [editable]="true"
                     [pinned]="pinFlag"></igx-column>
                 <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'"
-                    editable="true"></igx-column>
+                    [editable]="true"></igx-column>
                 <ng-template *ngIf="customTemplate" igxRowEdit>
                     <div class='igx-banner'>
                         <div class="igx-banner__message">
@@ -141,10 +141,10 @@
                         </div>
                         <div class="igx-banner__actions">
                             <div class="igx-banner__row">
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit()">Cancel</button>
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit()">Cancel</button>
                                 <button igxButton igxRowEditTabStop (click)="console.log(gridRowEditTransaction.transactions)">Log
                                     Changes</button>
-                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.endEdit(true)">Apply</button>
+                                <button igxButton igxRowEditTabStop (click)="gridRowEditTransaction.crudService.endEdit(true)">Apply</button>
                             </div>
                         </div>
                     </div>
@@ -174,8 +174,8 @@
                 </ng-template>
             </igx-column>
             <igx-column width="100px" field="ProductID" header="Product ID"></igx-column>
-            <igx-column width="100px" field="ReorderLevel" header="ReorderLever" [dataType]="'number'" editable="true"></igx-column>
-            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
+            <igx-column width="100px" field="ReorderLevel" header="ReorderLever" [dataType]="'number'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
             <igx-column width="100px" field="UnitsInStock" header="UnitsInStock" [dataType]="'number'">
                 <ng-template igxCellEditor let-cell="cell">
                     <input name="units" [(ngModel)]="cell.editValue"
@@ -184,19 +184,19 @@
             </igx-column>
             <igx-column width="100px" field="OrderDate" [dataType]="'date'"></igx-column>
             <igx-column width="100px" field="Discontinued2" header="PINNED DISCONTINUED" [dataType]="'boolean'"
-                pinned="true"></igx-column>
-            <igx-column width="100px" field="ReorderLevel2" header="ReorderLever2" [dataType]="'number'" editable="true"></igx-column>
-            <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" editable="true"></igx-column>
-            <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'" pinned="true"
-                editable="true"></igx-column>
-            <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" editable="true">
+                [pinned]="true"></igx-column>
+            <igx-column width="100px" field="ReorderLevel2" header="ReorderLever2" [dataType]="'number'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="UnitPrice" header="UnitPrice" [dataType]="'number'" [editable]="true"></igx-column>
+            <igx-column width="100px" field="UnitPrice2" header="PINNED UNIT PRICE" [dataType]="'number'" [pinned]="true"
+                [editable]="true"></igx-column>
+            <igx-column width="100px" field="UnitsInStock2" header="UnitsInStock2" [dataType]="'number'" [editable]="true">
                 <ng-template igxCellEditor let-cell="cell">
                     <input name="units" [(ngModel)]="cell.editValue"
                         style="color: black; width: 30px;" />
                 </ng-template>
             </igx-column>
-            <igx-column width="100px" field="PINNED ORDER DATE" [dataType]="'date'" editable="true" pinned="true"></igx-column>
-            <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" editable="true"></igx-column>
+            <igx-column width="100px" field="PINNED ORDER DATE" [dataType]="'date'" [editable]="true" [pinned]="true"></igx-column>
+            <igx-column width="100px" field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true"></igx-column>
         </igx-grid>
     </article>
     <article class="grid-row-edit-wrapper">
@@ -209,16 +209,16 @@
                     </ng-template>
                 </igx-column>
                 <igx-column field="ProductID" header="Product ID"></igx-column>
-                <igx-column field="ReorderLevel" header="ReorderLever" [dataType]="'number'" editable=" true"></igx-column>
-                <igx-column field="ProductName" header="ProductName" [dataType]="'string'" editable="true"></igx-column>
-                <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" editable="true">
+                <igx-column field="ReorderLevel" header="ReorderLever" [dataType]="'number'" [editable]="true"></igx-column>
+                <igx-column field="ProductName" header="ProductName" [dataType]="'string'" [editable]="true"></igx-column>
+                <igx-column field="UnitsInStock" header="UnitsInStock" [dataType]="'number'" [editable]="true">
                     <ng-template igxCellEditor let-cell="cell">
                         <input name="units" [(ngModel)]="cell.editValue"
                             style="color: black; width: 30px;" />
                     </ng-template>
                 </igx-column>
-                <igx-column field="OrderDate" [dataType]="'date'" editable="true"></igx-column>
-                <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" editable="true"></igx-column>
+                <igx-column field="OrderDate" [dataType]="'date'" [editable]="true"></igx-column>
+                <igx-column field="Discontinued" header="Discontinued" [dataType]="'boolean'" [editable]="true"></igx-column>
             </igx-grid>
         </app-grid-with-transactions>
         <button (click)="addRow('gridTransaction')">Add Row</button>

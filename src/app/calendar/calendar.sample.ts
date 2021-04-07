@@ -33,8 +33,8 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
     public ngAfterViewInit() {
     }
 
-    public selectPTOdays(dates: Date[]) {
-        this.range = dates;
+    public selectPTOdays(dates: Date | Date[]) {
+        this.range = dates as Date [];
         console.log(this.range);
     }
 
@@ -58,7 +58,7 @@ export class CalendarSampleComponent implements OnInit, AfterViewInit {
         this.calendar.hideOutsideDays = !this.calendar.hideOutsideDays;
     }
 
-    public onSelection(event: Date) {
+    public onSelection(event: Date | Date []) {
         console.log(`Selected date\s:${event}`);
     }
 

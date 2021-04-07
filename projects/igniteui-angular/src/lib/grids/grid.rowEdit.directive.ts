@@ -15,6 +15,12 @@ export class IgxRowEditTextDirective { }
 
 /** @hidden @internal */
 @Directive({
+    selector: '[igxRowAddText]'
+})
+export class IgxRowAddTextDirective { }
+
+/** @hidden @internal */
+@Directive({
     selector: '[igxRowEditActions]'
 })
 export class IgxRowEditActionsDirective { }
@@ -47,7 +53,7 @@ export class IgxRowEditTabStopDirective {
 
     @HostListener('keydown.Escape', [`$event`])
     public handleEscape(event: KeyboardEvent): void {
-        this.grid.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.grid.tbody.nativeElement.focus();
     }
 
@@ -65,9 +71,9 @@ export class IgxRowEditTabStopDirective {
     private move(event: KeyboardEvent) {
         event.preventDefault();
         this.currentCellIndex = event.shiftKey ? this.grid.lastEditableColumnIndex : this.grid.firstEditableColumnIndex;
-        this.grid.navigation.activeNode.row = this.grid.rowInEditMode.index;
+        this.grid.navigation.activeNode.row = this.grid.crudService.rowInEditMode.index;
         this.grid.navigation.activeNode.column = this.currentCellIndex;
-        this.grid.navigateTo(this.grid.rowInEditMode.index, this.currentCellIndex, (obj) => {
+        this.grid.navigateTo(this.grid.crudService.rowInEditMode.index, this.currentCellIndex, (obj) => {
             obj.target.activate(event);
             this.grid.cdr.detectChanges();
         });

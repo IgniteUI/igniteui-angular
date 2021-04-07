@@ -30,9 +30,10 @@ describe('IgxSwitch', () => {
         const fixture = TestBed.createComponent(InitSwitchComponent);
         fixture.detectChanges();
 
+        const switchComp = fixture.componentInstance.switch;
         const domSwitch = fixture.debugElement.query(By.css('igx-switch')).nativeElement;
         const nativeCheckbox = fixture.debugElement.query(By.css('input')).nativeElement;
-        const nativeLabel = fixture.debugElement.query(By.css('label')).nativeElement;
+        const nativeLabel = switchComp.nativeLabel.nativeElement;
         const placeholderLabel = fixture.debugElement.query(By.css('.igx-switch__label')).nativeElement;
 
         expect(domSwitch.id).toBe('igx-switch-0');
@@ -42,11 +43,18 @@ describe('IgxSwitch', () => {
         expect(nativeCheckbox.getAttribute('aria-labelledby')).toMatch('igx-switch-0-label');
 
         expect(nativeLabel).toBeTruthy();
-        expect(nativeLabel.getAttribute('for')).toEqual('igx-switch-0-input');
+        // No longer have a for attribute to not propagate clicks to the native checkbox
+        // expect(nativeLabel.getAttribute('for')).toEqual('igx-switch-0-input');
 
         expect(placeholderLabel.textContent.trim()).toEqual('Init');
         expect(placeholderLabel.classList).toContain('igx-switch__label');
         expect(placeholderLabel.getAttribute('id')).toEqual('igx-switch-0-label');
+
+        // When aria-label is present, aria-labeledby shouldn't be
+        switchComp.ariaLabel = 'New Label';
+        fixture.detectChanges();
+        expect(nativeCheckbox.getAttribute('aria-labelledby')).toEqual(null);
+        expect(nativeCheckbox.getAttribute('aria-label')).toMatch('New Label');
     });
 
     it('Initializes with ngModel', () => {
@@ -193,8 +201,10 @@ describe('IgxSwitch', () => {
     });
 });
 
-@Component({ template: `<igx-switch>Init</igx-switch>` })
-class InitSwitchComponent { }
+@Component({ template: `<igx-switch #switch>Init</igx-switch>` })
+class InitSwitchComponent {
+    @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;
+}
 
 @Component({
     template: `<igx-switch #switch (change)="onChange()" (click)="onClick()"
@@ -213,7 +223,7 @@ class SwitchSimpleComponent {
 }
 
 @Component({
-    template: `<igx-switch #switch [required]="true">Required</igx-switch>`
+    template: `<igx-switch #switch required>Required</igx-switch>`
 })
 class SwitchRequiredComponent {
     @ViewChild('switch', { static: true }) public switch: IgxSwitchComponent;

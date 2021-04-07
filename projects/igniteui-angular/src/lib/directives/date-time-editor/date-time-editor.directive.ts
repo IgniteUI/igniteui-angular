@@ -118,11 +118,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    *
    * @example
    * ```html
-   * <input igxDateTimeEditor [isSpinLoop]="false">
+   * <input igxDateTimeEditor [spinLoop]="false">
    * ```
    */
   @Input()
-  public isSpinLoop = true;
+  public spinLoop = true;
 
   /**
    * Set both pre-defined format options such as `shortDate` and `longDate`,
@@ -155,7 +155,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   public get inputFormat(): string {
-    return this._format;
+    return this._format || this._inputFormat;
   }
 
   /**
@@ -186,7 +186,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    *
    * @example
    * ```html
-   * <input igxDateTimeEditor [spinDeltas]="{date: 5, minute: 30}">
+   * <input igxDateTimeEditor [spinDelta]="{date: 5, minute: 30}">
    * ```
    */
   @Input()
@@ -299,7 +299,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['inputFormat'] || changes['locale']) {
+    if (changes['locale'] && !this._format) {
+      this._inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    }
+    if (changes['inputFormat']) {
       this.updateInputFormat();
     }
   }
@@ -442,6 +445,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onFocus(): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     this._isFocused = true;
     this.onTouchCallback();
     this.updateMask();
@@ -455,6 +461,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.updateValue(this.parseDate(this.inputValue));
     } else {
       this.updateMask();
+    }
+
+    // TODO: think of a better way to set displayValuePipe in mask directive
+    if (this.displayValuePipe) {
+      return;
     }
 
     super.onBlur(value);
@@ -479,11 +490,15 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         this.inputValue = '';
         return;
       }
+      if (this.displayValuePipe) {
+        // TODO: remove when formatter func has been deleted
+        this.inputValue = this.displayValuePipe.transform(this.value);
+        return;
+      }
       const format = this.displayFormat || this.inputFormat;
       if (format) {
         this.inputValue = DateTimeUtil.formatDate(this._dateValue, format.replace('tt', 'aa'), this.locale);
       } else {
-        // TODO: formatter function?
         this.inputValue = this._dateValue.toLocaleString();
       }
     }
@@ -500,7 +515,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private getMaskedValue(): string {
     let mask = this.emptyMask;
-    if (this.value) {
+    if (DateTimeUtil.isValidDate(this.value)) {
       for (const part of this._inputDateParts) {
         if (part.type === DatePart.Literal) {
           continue;
@@ -555,22 +570,22 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     const newDate = new Date(this._dateValue.getTime());
     switch (datePart) {
       case DatePart.Date:
-        DateTimeUtil.spinDate(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinDate(delta, newDate, this.spinLoop);
         break;
       case DatePart.Month:
-        DateTimeUtil.spinMonth(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinMonth(delta, newDate, this.spinLoop);
         break;
       case DatePart.Year:
         DateTimeUtil.spinYear(delta, newDate);
         break;
       case DatePart.Hours:
-        DateTimeUtil.spinHours(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinHours(delta, newDate, this.spinLoop);
         break;
       case DatePart.Minutes:
-        DateTimeUtil.spinMinutes(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinMinutes(delta, newDate, this.spinLoop);
         break;
       case DatePart.Seconds:
-        DateTimeUtil.spinSeconds(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinSeconds(delta, newDate, this.spinLoop);
         break;
       case DatePart.AmPm:
         const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);

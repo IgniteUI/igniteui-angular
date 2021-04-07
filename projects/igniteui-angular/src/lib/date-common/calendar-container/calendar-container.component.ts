@@ -1,8 +1,7 @@
-
 import { CommonModule } from '@angular/common';
 import { NgModule, Component, ViewChild, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 import { IgxCalendarComponent, IgxCalendarModule } from '../../calendar/public_api';
-import { InteractionMode } from '../../core/enums';
+import { PickerInteractionMode } from '../../date-common/types';
 import { IgxButtonModule } from '../../directives/button/button.directive';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 import { IgxPickerActionsDirective } from '../picker-icons.common';
@@ -28,18 +27,18 @@ export class IgxCalendarContainerComponent {
 
     @HostBinding('class.igx-date-picker--dropdown')
     public get dropdownCSS(): boolean {
-        return this.mode === InteractionMode.DropDown;
+        return this.mode === PickerInteractionMode.DropDown;
     }
 
     @HostBinding('class.igx-date-picker--vertical')
     public get verticalCSS(): boolean {
-        return this.vertical && this.mode === InteractionMode.Dialog;
+        return this.vertical && this.mode === PickerInteractionMode.Dialog;
     }
 
     public vertical = false;
     public closeButtonLabel: string;
     public todayButtonLabel: string;
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
     public pickerActions: IgxPickerActionsDirective;
 
     @HostListener('keydown.alt.arrowup', ['$event'])
@@ -49,7 +48,7 @@ export class IgxCalendarContainerComponent {
     }
 
     public get isReadonly() {
-        return this.mode === InteractionMode.Dialog;
+        return this.mode === PickerInteractionMode.Dialog;
     }
 }
 
