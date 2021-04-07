@@ -28,25 +28,9 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
         super(selectionService, gridAPI, cdr, helement, zone, touchManager, platformUtil);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         super.ngOnInit();
         this._rootGrid = this._getRootGrid();
-    }
-
-    // TODO: Extend the new selection service to avoid complete traversal
-    _clearAllHighlights() {
-        [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
-            if (grid !== this.grid && grid.navigation.activeNode) {
-                grid.navigation.clearActivation();
-                grid.selectionService.initKeyboardState();
-                grid.selectionService.clear();
-            }
-
-            grid.selectionService.activeElement = null;
-            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
-            grid.highlightedRowID = null;
-            grid.cdr.markForCheck();
-        });
     }
 
     /**
@@ -81,5 +65,21 @@ export class IgxHierarchicalGridCellComponent extends IgxGridCellComponent imple
             currGrid = currGrid.parent;
         }
         return currGrid;
+    }
+
+    // TODO: Extend the new selection service to avoid complete traversal
+    private _clearAllHighlights() {
+        [this._rootGrid, ...this._rootGrid.getChildGrids(true)].forEach(grid => {
+            if (grid !== this.grid && grid.navigation.activeNode) {
+                grid.navigation.clearActivation();
+                grid.selectionService.initKeyboardState();
+                grid.selectionService.clear();
+            }
+
+            grid.selectionService.activeElement = null;
+            grid.nativeElement.classList.remove('igx-grid__tr--highlighted');
+            grid.highlightedRowID = null;
+            grid.cdr.markForCheck();
+        });
     }
 }

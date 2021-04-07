@@ -404,7 +404,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /** @hidden */

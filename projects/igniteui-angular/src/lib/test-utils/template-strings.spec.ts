@@ -163,11 +163,7 @@ export class ColumnDefinitions {
         <igx-column [field]="'ReleaseDate'" [resizable]="true" dataType="date"></igx-column>
         <igx-column [field]="'Category'" [width]="'150px'" [resizable]="true" dataType="string">
             <ng-template igxCell igxHeader>
-                <div>
-                    <div style="width: 40px; min-width: 40px; min-height: 40px; background-color: gray;">
-                        JS
-                    </div> 
-                </div>
+                <igx-avatar initials="JS"></igx-avatar>
             </ng-template>
         </igx-column>
         <igx-column [field]="'Items'" [width]="'60px'" [hasSummary]="true" [resizable]="true" dataType="string"></igx-column>

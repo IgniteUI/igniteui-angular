@@ -3173,12 +3173,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            this.overlayService.hide(overlayID);
-            this.overlayService.onClosed.pipe(
-                filter(o => o.id === overlayID),
-                takeUntil(this.destroy$)).subscribe(() => {
-                    this.nativeElement.focus();
-                });
+            this.overlayService.detach(overlayID);
+            this.nativeElement.focus();
         });
     }
 
@@ -3267,7 +3263,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
+                    || (event.target === this.tfoot.nativeElement.children[0] &&
+                        this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
@@ -3350,6 +3347,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
+                this.overlayService.detach(this._advancedFilteringOverlayId);
                 this._advancedFilteringOverlayId = null;
                 return;
             }
@@ -3655,7 +3653,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._destroyed = true;
 
         if (this._advancedFilteringOverlayId) {
-            this.overlayService.hide(this._advancedFilteringOverlayId);
+            this.overlayService.detach(this._advancedFilteringOverlayId);
         }
 
         this.zone.runOutsideAngular(() => {

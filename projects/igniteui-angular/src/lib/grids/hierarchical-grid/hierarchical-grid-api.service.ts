@@ -12,22 +12,22 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
     protected childGrids:  Map<string, Map<any, IgxHierarchicalGridComponent>> =
         new Map<string, Map<any, IgxHierarchicalGridComponent>>();
 
-    registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
+    public registerChildRowIsland(rowIsland: IgxRowIslandComponent) {
         this.childRowIslands.set(rowIsland.key, rowIsland);
         this.destroyMap.set(rowIsland.key, new Subject<boolean>());
     }
 
-    unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
+    public unsetChildRowIsland(rowIsland: IgxRowIslandComponent) {
         this.childGrids.delete(rowIsland.key);
         this.childRowIslands.delete(rowIsland.key);
         this.destroyMap.delete(rowIsland.key);
     }
 
-    getChildRowIsland(key: string) {
+    public getChildRowIsland(key: string) {
         return this.childRowIslands.get(key);
     }
 
-    getChildGrid(path: Array<IPathSegment>) {
+    public getChildGrid(path: Array<IPathSegment>) {
         const currPath = path;
         let grid;
         const pathElem = currPath.shift();
@@ -43,7 +43,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return grid;
     }
 
-    getChildGrids(inDepth?: boolean) {
+    public getChildGrids(inDepth?: boolean) {
         const allChildren = [];
         this.childGrids.forEach((layoutMap) => {
             layoutMap.forEach((grid) => {
@@ -60,7 +60,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return allChildren;
     }
 
-    getParentRowId(childGrid: IgxHierarchicalGridComponent) {
+    public getParentRowId(childGrid: IgxHierarchicalGridComponent) {
         let rowID;
         this.childGrids.forEach((layoutMap) => {
             layoutMap.forEach((grid, key) => {
@@ -73,7 +73,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return rowID;
     }
 
-    registerChildGrid(parentRowID: any, rowIslandKey: string, grid: IgxHierarchicalGridComponent) {
+    public registerChildGrid(parentRowID: any, rowIslandKey: string, grid: IgxHierarchicalGridComponent) {
         let childrenForLayout = this.childGrids.get(rowIslandKey);
         if (!childrenForLayout) {
             this.childGrids.set(rowIslandKey, new Map<any, IgxHierarchicalGridComponent>());
@@ -82,7 +82,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         childrenForLayout.set(parentRowID, grid);
     }
 
-    getChildGridsForRowIsland(rowIslandKey): IgxHierarchicalGridComponent[] {
+    public getChildGridsForRowIsland(rowIslandKey): IgxHierarchicalGridComponent[] {
         const childrenForLayout = this.childGrids.get(rowIslandKey);
         const children = [];
         if (childrenForLayout) {
@@ -93,7 +93,7 @@ export class IgxHierarchicalGridAPIService extends GridBaseAPIService<IgxGridBas
         return children;
     }
 
-    getChildGridByID(rowIslandKey, rowID) {
+    public getChildGridByID(rowIslandKey, rowID) {
         const childrenForLayout = this.childGrids.get(rowIslandKey);
         return childrenForLayout.get(rowID);
     }

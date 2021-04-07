@@ -29,7 +29,6 @@
 /// @requires extend
 /// @requires igx-elevation
 /// @requires text-contrast
-/// @requires $elevations
 /// @requires round-borders
 ///
 /// @example scss Change the previous/next button colors
@@ -90,7 +89,9 @@
     }
 
     @if not($button-disabled-arrow-color) and $button-disabled-background {
-        $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        @if type-of($button-disabled-background) == 'color' {
+            $button-disabled-arrow-color: rgba(text-contrast($button-disabled-background), .3);
+        }
     }
 
     @return extend($theme, (
@@ -120,7 +121,6 @@
 /// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires {mixin} animation
 /// @requires {mixin} scale-in-center
 /// @requires {mixin} scale-out-center

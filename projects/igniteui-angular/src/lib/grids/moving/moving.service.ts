@@ -25,19 +25,19 @@ export class IgxColumnMovingService {
     private _icon: any;
     private _column: IgxColumnComponent;
 
-    get column(): IgxColumnComponent {
+    public get column(): IgxColumnComponent {
         return this._column;
     }
-    set column(val: IgxColumnComponent) {
+    public set column(val: IgxColumnComponent) {
         if (val) {
             this._column = val;
         }
     }
 
-    get icon(): any {
+    public get icon(): any {
         return this._icon;
     }
-    set icon(val: any) {
+    public set icon(val: any) {
         if (val) {
             this._icon = val;
         }

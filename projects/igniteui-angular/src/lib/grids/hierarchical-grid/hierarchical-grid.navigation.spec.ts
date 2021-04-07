@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
@@ -1024,7 +1024,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.selectedCell = event.cell;
     }
 
-    generateData(count: number, level: number) {
+    public generateData(count: number, level: number) {
         const prods = [];
         const currLevel = level;
         let children;

@@ -73,26 +73,26 @@ $handmade-palette: (
         'A700-contrast': white
     ),
     grays: (
-        50: rgba(0, 0, 0, .02),
-        '50-contrast': black,
-        100: rgba(0, 0, 0, .04),
-        '100-contrast': black,
-        200: rgba(0, 0, 0, .08),
-        '200-contrast': black,
-        300: rgba(0, 0, 0, .12),
-        '300-contrast': black,
-        400: rgba(0, 0, 0, .26),
-        '400-contrast': black,
-        500: rgba(0, 0, 0, .38),
+        50: rgba(255, 255, 255, .02),
+        '50-contrast': white,
+        100: rgba(255, 255, 255, .04),
+        '100-contrast': white,
+        200: rgba(255, 255, 255, .08),
+        '200-contrast': white,
+        300: rgba(255, 255, 255, .12),
+        '300-contrast': white,
+        400: rgba(255, 255, 255, .26),
+        '400-contrast': white,
+        500: rgba(255, 255, 255, .38),
         '500-contrast': black,
-        600: rgba(0, 0, 0, .54),
-        '600-contrast': white,
-        700: rgba(0, 0, 0, .62),
-        '700-contrast': white,
-        800: rgba(0, 0, 0, .74),
-        '800-contrast': white,
-        900: rgba(0, 0, 0, .87),
-        '900-contrast': white
+        600: rgba(255, 255, 255, .54),
+        '600-contrast': black,
+        700: rgba(255, 255, 255, .62),
+        '700-contrast': black,
+        800: rgba(255, 255, 255, .74),
+        '800-contrast': black,
+        900: rgba(255, 255, 255, .87),
+        '900-contrast': black
     ),
     info: (
         500: #1377d5,
@@ -111,7 +111,9 @@ $handmade-palette: (
         '500-contrast': black
     ),
     surface: (
-        500: #fff,
-        '500-contrast': black
+        500: #222,
+        '500-contrast': white
     )
 );
+
+// $palette: $handmade-palette;

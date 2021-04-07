@@ -1382,14 +1382,12 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
     describe('Custom row selectors', () => {
         let hGrid;
-        let firstLevelChild;
 
         beforeEach(fakeAsync(() => {
             fix = TestBed.createComponent(IgxHierarchicalGridCustomSelectorsComponent);
             fix.detectChanges();
             hGrid = fix.componentInstance.hGrid;
             hGrid.rowSelection = GridSelectionMode.multiple;
-            firstLevelChild = fix.componentInstance.firstLevelChild;
         }));
 
         it('Row context `select` method selects a single row', () => {

@@ -52,7 +52,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
  * @example
  * ```html
- * <igx-grid [data]="employeeData" autoGenerate="false">
+ * <igx-grid [data]="employeeData" [autoGenerate]="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
@@ -83,11 +83,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @example
      * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -1032,7 +1032,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /**

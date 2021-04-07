@@ -530,6 +530,7 @@ export class IgxGridNavigationService {
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
         if (!this.grid.crudService.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
             this.grid.crudService.endEdit(true, event);
+            this.grid.tbody.nativeElement.focus();
             return;
         }
         event.preventDefault();
