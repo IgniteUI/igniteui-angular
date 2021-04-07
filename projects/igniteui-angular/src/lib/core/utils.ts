@@ -227,7 +227,7 @@ export class PlatformUtil {
     public getNodeSizeViaRange(range: Range, node: HTMLElement) {
         let overflow = null;
 
-        if (this.isFirefox) {
+        if (!this.isFirefox) {
             overflow = node.style.overflow;
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = 'visible';
@@ -236,7 +236,7 @@ export class PlatformUtil {
         range.selectNodeContents(node);
         const width = range.getBoundingClientRect().width;
 
-        if (this.isFirefox) {
+        if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = overflow;
         }
