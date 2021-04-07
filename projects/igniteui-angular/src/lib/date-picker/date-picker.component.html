@@ -7,9 +7,8 @@
         [igxDateTimeEditor]="this.inputFormat" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" [displayFormat]="this.displayFormat"
         [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown"
-        [igxTextSelection]="this.isDropdown" [required]="this.required" [locale]="this.locale"
-        [attr.aria-expanded]="!this.collapsed" [attr.aria-labelledby]="this.label?.id"
-        [attr.aria-required]="this.required" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
+        [igxTextSelection]="this.isDropdown" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"
+        [attr.aria-labelledby]="this.label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
 
     <igx-suffix *ngIf="!this.clearComponents.length && this.value" (click)="this.clear()">
         <igx-icon>clear</igx-icon>

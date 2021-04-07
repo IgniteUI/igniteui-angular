@@ -444,6 +444,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private _value: Date;
     private _overlayId: string;
+    private _targetViewDate: Date;
     private _destroy$ = new Subject();
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
@@ -464,14 +465,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         positionStrategy: new AutoPositionStrategy({
             openAnimation: fadeIn,
             closeAnimation: fadeOut
-        }),
-        outlet: this.outlet
+        })
     };
     private _dialogOverlaySettings: OverlaySettings = {
         closeOnOutsideClick: true,
         modal: true,
-        closeOnEscape: true,
-        outlet: this.outlet
+        closeOnEscape: true
     };
     private _calendarFormat: IFormattingOptions = {
         day: 'numeric',
@@ -559,6 +558,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         if (this.isDropdown && this.inputGroupElement) {
             overlaySettings.target = this.inputGroupElement;
+        }
+        if (this.outlet) {
+            overlaySettings.outlet = this.outlet;
         }
 
         this._overlayId = this._overlayService
@@ -813,9 +815,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
             this.updateValidity();
         }
-        if (this.inputGroup.isRequired !== this.required) {
-            this.inputGroup.isRequired = this.required;
-        }
+        this.inputGroup.isRequired = this.required;
     };
 
     private handleSelection(date: Date): void {
@@ -862,7 +862,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             this.opened.emit(eventArgs as IBaseEventArgs);
-            this._calendar?.daysView?.focusActiveDate();
+            if (this._calendar?.daysView?.selectedDates) {
+                this._calendar?.daysView?.focusActiveDate();
+            } else {
+                this._targetViewDate.setHours(0, 0, 0, 0);
+                this._calendar?.daysView?.dates
+                    .find(d => d.date.date.getTime() === this._targetViewDate.getTime())?.nativeElement.focus();
+            }
         });
 
         this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
@@ -878,10 +884,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         });
 
         this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe((event) => {
-            this._collapsed = true;
-            this._overlayId = null;
             this.closed.emit(event as IBaseEventArgs);
             this._overlayService.detach(this._overlayId);
+            this._collapsed = true;
+            this._overlayId = null;
         });
     }
 
@@ -925,8 +931,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         if (DateTimeUtil.isValidDate(this.value)) {
             // calendar will throw if this.value is InvalidDate #9208
             this._calendar.value = this.value;
-            this._calendar.viewDate = this.value;
         }
+        this.setCalendarViewDate();
 
         componentInstance.mode = this.mode;
         componentInstance.vertical = isVertical;
@@ -936,5 +942,20 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
         componentInstance.calendarClose.pipe(takeUntil(this._destroy$)).subscribe(() => this.close());
         componentInstance.todaySelection.pipe(takeUntil(this._destroy$)).subscribe(() => this.selectToday());
+    }
+
+    private setCalendarViewDate() {
+        // TODO: use ISO date parser from DateUtil
+        const minValueAsDate = parseDate(this.minValue);
+        const maxValueAsDate = parseDate(this.maxValue);
+        if (DateTimeUtil.lessThanMinValue(this.value, minValueAsDate)) {
+            this._calendar.viewDate = this._targetViewDate = minValueAsDate;
+            return;
+        }
+        if (DateTimeUtil.greaterThanMaxValue(this.value, maxValueAsDate)) {
+            this._calendar.viewDate = this._targetViewDate = maxValueAsDate;
+            return;
+        }
+        this._calendar.viewDate = this.value;
     }
 }
