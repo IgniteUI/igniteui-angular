@@ -92,7 +92,7 @@ describe('igxCombo', () => {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
-        const mockIconService = new IgxIconService(null, null);
+        const mockIconService = new IgxIconService(null, null, null);
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, null, null, mockInjector);
