@@ -26,7 +26,7 @@ import {
     OverlayEventArgs
 } from '../services/public_api';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { KEYS, isEqual, IBaseCancelableBrowserEventArgs, IBaseEventArgs, parseDate } from '../core/utils';
+import { KEYS, isEqual, IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -311,17 +311,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public get value(): Date {
+    public get value(): Date | string {
         return this._value;
     }
-    public set value(date: Date) {
-        const oldValue = this._value;
+    public set value(date: Date | string) {
+        const oldValue = this.dateValue;
         this._value = date;
+        this.setDateValue(date);
         if (this.dateTimeEditor.value !== date) {
             this.dateTimeEditor.value = date;
         }
-        this.emitValueChange(oldValue, this.value);
-        this._onChangeCallback(date);
+        this.emitValueChange(oldValue, this.dateValue);
+        this._onChangeCallback(this.dateValue);
     }
 
     /**
@@ -439,11 +440,16 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputGroup?.element.nativeElement;
     }
 
+    private get dateValue(): Date {
+        return this._dateValue;
+    }
+
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
-    private _value: Date;
+    private _dateValue: Date;
     private _overlayId: string;
+    private _value: Date | string;
     private _targetViewDate: Date;
     private _destroy$ = new Subject();
     private _ngControl: NgControl = null;
@@ -614,7 +620,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * @param date passed date that has to be set to the calendar.
      */
     public select(value: Date): void {
-        const oldValue = this.value;
+        const oldValue = this.dateValue;
         this.value = value;
         if (DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue)) {
             this.validationFailed.emit({
@@ -689,8 +695,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     //#region Control Value Accessor
     /** @hidden @internal */
-    public writeValue(value: Date) {
+    public writeValue(value: Date | string) {
         this._value = value;
+        this.setDateValue(value);
         if (this.dateTimeEditor.value !== value) {
             this.dateTimeEditor.value = this.value;
         }
@@ -796,6 +803,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             });
     }
 
+    private setDateValue(value: Date | string) {
+        this._dateValue = DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
+    }
+
     private updateValidity() {
         if (this._ngControl) {
             if (this.inputGroup.isFocused) {
@@ -819,11 +830,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     };
 
     private handleSelection(date: Date): void {
-        if (this.value) {
-            date.setHours(this.value.getHours());
-            date.setMinutes(this.value.getMinutes());
-            date.setSeconds(this.value.getSeconds());
-            date.setMilliseconds(this.value.getMilliseconds());
+        if (this.dateValue) {
+            date.setHours(this.dateValue.getHours());
+            date.setMinutes(this.dateValue.getMinutes());
+            date.setSeconds(this.dateValue.getSeconds());
+            date.setMilliseconds(this.dateValue.getMilliseconds());
         }
         this.value = date;
         this._calendar.viewDate = date;
@@ -834,8 +845,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.dateTimeEditor.valueChange.pipe(
             takeUntil(this._destroy$)).subscribe(newDate => {
                 this.value = newDate;
-                if (newDate && this.disabledDates && !isDateInRanges(newDate, this.disabledDates)) {
-                    this.onDisabledDate.emit({ currentValue: this.value, datePicker: this });
+                const dateValue = DateTimeUtil.isValidDate(newDate) ? newDate : DateTimeUtil.parseIsoDate(newDate);
+                if (newDate && this.disabledDates && !isDateInRanges(dateValue, this.disabledDates)) {
+                    this.onDisabledDate.emit({ currentValue: this.dateValue, datePicker: this });
                 }
             });
         this.dateTimeEditor.validationFailed.pipe(
@@ -864,7 +876,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this.opened.emit(eventArgs as IBaseEventArgs);
             if (this._calendar?.daysView?.selectedDates) {
                 this._calendar?.daysView?.focusActiveDate();
-            } else {
+                return;
+            }
+            if (this._targetViewDate) {
                 this._targetViewDate.setHours(0, 0, 0, 0);
                 this._calendar?.daysView?.dates
                     .find(d => d.date.date.getTime() === this._targetViewDate.getTime())?.nativeElement.focus();
@@ -897,14 +911,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         }
     }
 
+    private getMinMaxDates() {
+        const minValue = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : DateTimeUtil.parseIsoDate(this.minValue);
+        const maxValue = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : DateTimeUtil.parseIsoDate(this.maxValue);
+        return { minValue, maxValue };
+    }
+
     private setDisabledDates(): void {
         this._calendar.disabledDates = this.disabledDates ? [...this.disabledDates] : [];
-        // TODO: ISO support
-        const minValue = parseDate(this.minValue);
+        const { minValue, maxValue } = this.getMinMaxDates();
         if (minValue) {
             this._calendar.disabledDates.push({ type: DateRangeType.Before, dateRange: [minValue] });
         }
-        const maxValue = parseDate(this.maxValue);
         if (maxValue) {
             this._calendar.disabledDates.push({ type: DateRangeType.After, dateRange: [maxValue] });
         }
@@ -928,9 +946,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar.selected.pipe(takeUntil(this._destroy$)).subscribe((ev: Date) => this.handleSelection(ev));
         this.setDisabledDates();
 
-        if (DateTimeUtil.isValidDate(this.value)) {
-            // calendar will throw if this.value is InvalidDate #9208
-            this._calendar.value = this.value;
+        if (DateTimeUtil.isValidDate(this.dateValue)) {
+            // calendar will throw if the picker's value is InvalidDate #9208
+            this._calendar.value = this.dateValue;
         }
         this.setCalendarViewDate();
 
@@ -945,17 +963,15 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private setCalendarViewDate() {
-        // TODO: use ISO date parser from DateUtil
-        const minValueAsDate = parseDate(this.minValue);
-        const maxValueAsDate = parseDate(this.maxValue);
-        if (DateTimeUtil.lessThanMinValue(this.value, minValueAsDate)) {
-            this._calendar.viewDate = this._targetViewDate = minValueAsDate;
+        const { minValue, maxValue } = this.getMinMaxDates();
+        if (minValue && DateTimeUtil.lessThanMinValue(this.dateValue, minValue)) {
+            this._calendar.viewDate = this._targetViewDate = minValue;
             return;
         }
-        if (DateTimeUtil.greaterThanMaxValue(this.value, maxValueAsDate)) {
-            this._calendar.viewDate = this._targetViewDate = maxValueAsDate;
+        if (maxValue && DateTimeUtil.greaterThanMaxValue(this.dateValue, maxValue)) {
+            this._calendar.viewDate = this._targetViewDate = maxValue;
             return;
         }
-        this._calendar.viewDate = this.value;
+        this._calendar.viewDate = this.dateValue;
     }
 }
