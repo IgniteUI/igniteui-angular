@@ -290,7 +290,7 @@ describe('Row Pinning #grid', () => {
             expect(finds).toEqual(2);
         });
 
-        xit('should allow pinning onInit', () => {
+        it('should allow pinning onInit', () => {
             expect(() => {
                 fix = TestBed.createComponent(GridRowPinningComponent);
                 grid = fix.componentInstance.instance;

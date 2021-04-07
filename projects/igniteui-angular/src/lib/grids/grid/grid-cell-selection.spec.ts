@@ -1487,7 +1487,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifySelectedRange(grid, 2, 10, 1, 2);
         }));
 
-        xit('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
+        it('Grouping and Summaries: should select cells with arrow up and down keys', (async () => {
             const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
             grid.getColumnByName('ParentID').groupable = true;
             grid.getColumnByName('Name').hasSummary = true;
@@ -1538,7 +1538,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 10; i > 3; i--) {
                 let obj = grid.getCellByColumn(i, 'Name');
                 if (!obj) {
-                    obj = grid.getRowByIndex(i);
+                    obj = grid.gridAPI.get_row_by_index(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
                             .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);

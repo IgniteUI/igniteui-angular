@@ -2176,7 +2176,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows[groupRows.length - 1].expanded).toBe(true);
     }));
 
-    xit('should update horizontal virtualization state correcly when data row views are re-used from cache.', async () => {
+    it('should update horizontal virtualization state correcly when data row views are re-used from cache.', async () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
