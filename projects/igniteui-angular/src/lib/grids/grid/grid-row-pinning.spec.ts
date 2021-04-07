@@ -152,7 +152,7 @@ describe('Row Pinning #grid', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
             let row = grid.getRowByIndex(0);
-            let rowID = row.rowID;
+            const rowID = row.rowID;
             row.pin();
             fix.detectChanges();
 
