@@ -14,7 +14,7 @@ import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs,
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { EventEmitter, QueryList, Renderer2 } from '@angular/core';
 
-fdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -46,8 +46,8 @@ fdescribe('IgxDatePicker', () => {
             'registerOnValidatorChangeCb']);
     beforeEach(() => {
         mockFactoryResolver = {
-            resolveComponentFactory: (c: any) => ({ // eslint-disable-line 
-                create: (i: any) => ({ // eslint-disable-line 
+            resolveComponentFactory: (c: any) => ({ // eslint-disable-line
+                create: (i: any) => ({ // eslint-disable-line
                     hostView: '',
                     location: mockElementRef,
                     changeDetectorRef: { detectChanges: () => { } },
@@ -55,12 +55,12 @@ fdescribe('IgxDatePicker', () => {
                 })
             })
         };
-        ngModuleRef = ({ // eslint-disable-line 
-            injector: (...args: any[]) => { }, // eslint-disable-line 
+        ngModuleRef = ({ // eslint-disable-line
+            injector: (...args: any[]) => { }, // eslint-disable-line
             componentFactoryResolver: mockFactoryResolver,
             instance: () => { },
             destroy: () => { },
-            onDestroy: (fn: any) => { } // eslint-disable-line 
+            onDestroy: (fn: any) => { } // eslint-disable-line
         });
         mockElement = {
             style: { visibility: '', cursor: '', transitionDuration: '' },
@@ -70,7 +70,7 @@ fdescribe('IgxDatePicker', () => {
             addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }, // eslint-disable-line
             removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }, // eslint-disable-line
             getBoundingClientRect: () => ({ width: 10, height: 10 }),
-            insertBefore: (newChild: HTMLDivElement, refChild: Node) => { }, // eslint-disable-line 
+            insertBefore: (newChild: HTMLDivElement, refChild: Node) => { }, // eslint-disable-line
             contains: () => { }
         };
         mockElement.parent = mockElement;

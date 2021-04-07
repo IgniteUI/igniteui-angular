@@ -6,7 +6,7 @@ const reduceToDictionary = (parts: DatePartInfo[]) => parts.reduce((obj, x) => {
     return obj;
 }, {});
 
-fdescribe(`DateTimeUtil Unit tests`, () => {
+describe(`DateTimeUtil Unit tests`, () => {
     describe('Date Time Parsing', () => {
         it('should correctly parse all date time parts (base)', () => {
             const result = DateTimeUtil.parseDateTimeFormat('dd/MM/yyyy HH:mm:ss tt');
