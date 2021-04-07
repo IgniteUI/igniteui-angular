@@ -703,7 +703,6 @@ $_bootstrap-grid: extend(
 /// @prop {Map} cell-selected-within-background [igx-color: ('primary', 50)] - The background of the selected cell inside a selected row/column.
 /// @prop {Map} cell-selected-within-text-color [igx-contrast-color: ('primary', 50)] - The color of the selected cell inside a selected row/column.
 /// @prop {Map} row-selected-hover-text-color [igx-contrast-color: ('primary', 50)] - The selected row hover text color.
-
 ///
 /// @requires {function} extend
 /// @requires {Map} $_light-grid

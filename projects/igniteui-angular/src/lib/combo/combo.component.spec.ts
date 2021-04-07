@@ -2045,7 +2045,6 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
         }));
-
         it('should properly add items to the defaultFallbackGroup', () => {
             combo.allowCustomValues = true;
             combo.toggle();
@@ -2452,22 +2451,26 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('My New Custom Item');
         });
-        it('should enable/disable filtering at runtime', () => {
+        it('should enable/disable filtering at runtime', fakeAsync(() => {
             combo.open(); // Open combo - all data items are in filteredData
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
             const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
             searchInput.nativeElement.value = 'Not-available item';
             searchInput.triggerEventHandler('input', { target: searchInput.nativeElement });
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
 
             combo.close(); // Filter is cleared on close
+            tick();
             fixture.detectChanges();
             combo.filterable = false; // Filtering is disabled
             fixture.detectChanges();
             combo.open(); // All items are visible since filtering is disabled
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
 
@@ -2477,13 +2480,15 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
 
             combo.close(); // Filter is cleared on close
+            tick();
             fixture.detectChanges();
             combo.filterable = true; // Filtering is re-enabled
             fixture.detectChanges();
             combo.open(); // Filter is cleared on open
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
-        });
+        }));
         it(`should properly display "Add Item" button when filtering is off`, () => {
             combo.allowCustomValues = true;
             combo.filterable = false;
