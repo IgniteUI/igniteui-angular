@@ -10,7 +10,7 @@ import {
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
     ROW_ADD_KEYS,
-    PlatformUtil,
+    PlatformUtil
 } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
