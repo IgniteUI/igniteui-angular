@@ -61,7 +61,7 @@ export class IgxGridGroupingPipe implements PipeTransform {
 
     public transform(collection: any[], expression: IGroupingExpression | IGroupingExpression[],
         expansion: IGroupByExpandState | IGroupByExpandState[], defaultExpanded: boolean,
-        id: string, groupsRecords: any[], pipeTrigger: number): IGroupByResult {
+        id: string, groupsRecords: any[], _pipeTrigger: number): IGroupByResult {
 
         const state = { expressions: [], expansion: [], defaultExpanded };
         const grid: IgxGridComponent = this.gridAPI.grid;
