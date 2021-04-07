@@ -7,9 +7,9 @@
 
 /// If only background color is specified,
 /// the idle item color will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color used for the toast.
 /// @param {Color} $idle-item-color [null] - The text-color used for the idle color.
 /// @param {Color} $active-item-color [null] - The text-color used for the active color.
@@ -21,16 +21,16 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
+/// @requires $igx-elevations
 ///
 /// @example scss Set a custom background color
-///   $my-tabbar-theme: igx-toast-theme($background: black);
+///   $my-bottom-nav-theme: igx-bottom-nav-theme($background: black);
 ///   // Pass the theme to the igx-bottom-nav component mixin
-///   @include igx-bottom-nav($my-tabbar-theme);
+///   @include igx-bottom-nav($my-bottom-nav-theme);
 @function igx-bottom-nav-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background: null,
     $idle-item-color: null,
@@ -56,7 +56,7 @@
 
     @if not($shadow) {
         $elevation: map-get($bottom-nav-schema, 'elevation');
-        $shadow: igx-elevation($elevations, $elevation);
+        $shadow: igx-elevation($igx-elevations, $elevation);
     }
 
     @return extend($theme, (
@@ -70,7 +70,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires igx-bottom-nav-theme
 /// @requires igx-color
@@ -79,19 +79,15 @@
 /// @requires $ease-in-out-quad
 /// @requires --var
 @mixin igx-bottom-nav($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
-    $menu-height: 56px;
-    $item-min-width: 80px;
-    $item-max-width: 168px;
+    $menu-height: rem(56px);
+    $item-min-width: rem(80px);
+    $item-max-width: rem(168px);
     $item-padding: 0 rem(12px, 16px);
 
-    %igx-tab-panel {
-        display: none;
-    }
-
-    %igx-tab-panel--selected {
-        display: block;
+    %igx-bottom-nav-panel:focus {
+        outline-style: none;
     }
 
     %igx-bottom-nav-menu {
@@ -135,15 +131,16 @@
         overflow: hidden;
         padding: $item-padding;
         -webkit-tap-highlight-color: transparent;
-        outline: 0;
+        outline-style: none;
     }
 
     %igx-bottom-nav-menu-item--disabled {
         opacity: .5;
         cursor: default;
+        pointer-events: none;
     }
 
-    %igx-active-tab {
+    %igx-bottom-nav-menu-item--selected {
         color: --var($theme, 'active-item-color');
         transition: color .15s $ease-in-out-quad, opacity .25s $ease-in-out-quad;
     }
@@ -167,22 +164,13 @@
         transform: translateZ(0);
         transition: transform .15s $ease-in-out-quad;
         z-index: 1;
-
-        igx-badge {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            padding: 1px;
-        }
     }
 
     %igx-tab-icon--selected {
-        @extend %igx-active-tab;
         transform: translateY(-2px);
     }
 
     %igx-tab-label--selected {
-        @extend %igx-active-tab;
         transform: translateY(-2px) scale(1.166667);
     }
 }

@@ -15,7 +15,7 @@ import { GridBaseAPIService } from '../api.service';
 import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from './public_api';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { HammerGesturesManager } from '../../core/touch';
 import { GridType } from '../common/grid.interface';
 
@@ -51,7 +51,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     protected defaultCollapsedTemplate: TemplateRef<any>;
 
     constructor(selectionService: IgxGridSelectionService,
-                crudService: IgxGridCRUDService,
                 gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
                 cdr: ChangeDetectorRef,
                 element: ElementRef,
@@ -59,7 +58,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
                 touchManager: HammerGesturesManager,
                 @Inject(DOCUMENT) public document,
                 protected platformUtil: PlatformUtil) {
-        super(selectionService, crudService, gridAPI, cdr, element, zone, touchManager, platformUtil);
+        super(selectionService, gridAPI, cdr, element, zone, touchManager, platformUtil);
     }
 
     /**

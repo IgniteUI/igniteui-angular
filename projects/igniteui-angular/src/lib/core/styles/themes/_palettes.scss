@@ -382,7 +382,7 @@ $dark-indigo-palette: igx-palette(
     $warn: igx-color($light-indigo-palette, 'warn'),
     $error: igx-color($light-indigo-palette, 'error'),
     $surface: #2a2b2f,
-    $grays: #fff,
+    $grays: #f8f4ff,
     $variant: 'indigo-design'
 ) !default;
 
@@ -392,4 +392,3 @@ $dark-indigo-palette: igx-palette(
 /// @type Color
 /// @requires igx-color
 $overlay-color: igx-color($default-palette, 'grays') !default;
-

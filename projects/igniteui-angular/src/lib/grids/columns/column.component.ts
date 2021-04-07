@@ -36,7 +36,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import { getNodeSizeViaRange } from '../../core/utils';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand } from '../summaries/grid-summary';
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -246,6 +246,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public resizable = false;
+
+    /**
+     * Sets/gets whether the column header is included in autosize logic.
+     * Useful when template for a column header is sized based on parent, for example a default `div`.
+     * Default value is `false`.
+     * ```typescript
+     * let isResizable = this.column.resizable;
+     * ```
+     * ```html
+     * <igx-column [resizable] = "true"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @WatchColumnChanges()
+    @Input()
+    public autosizeHeader = true;
+
     /**
      * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
@@ -313,7 +331,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 return;
             }
             if (this.grid) {
-                this.grid.endEdit(false);
+                this.grid.crudService.endEdit(false);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
                 this.grid.filteringService.hideFilteringRowOnColumnVisibilityChange(this);
@@ -575,6 +593,37 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public formatter: (value: any) => any;
+
+    /**
+     * The summaryFormatter is used to format the display of the column summaries.
+     *
+     * In this example, we check to see if the column name is OrderDate, and then provide a method as the summaryFormatter
+     * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
+     *
+     * ```typescript
+     * onColumnInit(column: IgxColumnComponent) {
+     *   if (column.field == "OrderDate") {
+     *     column.summaryFormatter = this.summaryFormat;
+     *   }
+     * }
+     *
+     * summaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+     *   const result = summary.summaryResult;
+     *   if(summaryResult.key !== 'count' && result !== null && result !== undefined) {
+     *      const pipe = new DatePipe('fr-FR');
+     *      return pipe.transform(result,'mediumDate');
+     *   }
+     *   return result;
+     * }
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -1793,7 +1842,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        grid.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
@@ -1884,7 +1933,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.grid.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);
@@ -2057,12 +2106,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      *
      * @memberof IgxColumnComponent
-     * @param byHeader Set if column should be autized based only on the header content
+     * @param byHeaderOnly Set if column should be autosized based only on the header content.
      */
-    public autosize(byHeader = false) {
+    public autosize(byHeaderOnly = false) {
         if (!this.columnGroup) {
-            const size = this.getAutoSize(byHeader);
-            this.width = size;
+            this.width = this.getAutoSize(byHeaderOnly);
             this.grid.reflow();
         }
     }
@@ -2073,15 +2121,25 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public getAutoSize(byHeader = false) {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
-        const gridAvailableSize = this.grid.calcWidth;
-        let newWidth;
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
+
+        let newWidth;
         if (isPercentageWidth) {
+            const gridAvailableSize = this.grid.calcWidth;
             const percentageSize =  parseFloat(size) / gridAvailableSize * 100;
             newWidth = percentageSize + '%';
         } else {
             newWidth = size;
         }
+
+        const maxWidth = isPercentageWidth ? this.maxWidthPercent : this.maxWidthPx;
+        const minWidth = isPercentageWidth ? this.minWidthPercent : this.minWidthPx;
+        if (this.maxWidth && (parseFloat(newWidth) > maxWidth)) {
+            newWidth = isPercentageWidth ? maxWidth + '%' : maxWidth + 'px';
+        } else if (parseFloat(newWidth) < minWidth) {
+            newWidth = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
+        }
+
         return newWidth;
     }
 
@@ -2103,13 +2161,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     public getHeaderCellWidths() {
         const range = this.grid.document.createRange();
-        let headerWidth;
-        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-            headerWidth = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
-                .map((child) => getNodeSizeViaRange(range, child)));
-        } else {
-            headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
-        }
+
+        // We do not cover cases where there are children with width 100% and etc,
+        // because then we try to get new column size, based on header content, which is sized based on column size...
+        let headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
@@ -2157,7 +2212,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
 
-        if (this.headerCell) {
+        if (this.headerCell && this.autosizeHeader) {
             const headerCellWidths = this.getHeaderCellWidths();
             largest.set(headerCellWidths.width, headerCellWidths.padding);
         }

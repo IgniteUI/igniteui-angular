@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The list background color.
@@ -46,7 +46,6 @@
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
-/// @requires hexrgba
 /// @requires text-contrast
 /// @requires round-borders
 /// @requires luminance
@@ -56,7 +55,7 @@
 ///   // Pass the theme to the igx-list component mixin
 ///   @include igx-list($my-list-theme);
 @function igx-list-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -157,7 +156,9 @@
     }
 
     @if not($item-subtitle-color) and $item-background {
-        $item-subtitle-color: rgba(text-contrast($item-background), .74);
+        @if type-of($item-background) == 'color' {
+            $item-subtitle-color: rgba(text-contrast($item-background), .74);
+        }
     }
 
     @if not($item-subtitle-color) and $item-text-color {
@@ -181,7 +182,9 @@
     }
 
     @if not($item-subtitle-color-hover) and $item-background-hover {
-        $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+        @if type-of($item-background-hover) == 'color' {
+            $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+        }
     }
 
     @if not($item-subtitle-color-hover) and $item-text-color-hover {
@@ -205,7 +208,9 @@
     }
 
     @if not($item-subtitle-color-active) and $item-background-active {
-        $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+        @if type-of($item-background-active) == 'color' {
+            $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+        }
     }
 
     @if not($item-subtitle-color-active) and $item-text-color-active {
@@ -244,10 +249,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-list($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';

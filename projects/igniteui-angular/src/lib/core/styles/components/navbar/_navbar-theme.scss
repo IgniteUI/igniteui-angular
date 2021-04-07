@@ -5,9 +5,9 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $background [null] - The navbar background color.
 /// @param {Color} $text-color [null] - The navbar text color.
@@ -21,17 +21,16 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-/// @requires igx-elevations
-/// @requires $elevations
+/// @requires igx-elevation
 ///
 /// @example scss Change the background color
 ///   $my-navbar-theme: igx-navbar-theme($background: green);
 ///   // Pass the theme to the igx-navbar component mixin
 ///   @include igx-navbar($my-navbar-theme);
 @function igx-navbar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background: null,
     $text-color: null,
@@ -84,13 +83,13 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-navbar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
-    $navbar-padding: 0 rem(16px);
+    $navbar-padding: rem(16px);
     $navbar-title-fz: rem(18px, 16px);
     $navbar-title-lh: rem(18px, 16px);
     $navbar-title-margin: 0;
@@ -103,12 +102,14 @@
         align-items: center;
         justify-content: space-between;
         width: 100%;
-        height: 56px;
+        min-height: 56px;
+        max-height: 128px;
         padding: $navbar-padding;
         background: --var($theme, 'background');
         color: --var($theme, 'text-color');
         box-shadow: --var($theme, 'shadow');
         z-index: 4;
+        overflow: hidden;
     }
 
     %igx-navbar-part {
@@ -117,6 +118,7 @@
     }
 
     %igx-navbar-title {
+        @include line-clamp(4, true, true);
         margin: $navbar-title-margin;
         flex-grow: 1;
         user-select: text;

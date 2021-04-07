@@ -103,7 +103,7 @@
 /// @property {Map} igx-list [$_dark-list]
 /// @property {Map} geo-map [$_dark-geo-map]
 /// @property {Map} igx-navbar [$_dark-navbar]
-/// @property {Map} igx-navdrawer [$_dark-navdrawer]
+/// @property {Map} igx-nav-drawer [$_dark-navdrawer]
 /// @property {Map} igx-overlay [$_dark-overlay]
 /// @property {Map} igx-progress-linear [$_dark-progress-linear]
 /// @property {Map} igx-progress-circular [$_dark-progress-circular]
@@ -161,7 +161,7 @@ $dark-schema: (
     igx-list: $_dark-list,
     geo-map: $_dark-geo-map,
     igx-navbar: $_dark-navbar,
-    igx-navdrawer: $_dark-navdrawer,
+    igx-nav-drawer: $_dark-navdrawer,
     igx-overlay: $_dark-overlay,
     igx-linear-bar: $_dark-progress-linear,
     igx-circular-bar: $_dark-progress-circular,
@@ -229,7 +229,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-list [$_dark-fluent-list],
 /// @property {Map} geo-map [$_dark-fluent-geo-map]
 /// @property {Map} igx-navbar [$_dark-fluent-navbar],
-/// @property {Map} igx-navdrawer [$_dark-fluent-navdrawer],
+/// @property {Map} igx-nav-drawer [$_dark-fluent-navdrawer],
 /// @property {Map} igx-overlay [$_dark-fluent-overlay],
 /// @property {Map} igx-linear-bar [$_dark-fluent-progress-linear],
 /// @property {Map} igx-circular-bar [$_dark-fluent-progress-circular],
@@ -287,7 +287,7 @@ $dark-fluent-schema: (
     igx-list: $_dark-fluent-list,
     geo-map: $_dark-fluent-geo-map,
     igx-navbar: $_dark-fluent-navbar,
-    igx-navdrawer: $_dark-fluent-navdrawer,
+    igx-nav-drawer: $_dark-fluent-navdrawer,
     igx-overlay: $_dark-fluent-overlay,
     igx-linear-bar: $_dark-fluent-progress-linear,
     igx-circular-bar: $_dark-fluent-progress-circular,
@@ -350,7 +350,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-list [$_dark-bootstrap-list],
 /// @property {Map} geo-map [$_dark-bootstrap-geo-map]
 /// @property {Map} igx-navbar [$_dark-bootstrap-navbar],
-/// @property {Map} igx-navdrawer [$_dark-bootstrap-navdrawer],
+/// @property {Map} igx-nav-drawer [$_dark-bootstrap-navdrawer],
 /// @property {Map} igx-overlay [$_dark-bootstrap-overlay],
 /// @property {Map} igx-linear-bar [$_dark-bootstrap-progress-linear],
 /// @property {Map} igx-circular-bar [$_dark-bootstrap-progress-circular],
@@ -408,7 +408,7 @@ $dark-bootstrap-schema: (
     igx-list: $_dark-bootstrap-list,
     geo-map: $_dark-bootstrap-geo-map,
     igx-navbar: $_dark-bootstrap-navbar,
-    igx-navdrawer: $_dark-bootstrap-navdrawer,
+    igx-nav-drawer: $_dark-bootstrap-navdrawer,
     igx-overlay: $_dark-bootstrap-overlay,
     igx-linear-bar: $_dark-bootstrap-progress-linear,
     igx-circular-bar: $_dark-bootstrap-progress-circular,
@@ -471,7 +471,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-list [$_dark-indigo-list]
 /// @property {Map} geo-map [$_dark-indigo-geo-map]
 /// @property {Map} igx-navbar [$_dark-indigo-navbar]
-/// @property {Map} igx-navdrawer [$_dark-indigo-navdrawer]
+/// @property {Map} igx-nav-drawer [$_dark-indigo-navdrawer]
 /// @property {Map} igx-overlay [$_dark-indigo-overlay]
 /// @property {Map} igx-linear-bar [$_dark-indigo-progress-linear]
 /// @property {Map} igx-circular-bar [$_dark-indigo-progress-circular]
@@ -529,7 +529,7 @@ $dark-indigo-schema: (
     igx-list: $_dark-indigo-list,
     geo-map: $_dark-indigo-geo-map,
     igx-navbar: $_dark-indigo-navbar,
-    igx-navdrawer: $_dark-indigo-navdrawer,
+    igx-nav-drawer: $_dark-indigo-navdrawer,
     igx-overlay: $_dark-indigo-overlay,
     igx-linear-bar: $_dark-indigo-progress-linear,
     igx-circular-bar: $_dark-indigo-progress-circular,

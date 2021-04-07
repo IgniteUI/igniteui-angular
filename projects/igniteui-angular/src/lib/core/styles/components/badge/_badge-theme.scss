@@ -8,9 +8,9 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 ///
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $icon-color [null] - The icon color used.
 /// @param {Color} $text-color [null] - The text color used.
 /// @param {Color} $border-color [null] - The border color used.
@@ -24,11 +24,9 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires text-contrast
 /// @requires rem
 /// @requires round-borders
-/// @requires {variable} $elevations
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
@@ -38,9 +36,9 @@
 ///   // Theming using css variables (not supported in IE11):
 ///   @include igx-css-vars($my-badge-theme);
 @function igx-badge-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $icon-color: null,
     $text-color: null,
@@ -94,12 +92,12 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires rem
 /// @requires --var
 @mixin igx-badge($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
 

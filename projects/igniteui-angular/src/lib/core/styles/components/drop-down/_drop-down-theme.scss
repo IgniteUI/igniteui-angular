@@ -6,9 +6,9 @@
 ////
 
 /// Generates a drop-down theme.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The drop-down background color.
 /// @param {Color} $header-text-color [null] - The drop-down header text color.
 ///
@@ -44,12 +44,11 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 @function igx-drop-down-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $item-border-radius: null,
@@ -81,6 +80,8 @@
     $shadow: null
 ) {
     $name: 'igx-drop-down';
+    $selector: '.igx-drop-down__list, .igx-grid-toolbar__dd-list';
+
     $drop-down-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -170,6 +171,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         background-color: $background-color,
         border-radius: $border-radius,
@@ -195,11 +197,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-drop-down($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $item-height: (
         comfortable: rem(40px),
@@ -262,6 +264,7 @@
     %igx-drop-down__list-scroll {
         overflow-y: auto;
         overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
         position: relative;
 
         igx-input-group {

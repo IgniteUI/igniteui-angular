@@ -8,9 +8,9 @@
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
 ///
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $text-color [null] - The text color of a open time picker.
 /// @param {Color} $hover-text-color [null] - The hover text color of a open time picker.
@@ -32,7 +32,6 @@
 /// @requires apply-palette
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires extend
 /// @requires round-borders
 ///
@@ -44,9 +43,9 @@
 ///   // Pass the theme to the igx-time-picker component mixin
 ///   @include igx-time-picker($my-time-picker-theme);
 @function igx-time-picker-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $border-radius: null,
     $active-item-border-radius: null,
@@ -65,6 +64,8 @@
     $dropdown-shadow: null
 ) {
     $name: 'igx-time-picker';
+    $selector: '.igx-time-picker';
+
     $time-picker-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -125,6 +126,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         text-color: $text-color,
         hover-text-color: $hover-text-color,
@@ -144,11 +146,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-time-picker($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
