@@ -2676,7 +2676,7 @@ export class LocalService {
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
+        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'">
             <igx-column [sortable]="true" [filterable]="true" [field]="'Col1'" [header]="'Col1'">
             </igx-column>
         </igx-grid>
@@ -2712,7 +2712,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
         </igx-grid>
 
         <ng-template #customTemplate>

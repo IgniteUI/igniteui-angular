@@ -27,7 +27,7 @@ export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<a
 
     const layouts = hierarchicalGrid.allLayoutList.toArray();
     layouts.forEach((layout) => {
-        layout.onGridCreated.subscribe(evt => {
+        layout.gridCreated.subscribe(evt => {
             setupGridScrollDetection(fixture, evt.grid);
         });
     });

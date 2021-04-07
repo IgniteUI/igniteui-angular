@@ -15,7 +15,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected _pendingNavigation = false;
 
 
-    dispatchEvent(event: KeyboardEvent) {
+    public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
             !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
@@ -104,7 +104,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    focusTbody(event) {
+    public focusTbody(event) {
         if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
                 row: 0,

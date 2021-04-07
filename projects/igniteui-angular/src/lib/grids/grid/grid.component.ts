@@ -81,11 +81,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @example
      * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -1030,7 +1030,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /**
