@@ -488,8 +488,7 @@ $p-test: igx-palette(#fff, #000);
             }
         }
     } @else {
-        @warn 'Expected color for $background/$foreground but got #{$background}/#{$foreground}. The contrast color can\'t be calculated automatically.';
-        @return #fff;
+        @return $background;
     }
 }
 
@@ -824,7 +823,7 @@ $p-test: igx-palette(#fff, #000);
     @if type-of($value) == 'number' and unitless($value) {
 
         @if $value < 0 or $value > 1 {
-            @error 'Roundness factor should be between 0 and 1';
+            @return $value;
         }
 
         @return round(fraction-clamp($value, $min, $max));

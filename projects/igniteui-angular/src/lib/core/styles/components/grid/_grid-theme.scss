@@ -119,7 +119,6 @@
 /// @requires to-opaque
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 @function igx-grid-theme(
     $palette: null,
@@ -260,7 +259,7 @@
         $ghost-header-text-color: text-contrast($ghost-header-background);
     }
 
-    @if $header-background and type-of($header-background) == 'color' and alpha($header-background) < 1 {
+    @if $header-background and type-of($header-background) == 'color' {
         $header-background: to-opaque($header-background, igx-color($palette, 'surface'));
     }
 
@@ -391,11 +390,15 @@
     }
 
     @if not($grouparea-color) and $grouparea-background {
-        $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+        @if type-of($grouparea-background) == 'color' {
+            $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+        }
     }
 
     @if not($grouparea-color) and $header-background {
-        $grouparea-color: rgba(text-contrast($header-background), .8)
+        @if type-of($header-background) == 'color' {
+            $grouparea-color: rgba(text-contrast($header-background), .8)
+        }
     }
 
     @if not($drop-area-background) and $grouparea-background {

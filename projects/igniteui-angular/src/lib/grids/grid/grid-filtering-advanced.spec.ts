@@ -660,6 +660,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             expect(grid.filteredData.length).toEqual(1);
             expect(grid.rowList.length).toBe(1);
             expect(GridFunctions.getCurrentCellFromGrid(grid, 0, 0).value.toString()).toBe('8');
+
+            flush();
         }));
 
         it('Should emit the onFilteringDone event when applying filters.', fakeAsync(() => {
