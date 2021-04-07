@@ -74,20 +74,6 @@ export class IgxSplitterPaneComponent {
      * @example
      * ```html
      * <igx-splitter>
-     *  <igx-splitter-pane (onToggle)='onPaneToggle($event)'>...</igx-splitter-pane>
-     * </igx-splitter>
-     * ```
-     */
-    @DeprecateProperty(`Deprecated. Subscribe to the 'collapsedChange' output instead.`)
-    @Output()
-    public onToggle = new EventEmitter<IgxSplitterPaneComponent>();
-
-    /**
-     * Event fired when collapsed state of pane is changed.
-     *
-     * @example
-     * ```html
-     * <igx-splitter>
      *  <igx-splitter-pane (collapsedChange)='paneCollapsedChange($event)'>...</igx-splitter-pane>
      * </igx-splitter>
      * ```
@@ -216,7 +202,6 @@ export class IgxSplitterPaneComponent {
         // reset sibling sizes when pane collapse state changes.
         this._getSiblings().forEach(sibling => sibling.size = 'auto');
         this.collapsed = !this.collapsed;
-        this.onToggle.emit(this);
         this.collapsedChange.emit(this.collapsed);
     }
 
