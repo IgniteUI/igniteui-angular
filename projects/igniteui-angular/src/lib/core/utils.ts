@@ -26,6 +26,8 @@ import {
 } from '../animations/main';
 import { setImmediate } from './setImmediate';
 
+export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
+
 /**
  * @hidden
  */
@@ -131,12 +133,12 @@ export const parseDate = (value: any): Date | null => {
  * @hidden
  */
 export const uniqueDates = (columnValues: any[]) => columnValues.reduce((a, c) => {
-        if (!a.cache[c.label]) {
-            a.result.push(c);
-        }
-        a.cache[c.label] = true;
-        return a;
-    }, { result: [], cache: {} }).result;
+    if (!a.cache[c.label]) {
+        a.result.push(c);
+    }
+    a.cache[c.label] = true;
+    return a;
+}, { result: [], cache: {} }).result;
 
 /**
  * Checks if provided variable is Object
@@ -172,155 +174,137 @@ export const isEqual = (obj1, obj2): boolean => {
     return obj1 === obj2;
 };
 
-/**
- * @hidden
- */
-/* eslint-disable @typescript-eslint/naming-convention */
-export const enum KEYCODES {
-    ENTER = 13,
-    SPACE = 32,
-    ESCAPE = 27,
-    LEFT_ARROW = 37,
-    UP_ARROW = 38,
-    RIGHT_ARROW = 39,
-    DOWN_ARROW = 40,
-    F2 = 113,
-    TAB = 9,
-    CTRL = 17,
-    Z = 90,
-    Y = 89,
-    X = 88,
-    BACKSPACE = 8,
-    DELETE = 46,
-    INPUT_METHOD = 229
-}
+// /**
+//  * @hidden
+//  * Returns the actual size of the node content, using Canvas
+//  * ```typescript
+//  * let ctx = document.createElement('canvas').getContext('2d');
+//  * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+//  *
+//  * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
+//  * ```
+//  */
+// export function getNodeSizeViaCanvas(canvas2dCtx: any, node: Node): number {
+//     const s = this.grid.document.defaultView.getComputedStyle(node);
+
+//     // need to set the font to get correct width
+//     canvas2dCtx.font = s.fontSize + ' ' + s.fontFamily;
+
+//     return canvas2dCtx.measureText(node.textContent).width;
+// }
 
 /**
- * @hidden
- */
-export const enum KEYS {
-    ENTER = 'Enter',
-    SPACE = ' ',
-    SPACE_IE = 'Spacebar',
-    ESCAPE = 'Escape',
-    ESCAPE_IE = 'Esc',
-    LEFT_ARROW = 'ArrowLeft',
-    LEFT_ARROW_IE = 'Left',
-    UP_ARROW = 'ArrowUp',
-    UP_ARROW_IE = 'Up',
-    RIGHT_ARROW = 'ArrowRight',
-    RIGHT_ARROW_IE = 'Right',
-    DOWN_ARROW = 'ArrowDown',
-    DOWN_ARROW_IE = 'Down',
-    F2 = 'F2',
-    TAB = 'Tab',
-    SEMICOLON = ';',
-    HOME = 'Home',
-    END = 'End'
-}
-/* eslint-enable @typescript-eslint/naming-convention */
-
-/**
- * @hidden
- * Returns the actual size of the node content, using Range
- * ```typescript
- * let range = document.createRange();
- * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+ * Utility service taking care of various utility functions such as
+ * detecting browser features, general cross browser DOM manipulation, etc.
  *
- * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
- * ```
- */
-export const getNodeSizeViaRange = (range: Range, node: any): number => {
-    let overflow = null;
-    if (!isFirefox()) {
-        overflow = node.style.overflow;
-        // we need that hack - otherwise content won't be measured correctly in IE/Edge
-        node.style.overflow = 'visible';
-    }
-
-    range.selectNodeContents(node);
-    const width = range.getBoundingClientRect().width;
-
-    if (!isFirefox()) {
-        // we need that hack - otherwise content won't be measured correctly in IE/Edge
-        node.style.overflow = overflow;
-    }
-
-    return width;
-};
-/**
- * @hidden
- * Returns the actual size of the node content, using Canvas
- * ```typescript
- * let ctx = document.createElement('canvas').getContext('2d');
- * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
- *
- * let size = valToPxlsUsingCanvas(ctx, column.cells[0].nativeElement);
- * ```
- */
-export function getNodeSizeViaCanvas(canvas2dCtx: any, node: any): number {
-    const s = this.grid.document.defaultView.getComputedStyle(node);
-
-    // need to set the font to get correct width
-    canvas2dCtx.font = s.fontSize + ' ' + s.fontFamily;
-
-    return canvas2dCtx.measureText(node.textContent).width;
-}
-/**
- * @hidden
- */
-export const isIE = (): boolean => navigator.appVersion.indexOf('Trident/') > 0;
-
-/**
- * @hidden
- */
-export const isEdge = (): boolean => {
-    const edgeBrowser = /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
-    return edgeBrowser;
-};
-
-/**
- * @hidden
- */
-export const isFirefox = (): boolean => {
-    const firefoxBrowser = /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
-    return firefoxBrowser;
-};
-
-/**
- * @hidden
+ * @hidden @internal
  */
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
-
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
 
-    constructor(@Inject(PLATFORM_ID) private platformId) {
+    public KEYMAP = mkenum({
+        ENTER: 'Enter',
+        SPACE: this.isIE ? 'Spacebar' : ' ',
+        ESCAPE: this.isIE ? 'Esc' : 'Escape',
+        ARROW_DOWN: this.isIE ? 'Down' : 'ArrowDown',
+        ARROW_UP: this.isIE ? 'Up' : 'ArrowUp',
+        ARROW_LEFT: this.isIE ? 'Left' : 'ArrowLeft',
+        ARROW_RIGHT: this.isIE ? 'Right' : 'ArrowRight',
+        END: 'End',
+        HOME: 'Home',
+        PAGE_DOWN: 'PageDown',
+        PAGE_UP: 'PageUp',
+        F2: 'F2',
+        TAB: 'Tab',
+        SEMICOLON: ';',
+        // https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values#editing_keys
+        DELETE: this.isIE ? 'Del' : 'Delete',
+        BACKSPACE: 'Backspace',
+        CONTROL: 'Control',
+        X: 'x',
+        Y: 'y',
+        Z: 'z'
+    });
+
+    constructor(@Inject(PLATFORM_ID) private platformId: any) { }
+
+    /**
+     * @hidden @internal
+     * Returns the actual size of the node content, using Range
+     * ```typescript
+     * let range = document.createRange();
+     * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
+     *
+     * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     * ```
+     */
+    public getNodeSizeViaRange(range: Range, node: HTMLElement) {
+        let overflow = null;
+
+        if (this.isFirefox) {
+            overflow = node.style.overflow;
+            // we need that hack - otherwise content won't be measured correctly in IE/Edge
+            node.style.overflow = 'visible';
+        }
+
+        range.selectNodeContents(node);
+        const width = range.getBoundingClientRect().width;
+
+        if (this.isFirefox) {
+            // we need that hack - otherwise content won't be measured correctly in IE/Edge
+            node.style.overflow = overflow;
+        }
+
+        return width;
+    }
+
+
+    /**
+     * Returns true if the current keyboard event is an activation key (Enter/Space bar)
+     *
+     * @hidden
+     * @internal
+     *
+     * @memberof PlatformUtil
+     */
+    public isActivationKey(event: KeyboardEvent) {
+        return event.key === this.KEYMAP.ENTER || event.key === this.KEYMAP.SPACE;
+    }
+
+    /**
+     * Returns true if the current keyboard event is a combination that closes the filtering UI of the grid. (Escape/Ctrl+Shift+L)
+     *
+     * @hidden
+     * @internal
+     * @param event
+     * @memberof PlatformUtil
+     */
+    public isFilteringKeyCombo(event: KeyboardEvent) {
+        return event.key === this.KEYMAP.ESCAPE || (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'l');
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isLeftClick(event: PointerEvent | MouseEvent) {
+        return event.button === 0;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isNavigationKey(key: string) {
+        return [
+            this.KEYMAP.HOME, this.KEYMAP.END, this.KEYMAP.SPACE,
+            this.KEYMAP.ARROW_DOWN, this.KEYMAP.ARROW_LEFT, this.KEYMAP.ARROW_RIGHT, this.KEYMAP.ARROW_UP
+        ].includes(key);
     }
 }
-
-/**
- * @hidden
- */
-export const isLeftClick = (event: PointerEvent) => event.button === 0;
-
-/** @hidden */
-export const isNavigationKey = (key: string): boolean => [
-    'down',
-    'up',
-    'left',
-    'right',
-    'arrowdown',
-    'arrowup',
-    'arrowleft',
-    'arrowright',
-    'home',
-    'end',
-    'space',
-    'spacebar',
-    ' '
-].indexOf(key) !== -1;
 
 /**
  * @hidden
@@ -382,7 +366,7 @@ export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split('
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);
 export const SUPPORTED_KEYS = new Set([...Array.from(NAVIGATION_KEYS),
-                                    ...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
+...Array.from(ROW_ADD_KEYS), 'enter', 'f2', 'escape', 'esc', 'pagedown', 'pageup']);
 export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'esc', 'l',
     /** This symbol corresponds to the Alt + L combination under MAC. */
     '¬']);
@@ -507,10 +491,10 @@ export const yieldingLoop = (count: number, chunkSize: number, callback: (index:
     chunk();
 };
 
-export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
+// export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
 
 export const reverseAnimationResolver = (animation: AnimationReferenceMetadata): AnimationReferenceMetadata =>
-                                        oppositeAnimation.get(animation) ?? animation;
+    oppositeAnimation.get(animation) ?? animation;
 
 export const isHorizontalAnimation = (animation: AnimationReferenceMetadata): boolean => horizontalAnimations.includes(animation);
 

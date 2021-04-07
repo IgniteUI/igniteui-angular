@@ -771,7 +771,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10);
+        const origScrollHeight = parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10);
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -785,7 +785,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
@@ -796,7 +796,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight);
     }));
 

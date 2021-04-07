@@ -7,6 +7,7 @@ import { IgxMaskModule, IgxMaskDirective } from './mask.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { Replaced } from './mask-parsing.service';
+import { PlatformUtil } from '../../core/utils';
 
 describe('igxMask', () => {
     configureTestSuite();
@@ -31,7 +32,8 @@ describe('igxMask', () => {
                 FormsModule,
                 IgxInputGroupModule,
                 IgxMaskModule
-            ]
+            ],
+            providers: [PlatformUtil]
         })
             .compileComponents();
     }));
@@ -405,7 +407,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         const format = 'CCCCCCCC';
 
         // init
-        mask = new IgxMaskDirective(null, mockParser, null);
+        mask = new IgxMaskDirective(null, mockParser, null, { isIE: false } as any);
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -425,7 +427,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         inputGet.and.returnValue('test_2___');
         spyOnProperty(mask as any, 'selectionEnd').and.returnValue(6);
         const setSelectionSpy = spyOn(mask as any, 'setSelectionRange');
-        mask.onInputChanged();
+        mask.onInputChanged(false);
         expect(mockParser.replaceInMask).toHaveBeenCalledWith('', 'test_2', jasmine.objectContaining({ format }), 0, 0);
         expect(inputSet).toHaveBeenCalledWith('test_2__');
         expect(setSelectionSpy).toHaveBeenCalledWith(6);
