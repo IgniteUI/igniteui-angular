@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
 import { IgxTreeService } from './tree.service';
@@ -6,7 +6,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { Subject } from 'rxjs';
 
 @Injectable()
-export class IgxTreeNavigationService {
+export class IgxTreeNavigationService implements OnDestroy {
     private tree: IgxTree;
 
     private _focusedNode: IgxTreeNode<any> = null;
@@ -129,6 +129,11 @@ export class IgxTreeNavigationService {
         } else {
             this.handleNavigation(event);
         }
+    }
+
+    public ngOnDestroy() {
+        this._cacheChange.next();
+        this._cacheChange.complete();
     }
 
     private handleNavigation(event: KeyboardEvent) {
