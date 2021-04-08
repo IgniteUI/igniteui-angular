@@ -6,7 +6,7 @@
 ////
 
 /// Returns a map containing all style properties related to the theming the tooltip directive.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background [null] - The background color of the tooltip.
@@ -26,7 +26,7 @@
 ///   // Pass the theme to the igx-tooltip component mixin
 ///   @include igx-tooltip($my-checkbox-theme);
 @function igx-tooltip-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $border-radius: null,
@@ -34,6 +34,8 @@
     $text-color: null
 ) {
     $name: 'igx-tooltip';
+    $selector: '.igx-tooltip--desktop, .igx-tooptip--mobile';
+
     $tooltip-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -54,6 +56,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $default-palette,
         background: $background,
         border-radius: $border-radius,
@@ -62,10 +65,10 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 @mixin igx-tooltip($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %tooltip-display {
         display: inline-flex;

@@ -28,6 +28,13 @@
             "definedIn": [
                 "IgxCircularProgressBarComponent"
             ]
+        },
+        {
+            "member": "onColumnChange",
+            "replaceWith": "columnChange",
+            "definedIn": [
+                "IgxColumnComponent"
+            ]
         }
     ]
 }

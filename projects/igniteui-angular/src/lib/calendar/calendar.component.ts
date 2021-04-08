@@ -19,7 +19,6 @@ import {
     IgxCalendarHeaderTemplateDirective,
     IgxCalendarSubheaderTemplateDirective
 } from './calendar.directives';
-import { KEYS } from '../core/utils';
 import { ICalendarDate, monthRange } from './calendar';
 import { CalendarView, IgxCalendarView, IgxMonthPickerBaseDirective } from './month-picker-base';
 import { IgxMonthsViewComponent } from './months-view/months-view.component';
@@ -700,7 +699,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    public stopMonthScroll = (event) => {
+    public stopMonthScroll = (event: KeyboardEvent) => {
         event.stopPropagation();
 
         // generally the scrolling is built on the calendar component
@@ -716,7 +715,7 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
         } else if (this.monthScrollDirection === ScrollMonth.NEXT) {
             this.nextMonthBtn.nativeElement.focus();
         }
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+        if (this.platform.isActivationKey(event)) {
             this.resetActiveDate();
         }
 
@@ -839,8 +838,8 @@ export class IgxCalendarComponent extends IgxMonthPickerBaseDirective implements
      * @hidden
      * @internal
      */
-    public onActiveViewYearKB(args: Date, event, activeViewIdx: number): void {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+    public onActiveViewYearKB(args: Date, event: KeyboardEvent, activeViewIdx: number): void {
+        if (this.platform.isActivationKey(event)) {
             event.preventDefault();
             this.onActiveViewYear(args, activeViewIdx);
         }

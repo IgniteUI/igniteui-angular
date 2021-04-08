@@ -114,7 +114,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(firstDetail.nativeElement)).toEqual('Obere Str. 57');
 
             inputElem.componentInstance.input.value = 'Test value';
-            checkboxElem.componentInstance.toggle();
+            checkboxElem.componentInstance.checked = !checkboxElem.componentInstance.checked;
             fix.detectChanges();
 
             grid.navigateTo(20);
@@ -157,7 +157,7 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(getDetailAddressText(firstRowDetail.nativeElement)).toEqual('Obere Str. 57');
 
             inputGroup.input.value = 'Test value';
-            checkboxElem.toggle();
+            checkboxElem.checked = !checkboxElem.checked;
             fix.detectChanges();
 
             GridFunctions.toggleMasterRow(fix, grid.rowList.first);
@@ -182,7 +182,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME * 2);
 
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
-            const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
+            const verticalSrollHeight = (verticalScrollbar.firstElementChild as HTMLElement).offsetHeight;
 
             grid.navigateTo(26);
             await wait(DEBOUNCETIME * 2);
@@ -199,7 +199,8 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.expansionStates.has(grid.rowList.last.rowID)).toBeTruthy();
             expect(grid.expansionStates.get(grid.rowList.last.rowID)).toBeTruthy();
             expect(getDetailAddressText(lastRowDetail)).toEqual('Via Monte Bianco 34');
-            expect(verticalSrollHeight + lastRowDetail.offsetHeight).toEqual(verticalScrollbar.firstChild.offsetHeight);
+            expect(verticalSrollHeight + lastRowDetail.offsetHeight)
+                .toEqual((verticalScrollbar.firstElementChild as HTMLElement).offsetHeight);
         }));
 
         it('Should update view when setting a new expansionState object.', () => {
@@ -714,7 +715,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
                 // click the template checkbox
                 let checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
-                checkbox.componentInstance.toggle();
+                checkbox.componentInstance.checked = !checkbox.componentInstance.checked;
                 fix.detectChanges();
 
                 // go to last page that doesn't contain this view
@@ -987,7 +988,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 grid = fix.componentInstance.grid;
 
                 let checkbox = fix.debugElement.query(By.directive(IgxCheckboxComponent));
-                checkbox.componentInstance.toggle();
+                checkbox.componentInstance.checked = !checkbox.componentInstance.checked;
                 fix.detectChanges();
 
                 // check checkbox state
@@ -1189,7 +1190,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
 @Component({
     template: `
-        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]='true'
+        <igx-grid [data]="data" [width]="width" [height]="height" [primaryKey]="'ID'" [allowFiltering]="true"
         [paging]="paging" [perPage]="perPage" [rowSelection]="rowSelectable">
             <igx-column *ngFor="let c of columns" [field]="c.field" [width]="c.width" [dataType]='c.dataType'>
             </igx-column>
@@ -1247,7 +1248,7 @@ export class DefaultGridMasterDetailComponent {
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
-    ngOnInit(): void {
+    public ngOnInit(): void {
         const allExpanded = new Map<any, boolean>();
         this.data.forEach(item => {
             allExpanded.set(item['ID'], true);

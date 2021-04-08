@@ -3,7 +3,8 @@ import {
     IgxRowIslandComponent,
     IgxHierarchicalGridComponent,
     IGridCellEventArgs,
-    GridSelectionMode
+    GridSelectionMode,
+    DisplayDensity
 } from 'igniteui-angular';
 
 @Component({
@@ -25,7 +26,7 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
     public selectionMode;
     public firstLevelExpanded = false;
     public rootExpanded = false;
-    public density = 'comfortable';
+    public density: DisplayDensity = 'comfortable';
     public displayDensities;
     public riToggle = true;
     public hgridState = [];

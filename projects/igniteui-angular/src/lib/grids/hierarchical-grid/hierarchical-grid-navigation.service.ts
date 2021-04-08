@@ -15,10 +15,10 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected _pendingNavigation = false;
 
 
-    dispatchEvent(event: KeyboardEvent) {
+    public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+            !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
             return;
         }
 
@@ -52,7 +52,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 scrollAmount += isNext ? 1 : -1;
                 this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
                 this._pendingNavigation = true;
-                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                     this._moveToChild(rowIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
                     this._pendingNavigation = false;
                 });
@@ -104,7 +104,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    focusTbody(event) {
+    public focusTbody(event) {
         if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
                 row: 0,
@@ -171,7 +171,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
-            scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+            scrollableGrid.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 this._pendingNavigation = false;
                 if (cb) {
                     cb();

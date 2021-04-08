@@ -10,7 +10,7 @@ import {
     ChangeDetectorRef
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { isIE, IBaseEventArgs, mkenum } from '../core/utils';
+import { IBaseEventArgs, mkenum } from '../core/utils';
 import { EditorProvider } from '../core/edit-provider';
 import { noop } from 'rxjs';
 
@@ -51,6 +51,8 @@ let nextId = 0;
     templateUrl: 'radio.component.html'
 })
 export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
+    private static ngAcceptInputType_required: boolean | '';
+    private static ngAcceptInputType_disabled: boolean | '';
     /**
      * Returns reference to native radio element.
      * ```typescript
@@ -191,7 +193,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * Sets/gets whether the radio button is required.
      * If not set, `required` will have value `false`.
      * ```html
-     * <igx-radio [required] = "true"></igx-radio>
+     * <igx-radio required></igx-radio>
      * ```
      * ```typescript
      * let isRequired =  this.radio.required;
@@ -199,8 +201,13 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      *
      * @memberof IgxRadioComponent
      */
-    @Input()
-    public required = false;
+     @Input()
+     public get required(): boolean {
+         return this._required;
+     }
+     public set required(value: boolean) {
+         this._required = (value as any === '') || value;
+     }
 
     /**
      * Sets/gets the `aria-labelledby` attribute of the radio component.
@@ -272,7 +279,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * Sets/gets  the `disabled` attribute.
      * Default value is `false`.
      * ```html
-     * <igx-radio [disabled] = "true"></igx-radio>
+     * <igx-radio disabled></igx-radio>
      * ```
      * ```typescript
      * let isDisabled =  this.radio.disabled;
@@ -282,7 +289,12 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      */
     @HostBinding('class.igx-radio--disabled')
     @Input()
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+    public set disabled(value: boolean) {
+        this._disabled = (value as any === '') || value;
+    }
 
     /**
      * Sets/gets whether the radio component is on focus.
@@ -305,6 +317,16 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     public inputId = `${this.id}-input`;
     /**
      * @hidden
+     * @internal
+     */
+    private _required = false;
+    /**
+     * @hidden
+     * @internal
+     */
+    private _disabled = false;
+    /**
+     * @hidden
      */
     private _onTouchedCallback: () => void = noop;
 
@@ -323,13 +345,14 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
+        this.select();
     }
 
     /**
      * @hidden
      */
-    public _clicked(event: MouseEvent) {
-        event.stopPropagation();
+    @HostListener('click')
+    public _clicked() {
         this.select();
     }
 
@@ -344,13 +367,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     public select() {
         this.nativeRadio.nativeElement.focus();
 
-        if (isIE()) {
-            this.nativeRadio.nativeElement.blur();
+        if(!this.checked) {
+            this.checked = true;
+            this.change.emit({ value: this.value, radio: this });
+            this._onChangeCallback(this.value);
         }
-
-        this.checked = true;
-        this.change.emit({ value: this.value, radio: this });
-        this._onChangeCallback(this.value);
     }
 
     /**

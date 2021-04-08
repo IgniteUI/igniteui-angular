@@ -14,12 +14,12 @@ import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directiv
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
-import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
+import { IgxGridBaseDirective } from '../../public_api';
+import { PlatformUtil } from '../../../core/utils';
 
 /**
  * @hidden
@@ -289,7 +289,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     private _editingInputsContainer: ElementRef;
     private _addModeContainer: ElementRef;
     private _currentGroupButtonsContainer: ElementRef;
-    private _grid: GridType;
+    private _grid: IgxGridBaseDirective;
     private _filteringChange: Subscription;
 
     private _positionSettings = {
@@ -303,7 +303,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    constructor(public cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
     /**
      * @hidden @internal
@@ -356,7 +356,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * An @Input property that sets the grid.
      */
     @Input()
-    public set grid(grid: GridType) {
+    public set grid(grid: IgxGridBaseDirective) {
         this._grid = grid;
 
         if (this._filteringChange) {
@@ -377,7 +377,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * Returns the grid.
      */
-    public get grid(): GridType {
+    public get grid(): IgxGridBaseDirective {
         return this._grid;
     }
 
@@ -386,6 +386,13 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     public get filterableColumns(): IgxColumnComponent[] {
         return this.grid.columns.filter((col) => !col.columnGroup && col.filterable);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get hasEditedExpression(): boolean {
+        return this.editedExpression !== undefined && this.editedExpression !== null;
     }
 
     /**
@@ -654,9 +661,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
         const key = eventArgs.key;
-        if (!this.contextMenuToggle.collapsed && (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE)) {
+        if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
             this.clearSelection();
-        } else if (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE) {
+        } else if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
         }
     }
@@ -762,7 +769,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+        if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
         }
@@ -786,7 +793,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public initialize(grid: GridType, overlayService: IgxOverlayService,
+    public initialize(grid: IgxGridBaseDirective, overlayService: IgxOverlayService,
         overlayComponentId: string) {
         this.inline = false;
         this.grid = grid;
@@ -840,7 +847,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public onClearButtonClick(event?: Event) {
-        this.grid.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.grid.advancedFilteringExpressionsTree = null;
     }
 
@@ -861,7 +868,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public applyChanges(event?: Event) {
-        this.grid.endEdit(false, event);
+        this.grid.crudService.endEdit(false, event);
         this.exitOperandEdit();
         this.grid.advancedFilteringExpressionsTree = this.createExpressionsTreeFromGroupItem(this.rootGroup);
     }

@@ -1,11 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { data, dataWithoutPK } from './data';
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
-registerLocaleData(localeFr);
+import { data, dataWithoutPK } from '../shared/data';
 
 import {
-    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult
+    IgxGridComponent, GridSelectionMode, IgxDateSummaryOperand, IgxSummaryResult, DisplayDensity
 } from 'igniteui-angular';
 @Component({
     selector: 'app-grid-cellediting',
@@ -20,7 +17,7 @@ export class GridCellEditingComponent {
     public orderDateHidden = false;
     public data: any;
     public dataWithoutPK: any;
-    public density = 'compact';
+    public density: DisplayDensity = 'compact';
     public displayDensities;
     public options = {
         timezone: '+0430',

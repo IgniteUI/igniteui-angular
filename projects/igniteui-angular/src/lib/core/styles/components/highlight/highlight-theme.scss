@@ -5,7 +5,7 @@
 ////
 
 /// If only background color(s) specified, text color(s) will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $resting-background [null]- The background color used for the highlight in its resting state.
 /// @param {Color} $resting-color [null] - The text color used for the highlight in its resting state.
@@ -22,7 +22,7 @@
 ///   // Pass the theme to the igx-avatar component mixin
 ///   @include igx-avatar($my-avatar-theme);
 @function igx-highlight-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $resting-background: null,
     $resting-color: null,
@@ -59,11 +59,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-highlight($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %igx-highlight {
         color: --var($theme, 'resting-color');

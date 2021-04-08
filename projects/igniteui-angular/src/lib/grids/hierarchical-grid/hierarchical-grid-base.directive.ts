@@ -26,7 +26,7 @@ import { IgxOverlayService, IgxTransactionService, Transaction, TransactionServi
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
@@ -34,6 +34,7 @@ import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
+import { PlatformUtil } from '../../core/utils';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -80,12 +81,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      *
      * @example
      * ```typescript
-     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
+     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (dataPreLoad)="handleEvent()">
      *  </igx-hierarchical-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -97,7 +98,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
-    get maxLevelHeaderDepth() {
+    public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -110,14 +111,14 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    get outlet() {
+    public get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-    set outlet(val: any) {
+     public set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
@@ -142,7 +143,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: TransactionService<Transaction, State>,
@@ -158,10 +158,10 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) localeId: string) {
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil) {
         super(
             selectionService,
-            crudService,
             colResizingService,
             gridAPI,
             transactionFactory,
@@ -177,7 +177,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             overlayService,
             summaryService,
             _displayDensityOptions,
-            localeId);
+            localeId,
+            platform);
         this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
 
@@ -198,7 +199,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.initPinning();
 
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'onColumnChange');
+        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columnList.forEach(column => {
                 if (column[output.propName]) {

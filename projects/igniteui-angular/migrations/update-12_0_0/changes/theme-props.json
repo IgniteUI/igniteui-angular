@@ -2,6 +2,41 @@
     "$schema": "../../common/schema/theme-props.schema.json",
     "changes": [
         {
+            "name": "$border-radius-round",
+            "replaceWith": "$border-radius",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$border-radius-square",
+            "replaceWith": "$border-radius",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$initials-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$initials-color",
+            "replaceWith": "$color",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$icon-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$icon-color",
+            "replaceWith": "$color",
+            "owner": "igx-avatar-theme"
+        },
+        {
+            "name": "$image-background",
+            "replaceWith": "$background",
+            "owner": "igx-avatar-theme"
+        },
+        {
             "name": "$flat-border-radius",
             "replaceWith": "$border-radius",
             "owner": "igx-button-theme"
@@ -287,7 +322,7 @@
             "owner": "igx-button-theme"
         },
         {
-            "name": "$disabled-text-color",
+            "name": "$disabled-color",
             "replaceWith": "$disabled-foreground",
             "owner": "igx-button-theme"
         }

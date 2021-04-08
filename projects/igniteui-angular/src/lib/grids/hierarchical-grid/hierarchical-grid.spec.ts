@@ -172,7 +172,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(cellLeftOffset).not.toBeGreaterThan(gridWidth);
 
         const hScroll = hierarchicalGrid.headerContainer.getScroll();
-        expect(hScroll.children[0].offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
+        expect((hScroll.children[0] as HTMLElement).offsetWidth).not.toBeGreaterThan(hScroll.offsetWidth);
     });
 
     it('should allow extracting child grids using hgridAPI', () => {
@@ -397,7 +397,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         fixture.detectChanges();
         wait();
 
-        expect(childGrid.crudService.cellInEditMode).toBeFalsy();
+        expect(childGrid.gridAPI.crudService.cellInEditMode).toBeFalsy();
         expect(childGridSecondRow.inEditMode).toBeFalsy();
     });
 
@@ -1384,7 +1384,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateDataUneven(20, 3);
     }
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
         let children;
@@ -1427,7 +1427,7 @@ export class IgxHierarchicalGridMultiLayoutComponent extends IgxHierarchicalGrid
 @Component({
     template: `
         <igx-hierarchical-grid [data]="data" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
-            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1 (onGridCreated)="gridCreated($event, rowIsland1)">
+            <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland1 (gridCreated)="gridCreated($event, rowIsland1)">
                 <igx-column field="ID"></igx-column>
                 <igx-column field="ProductName"></igx-column>
                 <igx-row-island [key]="'childData2'" [autoGenerate]="true" #rowIsland2>
@@ -1450,7 +1450,7 @@ export class IgxHGridRemoteOnDemandComponent {
 
     constructor(public cdr: ChangeDetectorRef) { }
 
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
         for (let i = 0; i < count; i++) {
@@ -1462,11 +1462,11 @@ export class IgxHGridRemoteOnDemandComponent {
         return prods;
     }
 
-    bind() {
+    public bind() {
         this.data = this.generateDataUneven(20, 3);
     }
 
-    generateRowIslandData(count: number) {
+    public generateRowIslandData(count: number) {
         const prods = [];
         for (let i = 0; i < count; i++) {
             prods.push({ ID: i, ProductName: 'Product: A' + i });
@@ -1474,7 +1474,7 @@ export class IgxHGridRemoteOnDemandComponent {
         return prods;
     }
 
-    gridCreated(event: IGridCreatedEventArgs, rowIsland: IgxRowIslandComponent) {
+    public gridCreated(event: IGridCreatedEventArgs, _rowIsland: IgxRowIslandComponent) {
         setTimeout(() => {
             event.grid.data = this.generateRowIslandData(5);
             event.grid.cdr.detectChanges();
@@ -1506,7 +1506,7 @@ export class IgxHierarchicalGridColumnsUpdateComponent extends IgxHierarchicalGr
         super();
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.islandCols1 = this.cols1;
         this.islandCols2 = this.cols2;
         this.cdr.detectChanges();
@@ -1590,11 +1590,11 @@ export class IgxHierarchicalGridCustomTemplateComponent extends IgxHierarchicalG
 @Component({
     template: `
     <igx-hierarchical-grid #grid1 [data]="data" [showExpandAll]='true'
-        [autoGenerate]="false" [height]="'400px'" [width]="width" [allowFiltering]='true' filterMode="excelStyleFilter" #hierarchicalGrid>
+        [autoGenerate]="false" [height]="'400px'" [width]="width" [allowFiltering]="true" filterMode="excelStyleFilter" #hierarchicalGrid>
      <igx-column field="ID"></igx-column>
      <igx-column field="ProductName"></igx-column>
     <igx-row-island [showExpandAll]='true' [key]="'childData'" [autoGenerate]="false"
-        [allowFiltering]='true' filterMode="excelStyleFilter" #rowIsland>
+        [allowFiltering]="true" filterMode="excelStyleFilter" #rowIsland>
         <ng-template igxExcelStyleHeaderIcon>
             <igx-icon>filter_alt</igx-icon>
         </ng-template>

@@ -70,17 +70,17 @@ export class ColumnDefinitions {
     `;
 
     public static idNameJobHireSortable = `
-        <igx-column field="ID" sortable="true"></igx-column>
-        <igx-column field="Name" sortable="true"></igx-column>
-        <igx-column field="JobTitle" sortable="true"></igx-column>
-        <igx-column field="HireDate" sortable="true"></igx-column>
+        <igx-column field="ID" [sortable]="true"></igx-column>
+        <igx-column field="Name" [sortable]="true"></igx-column>
+        <igx-column field="JobTitle" [sortable]="true"></igx-column>
+        <igx-column field="HireDate" [sortable]="true"></igx-column>
     `;
 
     public static idNameHiddenJobHirePinned = `
         <igx-column field="ID"></igx-column>
         <igx-column field="Name" hidden="true"></igx-column>
         <igx-column field="JobTitle"></igx-column>
-        <igx-column field="HireDate" pinned="true"></igx-column>
+        <igx-column field="HireDate" [pinned]="true"></igx-column>
     `;
 
     public static idNameJobHoursHireDatePerformance = `
@@ -163,9 +163,7 @@ export class ColumnDefinitions {
         <igx-column [field]="'ReleaseDate'" [resizable]="true" dataType="date"></igx-column>
         <igx-column [field]="'Category'" [width]="'150px'" [resizable]="true" dataType="string">
             <ng-template igxCell igxHeader>
-                <div>
-                    <igx-avatar initials="JS"></igx-avatar>
-                </div>
+                <igx-avatar initials="JS"></igx-avatar>
             </ng-template>
         </igx-column>
         <igx-column [field]="'Items'" [width]="'60px'" [hasSummary]="true" [resizable]="true" dataType="string"></igx-column>
@@ -400,50 +398,50 @@ export class ColumnDefinitions {
     public static multiColHeadersWithGroupingColumns = `
   <igx-column [width]="'100px'" [movable]="true" [resizable]="true" [pinned]="false"
               [sortable]="true" [filterable]="true" field="Missing"></igx-column>
-  <igx-column-group [movable]="true" header="General Information" [groupable]='true'  [pinned]="isPinned">
+  <igx-column-group [movable]="true" header="General Information" [groupable]="true"  [pinned]="isPinned">
       <igx-column [movable]="true" [width]="'130px'" [filterable]="true" [sortable]="true" field="CompanyName"></igx-column>
       <igx-column-group [movable]="true" header="Person Details">
           <igx-column [movable]="true" [width]="'100px'" field="ContactName"></igx-column>
           <igx-column [movable]="true" [width]="'100px'"[filterable]="true" [sortable]="true" field="ContactTitle"></igx-column>
       </igx-column-group>
   </igx-column-group>
-  <igx-column [movable]="true" [resizable]="true" field="ID" [width]="'100px'" [groupable]='true'></igx-column>
+  <igx-column [movable]="true" [resizable]="true" field="ID" [width]="'100px'" [groupable]="true"></igx-column>
 `;
 
     public static contactInfoGroupableColumns = `
     <igx-column [movable]="true" [hasSummary]="true" [resizable]="true"
                 [pinned]="true" field="Missing"></igx-column>
     <igx-column-group [movable]="true" [pinned]="false" header="General Information">
-        <igx-column [movable]="true" filterable="true" sortable="true"
-                resizable="true" field="CompanyName"></igx-column>
+        <igx-column [movable]="true" [filterable]="true" [sortable]="true"
+                [resizable]="true" field="CompanyName"></igx-column>
         <igx-column-group [movable]="true" header="Person Details">
-            <igx-column [movable]="true" [pinned]="false" filterable="true"
-                sortable="true" resizable="true" field="ContactName"></igx-column>
-            <igx-column [movable]="true" [hasSummary]="true" filterable="true"
-                sortable="true" resizable="true" field="ContactTitle"></igx-column>
+            <igx-column [movable]="true" [pinned]="false" [filterable]="true"
+                [sortable]="true" [resizable]="true" field="ContactName"></igx-column>
+            <igx-column [movable]="true" [hasSummary]="true" [filterable]="true"
+                [sortable]="true" [resizable]="true" field="ContactTitle"></igx-column>
         </igx-column-group>
     </igx-column-group>
     <igx-column field="ID" [movable]="true" [hasSummary]="true" [resizable]="true"
-                editable="true"></igx-column>
+                [editable]="true"></igx-column>
     `;
 
     public static summariesGroupByColumns = `
-    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
-    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
-    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
-    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
-    <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]='true'></igx-column>
-    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]="true"></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="true" [groupable]="true"></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]="true"></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]="true"></igx-column>
+    <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true" [groupable]="true"></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]="true"></igx-column>
     `;
 
     public static summariesGroupByTansColumns = `
-    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]='true'></igx-column>
-    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="false" [groupable]='true'></igx-column>
-    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]='true'></igx-column>
-    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]='true'></igx-column>
+    <igx-column [field]="'ID'" dataType="number" width="150px" [hasSummary]="false" [groupable]="true"></igx-column>
+    <igx-column [field]="'ParentID'" width="150px" dataType="number" [hasSummary]="false" [groupable]="true"></igx-column>
+    <igx-column [field]="'Name'" width="150px" dataType="string" [hasSummary]="true" [groupable]="true"></igx-column>
+    <igx-column [field]="'HireDate'" width="150px" dataType="date" [hasSummary]="true" [groupable]="true"></igx-column>
     <igx-column [field]="'Age'" width="150px" dataType="number" [hasSummary]="true"
-        [groupable]='true' [summaries]="ageSummaryMinMax"></igx-column>
-    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]='true'></igx-column>
+        [groupable]="true" [summaries]="ageSummaryMinMax"></igx-column>
+    <igx-column [field]="'OnPTO'" width="150px" dataType="boolean" [hasSummary]="true" [groupable]="true"></igx-column>
     `;
 
     public static selectionWithScrollsColumns = `
@@ -456,10 +454,10 @@ export class ColumnDefinitions {
     `;
 
     public static exportGroupedDataColumns = `
-    <igx-column [field]="'Price'" dataType="number" [groupable]='true'></igx-column>
-    <igx-column [field]="'Brand'" dataType="string" [groupable]='true'></igx-column>
-    <igx-column [field]="'Model'" dataType="string" [groupable]='true'></igx-column>
-    <igx-column [field]="'Edition'" dataType="string" [groupable]='true'></igx-column>
+    <igx-column [field]="'Price'" dataType="number" [groupable]="true"></igx-column>
+    <igx-column [field]="'Brand'" dataType="string" [groupable]="true"></igx-column>
+    <igx-column [field]="'Model'" dataType="string" [groupable]="true"></igx-column>
+    <igx-column [field]="'Edition'" dataType="string" [groupable]="true"></igx-column>
     `;
 }
 

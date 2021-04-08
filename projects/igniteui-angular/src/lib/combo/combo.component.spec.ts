@@ -92,7 +92,7 @@ describe('igxCombo', () => {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
-        const mockIconService = new IgxIconService(null, null);
+        const mockIconService = new IgxIconService(null, null, null);
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, null, null, mockInjector);
@@ -890,7 +890,7 @@ describe('igxCombo', () => {
                 scrollIndex += 10;
                 if (scrollIndex < combo.data.length) {
                     combo.virtualScrollContainer.scrollTo(scrollIndex);
-                    combo.virtualScrollContainer.onChunkLoad.pipe(take(1)).subscribe(async () => {
+                    combo.virtualScrollContainer.chunkLoad.pipe(take(1)).subscribe(async () => {
                         await wait(30);
                         checkGroupedItemsClass();
                     });
@@ -2045,7 +2045,6 @@ describe('igxCombo', () => {
             fixture.detectChanges();
             expect(document.activeElement).toEqual(combo.searchInput.nativeElement);
         }));
-
         it('should properly add items to the defaultFallbackGroup', () => {
             combo.allowCustomValues = true;
             combo.toggle();
@@ -2452,22 +2451,26 @@ describe('igxCombo', () => {
             expect(combo.collapsed).toBeFalsy();
             expect(combo.value).toEqual('My New Custom Item');
         });
-        it('should enable/disable filtering at runtime', () => {
+        it('should enable/disable filtering at runtime', fakeAsync(() => {
             combo.open(); // Open combo - all data items are in filteredData
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
 
             const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
             searchInput.nativeElement.value = 'Not-available item';
             searchInput.triggerEventHandler('input', { target: searchInput.nativeElement });
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toEqual(0); // No items are available because of filtering
 
             combo.close(); // Filter is cleared on close
+            tick();
             fixture.detectChanges();
             combo.filterable = false; // Filtering is disabled
             fixture.detectChanges();
             combo.open(); // All items are visible since filtering is disabled
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
 
@@ -2477,13 +2480,15 @@ describe('igxCombo', () => {
             expect(combo.dropdown.items.length).toBeGreaterThan(0); // All items are visible since filtering is disabled
 
             combo.close(); // Filter is cleared on close
+            tick();
             fixture.detectChanges();
             combo.filterable = true; // Filtering is re-enabled
             fixture.detectChanges();
             combo.open(); // Filter is cleared on open
+            tick();
             fixture.detectChanges();
             expect(combo.dropdown.items.length).toBeGreaterThan(0);
-        });
+        }));
         it(`should properly display "Add Item" button when filtering is off`, () => {
             combo.allowCustomValues = true;
             combo.filterable = false;
@@ -2885,7 +2890,7 @@ class IgxComboSampleComponent {
      */
     @ViewChild('combo', { read: IgxComboComponent, static: true })
     public combo: IgxComboComponent;
-    public density = DisplayDensity.cosy;
+    public density: DisplayDensity = DisplayDensity.cosy;
 
     public items = [];
     public initData = [];
@@ -2923,7 +2928,7 @@ class IgxComboSampleComponent {
         this.initData = this.items;
     }
 
-    onSelectionChange(ev: IComboSelectionChangeEventArgs) {
+    public onSelectionChange() {
     }
 }
 
@@ -2955,14 +2960,14 @@ class IgxComboFormComponent {
     public combo: IgxComboComponent;
     public items = [];
 
-    get valuesTemplate() {
+    public get valuesTemplate() {
         return this.combo.selectedItems();
     }
-    set valuesTemplate(values: any[]) {
+    public set valuesTemplate(values: any[]) {
         this.combo.selectItems(values);
     }
 
-    reactiveForm: FormGroup;
+    public reactiveForm: FormGroup;
 
     constructor(fb: FormBuilder) {
 
@@ -3001,9 +3006,9 @@ class IgxComboFormComponent {
         });
 
     }
-    onSubmitReactive() { }
+    public onSubmitReactive() { }
 
-    onSubmitTemplateBased() { }
+    public onSubmitTemplateBased() { }
 }
 
 @Component({
@@ -3020,7 +3025,8 @@ class IgxComboFormComponent {
 `
 })
 class IgxComboInTemplatedFormComponent {
-    @ViewChild('testCombo', { read: IgxComboComponent, static: true }) testCombo: IgxComboComponent;
+    @ViewChild('testCombo', { read: IgxComboComponent, static: true })
+    public testCombo: IgxComboComponent;
     public items: any[] = [];
     public values: Array<any>;
 
@@ -3195,13 +3201,13 @@ export class IgxComboRemoteDataComponent implements OnInit, AfterViewInit, OnDes
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.remoteDataService.getData(evt, () => {
             this.cdr.detectChanges();
         });
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.cdr.detach();
     }
 }
@@ -3214,7 +3220,7 @@ export class ComboModelBindingComponent implements OnInit {
     public items: any[];
     public selectedItems: any[];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.items = [{ text: 'One', id: 0 }, { text: 'Two', id: 1 }, { text: 'Three', id: 2 },
         { text: 'Four', id: 3 }, { text: 'Five', id: 4 }];
     }

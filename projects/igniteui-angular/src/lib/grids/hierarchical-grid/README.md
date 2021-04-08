@@ -69,9 +69,9 @@ Most applications are designed to load as little data as possible initially for 
 ```html
 <igx-hierarchical-grid #grid1 [isLoading]="true" [data]="remoteData" [autoGenerate]="true">
     <igx-row-island #rowIsland1 [key]="'Orders'" [isLoading]="true" [autoGenerate]="true"
-    (onGridCreated)="gridCreated($event, rowIsland1)">
+    (gridCreated)="gridCreated($event, rowIsland1)">
         <igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true"
-        (onGridCreated)="gridCreated($event, rowIsland2)">
+        (gridCreated)="gridCreated($event, rowIsland2)">
         </igx-row-island>
     </igx-row-island>
 </igx-hierarchical-grid>
@@ -120,13 +120,13 @@ Enabling and configuring features is done through the **igx-row-island** markup 
 
 ```html
 <igx-hierarchical-grid [data]="localData" [displayDensity]="density" [autoGenerate]="false"
-    [allowFiltering]='true' [paging]="true" [height]="'600px'" [width]="'800px'" #hGrid>
+    [allowFiltering]="true" [paging]="true" [height]="'600px'" [width]="'800px'" #hGrid>
     <igx-column field="ID" [pinned]="true" [filterable]='true'></igx-column>
     <igx-column-group header="Information">
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName" hasSummary='true'></igx-column>
     </igx-column-group>
-    <igx-row-island [key]="'childData'" [autoGenerate]="false" [rowSelectable]='true' #layout1>
+    <igx-row-island [key]="'childData'" [autoGenerate]="false" rowSelection="multiple" #layout1>
         <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
         <igx-column-group header="Information2">
             <igx-column field="ChildLevels"></igx-column>
@@ -176,8 +176,8 @@ Below is the list of all inputs that the developers may set to configure the gri
     |Name|Description|
     |--- |--- |
     |_Event emitters_|_Notify for a change_|
-    | onGridCreated | Emitted when a grid is being created for this row island | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
-    | onGridInitialized | Emitted after a grid is being initialized for this row island. The emitting is done in `ngAfterViewInit` | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
+    | gridCreated | Emitted when a grid is being created for this row island | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
+    | gridInitialized | Emitted after a grid is being initialized for this row island. The emitting is done in `ngAfterViewInit` | false | parentRecord: `any`, owner: `IgxRowIslandComponent`, grid: `IgxHierarchicalGridComponent` |
 
 
 ### Properties
@@ -192,7 +192,7 @@ Defining handlers for this event emitter is done using declarative event binding
 
 ```html
 <igx-row-island #rowIsland2 [key]="'Order_Details'" [autoGenerate]="true"
-    (onGridCreated)="gridCreated($event, rowIsland2)">
+    (gridCreated)="gridCreated($event, rowIsland2)">
 </igx-row-island>
 ```
 

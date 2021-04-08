@@ -31,12 +31,11 @@ import {
     DisplayDensityBase
 } from '../core/displayDensity';
 import { IgxInputGroupBase } from './input-group.common';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
-import { isIE, mkenum } from '../core/utils';
+import { mkenum, PlatformUtil } from '../core/utils';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -242,7 +241,8 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any,
-        private renderer: Renderer2
+        private renderer: Renderer2,
+        private platform: PlatformUtil
     ) {
         super(_displayDensityOptions);
     }
@@ -275,12 +275,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden @internal */
     public ngAfterContentInit() {
         if (!this.theme) {
-            if(isIE()) {
+            if(this.platform.isIE) {
                 this._variant = IgxInputGroupTheme.Material;
             } else {
                 this._variant = this.document.defaultView
                     .getComputedStyle(this.element.nativeElement)
-                    .getPropertyValue('--igx-input-group-variant')
+                    .getPropertyValue('--theme')
                     .trim() as IgxInputGroupTheme;
             }
         }

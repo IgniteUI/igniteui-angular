@@ -1,12 +1,10 @@
 import { Component, ViewChild, OnInit, AfterViewInit } from '@angular/core';
-import { registerLocaleData, DatePipe } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
-registerLocaleData(localeFr);
+import { DatePipe } from '@angular/common';
 
 import { IgxGridComponent, IgxDateSummaryOperand, IgxSummaryResult, IgxColumnComponent,
-    IFilteringExpressionsTree, FilteringStrategy } from 'igniteui-angular';
+    IFilteringExpressionsTree, FilteringStrategy, IgxSummaryOperand } from 'igniteui-angular';
 import { RemoteService } from '../shared/remote.service';
-import { data } from '../grid-cellEditing/data';
+import { data } from '../shared/data';
 import { Observable } from 'rxjs';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -90,7 +88,17 @@ export class GridFormattingComponent implements OnInit, AfterViewInit {
 
     public addFormatter() {
         this.gridLocal.getColumnByName('OrderDate').formatter = this.formatter;
+        this.gridLocal.getColumnByName('OrderDate').summaryFormatter = this.summaryFormatter;
         this.gridRemote.getColumnByName('OrderDate').formatter = this.formatter;
+    }
+
+    public summaryFormatter(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+        const result = summaryResult.summaryResult;
+        if(summaryOperand instanceof IgxDateSummaryOperand && summaryResult.key !== 'count' && result !== null && result !== undefined) {
+            const pipe = new DatePipe('fr-FR');
+            return pipe.transform(result,'mediumDate');
+        }
+        return result;
     }
 
     public formatter(value: any): string {
@@ -126,6 +134,11 @@ class EarliestSummary extends IgxDateSummaryOperand {
 
     public operate(summaries?: any[]): IgxSummaryResult[] {
         const result = super.operate(summaries).filter((obj) => {
+            if (obj.key === 'count') {
+                const count = obj.summaryResult ? Number(obj.summaryResult) : undefined;
+                obj.summaryResult = count ? new Intl.NumberFormat('en-US').format(count) : undefined;
+                return obj;
+            }
             if (obj.key === 'earliest') {
                 const date = obj.summaryResult ? new Date(obj.summaryResult) : undefined;
                 obj.summaryResult = date ? new Intl.DateTimeFormat('en-US').format(date) : undefined;

@@ -7,9 +7,9 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {box-shadow} $shadow [null] - The shadow to be applied for the button group.
 /// @param {Color} $item-text-color [null]- The text color for button group items.
@@ -39,7 +39,6 @@
 /// @requires text-contrast
 /// @requires igx-elevation
 /// @requires round-borders
-/// @requires $elevations
 ///
 /// @example scss Change the background, text, and border colors
 ///   $my-button-group-theme: igx-button-group-theme(
@@ -50,9 +49,9 @@
 ///   // Pass the theme to the igx-button-group component mixin
 ///   @include igx-button-group($my-button-group-theme);
 @function igx-button-group-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $shadow: null,
     $item-text-color: null,
@@ -74,6 +73,8 @@
     $selected-shadow-color: null
 ) {
     $name: 'igx-button-group';
+    $selector: 'igx-buttongroup';
+
     $button-group-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -105,31 +106,31 @@
     }
 
     @if not($item-text-color) and $item-background {
-        @if type_of($item-background) == 'color' {
+        @if type-of($item-background) == 'color' {
             $item-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-hover-text-color) and $item-hover-background {
-        @if type_of($item-hover-background) == 'color' {
+        @if type-of($item-hover-background) == 'color' {
             $item-hover-text-color: text-contrast($item-hover-background);
         }
     }
 
     @if not($item-selected-background) and $item-background {
-        @if type_of($item-background) == 'color' {
+        @if type-of($item-background) == 'color' {
             $item-selected-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-selected-text-color) and $item-selected-background {
-        @if type_of($item-selected-background) == 'color' {
+        @if type-of($item-selected-background) == 'color' {
             $item-selected-text-color: text-contrast($item-selected-background);
         }
     }
 
     @if not($disabled-text-color) and $disabled-background-color {
-        @if type_of($disabled-background-color) == 'color' {
+        @if type-of($disabled-background-color) == 'color' {
             $disabled-text-color: rgba(text-contrast($item-background), .3);
         }
     }
@@ -145,6 +146,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         item-text-color: $item-text-color,
         item-background: $item-background,
@@ -168,11 +170,11 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires --var
 @mixin igx-button-group($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     $group-item-min-width: 24px;
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);

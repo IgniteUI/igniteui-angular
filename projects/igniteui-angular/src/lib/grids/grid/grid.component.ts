@@ -22,12 +22,13 @@ import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
 import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
+import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
 
@@ -49,7 +50,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
  * @example
  * ```html
- * <igx-grid [data]="employeeData" autoGenerate="false">
+ * <igx-grid [data]="employeeData" [autoGenerate]="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
@@ -60,10 +61,10 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     changeDetection: ChangeDetectionStrategy.OnPush,
     preserveWhitespaces: false,
     providers: [
+        IgxGridCRUDService,
         IgxGridNavigationService,
         IgxGridSummaryService,
         IgxGridSelectionService,
-        IgxGridCRUDService,
         { provide: GridBaseAPIService, useClass: IgxGridAPIService },
         { provide: IgxGridBaseDirective, useExisting: forwardRef(() => IgxGridComponent) },
         IgxFilteringService,
@@ -80,11 +81,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @example
      * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -164,6 +165,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     @ViewChild('groupArea')
     public groupArea: ElementRef;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'grid';
 
     /**
      * Gets/Sets the value of the `id` attribute.
@@ -624,7 +631,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.checkIfNoColumnField(expression)) {
             return;
         }
-        this.endEdit(false);
+        this.crudService.endEdit(false);
         if (expression instanceof Array) {
             this._gridAPI.groupBy_multiple(expression);
         } else {
@@ -975,7 +982,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+        this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isDetailRecord(rowData)) {
                 const cachedData = this.childDetailTemplates.get(rowData.detailsData);
@@ -993,7 +1000,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public ngOnInit() {
         super.ngOnInit();
         this.onGroupingDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
-            this.endEdit(false);
+            this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
         });
@@ -1023,7 +1030,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /**
@@ -1111,7 +1118,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
-            this.navigation = new IgxGridMRLNavigationService();
+            this.navigation = new IgxGridMRLNavigationService(this.platform);
             this.navigation.grid = this;
         }
     }

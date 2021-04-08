@@ -1,0 +1,6 @@
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web:300,400,600,700');
+@import 'demo-theme';
+
+// Tests should always be imported last
+@import '../../projects/igniteui-angular/src/lib/core/styles/spec/index';

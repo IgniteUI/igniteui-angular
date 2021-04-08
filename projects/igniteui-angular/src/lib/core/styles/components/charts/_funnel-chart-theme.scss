@@ -70,7 +70,9 @@
     $outer-label: igx-type-scale-category($type-scale, $outer-label-text-style);
     $text: igx-type-scale-category($type-scale, $text-style);
 
-    @include igx-font-var('outer-label-text-style', $outer-label, $name);
-    @include igx-font-var('text-style', $text, $name);
+    igx-funnel-chart {
+        @include igx-font-var('outer-label-text-style', $outer-label, $name);
+        @include igx-font-var('text-style', $text, $name);
+    }
 }
 

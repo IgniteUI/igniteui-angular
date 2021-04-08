@@ -36,12 +36,12 @@ import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayD
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxHierarchicalGridBaseDirective } from './hierarchical-grid-base.directive';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
@@ -99,13 +99,13 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     @Output()
-    public onLayoutChange = new EventEmitter<any>();
+    public layoutChange = new EventEmitter<any>();
 
     /**
      * Event emmited when a grid is being created based on this row island.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (onGridCreated)="gridCreated($event)" #rowIsland>
+     *      <igx-row-island [key]="'childData'" (gridCreated)="gridCreated($event)" #rowIsland>
      *          <!-- ... -->
      *      </igx-row-island>
      * </igx-hierarchical-grid>
@@ -114,14 +114,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Output()
-    public onGridCreated = new EventEmitter<IGridCreatedEventArgs>();
+    public gridCreated = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
      * Emitted after a grid is being initialized for this row island.
      * The emitting is done in `ngAfterViewInit`.
      * ```html
      * <igx-hierarchical-grid [data]="Data" [autoGenerate]="true">
-     *      <igx-row-island [key]="'childData'" (onGridInitialized)="gridInitialized($event)" #rowIsland>
+     *      <igx-row-island [key]="'childData'" (gridInitialized)="gridInitialized($event)" #rowIsland>
      *          <!-- ... -->
      *      </igx-row-island>
      * </igx-hierarchical-grid>
@@ -130,7 +130,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @memberof IgxRowIslandComponent
      */
     @Output()
-    public onGridInitialized = new EventEmitter<IGridCreatedEventArgs>();
+    public gridInitialized = new EventEmitter<IGridCreatedEventArgs>();
 
     /**
      * @hidden
@@ -217,7 +217,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: any,
@@ -234,10 +233,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string) {
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil) {
         super(
             selectionService,
-            crudService,
             colResizingService,
             gridAPI,
             typeof transactionFactory === 'function' ? transactionFactory() : transactionFactory,
@@ -253,7 +252,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             _displayDensityOptions,
-            localeId
+            localeId,
+            platform
         );
         this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
@@ -291,14 +291,14 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             });
         });
 
-        // handle column changes so that they are passed to child grid instances when onColumnChange is emitted.
+        // handle column changes so that they are passed to child grid instances when columnChange is emitted.
         this.ri_columnListDiffer.diff(this.childColumns);
-        this.childColumns.toArray().forEach(x => x.onColumnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
+        this.childColumns.toArray().forEach(x => x.columnChange.pipe(takeUntil(x.destroy$)).subscribe(() => this.updateColumnList()));
         this.childColumns.changes.pipe(takeUntil(this.destroy$)).subscribe((change: QueryList<IgxColumnComponent>) => {
             const diff = this.ri_columnListDiffer.diff(change);
             if (diff) {
                 diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                    record.item.onColumnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
+                    record.item.columnChange.pipe(takeUntil(record.item.destroy$)).subscribe(() => this.updateColumnList());
                 });
             }
          });
@@ -321,7 +321,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this._init = false;
 
         // Create the child toolbar if the parent island has a toolbar definition
-        this.onGridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
+        this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
                 .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
         });
@@ -331,7 +331,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnChanges(changes) {
-        this.onLayoutChange.emit(changes);
+        this.layoutChange.emit(changes);
         if (!this.isInit) {
             this.initialChanges.push(changes);
         }

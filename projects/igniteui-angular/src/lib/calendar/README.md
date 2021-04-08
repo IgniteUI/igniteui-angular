@@ -42,7 +42,7 @@ Instantiate a calendar component in single selection mode displaying the current
 A range selection calendar with first day of week set to Monday and an event
 handler when selection is done.
 ```html
-<igx-calendar weekStart="1" selection="range" (selected)="eventHandler($event)"></igx-calendar>
+<igx-calendar [weekStart]="1" selection="range" (selected)="eventHandler($event)"></igx-calendar>
 ```
 
 A multiple selection calendar with different locale and templating for the subheader.

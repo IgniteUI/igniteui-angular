@@ -3,9 +3,9 @@
 /// @access public
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a> //
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.  /
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.  /
 /// @param {Color} $idle-text-color [null] - The input text color in the idle state.
 /// @param {Color} $filled-text-color [null] - The input text color in the filled state.
 /// @param {Color} $focused-text-color [null] - The input text color in the focused state.
@@ -61,7 +61,6 @@
 /// @requires extend
 /// @requires text-contrast
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires round-borders
 ///
 /// @example scss Change the focused border and label colors
@@ -69,9 +68,9 @@
 ///   // Pass the theme to the igx-input-group component mixin
 ///   @include igx-input-group($my-input-group-theme);
 @function igx-input-group-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $box-border-radius: null,
     $border-border-radius: null,
@@ -125,6 +124,7 @@
     $label-floated-disabled-background: null
 ) {
     $name: 'igx-input-group';
+    $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
     $input-group-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -158,15 +158,15 @@
     $success-shadow-color: rgba(map-get($theme, 'success-secondary-color'), .5);
     $error-shadow-color: rgba(map-get($theme, 'error-secondary-color'), .5);
 
-    @if $focused-secondary-color {
+    @if $focused-secondary-color and type-of($focused-secondary-color) == 'color' {
         $focused-shadow-color: rgba($focused-secondary-color, .5);
     }
 
-    @if $success-secondary-color {
+    @if $success-secondary-color and type-of($success-secondary-color) == 'color' {
         $success-shadow-color: rgba($success-secondary-color, .5);
     }
 
-    @if $error-secondary-color {
+    @if $error-secondary-color and type-of($error-secondary-color) == 'color' {
         $error-shadow-color: rgba($error-secondary-color, .5);
     }
 
@@ -193,6 +193,7 @@
     @return extend($theme, (
         palette: $palette,
         name: $name,
+        selector: $selector,
 
         idle-text-color: $idle-text-color,
         filled-text-color: $filled-text-color,
@@ -253,12 +254,12 @@
 
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires --var
 @mixin igx-input-group($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $palette: map-get($theme, 'palette');
 
@@ -298,6 +299,10 @@
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
+
+    igx-input-group {
+        --theme: #{map-get($theme, 'variant')};
+    }
 
     %form-group-display {
         position: relative;

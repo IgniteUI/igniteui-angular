@@ -243,7 +243,7 @@ A list of the events emitted by the **igx-grid**:
 |`onPagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
 |`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
 |`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
-|`onDataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
+|`dataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
 |`onColumnPinning`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
 |`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
 |`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|

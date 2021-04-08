@@ -2669,7 +2669,7 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, null, mockSelection, null, null, mockInjector);
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -2905,7 +2905,7 @@ class IgxSelectAffixComponent {
 class IgxSelectReactiveFormComponent {
     @ViewChild('selectReactive', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
-    reactiveForm: FormGroup;
+    public reactiveForm: FormGroup;
     public items: string[] = [
         'Option 1',
         'Option 2',
@@ -2929,7 +2929,7 @@ class IgxSelectReactiveFormComponent {
             optionsSelect: ['', Validators.required]
         });
     }
-    onSubmitReactive() { }
+    public onSubmitReactive() { }
 
     public removeValidators(form: FormGroup) {
         // eslint-disable-next-line guard-for-in
@@ -2983,10 +2983,11 @@ class IgxSelectReactiveFormComponent {
 class IgxSelectTemplateFormComponent {
     @ViewChild('selectInForm', { read: IgxSelectComponent, static: true })
     public select: IgxSelectComponent;
+    @ViewChild(NgForm, { static: true })
+    public ngForm: NgForm;
 
-    @ViewChild(NgForm, { static: true }) ngForm: NgForm;
     public isRequired = true;
-    model = {
+    public model = {
         option: null
     };
     public items: string[] = [
@@ -2999,13 +3000,13 @@ class IgxSelectTemplateFormComponent {
         'Option 7'
     ];
 
-    onSubmit() { }
+    public onSubmit() { }
 }
 @Component({
     template: `
         <h4 class="sample-title">Select with ngModel, set items OnInit</h4>
         <igx-select #headerFooterSelect
-        [required]="true"
+        required
         [placeholder]="'Pick One'"
         [(ngModel)]="value"
         [displayDensity]="'cosy'">

@@ -4,12 +4,13 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $theme - theme used to style the component.
-/// @param {color} $label-color - The Color for date range separator label.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
+/// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
+/// @param {color} $label-color [null] - The color for date range separator label.
 /// @requires --var
 /// @requires rem
 @function igx-date-range-picker-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $label-color: null
 ) {
@@ -32,11 +33,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-date-range-picker($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 

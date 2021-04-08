@@ -2,115 +2,130 @@
     <article class="sample-column">
         <div class="tabbar-wrapper" #tabbarEl>
             <igx-bottom-nav>
-                <igx-tab-panel icon="phone">
-                    <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
-                        <igx-list-item [isHeader]="true">History</igx-list-item>
-                        <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
-                            *ngFor="let contact of contacts">
-                            <igx-avatar igxListThumbnail [src]="contact.avatar" roundShape="true"></igx-avatar>
-                            <p igxListLineTitle>{{contact.text}}</p>
-                            <span igxListLineSubTitle>{{contact.phone}}</span>
-                            <igx-icon igxListAction>phone</igx-icon>
-                        </igx-list-item>
-                    </igx-list>
-                </igx-tab-panel>
-                <igx-tab-panel icon="supervisor_account">
-                    <div class="tab-content">
-                        <h3>Tab 2 Content</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
-                            ligula. Donec
-                            consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
-                            Vestibulum
-                            urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
-                            lacus.
-                            Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
-                            lacus
-                            a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
-                            a
-                            arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
-                            diam.
-                            Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                    </div>
-                </igx-tab-panel>
-                <igx-tab-panel icon="format_list_bulleted">
-                    <div class="tab-content">
-                        <h3>Tab 3 Content</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
-                            ligula. Donec
-                            consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
-                            Vestibulum
-                            urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
-                            lacus.
-                            Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
-                            lacus
-                            a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
-                            a
-                            arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
-                            diam.
-                            Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                    </div>
-                </igx-tab-panel>
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                        <span igxBottomNavHeaderLabel>Tab 1</span>
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content class="igx-bottom-nav-item-content">
+                        <igx-list [allowRightPanning]="true" [allowLeftPanning]="true">
+                            <igx-list-item [isHeader]="true">History</igx-list-item>
+                            <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item-content"
+                                *ngFor="let contact of contacts">
+                                <igx-avatar igxListThumbnail [src]="contact.avatar" [roundShape]="true"></igx-avatar>
+                                <p igxListLineTitle>{{contact.text}}</p>
+                                <span igxListLineSubTitle>{{contact.phone}}</span>
+                                <igx-icon igxListAction>phone</igx-icon>
+                            </igx-list-item>
+                        </igx-list>
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
+
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+                        <span igxBottomNavHeaderLabel>Tab 2</span>
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content class="igx-bottom-nav-item-content">
+                        Content 2
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
+
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        Tab 3
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content class="igx-bottom-nav-item-content">
+                        Content 3
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien ligula.
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
     </article>
 
     <article class="sample-column">
         <div class="tabbar-wrapper" #tabbarEl>
-            <igx-bottom-nav #tabbar>
+            <igx-bottom-nav>
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>local_movies</igx-icon>
+                        <span igxBottomNavHeaderLabel>Movies</span>
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content>
+                        <div class="tab-content">
+                            <h3>Tab 1 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
+                                ligula. Donec
+                                consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
+                                Vestibulum
+                                urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
+                                lacus.
+                                Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
+                                lacus
+                                a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
+                                a
+                                arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
+                                diam.
+                                Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
+                        </div>
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
 
-                <igx-tab-panel label="Movies" icon="local_movies">
-                    <div class="tab-content">
-                        <h3>Tab 1 Content</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse varius sapien
-                            ligula. Donec
-                            consectetur accumsan suscipit. Praesent rutrum tellus blandit bibendum cursus.
-                            Vestibulum
-                            urna arcu, bibendum nec molestie ac, varius congue massa. Mauris porttitor viverra
-                            lacus.
-                            Donec efficitur purus id urna dapibus, vitae pharetra orci pellentesque. Vestibulum id
-                            lacus
-                            a magna euismod volutpat id in mi. Etiam a nunc ut tellus dictum porta. Donec in ligula
-                            a
-                            arcu sollicitudin finibus. Vivamus id lorem pulvinar, accumsan justo vitae, vehicula
-                            diam.
-                            Mauris vel quam at velit venenatis vulputate in quis nisl.</p>
-                    </div>
-                </igx-tab-panel>
+                <igx-bottom-nav-item>
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>favorite</igx-icon>
+                        <span igxBottomNavHeaderLabel>Favorite</span>
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content>
+                        <div class="tab-content">
+                            <h3>Tab 2 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio.
+                                Praesent
+                                ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus
+                                cursus
+                                rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum,
+                                pharetra
+                                a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper
+                                nunc.
+                                Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum,
+                                libero
+                                vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In
+                                hendrerit,
+                                sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis
+                                leo.
+                                Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
+                        </div>
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
 
-                <igx-tab-panel label="favorite" icon="favorite">
-                    <div class="tab-content">
-                        <h3>Tab 2 Content</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus vitae malesuada odio.
-                            Praesent
-                            ante lectus, porta a eleifend vel, sodales eu nisl. Vivamus sit amet purus eu lectus
-                            cursus
-                            rhoncus quis non ex. Cras ac nulla sed arcu finibus volutpat. Vivamus risus ipsum,
-                            pharetra
-                            a augue nec, euismod fringilla odio. Integer id velit rutrum, accumsan ante a, semper
-                            nunc.
-                            Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam elementum,
-                            libero
-                            vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel massa. In
-                            hendrerit,
-                            sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus nisl facilisis
-                            leo.
-                            Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique luctus.</p>
-                    </div>
-                </igx-tab-panel>
-
-                <igx-tab-panel [disabled]="true" label="watchlist" icon="list">
-                    <div class="tab-content">
-                        <h3>Tab 3 Content</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id velit rutrum, accumsan ante a,
-                            semper nunc. Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam. Nullam
-                            elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat nibh vel
-                            massa. In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan lectus
-                            nisl facilisis leo. Curabitur consequat sit amet nulla at consequat. Duis volutpat tristique
-                            luctus.Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales eu
-                            nisl. Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed arcu finibus
-                            volutpat. Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. </p>
-                    </div>
-                </igx-tab-panel>
+                <igx-bottom-nav-item [disabled]="true">
+                    <igx-bottom-nav-header>
+                        <igx-icon igxBottomNavHeaderIcon>list</igx-icon>
+                        <span igxBottomNavHeaderLabel>Watchlist</span>
+                    </igx-bottom-nav-header>
+                    <igx-bottom-nav-content>
+                        <div class="tab-content">
+                            <h3>Tab 3 Content</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer id velit rutrum,
+                                accumsan ante a,
+                                semper nunc. Phasellus ultrices tincidunt imperdiet. Nullam vulputate mauris diam.
+                                Nullam
+                                elementum, libero vel varius fermentum, lorem ex bibendum nulla, pretium lacinia erat
+                                nibh vel
+                                massa. In hendrerit, sapien ac mollis iaculis, dolor tellus malesuada sem, a accumsan
+                                lectus
+                                nisl facilisis leo. Curabitur consequat sit amet nulla at consequat. Duis volutpat
+                                tristique
+                                luctus.Vivamus vitae malesuada odio. Praesent ante lectus, porta a eleifend vel, sodales
+                                eu
+                                nisl. Vivamus sit amet purus eu lectus cursus rhoncus quis non ex. Cras ac nulla sed
+                                arcu finibus
+                                volutpat. Vivamus risus ipsum, pharetra a augue nec, euismod fringilla odio. </p>
+                        </div>
+                    </igx-bottom-nav-content>
+                </igx-bottom-nav-item>
             </igx-bottom-nav>
         </div>
     </article>

@@ -67,7 +67,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         const nextScroll = !(this.displayContainerScrollLeft <= scrollPos.leftScroll) && this.displayContainerWidth >= startScroll ?
             scrollPos.leftScroll : scrollPos.rightScroll - this.displayContainerWidth;
         this.forOfDir().getScroll().scrollLeft = nextScroll;
-        this.grid.parentVirtDir.onChunkLoad
+        this.grid.parentVirtDir.chunkLoad
             .pipe(first())
             .subscribe(() => {
                 if (cb) {
@@ -94,7 +94,7 @@ export class IgxGridMRLNavigationService extends IgxGridNavigationService {
         } else {
             this.grid.verticalScrollContainer.addScrollTop(Math.abs(pos.rowBottom - this.scrollTop - containerHeight));
         }
-        this.grid.verticalScrollContainer.onChunkLoad
+        this.grid.verticalScrollContainer.chunkLoad
             .pipe(first()).subscribe(() => {
                 if (cb) {
                     cb();
