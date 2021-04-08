@@ -648,16 +648,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public getRowByIndex(index: number): RowType {
         let rowData: any;
         let rec: any;
+        let treeRow: ITreeGridRecord;
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
 
         if (this.pinnedRecordsCount && this.pinning.rows && index >= this.summaryRowsData.length) {
             rowData = this.filteredSortedData[index];
+            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
             rec = new IgxTreeGridRow(this, index, rowData);
         }
         if (this.pinnedRecordsCount && !this.pinning.rows && index <= this.filteredSortedData.length - this.summaryRowsData.length) {
             rowData = this.filteredSortedData[index];
+            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
             rec = new IgxTreeGridRow(this, index, rowData);
         }
         if (this.pinnedRecordsCount && !this.pinning.rows && index > this.filteredSortedData.length - this.summaryRowsData.length) {
@@ -665,7 +668,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         rowData = rowData ? rowData : this.summaryRowsData[index];
         rec = rec ? rec : rowData.summaries ? new IgxSummaryRow(this, index, rowData.summaries) :
-            new IgxTreeGridRow(this, index, rowData.data);
+            new IgxTreeGridRow(this, index, rowData.data, rowData);
 
         return rec;
     }
@@ -680,13 +683,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const index = this.summaryRowsData.findIndex(r => (r.data && this.primaryKey && r.data[this.primaryKey] === key) ||
-            (r.data && !this.primaryKey && r.data === key));
+        const treeRow: ITreeGridRecord = this.primaryKey ? this.summaryRowsData.find(r => r.data && r.data[this.primaryKey] === key) :
+            this.summaryRowsData.find(r => r.rowData === key);
+        const index = this.summaryRowsData.findIndex(r => r === treeRow);
         if (index === undefined || index < 0) {
             return undefined;
         }
-        const row = this.summaryRowsData[index];
-        return new IgxTreeGridRow(this, index, row.data, row);
+        return new IgxTreeGridRow(this, index, treeRow.data, treeRow);
     }
 
     /** @hidden */
