@@ -259,7 +259,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const firstChildCell = childGrid.dataRowList.first.cells.first;
-            expect(hierarchicalGrid.getRowByIndex(3) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(3) instanceof IgxChildGridRowComponent).toBeTruthy();
             expect(childGrid.data).toBe(fixture.componentInstance.data[0]['childData']);
             expect(firstChildCell.value).toBe('00');
         }));
@@ -320,7 +320,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
 
             expect(hierarchicalGrid.getRowByIndex(0).expanded).toBe(true);
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             firstChildCell = childGrid.dataRowList.first.cells.first;
@@ -532,13 +532,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             // expand 3rd row
             hierarchicalGrid.expandRow(dataRows[3].rowID);
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
-            expect(hierarchicalGrid.getRowByIndex(4) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(4) instanceof IgxChildGridRowComponent).toBeTruthy();
         }));
 
         it('should correctly hide/show vertical scrollbar after page is changed.', (async () => {
@@ -771,7 +771,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
-        it('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {
+        fit('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {
             fixture.componentInstance.rowIsland.columnList.find(x => x.header === 'Information').pinned = true;
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
@@ -785,7 +785,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.pinnedColumns.length).toBe(3);
             expect(childGrid.unpinnedColumns.length).toBe(1);
             // check cells
-            expect(childGrid.getRowByIndex(0).cells.length).toBe(3);
+            expect(childGrid.gridAPI.get_row_by_index(0).cells.length).toBe(3);
             let cell = childGrid.getCellByColumn(0, 'ChildLevels');
             expect(cell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(cell)).toBeTruthy();

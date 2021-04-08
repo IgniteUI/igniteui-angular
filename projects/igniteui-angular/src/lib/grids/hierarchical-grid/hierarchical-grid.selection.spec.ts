@@ -51,7 +51,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        it('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
+        fit('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
             hierarchicalGrid.height = '500px';
             hierarchicalGrid.reflow();
             fix.detectChanges();
@@ -71,7 +71,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             expect(fCell.selected).toBeTruthy();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            const firstChildRow = childGrid.getRowByIndex(0);
+            const firstChildRow = childGrid.gridAPI.get_row_by_index(0);
             const fChildCell = firstChildRow.cells.toArray()[0];
 
             // select child cell
@@ -639,7 +639,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const mockEvent = new MouseEvent('click');
 
             // Click on a row in child grid
-            let row = childGrid.getRowByIndex(0);
+            let row = childGrid.hGridAPI.get_row_by_index(0);
             row.nativeElement.dispatchEvent(mockEvent);
             fix.detectChanges();
 
@@ -657,7 +657,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             });
 
             // Click on checkbox on second row
-            GridSelectionFunctions.getRowCheckboxDiv(childGrid.getRowByIndex(1).nativeElement).dispatchEvent(mockEvent);
+            GridSelectionFunctions.getRowCheckboxDiv(childGrid.hGridAPI.get_row_by_index(1).nativeElement).dispatchEvent(mockEvent);
             fix.detectChanges();
 
             expect(secondChildSpy).toHaveBeenCalledTimes(0);
@@ -825,7 +825,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             expect(childGrid.selectedRows).toEqual([]);
 
-            const childGridFirstRow = childGrid.getRowByIndex(2);
+            const childGridFirstRow = childGrid.gridAPI.get_row_by_index(2);
             UIInteractions.simulateClickEvent(childGridFirstRow.nativeElement, false, true);
             fix.detectChanges();
 
@@ -867,7 +867,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             // Row Islands selectRowOnClick should be true by default
             expect(childGrid1.selectRowOnClick).toBe(true);
 
-            const childGrid1FirstRow = childGrid1.getRowByIndex(2);
+            const childGrid1FirstRow = childGrid1.gridAPI.get_row_by_index(2);
             UIInteractions.simulateClickEvent(childGrid1FirstRow.nativeElement, false, true);
             fix.detectChanges();
 
@@ -905,8 +905,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             expect(childGrid.selectedRows).toEqual([]);
 
-            const firstRow = childGrid.getRowByIndex(0);
-            const secondRow = childGrid.getRowByIndex(2);
+            const firstRow = childGrid.gridAPI.get_row_by_index(0);
+            const secondRow = childGrid.hGridAPI.get_row_by_index(2);
 
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
@@ -957,8 +957,8 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             childGrid.selectRowOnClick = false;
             expect(childGrid.selectedRows).toEqual([]);
 
-            const firstRow = childGrid.getRowByIndex(0);
-            const secondRow = childGrid.getRowByIndex(2);
+            const firstRow = childGrid.gridAPI.get_row_by_index(0);
+            const secondRow = childGrid.hGridAPI.get_row_by_index(2);
 
             UIInteractions.simulateClickEvent(firstRow.nativeElement);
             fix.detectChanges();
@@ -1199,7 +1199,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             expect(childGrid.selectedRows).toEqual([]);
 
-            const childGridFirstRow = childGrid.getRowByIndex(0);
+            const childGridFirstRow = childGrid.gridAPI.get_row_by_index(0);
             childGridFirstRow.onClick(UIInteractions.getMouseEvent('click', false, false, true));
             tick();
             fix.detectChanges();
@@ -1251,7 +1251,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, true);
             expect(childGrid.selectedRows).toEqual(['00', '01', '02', '03']);
-            lastRow = childGrid.getRowByIndex(3);
+            lastRow = childGrid.gridAPI.get_row_by_index(3);
             GridSelectionFunctions.verifyRowSelected(lastRow);
         });
 
@@ -1368,7 +1368,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             childGrid.addRow({ ID: '03', ChildLevels: 3, ProductName: 'New Product' });
             fix.detectChanges();
 
-            addedRow = childGrid.getRowByIndex(3);
+            addedRow = childGrid.hGridAPI.get_row_by_index(3);
             GridSelectionFunctions.verifyRowSelected(addedRow, false);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(childGrid, false, true);
             GridSelectionFunctions.verifyHeaderRowCheckboxState(hierarchicalGrid, true);
@@ -1392,10 +1392,10 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Row context `select` method selects a single row', () => {
             // root grid
-            const firstRootRow = hGrid.getRowByIndex(0);
+            const firstRootRow = hGrid.gridAPI.get_row_by_index(0);
             GridSelectionFunctions.clickRowCheckbox(firstRootRow);
             fix.detectChanges();
-            GridSelectionFunctions.verifyRowSelected(hGrid.getRowByIndex(0));
+            GridSelectionFunctions.verifyRowSelected(hGrid.hGridAPI.get_row_by_index(0));
             GridSelectionFunctions.verifyHeaderRowCheckboxState(fix, false, true);
 
             // child grid
@@ -1403,7 +1403,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            const childRow = childGrid.getRowByIndex(0);
+            const childRow = childGrid.hGridAPI.get_row_by_index(0);
             GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
 
@@ -1413,7 +1413,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
         it('Row context `deselect` method deselects an already selected row', fakeAsync(() => {
             // root grid
-            const firstRootRow = hGrid.getRowByIndex(1);
+            const firstRootRow = hGrid.gridAPI.get_row_by_index(1);
             GridSelectionFunctions.clickRowCheckbox(firstRootRow);
             fix.detectChanges();
             GridSelectionFunctions.verifyRowSelected(firstRootRow);
@@ -1429,7 +1429,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            const childRow = childGrid.getRowByIndex(0);
+            const childRow = childGrid.hGridAPI.get_row_by_index(0);
 
             GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
@@ -1505,7 +1505,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
         it('Should have the correct properties in the custom row selector template context', () => {
             spyOn(fix.componentInstance, 'handleRowSelectorClick').and.callThrough();
 
-            GridSelectionFunctions.rowCheckboxClick(hGrid.getRowByIndex(1));
+            GridSelectionFunctions.rowCheckboxClick(hGrid.gridAPI.get_row_by_index(1));
             fix.detectChanges();
 
             expect(fix.componentInstance.handleRowSelectorClick).toHaveBeenCalledWith({
@@ -1521,7 +1521,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             // root grid
             hGrid.nextPage();
             fix.detectChanges();
-            expect(hGrid.getRowByIndex(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
+            expect(hGrid.gridAPI.get_row_by_index(0).nativeElement.querySelector('.rowNumber').textContent).toEqual('15');
 
             // child grid
             GridSelectionFunctions.expandRowIsland(3);
@@ -1531,7 +1531,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
 
             childGrid.nextPage();
             fix.detectChanges();
-            expect(childGrid.getRowByIndex(2).nativeElement.querySelector('.rowNumberChild').textContent).toEqual('17');
+            expect(childGrid.hGridAPI.get_row_by_index(2).nativeElement.querySelector('.rowNumberChild').textContent).toEqual('17');
         });
     });
 });
