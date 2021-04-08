@@ -92,6 +92,10 @@
         &:focus {
             outline-style: none;
         }
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-bottom-nav-menu {
