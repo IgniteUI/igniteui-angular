@@ -5,7 +5,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 
 const version = '12.0.0';
 
-describe(`Update to ${version}`, () => {
+fdescribe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
@@ -94,7 +94,7 @@ $theme: igx-avatar-theme(
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-tabs type="contentFit" [selectedIndex]="0">
-<igx-tabs-group label="Tab1" icon="home">
+<igx-tabs-group label="Tab1" icon="home" class="tabgroup">
     <div>Some Content</div>
 </igx-tabs-group>
 </igx-tabs>`);
@@ -110,7 +110,7 @@ ${noteText}
 <igx-icon igxTabHeaderIcon>home</igx-icon>
 <span igxTabHeaderLabel>Tab1</span>
 </igx-tab-header>
-<igx-tab-content>
+<igx-tab-content class="tabgroup">
     <div>Some Content</div>
 </igx-tab-content>
 </igx-tab-item>
@@ -121,7 +121,7 @@ ${noteText}
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-tabs type="fixed">
-<igx-tab-item label="Tab1" icon="folder" routerLink="view1" [isSelected]="true">
+<igx-tab-item label="Tab1" icon="folder" routerLink="view1" [isSelected]="true" class="tabitem">
 </igx-tab-item>
 </igx-tabs>`);
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
@@ -132,7 +132,7 @@ ${noteText}
 ${noteText}
 <igx-tabs tabAlignment="justify">
 <igx-tab-item [selected]="true">
-<igx-tab-header routerLink="view1">
+<igx-tab-header routerLink="view1" class="tabitem">
 <igx-icon igxTabHeaderIcon>folder</igx-icon>
 <span igxTabHeaderLabel>Tab1</span>
 </igx-tab-header>
@@ -174,7 +174,7 @@ ${noteText}
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
-<igx-tab-panel label="Tab1" icon="folder" [isSelected]="true">
+<igx-tab-panel label="Tab1" icon="folder" [isSelected]="true" class="tabpanel">
 Some Content
 </igx-tab-panel>
 </igx-bottom-nav>`);
@@ -190,7 +190,7 @@ ${noteText}
 <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
 <span igxBottomNavHeaderLabel>Tab1</span>
 </igx-bottom-nav-header>
-<igx-bottom-nav-content>
+<igx-bottom-nav-content class="tabpanel">
 Some Content
 </igx-bottom-nav-content>
 </igx-bottom-nav-item>
@@ -201,7 +201,7 @@ Some Content
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
-<igx-tab label="Tab1" icon="folder" routerLink="view1">
+<igx-tab label="Tab1" icon="folder" routerLink="view1" class="igxtab">
 </igx-tab>
 </igx-bottom-nav>`);
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
@@ -212,7 +212,7 @@ Some Content
 ${noteText}
 <igx-bottom-nav>
 <igx-bottom-nav-item>
-<igx-bottom-nav-header routerLink="view1">
+<igx-bottom-nav-header routerLink="view1" class="igxtab">
 <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
 <span igxBottomNavHeaderLabel>Tab1</span>
 </igx-bottom-nav-header>
@@ -247,5 +247,39 @@ ${noteText}
 </igx-bottom-nav-content>
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
+    });
+
+    fit('Should update the css selectors', async () => {
+        appTree.create('/testSrc/appPrefix/component/custom.component.scss', `
+igx-tabs-group {
+    padding: 8px;
+}
+igx-tab-item {
+    padding: 8px;
+}
+igx-tab-panel {
+    padding: 8px;
+}
+igx-tab {
+    padding: 8px;
+}`);
+
+        const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.scss'))
+            .toEqual(`
+igx-tab-content {
+    padding: 8px;
+}
+igx-tab-header {
+    padding: 8px;
+}
+igx-bottom-nav-content {
+    padding: 8px;
+}
+igx-bottom-nav-header {
+    padding: 8px;
+}`);
     });
 });
