@@ -720,6 +720,57 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(ri1.onCellClick.emit).toHaveBeenCalledTimes(1);
         expect(ri1.onCellClick.emit).toHaveBeenCalledWith(args);
     });
+
+    it('should filter correctly on row island',
+    fakeAsync(() => { /** height/width setter rAF + row toggle rAF */
+        const uniqueData = [
+            {
+                ID: 1,
+                ProductName : 'Parent Name',
+                childData: [
+                    {
+                        ID: 11,
+                        ProductName : 'Child11 ProductName'
+                    },
+                    {
+                        ID: 12,
+                        ProductName : 'Child12 ProductName'
+                    }
+                ],
+                childData2: [
+                    {
+                        ID: 21,
+                        Col1: 'Child21 Col1',
+                        Col2: 'Child21 Col2',
+                        Col3: 'Child21 Col3'
+                    },
+                    {
+                        ID: 22,
+                        Col1: 'Child22 Col1',
+                        Col2: 'Child22 Col2',
+                        Col3: 'Child22 Col3'
+                    }
+                ]
+            }
+        ];
+        fixture.componentInstance.data = uniqueData;
+        fixture.detectChanges();
+
+        const rowIsland1 = fixture.componentInstance.rowIsland1 as IgxRowIslandComponent;
+        rowIsland1.filter('ProductName', 'Child12', IgxStringFilteringOperand.instance().condition('contains'), true);
+
+        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(row.expander);
+        tick();
+        fixture.detectChanges();
+
+        const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const childGrid1 = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
+        expect(childGrid1.data.length).toEqual(2);
+        expect(childGrid1.filteredData.length).toEqual(1);
+        expect(childGrid1.rowList.length).toEqual(1);
+        expect(childGrid1.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
+    }));
 });
 
 describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
@@ -1384,12 +1435,12 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateDataUneven(20, 3);
     }
-    generateDataUneven(count: number, level: number, parendID: string = null) {
+    generateDataUneven(count: number, level: number, parentID: string = null) {
         const prods = [];
         const currLevel = level;
         let children;
         for (let i = 0; i < count; i++) {
-            const rowID = parendID ? parendID + i : i.toString();
+            const rowID = parentID ? parentID + i : i.toString();
             if (level > 0 ) {
                // Have child grids for row with even id less rows by not multiplying by 2
                children = this.generateDataUneven((i % 2 + 1) * Math.round(count / 3) , currLevel - 1, rowID);

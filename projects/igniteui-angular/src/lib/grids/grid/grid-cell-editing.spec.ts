@@ -1112,7 +1112,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            cell.gridAPI.clear_filter('fullName');
+            grid.clearFilter('fullName');
             fixture.detectChanges();
 
             cell = grid.getCellByColumn(0, 'fullName');
