@@ -656,12 +656,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.pinnedRecordsCount && this.pinning.rows && index >= this.summaryRowsData.length) {
             rowData = this.filteredSortedData[index];
             treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
-            rec = new IgxTreeGridRow(this, index, rowData);
+            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
         }
         if (this.pinnedRecordsCount && !this.pinning.rows && index <= this.filteredSortedData.length - this.summaryRowsData.length) {
             rowData = this.filteredSortedData[index];
             treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
-            rec = new IgxTreeGridRow(this, index, rowData);
+            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
         }
         if (this.pinnedRecordsCount && !this.pinning.rows && index > this.filteredSortedData.length - this.summaryRowsData.length) {
             rowData = this.summaryRowsData[index - this.pinnedRecordsCount];
