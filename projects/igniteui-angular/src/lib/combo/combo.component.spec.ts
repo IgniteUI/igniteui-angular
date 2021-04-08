@@ -991,7 +991,7 @@ describe('igxCombo', () => {
                 scrollIndex += 10;
                 if (scrollIndex < combo.data.length) {
                     combo.virtualScrollContainer.scrollTo(scrollIndex);
-                    combo.virtualScrollContainer.onChunkLoad.pipe(take(1)).subscribe(async () => {
+                    combo.virtualScrollContainer.chunkLoad.pipe(take(1)).subscribe(async () => {
                         await wait(30);
                         checkGroupedItemsClass();
                     });
