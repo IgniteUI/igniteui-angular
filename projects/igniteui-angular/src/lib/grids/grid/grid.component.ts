@@ -1079,12 +1079,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (hasGrouping) {
             rec = this.getRecord(index);
             if (rec.expression) {
-                row = new IgxGroupByRow(index, rec, this);
+                row = new IgxGroupByRow(this, index, rec);
             } else {
-                row = new IgxGridRow(index, this, rec);
+                row = new IgxGridRow(this, index, rec);
             }
         }
-        row = row ?? new IgxGridRow(index, this, this.filteredSortedData[index]);
+        row = row ?? new IgxGridRow(this, index, this.filteredSortedData[index]);
 
         return row;
     }

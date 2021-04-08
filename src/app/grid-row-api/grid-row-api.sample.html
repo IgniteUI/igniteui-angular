@@ -2,9 +2,9 @@
     <div>igxGrid</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="togglePinning(true)">Pin Row by index</button>
+            <button (click)="togglePinning(grid, true, index, key)">Pin Row by index</button>
             <br />
-            <button (click)="togglePinning(false)">Pin Row by key</button>
+            <button (click)="togglePinning(grid, false, index, key)">Pin Row by key</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="deleteRow(grid, index)">Delete</button>
@@ -54,9 +54,9 @@
     <div>IgxTreeGrid Hierarchical Data</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="toggleTGridPinning(true)">Pin Row by index</button>
+            <button (click)="togglePinning(treeGridHier, true, tHIndex, tHKey)">Pin Row by index</button>
             <br />
-            <button (click)="toggleTGridPinning(false)">Pin Row by key</button>
+            <button (click)="togglePinning(treeGridHier, false, tHIndex, tHKey)">Pin Row by key</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="deleteRow(treeGridHier, tHIndex)">Delete Row by Index</button>
@@ -108,9 +108,9 @@
     <div>IgxTreeGrid Flat Data</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="toggleTGridPinning(true)">Pin Row by index</button>
+            <button (click)="togglePinning(treeGrid, true, tIndex, tKey)">Pin Row by index</button>
             <br />
-            <button (click)="toggleTGridPinning(false)">Pin Row by key</button>
+            <button (click)="togglePinning(treeGrid, false, tIndex, tKey)">Pin Row by key</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="deleteRow(treeGrid, tIndex)">Delete Row by Index</button>
@@ -160,9 +160,9 @@
     <div>igxHierarchicalGrid</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="toggleHierPinning(true)">Pin Row by index</button>
+            <button (click)="togglePinning(hGrid, true, hIndex, hKey)">Pin Row by index</button>
             <br />
-            <button (click)="toggleHierPinning(false)">Pin Row by key</button>
+            <button (click)="togglePinning(hGrid, false, hIndex, hKey)">Pin Row by key</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="deleteRow(hGrid, hIndex)">Delete Row by Index</button>

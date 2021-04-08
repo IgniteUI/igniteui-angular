@@ -5,6 +5,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridAPIService } from './grid/grid-api.service';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
+import { IgxSummaryResult } from './summaries/grid-summary';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
@@ -156,7 +157,7 @@ export class IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(index: number, private _grid: IgxGridBaseDirective, private _data?: any) {
+    constructor(private _grid: IgxGridBaseDirective, index: number, private _data: any) {
         this.index = index;
     }
 
@@ -237,24 +238,6 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     }
 
     /**
-     *  The data passed to the row component.
-     *
-     * ```typescript
-     * // get the row data for the first selected row
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
-     * ```
-     */
-    public get data(): any {
-        const data = this.getRowData(this.index);
-        return data;
-    }
-
-    public get rowData(): any {
-        const data = this.getRowData(this.index);
-        return data;
-    }
-
-    /**
      * Returns the child rows.
      */
     public get children(): ITreeGridRecord[] {
@@ -282,8 +265,8 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(index: number, private _tgrid: IgxTreeGridComponent) {
-        super(index, _tgrid);
+    constructor(private _tgrid: IgxTreeGridComponent, index: number, data: any, private _treeRow?: ITreeGridRecord) {
+        super(_tgrid, index, data);
     }
 
     /**
@@ -295,7 +278,8 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * ```
      */
     public get treeRow(): ITreeGridRecord {
-        return this._tgrid.records.get(this.rowID);
+        const treeRow = this._treeRow ?? this._tgrid.records.get(this.rowID);
+        return treeRow;
     }
 
     /**
@@ -330,50 +314,6 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
     }
-
-    private getRowData(index: number): any {
-        let res = {} as { globalI: number; rec: ITreeGridRecord };
-
-        // TODO row
-        if (index === this.grid.filteredSortedData.length - 1) {
-            return this.grid.filteredSortedData[index];
-        }
-
-        res = this.lookInChildren(this.grid.rootRecords, index);
-
-        return res.rec.data;
-    }
-
-    private lookInChildren(records: ITreeGridRecord[], index: number, globalI?: number): { globalI: number; rec: ITreeGridRecord } {
-        let rowData: ITreeGridRecord;
-        let i = 0;
-        globalI = globalI ? globalI : 0;
-
-        if (globalI === index) {
-            return { globalI, rec: records[0] };
-        }
-
-        while (!rowData && i < records.length) {
-            const rec = records[i];
-            if (globalI === index) {
-                rowData = rec;
-                break;
-            }
-            if (rec.expanded && rec.children && rec.children.length) {
-                const res = this.lookInChildren(rec.children, index, globalI + 1);
-                if (res.rec) {
-                    rowData = res.rec;
-                } else {
-                    globalI = res.globalI;
-                }
-            } else {
-                globalI++;
-            }
-            i++;
-        }
-
-        return { globalI, rec: rowData };
-    }
 }
 
 export class IgxGroupByRow implements RowType {
@@ -395,7 +335,7 @@ export class IgxGroupByRow implements RowType {
     /**
      * @hidden
      */
-     constructor(index: number, groupRow: IGroupByRecord, private _grid: IgxGridComponent) {
+     constructor(private _grid: IgxGridComponent, index: number, groupRow: IGroupByRecord) {
         this.index = index;
         this.groupRow = groupRow;
         this.isGroupByRow = true;
@@ -439,5 +379,38 @@ export class IgxGroupByRow implements RowType {
 
     private get gridAPI(): IgxGridAPIService {
         return this.grid.gridAPI as IgxGridAPIService;
+    }
+}
+
+export class IgxSummaryRow implements RowType {
+    /**
+     * Returns the row index.
+     */
+    public index: number;
+
+    /**
+     * Returns always true, because this is in instance of an IgxGroupByRow.
+     */
+    public isSummaryRow: boolean;
+
+    /**
+     * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
+     */
+    public summaries: Map<string, IgxSummaryResult[]>;
+
+    /**
+     * @hidden
+     */
+     constructor(private _grid: IgxTreeGridComponent, index: number, summaries: Map<string, IgxSummaryResult[]>) {
+        this.index = index;
+        this.summaries = summaries;
+        this.isSummaryRow = true;
+    }
+
+    /**
+     * Get a reference to the grid that contains the GroupBy row.
+     */
+    protected get grid(): IgxTreeGridComponent {
+        return this._grid;
     }
 }

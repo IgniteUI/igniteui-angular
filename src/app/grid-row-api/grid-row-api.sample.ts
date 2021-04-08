@@ -165,8 +165,8 @@ export class GridRowAPISampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    public togglePinning(byIndex: boolean) {
-        const row: RowType = byIndex ? this.grid.getRowByIndex(this.index) : this.grid.getRowByKey(this.key);
+    public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, byIndex: boolean, index: number, key: any) {
+        const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
         if (row.pinned) {
             row.unpin();
         } else {
@@ -174,24 +174,6 @@ export class GridRowAPISampleComponent implements OnInit {
         }
     }
 
-    public toggleHierPinning(byIndex: boolean) {
-        const row = byIndex ? this.hGrid.getRowByIndex(this.hIndex) : this.hGrid.getRowByKey(this.hKey);
-        if (row.pinned) {
-            row.unpin();
-        } else {
-            row.pin();
-        }
-    }
-
-    public toggleTGridPinning(byIndex: boolean) {
-        const row = byIndex ? this.treeGrid.getRowByIndex(this.tIndex) :
-            this.treeGrid.getRowByKey(this.tKey);
-        if (row.pinned) {
-            row.unpin();
-        } else {
-            row.pin();
-        }
-    }
 
     public deleteRow(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
         const row = grid.getRowByIndex(index);
@@ -252,12 +234,14 @@ export class GridRowAPISampleComponent implements OnInit {
         this.clearLog(logger);
         const row = grid.getRowByIndex(index);
         const state = `
+            summaries: ${row.summaries},
             groupByRow: ${row.groupRow},
+            -----------------------------,
+            expanded: ${row.expanded},
             key: ${row.rowID},
             pinned: ${row.pinned},
             deleted: ${row.deleted},
             inEditMode: ${row.inEditMode},
-            expanded: ${row.expanded},
             selected: ${row.selected},
             hasChildren: ${row.hasChildren},
             disabled: ${row.disabled}`;

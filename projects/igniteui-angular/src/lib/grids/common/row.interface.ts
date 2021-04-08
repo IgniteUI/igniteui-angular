@@ -1,9 +1,12 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 
 export interface RowType {
     index: number;
     isGroupByRow?: boolean;
+    isSummaryRow?: boolean;
+    summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
     rowID?: any;
     rowData?: any;

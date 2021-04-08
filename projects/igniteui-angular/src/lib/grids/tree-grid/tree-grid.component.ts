@@ -37,8 +37,8 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridSelectionMode } from '../common/enums';
-import { IgxTreeGridRow } from '../grid-public-row';
+import { GridSelectionMode, GridSummaryCalculationMode } from '../common/enums';
+import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 
@@ -253,6 +253,15 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     private _expansionDepth = Infinity;
     private _filteredData = null;
+    private _summaryRowsData = [];
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public get summaryRowsData(): any[] {
+        return this._summaryRowsData;
+    }
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -484,6 +493,14 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
+    public setSummaryRowsData(data: any[]) {
+        this._summaryRowsData = data;
+    }
+
     public getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
@@ -645,15 +662,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        const visibleRecords = this.treeRecords.filter(
+        const hasSummary = this.hasSummarizedColumns || this.summaryCalculationMode || GridSummaryCalculationMode.rootLevelOnly;
+        const visibleRecords = this.summaryRowsData.filter(
             rec => rec.expanded ||
             (!rec.expanded && rec.children) ||
             (!rec.children && !rec.expanded && rec.parent?.expanded) ||
             (!rec.expanded && !rec.children && !rec.parent));
-        if (index < 0 || index >= this.filteredSortedData.length || index >= visibleRecords.length) {
+        if (index < 0 || index >= visibleRecords.length) {
             return undefined;
         }
-        return new IgxTreeGridRow(index, this);
+
+        const rec = visibleRecords[index];
+        const row = rec.summaries ? new IgxSummaryRow(this, index, rec.summaries) : new IgxTreeGridRow(this, index, rec.data, rec);
+
+        return row;
     }
 
     /**
@@ -666,11 +688,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-       const index = this.getRowIndexByKey(key);
-        if (index === undefined) {
+        const treeRow: ITreeGridRecord = this.primaryKey ? this.summaryRowsData.find(r => r.data && r.data[this.primaryKey] === key) :
+            this.summaryRowsData.find(r => r.rowData === key);
+        const index = this.summaryRowsData.findIndex(r => r === treeRow);
+        if (index === undefined || index < 0) {
             return undefined;
         }
-        return new IgxTreeGridRow(index, this);
+        return new IgxTreeGridRow(this, index, treeRow.data, treeRow);
     }
 
     /** @hidden */
@@ -848,43 +872,5 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 this.notifyChanges();
             }
         });
-    }
-
-    private getRowIndexByKey(key: any): number {
-        let res = {} as { rowIndex: number; rec: ITreeGridRecord };
-        res = this.lookInChildren(this.rootRecords, key);
-        return res.rowIndex;
-    }
-
-    private lookInChildren(records: ITreeGridRecord[], key: any, globalI?: number): { rowIndex: number; rec: ITreeGridRecord } {
-        let i = 0;
-        let rowData;
-        let rowIndex = 0;
-        globalI = globalI ? globalI : 0;
-
-        if (records[0].rowID === key) {
-            return { rowIndex, rec: records[0] };
-        }
-
-        while (!rowIndex && i < records.length) {
-            const rec = records[i];
-            if (rec.rowID === key) {
-                rowIndex = globalI;
-                break;
-            }
-            if (rec.expanded && rec.children && rec.children.length) {
-                const res = this.lookInChildren(rec.children, key, globalI + 1);
-                if (res.rec) {
-                    rowIndex = res.rowIndex;
-                } else {
-                    globalI = res.rowIndex;
-                }
-            } else {
-                globalI++;
-            }
-            i++;
-        }
-
-        return { rowIndex: globalI, rec: rowData };
     }
 }

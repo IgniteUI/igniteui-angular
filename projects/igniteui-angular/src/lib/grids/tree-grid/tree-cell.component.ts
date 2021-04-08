@@ -49,7 +49,7 @@ export class IgxTreeGridCellComponent extends IgxGridExpandableCellComponent {
      */
     @Input()
     public get row(): RowType {
-        return new IgxTreeGridRow(this.intRow.index, this.grid);
+        return new IgxTreeGridRow(this.grid, this.intRow.index, this.intRow.rowData);
     }
 
     /**

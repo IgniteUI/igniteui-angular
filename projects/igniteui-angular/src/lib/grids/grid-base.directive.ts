@@ -4057,7 +4057,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
-        return new IgxGridRow(index, this, this.filteredSortedData[index]);
+        return new IgxGridRow(this, index, this.filteredSortedData[index]);
     }
 
     /**
@@ -4079,7 +4079,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (index < 0 || !rec) {
             return undefined;
         }
-        return new IgxGridRow(index, this, rec);
+        return new IgxGridRow(this, index, rec);
     }
 
     /**
