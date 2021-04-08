@@ -384,7 +384,7 @@ describe('Scroll Inertia Directive - Scrolling', () => {
 export class IgxTestScrollInertiaDirective extends IgxScrollInertiaDirective {
 
     constructor(element: ElementRef, _zone: NgZone) {
-        super(element, _zone);
+        super(element, _zone, { isIE: false } as any);
     }
     public onWheel(evt) {
         super.onWheel(evt);
