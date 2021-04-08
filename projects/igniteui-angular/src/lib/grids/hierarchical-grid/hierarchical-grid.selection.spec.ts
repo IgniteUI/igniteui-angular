@@ -657,7 +657,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             });
 
             // Click on checkbox on second row
-            GridSelectionFunctions.getRowCheckboxDiv(childGrid.hGridAPI.get_row_by_index(1).nativeElement).dispatchEvent(mockEvent);
+            GridSelectionFunctions.getRowCheckboxDiv(childGrid.gridAPI.get_row_by_index(1).nativeElement).dispatchEvent(mockEvent);
             fix.detectChanges();
 
             expect(secondChildSpy).toHaveBeenCalledTimes(0);
@@ -1403,7 +1403,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             fix.detectChanges();
 
             const childGrid = hGrid.hgridAPI.getChildGrids(false)[0];
-            const childRow = childGrid.hGridAPI.get_row_by_index(0);
+            const childRow = childGrid.gridAPI.get_row_by_index(0);
             GridSelectionFunctions.clickRowCheckbox(childRow);
             fix.detectChanges();
 
