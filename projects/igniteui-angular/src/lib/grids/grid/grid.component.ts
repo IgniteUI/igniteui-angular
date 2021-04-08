@@ -29,7 +29,7 @@ import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
-import { IgxGridRow, IgxGroupByRow } from '../grid-public-row';
+import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 
 let NEXT_ID = 0;
@@ -1070,21 +1070,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getRowByIndex(index: number): RowType {
         let row: RowType;
         let rec: any;
-        const hasGrouping = this.groupingResult?.length;
-        const dataLength = hasGrouping ? hasGrouping : this.filteredSortedData.length;
-        if (index < 0 || index >= dataLength) {
+        if (index < 0 || index >= this.summaryRowsData.length) {
             return undefined;
         }
 
-        if (hasGrouping) {
-            rec = this.getRecord(index);
-            if (rec.expression) {
-                row = new IgxGroupByRow(this, index, rec);
-            } else {
-                row = new IgxGridRow(this, index, rec);
-            }
+        rec = this.summaryRowsData[index];
+        if (rec.expression) {
+            row = new IgxGroupByRow(this, index, rec);
         }
-        row = row ?? new IgxGridRow(this, index, this.filteredSortedData[index]);
+        if (rec.summaries) {
+            row = new IgxSummaryRow(this, index, rec);
+        }
+        row = row ?? new IgxGridRow(this, index, rec);
 
         return row;
     }
@@ -1175,22 +1172,5 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
-    }
-
-    private getRecord(index: number) {
-        let rec;
-        let i = 0;
-        let globalI = 0;
-
-        while (i <= index && i < this.groupingResult.length) {
-            rec = this.groupingResult[globalI];
-            if (rec.expression && !this.isExpandedGroup(rec)) {
-                globalI += rec.records.length;
-            }
-            i++;
-            globalI++;
-        }
-
-        return rec;
     }
 }

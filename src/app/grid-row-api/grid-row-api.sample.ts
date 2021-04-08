@@ -233,8 +233,10 @@ export class GridRowAPISampleComponent implements OnInit {
         this.clearLog(logger);
         const row = grid.getRowByIndex(index);
         const state = `
+            isSummaryRow: ${row.isSummaryRow},
             summaries: ${row.summaries},
-            groupByRow: ${row.groupRow},
+            isGroupByRow: ${row.isGroupByRow},
+            groupByRow: ${row.groupRow?.value},
             -----------------------------,
             expanded: ${row.expanded},
             key: ${row.rowID},

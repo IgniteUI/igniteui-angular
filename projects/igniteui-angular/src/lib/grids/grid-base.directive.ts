@@ -2910,6 +2910,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _selectRowOnClick = true;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
+    private _summaryRowsData: any[];
 
     private lastAddedRowIndex;
     private _currencyPositionLeft: boolean;
@@ -5304,6 +5305,19 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set selectRowOnClick(enabled: boolean) {
         this._selectRowOnClick = enabled;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get summaryRowsData(): any[] {
+        return this._summaryRowsData;
+    }
+    /**
+     * @hidden @internal
+     */
+    public set summaryRowsData(data: any[]) {
+        this._summaryRowsData = data;
     }
 
     /**

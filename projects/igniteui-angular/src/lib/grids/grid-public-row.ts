@@ -1,5 +1,6 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
+import { GridType } from './common/grid.interface';
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridAPIService } from './grid/grid-api.service';
@@ -401,7 +402,7 @@ export class IgxSummaryRow implements RowType {
     /**
      * @hidden
      */
-     constructor(private _grid: IgxTreeGridComponent, index: number, summaries: Map<string, IgxSummaryResult[]>) {
+     constructor(private _grid: IgxGridBaseDirective, index: number, summaries: Map<string, IgxSummaryResult[]>) {
         this.index = index;
         this.summaries = summaries;
         this.isSummaryRow = true;
@@ -410,7 +411,7 @@ export class IgxSummaryRow implements RowType {
     /**
      * Get a reference to the grid that contains the GroupBy row.
      */
-    protected get grid(): IgxTreeGridComponent {
+    protected get grid(): IgxGridBaseDirective & GridType {
         return this._grid;
     }
 }
