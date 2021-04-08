@@ -984,7 +984,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+        this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isDetailRecord(rowData)) {
                 const cachedData = this.childDetailTemplates.get(rowData.detailsData);
