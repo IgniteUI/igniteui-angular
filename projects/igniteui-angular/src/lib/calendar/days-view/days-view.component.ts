@@ -15,7 +15,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { IgxDayItemComponent } from './day-item.component';
 import { DateRangeDescriptor, DateRangeType } from '../../core/dates';
 import { IgxCalendarBaseDirective, CalendarSelection } from '../calendar-base';
-import { isEqual } from '../../core/utils';
+import { isEqual, PlatformUtil } from '../../core/utils';
 import { IViewChangingEventArgs } from './days-view.interface';
 import { IgxDaysViewNavigationService } from '../days-view/daysview-navigation.service';
 
@@ -136,8 +136,11 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     /**
      * @hidden
      */
-    constructor(public daysNavService: IgxDaysViewNavigationService) {
-        super();
+    constructor(
+        public daysNavService: IgxDaysViewNavigationService,
+        protected platform: PlatformUtil
+    ) {
+        super(platform);
     }
 
     /**
@@ -148,8 +151,8 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
     public resetActiveMonth() {
         if (this.shouldResetDate) {
             const date = this.dates.find(day => day.selected && day.isCurrentMonth) ||
-                        this.dates.find(day => day.isToday && day.isCurrentMonth) ||
-                        this.dates.find(d => d.isFocusable);
+                this.dates.find(day => day.isToday && day.isCurrentMonth) ||
+                this.dates.find(d => d.isFocusable);
             if (date) {
                 this.activeDate = date.date.date.toLocaleDateString();
             }
@@ -307,7 +310,7 @@ export class IgxDaysViewComponent extends IgxCalendarBaseDirective implements Do
         let selectedDates: Date | Date[];
         if (this.isDateDisabled(date.date) || !this.value ||
             (Array.isArray(this.value) && this.value.length === 0)
-            )  {
+        ) {
             return false;
         }
 
