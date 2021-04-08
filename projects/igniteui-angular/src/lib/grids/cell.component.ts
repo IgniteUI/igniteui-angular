@@ -31,7 +31,6 @@ import { DataType } from '../data-operations/data-util';
 import { IgxGridRow, IgxTreeGridRow } from './grid-public-row';
 import { IgxRowDirective } from './row.directive';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
-import { IgxTreeGridRowComponent } from './tree-grid/tree-grid-row.component';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -91,7 +90,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     public get row(): RowType {
         if (this.grid instanceof IgxTreeGridComponent) {
-            return new IgxTreeGridRow(this.grid, this.intRow.index, this.intRow.rowData, (this.intRow as IgxTreeGridRowComponent).treeRow);
+            return new IgxTreeGridRow(this.grid, this.intRow.index, this.intRow.rowData);
         } else {
             return new IgxGridRow(this.grid, this.intRow.index, this.intRow.rowData);
         }
