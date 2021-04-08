@@ -165,7 +165,8 @@ export class GridRowAPISampleComponent implements OnInit {
         /* eslint-enable max-len */
     }
 
-    public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, byIndex: boolean, index: number, key: any) {
+    public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+        byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
         if (row.pinned) {
             row.unpin();
@@ -182,13 +183,11 @@ export class GridRowAPISampleComponent implements OnInit {
 
     public toggle(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
         const row = grid.getRowByIndex(index);
-        const data = row.data;
         row.expanded = !row.expanded;
     }
 
     public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
         const row = grid.getRowByIndex(index);
-        const data = row.data;
         row.selected = !row.selected;
     }
 
