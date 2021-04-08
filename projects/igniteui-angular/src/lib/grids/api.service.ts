@@ -2,13 +2,11 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, isEqual, reverseMapper, mergeObjects } from '../core/utils';
 import { DataUtil, DataType } from '../data-operations/data-util';
-import { IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxRowDirective } from './row.directive';
-import { IFilteringOperation } from '../data-operations/filtering-condition';
-import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
+import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
 import { IgxCell, IgxRow } from './selection/selection.service';
 import { GridType } from './common/grid.interface';
@@ -298,61 +296,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         this.grid.sortingExpressions = sortingState;
     }
 
-    public filter(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
-        ignoreCase: boolean) {
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
-        this.grid.endEdit(false);
-
-        if (grid.paging) {
-            grid.page = 0;
-        }
-
-        const fieldFilterIndex = filteringTree.findIndex(fieldName);
-        if (fieldFilterIndex > -1) {
-            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
-        }
-
-        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
-        grid.filteringExpressionsTree = filteringTree;
-    }
-
-    public filter_global(term, condition, ignoreCase) {
-        if (!condition) {
-            return;
-        }
-
-        const grid = this.grid;
-        const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
-        if (grid.paging) {
-            grid.page = 0;
-        }
-
-        filteringTree.filteringOperands = [];
-        for (const column of grid.columns) {
-            this.prepare_filtering_expression(filteringTree, column.field, term,
-                condition, ignoreCase || column.filteringIgnoreCase);
-        }
-
-        grid.filteringExpressionsTree = filteringTree;
-    }
-
-    public clear_filter(fieldName: string) {
-        const grid = this.grid;
-        grid.endEdit(false);
-        const filteringState = grid.filteringExpressionsTree;
-        const index = filteringState.findIndex(fieldName);
-
-        if (index > -1) {
-            filteringState.filteringOperands.splice(index, 1);
-        } else if (!fieldName) {
-            filteringState.filteringOperands = [];
-        }
-
-        grid.filteringExpressionsTree = filteringState;
-    }
-
     public clear_sort(fieldName: string) {
         const sortingState = this.grid.sortingExpressions;
         const index = sortingState.findIndex((expr) => expr.fieldName === fieldName);
@@ -525,48 +468,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
 
     public allow_expansion_state_change(rowID, expanded) {
         return this.grid.expansionStates.get(rowID) !== expanded;
-    }
-
-    /** Modifies the filteringState object to contain the newly added fitering conditions/expressions.
-     * If createNewTree is true, filteringState will not be modified (because it directly affects the grid.filteringExpressionsTree),
-     * but a new object is created and returned.
-     */
-    public prepare_filtering_expression(
-        filteringState: IFilteringExpressionsTree,
-        fieldName: string,
-        searchVal,
-        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
-        ignoreCase: boolean,
-        insertAtIndex = -1,
-        createNewTree = false): FilteringExpressionsTree {
-
-        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
-        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
-        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
-            null : conditionOrExpressionsTree as IFilteringOperation;
-        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
-
-        const newExpressionsTree: FilteringExpressionsTree = createNewTree ?
-            new FilteringExpressionsTree(filteringState.operator, filteringState.fieldName) : filteringState as FilteringExpressionsTree;
-
-        if (oldExpressionsTreeIndex === -1) {
-            // no expressions tree found for this field
-            if (expressionsTree) {
-                if (insertAtIndex > -1) {
-                    newExpressionsTree.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
-                } else {
-                    newExpressionsTree.filteringOperands.push(expressionsTree);
-                }
-            } else if (condition) {
-                // create expressions tree for this field and add the new expression to it
-                const newExprTree: FilteringExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
-                newExprTree.filteringOperands.push(newExpression);
-                newExpressionsTree.filteringOperands.push(newExprTree);
-            }
-        }
-
-        return newExpressionsTree;
     }
 
     public prepare_sorting_expression(stateCollections: Array<Array<any>>, expression: ISortingExpression) {
