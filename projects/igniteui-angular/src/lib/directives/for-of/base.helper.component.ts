@@ -56,7 +56,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         });
     }
 
-    get nativeElement() {
+    public get nativeElement() {
         return this.elementRef.nativeElement;
     }
 

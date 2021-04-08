@@ -142,7 +142,7 @@ export class IgxFilteringService implements OnDestroy {
                 this.updateFilteringCell(eventArgs.column);
             });
 
-            this.grid.parentVirtDir.onChunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
+            this.grid.parentVirtDir.chunkLoad.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IForOfState) => {
                 if (eventArgs.startIndex !== this.columnStartIndex) {
                     this.columnStartIndex = eventArgs.startIndex;
                     this.grid.filterCellList.forEach((filterCell) => {
