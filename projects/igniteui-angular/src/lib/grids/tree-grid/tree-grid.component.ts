@@ -41,6 +41,7 @@ import { GridSelectionMode, GridSummaryCalculationMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 let NEXT_ID = 0;
 
@@ -645,14 +646,31 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.summaryRowsData.length) {
+        let rowData: any;
+        let rec: any;
+        let treeRow: ITreeGridRecord;
+        if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
 
-        const rec = this.summaryRowsData[index];
-        const row = rec.summaries ? new IgxSummaryRow(this, index, rec.summaries) : new IgxTreeGridRow(this, index, rec.data, rec);
+        if (this.pinnedRecordsCount && this.pinning.rows && index >= this.summaryRowsData.length) {
+            rowData = this.filteredSortedData[index];
+            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
+            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
+        }
+        if (this.pinnedRecordsCount && !this.pinning.rows && index <= this.filteredSortedData.length - this.summaryRowsData.length) {
+            rowData = this.filteredSortedData[index];
+            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
+            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
+        }
+        if (this.pinnedRecordsCount && !this.pinning.rows && index > this.filteredSortedData.length - this.summaryRowsData.length) {
+            rowData = this.summaryRowsData[index - this.pinnedRecordsCount];
+        }
+        rowData = rowData ? rowData : this.summaryRowsData[index];
+        rec = rec ? rec : rowData.summaries ? new IgxSummaryRow(this, index, rowData.summaries) :
+            new IgxTreeGridRow(this, index, rowData.data, rowData);
 
-        return row;
+        return rec;
     }
 
     /**

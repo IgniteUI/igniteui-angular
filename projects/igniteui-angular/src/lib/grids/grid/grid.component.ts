@@ -1069,17 +1069,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public getRowByIndex(index: number): RowType {
         let row: RowType;
-        let rec: any;
         if (index < 0 || index >= this.summaryRowsData.length) {
             return undefined;
         }
 
-        rec = this.summaryRowsData[index];
+        const rec = this.summaryRowsData[index];
         if (rec.expression) {
             row = new IgxGroupByRow(this, index, rec);
         }
         if (rec.summaries) {
-            row = new IgxSummaryRow(this, index, rec);
+            row = new IgxSummaryRow(this, index, rec.summaries);
         }
         row = row ?? new IgxGridRow(this, index, rec);
 

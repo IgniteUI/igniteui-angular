@@ -1501,20 +1501,20 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should disable pinned row instance in the body', () => {
-            const rowToPin = treeGrid.getRowByIndex(0);
+            const rowToPin = treeGrid.gridAPI.get_row_by_index(0);
             const primaryKey = treeGrid.primaryKey;
 
             treeGrid.pinRow(rowToPin.rowData[primaryKey]);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
-            expect(treeGrid.getRowByIndex(1).disabled).toBe(true);
+            expect(treeGrid.gridAPI.get_row_by_index(0).disabled).toBe(false);
+            expect(treeGrid.gridAPI.get_row_by_index(1).disabled).toBe(true);
 
             treeGrid.unpinRow(rowToPin.rowData[primaryKey]);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByIndex(0).disabled).toBe(false);
-            expect(treeGrid.getRowByIndex(1).disabled).toBe(false);
+            expect(treeGrid.gridAPI.get_row_by_index(0).disabled).toBe(false);
+            expect(treeGrid.gridAPI.get_row_by_index(1).disabled).toBe(false);
 
         });
 
