@@ -1,5 +1,5 @@
 <div class="input-group-sample">
-    <form class="input-group-sample-form">
+    <form #testForm="ngForm" class="input-group-sample-form">
         <div class="form__fields-settings">
             <strong>Select density</strong>
             <igx-buttongroup
@@ -210,6 +210,7 @@
                 <igx-select-item>New York</igx-select-item>
             </igx-select>
             <br />
+            <igx-checkbox required [(ngModel)]="isRequired" name="requiredCheckbox">Required Toggle #2</igx-checkbox>
         </div>
     </form>
 

@@ -26,7 +26,7 @@ import { IgxOverlayService, IgxTransactionService, Transaction, TransactionServi
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
@@ -142,7 +142,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
 
     constructor(
         public selectionService: IgxGridSelectionService,
-        crudService: IgxGridCRUDService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         @Inject(IgxGridTransaction) protected transactionFactory: TransactionService<Transaction, State>,
@@ -161,7 +160,6 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(LOCALE_ID) localeId: string) {
         super(
             selectionService,
-            crudService,
             colResizingService,
             gridAPI,
             transactionFactory,
@@ -198,7 +196,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         this.initPinning();
 
         const factoryColumn = this.resolver.resolveComponentFactory(IgxColumnComponent);
-        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'onColumnChange');
+        const outputs = factoryColumn.outputs.filter(o => o.propName !== 'columnChange');
         outputs.forEach(output => {
             this.columnList.forEach(column => {
                 if (column[output.propName]) {

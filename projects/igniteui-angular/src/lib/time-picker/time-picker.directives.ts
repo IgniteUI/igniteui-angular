@@ -13,9 +13,8 @@ import {
     Input,
     TemplateRef
 } from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
-import { IgxTimePickerComponent } from './time-picker.component';
-import { DatePickerUtil } from '../date-picker/date-picker.utils';
+import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { PickerInteractionMode } from '../date-common/types';
 
 /** @hidden */
 @Directive({

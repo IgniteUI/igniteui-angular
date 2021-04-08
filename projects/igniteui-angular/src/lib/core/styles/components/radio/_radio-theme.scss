@@ -8,7 +8,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $label-color [null]- The text color used for the label text.
@@ -31,7 +31,7 @@
 ///   // Pass the theme to the igx-radio component mixin
 ///   @include igx-radio($my-radio-theme);
 @function igx-radio-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $label-color: null,
@@ -69,7 +69,6 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
 /// @requires {mixin} igx-css-vars
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
@@ -79,7 +78,7 @@
 /// @requires em
 /// @requires --var
 @mixin igx-radio($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
     $label-margin: em(8px);

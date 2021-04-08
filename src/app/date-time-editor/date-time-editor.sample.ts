@@ -14,8 +14,8 @@ export class DateTimeEditorSampleComponent {
   public minDate = new Date(2020, 2, 20, 11, 15);
   public maxDate = new Date(2020, 2, 25);
 
-  public onValueChanged(event: IgxDateTimeEditorEventArgs) {
-    console.log('value changed', event.oldValue, event.newValue);
+  public onValueChanged(event: Date | string) {
+    console.log('value changed', event);
   }
 
   public onValidationFailed(event: IgxDateTimeEditorEventArgs) {

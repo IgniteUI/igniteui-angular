@@ -5,9 +5,9 @@
 ////
 
 /// Chip Theme
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {String} $border-radius [null] - The chip border-radius.
 ///
 /// @param {Color} $text-color [null] - The chip text color.
@@ -51,9 +51,9 @@
 ///   // Pass the theme to the igx-chip component mixin
 ///   @include igx-chip($my-chip-theme);
 @function igx-chip-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
     $border-radius: null,
 
     $text-color: null,
@@ -88,6 +88,7 @@
     $remove-icon-color-focus: null,
 ) {
     $name: 'igx-chip';
+    $selector: 'igx-chip, .igx-chip__ghost';
     $chip-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -117,7 +118,7 @@
     }
 
     @if not($hover-text-color) and $hover-background {
-        $hover-text-color: text-contrast(hexrgba($hover-background));
+        $hover-text-color: text-contrast(to-opaque($hover-background));
     }
 
     @if not($focus-background) and $background {
@@ -131,7 +132,7 @@
     }
 
     @if not($focus-text-color) and $focus-background {
-        $focus-text-color: text-contrast(hexrgba($focus-background));
+        $focus-text-color: text-contrast(to-opaque($focus-background));
     }
 
     @if not($selected-background) and $background {
@@ -145,7 +146,7 @@
     }
 
     @if not($selected-text-color) and $selected-background {
-        $selected-text-color: text-contrast(hexrgba($selected-background));
+        $selected-text-color: text-contrast(to-opaque($selected-background));
     }
 
     @if not($hover-selected-background) and $hover-background {
@@ -153,7 +154,7 @@
     }
 
     @if not($hover-selected-text-color) and $hover-selected-background {
-        $hover-selected-text-color: text-contrast(hexrgba($hover-selected-background));
+        $hover-selected-text-color: text-contrast(to-opaque($hover-selected-background));
     }
 
     @if not($focus-selected-background) and $selected-background {
@@ -167,7 +168,7 @@
     }
 
     @if not($focus-selected-text-color) and $focus-selected-background {
-        $focus-selected-text-color: text-contrast(hexrgba($focus-selected-background));
+        $focus-selected-text-color: text-contrast(to-opaque($focus-selected-background));
     }
 
     @if not($hover-border-color) and $border-color {
@@ -197,6 +198,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         border-radius: $border-radius,
 
@@ -234,11 +236,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-chip($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
@@ -418,7 +420,7 @@
         + [igxPrefix] {
             margin-#{$left}: rem(4px);
 
-            &%igx-avatar-display {
+            igx-avatar {
                 max-height: 100%;
                 max-width: 100%;
                 margin-#{$left}: $chip-avatar-inset!important;

@@ -8,9 +8,9 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 ///
 /// @param {Color} $header-background [null] - The table header background color.
 /// @param {Color} $header-text-color [null] - The table header text color.
@@ -37,6 +37,7 @@
 /// @param {Color} $row-selected-background [null] - The selected row background color.
 /// @param {Color} $row-selected-hover-background [null] - The selected row hover background color.
 /// @param {Color} $row-selected-text-color [null] - The selected row text color.
+/// @param {Color} $row-selected-hover-text-color [null] - The selected row hover text color.
 /// @param {Color} $row-hover-background [null] - The hover row background color.
 /// @param {Color} $row-hover-text-color [null] - The hover row text color.
 /// @param {Color} $row-border-color [null] - The row bottom border color.
@@ -52,6 +53,8 @@
 /// @param {Color} $cell-edited-value-color [null] - The text color of a cell that has been edited.
 /// @param {Color} $cell-new-color [null] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @param {Color} $cell-disabled-color [null] - The text color of a disabled cell.
+/// @param {Color} $cell-selected-within-background [null] - The background of the selected cell inside a selected row/column.
+/// @param {Color} $cell-selected-within-text-color [null] - The color of the selected cell inside a selected row/column.
 ///
 /// @param {Color} $edit-mode-color [null] - The color applied around the row when in editing mode.
 /// @param {Color} $edited-row-indicator [null] - The color applied to the edited row indicator line.
@@ -108,21 +111,20 @@
 /// @param {color} $row-drag-color [null] - The row drag handle color.
 /// @param {Color} $grid-border-color [null] - The color of the grid border.
 /// @param {border-radius} $drop-area-border-radius [null] - The border radius used for column drop area.
-///
 /// @requires $default-palette
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires luminance
 /// @requires text-contrast
-/// @requires hexrgba
+/// @requires to-opaque
 /// @requires extend
 /// @requires igx-elevation
 /// @requires $elevations
 /// @requires round-borders
 @function igx-grid-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $header-background: null,
     $header-text-color: null,
@@ -149,6 +151,7 @@
     $row-selected-background: null,
     $row-selected-hover-background: null,
     $row-selected-text-color: null,
+    $row-selected-hover-text-color: null,
     $row-hover-background: null,
     $row-hover-text-color: null,
     $row-border-color: null,
@@ -220,8 +223,12 @@
     $drop-area-border-radius: null,
     $grid-border-color: null,
     $sortable-header-icon-hover-color: null,
+
+    $cell-selected-within-background: null,
+    $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid';
     $grid-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -236,24 +243,11 @@
         if($drop-area-border-radius, $drop-area-border-radius, map-get($grid-schema, 'drop-area-border-radius')), 0, 16px
     );
 
-
     $tree-selected-filtered-row-text-color: rgba(text-contrast(map-get($theme, 'row-selected-background')), .5);
     $tree-selected-filtered-cell-text-color: rgba(text-contrast(map-get($theme, 'cell-selected-background')), .5);
 
-    $rs-bg: if(
-        $row-selected-background,
-        $row-selected-background,
-        map-get($theme, 'row-selected-background')
-    );
-
-    $row-selected-cell-background: null;
-
-    @if type-of($rs-bg) == 'color' {
-        @if luminance($rs-bg) < .5 {
-            $row-selected-cell-background: lighten-color($rs-bg, 8%);
-        } @else {
-            $row-selected-cell-background: darken-color($rs-bg, 8%);
-        }
+    @if not($cell-selected-within-text-color) and $cell-selected-within-background {
+        $cell-selected-within-text-color: text-contrast($cell-selected-within-background);
     }
 
     @if not($ghost-header-icon-color) and $ghost-header-background {
@@ -266,8 +260,8 @@
         $ghost-header-text-color: text-contrast($ghost-header-background);
     }
 
-    @if $header-background and alpha($header-background) < 1 {
-        $header-background: hexrgba($header-background, igx-color($palette, 'surface'));
+    @if $header-background and type-of($header-background) == 'color' {
+        $header-background: to-opaque($header-background, igx-color($palette, 'surface'));
     }
 
     @if not($header-text-color) and $header-background {
@@ -292,10 +286,10 @@
         $row-odd-background: $content-background;
     }
 
-    @if $row-odd-background and alpha($row-odd-background) != 1 {
+    @if $row-odd-background and type-of($row-odd-background) == 'color' and alpha($row-odd-background) != 1 {
         $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
 
-        $row-odd-background: hexrgba($row-odd-background, $cbg);
+        $row-odd-background: to-opaque($row-odd-background, $cbg);
     }
 
     @if not($row-odd-text-color) and $row-odd-background {
@@ -306,10 +300,10 @@
         $row-even-background: $content-background;
     }
 
-    @if $row-even-background and alpha($row-even-background) != 1 {
+    @if $row-even-background and type-of($row-even-background) == 'color' and alpha($row-even-background) != 1 {
         $cbg: if($content-background, $content-background, map-get($theme, 'content-background'));
 
-        $row-even-background: hexrgba($row-even-background, $cbg);
+        $row-even-background: to-opaque($row-even-background, $cbg);
     }
 
     @if not($row-even-text-color) and $row-even-background {
@@ -318,7 +312,7 @@
 
     @if not($row-hover-background) and $content-background {
         @if type-of($content-background) == 'color' {
-            $row-hover-background: hexrgba(rgba(text-contrast($content-background), .08), $content-background)
+            $row-hover-background: to-opaque(rgba(text-contrast($content-background), .08), $content-background)
         }
     }
 
@@ -331,11 +325,11 @@
     }
 
     @if not($row-selected-text-color) and $row-selected-background {
-        $row-selected-text-color: $row-selected-background;
+        $row-selected-text-color: text-contrast($row-selected-background);
     }
 
-    @if not($row-selected-text-color) and $row-selected-hover-background {
-        $row-selected-text-color: $row-selected-hover-background;
+    @if not($row-selected-hover-text-color) and $row-selected-hover-background {
+        $row-selected-hover-text-color: text-contrast($row-selected-hover-background);
     }
 
     @if not($row-border-color) and $content-background {
@@ -397,11 +391,15 @@
     }
 
     @if not($grouparea-color) and $grouparea-background {
-        $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+        @if type-of($grouparea-background) == 'color' {
+            $grouparea-color: rgba(text-contrast($grouparea-background), .8)
+        }
     }
 
     @if not($grouparea-color) and $header-background {
-        $grouparea-color: rgba(text-contrast($header-background), .8)
+        @if type-of($header-background) == 'color' {
+            $grouparea-color: rgba(text-contrast($header-background), .8)
+        }
     }
 
     @if not($drop-area-background) and $grouparea-background {
@@ -422,9 +420,9 @@
 
     @if not($filtering-header-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-header-background: hexrgba(lighten-color($header-background, 5%));
+            $filtering-header-background: to-opaque(lighten-color($header-background, 5%));
         } @else {
-            $filtering-header-background: hexrgba(darken-color($header-background, 5%));
+            $filtering-header-background: to-opaque(darken-color($header-background, 5%));
         }
     }
 
@@ -434,14 +432,14 @@
 
     @if not($filtering-row-background) and $header-background {
         @if type-of($header-background) == 'color' and luminance($header-background) < .5 {
-            $filtering-row-background: hexrgba(lighten-color($header-background, 5%));
+            $filtering-row-background: to-opaque(lighten-color($header-background, 5%));
         } @else {
-            $filtering-row-background: hexrgba(darken-color($header-background, 5%));
+            $filtering-row-background: to-opaque(darken-color($header-background, 5%));
         }
     }
 
     @if not($filtering-row-text-color) and $filtering-row-background {
-        $filtering-row-text-color: text-contrast(hexrgba($filtering-row-background));
+        $filtering-row-text-color: text-contrast(to-opaque($filtering-row-background));
     }
 
     @if not($body-summaries-text-color) and $body-summaries-background {
@@ -464,6 +462,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
 
         header-background: $header-background,
@@ -490,6 +489,7 @@
         row-selected-background: $row-selected-background,
         row-selected-hover-background: $row-selected-hover-background,
         row-selected-text-color: $row-selected-text-color,
+        row-selected-hover-text-color: $row-selected-hover-text-color,
         row-hover-background: $row-hover-background,
         row-hover-text-color: $row-hover-text-color,
         row-border-color: $row-border-color,
@@ -557,7 +557,6 @@
         body-summaries-text-color: $body-summaries-text-color,
         root-summaries-background: $root-summaries-background,
         root-summaries-text-color: $root-summaries-text-color,
-        row-selected-cell-background: $row-selected-cell-background,
 
         row-highlight: $row-highlight,
         grid-shadow: $grid-shadow,
@@ -567,11 +566,14 @@
         drop-area-border-radius: $drop-area-border-radius,
         sortable-header-icon-hover-color: $sortable-header-icon-hover-color,
         grid-border-color: $grid-border-color,
+
+        cell-selected-within-background: $cell-selected-within-background,
+        cell-selected-within-text-color: $cell-selected-within-text-color,
     ));
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires {mixin} _excel-filtering
 /// @requires igx-color
@@ -579,7 +581,7 @@
 /// @requires rem
 /// @requires --var
 @mixin igx-grid($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     @include scale-in-ver-center();
 
@@ -751,6 +753,10 @@
                 background: inherit;
                 color: inherit;
             }
+        }
+
+        > [aria-activedescendant] {
+            outline-style: none;
         }
     }
 
@@ -1022,17 +1028,25 @@
             color: --var($theme, 'row-hover-text-color');
 
             %grid-cell--column-selected {
+                color: --var($theme, 'row-selected-hover-text-color');
                 background: --var($theme, 'row-selected-hover-background');
             }
 
             %grid-cell--cross-selected {
-                color: --var($theme, 'row-selected-text-color');
-                background: --var($theme, 'row-selected-cell-background');
+                color: --var($theme, 'cell-selected-within-text-color');
+                background: --var($theme, 'cell-selected-within-background');
             }
         }
 
         &%igx-grid__tr--ghost {
+            @include igx-css-vars((
+                name: 'igx-grid-row',
+                row-ghost-background: map-get($theme, 'row-ghost-background'),
+                row-drag-color: map-get($theme, 'row-drago-color')
+            ));
+
             background: --var($theme, 'row-ghost-background');
+            color: --var($theme, 'row-drag-color');
             z-index: 1;
         }
     }
@@ -1050,7 +1064,7 @@
         cursor: move;
         border-#{$right}: 1px solid transparent;
 
-        %igx-icon-display {
+        igx-icon {
             width: $drag-icon-size;
             height: $drag-icon-size;
             font-size: $drag-icon-size;
@@ -1097,15 +1111,16 @@
 
         %grid-cell--selected,
         %grid-cell--pinned-selected {
-            background: --var($theme, 'row-selected-cell-background');
+            color: --var($theme, 'cell-selected-within-text-color');
+            background: --var($theme, 'cell-selected-within-background');
         }
 
         &:hover {
             background: --var($theme, 'row-selected-hover-background');
-            color: --var($theme, 'row-selected-text-color');
+            color: --var($theme, 'row-selected-hover-text-color');
 
             %grid-cell--column-selected {
-                color: --var($theme, 'row-selected-text-color');
+                color: --var($theme, 'row-selected-hover-text-color');
                 background: --var($theme, 'row-selected-hover-background');
             }
         }
@@ -1142,7 +1157,7 @@
     %igx-grid__td--bool {
         justify-content: center;
 
-        %igx-icon-display {
+        igx-icon {
             height: rem(18px);
             width: rem(18px);
             font-size: rem(18px);
@@ -1369,8 +1384,8 @@
     }
 
     %grid-cell--cross-selected {
-        color: --var($theme, 'row-selected-text-color');
-        background: --var($theme, 'row-selected-cell-background');
+        color: --var($theme, 'cell-selected-within-text-color');
+        background: --var($theme, 'cell-selected-within-background');
     }
 
     %igx-grid__td--new {
@@ -1414,7 +1429,7 @@
         }
 
         igx-input-group {
-            --igx-input-group-variant: fluent;
+            --theme: fluent;
             padding-top: 0 !important;
         }
 
@@ -1771,6 +1786,7 @@
         display: flex;
         overflow: hidden;
         background: --var($theme, 'root-summaries-background');
+        outline-style: none;
 
         %igx-grid-summary__result {
             color: --var($theme, 'root-summaries-text-color');
@@ -1992,7 +2008,7 @@
     %igx-group-label__icon {
         user-select: none;
 
-        &%igx-icon-display {
+        igx-icon {
             color: --var($theme, 'group-label-icon');
             width: rem(16px);
             height: rem(16px);
@@ -2472,7 +2488,7 @@
         }
 
         igx-input-group {
-            --igx-input-group-variant: fluent;
+            --theme: fluent;
             width: 100%;
             max-width: rem(200px);
             min-width: rem(140px);
@@ -2754,6 +2770,10 @@
     %igx-grid__filtering-row-editing-buttons {
         display: flex;
         align-items: center;
+
+        button {
+            transition: none;
+        }
     }
 
     %igx-grid__filtering-row-editing-buttons--small {

@@ -45,7 +45,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { KEYS, IBaseEventArgs } from '../core/utils';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickersBaseDirective } from '../date-common/pickers-base.directive';

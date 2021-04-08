@@ -33,7 +33,7 @@
         <div class="sample-description">{{showDate(date)}}</div>
         <div class="preview">
             <igx-time-picker #tp (onValueChanged)="valueChanged($event)" [minValue]="'9:15:20 AM'" [maxValue]="'11:15:20 AM'"
-                (onValidationFailed)="validationFailed($event)" [mode]="mode" [isSpinLoop]="isSpinLoop"
+                (onValidationFailed)="validationFailed($event)" [mode]="'dropdown'" [isSpinLoop]="isSpinLoop"
                 [(ngModel)]="date" [itemsDelta]="itemsDelta" [format]="format">
                 <label igxLabel>Custom label</label>
             </igx-time-picker>

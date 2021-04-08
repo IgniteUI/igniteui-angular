@@ -42,24 +42,18 @@
     }
 
     @include e(ghost) {
-        @extend %igx-chip !optional;
         @extend %igx-chip__ghost !optional;
     }
 
     @include e(ghost, $m: cosy) {
-        @extend %igx-chip !optional;
-        @extend %igx-chip__ghost !optional;
         @extend %igx-chip__ghost--cosy !optional;
     }
 
     @include e(ghost, $m: compact) {
-        @extend %igx-chip !optional;
-        @extend %igx-chip__ghost !optional;
         @extend %igx-chip__ghost--compact !optional;
     }
 
     @include m(cosy) {
-        @extend %igx-chip !optional;
         @extend %igx-chip--cosy !optional;
 
         @include e(item) {
@@ -72,7 +66,6 @@
     }
 
     @include m(compact) {
-        @extend %igx-chip !optional;
         @extend %igx-chip--compact !optional;
 
         @include e(item) {

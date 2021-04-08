@@ -1,97 +1,82 @@
 <section class="sample-content">
     <article class="datepicker-column">
-        <h4 class="sample-title">Default Date Picker - dialog mode</h4>
-        <p class="sample-description">Added buttons - today and cancel</p>
-        <div class="preview">
-            <igx-date-picker #datePicker  [showWeekNumbers]="true" cancelButtonLabel="cancel" todayButtonLabel="today">
-                <label igxLabel>Custom Label</label>
-            </igx-date-picker>
-            <igx-buttongroup class="datepicker-actions">
-                <button igxButton igxRipple (click)="d()">Today</button>
-                <button igxButton igxRipple (click)="deselect(datePicker)">Deselect date</button>
-            </igx-buttongroup>
-        </div>
-    </article>
-    <article class="datepicker-column">
         <h4 class="sample-title">Default Date Picker</h4>
-        <p class="sample-description">With Months View Number</p>
         <div class="preview">
-            <igx-date-picker #datepicker1 [value]="date"></igx-date-picker>
-        </div>
-        <input type="number" #monthsviewnumber />
-        <button igxButton="raised" igxRipple (click)="setMonthsViewNumber(monthsviewnumber)">Set months number</button>
-    </article>
-    <article class="datepicker-column">
-        <h4 class="sample-title">Default Date Picker</h4>
-        <p class="sample-description">Custom formatter applied</p>
-        <div class="preview">
-            <igx-date-picker [value]="date" [vertical]="true" [formatter]="formatter"></igx-date-picker>
-        </div>
-    </article>
-    <article class="datepicker-column">
-        <h4 class="sample-title">Default Date Picker</h4>
-        <p class="sample-description">Retemplated input group</p>
-        <div class="preview">
-            <igx-date-picker [value]="date" [formatter]="formatter">
-                <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
-                    let-displayData="displayData">
-                    <igx-input-group (click)="openDialog()">
-                        <label igxLabel>Date</label>
-                        <input class="igx-date-picker__input-date" igxInput [value]="displayData" />
-                    </igx-input-group>
-                </ng-template>
+            <igx-date-picker #dp1 tabindex="-1" (valueChange)="model.control.markAsDirty()" [(value)]="date1">
+                <label igxLabel>Select a Date</label>
             </igx-date-picker>
         </div>
     </article>
 
     <article class="datepicker-column">
-        <h4 class="sample-title" #TEST>DropDown Date Picker</h4>
-        <p class="sample-description">Retemplated Date Picker using #dropDownTarget </p>
+        <h4 class="sample-title">Custom View Count And Validation</h4>
         <div class="preview">
-            <igx-date-picker [locale]="'ja'" [value]="date" mode="dropdown" #retemplated>
-                <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value"
-                    let-displayData="displayData">
-                    <igx-input-group>
-                        <input #dropDownTarget class="igx-date-picker__input-date" igxInput [value]="displayData"
-                            (blur)="changeDate($event)" />
-                        <igx-suffix (click)="openDialog(TEST)">
-                            <igx-icon>alarm</igx-icon>
-                        </igx-suffix>
-                    </igx-input-group>
-                </ng-template>
-                <ng-template igxDatePickerActions>
+            <igx-date-picker #model="ngModel" required #dp2 [displayMonthsCount]="3" [(ngModel)]="date2"
+                [minValue]="date1" [maxValue]="date7">
+                <label igxLabel>Select a Date</label>
+                <igx-hint *ngIf="model.errors?.value">This field is required.</igx-hint>
+                <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">Value is not in range.</igx-hint>
+            </igx-date-picker>
+        </div>
+    </article>
+
+    <article class="datepicker-column">
+        <h4 class="sample-title">Custom Formats</h4>
+        <div class="preview">
+            <igx-date-picker #dp3 [value]="date3" displayFormat="fullDate" inputFormat="dd/MM/yyyy">
+                <label igxLabel>Select a Date</label>
+            </igx-date-picker>
+        </div>
+    </article>
+
+    <article class="datepicker-column">
+        <h4 class="sample-title">Templated Icons And Special Dates</h4>
+        <div class="preview">
+            <igx-date-picker #dp4 [value]="date4">
+                <label igxLabel>Select a Date</label>
+                <igx-picker-toggle (click)="dp4.open()" igxPrefix>
+                    <igx-icon>calendar_view_day</igx-icon>
+                </igx-picker-toggle>
+                <igx-picker-clear (click)="dp4.clear()" igxSuffix>
+                    <igx-icon>delete</igx-icon>
+                </igx-picker-clear>
+            </igx-date-picker>
+        </div>
+    </article>
+
+    <article class="datepicker-column">
+        <h4 class="sample-title">Additional Icons And Custom Buttons</h4>
+        <div class="preview">
+            <igx-date-picker #dp5 [value]="date5">
+                <label igxLabel>Select a Date</label>
+                <igx-suffix (click)="dp5.open()">
+                    <igx-icon>alarm</igx-icon>
+                </igx-suffix>
+                <ng-template igxPickerActions>
                     <div class="action-buttons">
-                        <button igxButton="flat" (click)="selectToday(retemplated)">Today</button>
+                        <button igxButton="flat" (click)="dp5.selectToday()">Today</button>
                     </div>
                 </ng-template>
             </igx-date-picker>
-            <label>Date: {{ retemplated.value | date:'longDate'}}</label>
         </div>
     </article>
 
     <article class="datepicker-column">
-        <h4 class="sample-title">DropDown Date Picker</h4>
-        <p class="sample-description">Format: dd.MM.y / mask: M/d/y</p>
+        <h4 class="sample-title">Date Picker With Disabled Dates</h4>
         <div class="preview">
-            <igx-date-picker #editableDatePicker1 mode="dropdown" [value]="testDate" format="dd.MM.y" mask="M/d/y">
+            <igx-date-picker #dp6 mode="dialog" [(value)]="date6" displayFormat="dd.MM.y"
+                [disabledDates]="disabledDates">
+                <label igxLabel>Select a Date</label>
             </igx-date-picker>
-            <label>Date: {{ editableDatePicker1.value | date:'longDate'}}</label>
         </div>
     </article>
 
     <article class="datepicker-column">
-        <h4 class="sample-title">DropDown Date Picker bind with ngModel</h4>
-        <p class="sample-description">isSpinLoop set to false</p>
+        <h4 class="sample-title">Date Picker Bound With ngModel And With Default Buttons</h4>
         <div class="preview">
-            <igx-date-picker #editableDatePicker
-                            mode="dropdown"
-                            cancelButtonLabel="close"
-                            todayButtonLabel="today"
-                            [weekStart]="1"
-                            [(ngModel)]="date1"
-                            [isSpinLoop]="false">
+            <igx-date-picker #dp7 mode="dialog" cancelButtonLabel="close" todayButtonLabel="today" [(ngModel)]="date7">
             </igx-date-picker>
-            <button igxButton igxRipple type="raised" (click)="deselect(editableDatePicker)">
+            <button igxButton igxRipple type="raised" (click)="dp7.clear()">
                 Deselect date
             </button>
         </div>

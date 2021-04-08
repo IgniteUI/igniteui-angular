@@ -9,7 +9,7 @@ import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFai
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';

@@ -1,12 +1,13 @@
+import { ConnectedFit, HorizontalAlignment, Point, PositionSettings, Size, Util, VerticalAlignment } from '../utilities';
 import { ConnectedPositioningStrategy } from './connected-positioning-strategy';
-import { HorizontalAlignment, VerticalAlignment, PositionSettings, Size, Util, ConnectedFit, OutOfViewPort, Point } from '../utilities';
 
 export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrategy {
     protected _initialSize: Size;
     protected _initialSettings: PositionSettings;
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+    public position(
+        contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         const connectedFit: ConnectedFit = {};
@@ -39,9 +40,9 @@ export abstract class BaseFitPositionStrategy extends ConnectedPositioningStrate
             connectedFit.horizontalOffset ? connectedFit.horizontalOffset : 0);
         connectedFit.right = connectedFit.left + connectedFit.contentElementRect.width;
         connectedFit.fitHorizontal = {
-                back: Math.round(connectedFit.left),
-                forward: Math.round(connectedFit.viewPortRect.width - connectedFit.right)
-            };
+            back: Math.round(connectedFit.left),
+            forward: Math.round(connectedFit.viewPortRect.width - connectedFit.right)
+        };
 
         connectedFit.top = this.calculateTop(
             connectedFit.targetRect,

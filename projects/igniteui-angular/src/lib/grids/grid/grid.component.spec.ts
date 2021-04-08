@@ -19,12 +19,10 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { IgxStringFilteringOperand, IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
 import { SortingDirection, ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { IgxTabsModule, IgxTabsComponent } from '../../tabs/public_api';
 import { GridSelectionMode } from '../common/enums';
-import { registerLocaleData } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -667,6 +665,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.headerContainer.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.headerContainer.getScroll().scrollLeft;
 
@@ -700,6 +699,7 @@ describe('IgxGrid Component Tests #grid', () => {
             );
             fix.detectChanges();
             const grid = fix.componentInstance.grid;
+            grid.rowList.first.virtDirRow.dc.instance._scrollInertia.smoothingDuration = 0;
             const initialScroll = grid.verticalScrollContainer.getScroll().scrollTop;
             const initialHorScroll = grid.rowList.first.virtDirRow.getScroll().scrollLeft;
 
@@ -1508,8 +1508,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         });
 
-        xit('Should change dates/number display based on locale', fakeAsync(() => {
-            registerLocaleData(localeDE);
+        it('Should change dates/number display based on locale #ivy', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxGridFormattingComponent);
             const grid = fixture.componentInstance.grid;
             grid.data = fixture.componentInstance.data.map(rec => {
@@ -1550,6 +1549,11 @@ describe('IgxGrid Component Tests #grid', () => {
             });
 
             grid.locale = 'de-DE';
+            grid.columnList.toArray()[5].pipeArgs = {
+                timezone: 'UTC',
+                format: 'longDate',
+                digitsInfo: '1.2-2'
+            };
             grid.columnList.toArray()[4].pipeArgs = {
                 timezone: 'UTC',
                 format: 'longDate',
@@ -1982,7 +1986,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid3;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
-            tab.tabs.toArray()[2].select();
+            tab.items.toArray()[2].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2002,7 +2006,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const tab = fix.componentInstance.tabs;
 
             expect(grid.calcHeight).toBe(300);
-            tab.tabs.toArray()[1].select();
+            tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2022,7 +2026,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             const grid = fix.componentInstance.grid4;
             const tab = fix.componentInstance.tabs;
-            tab.tabs.toArray()[3].select();
+            tab.items.toArray()[3].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2047,7 +2051,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid5;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(204);
-            tab.tabs.toArray()[4].select();
+            tab.items.toArray()[4].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2065,7 +2069,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid6;
             const tab = fix.componentInstance.tabs;
             expect(grid.calcHeight).toBe(510);
-            tab.tabs.toArray()[5].select();
+            tab.items.toArray()[5].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2085,7 +2089,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             const tab = fix.componentInstance.tabs;
 
-            tab.tabs.toArray()[1].select();
+            tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
 
@@ -2099,11 +2103,11 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(scrTop).not.toBe(0);
             expect(scrLeft).not.toBe(0);
 
-            tab.tabs.toArray()[0].select();
+            tab.items.toArray()[0].selected = true;
             await wait(100);
             fix.detectChanges();
 
-            tab.tabs.toArray()[1].select();
+            tab.items.toArray()[1].selected = true;
             await wait(100);
             fix.detectChanges();
             await wait(100);
@@ -2583,7 +2587,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 }
@@ -2599,7 +2603,7 @@ export class IgxGridWrappedInContComponent extends IgxGridTestComponent {
 export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContComponent {
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
 }
 
 @Component({
@@ -2770,64 +2774,93 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
     template: `
     <div style="width: 600px; height: 400px;">
     <igx-tabs #tabs>
-      <igx-tabs-group label="Tab 1">This is Tab 1 content.</igx-tabs-group>
-      <igx-tabs-group label="Tab 2">
-        <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 3">
-        <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [width]="column.width"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 4">
-        <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
-            [paging]="true" [perPage]="3">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-            [hasSummary]="true"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 5">
-        <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-            [paging]="true" [perPage]="4">
-        <igx-column
-            *ngFor="let column of columns"
-            [field]="column.field"
-            [header]="column.field"
-        >
-        </igx-column>
-        </igx-grid>
-      </igx-tabs-group>
-      <igx-tabs-group label="Tab 6">
-      <div style='height:300px;'>
-      <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-       >
-      <igx-column
-          *ngFor="let column of columns"
-          [field]="column.field"
-          [header]="column.field"
-      >
-      </igx-column>
-      </igx-grid>
-      </div>
-    </igx-tabs-group>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 1</span>
+            </igx-tab-header>
+            <igx-tab-content>This is Tab 1 content.</igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 2</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                <igx-grid #grid2 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
+                    <igx-column
+                        *ngFor="let column of columns"
+                        [field]="column.field"
+                        [header]="column.field"
+                    >
+                    </igx-column>
+                </igx-grid>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 3</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                <igx-grid #grid3 [data]="data" [primaryKey]="'id'">
+                    <igx-column
+                        *ngFor="let column of columns"
+                        [field]="column.field"
+                        [header]="column.field"
+                        [width]="column.width"
+                    >
+                    </igx-column>
+                </igx-grid>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 4</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
+                    [paging]="true" [perPage]="3">
+                    <igx-column
+                        *ngFor="let column of columns"
+                        [field]="column.field"
+                        [header]="column.field"
+                        [hasSummary]="true"
+                    >
+                    </igx-column>
+                </igx-grid>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 5</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
+                    [paging]="true" [perPage]="4">
+                <igx-column
+                    *ngFor="let column of columns"
+                    [field]="column.field"
+                    [header]="column.field"
+                >
+                </igx-column>
+                </igx-grid>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                <span igxTabHeaderLabel>Tab 6</span>
+            </igx-tab-header>
+            <igx-tab-content>
+                <div style='height:300px;'>
+                    <igx-grid #grid6 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
+                        <igx-column
+                            *ngFor="let column of columns"
+                            [field]="column.field"
+                            [header]="column.field"
+                        >
+                        </igx-column>
+                    </igx-grid>
+                </div>
+            </igx-tab-content>
+        </igx-tab-item>
     </igx-tabs>
   </div>
     `

@@ -98,6 +98,7 @@ $fluent_button: igx-type-style(
 );
 
 $fluent-type-scale: igx-type-scale(
+    $_meta: (variant: 'fluent'),
     $h1: $fluent_h1,
     $h2: $fluent_h2,
     $h3: $fluent_h3,
