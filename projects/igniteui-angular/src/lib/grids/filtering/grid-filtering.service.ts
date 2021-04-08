@@ -247,7 +247,7 @@ export class IgxFilteringService implements OnDestroy {
 
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        grid.endEdit(false);
+        grid.crudService.endEdit(false);
         if (grid.paging) {
             grid.page = 0;
         }
@@ -304,7 +304,7 @@ export class IgxFilteringService implements OnDestroy {
 
     public clear_filter(fieldName: string) {
         const grid = this.grid;
-        grid.endEdit(false);
+        grid.crudService.endEdit(false);
         const filteringState = grid.filteringExpressionsTree;
         const index = filteringState.findIndex(fieldName);
 
@@ -553,7 +553,7 @@ export class IgxFilteringService implements OnDestroy {
         ignoreCase: boolean) {
         const grid = this.grid;
         const filteringTree = grid.filteringExpressionsTree;
-        this.grid.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         if (grid.paging) {
             grid.page = 0;
