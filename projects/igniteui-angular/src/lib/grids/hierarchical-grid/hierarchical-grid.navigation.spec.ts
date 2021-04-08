@@ -306,7 +306,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
       expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
-    fit('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', (async () => {
+    it('when navigating down from parent into child should scroll child grid to top and start navigation from first row.', (async () => {
         const ri = fixture.componentInstance.rowIsland;
         ri.height = '200px';
         fixture.detectChanges();

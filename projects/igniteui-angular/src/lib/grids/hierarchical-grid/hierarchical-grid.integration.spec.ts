@@ -771,7 +771,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(GridFunctions.isHeaderPinned(childHeader.parent)).toBeTruthy();
         }));
 
-        fit('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {
+        it('should be applied correctly for child grid with multi-column header.', fakeAsync(() => {
             fixture.componentInstance.rowIsland.columnList.find(x => x.header === 'Information').pinned = true;
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();

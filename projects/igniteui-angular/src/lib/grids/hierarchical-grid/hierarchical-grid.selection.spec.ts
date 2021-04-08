@@ -51,7 +51,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             rowIsland2 = fix.componentInstance.rowIsland2;
         }));
 
-        fit('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
+        it('should allow only one cell to be selected in the whole hierarchical grid.', fakeAsync(() => {
             hierarchicalGrid.height = '500px';
             hierarchicalGrid.reflow();
             fix.detectChanges();
