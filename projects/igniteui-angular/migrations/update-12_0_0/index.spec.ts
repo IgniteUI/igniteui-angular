@@ -5,7 +5,7 @@ import { SchematicTestRunner, UnitTestTree } from '@angular-devkit/schematics/te
 
 const version = '12.0.0';
 
-fdescribe(`Update to ${version}`, () => {
+describe(`Update to ${version}`, () => {
     let appTree: UnitTestTree;
     const schematicRunner = new SchematicTestRunner('ig-migrate', path.join(__dirname, '../migration-collection.json'));
     const configJson = {
@@ -249,7 +249,7 @@ ${noteText}
 </igx-bottom-nav>`);
     });
 
-    fit('Should update the css selectors', async () => {
+    it('Should update the css selectors', async () => {
         appTree.create('/testSrc/appPrefix/component/custom.component.scss', `
 igx-tabs-group {
     padding: 8px;
