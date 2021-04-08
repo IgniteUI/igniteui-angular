@@ -1248,7 +1248,7 @@ export class DefaultGridMasterDetailComponent {
 })
 export class AllExpandedGridMasterDetailComponent extends DefaultGridMasterDetailComponent implements OnInit {
     public expStates = new Map<any, boolean>();
-    ngOnInit(): void {
+    public ngOnInit(): void {
         const allExpanded = new Map<any, boolean>();
         this.data.forEach(item => {
             allExpanded.set(item['ID'], true);

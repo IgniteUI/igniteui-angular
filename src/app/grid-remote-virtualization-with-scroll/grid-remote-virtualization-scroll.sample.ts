@@ -38,7 +38,7 @@ export class GridVirtualizationScrollSampleComponent implements OnInit, AfterVie
             this.grid.isLoading = false;
         });
 
-        this.grid.onDataPreLoad.pipe(debounceTime(500)).subscribe(() => {
+        this.grid.dataPreLoad.pipe(debounceTime(500)).subscribe(() => {
             this.processData(false);
         });
     }

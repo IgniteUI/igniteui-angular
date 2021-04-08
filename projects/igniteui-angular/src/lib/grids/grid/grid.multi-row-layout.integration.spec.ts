@@ -28,7 +28,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
-    let colGroups: Array<ColGroupsType>;
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -48,7 +47,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            colGroups = fixture.componentInstance.colGroups;
         });
 
         it('should allow setting a whole group as hidden/shown.', () => {

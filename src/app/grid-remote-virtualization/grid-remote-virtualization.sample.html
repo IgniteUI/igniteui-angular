@@ -1,5 +1,5 @@
 <div class="dark-grid">
-    <igx-grid #grid1 [isLoading]="loading" [autoGenerate]="true" [data]="remoteData | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
+    <igx-grid #grid1 [isLoading]="loading" [autoGenerate]="true" [data]="remoteData | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'">
     </igx-grid>
 
     <button (click)="loadData()">loadData</button>

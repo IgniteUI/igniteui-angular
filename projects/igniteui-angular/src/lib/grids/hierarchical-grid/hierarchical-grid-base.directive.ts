@@ -81,12 +81,12 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      *
      * @example
      * ```typescript
-     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (onDataPreLoad)="handleEvent()">
+     *  <igx-hierarchical-grid [id]="'igx-grid-1'" [data]="Data" [autoGenerate]="true" (dataPreLoad)="handleEvent()">
      *  </igx-hierarchical-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -98,7 +98,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * @hidden
      */
-    get maxLevelHeaderDepth() {
+    public get maxLevelHeaderDepth() {
         if (this._maxLevelHeaderDepth === null) {
             this._maxLevelHeaderDepth = this.columnList.reduce((acc, col) => Math.max(acc, col.level), 0);
         }
@@ -111,14 +111,14 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      * @remark
      * If set, returns the outlet defined outside the grid. Otherwise returns the grid's internal outlet directive.
      */
-    get outlet() {
+    public get outlet() {
         return this.rootGrid ? this.rootGrid.resolveOutlet() : this.resolveOutlet();
     }
 
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-    set outlet(val: any) {
+     public set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
