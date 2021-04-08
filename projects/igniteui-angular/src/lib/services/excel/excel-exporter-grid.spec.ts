@@ -413,10 +413,10 @@ describe('Excel Exporter', () => {
             const sortField = grid.sortingExpressions[0].fieldName;
             fix.detectChanges();
 
-            let wrapper = await getExportedData(grid, options);
+            await getExportedData(grid, options);
             fix.detectChanges();
 
-            wrapper = await getExportedData(grid, options);
+            await getExportedData(grid, options);
             const sortFieldAfterExport = grid.sortingExpressions[0].fieldName;
             expect(sortField).toBe(sortFieldAfterExport);
         });
