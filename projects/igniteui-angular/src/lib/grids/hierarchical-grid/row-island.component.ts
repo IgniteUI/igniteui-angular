@@ -58,6 +58,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     selector: 'igx-row-island',
     template: ``,
     providers: [IgxRowIslandAPIService,
+        IgxFilteringService,
         IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
@@ -260,6 +261,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnInit() {
+        this.filteringService.grid = this;
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
