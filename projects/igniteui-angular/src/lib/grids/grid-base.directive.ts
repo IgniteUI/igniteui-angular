@@ -6276,7 +6276,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.gridAPI.clear_groupby(record.item.field);
 
                     // Clear Filtering
-                    this.gridAPI.clear_filter(record.item.field);
+                    this.filteringService.clear_filter(record.item.field);
 
                     // Close filter row
                     if (this.filteringService.isFilterRowVisible
