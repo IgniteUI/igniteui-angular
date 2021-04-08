@@ -51,21 +51,20 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
 
             // TODO
-            return;
-            result = DateTimeUtil.parseDateTimeFormat('dd.MM.yyyyг');
-            resDict = reduceToDictionary(result);
-            expect(result.length).toEqual(6);
-            expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
-            expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
-            expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
-            expect(result[5]?.format).toEqual('г');
+            // result = DateTimeUtil.parseDateTimeFormat('dd.MM.yyyyг');
+            // resDict = reduceToDictionary(result);
+            // expect(result.length).toEqual(6);
+            // expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
+            // expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
+            // expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
+            // expect(result[5]?.format).toEqual('г');
 
-            result = DateTimeUtil.parseDateTimeFormat('yyyy/MM/d');
-            resDict = reduceToDictionary(result);
-            expect(result.length).toEqual(5);
-            expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 0, end: 4 }));
-            expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 5, end: 7 }));
-            expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 8, end: 10 }));
+            // result = DateTimeUtil.parseDateTimeFormat('yyyy/MM/d');
+            // resDict = reduceToDictionary(result);
+            // expect(result.length).toEqual(5);
+            // expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 0, end: 4 }));
+            // expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 5, end: 7 }));
+            // expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 8, end: 10 }));
         });
 
         it('should correctly parse boundary dates', () => {
@@ -422,7 +421,6 @@ describe(`DateTimeUtil Unit tests`, () => {
         expect(DateTimeUtil.greaterThanMaxValue(new Date(2010, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
         expect(DateTimeUtil.greaterThanMaxValue(new Date(2009, 3, 2, 15, 15, 15), maxValue)).toBeFalse();
 
-
         // date excluded
         expect(DateTimeUtil.lessThanMinValue(new Date(2030, 3, 2, 11, 10, 9), minValue, true, false)).toBeTrue();
         expect(DateTimeUtil.greaterThanMaxValue(new Date(2000, 3, 2, 15, 15, 16), minValue, true, false)).toBeTrue();
@@ -430,22 +428,6 @@ describe(`DateTimeUtil Unit tests`, () => {
         // time excluded
         expect(DateTimeUtil.lessThanMinValue(new Date(2009, 3, 2, 11, 10, 10), minValue, false, true)).toBeTrue();
         expect(DateTimeUtil.greaterThanMaxValue(new Date(2011, 3, 2, 15, 15, 15), minValue, true, false)).toBeTrue();
-
-        // falsy values
-        expect(DateTimeUtil.lessThanMinValue(new Date(NaN), new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(NaN), new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(NaN), null)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(NaN), null)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(null, new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(null, new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(NaN), undefined)).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(NaN), undefined)).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(undefined, new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(undefined, new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(NaN), new Date())).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(NaN), new Date())).toBeFalse();
-        expect(DateTimeUtil.lessThanMinValue(new Date(), new Date(NaN))).toBeFalse();
-        expect(DateTimeUtil.greaterThanMaxValue(new Date(), new Date(NaN))).toBeFalse();
     });
 
     it('should return ValidationErrors for minValue and maxValue', () => {
@@ -459,46 +441,70 @@ describe(`DateTimeUtil Unit tests`, () => {
         minValue = new Date(2010, 3, 2, 10, 10, 10);
         maxValue = new Date(2010, 3, 2, 15, 15, 15);
 
-        // TODO: test with time portions as well
-        return;
-        expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 11, 11, 11), minValue, maxValue)).toEqual({});
+        expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 10, 10, 10), minValue, maxValue)).toEqual({});
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 9, 11, 11), minValue, maxValue)).toEqual({ minValue: true });
         expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 16, 11, 11), minValue, maxValue)).toEqual({ maxValue: true });
+
+        // ignore date portion
+        expect(DateTimeUtil.validateMinMax(new Date(2000, 0, 1, 10, 10, 10), minValue, maxValue, true, false)).toEqual({});
+        expect(DateTimeUtil.validateMinMax(
+            new Date(2020, 10, 10, 9, 10, 10), minValue, maxValue, true, false)).toEqual({ minValue: true });
+        expect(DateTimeUtil.validateMinMax(
+            new Date(2000, 0, 1, 16, 0, 0), minValue, maxValue, true, false)).toEqual({ maxValue: true });
+
+        // ignore time portion
+        expect(DateTimeUtil.validateMinMax(new Date(2010, 3, 2, 9, 0, 0), minValue, maxValue, false, true)).toEqual({});
+        expect(DateTimeUtil.validateMinMax(
+            new Date(2009, 3, 2, 11, 11, 11), minValue, maxValue, false, true)).toEqual({ minValue: true });
+        expect(DateTimeUtil.validateMinMax(
+            new Date(2020, 3, 2, 0, 0, 0), minValue, maxValue, false, true)).toEqual({ maxValue: true });
     });
 
-    it('should parse dates correctly with parseDate', () => {
-        pending('TODO: ISO implementation');
-        // // ISO strings and numbers
-        // expect(DateTimeUtil.parseDate('2012-12-12T12:12:12').getTime()).toEqual(new Date(2012, 11, 12, 12, 12, 12).getTime());
-        // expect(DateTimeUtil.parseDate(new Date()).getTime()).toEqual(new Date().getTime());
-        // expect(DateTimeUtil.parseDate(new Date().getTime()).getTime()).toEqual(new Date().getTime());
+    it('should parse dates correctly with parseIsoDate', () => {
+        const updateDate = (dateValue: Date, stringValue: string): Date => {
+            const [datePart, timePart] = dateValue.toISOString().split('T');
+            const newDate = new Date(`${datePart}T${stringValue + timePart.substr(stringValue.length, timePart.length)}`);
+            newDate.setMilliseconds(0);
+            return newDate;
+        };
 
-        // // non ISO strings with mask and no dateTimeParts
-        // let mask = 'dd/MM/yyyy HH:mm:ss';
-        // expect(DateTimeUtil.parseDate('12/12/2012 12:12:12', null, mask)
-        //     .getTime()).toEqual(new Date(2012, 11, 12, 12, 12, 12).getTime());
-        // mask = 'MM-dd-yyyy mm:ss';
-        // expect(DateTimeUtil.parseDate('06/04/2012 44:12', null, mask).getTime()).toEqual(new Date(2012, 5, 4, 0, 44, 12).getTime());
-        // mask = 'yy-dd-MM ss:HHmm';
-        // expect(DateTimeUtil.parseDate('12/12/12 12:12:12', null, mask).getTime()).toEqual(new Date(2012, 11, 12, 12, 12, 12).getTime());
-        // mask = 'dd///()#yy123/\\\/MM  ___   ss(|::HH123456::123123    mm';
-        // expect(DateTimeUtil.parseDate('12/12/12 12:12:12', null, mask).getTime()).toEqual(new Date(2012, 11, 12, 12, 12, 12).getTime());
+        let date = new Date();
+        date.setMilliseconds(0);
+        // full iso string
+        expect(DateTimeUtil.parseIsoDate(date.toISOString()).getTime()).toEqual(date.getTime());
 
-        // // non ISO strings with dateTimeParts and no mask
-        // const dateTimeParts = DateTimeUtil.parseDateTimeFormat(mask);
-        // expect(DateTimeUtil.parseDate('12/12/12 12:12:12', dateTimeParts).getTime())
-        //     .toEqual(new Date(2012, 11, 12, 12, 12, 12).getTime());
+        // date only
+        expect(DateTimeUtil.parseIsoDate('2012-12-10').getTime()).toEqual(new Date('2012-12-10T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2023-13-15').getTime()).toEqual(new Date('2023-13-15T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('1524-01-02').getTime()).toEqual(new Date('1524-01-02T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2012').getTime()).toEqual(new Date('2012-01-01T00:00:00').getTime());
+        expect(DateTimeUtil.parseIsoDate('2012-02').getTime()).toEqual(new Date('2012-02-01T00:00:00').getTime());
 
-        // // invalid values
-        // expect(DateTimeUtil.parseDate(undefined)).toEqual(null);
-        // expect(DateTimeUtil.parseDate(NaN)).toEqual(null);
-        // expect(DateTimeUtil.parseDate([])).toEqual(null);
-        // expect(DateTimeUtil.parseDate({})).toEqual(null);
-        // expect(DateTimeUtil.parseDate('')).toEqual(null);
-        // expect(DateTimeUtil.parseDate(new Date(NaN))).toEqual(null);
-        // expect(DateTimeUtil.parseDate(null)).toBeInstanceOf(Date);
-        // expect(DateTimeUtil.parseDate(true)).toBeInstanceOf(Date);
-        // expect(DateTimeUtil.parseDate(false)).toBeInstanceOf(Date);
+        // time only
+        date = DateTimeUtil.parseIsoDate('12:14');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '12:14').getTime());
+
+        date = DateTimeUtil.parseIsoDate('15:18');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '15:18').getTime());
+
+        date = DateTimeUtil.parseIsoDate('06:03');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '06:03').getTime());
+
+        date = DateTimeUtil.parseIsoDate('00:00');
+        date.setMilliseconds(0);
+        expect(date.getTime()).toEqual(updateDate(new Date(), '00:00').getTime());
+
+        // falsy values
+        expect(DateTimeUtil.parseIsoDate('')).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate('false')).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate('true')).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate('NaN')).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate(undefined)).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate(null)).toEqual(null);
+        expect(DateTimeUtil.parseIsoDate(new Date().getTime().toString()).getTime()).toEqual(NaN);
     });
 
     it('isValidDate should properly determine if a date is valid or not', () => {

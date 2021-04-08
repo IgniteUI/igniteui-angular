@@ -1120,8 +1120,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.open();
                     fixture.detectChanges();
                     tick();
-                    expect(fixture.componentInstance.dateRange.value.start.getTime()).toEqual(range.start.getTime());
-                    expect(fixture.componentInstance.dateRange.value.end.getTime()).toEqual(range.end.getTime());
+                    expect((fixture.componentInstance.dateRange.value.start as Date).getTime()).toEqual(range.start.getTime());
+                    expect((fixture.componentInstance.dateRange.value.end as Date).getTime()).toEqual(range.end.getTime());
                 }));
             });
         });
@@ -1350,8 +1350,11 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     private monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
 
     public formatter = (date: DateRange) => {
-        const startDate = `${this.monthFormatter.format(date.start)} ${date.start.getDate()}, ${date.start.getFullYear()}`;
-        const endDate = `${this.monthFormatter.format(date.end)} ${date.end.getDate()}, ${date.end.getFullYear()}`;
+        const startDate = `${this.monthFormatter
+            .format(date.start as Date)} ${(date.start as Date).getDate()}, ${(date.start as Date).getFullYear()}`;
+        const endDate = `${this.monthFormatter
+            .format(date.end as Date)} ${(date
+                .end as Date).getDate()}, ${(date.end as Date).getFullYear()}`;
         return `You selected ${startDate}-${endDate}`;
     };
 }

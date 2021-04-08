@@ -17,7 +17,7 @@ import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IBaseCancelableBrowserEventArgs, KEYS, parseDate } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isDate, KEYS, parseDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -840,11 +840,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
         const range: Date[] = [];
         if (this.value?.start && this.value?.end) {
-            if (DateTimeUtil.greaterThanMaxValue(this.value.start, this.value.end)) {
+            const _value = this.toRangeOfDates(this.value);
+            if (DateTimeUtil.greaterThanMaxValue(_value.start, _value.end)) {
                 this.swapEditorDates();
             }
             if (this.valueInRange(this.value, minValue, maxValue)) {
-                range.push(this.value.start, this.value.end);
+                range.push(_value.start, _value.end);
             }
         }
 
@@ -866,10 +867,11 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private valueInRange(value: DateRange, minValue?: Date, maxValue?: Date): boolean {
-        if (minValue && DateTimeUtil.lessThanMinValue(value.start, minValue, false)) {
+        const _value = this.toRangeOfDates(value);
+        if (minValue && DateTimeUtil.lessThanMinValue(_value.start, minValue, false)) {
             return false;
         }
-        if (maxValue && DateTimeUtil.greaterThanMaxValue(value.end, maxValue, false)) {
+        if (maxValue && DateTimeUtil.greaterThanMaxValue(_value.end, maxValue, false)) {
             return false;
         }
 
@@ -881,6 +883,23 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             start: selection[0] || null,
             end: selection.length > 0 ? selection[selection.length - 1] : null
         };
+    }
+
+    private toRangeOfDates(range: DateRange): { start: Date; end: Date } {
+        let start;
+        let end;
+        if (!isDate(range.start)) {
+            start = DateTimeUtil.parseIsoDate(range.start);
+        }
+        if (!isDate(range.end)) {
+            end = DateTimeUtil.parseIsoDate(range.end);
+        }
+
+        if (start || end) {
+            return { start, end };
+        }
+
+        return { start: range.start as Date, end: range.end as Date };
     }
 
     private subscribeToDateEditorEvents(): void {
@@ -901,9 +920,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                     .pipe(takeUntil(this._destroy$))
                     .subscribe(value => {
                         if (this.value) {
-                            this.value = { start: this.value.start, end: value };
+                            this.value = { start: this.value.start, end: value as Date };
                         } else {
-                            this.value = { start: null, end: value };
+                            this.value = { start: null, end: value as Date };
                         }
                     });
             }
@@ -965,8 +984,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             const start = this.projectedInputs.find(i => i instanceof IgxDateRangeStartComponent);
             const end = this.projectedInputs.find(i => i instanceof IgxDateRangeEndComponent);
             this._value = {
-                start: start.dateTimeEditor.value,
-                end: end.dateTimeEditor.value
+                start: start.dateTimeEditor.value as Date,
+                end: end.dateTimeEditor.value as Date
             };
         }
     }
@@ -975,8 +994,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         const start = this.projectedInputs?.find(i => i instanceof IgxDateRangeStartComponent) as IgxDateRangeStartComponent;
         const end = this.projectedInputs?.find(i => i instanceof IgxDateRangeEndComponent) as IgxDateRangeEndComponent;
         if (start && end) {
-            start.updateInputValue(this.value?.start ?? null);
-            end.updateInputValue(this.value?.end ?? null);
+            const _value = this.value ? this.toRangeOfDates(this.value) : null;
+            start.updateInputValue(_value?.start || null);
+            end.updateInputValue(_value?.end || null);
         }
     }
 

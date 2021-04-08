@@ -1,7 +1,8 @@
 import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
-import { isDate, parseDate } from '../../core/utils';
+import { isDate } from '../../core/utils';
+import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
 const enum FormatDesc {
@@ -323,20 +324,45 @@ export abstract class DateTimeUtil {
      * @param minValue The lowest possible value that `value` can take
      * @param maxValue The largest possible value that `value` can take
      */
-    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string): ValidationErrors | null {
+    public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
+        includeTime = true, includeDate = true): ValidationErrors {
         const errors = {};
-        const min = parseDate(minValue);
-        const max = parseDate(maxValue);
-        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, false))
-            || (min && value && DateTimeUtil.lessThanMinValue(value, min, false))) {
+        const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
+        const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
+        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))
+            || (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, false))
-            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, false))) {
+        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
+            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
             Object.assign(errors, { maxValue: true });
         }
 
         return errors;
+    }
+
+    /** Parse an ISO string to a Date */
+    public static parseIsoDate(value: string): Date | null {
+        let regex = /^\d{4}/g;
+        const timeLiteral = 'T';
+        if (regex.test(value)) {
+            return new Date(value + `${value.indexOf(timeLiteral) === -1 ? 'T00:00:00' : ''}`);
+        }
+
+        regex = /^\d{2}/g;
+        if (regex.test(value)) {
+            const dateNow = new Date().toISOString();
+            // eslint-disable-next-line prefer-const
+            let [datePart, timePart] = dateNow.split(timeLiteral);
+            // transform the provided value to a numeric mask
+            // and use the mask parser to update it with the value
+            const format = timePart.replace(/\d/g, '0');
+            timePart = new MaskParsingService().replaceInMask(timePart, value,
+                { format, promptChar: '' }, 0, value.length).value;
+            return new Date(`${datePart}T${timePart}`);
+        }
+
+        return null;
     }
 
     /**
