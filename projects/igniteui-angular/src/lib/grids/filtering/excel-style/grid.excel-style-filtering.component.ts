@@ -19,7 +19,7 @@ import {
 import { IgxOverlayService } from '../../../services/public_api';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
-import { KEYS, resolveNestedPath, parseDate, uniqueDates } from '../../../core/utils';
+import { resolveNestedPath, parseDate, uniqueDates, PlatformUtil } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -48,16 +48,12 @@ export class FilterListItem {
 @Directive({
     selector: 'igx-excel-style-column-operations,[igxExcelStyleColumnOperations]'
 })
-export class IgxExcelStyleColumnOperationsTemplateDirective {
-    constructor() {}
-}
+export class IgxExcelStyleColumnOperationsTemplateDirective { }
 
 @Directive({
     selector: 'igx-excel-style-filter-operations,[igxExcelStyleFilterOperations]'
 })
-export class IgxExcelStyleFilterOperationsTemplateDirective {
-    constructor() {}
-}
+export class IgxExcelStyleFilterOperationsTemplateDirective { }
 
 /**
  * A component used for presenting Excel style filtering UI for a specific column.
@@ -72,7 +68,6 @@ export class IgxExcelStyleFilterOperationsTemplateDirective {
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-excel-style-filtering',
     templateUrl: './grid.excel-style-filtering.component.html'
 })
@@ -341,6 +336,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     constructor(
         private cdr: ChangeDetectorRef,
         public element: ElementRef,
+        protected platform: PlatformUtil,
         @Host() @Optional() private gridAPI?: GridBaseAPIService<IgxGridBaseDirective>) {}
 
     /**
@@ -435,9 +431,9 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.ESCAPE || eventArgs.key === KEYS.ESCAPE_IE ||
-            eventArgs.ctrlKey && eventArgs.shiftKey && eventArgs.key.toLowerCase() === 'l') {
+    public onKeyDown(eventArgs: KeyboardEvent) {
+        if (this.platform.isFilteringKeyCombo(eventArgs)) {
+            eventArgs.preventDefault();
             this.closeDropdown();
         }
         eventArgs.stopPropagation();

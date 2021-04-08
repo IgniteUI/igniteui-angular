@@ -41,7 +41,7 @@ import { IgxOverlayService } from '../../services/public_api';
 import { first, filter, takeUntil, pluck } from 'rxjs/operators';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxRowIslandAPIService } from './row-island-api.service';
-import { IBaseEventArgs } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
@@ -58,6 +58,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     selector: 'igx-row-island',
     template: ``,
     providers: [IgxRowIslandAPIService,
+        IgxFilteringService,
         IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
@@ -233,7 +234,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         public rowIslandAPI: IgxRowIslandAPIService,
-        @Inject(LOCALE_ID) localeId: string) {
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil) {
         super(
             selectionService,
             colResizingService,
@@ -251,7 +253,8 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             overlayService,
             summaryService,
             _displayDensityOptions,
-            localeId
+            localeId,
+            platform
         );
         this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
@@ -260,6 +263,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnInit() {
+        this.filteringService.grid = this;
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);
