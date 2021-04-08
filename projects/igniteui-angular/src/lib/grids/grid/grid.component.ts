@@ -775,13 +775,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
+    /**
+     * Returns whether the `IgxGridComponent` has group area.
+     *
+     * @example
+     * ```typescript
+     * let isGroupAreaVisible = this.grid.showGroupArea;
+     * ```
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [showGroupArea]="false"></igx-grid>
+     * ```
+     */
     @Input()
     public get showGroupArea(): boolean {
         return this._showGroupArea;
     }
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
-        this.calculateGridSizes();
+        if (!this._init) {
+            this.calculateGridSizes();
+        }
     }
 
     /**
