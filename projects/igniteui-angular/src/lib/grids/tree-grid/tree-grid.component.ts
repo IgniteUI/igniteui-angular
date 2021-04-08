@@ -253,15 +253,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     private _rowLoadingIndicatorTemplate: TemplateRef<any>;
     private _expansionDepth = Infinity;
     private _filteredData = null;
-    private _summaryRowsData = [];
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public get summaryRowsData(): any[] {
-        return this._summaryRowsData;
-    }
 
     /**
      * An @Input property that lets you fill the `IgxTreeGridComponent` with an array of data.
@@ -493,14 +484,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super.ngAfterContentInit();
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    public setSummaryRowsData(data: any[]) {
-        this._summaryRowsData = data;
-    }
-
     public getDefaultExpandState(record: ITreeGridRecord) {
         return record.children && record.children.length && record.level < this.expansionDepth;
     }
@@ -662,17 +645,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        const hasSummary = this.hasSummarizedColumns || this.summaryCalculationMode || GridSummaryCalculationMode.rootLevelOnly;
-        const visibleRecords = this.summaryRowsData.filter(
-            rec => rec.expanded ||
-            (!rec.expanded && rec.children) ||
-            (!rec.children && !rec.expanded && rec.parent?.expanded) ||
-            (!rec.expanded && !rec.children && !rec.parent));
-        if (index < 0 || index >= visibleRecords.length) {
+        if (index < 0 || index >= this.summaryRowsData.length) {
             return undefined;
         }
 
-        const rec = visibleRecords[index];
+        const rec = this.summaryRowsData[index];
         const row = rec.summaries ? new IgxSummaryRow(this, index, rec.summaries) : new IgxTreeGridRow(this, index, rec.data, rec);
 
         return row;
