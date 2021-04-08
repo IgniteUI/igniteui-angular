@@ -15,8 +15,8 @@ export const resizeObserverIgnoreError = () => {
 };
 
 export const setupGridScrollDetection = (fixture: ComponentFixture<any>, grid: IgxGridBaseDirective) => {
-    grid.verticalScrollContainer.onChunkLoad.subscribe(() => fixture.detectChanges());
-    grid.parentVirtDir.onChunkLoad.subscribe(() => fixture.detectChanges());
+    grid.verticalScrollContainer.chunkLoad.subscribe(() => fixture.detectChanges());
+    grid.parentVirtDir.chunkLoad.subscribe(() => fixture.detectChanges());
 };
 
 export const setupHierarchicalGridScrollDetection = (fixture: ComponentFixture<any>, hierarchicalGrid: IgxHierarchicalGridComponent) => {

@@ -304,7 +304,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 this.virtDir.scrollTo(index);
             }
             if (subRequired) {
-                this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                this.virtDir.chunkLoad.pipe(take(1)).subscribe(() => {
                     this.skipHeader(direction);
                 });
             } else {

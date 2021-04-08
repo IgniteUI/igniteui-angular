@@ -3347,7 +3347,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.verticalScrollContainer.onDataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
+        this.verticalScrollContainer.dataChanging.pipe(destructor, filter(() => !this._init)).subscribe(($event) => {
             const shouldRecalcSize = this.isPercentHeight &&
                 (!this.calcHeight || this.calcHeight === this.getDataBasedBodyHeight() ||
                     this.calcHeight === this.renderedRowHeight * this._defaultTargetRecordNumber);
@@ -3358,13 +3358,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.evaluateLoadingState();
         });
 
-        this.verticalScrollContainer.onScrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+        this.verticalScrollContainer.scrollbarVisibilityChanged.pipe(destructor, filter(() => !this._init)).subscribe(() => {
             // called to recalc all widths that may have changes as a result of
             // the vert. scrollbar showing/hiding
             this.notifyChanges(true);
         });
 
-        this.verticalScrollContainer.onContentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
+        this.verticalScrollContainer.contentSizeChange.pipe(destructor, filter(() => !this._init)).subscribe(() => {
             this.calculateGridSizes(false);
         });
 
@@ -6839,7 +6839,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         if (delayScrolling) {
-            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+            this.verticalScrollContainer.dataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
                     typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(row));
             });
@@ -6928,7 +6928,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
-                this.verticalScrollContainer.onChunkLoad.emit(this.verticalScrollContainer.state);
+                this.verticalScrollContainer.chunkLoad.emit(this.verticalScrollContainer.state);
                 if (this.rowEditable) {
                     this.changeRowEditingOverlayStateOnScroll(this.crudService.rowInEditMode);
                 }
@@ -6954,7 +6954,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.zone.run(() => {
             this.zone.onStable.pipe(first()).subscribe(() => {
-                this.parentVirtDir.onChunkLoad.emit(this.headerContainer.state);
+                this.parentVirtDir.chunkLoad.emit(this.headerContainer.state);
             });
         });
 
@@ -6970,7 +6970,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
         if (!row) {
             if ((this as any).totalItemCount) {
-                this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+                this.verticalScrollContainer.dataChanged.pipe(first()).subscribe(() => {
                     this.cdr.detectChanges();
                     row = this.summariesRowList.filter(s => s.index !== 0).concat(this.rowList.toArray()).find(r => r.index === rowIndex);
                     const cbArgs = this.getNavigationArguments(row, visibleColIndex);
