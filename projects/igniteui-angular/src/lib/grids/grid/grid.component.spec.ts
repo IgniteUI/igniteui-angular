@@ -2406,7 +2406,7 @@ export class IgxGridTestComponent {
     public isHorizontalScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
         if (scrollbar) {
-            return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+            return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
         }
 
         return false;
@@ -2424,7 +2424,7 @@ export class IgxGridTestComponent {
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
-            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+            return scrollbar.offsetHeight < (scrollbar.children[0] as HTMLElement).offsetHeight;
         }
         return false;
     }
@@ -2482,7 +2482,7 @@ export class IgxGridDefaultRenderingComponent {
 
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
-        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+        return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
     }
 
     public initColumns(column) {
@@ -2676,7 +2676,7 @@ export class LocalService {
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [height]="'600px'">
+        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [height]="'600px'">
             <igx-column [sortable]="true" [filterable]="true" [field]="'Col1'" [header]="'Col1'">
             </igx-column>
         </igx-grid>
@@ -2712,7 +2712,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
 
 @Component({
     template: `
-        <igx-grid [data]="data | async" (onDataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
+        <igx-grid [data]="data | async" (dataPreLoad)="dataLoading($event)" [isLoading]="true" [autoGenerate]="true" [height]="'600px'">
         </igx-grid>
 
         <ng-template #customTemplate>

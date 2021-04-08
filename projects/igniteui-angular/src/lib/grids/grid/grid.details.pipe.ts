@@ -14,7 +14,7 @@ export class IgxGridDetailsPipe implements PipeTransform {
     constructor(gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
         this.gridAPI = gridAPI as IgxGridAPIService;
     }
-    public transform(collection: any[], hasDetails: boolean, expansionStates:  Map<any, boolean>, pipeTrigger: number) {
+    public transform(collection: any[], hasDetails: boolean, expansionStates:  Map<any, boolean>, _pipeTrigger: number) {
         if (!hasDetails) {
             return collection;
         }
@@ -22,7 +22,7 @@ export class IgxGridDetailsPipe implements PipeTransform {
         return res;
     }
 
-    protected addDetailRows(collection: any[], expansionStates: Map<any, boolean>) {
+    protected addDetailRows(collection: any[], _expansionStates: Map<any, boolean>) {
         const result = [];
         collection.forEach((v) => {
             result.push(v);

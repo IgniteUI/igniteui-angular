@@ -1,5 +1,6 @@
 
 import { Directive, ElementRef, HostBinding, HostListener } from '@angular/core';
+import { PlatformUtil } from '../core/utils';
 import { IgxTabItemDirective } from './tab-item.directive';
 import { IgxTabHeaderBase, IgxTabsBase } from './tabs.base';
 
@@ -11,8 +12,12 @@ export abstract class IgxTabHeaderDirective implements IgxTabHeaderBase {
     public role = 'tab';
 
     /** @hidden */
-    constructor(protected tabs: IgxTabsBase, public tab: IgxTabItemDirective, private elementRef: ElementRef<HTMLElement>) {
-    }
+    constructor(
+        protected tabs: IgxTabsBase,
+        public tab: IgxTabItemDirective,
+        private elementRef: ElementRef<HTMLElement>,
+        protected platform: PlatformUtil
+    ) { }
 
     /** @hidden */
     @HostBinding('attr.tabindex')

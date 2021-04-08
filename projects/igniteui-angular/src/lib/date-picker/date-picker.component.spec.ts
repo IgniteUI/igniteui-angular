@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2, DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
@@ -20,6 +20,7 @@ import {
     OverlayClosingEventArgs,
     OverlayEventArgs
 } from '../services/public_api';
+import { PlatformUtil } from '../core/utils';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -753,7 +754,8 @@ describe('IgxDatePicker', () => {
             const dom = fixture.debugElement;
 
             // check if drop down is opened above the input if there is no space below
-            datePicker.element.nativeElement.style = 'position: fixed; bottom: 150px';
+            datePicker.element.nativeElement.style.position = 'fixed';
+            datePicker.element.nativeElement.style.bottom = '150px';
             fixture.detectChanges();
             tick();
 
@@ -823,7 +825,8 @@ describe('IgxDatePicker', () => {
             const dom = fixture.debugElement;
 
             // check if drop down is opened above the input if there is no space below
-            datePicker.element.nativeElement.style = 'position: fixed; bottom: 150px';
+            datePicker.element.nativeElement.style.position = 'fixed';
+            datePicker.element.nativeElement.style.bottom = '150px';
             fixture.detectChanges();
 
             const input = dom.query(By.css('.igx-input-group__input'));
@@ -1495,6 +1498,7 @@ describe('IgxDatePicker', () => {
         let injector;
         let inputGroup: IgxInputGroupComponent;
         let renderer2: Renderer2;
+        let platform: PlatformUtil;
 
         beforeEach(() => {
             ngModel = {
@@ -1517,14 +1521,14 @@ describe('IgxDatePicker', () => {
             };
             moduleRef = {};
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(null, null, null, document, renderer2);
+            inputGroup = new IgxInputGroupComponent(null, null, null, document, renderer2, platform);
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             spyOn(renderer2, 'setAttribute').and.callFake(() => {
             });
         });
 
         it('should initialize date picker with required correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2, platform);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
@@ -1538,7 +1542,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should initialize date picker with required correctly with user template input-group', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2, platform);
             datePicker['_inputGroupUserTemplate'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
@@ -1552,7 +1556,7 @@ describe('IgxDatePicker', () => {
         });
 
         it('should update inputGroup isRequired correctly', () => {
-            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2);
+            const datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2, platform);
             datePicker['_inputGroup'] = inputGroup;
             datePicker['_inputDirectiveUserTemplates'] = new QueryList();
             spyOnProperty(datePicker, 'inputGroupElement').and.returnValue(null);
