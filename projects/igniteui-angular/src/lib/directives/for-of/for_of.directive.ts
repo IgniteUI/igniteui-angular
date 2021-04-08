@@ -772,8 +772,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
             // update scrBar heights/widths
             if (this.igxForScrollOrientation === 'horizontal') {
-                const totalWidth = parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10) + totalDiff;
-                this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+                const totalWidth = parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10) + totalDiff;
+                (this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width = totalWidth + 'px';
             }
             const reducer = (acc, val) => acc + val;
             if (this.igxForScrollOrientation === 'vertical') {
@@ -997,7 +997,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
             return;
         }
         const prevStartIndex = this.state.startIndex;
@@ -1559,7 +1559,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     public onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!this.scrollComponent || !parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!this.scrollComponent || !parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
             return;
         }
         // Updating horizontal chunks
