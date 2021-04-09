@@ -156,7 +156,9 @@
     }
 
     @if not($item-subtitle-color) and $item-background {
-        $item-subtitle-color: rgba(text-contrast($item-background), .74);
+        @if type-of($item-background) == 'color' {
+            $item-subtitle-color: rgba(text-contrast($item-background), .74);
+        }
     }
 
     @if not($item-subtitle-color) and $item-text-color {
@@ -180,7 +182,9 @@
     }
 
     @if not($item-subtitle-color-hover) and $item-background-hover {
-        $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+        @if type-of($item-background-hover) == 'color' {
+            $item-subtitle-color-hover: rgba(text-contrast($item-background-hover), .74);
+        }
     }
 
     @if not($item-subtitle-color-hover) and $item-text-color-hover {
@@ -204,7 +208,9 @@
     }
 
     @if not($item-subtitle-color-active) and $item-background-active {
-        $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+        @if type-of($item-background-active) == 'color' {
+            $item-subtitle-color-active: rgba(text-contrast($item-background-active), .74);
+        }
     }
 
     @if not($item-subtitle-color-active) and $item-text-color-active {
@@ -243,7 +249,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires igx-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-list($theme) {

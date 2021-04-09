@@ -69,14 +69,16 @@
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the components.
 /// @param {List} $exclude [( )] - A list of igx components to be excluded from the global theme styles.
 /// @param {Boolean} $legacy-support [false] - If set to true, it turns on support for IE11, i.e. css variables are not used in the generated component themes.
-/// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Number} $roundness [null] - Sets the global roundness factor (the value can be any decimal fraction between 0 and 1) for all components.
+/// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
+/// @param {Map} $elevations [$igx-elevations] - The elevation map to be used by all component themes.
 /// @requires $components
 /// @requires $default-palette
+/// @requires $igx-elevations
 /// @requires {function} is-component
 @mixin igx-theme(
     $palette,
-    $schema: $light-schema,
+    $schema: $light-material-schema,
     $exclude: (),
     $legacy-support: false,
     $roundness: null,

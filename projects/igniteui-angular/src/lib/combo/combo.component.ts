@@ -1184,7 +1184,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.onDataPreLoad.emit(eventArgs);
         });

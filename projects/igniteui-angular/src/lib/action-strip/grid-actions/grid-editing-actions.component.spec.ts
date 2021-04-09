@@ -77,6 +77,21 @@ describe('igxGridEditingActions #grid ', () => {
             expect(grid.rowList.first.rowData['ID']).toBe('ANATR');
             expect(dataLenght - 1).toBe(grid.dataLength);
         });
+
+        it('should focus the first cell when editing mode is cell', () => {
+            fixture.detectChanges();
+            grid.selectRange({rowStart: 0, rowEnd: 0, columnStart: 'ContactName', columnEnd: 'ContactName'});
+            fixture.detectChanges();
+            grid.actionStrip.show(grid.rowList.first);
+            fixture.detectChanges();
+            const editIcon = fixture.debugElement.queryAll(By.css(`igx-grid-editing-actions igx-icon`))[0];
+            expect(editIcon.nativeElement.innerText).toBe('edit');
+            editIcon.parent.triggerEventHandler('click', new Event('click'));
+            fixture.detectChanges();
+            // first cell of the row should be the active one, excluding ID as primaryKey
+            expect(grid.selectionService.activeElement.column).toBe(1);
+            expect(grid.selectionService.activeElement.row).toBe(0);
+        });
     });
 
     describe('Menu ', () => {

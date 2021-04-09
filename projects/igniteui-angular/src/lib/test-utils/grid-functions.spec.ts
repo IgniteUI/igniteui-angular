@@ -186,11 +186,6 @@ export class GridFunctions {
         hScrollbar.scrollLeft = newLeft;
     }
 
-    public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getScroll();
-        hScrollbar.scrollRight = newRight;
-    }
-
     public static scrollTop(grid: IgxGridComponent, newTop: number) {
         const vScrollbar = grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;
@@ -703,6 +698,13 @@ export class GridFunctions {
         const header = grid.getColumnByName(columnField).headerCell;
         header.onFilteringIconClick(event);
         tick(50);
+        fix.detectChanges();
+    }
+
+    public static clickExcelFilterIconFromCodeAsync(fix: ComponentFixture<any>, grid: IgxGridBaseDirective, columnField: string) {
+        const event = { stopPropagation: () => { }, preventDefault: () => { } };
+        const header = grid.getColumnByName(columnField).headerCell;
+        header.onFilteringIconClick(event);
         fix.detectChanges();
     }
 

@@ -375,6 +375,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         it('should autosize column programmatically.', fakeAsync(/** height/width setter rAF */() => {
             const column = grid.getColumnByName('ID');
+            column.minWidth = '30px';
             expect(column.width).toEqual('100px');
 
             column.autosize();
@@ -417,11 +418,12 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             const column = grid.getColumnByName('ID');
             column.minWidth = '70px';
             expect(column.minWidth).toEqual('70px');
+            expect(column.width).toEqual('100px');
 
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('63px');
+            expect(column.width).toEqual('70px');
         }));
     });
 
@@ -678,6 +680,20 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
             expect(column.width).toEqual('89px');
         });
+
+        it('should ignore header template during autosize if autosizeHeader is false.', () => {
+            const column = grid.getColumnByName('ID');
+            column.minWidth = '10px';
+            column.autosizeHeader = false;
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('150px');
+
+            column.autosize();
+            fixture.detectChanges();
+
+            expect(column.width).toEqual('55px');
+        });
     });
 
     describe('Multi Column Headers tests: ', () => {
@@ -870,12 +886,12 @@ export class ResizableColumnsComponent {
 export class LargePinnedColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    timeGenerator: Calendar = new Calendar();
-    today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    data = [];
-    value: any;
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public data = [];
+    public value: any;
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(75);
     }
 
@@ -936,9 +952,9 @@ export class NullColumnsComponent implements OnInit {
 export class ColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    data = [];
+    public data = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
     }
 }
@@ -954,9 +970,9 @@ export class ColGridComponent implements OnInit {
 export class ColPercentageGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    data = [];
+    public data = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
     }
 }

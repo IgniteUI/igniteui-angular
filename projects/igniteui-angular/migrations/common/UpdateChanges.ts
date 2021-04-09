@@ -198,7 +198,7 @@ export class UpdateChanges {
                     regSource = String.raw`\<${change.selector}[\s\S]*?\<\/${change.selector}\>`;
                     replace = '';
                 } else {
-                    regSource = String.raw`\<(\/?)${change.selector}`;
+                    regSource = String.raw`\<(\/?)${change.selector}(?=[\s\>])`;
                     replace = `<$1${change.replaceWith}`;
                 }
                 break;
@@ -276,6 +276,9 @@ export class UpdateChanges {
             }
 
             const matches = fileContent.match(new RegExp(searchPattern, 'g'));
+            if (!matches) {
+                continue;
+            }
 
             for (const match of matches) {
                 let replaceStatement = replace;

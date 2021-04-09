@@ -37,7 +37,8 @@ const CSS_RANGE_PICKER = 'igx-date-range-picker';
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         const elementRef = { nativeElement: null };
-        const calendar = new IgxCalendarComponent();
+        const platform = {} as any;
+        const calendar = new IgxCalendarComponent(platform);
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
@@ -46,7 +47,7 @@ describe('IgxDateRangePicker', () => {
             get: mockNgControl
         });
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null,);
             dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -64,7 +65,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit rangeSelected on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null);
             dateRange.calendar = calendar;
             spyOn(dateRange.rangeSelected, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -91,7 +92,7 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, null, 'en', null);
+            const dateRangePicker = new IgxDateRangePickerComponent(null, null, platform, 'en', null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
             spyOn(dateRangePicker, 'handleSelection').and.callThrough();
@@ -125,7 +126,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue ', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
             dateRange.ngOnInit();
 
             dateRange.calendar = calendar;
@@ -150,7 +151,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
             dateRange.ngOnInit();
 
             dateRange.calendar = calendar;
@@ -167,7 +168,7 @@ describe('IgxDateRangePicker', () => {
         }));
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, mockInjector);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
             dateRange.ngOnInit();
 
             dateRange.calendar = calendar;
@@ -228,7 +229,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
                 singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
             }));
@@ -690,7 +691,7 @@ describe('IgxDateRangePicker', () => {
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
             });
 
             const verifyDateRange = () => {

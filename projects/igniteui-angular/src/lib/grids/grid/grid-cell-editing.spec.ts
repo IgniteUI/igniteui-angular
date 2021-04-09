@@ -164,6 +164,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const editTemplate = cellDomBoolean.query(By.css('.igx-checkbox'));
             expect(editTemplate).toBeDefined();
             expect(cell.value).toBe(true);
+            expect(cell.nativeElement.querySelector('.igx-checkbox--checked')).toBeInstanceOf(HTMLElement);
 
             editTemplate.nativeElement.click();
             fixture.detectChanges();
@@ -173,6 +174,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             expect(cell.editMode).toBe(false);
             expect(cell.value).toBe(false);
+            expect(cell.nativeElement.querySelector('.igx-checkbox--checked')).toBeNull();
         }));
 
         it('edit template should be according column data type -- date', () => {
@@ -1118,7 +1120,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             grid.filter('fullName', 'Al', IgxStringFilteringOperand.instance().condition('equals'));
             fixture.detectChanges();
-            cell.gridAPI.clear_filter('fullName');
+            grid.clearFilter('fullName');
             fixture.detectChanges();
 
             cell = grid.getCellByColumn(0, 'fullName');

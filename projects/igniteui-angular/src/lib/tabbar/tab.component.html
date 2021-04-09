@@ -1,9 +1,0 @@
-<ng-template #defaultTabTemplate let-context>
-    <div *ngIf="context.icon" class="tab-icon">
-        <igx-icon>{{context.icon}}</igx-icon>
-        <igx-badge [value]="context.changesCount" [hidden]="context.changesCount === 0"></igx-badge>
-    </div>
-    <div *ngIf="context.label" ngClass="tab-label">{{context.label}}</div>
-</ng-template>
-<ng-container *ngTemplateOutlet="template; context: { $implicit: this.context }">
-</ng-container>

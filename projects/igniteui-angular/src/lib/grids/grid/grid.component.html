@@ -26,7 +26,7 @@
 </div>
 
 <div class="igx-grid__thead" role="rowgroup">
-    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" 
+    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)"
     [class.igx-grid__tr--mrl]='hasColumnLayouts' (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
     [style.width.px]='calcWidth' tabindex="0" (keydown)="navigation.headerNavigation($event)" (scroll)="preventHeaderScroll($event)" #theadRow>
     <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
@@ -144,13 +144,13 @@
             [igxForContainerSize]='calcHeight'
             [igxForItemSize]="hasColumnLayouts ? rowHeight * multiRowLayoutRowSize + 1 : renderedRowHeight"
             [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (chunkPreload)="dataLoading($event)">
             <ng-template
                 [igxTemplateOutlet]='getRowTemplate(rowData)'
                 [igxTemplateOutletContext]='getContext(rowData, rowIndex)'
-                (onCachedViewLoaded)='cachedViewLoaded($event)'
-                (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)'>
+                (cachedViewLoaded)='cachedViewLoaded($event)'
+                (viewCreated)='viewCreatedHandler($event)'
+                (viewMoved)='viewMovedHandler($event)'>
             </ng-template>
         </ng-template>
         <ng-container *ngTemplateOutlet="hasPinnedRecords && !isRowPinningToTop ? pinnedRecordsTemplate : null">

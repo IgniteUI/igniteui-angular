@@ -2,7 +2,7 @@
 <ng-container #toolbarOutlet></ng-container>
 
 <div class="igx-grid__thead" role="rowgroup">
-    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" 
+    <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)"
         tabindex="0" (focus)="navigation.focusFirstCell()" [attr.aria-activedescendant]="activeDescendant"
         (keydown)="navigation.headerNavigation($event)" [style.width.px]='calcWidth' #theadRow>
         <div class="igx-grid__tr" role="row" [style.width.px]='calcWidth'>
@@ -130,11 +130,11 @@
         | gridAddRow:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
-            #verticalScrollContainer (onChunkPreload)="dataLoading($event)">
+            #verticalScrollContainer (chunkPreload)="dataLoading($event)">
             <ng-template
                 [igxTemplateOutlet]='(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template))'
-                [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (onViewCreated)='viewCreatedHandler($event)'
-                (onViewMoved)='viewMovedHandler($event)' (onCachedViewLoaded)='cachedViewLoaded($event)'>
+                [igxTemplateOutletContext]='getContext(rowData, rowIndex, false)' (viewCreated)='viewCreatedHandler($event)'
+                (viewMoved)='viewMovedHandler($event)' (cachedViewLoaded)='cachedViewLoaded($event)'>
             </ng-template>
             <!-- <ng-container *igxTemplateOutlet="(isHierarchicalRecord(rowData) ? hierarchical_record_template : (isChildGridRecord(rowData) && isExpanded(rowData) ? child_record_template : hierarchical_record_template)); context: getContext(rowData)"></ng-container> -->
         </ng-template>

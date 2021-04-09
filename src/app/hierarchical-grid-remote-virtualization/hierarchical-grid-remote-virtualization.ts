@@ -42,7 +42,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
         this.hGrid.expansionStatesChange.subscribe(() => this.handleLoad(this.hGrid.virtualizationState));
 
         // update on scroll
-        this.hGrid.onDataPreLoad.pipe().subscribe(() => {
+        this.hGrid.dataPreLoad.pipe().subscribe(() => {
             const data = this.remoteService.getDataFromCache(this.hGrid.virtualizationState);
             if (data) {
                 this.gridData = data;
@@ -50,7 +50,7 @@ export class HierarchicalGridRemoteVirtualizationComponent implements AfterViewI
         });
 
         // handle remote request after user stops scrolling for 500ms
-        this.hGrid.onDataPreLoad.pipe(debounceTime(500)).subscribe((event) => {
+        this.hGrid.dataPreLoad.pipe(debounceTime(500)).subscribe((event) => {
             this.handleLoad(event);
         });
     }

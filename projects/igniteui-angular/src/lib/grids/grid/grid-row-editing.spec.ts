@@ -957,8 +957,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.filter('ProductName', 'a', IgxStringFilteringOperand.instance().condition('contains'), true);
             fix.detectChanges();
 
-            // expect(gridAPI.submit_value).toHaveBeenCalled();
-            // expect(gridAPI.submit_value).toHaveBeenCalledWith();
+            expect(gridAPI.submit_value).toHaveBeenCalled();
+            expect(gridAPI.submit_value).toHaveBeenCalledWith();
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalledWith(undefined);
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
@@ -1012,7 +1012,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.editMode).toBeFalsy();
         });
 
-        fit(`Should NOT exit row editing on click on non-editable cell in same row`, () => {
+        it(`Should NOT exit row editing on click on non-editable cell in same row`, () => {
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
 
             // put cell in edit mode
@@ -1094,7 +1094,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
 
-            // expect(gridAPI.submit_value).toHaveBeenCalled();
+            expect(gridAPI.submit_value).toHaveBeenCalled();
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
@@ -1112,7 +1112,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('escape', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
-            // expect(gridAPI.submit_value).not.toHaveBeenCalled();
+            expect(gridAPI.submit_value).not.toHaveBeenCalled();
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
@@ -1348,7 +1348,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
 
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
-            // expect(gridAPI.submit_value).toHaveBeenCalled();
+            expect(gridAPI.submit_value).toHaveBeenCalled();
         });
 
         it(`Sorting: Should NOT include the new value in the results when sorting`, () => {
