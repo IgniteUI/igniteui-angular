@@ -168,7 +168,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return;
         }
 
-        if (value) {
+        if (value !== null && value !== undefined) {
             cell.editValue = value;
         }
         const args = cell.createEditEventArgs(true, event);

@@ -463,6 +463,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 return;
             }
 
+            this.createCell(cell);
             if (this.rowEditing) {
                 if (this.row && !this.sameRow(this.cell?.id?.rowID)) {
                     this.rowEditingBlocked = this.endEdit(true, event);
@@ -474,14 +475,12 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                     this.endRowEdit();
                 }
 
-                this.createCell(cell);
                 const canceled = this.beginRowEdit(event);
                 if (!canceled) {
                     this.beginCellEdit(event);
                 }
 
             } else {
-                this.createCell(cell);
                 this.beginCellEdit(event);
             }
         }
@@ -511,7 +510,10 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         }
 
         if (commit) {
-            this.updateCell(true, event);
+            const args = this.updateCell(true, event);
+            if (args.cancel) {
+                return args.cancel;
+            }
         } else {
             this.exitCellEdit(event);
         }

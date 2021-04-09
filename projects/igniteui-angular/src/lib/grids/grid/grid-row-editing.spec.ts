@@ -124,7 +124,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(false);
         });
 
-        fit('Emit all events with proper arguments', () => {
+        it('Emit all events with proper arguments', () => {
             const row = grid.getRowByIndex(2);
             const initialRowData = {...cell.rowData};
             const newCellValue = 'Aaaaa';
@@ -515,7 +515,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(targetCell.editMode).toBeTruthy();
         }));
 
-        fit(`Should scroll editable column into view when navigating from buttons`, (async () => {
+        it(`Should scroll editable column into view when navigating from buttons`, (async () => {
             let cell = grid.getCellByColumn(0, 'Downloads');
             // let cellDebug;
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -779,7 +779,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(editedCell.editMode).toBeTruthy();
         });
 
-        fit(`Should update row changes when focus overlay buttons on tabbing`, (async () => {
+        it(`Should update row changes when focus overlay buttons on tabbing`, (async () => {
             grid.tbody.nativeElement.focus();
             fix.detectChanges();
 
@@ -1394,7 +1394,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toBe('AAAAAAAAAAA Don Juan De Marco');
         });
 
-        fit(`Summaries: Should update summaries after row editing completes`, fakeAsync(() => {
+        it(`Summaries: Should update summaries after row editing completes`, fakeAsync(() => {
             grid.enableSummaries('OrderDate');
             tick(16);
             fix.detectChanges();
@@ -1408,7 +1408,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             tick(16);
             // Cell will always be first
             const editTemplate = fix.debugElement.query(By.css('input'));
-            UIInteractions.clickAndSendInputElementValue(editTemplate, '01/01/1901');
+            UIInteractions.clickAndSendInputElementValue(editTemplate, '01/01/1901', fix);
             tick(16);
             fix.detectChanges();
             GridFunctions.simulateGridContentKeydown(fix, 'tab', false, true);
@@ -1754,7 +1754,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        fit(`Should be able to cancel 'rowEdit' event `, () => {
+        it(`Should be able to cancel 'rowEdit' event `, () => {
             spyOn(grid.rowEdit, 'emit').and.callThrough();
 
             grid.rowEdit.subscribe((e: IGridEditEventArgs) => {
@@ -1903,7 +1903,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             });
         });
 
-        fit(`Should properly emit 'rowEditExit' event - Filtering`, () => {
+        it(`Should properly emit 'rowEditExit' event - Filtering`, () => {
             spyOn(grid.rowEditExit, 'emit').and.callThrough();
 
             const gridContent = GridFunctions.getGridContent(fix);
@@ -2397,7 +2397,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toBeTruthy();
         });
 
-        fit('Should allow to change value of a cell with initial value of empty string', () => {
+        it('Should allow to change value of a cell with initial value of empty string', () => {
             expect(cell.value).toBe('Chai');
 
             cell.update('');
@@ -2488,7 +2488,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toBe('Changed product');
         });
 
-        fit('Should properly mark cell/row as dirty if new value evaluates to `false`', () => {
+        it('Should properly mark cell/row as dirty if new value evaluates to `false`', () => {
             const targetRow = grid.getRowByIndex(0);
             let targetRowElement = targetRow.element.nativeElement;
             let targetCellElement = targetRow.cells.toArray()[1].nativeElement;
@@ -2577,7 +2577,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(grid.totalPages).toEqual(2);
         });
 
-        fit('Should not log transaction when exit edit mode on row with state and with no changes', () => {
+        it('Should not log transaction when exit edit mode on row with state and with no changes', () => {
             const trans = grid.transactions;
             const updateValue = 'Chaiiii';
             cell.setEditMode(true);

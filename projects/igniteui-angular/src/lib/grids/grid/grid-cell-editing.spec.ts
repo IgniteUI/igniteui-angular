@@ -564,7 +564,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             $destroyer.next(true);
         }));
 
-        fit(`Should properly emit 'cellEditEnter' event`, () => {
+        it(`Should properly emit 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             let cell = grid.getCellByColumn(0, 'fullName');
             let initialRowData = {...cell.rowData};
@@ -609,7 +609,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.editMode).toBeTruthy();
         });
 
-        fit(`Should be able to cancel 'cellEditEnter' event`, () => {
+        it(`Should be able to cancel 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
             grid.cellEditEnter.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
