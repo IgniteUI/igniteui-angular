@@ -130,7 +130,17 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public displayFormat: string;
+    public set displayFormat(value: string) {
+        this._displayFormat = this.inputFormat;
+
+        if (value && this.validateFormat(value)) {
+            this._displayFormat = value;
+        }
+    }
+
+    public get displayFormat(): string {
+        return this._displayFormat;
+    }
 
     /**
      * The expected user input format and placeholder.
@@ -140,11 +150,21 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      * @example
      * ```html
-     * <igx-time-picker inputFormat="HH:mm tt"></igx-time-picker>
+     * <igx-time-picker inputFormat="HH:mm"></igx-time-picker>
      * ```
      */
     @Input()
-    public inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
+    public set inputFormat(value: string) {
+        this._inputFormat = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
+
+        if (value && this.validateFormat(value)) {
+            this._inputFormat = value;
+        }
+    }
+
+    public get inputFormat(): string {
+        return this._inputFormat;
+    }
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -246,38 +266,25 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public selected = new EventEmitter<Date>();
 
     /**
-     * Emitted when selection is made. The event contains the selected value. Returns {`oldValue`: `Date | string`, `newValue`: `Date |string`}.
-     * ```typescript
-     *  @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public valueChange(timepicker){
-     *     this.toast.open()
-     * }
-     *  //...
-     *  ```
-     *  ```html
-     * <igx-time-picker (valueChange)="valueChange($event)"></igx-time-picker>
-     * <igx-toast #toast message="The value has been changed!"></igx-toast>
+     * Emitted when the picker's value changes.
+     *
+     * @remarks
+     * Used for `two-way` bindings.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [(value)]="date"></igx-time-picker>
      * ```
      */
     @Output()
     public valueChange = new EventEmitter<Date>();
 
     /**
-     * It emits when the picker's value goes outside of a given min/max range. Returns {`timePicker`: `any`, `currentValue`: `Date | string`, `setThroughUI`: `boolean`}
-     * ```typescript
-     * public min: string = "09:00";
-     * public max: string = "18:00";
-     *  @ViewChild("toast")
-     * private toast: IgxToastComponent;
-     * public validationFailed(timepicker){
-     *     this.toast.open();
-     * }
-     *  //...
-     *  ```
-     *  ```html
-     * <igx-time-picker [minValue]="min" [maxValue]="max" (validationFailed)="validationFailed($event)"></igx-time-picker>
-     * <igx-toast #toast message="Value must be between 09:00 and 18:00!"></igx-toast>
+     * Emitted when the user types/spins invalid time in the time-picker editor.
+     *
+     *  @example
+     * ```html
+     * <igx-time-picker (validationFailed)="onValidationFailed($event)"></igx-time-picker>
      * ```
      */
     @Output()
@@ -467,6 +474,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _oldValue: Date | string;
     private _minDropdownValue: Date;
     private _maxDropdownValue: Date;
+    private _inputFormat: string;
+    private _displayFormat: string;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
@@ -766,13 +775,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
     }
 
-     /**
-     * Clears the time picker value if it is a `string` or resets the time to `00:00:00` if the value is a Date object.
-     * @example
-     * ```typescript
-     * this.timePicker.clear();
-     * ```
-     */
+    /**
+    * Clears the time picker value if it is a `string` or resets the time to `00:00:00` if the value is a Date object.
+    * @example
+    * ```typescript
+    * this.timePicker.clear();
+    * ```
+    */
     public clear(): void {
         if (this.disabled) {
             return;
@@ -1013,7 +1022,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this.value = this._selectedDate;
         }
     }
-    
+
     /** @hidden @internal */
     public hoursInView(): string[] {
         return this._hourView.filter((hour) => hour !== '');
@@ -1413,6 +1422,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         return hour;
+    }
+
+    private validateFormat(format: string): boolean {
+        return (format.indexOf('d') < 0 && format.indexOf('M') < 0 &&
+            format.indexOf('Y') < 0 && format.indexOf('y') < 0 &&
+            format.indexOf('L') < 0 && format.indexOf('E') < 0 &&
+            format.indexOf('W') < 0 && format.indexOf('w') < 0);
     }
 
     private attachOnKeydown(): void {
