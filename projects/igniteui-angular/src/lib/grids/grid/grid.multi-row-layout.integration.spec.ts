@@ -869,7 +869,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
@@ -901,7 +901,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
@@ -911,7 +911,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
         }));
     });

@@ -182,7 +182,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME * 2);
 
             const verticalScrollbar = grid.verticalScrollContainer.getScroll();
-            const verticalSrollHeight = verticalScrollbar.firstChild.offsetHeight;
+            const verticalSrollHeight = (verticalScrollbar.firstElementChild as HTMLElement).offsetHeight;
 
             grid.navigateTo(26);
             await wait(DEBOUNCETIME * 2);
@@ -199,7 +199,8 @@ describe('IgxGrid Master Detail #grid', () => {
             expect(grid.expansionStates.has(grid.rowList.last.rowID)).toBeTruthy();
             expect(grid.expansionStates.get(grid.rowList.last.rowID)).toBeTruthy();
             expect(getDetailAddressText(lastRowDetail)).toEqual('Via Monte Bianco 34');
-            expect(verticalSrollHeight + lastRowDetail.offsetHeight).toEqual(verticalScrollbar.firstChild.offsetHeight);
+            expect(verticalSrollHeight + lastRowDetail.offsetHeight)
+                .toEqual((verticalScrollbar.firstElementChild as HTMLElement).offsetHeight);
         }));
 
         it('Should update view when setting a new expansionState object.', () => {

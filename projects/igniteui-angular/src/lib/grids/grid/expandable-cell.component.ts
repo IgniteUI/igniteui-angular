@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from './public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -90,7 +90,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
             leftPadding = parseFloat(indentationStyle.paddingLeft);
         }
         const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child) => getNodeSizeViaRange(range, child)));
+            .map((child: HTMLElement) => this.platformUtil.getNodeSizeViaRange(range, child)));
         return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
     }
 
