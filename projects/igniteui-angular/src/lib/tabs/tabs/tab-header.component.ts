@@ -4,7 +4,7 @@ import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
 import ResizeObserver from 'resize-observer-polyfill';
-import { KEYS } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 
 @Component({
     selector: 'igx-tab-header',
@@ -13,30 +13,36 @@ import { KEYS } from '../../core/utils';
 })
 export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements AfterViewInit, OnDestroy {
 
-    /** @hidden */
+    /** @hidden @internal */
     @HostBinding('class.igx-tabs__header-item--selected')
     public get provideCssClassSelected(): boolean {
         return this.tab.selected;
     }
 
-    /** @hidden */
+    /** @hidden @internal */
     @HostBinding('class.igx-tabs__header-item--disabled')
     public get provideCssClassDisabled(): boolean {
         return this.tab.disabled;
     }
 
-    /** @hidden */
+    /** @hidden @internal */
     @HostBinding('class.igx-tabs__header-item')
     public cssClass = true;
 
     private _resizeObserver: ResizeObserver;
 
-    /** @hidden */
-    constructor(protected tabs: IgxTabsComponent, tab: IgxTabItemDirective, elementRef: ElementRef<HTMLElement>, private ngZone: NgZone) {
-        super(tabs, tab, elementRef);
+    /** @hidden @internal */
+    constructor(
+        protected tabs: IgxTabsComponent,
+        tab: IgxTabItemDirective,
+        elementRef: ElementRef<HTMLElement>,
+        protected platform: PlatformUtil,
+        private ngZone: NgZone
+    ) {
+        super(tabs, tab, elementRef, platform);
     }
 
-     /** @hidden */
+    /** @hidden @internal */
     @HostListener('keydown', ['$event'])
     public keyDown(event: KeyboardEvent) {
         let unsupportedKey = false;
@@ -45,42 +51,39 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         let newIndex = previousIndex;
         const hasDisabledItems = itemsArray.some((item) => item.disabled);
         switch (event.key) {
-            case KEYS.RIGHT_ARROW:
-            case KEYS.RIGHT_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_RIGHT:
                 newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
                 while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                     newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
                 }
                 break;
-            case KEYS.LEFT_ARROW:
-            case KEYS.LEFT_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_LEFT:
                 newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
                 while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex >= 0) {
                     newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
                 }
                 break;
-            case KEYS.HOME:
+            case this.platform.KEYMAP.HOME:
                 event.preventDefault();
                 newIndex = 0;
                 while (itemsArray[newIndex].disabled && newIndex < itemsArray.length) {
                     newIndex = newIndex === itemsArray.length - 1 ? 0 : newIndex + 1;
                 }
                 break;
-            case KEYS.END:
+            case this.platform.KEYMAP.END:
                 event.preventDefault();
                 newIndex = itemsArray.length - 1;
                 while (hasDisabledItems && itemsArray[newIndex].disabled && newIndex > 0) {
                     newIndex = newIndex === 0 ? itemsArray.length - 1 : newIndex - 1;
                 }
                 break;
-            case KEYS.ENTER:
+            case this.platform.KEYMAP.ENTER:
                 if (!this.tab.panelComponent) {
                     this.nativeElement.click();
                 }
                 unsupportedKey = true;
                 break;
-            case KEYS.SPACE:
-            case KEYS.SPACE_IE:
+            case this.platform.KEYMAP.SPACE:
                 event.preventDefault();
                 if (!this.tab.panelComponent) {
                     this.nativeElement.click();
@@ -100,7 +103,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         }
     }
 
-    /** @hidden */
+    /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver = new ResizeObserver(() => {
@@ -110,7 +113,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
         });
     }
 
-    /** @hidden */
+    /** @hidden @internal */
     public ngOnDestroy(): void {
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver.disconnect();

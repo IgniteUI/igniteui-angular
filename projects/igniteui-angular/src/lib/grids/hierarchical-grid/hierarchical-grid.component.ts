@@ -332,7 +332,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.verticalScrollContainer.getScroll().addEventListener('scroll', this.hg_verticalScrollHandler.bind(this));
         this.headerContainer.getScroll().addEventListener('scroll', this.hg_horizontalScrollHandler.bind(this));
 
-        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+        this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isChildGridRecord(rowData)) {
                 const cachedData = this.childGridTemplates.get(rowData.rowID);
@@ -404,7 +404,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /** @hidden */

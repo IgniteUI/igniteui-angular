@@ -34,9 +34,10 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { getNodeSizeViaRange } from '../../core/utils';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult } from '../summaries/grid-summary';
+import {
+    IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult
+} from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -48,6 +49,7 @@ import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './inter
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
+import { PlatformUtil } from '../../core/utils';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_TIME_FORMAT = 'mediumTime';
@@ -64,7 +66,6 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-column',
     template: ``
 })
@@ -143,7 +144,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @WatchColumnChanges()
     @Input()
-    public get selectable(): boolean  {
+    public get selectable(): boolean {
         return this._selectable;
     }
 
@@ -470,7 +471,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.widthSetByUser = true;
             // width could be passed as number from the template
             // host bindings are not px affixed so we need to ensure we affix simple number strings
-            if (typeof(value) === 'number' || value.match(/^[0-9]*$/)) {
+            if (typeof (value) === 'number' || value.match(/^[0-9]*$/)) {
                 value = value + 'px';
             }
             this._width = value;
@@ -780,7 +781,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      */
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
-    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
+    protected collapseIndicatorTemplate: IgxCollapsibleIndicatorTemplateDirective;
 
     /**
      * @hidden
@@ -797,7 +798,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get maxWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
+        return isPercentageWidth ? parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
     }
 
     /**
@@ -806,7 +807,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get maxWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
+        return isPercentageWidth ? parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
     }
 
     /**
@@ -815,7 +816,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+        return isPercentageWidth ? parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
     }
 
     /**
@@ -824,7 +825,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+        return isPercentageWidth ? parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
     }
 
 
@@ -1389,7 +1390,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get collapsible() {
         return false;
     }
-    public set collapsible(_value: boolean) {}
+    public set collapsible(_value: boolean) { }
 
     /**
      * @hidden
@@ -1398,7 +1399,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get expanded() {
         return true;
     }
-    public set expanded(_value: boolean) {}
+    public set expanded(_value: boolean) { }
 
     /**
      * hidden
@@ -1552,7 +1553,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
+    constructor(
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
+    ) { }
 
     /**
      * @hidden
@@ -2136,7 +2141,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         let newWidth;
         if (isPercentageWidth) {
             const gridAvailableSize = this.grid.calcWidth;
-            const percentageSize =  parseFloat(size) / gridAvailableSize * 100;
+            const percentageSize = parseFloat(size) / gridAvailableSize * 100;
             newWidth = percentageSize + '%';
         } else {
             newWidth = size;
@@ -2174,7 +2179,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         // We do not cover cases where there are children with width 100% and etc,
         // because then we try to get new column size, based on header content, which is sized based on column size...
-        let headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+        let headerWidth = this.platform.getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
@@ -2188,7 +2193,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
         const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
 
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
     }
 
     /**
@@ -2211,7 +2216,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             if (this.cells[0].nativeElement.children.length > 0) {
                 this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
-                cellsContentWidths = this.cells.map((cell) => getNodeSizeViaRange(range, cell.nativeElement));
+                cellsContentWidths = this.cells.map((cell) => this.platform.getNodeSizeViaRange(range, cell.nativeElement));
             }
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
@@ -2295,7 +2300,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     protected setExpandCollapseState() {
-        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c => {
             if (!this.collapsible) {
                 c.hidden = this.hidden; return;
             }

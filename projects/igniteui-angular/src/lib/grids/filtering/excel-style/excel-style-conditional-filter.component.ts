@@ -1,6 +1,5 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { KEYS } from '../../../core/utils';
 import { DataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
@@ -15,6 +14,7 @@ import {
 } from '../../../services/public_api';
 import { IgxGridExcelStyleFilteringComponent } from './grid.excel-style-filtering.component';
 import { takeUntil } from 'rxjs/operators';
+import { PlatformUtil } from '../../../core/utils';
 
 
 /**
@@ -52,7 +52,7 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
         scrollStrategy: new AbsoluteScrollStrategy()
     };
 
-    constructor(public esf: IgxGridExcelStyleFilteringComponent) {
+    constructor(public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) {
         this.esf.columnChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.esf.grid) {
                 this.shouldOpenSubMenu = true;
@@ -73,8 +73,8 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public onTextFilterKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.ENTER) {
+    public onTextFilterKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === this.platform.KEYMAP.ENTER) {
             this.onTextFilterClick(eventArgs);
         }
     }

@@ -92,7 +92,7 @@ describe('igxCombo', () => {
             get: mockNgControl
         });
         mockSelection.get.and.returnValue(new Set([]));
-        const mockIconService = new IgxIconService(null, null);
+        const mockIconService = new IgxIconService(null, null, null);
         it('should correctly implement interface methods - ControlValueAccessor ', () => {
             combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, null, null, mockInjector);
@@ -890,7 +890,7 @@ describe('igxCombo', () => {
                 scrollIndex += 10;
                 if (scrollIndex < combo.data.length) {
                     combo.virtualScrollContainer.scrollTo(scrollIndex);
-                    combo.virtualScrollContainer.onChunkLoad.pipe(take(1)).subscribe(async () => {
+                    combo.virtualScrollContainer.chunkLoad.pipe(take(1)).subscribe(async () => {
                         await wait(30);
                         checkGroupedItemsClass();
                     });

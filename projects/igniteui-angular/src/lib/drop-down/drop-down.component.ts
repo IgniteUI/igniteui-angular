@@ -23,7 +23,7 @@ import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
 import { IGX_DROPDOWN_BASE, IDropDownBase } from './drop-down.common';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IBaseCancelableBrowserEventArgs, isIE } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxSelectionAPIService } from '../core/selection';
 import { Subject } from 'rxjs';
 import { IgxDropDownItemBaseDirective } from './drop-down-item.base';
@@ -218,9 +218,10 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, _displayDensityOptions);
+        super(elementRef, cdr, platform, _displayDensityOptions);
     }
 
     /**
@@ -303,7 +304,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
                 this.virtDir.scrollTo(index);
             }
             if (subRequired) {
-                this.virtDir.onChunkLoad.pipe(take(1)).subscribe(() => {
+                this.virtDir.chunkLoad.pipe(take(1)).subscribe(() => {
                     this.skipHeader(direction);
                 });
             } else {
@@ -572,7 +573,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         //  to appear on screen before animation start. As a result dropdown
         //  flickers badly. This is why we set scrollTop just a little later
         //  allowing animation to start and prevent dropdown flickering
-        if (isIE()) {
+        if (this.platform.isIE) {
             setTimeout(() => {
                 this.scrollContainer.scrollTop = (itemPosition);
             }, 1);

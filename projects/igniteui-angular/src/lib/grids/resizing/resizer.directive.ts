@@ -66,7 +66,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
 
     }
 
-    ngOnInit() {
+   public ngOnInit() {
         this.zone.runOutsideAngular(() => {
             fromEvent(this.document.defaultView, 'mousemove').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
@@ -78,7 +78,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this._destroy.next(true);
         this._destroy.complete();
     }
@@ -91,12 +91,12 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         requestAnimationFrame(() => this.element.nativeElement.style.top = val + 'px');
     }
 
-    onMouseup(event) {
+    public onMouseup(event) {
         this.resizeEnd.next(event);
         this.resizeEnd.complete();
     }
 
-    onMousedown(event) {
+    public onMousedown(event) {
         event.preventDefault();
         const parent = this.element.nativeElement.parentElement.parentElement;
 
@@ -106,7 +106,7 @@ export class IgxColumnResizerDirective implements OnInit, OnDestroy {
         this.resizeStart.next(event);
     }
 
-    onMousemove(event) {
+    public onMousemove(event) {
         event.preventDefault();
         this.resize.next(event);
     }
