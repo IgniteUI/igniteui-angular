@@ -759,7 +759,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const rowIsland1 = fixture.componentInstance.rowIsland1 as IgxRowIslandComponent;
         rowIsland1.filter('ProductName', 'Child12', IgxStringFilteringOperand.instance().condition('contains'), true);
 
-        const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        const row = hierarchicalGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         tick();
         fixture.detectChanges();
