@@ -794,9 +794,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
-        if (!this._init) {
-            this.calculateGridSizes();
-        }
+        this.notifyChanges(true);
     }
 
     /**
