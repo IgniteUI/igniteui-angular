@@ -57,7 +57,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         }
     };
 
-    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str === '\r\n' || str.match(/^[\n\t]* *$/) !== null;
+    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str === '\r\n' || str.match(/^[\r\n\t]* *$/) !== null;
 
     // Replace the tabsType input with tabsAligment
     for (const path of htmlFiles) {
