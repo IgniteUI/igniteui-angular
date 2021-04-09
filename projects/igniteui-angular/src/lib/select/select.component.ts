@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs } from '../core/utils';
+import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, PlatformUtil } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
@@ -323,11 +323,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        super(elementRef, cdr, platform, selection, _displayDensityOptions);
     }
 
     //#region ControlValueAccessor

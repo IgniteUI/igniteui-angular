@@ -86,8 +86,16 @@
     $item-max-width: rem(168px);
     $item-padding: 0 rem(12px, 16px);
 
-    %igx-bottom-nav-panel:focus {
-        outline-style: none;
+    %igx-bottom-nav-panel {
+        display: block;
+
+        &:focus {
+            outline-style: none;
+        }
+
+        &:empty {
+            display: none;
+        }
     }
 
     %igx-bottom-nav-menu {

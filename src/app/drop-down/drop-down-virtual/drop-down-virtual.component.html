@@ -4,7 +4,7 @@
     <igx-drop-down #dropdown>
       <div class="drop-down-virtual-wrapper">
         <ng-template igxFor #asyncFor let-item let-index="index" [igxForOf]="itemsAsync | async" [igxForScrollOrientation]="'vertical'"
-          [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="40" (onChunkPreload)="dataLoading($event)">
+          [igxForContainerSize]="itemsMaxHeight" [igxForItemSize]="40" (chunkPreload)="dataLoading($event)">
           <igx-drop-down-item [value]="item?.ProductID" role="option" [isHeader]="getIndex(index) % 7 === 0"
             [index]="this.getIndex(index)">
             {{ item.ProductName }}
@@ -17,7 +17,7 @@
     <button igxButton [igxToggleAction]="dropdown2" [igxDropDownItemNavigation]="dropdown2">Toggle Local</button>
     <igx-drop-down #dropdown2>
       <div class="drop-down-virtual-wrapper">
-          <igx-drop-down-item *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;" 
+          <igx-drop-down-item *igxFor="let item of localItems; index as index; scrollOrientation: 'vertical'; containerSize: itemsMaxHeight; itemSize: itemHeight;"
           [value]="item" [isHeader]="index % 7 === 0" role="option"
             [disabled]="index > 53 && index < 57"
             [index]="index">
