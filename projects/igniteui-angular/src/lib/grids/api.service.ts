@@ -116,15 +116,10 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public submit_value(event?: Event) {
+    public submit_value() {
         const cell = this.crudService.cell;
         if (cell) {
-            const args = this.update_cell(cell, cell.editValue, event);
-            this.crudService.cellEditingBlocked = args.cancel;
-            if (args.cancel) {
-                return args.cancel;
-            }
-            this.crudService.exitCellEdit(event);
+            this.update_cell(cell.editValue);
         }
     }
 
@@ -168,19 +163,16 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return args;
     }
 
-    public update_cell(cell: IgxCell, value: any, event?: Event) {
-        cell.editValue = value;
+    public update_cell(value?, cellObj?: IgxCell, event?: Event) {
+        const cell = cellObj || this.crudService.cell;
+        if (!cell) {
+            return;
+        }
+
+        if (value) {
+            cell.editValue = value;
+        }
         const args = cell.createEditEventArgs(true, event);
-
-        if (isEqual(args.oldValue, args.newValue)) {
-            return args;
-        }
-
-        this.grid.cellEdit.emit(args);
-        this.crudService.cellEditingBlocked = args.cancel;
-        if (args.cancel) {
-            return args;
-        }
 
 
         this.grid.summaryService.clearSummaryCache(args);
@@ -200,10 +192,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.grid.summaryService.clearSummaryCache(args);
             this.grid.pipeTrigger++;
         }
-
-        const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
-        this.grid.cellEditDone.emit(doneArgs);
-        return args;
     }
 
     public update_row(row: IgxRow, value: any, event?: Event) {

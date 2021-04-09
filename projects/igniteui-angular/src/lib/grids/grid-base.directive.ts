@@ -4362,7 +4362,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row.animateAdd = false;
             const cell = row.cells.find(c => c.editable);
             if (cell) {
-                this.gridAPI.submit_value(event);
+                this.gridAPI.submit_value();
                 this.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
@@ -4442,13 +4442,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 };
 
                 const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
-                const args = this.gridAPI.update_cell(cell, value);
+                this.gridAPI.update_cell(value, cell);
 
                 if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                    if (args.cancel) {
-                        return;
-                    }
-                    this.crudService.exitCellEdit();
+                    this.crudService.endCellEdit();
                 }
                 this.cdr.detectChanges();
             }
@@ -4471,6 +4468,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param value
      * @param rowSelector correspond to rowID
      */
+    // TODO: prevent event invocation
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
@@ -5792,6 +5790,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             } else {
                 return { rowIndex: this.getNextDataRowIndex(currRowIndex, true), visibleColumnIndex: colIndexes[0] };
             }
+        }
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public endRowEditTabStop(commit = true, event?: Event) {
+        const canceled = this.crudService.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
+        const activeCell = this.gridAPI.grid.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
         }
     }
 
