@@ -7,13 +7,11 @@ import { takeUntil, first } from 'rxjs/operators';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IFilteringOperation } from '../../data-operations/filtering-condition';
-import { GridBaseAPIService } from '../api.service';
 import { IColumnResizeEventArgs } from '../common/events';
-import { GridType } from '../common/grid.interface';
 import { OverlaySettings, PositionSettings, VerticalAlignment } from '../../services/overlay/utilities';
 import { IgxOverlayService } from '../../services/overlay/overlay';
 import { useAnimation } from '@angular/animations';
-import { fadeIn, fadeOut } from '../../animations/main';
+import { fadeIn } from '../../animations/main';
 import { ExcelStylePositionStrategy } from './excel-style/excel-style-position-strategy';
 import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-scroll-strategy';
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
@@ -56,7 +54,7 @@ export class IgxFilteringService implements OnDestroy {
     public activeFilterCell = 0;
     grid: IgxGridBaseDirective;
 
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, private _moduleRef: NgModuleRef<any>,
+    constructor(private _moduleRef: NgModuleRef<any>,
         private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
 
     ngOnDestroy(): void {
@@ -200,20 +198,20 @@ export class IgxFilteringService implements OnDestroy {
      */
     public filter(field: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
-        const col = this.gridAPI.get_column_by_name(field);
+        const col = this.grid.getColumnByName(field);
         const filteringIgnoreCase = ignoreCase || (col ? col.filteringIgnoreCase : false);
 
         if (conditionOrExpressionTree) {
-            this.gridAPI.filter(field, value, conditionOrExpressionTree, filteringIgnoreCase);
+            this.filter_internal(field, value, conditionOrExpressionTree, filteringIgnoreCase);
         } else {
             const expressionsTreeForColumn = this.grid.filteringExpressionsTree.find(field);
             if (!expressionsTreeForColumn) {
                 throw new Error('Invalid condition or Expression Tree!');
             } else if (expressionsTreeForColumn instanceof FilteringExpressionsTree) {
-                this.gridAPI.filter(field, value, expressionsTreeForColumn, filteringIgnoreCase);
+                this.filter_internal(field, value, expressionsTreeForColumn, filteringIgnoreCase );
             } else {
                 const expressionForColumn = expressionsTreeForColumn as IFilteringExpression;
-                this.gridAPI.filter(field, value, expressionForColumn.condition, filteringIgnoreCase);
+                this.filter_internal(field, value, expressionForColumn.condition, filteringIgnoreCase );
             }
         }
         const eventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
@@ -221,20 +219,40 @@ export class IgxFilteringService implements OnDestroy {
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(eventArgs));
     }
 
+    public filter_global(term, condition, ignoreCase) {
+        if (!condition) {
+            return;
+        }
+
+        const grid = this.grid;
+        const filteringTree = grid.filteringExpressionsTree;
+        grid.endEdit(false);
+        if (grid.paging) {
+            grid.page = 0;
+        }
+
+        filteringTree.filteringOperands = [];
+        for (const column of grid.columns) {
+            this.prepare_filtering_expression(filteringTree, column.field, term,
+                condition, ignoreCase || column.filteringIgnoreCase);
+        }
+
+        grid.filteringExpressionsTree = filteringTree;
+    }
+
     /**
      * Clears the filter of a given column if name is provided. Otherwise clears the filters of all columns.
      */
     public clearFilter(field: string): void {
         if (field) {
-            const column = this.gridAPI.get_column_by_name(field);
+            const column = this.grid.getColumnByName(field);
             if (!column) {
                 return;
             }
         }
 
         this.isFiltering = true;
-
-        this.gridAPI.clear_filter(field);
+        this.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
@@ -252,11 +270,26 @@ export class IgxFilteringService implements OnDestroy {
         this.isFiltering = false;
     }
 
+    public clear_filter(fieldName: string) {
+        const grid = this.grid;
+        grid.endEdit(false);
+        const filteringState = grid.filteringExpressionsTree;
+        const index = filteringState.findIndex(fieldName);
+
+        if (index > -1) {
+            filteringState.filteringOperands.splice(index, 1);
+        } else if (!fieldName) {
+            filteringState.filteringOperands = [];
+        }
+
+        grid.filteringExpressionsTree = filteringState;
+    }
+
     /**
      * Filters all the `IgxColumnComponent` in the `IgxGridComponent` with the same condition.
      */
     public filterGlobal(value: any, condition, ignoreCase?) {
-        this.gridAPI.filter_global(value, condition, ignoreCase);
+        this.filter_global(value, condition, ignoreCase);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
         requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
@@ -433,6 +466,53 @@ export class IgxFilteringService implements OnDestroy {
 
     public get filteredData() {
         return this.grid.filteredData;
+    }
+
+    private filter_internal(fieldName: string, term, conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree,
+        ignoreCase: boolean) {
+        const grid = this.grid;
+        const filteringTree = grid.filteringExpressionsTree;
+        this.grid.endEdit(false);
+
+        if (grid.paging) {
+            grid.page = 0;
+        }
+
+        const fieldFilterIndex = filteringTree.findIndex(fieldName);
+        if (fieldFilterIndex > -1) {
+            filteringTree.filteringOperands.splice(fieldFilterIndex, 1);
+        }
+
+        this.prepare_filtering_expression(filteringTree, fieldName, term, conditionOrExpressionsTree, ignoreCase, fieldFilterIndex);
+        grid.filteringExpressionsTree = filteringTree;
+    }
+
+    private prepare_filtering_expression(filteringState: IFilteringExpressionsTree, fieldName: string, searchVal,
+        conditionOrExpressionsTree: IFilteringOperation | IFilteringExpressionsTree, ignoreCase: boolean, insertAtIndex = -1) {
+
+        let newExpressionsTree;
+        const oldExpressionsTreeIndex = filteringState.findIndex(fieldName);
+        const expressionsTree = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+            conditionOrExpressionsTree as IFilteringExpressionsTree : null;
+        const condition = conditionOrExpressionsTree instanceof FilteringExpressionsTree ?
+            null : conditionOrExpressionsTree as IFilteringOperation;
+        const newExpression: IFilteringExpression = { fieldName, searchVal, condition, ignoreCase };
+
+        if (oldExpressionsTreeIndex === -1) {
+            // no expressions tree found for this field
+            if (expressionsTree) {
+                if (insertAtIndex > -1) {
+                    filteringState.filteringOperands.splice(insertAtIndex, 0, expressionsTree);
+                } else {
+                    filteringState.filteringOperands.push(expressionsTree);
+                }
+            } else if (condition) {
+                // create expressions tree for this field and add the new expression to it
+                newExpressionsTree = new FilteringExpressionsTree(filteringState.operator, fieldName);
+                newExpressionsTree.filteringOperands.push(newExpression);
+                filteringState.filteringOperands.push(newExpressionsTree);
+            }
+        }
     }
 
     private isFilteringTreeComplex(expressions: IFilteringExpressionsTree | IFilteringExpression): boolean {
