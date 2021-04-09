@@ -153,11 +153,7 @@ export class IgxCellCrudState {
 
     }
 
-    public updateCellEdit(event?: Event) {
-        if (!this.cell) {
-            return;
-        }
-
+    public cellEdit(event?: Event) {
         const args = this.cell.createEditEventArgs(true, event);
 
         if (isEqual(args.oldValue, args.newValue)) {
@@ -169,30 +165,47 @@ export class IgxCellCrudState {
         return args;
     }
 
-    public cellEditDone(args, event) {
+    public updateCell(exit: boolean, event?: Event): IGridEditEventArgs {
         if (!this.cell) {
             return;
         }
 
-        const doneArgs = this.cell.createDoneEditEventArgs(args.newValue, event);
+        const args = this.cellEdit(event);
+        if (args.cancel) {
+            return args;
+        }
+
+        this.grid.gridAPI.update_cell();
+
+        let doneArgs = this.cellEditDone(event);
+        if (exit) {
+            doneArgs = this.exitCellEdit(event);
+        }
+;
+        return {...args, ...doneArgs};
+    }
+
+    public cellEditDone(event): IGridEditDoneEventArgs {
+        const newValue = this.cell.castToNumber(this.cell.editValue);
+        const doneArgs = this.cell.createDoneEditEventArgs(newValue, event);
         this.grid.cellEditDone.emit(doneArgs);
-        return args;
+        return doneArgs;
     }
 
     /** Exit cell edit mode */
-    public exitCellEdit(event?: Event): boolean {
-        if (!this.cell) {
-            return false;
-        }
-
+    public exitCellEdit(event?: Event): IGridEditDoneEventArgs {
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
+        if (!this.cell) {
+            return args;
+        }
+
         this.cell.value = newValue;
 
 
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
-        return false;
+        return args;
     }
 
     /** Clears cell editing state */
@@ -498,15 +511,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         }
 
         if (commit) {
-            const editableArgs = this.grid.crudService.updateCellEdit(event);
-            if (editableArgs?.cancel) {
-                return true;
-            }
-
-            this.grid.gridAPI.update_cell();
-
-            this.grid.crudService.cellEditDone(editableArgs, event);
-            this.exitCellEdit(event);
+            this.updateCell(true, event);
         } else {
             this.exitCellEdit(event);
         }

@@ -129,7 +129,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
                 this.crudService.endAddRow();
                 return args.cancel;
             }
-            return this.crudService.exitCellEdit(event);
+            this.crudService.exitCellEdit(event);
+            return args.cancel;
         }
     }
 

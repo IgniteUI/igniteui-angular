@@ -542,13 +542,7 @@ export class IgxGridNavigationService {
                 const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
                 row.rowData = this.grid.crudService.row.data;
             } else {
-                const editableArgs = this.grid.crudService.updateCellEdit(event);
-                if (editableArgs?.cancel) {
-                    return;
-                }
-                this.grid.gridAPI.update_cell();
-                this.grid.crudService.cellEditDone(editableArgs, event);
-                this.grid.crudService.exitCellEdit(event);
+                this.grid.crudService.updateCell(true, event);
             }
             if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();

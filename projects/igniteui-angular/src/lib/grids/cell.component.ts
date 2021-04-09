@@ -817,13 +817,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.primaryButton = false;
             // Ensure RMB Click on edited cell does not end cell editing
             if (!this.selected) {
-                const editableArgs = this.grid.crudService.updateCellEdit(event);
-                if (editableArgs.cancel) {
-                    return;
-                }
-                this.gridAPI.update_cell();;
-                this.grid.crudService.cellEditDone(editableArgs, event);
-                this.grid.crudService.exitCellEdit(event);
+                this.grid.crudService.updateCell(true, event);
             }
             return;
         }
@@ -890,13 +884,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         } else {
             this.selectionService.activeElement = null;
             if (this.grid.crudService.cellInEditMode && !this.editMode) {
-                const editableArgs = this.grid.crudService.updateCellEdit(event);
-                if (editableArgs?.cancel) {
-                    return;
-                }
-                this.grid.gridAPI.update_cell();
-                this.grid.crudService.cellEditDone(editableArgs, event);
-                this.grid.crudService.exitCellEdit(event);
+                this.grid.crudService.updateCell(true, event);
             }
         }
 
@@ -977,14 +965,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.gridAPI.update_add_cell(editableCell, editableCell.editValue, event);
                     this.row.rowData = editableCell.rowData;
                 } else {
-                    editableArgs = this.grid.crudService.updateCellEdit(event);
-                    if (editableArgs.cancel) {
-                        return;
-                    }
-
-                    this.gridAPI.update_cell();
-
-                    this.grid.crudService.cellEditDone(editableArgs, event);
+                    editableArgs = this.grid.crudService.updateCell(false, event);
                 }
                 /* This check is related with the following issue #6517:
                  * when edit cell that belongs to a column which is sorted and press tab,
@@ -997,7 +978,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                if (this.grid.crudService.cellEditingBlocked) {
+                // TODO: remove cellEditingBlocked after refactoring @update_add_cell
+                if (this.grid.crudService.cellEditingBlocked || editableArgs.cancel) {
                     return true;
                 }
 
@@ -1014,15 +996,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.gridAPI.submit_add_value(event);
                 this.row.rowData = editableCell.rowData;
             } else {
-                editableArgs = this.grid.crudService.updateCellEdit(event);
-                if (editableArgs.cancel) {
-                    return;
-                }
-
-                this.gridAPI.update_cell();
-
-                this.grid.crudService.cellEditDone(editableArgs, event);
-                this.grid.crudService.exitCellEdit(event);
+                this.grid.crudService.updateCell(true, event);
             }
         } else if (editMode && !crud.sameRow(this.cellID.rowID)) {
             this.grid.crudService.endEdit(true, event);
