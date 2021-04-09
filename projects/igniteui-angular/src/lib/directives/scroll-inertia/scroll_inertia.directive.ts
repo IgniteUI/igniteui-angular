@@ -1,6 +1,6 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { isIE } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -68,7 +68,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
 
-    constructor(private element: ElementRef, private _zone: NgZone) { }
+    constructor(private element: ElementRef, private _zone: NgZone, private platform: PlatformUtil) { }
 
     public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
@@ -118,14 +118,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.ctrlKey) {
             return;
         }
-        if (evt.shiftKey && isIE()) {
+        if (evt.shiftKey && this.platform.isIE) {
             evt.preventDefault();
         }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
         const minWheelStep = 1 / this.wheelStep;
-        const smoothing = this.smoothingDuration !== 0 && !isIE();
+        const smoothing = this.smoothingDuration !== 0 && !this.platform.isIE;
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;

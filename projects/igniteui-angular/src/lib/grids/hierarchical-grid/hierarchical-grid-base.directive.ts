@@ -34,6 +34,7 @@ import { IgxColumnGroupComponent } from '../columns/column-group.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
+import { PlatformUtil } from '../../core/utils';
 
 export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
@@ -157,7 +158,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) localeId: string) {
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil) {
         super(
             selectionService,
             colResizingService,
@@ -175,7 +177,8 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
             overlayService,
             summaryService,
             _displayDensityOptions,
-            localeId);
+            localeId,
+            platform);
         this.hgridAPI = gridAPI as IgxHierarchicalGridAPIService;
     }
 

@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { Subject } from 'rxjs';
 import { takeUntil, throttleTime } from 'rxjs/operators';
-import { resizeObservable, isIE, PlatformUtil } from '../../core/utils';
+import { resizeObservable, PlatformUtil } from '../../core/utils';
 
 @Directive({
     selector: '[igxVirtualHelperBase]'
@@ -48,7 +48,7 @@ export class VirtualHelperBaseDirective implements OnDestroy, AfterViewInit {
         if (!this.platformUtil.isBrowser) {
             return;
         }
-        const delayTime = isIE() ? 40 : 0;
+        const delayTime = this.platformUtil.isIE ? 40 : 0;
         this._zone.runOutsideAngular(() => {
             resizeObservable(this.nativeElement).pipe(
                 throttleTime(delayTime),

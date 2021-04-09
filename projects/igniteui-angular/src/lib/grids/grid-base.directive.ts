@@ -33,7 +33,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
-import { cloneArray, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -91,7 +91,7 @@ import {
     IgxRow,
     IgxCell
 }
-from './common/crud.service';
+    from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -2237,8 +2237,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         return activeElem.row < 0 ?
-        `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
-        `${this.id}_${activeElem.row}_${activeElem.column}`;
+            `${this.id}_${activeElem.row}_${activeElem.mchCache.level}_${activeElem.column}` :
+            `${this.id}_${activeElem.row}_${activeElem.column}`;
     }
 
     /**
@@ -3043,7 +3043,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) private localeId: string) {
+        @Inject(LOCALE_ID) private localeId: string,
+        protected platform: PlatformUtil) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
@@ -3229,7 +3230,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public _setupListeners() {
         const destructor = takeUntil<any>(this.destroy$);
         fromEvent(this.nativeElement, 'focusout').pipe(filter(() => !!this.navigation.activeNode), destructor).subscribe((event) => {
-            if (this.selectionService.dragMode && isIE()) {
+            if (this.selectionService.dragMode && this.platform.isIE) {
                 return;
             }
             if (!this.crudService.cell &&
@@ -5570,12 +5571,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 result = this.prepareCopyData(event, data);
             }
 
-            if (isIE()) {
+            if (this.platform.isIE) {
                 (window as any).clipboardData.setData('Text', result);
                 return;
             }
             navigator.clipboard.writeText(result).then().catch(e => console.error(e));
-        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
+        } else if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!this.platform.isIE && event.type === 'keydown')) {
             return;
         } else {
             if (selectedColumns.length) {
@@ -5587,7 +5588,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 result = this.prepareCopyData(event, data);
             }
 
-            if (isIE()) {
+            if (this.platform.isIE) {
                 (window as any).clipboardData.setData('Text', result);
                 return;
             }
@@ -5774,7 +5775,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-        public closeRowEditingOverlay() {
+    public closeRowEditingOverlay() {
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
@@ -5898,7 +5899,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-     public rowEditingWheelHandler(event: WheelEvent) {
+    public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
@@ -6228,7 +6229,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                     this.gridAPI.clear_groupby(record.item.field);
 
                     // Clear Filtering
-                    this.gridAPI.clear_filter(record.item.field);
+                    this.filteringService.clear_filter(record.item.field);
 
                     // Close filter row
                     if (this.filteringService.isFilterRowVisible

@@ -1,4 +1,3 @@
-import { isIE } from '../core/utils';
 import { DatePart, DatePartInfo } from '../directives/date-time-editor/date-time-editor.common';
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 
@@ -347,7 +346,9 @@ export abstract class DatePickerUtil {
      */
     public static parseDateFormat(maskValue: string, locale: string = DatePickerUtil.DEFAULT_LOCALE): any[] {
         let dateStruct = [];
-        if (maskValue === undefined && !isIE()) {
+
+        // Removed for now. This whole file is refactored anyway in PR #9160 and it is now needed there anymore.
+        if (maskValue === undefined) {
             dateStruct = DatePickerUtil.getDefaultLocaleMask(locale);
         } else {
             const mask = (maskValue) ? maskValue : DatePickerUtil.SHORT_DATE_MASK;
