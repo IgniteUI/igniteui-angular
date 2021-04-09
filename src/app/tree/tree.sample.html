@@ -43,11 +43,13 @@
         </div>
 
         <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
 
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
                 <igx-tree #tree1 (blur)="handleActive($event)" [singleBranchExpand]="singleBranchExpand"
+                    [displayDensity]="density"
                     [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)"
                     (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
                     (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">

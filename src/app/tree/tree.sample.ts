@@ -1,9 +1,9 @@
 import { useAnimation } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
-import { growVerIn, growVerOut } from 'igniteui-angular';
-import { IgxTreeSearchResolver, IgxTreeNode } from 'projects/igniteui-angular/src/lib/tree/common';
-import { IgxTreeNodeComponent } from 'projects/igniteui-angular/src/lib/tree/tree-node/tree-node.component';
-import { IgxTreeComponent } from 'projects/igniteui-angular/src/lib/tree/tree.component';
+import {
+    DisplayDensity, growVerIn, growVerOut,
+    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeNode, IgxTreeComponent
+} from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 interface CompanyData {
@@ -43,6 +43,28 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public animationDuration = 400;
 
+    public density: DisplayDensity = DisplayDensity.comfortable;
+
+    public displayDensities: { label: DisplayDensity; selectMode: DisplayDensity; selected: boolean; togglable: boolean }[] = [
+        {
+            label: DisplayDensity.comfortable,
+            selectMode: DisplayDensity.comfortable,
+            selected: this.density === DisplayDensity.comfortable,
+            togglable: false
+        },
+        {
+            label: DisplayDensity.cosy,
+            selectMode: DisplayDensity.cosy,
+            selected: this.density === DisplayDensity.cosy,
+            togglable: false
+        },
+        {
+            label: DisplayDensity.compact,
+            selectMode: DisplayDensity.compact,
+            selected: this.density === DisplayDensity.compact,
+            togglable: false
+        }
+    ];
 
     public data: CompanyData[];
 
@@ -100,6 +122,10 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public selectCellSelectionMode(args) {
         this.tree.selection = this.selectionModes[args.index].selectMode;
+    }
+
+    public changeDensity(args) {
+        this.density = this.displayDensities[args.index].selectMode;
     }
 
     public addItem() {

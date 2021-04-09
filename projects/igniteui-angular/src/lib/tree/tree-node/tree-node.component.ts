@@ -21,6 +21,7 @@ import { IgxTreeNavigationService } from '../tree-navigation.service';
 import { IgxTreeService } from '../tree.service';
 import { ITreeResourceStrings } from '../../core/i18n/tree-resources';
 import { CurrentResourceStrings } from '../../core/i18n/resources';
+import { DisplayDensity } from '../../core/displayDensity';
 
 // TODO: Implement aria functionality
 /**
@@ -163,8 +164,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     /**
-     * An accessor that sets the resource strings.
-     * By default it uses EN resources.
+     * Gets/Sets the resource strings.
+     *
+     * @remarks
+     * Uses EN resources by default.
      */
     @Input()
     public set resourceStrings(value: ITreeResourceStrings) {
@@ -320,6 +323,16 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     private get hasLinkChildren(): boolean {
         return this.linkChildren?.length > 0 || this.registeredChildren?.length > 0;
+    }
+
+    /** @hidden @internal */
+    public get isCompact(): boolean {
+        return this.tree?.displayDensity === DisplayDensity.compact;
+    }
+
+    /** @hidden @internal */
+    public get isCosy(): boolean {
+        return this.tree?.displayDensity === DisplayDensity.cosy;
     }
 
     /** @hidden @internal */
@@ -582,9 +595,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public expand() {
-        // if (this.treeService.isExpanded(this)) {
-        //     return;
-        // }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,
@@ -617,9 +627,6 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * ```
      */
     public collapse() {
-        // if (!this.treeService.isExpanded(this)) {
-        //     return;
-        // }
         const args: ITreeNodeTogglingEventArgs = {
             owner: this.tree,
             node: this,

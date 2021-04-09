@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import {
     Component, QueryList, Input, Output, EventEmitter, ContentChild, Directive,
-    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef
+    NgModule, TemplateRef, OnInit, AfterViewInit, ContentChildren, OnDestroy, HostBinding, ElementRef, Optional, Inject
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { growVerIn, growVerOut } from '../animations/grow';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
+import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/displayDensity';
 import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxIconModule } from '../icon/public_api';
@@ -51,7 +52,7 @@ export class IgxTreeExpandIndicatorDirective {
         { provide: IGX_TREE_COMPONENT, useExisting: IgxTreeComponent },
     ]
 })
-export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestroy {
+export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnInit, AfterViewInit, OnDestroy {
 
     @HostBinding('class.igx-tree')
     public cssClass = 'igx-tree';
@@ -261,7 +262,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         private navService: IgxTreeNavigationService,
         private selectionService: IgxTreeSelectionService,
         private treeService: IgxTreeService,
-        private element: ElementRef<HTMLElement>) {
+        private element: ElementRef<HTMLElement>,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions?: IDisplayDensityOptions) {
+        super(_displayDensityOptions);
         this.selectionService.register(this);
         this.treeService.register(this);
         this.navService.register(this);
@@ -367,7 +370,9 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.navService.handleKeydown(event);
     }
 
+    /** @hidden @internal */
     public ngOnInit() {
+        super.ngOnInit();
         this.disabledChange.pipe(takeUntil(this.destroy$)).subscribe((e) => {
             this.navService.update_disabled_cache(e);
         });
@@ -375,9 +380,15 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
             this.expandToNode(this.navService.activeNode);
             this.scrollNodeIntoView(node);
         });
+        this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            requestAnimationFrame(() => {
+                this.scrollElementIntoView(this.navService.activeNode?.header.nativeElement);
+            });
+        });
         this.subToCollapsing();
     }
 
+    /** @hidden @internal */
     public ngAfterViewInit() {
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
@@ -386,6 +397,7 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
         this.subToChanges();
     }
 
+    /** @hidden @internal */
     public ngOnDestroy() {
         this.unsubChildren$.next();
         this.unsubChildren$.complete();
@@ -435,11 +447,18 @@ export class IgxTreeComponent implements IgxTree, OnInit, AfterViewInit, OnDestr
 
     private scrollNodeIntoView(node: IgxTreeNode<any>) {
         if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
+            if (!node) {
+                return;
+            }
             this.nativeElement.scrollTop = node.nativeElement.offsetTop;
         }
     }
 
+    // TODO: check if this can be done w/o el.scollIntoView();
     private scrollElementIntoView(el: HTMLElement): void {
+        if (!el) {
+            return;
+        }
         const rect = this.nativeElement.getBoundingClientRect();
         const targetRect = el.getBoundingClientRect();
         let scrollFlag;

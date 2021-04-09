@@ -1,4 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken, QueryList, TemplateRef } from '@angular/core';
+import { DisplayDensity } from '../core/displayDensity';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, mkenum } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
@@ -16,6 +17,8 @@ export interface IgxTree {
     selection: IGX_TREE_SELECTION_TYPE;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
+    /** @hidden @internal */
+    displayDensity: DisplayDensity;
     /** @hidden @internal */
     disabledChange: EventEmitter<IgxTreeNode<any>>;
     /** @hidden @internal */

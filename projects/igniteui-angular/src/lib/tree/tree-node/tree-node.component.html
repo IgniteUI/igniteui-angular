@@ -30,6 +30,8 @@
     <div #ghostTemplate class="igx-tree-node__wrapper"
         [tabIndex]="tabIndex"
         [ngClass]="{
+            'igx-tree-node__wrapper--cosy': isCosy,
+            'igx-tree-node__wrapper--compact': isCompact,
             'igx-tree-node__wrapper--selected': selected,
             'igx-tree-node__wrapper--active' : this.active,
             'igx-tree-node__wrapper--focused' : this.focused,

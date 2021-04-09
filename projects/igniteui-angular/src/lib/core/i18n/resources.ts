@@ -12,7 +12,7 @@ import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
     ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDateRangePickerResourceStrings, IListResourceStrings,
-    IPaginatorResourceStrings { }
+    IPaginatorResourceStrings, ITreeResourceStrings { }
 
 /**
  * @hidden
