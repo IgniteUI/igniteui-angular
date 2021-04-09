@@ -10,6 +10,7 @@ export interface IGridResourceStrings {
     igx_grid_filter_row_placeholder?: string;
     igx_grid_filter_row_boolean_placeholder?: string;
     igx_grid_filter_row_date_placeholder?: string;
+    igx_grid_filter_row_time_placeholder?: string;
     igx_grid_filter_operator_and?: string;
     igx_grid_complex_filter?: string;
     igx_grid_filter_operator_or?: string;
@@ -136,6 +137,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_row_placeholder: 'Add filter value',
     igx_grid_filter_row_boolean_placeholder: 'All',
     igx_grid_filter_row_date_placeholder: 'Pick up date',
+    igx_grid_filter_row_time_placeholder: 'Pick up time',
     igx_grid_filter_operator_and: 'And',
     igx_grid_filter_operator_or: 'Or',
     igx_grid_complex_filter: 'Complex Filter',

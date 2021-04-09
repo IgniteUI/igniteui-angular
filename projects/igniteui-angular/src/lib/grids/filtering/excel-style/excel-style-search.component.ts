@@ -320,7 +320,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         }
 
         const searchVal = this.searchValue.toLowerCase();
-
         this.displayedListData = this.esf.listData.filter((it, i) => (i === 0 && it.isSpecial) ||
             (it.label !== null && it.label !== undefined) &&
             !it.isBlanks &&
@@ -421,6 +420,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             case DataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
+            case DataType.DateTime:
+            case DataType.Time:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
