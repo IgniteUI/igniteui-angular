@@ -1189,7 +1189,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         let rec: any;
 
         // 1. Search in top pinned records
-        if (this.pinnedRecordsCount && this.pinning.rows === RowPinningPosition.Bottom) {
+        if (this.pinnedRecordsCount && this.pinning.rows === RowPinningPosition.Top) {
             rec = this.pinnedRecords[index];
         }
 
