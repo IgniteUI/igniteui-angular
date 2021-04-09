@@ -138,11 +138,10 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             changes.clear();
 
             // Grab the content between <igx-tabs-group> and create a <igx-tab-content>
-            // Also migrate class from igx-tabs-group to igx-tab-cotnent, if any
+            // Also migrate class from igx-tabs-group to igx-tab-content, if any
             findElementNodes(parseFile(host, path), comp.tags)
                 .map(node => getSourceOffset(node as Element))
                 .forEach(offset => {
-                    // console.log('OFFSET', offset);
                     const tabHeader = offset.node.children.find(c => (c as Element).name === comp.headerItem);
                     let classAttrText = '';
                     if (offset.node.name === 'igx-tab-panel' || offset.node.name === 'igx-tabs-group') {
