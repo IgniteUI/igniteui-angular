@@ -23,6 +23,7 @@ const enum DateParts {
 /** @hidden */
 export abstract class DateTimeUtil {
     public static readonly DEFAULT_INPUT_FORMAT = 'MM/dd/yyyy';
+    public static readonly DEFAULT_TIME_INPUT_FORMAT = 'hh:mm tt';
     private static readonly SEPARATOR = 'literal';
     private static readonly DEFAULT_LOCALE = 'en';
 
@@ -359,6 +360,7 @@ export abstract class DateTimeUtil {
             const format = timePart.replace(/\d/g, '0');
             timePart = new MaskParsingService().replaceInMask(timePart, value,
                 { format, promptChar: '' }, 0, value.length).value;
+            timePart = timePart.substr(0, timePart.length - 1);
             return new Date(`${datePart}T${timePart}`);
         }
 
@@ -424,6 +426,66 @@ export abstract class DateTimeUtil {
     private static logMissingLocaleSettings(locale: string): void {
         console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
         console.warn('Using default browser locale settings.');
+    }
+
+    public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
+        let maskedValue;
+        const datePart = datePartInfo.type;
+        switch (datePart) {
+            case DatePart.Date:
+                maskedValue = value.getDate();
+                break;
+            case DatePart.Month:
+                // months are zero based
+                maskedValue = value.getMonth() + 1;
+                break;
+            case DatePart.Year:
+                if (partLength === 2) {
+                    maskedValue = this.prependValue(
+                        parseInt(value.getFullYear().toString().slice(-2), 10), partLength, '0');
+                } else {
+                    maskedValue = value.getFullYear();
+                }
+                break;
+            case DatePart.Hours:
+                if (datePartInfo.format.indexOf('h') !== -1) {
+                    maskedValue = this.prependValue(
+                        this.toTwelveHourFormat(value.getHours().toString()), partLength, '0');
+                } else {
+                    maskedValue = value.getHours();
+                }
+                break;
+            case DatePart.Minutes:
+                maskedValue = value.getMinutes();
+                break;
+            case DatePart.Seconds:
+                maskedValue = value.getSeconds();
+                break;
+            case DatePart.AmPm:
+                maskedValue = value.getHours() >= 12 ? 'PM' : 'AM';
+                break;
+        }
+
+        if (datePartInfo.type !== DatePart.AmPm) {
+            return this.prependValue(maskedValue, partLength, '0');
+        }
+
+        return maskedValue;
+    }
+
+    private static prependValue(value: number, partLength: number, prependChar: string): string {
+        return (prependChar + value.toString()).slice(-partLength);
+    }
+
+    private static toTwelveHourFormat(value: string, promptChar = '_'): number {
+        let hour = parseInt(value.replace(new RegExp(promptChar, 'g'), '0'), 10);
+        if (hour > 12) {
+            hour -= 12;
+        } else if (hour === 0) {
+            hour = 12;
+        }
+
+        return hour;
     }
 
     private static ensureLeadingZero(part: DatePartInfo) {

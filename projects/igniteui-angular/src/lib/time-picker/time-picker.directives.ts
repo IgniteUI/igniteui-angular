@@ -13,8 +13,9 @@ import {
     Input,
     TemplateRef
 } from '@angular/core';
-import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
-import { PickerInteractionMode } from '../date-common/types';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerComponent } from './time-picker.component';
 
 /** @hidden */
 @Directive({
@@ -265,29 +266,29 @@ export class IgxTimeItemDirective {
 
     public get isSelectedTime(): boolean {
         const dateType = this.itemList.type;
-        const inputDateParts = DatePickerUtil.parseDateTimeFormat(this.timePicker.inputFormat);
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hour');
-                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
             case 'minuteList': {
                 const minutePart = inputDateParts.find(element => element.type === 'minute');
-                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === this.value;
             }
             case 'secondsList': {
                 const hourPart = inputDateParts.find(element => element.type === 'second');
-                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
             }
             case 'ampmList': {
                 const ampmPart = inputDateParts.find(element => element.format === 'tt');
-                return DatePickerUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;
             }
         }
     }
 
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT)
     public timePicker: IgxTimePickerComponent,
-        private itemList: IgxItemListDirective) { }
+    private itemList: IgxItemListDirective) { }
 
     @HostListener('click', ['value'])
     public onClick(item) {
