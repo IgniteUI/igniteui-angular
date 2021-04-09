@@ -34,6 +34,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
     const sassFiles = update.sassFiles;
+    let applyComment = false;
 
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {
@@ -44,6 +45,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 .forEach(c => buffer = c.apply(buffer));
 
             host.overwrite(path, buffer);
+            applyComment = true;
         }
     };
 
@@ -55,7 +57,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         }
     };
 
-    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str.match(/^ *$/) !== null;
+    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str === '\r\n' || str.match(/^[\n\t]* *$/) !== null;
 
     // Replace the tabsType input with tabsAligment
     for (const path of htmlFiles) {
@@ -151,7 +153,12 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
                     if (tabHeader) {
                         const content = offset.file.content.substring(tabHeader.sourceSpan.end.offset, offset.endTag.start);
-                        if (!isEmptyOrSpaces(content)) {
+                        // Since igx-tab-item tag is common for old and new igx-tabs
+                        // Check whether igx-tab-content is already present!
+                        const tabContentTag = new RegExp(String.raw`${comp.panelItem}`);
+                        const hasTabContent = content.match(tabContentTag);
+
+                        if ((!hasTabContent || hasTabContent.length === 0) && !isEmptyOrSpaces(content)) {
                             const tabPanel = `\n<${comp.panelItem}${classAttrText}>${content}</${comp.panelItem}>\n`;
                             addChange(offset.file.url, new FileChange(tabHeader.sourceSpan.end.offset, tabPanel, content, 'replace'));
                         }
@@ -162,17 +169,19 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             changes.clear();
 
             // Insert a comment indicating the change/replacement
-            findElementNodes(parseFile(host, path), comp.component).
-                map(node => getSourceOffset(node as Element)).
-                forEach(offset => {
-                    const { startTag, file } = offset;
-                    // eslint-disable-next-line max-len
-                    const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
-                    addChange(file.url, new FileChange(startTag.start, commentText));
-                });
+            if (applyComment) {
+                findElementNodes(parseFile(host, path), comp.component).
+                    map(node => getSourceOffset(node as Element)).
+                    forEach(offset => {
+                        const { startTag, file } = offset;
+                        // eslint-disable-next-line max-len
+                        const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+                        addChange(file.url, new FileChange(startTag.start, commentText));
+                    });
 
-            applyChanges();
-            changes.clear();
+                applyChanges();
+                changes.clear();
+            }
         }
 
         for (const sassPath of sassFiles) {

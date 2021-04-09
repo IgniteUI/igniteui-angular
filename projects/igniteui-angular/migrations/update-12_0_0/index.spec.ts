@@ -140,6 +140,62 @@ ${noteText}
 </igx-tabs>`);
     });
 
+    it('Should not create igx-[tab|botton-nav]-content if it\'s already present', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/custom.component.html', `
+<igx-tabs #tabs1>
+<igx-tab-item>
+<igx-tab-header>
+<span igxTabHeaderLabel>Home</span>
+</igx-tab-header>
+<igx-tab-content>Home content.</igx-tab-content>
+</igx-tab-item>
+</igx-tabs>
+<!--BottomNav-->
+<igx-bottom-nav>
+<igx-bottom-nav-item>
+<igx-bottom-nav-header>
+<igx-icon igxBottomNavHeaderIcon>library_music</igx-icon>
+<span igxBottomNavHeaderLabel>Songs</span>
+</igx-bottom-nav-header>
+<igx-bottom-nav-content>
+<div class="item" *ngFor="let song of songsList">
+<span class="item-line1">{{song.title}}</span><br/>
+<span class="item-line2">{{song.artist}}</span>
+</div>
+</igx-bottom-nav-content>
+</igx-bottom-nav-item>
+</igx-bottom-nav>`);
+        const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/custom.component.html'))
+            .toEqual(`
+<igx-tabs #tabs1>
+<igx-tab-item>
+<igx-tab-header>
+<span igxTabHeaderLabel>Home</span>
+</igx-tab-header>
+<igx-tab-content>Home content.</igx-tab-content>
+</igx-tab-item>
+</igx-tabs>
+<!--BottomNav-->
+<igx-bottom-nav>
+<igx-bottom-nav-item>
+<igx-bottom-nav-header>
+<igx-icon igxBottomNavHeaderIcon>library_music</igx-icon>
+<span igxBottomNavHeaderLabel>Songs</span>
+</igx-bottom-nav-header>
+<igx-bottom-nav-content>
+<div class="item" *ngFor="let song of songsList">
+<span class="item-line1">{{song.title}}</span><br/>
+<span class="item-line2">{{song.artist}}</span>
+</div>
+</igx-bottom-nav-content>
+</igx-bottom-nav-item>
+</igx-bottom-nav>`);
+    });
+
     it('Should insert ng-template content into igx-tab-header', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
