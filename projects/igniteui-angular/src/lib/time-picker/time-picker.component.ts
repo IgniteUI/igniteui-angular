@@ -130,16 +130,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      *
      */
     @Input()
-    public displayFormat: string
-
-        if (value && this.validateFormat(value)) {
-            this._displayFormat = value;
-        }
-    }
-
-    public get displayFormat(): string {
-        return this._displayFormat;
-    }
+    public displayFormat: string;
 
     /**
      * The expected user input format and placeholder.
@@ -153,17 +144,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public set inputFormat(value: string) {
-        this._inputFormat = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
-
-        if (value && this.validateFormat(value)) {
-            this._inputFormat = value;
-        }
-    }
-
-    public get inputFormat(): string {
-        return this._inputFormat;
-    }
+    public inputFormat : string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
