@@ -25,7 +25,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode } from '../common/enums';
+import { FilterMode, RowPinningPosition } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -1069,18 +1069,25 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public getRowByIndex(index: number): RowType {
         let row: RowType;
-        if (index < 0 || index >= this.summaryRowsData.length) {
+
+        if (index < 0) {
             return undefined;
         }
 
-        const rec = this.summaryRowsData[index];
-        if (rec.expression) {
+        const rec = this.findRecord(index);
+
+        // if found record is a groupby row, return IgxGroupByRow instance
+        if (rec?.expression) {
             row = new IgxGroupByRow(this, index, rec);
         }
-        if (rec.summaries) {
+        // if found record is a summary row, return IgxSummaryRow instance
+        if (rec?.summaries) {
             row = new IgxSummaryRow(this, index, rec.summaries);
         }
-        row = row ?? new IgxGridRow(this, index, rec);
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
 
         return row;
     }
@@ -1171,5 +1178,49 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
+    }
+
+    /**
+     * Helper method to find record in grid.
+     * Takes into consideration data rows, groupy rows, summary rows, pinned records, and paging.
+     * Steps described inline.
+     */
+    private findRecord(index: number): any {
+        let rec: any;
+
+        // 1. Search in top pinned records
+        if (this.pinnedRecordsCount && this.pinning.rows === RowPinningPosition.Bottom) {
+            rec = this.pinnedRecords[index];
+        }
+
+        // 2. If rec not found, search the rec in current page data,
+        // using the summaryRowsData collection, which inlcudes groypby rows and summary rows too.
+        if (!rec && index < this.summaryRowsData.length) {
+            rec = this.summaryRowsData[index - this.pinnedRecordsCount];
+        }
+        // 3. If rec was nout found in 2., search in bottom pinned records
+        if (!rec && index < this.summaryRowsData.length + this.pinnedRecordsCount) {
+            rec = this.pinnedRecords[index - this.summaryRowsData.length];
+        }
+
+        // 4. If rec was not found, search in grid next page
+        if (!rec && this.paging && this.page < this.totalPages - 1) {
+            if (!this.groupingResult.length) {
+                // 4.a
+                // if there is no grouping, there are also no summary rows in between data rows.
+                // relatively simple - just take the record from filteredSortedData collection
+                rec = this.filteredSortedData[index - this.pinnedRecordsCount];
+            } else {
+                // 4.b
+                // if there is grouping, cannot use summaryRowsData, because it does not contain rows from other pages.
+                // we can use groupingResult, which contains records for all pages (exluding summary rows)
+                // and correct the index with the number of summary rows in the page.
+                const correctedIndex = index - this.pinnedRecordsCount - this.summaryRowsData.filter(r => r.summaries).length;
+                rec = this.groupingResult[correctedIndex];
+            }
+        }
+        // 4. needs else clause to work for when the record is in a previous page
+
+        return rec;
     }
 }
