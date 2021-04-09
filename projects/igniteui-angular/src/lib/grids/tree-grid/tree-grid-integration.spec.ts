@@ -1710,7 +1710,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const pinnedRow = pinnedChipExpectedPosition.row;
 
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
-            expect(pinnedRow.disabled).toBe(false);
+            expect(pinnedRow.disabled).toBeFalsy();
         });
     });
 });
