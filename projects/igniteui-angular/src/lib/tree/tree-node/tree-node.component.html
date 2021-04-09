@@ -7,12 +7,13 @@
 </ng-template>
 
 <div #childrenContainer 
-    *ngIf="expanded" 
+    *ngIf="expanded && !loading" 
     class="igx-tree-node__group"
     role="group"
 >
     <ng-content select="igx-tree-node"></ng-content>
 </div>
+
 
 <ng-template #defaultIndicator>
     <igx-icon [attr.aria-label]="expanded ? resourceStrings.igx_collapse : resourceStrings.igx_expand">
@@ -49,12 +50,24 @@
         </div>
 
         <!-- Expand/Collapse indicator -->
-        <span class="igx-tree-node__toggle-button"
+        <span *ngIf="!loading" 
+            class="igx-tree-node__toggle-button"
             [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !children?.length }"
             (click)="indicatorClick()"
         >
             <ng-container *ngTemplateOutlet="expandIndicatorTemplate, context: { $implicit: expanded }">
             </ng-container>
+        </span>
+        <span *ngIf="loading"
+            class="igx-tree-node__toggle-button"
+        >
+        	<igx-circular-bar
+            	[animate]="false"
+            	[indeterminate]="true"
+            	[textVisibility]="false"
+            	class="igx-tree-node__toggle-button"
+        	>
+        	</igx-circular-bar>
         </span>
 
         <!-- Item selection -->

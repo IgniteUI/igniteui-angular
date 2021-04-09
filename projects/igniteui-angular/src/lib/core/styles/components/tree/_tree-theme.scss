@@ -202,6 +202,11 @@
             outline-width: 0;
         }
 
+        igx-circular-bar {
+            width: $icon-size;
+            height: $icon-size;
+        }
+
         &--cosy {
             min-height: map-get($node-height, 'cosy');
             padding: 0 map-get($node-indent, 'cosy');
@@ -213,6 +218,11 @@
             %node-drop-indicator {
                 #{$right}: map-get($node-indent, 'cosy');
                 width: map-get($drop-indicator-width, 'cosy');
+            }
+
+            igx-circular-bar {
+                width: calc(#{$icon-size} - 4px);
+                height: calc(#{$icon-size} - 4px);
             }
         }
 
@@ -226,7 +236,13 @@
 
             %node-drop-indicator {
                 #{$right}: map-get($node-indent, 'compact');
-                width: map-get($drop-indicator-width, 'compact');            }
+                width: map-get($drop-indicator-width, 'compact');
+            }
+
+            igx-circular-bar {
+                width: calc(#{$icon-size} - 6px);
+                height: calc(#{$icon-size} - 6px);
+            }
         }
     }
 

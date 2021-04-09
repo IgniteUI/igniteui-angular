@@ -13,6 +13,11 @@
             <input igxInput [(ngModel)]="animationDuration" name="time" type="number">
         </igx-input-group>
 
+        <igx-input-group>
+            <label igxLabel for="time">Node Remote Data Load Duration (ms)</label>
+            <input igxInput [(ngModel)]="loadDuration" name="time" type="number">
+        </igx-input-group>
+
         <div igxLayout igxLayoutDir="row">
             <igx-input-group type="search">
                 <label igxLabel for="search">Search By Key</label>
@@ -54,6 +59,12 @@
                     (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
                     (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">
                     <igx-tree-node [disabled]="true">Disabled node</igx-tree-node>
+                    <igx-tree-node #loadingNode [loading]="true" (expandedChange)="handleRemote(loadingNode, $event)">
+                        Load on demand
+                        <igx-tree-node *ngFor="let item of (asyncItems | async) || [{ ID: 'dummy', CompanyName: ''}]">
+                            {{ item.CompanyName }}
+                        </igx-tree-node>
+                    </igx-tree-node>
                     <igx-tree-node [disabled]="true">
                         <a igxTreeNodeLink href="www.google.com">Disabled Link</a>
                     </igx-tree-node>

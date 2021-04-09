@@ -4,6 +4,7 @@ import {
     DisplayDensity, growVerIn, growVerOut,
     IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeNode, IgxTreeComponent
 } from 'igniteui-angular';
+import { Subject } from 'rxjs';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 interface CompanyData {
@@ -70,6 +71,8 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public singleBranchExpand = false;
 
+    public asyncItems = new Subject<CompanyData[]>();
+    public loadDuration = 6000;
     private iteration = 0;
 
     private initData: CompanyData[];
@@ -91,6 +94,22 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public handleEvent(event: any) {
         // event.cancel = true;
+    }
+
+    public handleRemote(node: IgxTreeNodeComponent<any>, event: boolean) {
+        console.log(event);
+        node.loading = true;
+        setTimeout(() => {
+            const newData: CompanyData[] = [];
+            for (let i = 0; i < 10; i++) {
+                newData.push({
+                    ID: `Remote ${i}`,
+                    CompanyName: `Remote ${i}`
+                });
+            }
+            node.loading = false;
+            this.asyncItems.next(newData);
+        }, this.loadDuration);
     }
 
     public handleActive(event: any) {

@@ -139,6 +139,9 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Input()
     public data: T;
 
+    @Input()
+    public loading = false;
+
     // TO DO: return different tab index depending on anchor child
     /** @hidden @internal */
     public set tabIndex(val: number) {
@@ -159,6 +162,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.hasLinkChildren ? -1 : this._tabIndex;
     }
 
+    /** @hidden @internal */
     public get animationSettings(): ToggleAnimationSettings {
         return this.tree.animationSettings;
     }
@@ -235,12 +239,12 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @Output()
     public expandedChange = new EventEmitter<boolean>();
 
+    /** @hidden @internal */
     public get focused() {
         return this.isFocused &&
             this.navService.focusedNode === this;
     }
 
-    // TODO: Add API docs
     /**
      * Retrieves the full path to the node incuding itself
      *
@@ -469,6 +473,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * const nodeElement: HTMLElement = node.nativeElement;
      * ```
      */
+    /** @hidden @internal */
     public get nativeElement() {
         return this.element.nativeElement;
     }

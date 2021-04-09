@@ -13,6 +13,7 @@ import { IgxExpansionPanelModule } from '../expansion-panel/public_api';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import {
     IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
@@ -493,7 +494,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         IgxIconModule,
         IgxInputGroupModule,
         IgxCheckboxModule,
-        IgxExpansionPanelModule
+        IgxProgressBarModule
     ],
     exports: [
         IgxTreeSelectMarkerDirective,
