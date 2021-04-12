@@ -1187,20 +1187,26 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     private findRecord(index: number): any {
         let rec: any;
+        const totalPerPage = this.paging ? this.perPage + this.pinnedRecordsCount : this.summaryRowsData.length + this.pinnedRecordsCount;
+        const hasTopPinnedRows: boolean = this.pinnedRecordsCount && this.pinning.rows !== RowPinningPosition.Bottom;
 
-        // 1. Search in top pinned records
-        if (this.pinnedRecordsCount && this.pinning.rows === RowPinningPosition.Top) {
+        // 1. Search in top pinned records, regardless of paging, because pinnedRows exist on each page
+        if (!rec && index < this.pinnedRecordsCount && hasTopPinnedRows) {
             rec = this.pinnedRecords[index];
         }
 
-        // 2. If rec not found, search the rec in current page data,
-        // using the summaryRowsData collection, which inlcudes groypby rows and summary rows too.
-        if (!rec && index < this.summaryRowsData.length) {
-            rec = this.summaryRowsData[index - this.pinnedRecordsCount];
-        }
-        // 3. If rec was nout found in 2., search in bottom pinned records
-        if (!rec && index < this.summaryRowsData.length + this.pinnedRecordsCount) {
-            rec = this.pinnedRecords[index - this.summaryRowsData.length];
+        // 2. If no paging, or at page 0, search the rec in current page data
+        if (!rec && (!this.paging || (this.paging && this.page === 0))) {
+
+            // 2. If no paging, or at page 0, search the rec in current page data
+            if (!rec && index < this.summaryRowsData.length) {
+                rec = this.summaryRowsData[index];
+            }
+
+            // 3. If rec was not found in 2., search in bottom pinned records
+            if (!rec && index < this.summaryRowsData.length + this.pinnedRecordsCount) {
+                rec = this.pinnedRecords[index - this.summaryRowsData.length];
+            }
         }
 
         // 4. If rec was not found, search in grid next page
