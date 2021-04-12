@@ -1059,37 +1059,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * Returns the `RowType` by index.
+     * Returns the `IgxGridRow` by index.
      *
      * @example
      * ```typescript
-     * const myRow = this.grid1.getRowByIndex(1);
+     * const myRow = grid.getRowByIndex(1);
      * ```
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        let row: RowType;
-
-        if (index < 0) {
+        if (index < 0 || index >= this.allRowsData.length) {
             return undefined;
         }
-
-        const rec = this.findRecord(index);
-
-        // if found record is a groupby row, return IgxGroupByRow instance
-        if (rec?.expression) {
-            row = new IgxGroupByRow(this, index, rec);
-        }
-        // if found record is a summary row, return IgxSummaryRow instance
-        if (rec?.summaries) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
-        }
-        // if found record is a no a groupby or summary row, return IgxGridRow instance
-        if (!row && rec) {
-            row = new IgxGridRow(this, index, rec);
-        }
-
-        return row;
+        return this.createRow(index);
     }
 
     /**
@@ -1180,53 +1162,27 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
     }
 
-    /**
-     * Helper method to find record in grid.
-     * Takes into consideration data rows, groupy rows, summary rows, pinned records, and paging.
-     * Steps described inline.
-     */
-    private findRecord(index: number): any {
-        let rec: any;
-        const totalPerPage = this.paging ? this.perPage + this.pinnedRecordsCount : this.summaryRowsData.length + this.pinnedRecordsCount;
-        const hasTopPinnedRows: boolean = this.pinnedRecordsCount && this.pinning.rows !== RowPinningPosition.Bottom;
+    private createRow(index: number): RowType {
+        let row: RowType;
+        let currentPageData: any[] = this.allRowsData;
 
-        // 1. Search in top pinned records, regardless of paging, because pinnedRows exist on each page
-        if (!rec && index < this.pinnedRecordsCount && hasTopPinnedRows) {
-            rec = this.pinnedRecords[index];
+        if (this.pinnedRecordsCount) {
+            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
+                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
+        }
+        const rec: any = currentPageData[index];
+
+        if (this.isGroupByRecord(rec)) {
+            row = new IgxGroupByRow(this, index, rec);
+        }
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
         }
 
-        // 2. If no paging, or at page 0, search the rec in current page data
-        if (!rec && (!this.paging || (this.paging && this.page === 0))) {
-
-            // 2. If no paging, or at page 0, search the rec in current page data
-            if (!rec && index < this.summaryRowsData.length) {
-                rec = this.summaryRowsData[index];
-            }
-
-            // 3. If rec was not found in 2., search in bottom pinned records
-            if (!rec && index < this.summaryRowsData.length + this.pinnedRecordsCount) {
-                rec = this.pinnedRecords[index - this.summaryRowsData.length];
-            }
-        }
-
-        // 4. If rec was not found, search in grid next page
-        if (!rec && this.paging && this.page < this.totalPages - 1) {
-            if (!this.groupingResult.length) {
-                // 4.a
-                // if there is no grouping, there are also no summary rows in between data rows.
-                // relatively simple - just take the record from filteredSortedData collection
-                rec = this.filteredSortedData[index - this.pinnedRecordsCount];
-            } else {
-                // 4.b
-                // if there is grouping, cannot use summaryRowsData, because it does not contain rows from other pages.
-                // we can use groupingResult, which contains records for all pages (exluding summary rows)
-                // and correct the index with the number of summary rows in the page.
-                const correctedIndex = index - this.pinnedRecordsCount - this.summaryRowsData.filter(r => r.summaries).length;
-                rec = this.groupingResult[correctedIndex];
-            }
-        }
-        // 4. needs else clause to work for when the record is in a previous page
-
-        return rec;
+        return row;
     }
 }

@@ -20,10 +20,10 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get data(): any {
-        return this._data;
+        return this._data ?? this.grid.allRowsData[this.index];
     }
     public get rowData(): any {
-        return this._data;
+        return this.data;
     }
 
     /**
@@ -39,9 +39,9 @@ export class IgxGridRow implements RowType {
 
     public set pinned(val: boolean) {
         if (val) {
-            this.grid.pinRow(this.rowID);
+            this.pin();
         } else {
-            this.grid.unpinRow(this.rowID);
+            this.unpin();
         }
     }
 
@@ -65,22 +65,22 @@ export class IgxGridRow implements RowType {
         this.grid.cdr.markForCheck();
     }
 
-    // todo TODO ROW
     /**
      * Sets whether this specific row has disabled functionality for editing and row selection.
      * Default value is `false`.
      * ```typescript
-     * this.grid.selectedRows[0].pinned = true;
+     * const isDisabled = row.disabled;
      * ```
      */
     public get disabled(): boolean {
-        return false;
+        return this._disabled;
     }
 
     /**
      * Returns the index of the row in the rows collection.
      */
     public index: number;
+    private _disabled = false;
 
     /**
      * Returns if the row is in delete state.
@@ -158,7 +158,7 @@ export class IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _grid: IgxGridBaseDirective, index: number, private _data: any) {
+    constructor(private _grid: IgxGridBaseDirective, index: number, private _data?: any) {
         this.index = index;
     }
 
@@ -205,7 +205,9 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        return this.grid.pinRow(this.rowID);
+        const pinned = this.grid.pinRow(this.rowID);
+        this._disabled = pinned;
+        return pinned;
     }
 
     /**
@@ -218,6 +220,8 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public unpin(): boolean {
+        const unpinned = this.grid.unpinRow(this.rowID);
+        this._disabled = !unpinned;
         return this.grid.unpinRow(this.rowID);
     }
 
@@ -266,7 +270,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _tgrid: IgxTreeGridComponent, index: number, data: any, private _treeRow?: ITreeGridRecord) {
+    constructor(private _tgrid: IgxTreeGridComponent, index: number, data?: any, private _treeRow?: ITreeGridRecord) {
         super(_tgrid, index, data);
     }
 
@@ -331,14 +335,15 @@ export class IgxGroupByRow implements RowType {
     /**
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
-    public groupRow: IGroupByRecord;
+    public get groupRow(): IGroupByRecord {
+        return this._groupRow ? this._groupRow : this.grid.allRowsData[this.index]
+    }
 
     /**
      * @hidden
      */
-     constructor(private _grid: IgxGridComponent, index: number, groupRow: IGroupByRecord) {
+     constructor(private _grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
         this.index = index;
-        this.groupRow = groupRow;
         this.isGroupByRow = true;
     }
 
@@ -397,14 +402,15 @@ export class IgxSummaryRow implements RowType {
     /**
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
-    public summaries: Map<string, IgxSummaryResult[]>;
+    public get summaries(): Map<string, IgxSummaryResult[]> {
+        return this._summaries ? this._summaries : this.grid.allRowsData[this.index].summaries;
+    }
 
     /**
      * @hidden
      */
-     constructor(private _grid: IgxGridBaseDirective, index: number, summaries: Map<string, IgxSummaryResult[]>) {
+     constructor(private _grid: IgxGridBaseDirective, index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
         this.index = index;
-        this.summaries = summaries;
         this.isSummaryRow = true;
     }
 

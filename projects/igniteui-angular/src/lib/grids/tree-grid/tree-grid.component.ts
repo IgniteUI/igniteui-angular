@@ -37,11 +37,10 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridSelectionMode, GridSummaryCalculationMode } from '../common/enums';
+import { GridSelectionMode, RowPinningPosition } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
 
 let NEXT_ID = 0;
 
@@ -637,40 +636,19 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * Returns the `RowType` object by index.
+     * Returns the `IgxTreeGridRow` by index.
      *
      * @example
      * ```typescript
-     * const myRow = this.treeGrid.getRowByIndex(1);
+     * const myRow = treeGrid.getRowByIndex(1);
      * ```
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        let rowData: any;
-        let rec: any;
-        let treeRow: ITreeGridRecord;
-        if (index < 0 || index >= this.filteredSortedData.length) {
+        if (index < 0 || index >= this.allRowsData.length) {
             return undefined;
         }
-
-        if (this.pinnedRecordsCount && this.pinning.rows && index >= this.summaryRowsData.length) {
-            rowData = this.filteredSortedData[index];
-            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
-            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
-        }
-        if (this.pinnedRecordsCount && !this.pinning.rows && index <= this.filteredSortedData.length - this.summaryRowsData.length) {
-            rowData = this.filteredSortedData[index];
-            treeRow = this.summaryRowsData.find(r => r.data === rowData).treeRow;
-            rec = new IgxTreeGridRow(this, index, rowData, treeRow);
-        }
-        if (this.pinnedRecordsCount && !this.pinning.rows && index > this.filteredSortedData.length - this.summaryRowsData.length) {
-            rowData = this.summaryRowsData[index - this.pinnedRecordsCount];
-        }
-        rowData = rowData ? rowData : this.summaryRowsData[index];
-        rec = rec ? rec : rowData.summaries ? new IgxSummaryRow(this, index, rowData.summaries) :
-            new IgxTreeGridRow(this, index, rowData.data, rowData);
-
-        return rec;
+        return this.createRow(index);
     }
 
     /**
@@ -683,10 +661,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const treeRow: ITreeGridRecord = this.primaryKey ? this.summaryRowsData.find(r => r.data && r.data[this.primaryKey] === key) :
-            this.summaryRowsData.find(r => r.rowData === key);
-        const index = this.summaryRowsData.findIndex(r => r === treeRow);
-        if (index === undefined || index < 0) {
+        const treeRow: ITreeGridRecord = this.primaryKey ? this.allRowsData.find(r => r.data && r.data[this.primaryKey] === key) :
+            this.allRowsData.find(r => r.rowData === key);
+        const index = this.allRowsData.findIndex(r => r === treeRow);
+        if (index < 0 || index >= this.allRowsData.length) {
             return undefined;
         }
         return new IgxTreeGridRow(this, index, treeRow.data, treeRow);
@@ -867,5 +845,25 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 this.notifyChanges();
             }
         });
+    }
+    private createRow(index: number): RowType {
+        let row: RowType;
+        let currentPageData: any[] = this.allRowsData;
+
+        if (this.pinnedRecordsCount) {
+            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
+                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
+        }
+        const rec: any = currentPageData[index];
+
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxTreeGridRow(this, index, rec.data, rec);
+        }
+
+        return row;
     }
 }

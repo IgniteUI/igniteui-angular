@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-grid #grid [data]="data" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
+        <igx-grid #grid [data]="data" [pinning]="pinningConfig" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
@@ -78,6 +78,7 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier
+            [pinning]="pinningConfig"
             [width]="'900px'" [height]="'500px'"
             [data]="treeGridHierData"
             childDataKey="ChildCompanies"

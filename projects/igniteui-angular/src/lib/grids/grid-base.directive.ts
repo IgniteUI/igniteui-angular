@@ -2910,7 +2910,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _selectRowOnClick = true;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
-    private _summaryRowsData: any[];
+    private _allRowsData: any[];
 
     private lastAddedRowIndex;
     private _currencyPositionLeft: boolean;
@@ -3220,6 +3220,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
     }
+
+    /**
+     * @hidden @internal
+     */
+     public isSummaryRecord(record: any): boolean {
+        return record.summaries && record.summaries.size;
+    }
+
 
     /**
      * @hidden
@@ -5311,14 +5319,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get summaryRowsData(): any[] {
-        return this._summaryRowsData;
+    public get allRowsData(): any[] {
+        return this._allRowsData;
     }
     /**
      * @hidden @internal
      */
-    public set summaryRowsData(data: any[]) {
-        this._summaryRowsData = data;
+    public set allRowsData(data: any[]) {
+        this._allRowsData = data;
     }
 
     /**

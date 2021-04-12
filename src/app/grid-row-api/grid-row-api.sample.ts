@@ -5,7 +5,9 @@ import {
     IgxGridTransaction,
     RowType,
     IgxTreeGridComponent,
-    IgxHierarchicalGridComponent
+    IgxHierarchicalGridComponent,
+    IPinningConfig,
+    RowPinningPosition
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -46,6 +48,8 @@ export class GridRowAPISampleComponent implements OnInit {
     public tKey = '';
     public tHKey = '';
     public hKey = '';
+
+    public pinningConfig: IPinningConfig = { rows: RowPinningPosition.Top };
 
     constructor(private renderer: Renderer2) { }
 
@@ -233,8 +237,11 @@ export class GridRowAPISampleComponent implements OnInit {
         this.clearLog(logger);
         const row = grid.getRowByIndex(index);
         const state = `
+            index: ${row.index},
+            -----------------------------,
             isSummaryRow: ${row.isSummaryRow},
             summaries: ${row.summaries},
+            -----------------------------,
             isGroupByRow: ${row.isGroupByRow},
             groupByRow: ${row.groupRow?.value},
             -----------------------------,
