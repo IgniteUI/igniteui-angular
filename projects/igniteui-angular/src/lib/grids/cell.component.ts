@@ -16,7 +16,7 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
@@ -708,7 +708,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.nativeElement.addEventListener('pointerdown', this.pointerdown);
             this.addPointerListeners(this.cellSelectionMode);
             // IE 11 workarounds
-            if (this.platformUtil.isBrowser && isIE()) { // TODO: Move isIE to platformUtil
+            if (this.platformUtil.isIE) {
                 this.compositionStartHandler = () => this.grid.crudService.isInCompositionMode = true;
                 this.compositionEndHandler = () => this.grid.crudService.isInCompositionMode = false;
                 // Hitting Enter with IME submits and exits from edit mode instead of first closing the IME dialog
@@ -731,7 +731,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.removeEventListener('pointerdown', this.pointerdown);
             this.removePointerListeners(this.cellSelectionMode);
-            if (this.platformUtil.isBrowser && isIE()) {
+            if (this.platformUtil.isIE) {
                 this.nativeElement.removeEventListener('compositionstart', this.compositionStartHandler);
                 this.nativeElement.removeEventListener('compositionend', this.compositionEndHandler);
             }
@@ -807,7 +807,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.activate(event);
             return;
         }
-        if (!isLeftClick(event)) {
+        if (!this.platformUtil.isLeftClick(event)) {
             event.preventDefault();
             this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
             this.selectionService.addKeyboardRange();
@@ -836,7 +836,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         const dragMode = this.selectionService.pointerEnter(this.selectionNode, event);
         if (dragMode) {
             this.grid.cdr.detectChanges();
-            if (isIE()) {
+            if (this.platformUtil.isIE) {
                 this.grid.tbody.nativeElement.focus({ preventScroll: true });
             }
         }
@@ -848,13 +848,13 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     public pointerup = (event: PointerEvent) => {
         const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
-        if (!isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
+        if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
         this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
         }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelection)) {
             this.grid.cdr.detectChanges();
-            if (isIE()) {
+            if (this.platformUtil.isIE) {
                 this.grid.tbody.nativeElement.focus({ preventScroll: true });
             }
         }
@@ -929,7 +929,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public calculateSizeToFit(range: any): number {
-        return getNodeSizeViaRange(range, this.nativeElement);
+        return this.platformUtil.getNodeSizeViaRange(range, this.nativeElement);
     }
 
     /**

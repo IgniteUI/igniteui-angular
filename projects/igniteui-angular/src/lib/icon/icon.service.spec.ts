@@ -4,6 +4,7 @@ import { DOCUMENT } from '@angular/common';
 
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('Icon Service', () => {
     configureTestSuite();
@@ -17,6 +18,7 @@ describe('Icon Service', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [HttpClientModule],
             providers: [IgxIconService]
         }).compileComponents();
     });

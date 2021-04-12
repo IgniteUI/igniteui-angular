@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from './public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';

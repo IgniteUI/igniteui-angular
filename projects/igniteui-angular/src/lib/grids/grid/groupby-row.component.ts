@@ -117,7 +117,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * let gridRowFocused = this.grid1.rowList.first.focused;
      * ```
      */
-    get focused(): boolean {
+    public get focused(): boolean {
         return this.isActive();
     }
 
@@ -153,7 +153,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @HostBinding('attr.aria-expanded')
-    get expanded(): boolean {
+    public get expanded(): boolean {
         return this.grid.isExpandedGroup(this.groupRow);
     }
 
@@ -161,13 +161,13 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden
      */
     @HostBinding('attr.aria-describedby')
-    get describedBy(): string {
+    public get describedBy(): string {
         const grRowExpr = this.groupRow.expression !== undefined ? this.groupRow.expression.fieldName : '';
         return this.gridID + '_' + grRowExpr;
     }
 
     @HostBinding('attr.data-rowIndex')
-    get dataRowIndex() {
+    public get dataRowIndex() {
         return this.index;
     }
 
@@ -177,7 +177,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * const groupRowElement = this.nativeElement;
      * ```
      */
-    get nativeElement(): any {
+     public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -193,7 +193,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * ```
      */
     @HostBinding('class')
-    get styleClasses(): string {
+    public get styleClasses(): string {
         return `${this.defaultCssClass} ` + `${this.paddingIndentationCssClass}-` + this.groupRow.level +
             (this.isActive() ? ` ${this.defaultCssClass}--active` : '');
     }
@@ -205,7 +205,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    getRowID(rowData): IgxGridRowComponent {
+     public getRowID(rowData): IgxGridRowComponent {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
@@ -259,14 +259,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * this.grid1.rowList.first.grid;
      * ```
      */
-    get grid(): IgxGridComponent {
+     public get grid(): IgxGridComponent {
         return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**
      * @hidden
      */
-    get dataType(): any {
+     public get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
     }
@@ -307,7 +307,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    get showRowSelectors(): boolean {
+     public get showRowSelectors(): boolean {
         return this.grid.rowSelection !== GridSelectionMode.none && !this.hideGroupRowSelectors;
     }
 

@@ -11,6 +11,7 @@ import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IgxSelectionAPIService } from '../core/selection';
 import { IgxComboItemComponent } from './combo-item.component';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
+import { PlatformUtil } from '../core/utils';
 
 /** @hidden */
 @Component({
@@ -75,11 +76,12 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     constructor(
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
         @Inject(IGX_COMBO_COMPONENT) public combo: IgxComboBase,
         protected comboAPI: IgxComboAPIService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
-        super(elementRef, cdr, selection, _displayDensityOptions);
+        super(elementRef, cdr, platform, selection, _displayDensityOptions);
     }
 
     /**
@@ -92,7 +94,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
     /**
      * @hidden @internal
      */
-    public onBlur(evt?) {
+    public onBlur(_evt?) {
         this.focusedItem = null;
     }
 
@@ -181,7 +183,7 @@ export class IgxComboDropDownComponent extends IgxDropDownComponent implements I
         this.destroy$.complete();
     }
 
-    protected scrollToHiddenItem(newItem: any): void { }
+    protected scrollToHiddenItem(_newItem: any): void { }
 
     protected scrollHandler = () => {
         this.comboAPI.disableTransitions = true;

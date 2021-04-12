@@ -24,11 +24,9 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires text-contrast
 /// @requires rem
 /// @requires round-borders
-/// @requires {variable} $elevations
 ///
 /// @example scss Change the text and icon colors in a badge
 ///   $my-badge-theme: igx-badge-theme($icon-color: black, $background-color: white);
