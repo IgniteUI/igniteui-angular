@@ -131,7 +131,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * <igx-date-picker [value]="date" [formatter]="formatter"></igx-date-picker>
      * ```
      */
-    @DeprecateProperty('formatter has been deprecated, use displayFormat instead.')
     @Input()
     public formatter: (val: Date) => string;
 
@@ -280,7 +279,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @example
      * ```typescript
-     * let formatOptions = this.datePicker.formatOptions;
+     * let calendarFormat = this.datePicker.calendarFormat;
      * ```
      */
     @Input()
@@ -293,7 +292,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      *
      * @example
      * ```typescript
-     * this.datePicker.formatOptions = {day: "numeric",  month: "long", weekday: "long", year: "numeric"};
+     * this.datePicker.calendarFormat = {day: "numeric",  month: "long", weekday: "long", year: "numeric"};
      * ```
      */
     public set calendarFormat(options: IFormattingOptions) {
@@ -356,6 +355,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public get maxValue(): Date | string {
         return this._maxValue;
     }
+
+    /** @hidden @internal */
+    @Input()
+    public readOnly = false;
 
     /**
      * Emitted when the picker's value changes.
@@ -467,6 +470,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         target: this.inputGroupElement,
         closeOnOutsideClick: true,
         modal: false,
+        closeOnEscape: true,
         scrollStrategy: new AbsoluteScrollStrategy(),
         positionStrategy: new AutoPositionStrategy({
             openAnimation: fadeIn,
@@ -493,7 +497,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _onTouchedCallback: () => void = noop;
     private _onValidatorChange: () => void = noop;
 
-    constructor(public element: ElementRef,
+    constructor(public element: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) protected _localeId: string,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
         private _moduleRef: NgModuleRef<any>,
@@ -535,7 +539,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 break;
             case KEYS.DOWN_ARROW:
             case KEYS.DOWN_ARROW_IE:
-                if (event.altKey) {
+                if (event.altKey && !this.readOnly) {
                     this.open();
                 }
                 break;
@@ -972,6 +976,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._calendar.viewDate = this._targetViewDate = maxValue;
             return;
         }
-        this._calendar.viewDate = this.dateValue;
+        this._calendar.viewDate = this._targetViewDate = this.dateValue || new Date();
     }
 }
