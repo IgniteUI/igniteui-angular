@@ -29,6 +29,7 @@ import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 import { DataType } from '../data-operations/data-util';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { IgxCell } from './common/crud.service';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -790,11 +791,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.row.deleted) {
             return;
         }
-        const currEditableCell = this.grid.crudService.cell;
-        this.grid.crudService.createCell(this);
-        this.gridAPI.update_cell(val);
-        if (currEditableCell && this.grid.crudService.sameCell(currEditableCell)) {
-            this.grid.crudService.exitCellEdit();
+        const cell = new IgxCell(this.cellID, this.rowIndex, this.column, this.value, this.value, this.row.rowData, this.grid);
+        this.gridAPI.update_cell(val, cell);
+        if (this.grid.crudService.cell && this.grid.crudService.sameCell(cell)) {
+            this.grid.crudService.endCellEdit();
         }
         this.cdr.markForCheck();
     }

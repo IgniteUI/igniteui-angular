@@ -181,7 +181,7 @@ export class IgxCellCrudState {
         if (exit) {
             doneArgs = this.exitCellEdit(event);
         }
-;
+
         return {...args, ...doneArgs};
     }
 
@@ -194,6 +194,10 @@ export class IgxCellCrudState {
 
     /** Exit cell edit mode */
     public exitCellEdit(event?: Event): IGridEditDoneEventArgs {
+        if (!this.cell) {
+            return;
+        }
+
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
         if (!this.cell) {
@@ -471,6 +475,8 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                         return true;
                     }
 
+                    // If enters here, @endEdit clears the new reference of the cell edit.
+                    this.createCell(cell);
                     this.rowEditingBlocked = false;
                     this.endRowEdit();
                 }
