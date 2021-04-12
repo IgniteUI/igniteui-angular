@@ -336,7 +336,7 @@ export class IgxGroupByRow implements RowType {
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
     public get groupRow(): IGroupByRecord {
-        return this._groupRow ? this._groupRow : this.grid.allRowsData[this.index]
+        return this._groupRow ? this._groupRow : this.grid.allRowsData[this.index];
     }
 
     /**
