@@ -105,7 +105,7 @@
 <article>
     <h4 class="sample-title">Remote Virtualization</h4>
     <div style='height: 500px; position: relative; overflow: hidden'>
-        <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
+        <ng-template igxFor let-item [igxForOf]="remoteData | async" (chunkPreload)="chunkLoading($event)"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]='"500px"' [igxForItemSize]='"50px"'
             [igxForTotalItemCount]="totalCount | async" let-rowIndex="index" #virtDirRemote>
             <div style='height: 50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}
