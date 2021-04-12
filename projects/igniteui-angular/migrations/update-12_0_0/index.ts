@@ -33,6 +33,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
+    const sassFiles = update.sassFiles;
+    let applyComment = false;
 
     const applyChanges = () => {
         for (const [path, change] of changes.entries()) {
@@ -43,6 +45,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 .forEach(c => buffer = c.apply(buffer));
 
             host.overwrite(path, buffer);
+            applyComment = true;
         }
     };
 
@@ -54,7 +57,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         }
     };
 
-    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str.match(/^ *$/) !== null;
+    const isEmptyOrSpaces = (str) => str === null || str === '' || str === '\n' || str === '\r\n' || str.match(/^[\r\n\t]* *$/) !== null;
 
     // Replace the tabsType input with tabsAligment
     for (const path of htmlFiles) {
@@ -92,7 +95,6 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     addChange(file.url, new FileChange(startTag.start, tabPanel, textToReplace, 'replace'));
                 });
 
-
             applyChanges();
             changes.clear();
 
@@ -121,9 +123,15 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                         routerLinkText = ` ${routerLink.name}="${routerLink.value}"`;
                     }
 
+                    let classText = '';
+                    if ((node.name === 'igx-tab-item' || node.name === 'igx-tab') && hasAttribute(node, 'class')) {
+                        const classAttr = getAttribute(node, 'class')[0].value;
+                        classText = !isEmptyOrSpaces(classAttr) ? ` class="${classAttr}"` : '';
+                    }
+
                     if (iconText || labelText || routerLinkText) {
                         // eslint-disable-next-line max-len
-                        const tabHeader = `\n<${comp.headerItem}${routerLinkText}>${iconText}${labelText}</${comp.headerItem}>`;
+                        const tabHeader = `\n<${comp.headerItem}${routerLinkText}${classText}>${iconText}${labelText}</${comp.headerItem}>`;
                         addChange(file.url, new FileChange(startTag.end, tabHeader));
                     }
                 });
@@ -132,14 +140,26 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             changes.clear();
 
             // Grab the content between <igx-tabs-group> and create a <igx-tab-content>
+            // Also migrate class from igx-tabs-group to igx-tab-content, if any
             findElementNodes(parseFile(host, path), comp.tags)
                 .map(node => getSourceOffset(node as Element))
                 .forEach(offset => {
                     const tabHeader = offset.node.children.find(c => (c as Element).name === comp.headerItem);
+                    let classAttrText = '';
+                    if (offset.node.name === 'igx-tab-panel' || offset.node.name === 'igx-tabs-group') {
+                        const classAttr = hasAttribute(offset.node, 'class') ? getAttribute(offset.node, 'class')[0].value : '';
+                        classAttrText = !isEmptyOrSpaces(classAttr) ? ` class="${classAttr}"` : '';
+                    }
+
                     if (tabHeader) {
                         const content = offset.file.content.substring(tabHeader.sourceSpan.end.offset, offset.endTag.start);
-                        if (!isEmptyOrSpaces(content)) {
-                            const tabPanel = `\n<${comp.panelItem}>${content}</${comp.panelItem}>\n`;
+                        // Since igx-tab-item tag is common for old and new igx-tabs
+                        // Check whether igx-tab-content is already present!
+                        const tabContentTag = new RegExp(String.raw`${comp.panelItem}`);
+                        const hasTabContent = content.match(tabContentTag);
+
+                        if ((!hasTabContent || hasTabContent.length === 0) && !isEmptyOrSpaces(content)) {
+                            const tabPanel = `\n<${comp.panelItem}${classAttrText}>${content}</${comp.panelItem}>\n`;
                             addChange(offset.file.url, new FileChange(tabHeader.sourceSpan.end.offset, tabPanel, content, 'replace'));
                         }
                     }
@@ -149,17 +169,51 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             changes.clear();
 
             // Insert a comment indicating the change/replacement
-            findElementNodes(parseFile(host, path), comp.component).
-                map(node => getSourceOffset(node as Element)).
-                forEach(offset => {
-                    const { startTag, file } = offset;
-                    // eslint-disable-next-line max-len
-                    const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
-                    addChange(file.url, new FileChange(startTag.start, commentText));
-                });
+            if (applyComment) {
+                findElementNodes(parseFile(host, path), comp.component).
+                    map(node => getSourceOffset(node as Element)).
+                    forEach(offset => {
+                        const { startTag, file } = offset;
+                        // eslint-disable-next-line max-len
+                        const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+                        addChange(file.url, new FileChange(startTag.start, commentText));
+                    });
 
-            applyChanges();
-            changes.clear();
+                applyChanges();
+                changes.clear();
+            }
+        }
+
+        for (const sassPath of sassFiles) {
+            const origContent = host.read(sassPath).toString();
+            let newContent = origContent;
+            let changed = false;
+            for (const item of comp.tags) {
+                const searchText = new RegExp(String.raw`${item}(?=[\s])`);
+                let replaceText = '';
+                if (comp.component === 'igx-tabs') {
+                    if (item === 'igx-tab-item') {
+                        replaceText = comp.headerItem;
+                    } else if (item === 'igx-tabs-group') {
+                        replaceText = comp.panelItem;
+                    }
+                }
+                if (comp.component === 'igx-bottom-nav') {
+                    if (item === 'igx-tab') {
+                        replaceText = comp.headerItem;
+                    } else if (item === 'igx-tab-panel') {
+                        replaceText = comp.panelItem;
+                    }
+                }
+
+                if (searchText.test(origContent)) {
+                    changed = true;
+                    newContent = newContent.replace(searchText, replaceText);
+                }
+            }
+            if (changed) {
+                host.overwrite(sassPath, newContent);
+            }
         }
     }
 
