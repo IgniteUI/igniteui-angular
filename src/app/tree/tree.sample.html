@@ -1,4 +1,13 @@
 <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+    <div igxLayout igxLayoutDir="row" class="sample-search">
+        <igx-input-group type="search">
+            <input placeholder="Search by key..." #searchCriteria igxInput id="search-b-key" type="text">
+        </igx-input-group>
+
+        <button igxButton="raised" (click)="customSearch(searchCriteria.value)">Log node</button>
+    </div>
+</div>
+<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
     <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
@@ -7,33 +16,22 @@
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p> -->
+
     <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutItemAlign="center" class="controls">
-        <igx-input-group>
-            <label igxLabel for="time">Animation Duration</label>
-            <input igxInput [(ngModel)]="animationDuration" name="time" type="number">
+        <igx-input-group type="border">
+            <label igxLabel for="ad-time">Animation Duration</label>
+            <input igxInput [(ngModel)]="animationDuration" id="ad-time" type="number">
         </igx-input-group>
 
-        <igx-input-group>
-            <label igxLabel for="time">Node Remote Data Load Duration (ms)</label>
-            <input igxInput [(ngModel)]="loadDuration" name="time" type="number">
+        <igx-input-group type="border">
+            <label igxLabel for="load-time">Node Remote Data Load Duration (ms)</label>
+            <input igxInput [(ngModel)]="loadDuration" id="load-time" type="number">
         </igx-input-group>
 
-        <div igxLayout igxLayoutDir="row">
-            <igx-input-group type="search">
-                <label igxLabel for="search">Search By Key</label>
-                <input #searchCriteria igxInput name="search" type="text">
-            </igx-input-group>
-
-            <button igxButton="outlined" (click)="customSearch(searchCriteria.value)">Log node</button>
-        </div>
-
-        <div>
-            <label for="branchExpand"></label>
-            <igx-switch name="branchExpand" [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
-        </div>
+        <igx-switch [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
     </div>
 
-    <div igxLayout igxLayoutDir="column">
+    <div igxLayout igxLayoutDir="column" class="sample-bottom-gap">
         <div class="btn-holder" igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
             <button igxButton (click)="selectSpecific()">Select specific</button>
             <button igxButton (click)="selectAll()">Select all</button>
@@ -46,7 +44,6 @@
             <button igxButton (click)="setDummy()">Dummy nodes</button>
 
         </div>
-
         <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
         <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
 
@@ -57,7 +54,8 @@
                     [displayDensity]="density"
                     [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)"
                     (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
-                    (activeNodeChanged)="activeNodeChanged($event)" style="height: 300px; overflow: scroll;">
+                    (activeNodeChanged)="activeNodeChanged($event)"
+                    class="sample-scroll">
                     <igx-tree-node [disabled]="true">Disabled node</igx-tree-node>
                     <igx-tree-node #loadingNode [loading]="true" (expandedChange)="handleRemote(loadingNode, $event)">
                         Load on demand
@@ -94,7 +92,6 @@
                 </igx-tree>
             </div>
 
-
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree 2: The Branchening</p>
                 <igx-tree>
@@ -111,6 +108,4 @@
             </div>
         </div>
     </div>
-
-    <button igxButton>TEST</button>
 </div>

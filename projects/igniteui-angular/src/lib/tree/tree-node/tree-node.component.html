@@ -6,8 +6,8 @@
 <ng-template *ngTemplateOutlet="noDragTemplate">
 </ng-template>
 
-<div #childrenContainer 
-    *ngIf="expanded && !loading" 
+<div #childrenContainer
+    *ngIf="expanded && !loading"
     class="igx-tree-node__group"
     role="group"
 >
@@ -50,7 +50,7 @@
         </div>
 
         <!-- Expand/Collapse indicator -->
-        <span *ngIf="!loading" 
+        <span *ngIf="!loading"
             class="igx-tree-node__toggle-button"
             [ngClass]="{ 'igx-tree-node__toggle-button--hidden': !children?.length }"
             (click)="indicatorClick()"
@@ -65,14 +65,13 @@
             	[animate]="false"
             	[indeterminate]="true"
             	[textVisibility]="false"
-            	class="igx-tree-node__toggle-button"
         	>
         	</igx-circular-bar>
         </span>
 
         <!-- Item selection -->
         <div *ngIf="showSelectors"
-            class="igx-tree-node__select" 
+            class="igx-tree-node__select"
             (pointerdown)="$event.preventDefault()"
             (click)="onSelectorClick($event)">
             <ng-container *ngTemplateOutlet="selectMarkerTemplate">

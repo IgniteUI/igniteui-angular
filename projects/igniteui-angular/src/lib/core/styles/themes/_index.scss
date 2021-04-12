@@ -477,7 +477,10 @@
     }
 
     @if not(index($exclude, 'igx-tree')) {
-        @include igx-tree(igx-tree-theme($palette, $schema,));
+        @include igx-tree(igx-tree-theme(
+            $palette: $palette,
+            $schema: $schema,
+        ));
     }
 
     @if not(index($exclude, 'igx-watermark')) {
@@ -738,4 +741,3 @@
         $elevation: $elevation,
     );
 }
-

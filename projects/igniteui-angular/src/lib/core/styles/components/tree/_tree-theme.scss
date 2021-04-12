@@ -4,35 +4,31 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// Returns a map containing all style properties related to the theming the tree component.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// Returns a map containing all style properties related to the theming of the tree component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-///
 /// @param {Color} background [null] - The background color used for the tree node.
-/// @param {Color} background-selected [null] - The background color used for the selected tree node.
-/// @param {Color} background-active [null] - The background color used for the active tree node.
-/// @param {Color} background-disabled [null] - The background color used for the tree node in disabled state.
-///
 /// @param {Color} foreground [null] - The color used for the tree node content.
+/// @param {Color} background-selected [null] - The background color used for the selected tree node.
 /// @param {Color} foreground-selected [null] - The color used for the content of the selected tree node.
+/// @param {Color} background-active [null] - The background color used for the active tree node.
 /// @param {Color} foreground-active [null] - The color used for the content of the active tree node.
+/// @param {Color} background-active-selected [null] - The background color used for the active selected tree node.
+/// @param {Color} foreground-active-selected [null] - The color used for the content of the active selected tree node.
+/// @param {Color} background-disabled [null] - The background color used for the tree node in disabled state.
 /// @param {Color} foreground-disabled [null] - The color used for the content of the disabled tree node.
-///
-/// @param {Color} drop-indicator-color [null] - The color used for the drop aria indicator.
-/// @param {Color} border-focused [null] - The outline shadow color used for tree node in focus state.
-///
-/// @requires $default-palette
+/// @param {Color} drop-area-color [null] - The background color used for the tree node drop aria.
+/// @param {Color} border-color [null] - The outline shadow color used for tree node in focus state.
 /// @requires $light-schema
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
-///
 /// @example scss Change the tree background
 ///   $my-tree-theme: igx-tree-theme($background: magenta);
 ///   // Pass the theme to the igx-tree component mixin
 ///   @include igx-tree($my-tree-theme);
 @function igx-tree-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $background: null,
     $background-selected: null,
@@ -44,7 +40,7 @@
     $foreground-active: null,
     $foreground-active-selected: null,
     $foreground-disabled: null,
-    $drop-indicator-color: null,
+    $drop-area-color: null,
     $border-color: null,
 ) {
     $name: 'igx-tree';
@@ -70,27 +66,25 @@
         $foreground-active: text-contrast($background-active);
     }
 
-    $_hover-color: --var($theme, '_hover-color');
+    @if not($foreground-active-selected) and $background-active-selected {
+        $foreground-active-selected: text-contrast($background-active-selected);
+    }
 
     @return extend($theme, (
         name: $name,
         palette: $default-palette,
-
         background: $background,
-        background-selected: $background-selected,
-        background-active: $background-active,
-        background-active-selected: $background-active-selected,
-        background-disabled: $background-disabled,
-
         foreground: $foreground,
+        background-selected: $background-selected,
         foreground-selected: $foreground-selected,
+        background-active: $background-active,
         foreground-active: $foreground-active,
+        background-active-selected: $background-active-selected,
         foreground-active-selected: $foreground-active-selected,
+        background-disabled: $background-disabled,
         foreground-disabled: $foreground-disabled,
-
-        drop-indicator-color: $drop-indicator-color,
+        drop-area-color: $drop-area-color,
         border-color: $border-color,
-        _hover-color: $_hover-color,
     ));
 }
 
@@ -105,9 +99,6 @@
 
     $variant: map-get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
-
-    $type: map-get($theme, type);
-    $dark-variant: $type == 'dark';
 
     $node-indent: (
         comfortable: rem(24px),
@@ -132,6 +123,7 @@
 
     %tree-display {
         display: block;
+        z-index: 0;
     }
 
     %tree-node,
@@ -194,7 +186,7 @@
 
         &:hover {
             &::after {
-                background: --var($theme, '_hover-color');
+                background: --var($theme, 'hover-color');
             }
         }
 
@@ -256,19 +248,14 @@
         color: --var($theme, 'foreground-active');
     }
 
-    %node-wrapper--selected,
-    %node-wrapper--active-selected {
-        &:hover {
-            &::after {
-                @if ($indigo-theme) {
-                    /* stylelint-disable max-nesting-depth */
-                    @if($dark-variant) {
-                        opacity: .8;
-                    } @else {
-                        opacity: .2;
-                    }
-                    /* stylelint-enable max-nesting-depth */
-                }
+    %indigo-opacity {
+        $bg-active: map-get($theme, 'background-active');
+
+        @if ($indigo-theme) {
+            @if type-of($bg-active == 'color') and lightness($bg-active) < 50 {
+                opacity: .8;
+            } @else {
+                opacity: .3;
             }
         }
     }
@@ -315,6 +302,7 @@
         justify-content: center;
         cursor: pointer;
         user-select: none;
+        min-width: $icon-size
     }
 
     %node-drop-indicator {
@@ -328,7 +316,7 @@
         > div {
             flex: 1;
             height: rem(1px);
-            background: --var($theme, 'drop-indicator-color');
+            background: --var($theme, 'drop-area-color');
         }
     }
 
@@ -343,7 +331,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(label: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
-@mixin igx-switch-typography(
+@mixin igx-tree-typography(
     $type-scale,
     $categories: (label: 'body-2')
 ) {
@@ -353,4 +341,3 @@
         @include igx-type-style($type-scale, $text)
     }
 }
-

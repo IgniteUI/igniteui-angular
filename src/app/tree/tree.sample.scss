@@ -17,6 +17,14 @@
     overflow-y: auto;
 }
 
+.sample-bottom-gap {
+    margin-bottom: 24px;
+
+    > * {
+        margin-bottom: 16px;
+    }
+}
+
 .sample-ellipsis {
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -36,12 +44,24 @@
 }
 
 .controls {
-    padding: 40px;
+    padding: 24px;
+
+    > * {
+        margin-right: 16px;
+    }
 
     .row {
-        border: 2px solid#d1d1d1;
+        border: 2px solid #d1d1d1;
         padding: 12px;
         margin: 12px;
+    }
+}
+
+.sample-search {
+    margin-right: 24px;
+
+    > * {
+        margin-right: 16px;
     }
 }
 
