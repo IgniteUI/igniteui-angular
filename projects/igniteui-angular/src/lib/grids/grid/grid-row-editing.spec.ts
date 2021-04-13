@@ -29,6 +29,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RowType } from '../common/row.interface';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -1562,7 +1563,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
-        let initialRow: IgxRowDirective<IgxGridBaseDirective>;
+        let initialRow: RowType;
         let initialData: any;
         const $destroyer = new Subject<boolean>();
 
@@ -1571,8 +1572,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
-            initialRow = grid.gridAPI.get_row_by_index(0);
-            initialData = {...initialRow.rowData};
+            initialRow = grid.getRowByIndex(0);
+            initialData = {...initialRow.data};
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));

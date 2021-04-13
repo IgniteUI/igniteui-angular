@@ -39,6 +39,7 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IgxGridCRUDService } from '../common/crud.service';
 import { RowType } from '../common/row.interface';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
+import { RowPinningPosition } from '../common/enums';
 
 let NEXT_ID = 0;
 
@@ -412,10 +413,11 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.filteredSortedData.length) {
+        const data = this.paging ? this.allRowsData : this.filteredSortedData;
+        if (index < 0 || index >= data.length + this.pinnedRecordsCount) {
             return undefined;
         }
-        return new IgxHierarchicalGridRow(this, index, this.filteredSortedData[index]);
+        return this.createRow(index);
     }
 
     /**
@@ -430,11 +432,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param keyValue
      */
     public getRowByKey(key: any): RowType {
+        const data = this.paging ? this.allRowsData : this.filteredSortedData;
         const rec = this.primaryKey ?
-            this.allRowsData.find(record => record[this.primaryKey] === key) :
-            this.allRowsData.find(record => record === key);
-        const index = this.allRowsData.indexOf(rec);
-        if (index < 0 || index > this.allRowsData.length) {
+            data.find(record => record[this.primaryKey] === key) :
+            data.find(record => record === key);
+        const index = data.indexOf[rec];
+        if (index < 0 || index > data.length) {
             return undefined;
         }
 
@@ -795,5 +798,22 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
+    }
+
+    private createRow(index: number): RowType {
+        let row: RowType;
+        let currentPageData: any[] = this.paging ? this.allRowsData : this.filteredSortedData;
+
+        if (this.pinnedRecordsCount) {
+            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
+                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
+        }
+        const rec: any = currentPageData[index];
+
+        if (!row && rec) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
     }
 }

@@ -79,6 +79,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
         const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.length;
         const result: any[] = DataUtil.page(cloneArray(collection), state, total);
         this.gridAPI.grid.pagingState = state;
+        this.gridAPI.grid.allRowsData = result;
         return result;
 
     }
