@@ -8,7 +8,9 @@ export interface RowType {
     isSummaryRow?: boolean;
     summaries?: Map<string, IgxSummaryResult[]>;
     groupRow?: IGroupByRecord;
+    /** Deprecated, will be removed. key is the new property */
     rowID?: any;
+    key?: any;
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;

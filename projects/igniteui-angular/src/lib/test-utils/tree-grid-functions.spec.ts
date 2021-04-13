@@ -304,7 +304,7 @@ export class TreeGridFunctions {
 
         // Verify selection of row through treeGrid
         const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows;
-        expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
+        expect(selectedRows.includes(rowComponent.key)).toBe(expectedSelection);
     }
 
     /**
@@ -357,7 +357,7 @@ export class TreeGridFunctions {
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
-            expect(selectedRows.includes(rowComponent.rowID)).toBe(false);
+            expect(selectedRows.includes(rowComponent.key)).toBe(false);
         }  else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(
@@ -369,7 +369,7 @@ export class TreeGridFunctions {
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
-            expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
+            expect(selectedRows.includes(rowComponent.key)).toBe(expectedSelection);
         }
     }
 

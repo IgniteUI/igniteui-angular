@@ -51,7 +51,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             verifyTreeBaseSummaries(fix);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             // Expand second row and verify summaries
-            treeGrid.toggleRow(treeGrid.getRowByIndex(1).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
@@ -59,7 +59,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
 
             // Expand child row and verify summaries
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
@@ -76,7 +76,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             verifyTreeBaseSummaries(fix);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             // Expand first row and verify summaries
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
@@ -84,7 +84,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
 
             // Expand second row and verify summaries
-            treeGrid.toggleRow(treeGrid.getRowByIndex(5).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(5).key);
             fix.detectChanges();
 
             verifyTreeBaseSummaries(fix);
@@ -92,7 +92,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
 
             // Expand first row child and verify summaries
-            treeGrid.toggleRow(treeGrid.getRowByIndex(4).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(4).key);
             fix.detectChanges();
 
             verifySummaryForRow317(fix, 5);
@@ -197,7 +197,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
             await wait(30);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
@@ -241,7 +241,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
             expect(summaries.length).toBe(4);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             treeGrid.summaryPosition = 'top';
@@ -290,7 +290,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.getColumnByName('Name').hasSummary = true;
             fix.detectChanges();
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
@@ -311,7 +311,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             GridSummaryFunctions.verifyVisibleSummariesHeight(fix, 1);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             let summaries = GridSummaryFunctions.getAllVisibleSummaries(fix);
@@ -521,7 +521,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
             tick(16);
 
@@ -529,7 +529,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             verifyTreeBaseSummaries(fix);
             verifySummaryForRow147(fix, 4);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
             tick(16);
 
@@ -555,14 +555,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
             verifyTreeBaseSummaries(fix);
             verifySummaryForRow147(fix, 1);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(4).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(4).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
@@ -576,7 +576,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             verifyTreeBaseSummaries(fix);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(2).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(2).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
@@ -659,7 +659,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.expandAll();
             fix.detectChanges();
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             const summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -674,34 +674,34 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         });
 
         it('CRUD: delete all root nodes', () => {
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(5).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(5).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(5).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(5).key);
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(5).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(5).key);
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(5).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(5).key);
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['1']);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
@@ -710,15 +710,15 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         });
 
         it('CRUD: delete child node', () => {
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
@@ -731,10 +731,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Count', 'Min', 'Max', 'Sum', 'Avg'], ['2', '29', '43', '72', '36']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Count'], ['2']);
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(2).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(2).key);
             fix.detectChanges();
 
-            treeGrid.deleteRow(treeGrid.getRowByIndex(1).rowID);
+            treeGrid.deleteRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
@@ -762,10 +762,10 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         });
 
         it('CRUD: Update child node', () => {
-            treeGrid.toggleRow(treeGrid.getRowByIndex(1).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             const newRow = {
@@ -1578,14 +1578,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         verifyTreeBaseSummaries(fix);
         expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(1).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
         fix.detectChanges();
 
         verifyTreeBaseSummaries(fix);
         verifySummaryForRow847(fix, 4);
         expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
         fix.detectChanges();
 
         expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);

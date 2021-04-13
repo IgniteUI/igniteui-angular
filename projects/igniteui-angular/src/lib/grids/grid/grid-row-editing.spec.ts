@@ -148,7 +148,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(true);
             const cellEditArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: cell.rowData,
                 oldValue: cell.value,
                 cancel: false,
@@ -207,7 +207,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditExitArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
@@ -231,7 +231,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
@@ -1976,7 +1976,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             const cellArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: cell.rowData,
                 oldValue: 'Chai',
                 newValue: 'New Value',
@@ -2176,7 +2176,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: cell.value,

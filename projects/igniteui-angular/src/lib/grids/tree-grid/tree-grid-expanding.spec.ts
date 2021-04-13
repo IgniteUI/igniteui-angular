@@ -119,7 +119,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
-                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).rowID);
+                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).key);
                 fix.detectChanges();
 
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
@@ -129,7 +129,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
-                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).rowID);
+                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).key);
                 fix.detectChanges();
             }
 
@@ -151,7 +151,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         it('check second level records are having the correct indentation (API)', () => {
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // fix, rowIndex, expectedLevel
@@ -179,11 +179,11 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('check third level records are having the correct indentation (API)', () => {
             // expand second level records
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             // expand third level record
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             // check third level records indentation
@@ -196,18 +196,18 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(4);
 
             // expand second level records
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             // expand third level record
-            treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(9);
 
             // collapse first row with all its children and grand children
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -521,13 +521,13 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             let rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(3);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(5);
 
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -572,7 +572,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             });
 
             for (let rowToToggle = 0; rowToToggle < rows.length; rowToToggle++) {
-                const ri = treeGrid.gridAPI.get_row_by_index(rowToToggle).rowID;
+                const ri = treeGrid.getRowByIndex(rowToToggle).key;
                 treeGrid.toggleRow(ri);
                 fix.detectChanges();
                 for (let rowToCheck = 0; rowToCheck < rows.length; rowToCheck++) {
@@ -582,7 +582,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
                         TreeGridFunctions.verifyTreeRowHasCollapsedIcon(rows[rowToCheck]);
                     }
                 }
-                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).rowID);
+                treeGrid.toggleRow(treeGrid.getRowByIndex(rowToToggle).key);
                 fix.detectChanges();
             }
 
@@ -603,7 +603,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         it('check second level records are having the correct indentation (API)', () => {
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             TreeGridFunctions.verifyRowIndentationLevelByIndex(fix, 1, 1); // fix, rowIndex, expectedLevel
@@ -631,10 +631,10 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('check third level records are having the correct indentation (API)', () => {
             // expand second level records
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
             // expand third level record
-            treeGrid.toggleRow(treeGrid.getRowByIndex(1).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
             // check third level records indentation
@@ -647,18 +647,18 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             expect(rows.length).toBe(3);
 
             // expand second level records
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             // expand third level record
-            treeGrid.toggleRow(treeGrid.getRowByIndex(1).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(7);
 
             // collapse first row with all its children and grand children
-            treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+            treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -1218,12 +1218,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         fix.detectChanges();
         expect(treeGrid.rowEditingOverlay.collapsed).toBeFalsy('Edit overlay should be visible');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should hide');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(treeGrid.rowEditingOverlay.collapsed).toBeTruthy('Edit overlay should not show again');
@@ -1271,12 +1271,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         fix.detectChanges();
         const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('none');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
@@ -1317,12 +1317,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         fix.detectChanges();
         const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
@@ -1365,12 +1365,12 @@ describe('Row editing expanding/collapsing #tGrid', () => {
         const banner = document.getElementsByClassName('igx-overlay__content')[0] as HTMLElement;
         const overlayContent = treeGrid.rowEditingOverlay.element.parentElement;
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         tick(16);
         fix.detectChanges();
         expect(overlayContent.style.display).toEqual('');

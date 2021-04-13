@@ -246,7 +246,7 @@ export class GridRowAPISampleComponent implements OnInit {
             groupByRow: ${row.groupRow?.value},
             -----------------------------,
             expanded: ${row.expanded},
-            key: ${row.rowID},
+            key: ${row.key},
             pinned: ${row.pinned},
             deleted: ${row.deleted},
             inEditMode: ${row.inEditMode},

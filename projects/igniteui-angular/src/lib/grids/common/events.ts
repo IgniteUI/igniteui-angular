@@ -10,7 +10,6 @@ import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
-import { RowType } from './row.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {

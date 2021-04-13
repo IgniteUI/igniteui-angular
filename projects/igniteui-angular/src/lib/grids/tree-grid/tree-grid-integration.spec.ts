@@ -476,7 +476,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             // Collapse parent child row
             let parentRow = grid.getRowByIndex(3);
-            grid.collapseRow(parentRow.rowID);
+            grid.collapseRow(parentRow.key);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -493,7 +493,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             // Collapse parent row
             parentRow = grid.getRowByIndex(0);
-            grid.collapseRow(parentRow.rowID);
+            grid.collapseRow(parentRow.key);
             fix.detectChanges();
 
             banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER));
@@ -552,9 +552,9 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const childCell = grid.getCellByColumn(2, 'Age');
-            const childRowID = childCell.row.rowID;
+            const childRowID = childCell.row.key;
             const parentCell = grid.getCellByColumn(0, 'Age');
-            const parentRowID = parentCell.row.rowID;
+            const parentRowID = parentCell.row.key;
 
             childCell.update(18);
             parentCell.update(33);
@@ -579,10 +579,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const childCell = grid.getCellByColumn(0, 'Age');
-            const childRowID = childCell.row.rowID;
+            const childRowID = childCell.row.key;
             childCell.update(14);
             const parentCell = grid.getCellByColumn(1, 'Age');
-            const parentRowID = parentCell.row.rowID;
+            const parentRowID = parentCell.row.key;
             parentCell.update(80);
             fix.detectChanges();
 
@@ -964,7 +964,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
-            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
@@ -1011,11 +1011,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 Employees: []
             };
 
-            treeGrid.addRow(newRow, parentRow.rowID);
+            treeGrid.addRow(newRow, parentRow.key);
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
-            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             tick(20);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -1023,7 +1023,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(trans.add).toHaveBeenCalledTimes(1);
             const transParams: HierarchicalTransaction = {
                 id: addedRowId,
-                path: [parentRow.rowID],
+                path: [parentRow.key],
                 newValue: newRow,
                 type: TransactionType.ADD
             };
@@ -1067,7 +1067,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
-            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
@@ -1110,11 +1110,11 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
                 Employees: []
             };
 
-            treeGrid.addRow(newRow, parentRow.rowID);
+            treeGrid.addRow(newRow, parentRow.key);
             fix.detectChanges();
 
             const addedRow = treeGrid.rowList.filter(r => r.rowID === addedRowId)[0] as IgxTreeGridRowComponent;
-            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).rowID], true);
+            treeGrid.selectRows([treeGrid.getRowByIndex(addedRow.index).key], true);
             tick(20);
             fix.detectChanges();
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -1122,7 +1122,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(trans.add).toHaveBeenCalledTimes(1);
             const transPasrams: HierarchicalTransaction = {
                 id: addedRowId,
-                path: [treeGrid.getRowByIndex(0).rowID, parentRow.rowID],
+                path: [treeGrid.getRowByIndex(0).key, parentRow.key],
                 newValue: newRow,
                 type: TransactionType.ADD
             };
@@ -1475,7 +1475,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.pinRow(711);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByIndex(visibleRecordsLength).rowID).toBe(711);
+            expect(treeGrid.getRowByIndex(visibleRecordsLength).key).toBe(711);
         });
 
         it('should calculate row indices correctly after row pinning', async () => {
@@ -1487,17 +1487,17 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             await wait();
 
-            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
-            expect(treeGrid.getRowByIndex(1).rowID).toBe(firstRow.rowID);
-            expect(treeGrid.getRowByIndex(2).rowID).toBe(secondRow.rowID);
+            expect(treeGrid.getRowByIndex(0).key).toBe(711);
+            expect(treeGrid.getRowByIndex(1).key).toBe(firstRow.key);
+            expect(treeGrid.getRowByIndex(2).key).toBe(secondRow.key);
 
             treeGrid.unpinRow(711);
             fix.detectChanges();
 
             await wait();
 
-            expect(treeGrid.getRowByIndex(0).rowID).toBe(firstRow.rowID);
-            expect(treeGrid.getRowByIndex(1).rowID).toBe(secondRow.rowID);
+            expect(treeGrid.getRowByIndex(0).key).toBe(firstRow.key);
+            expect(treeGrid.getRowByIndex(1).key).toBe(secondRow.key);
         });
 
         it('should disable pinned row instance in the body', () => {
@@ -1561,14 +1561,14 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // collapse pinned row
-            treeGrid.toggleRow(rowToPin.rowID);
+            treeGrid.toggleRow(rowToPin.key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
             expect(rows.length).toBe(5);
 
             // expand the pinned row
-            treeGrid.toggleRow(rowToPin.rowID);
+            treeGrid.toggleRow(rowToPin.key);
             fix.detectChanges();
 
             rows = TreeGridFunctions.getAllRows(fix);
@@ -1606,16 +1606,16 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.pinRow(711);
             fix.detectChanges();
 
-            expect(treeGrid.getRowByIndex(0).rowID).toBe(147);
-            expect(treeGrid.getRowByIndex(1).rowID).toBe(711);
-            expect(treeGrid.getRowByIndex(2).rowID).toBe(147);
+            expect(treeGrid.getRowByIndex(0).key).toBe(147);
+            expect(treeGrid.getRowByIndex(1).key).toBe(711);
+            expect(treeGrid.getRowByIndex(2).key).toBe(147);
 
             treeGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
-            expect(treeGrid.getRowByIndex(0).rowID).toBe(711);
-            expect(treeGrid.getRowByIndex(1).rowID).toBe(147);
-            expect(treeGrid.getRowByIndex(2).rowID).toBe(847);
+            expect(treeGrid.getRowByIndex(0).key).toBe(711);
+            expect(treeGrid.getRowByIndex(1).key).toBe(147);
+            expect(treeGrid.getRowByIndex(2).key).toBe(847);
         });
 
         it('should not take into account pinned rows when changing items per page', () => {

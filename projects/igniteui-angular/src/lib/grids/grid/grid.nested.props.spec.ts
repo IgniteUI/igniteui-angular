@@ -537,7 +537,7 @@ describe('Edit cell with data of type Array', () => {
         await fixture.whenStable();
 
         const cellArgs: IGridEditEventArgs = {
-            rowID: cell.row.rowID,
+            rowID: cell.row.key,
             cellID: cell.cellID,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
@@ -599,7 +599,7 @@ describe('Edit cell with data of type Array', () => {
         await fixture.whenStable();
 
         const cellArgs: IGridEditEventArgs = {
-            rowID: cell.row.rowID,
+            rowID: cell.row.key,
             cellID: cell.cellID,
             rowData: initialRowData,
             oldValue: initialRowData.locations,

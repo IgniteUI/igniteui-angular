@@ -838,9 +838,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_BOTTOM)).toBeFalsy();
 
             expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(3).key).toBe('2');
 
             hierarchicalGrid.pinRow('2');
             fixture.detectChanges();
@@ -850,9 +850,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
             expect(pinRowContainer[0].children[1].context.rowID).toBe('2');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(4).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(3).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(4).key).toBe('2');
 
             fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
@@ -881,9 +881,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].children[0].nativeElement)
                 .toBe(hierarchicalGrid.gridAPI.get_row_by_index(fixture.componentInstance.data.length).nativeElement);
 
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('2');
 
             // Pin 1st row
             hierarchicalGrid.pinRow('0');
@@ -893,9 +893,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].children.length).toBe(2);
             expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
             expect(pinRowContainer[0].children[1].context.rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('2');
 
             fixture.detectChanges();
             // Check last pinned is fully in view
@@ -985,19 +985,19 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.pinRow('3');
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('3');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('3');
 
             hierarchicalGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
 
             // check pinned rows data is sorted
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('3');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('3');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
 
             // check unpinned rows data is sorted
             // Expect 9 since it is a string.
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('9');
         });
 
         it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async () => {

@@ -152,7 +152,7 @@ describe('Row Pinning #grid', () => {
             spyOn(grid.onRowPinning, 'emit').and.callThrough();
 
             let row = grid.getRowByIndex(0);
-            const rowID = row.rowID;
+            const rowID = row.key;
             row.pin();
             fix.detectChanges();
 
@@ -660,7 +660,7 @@ describe('Row Pinning #grid', () => {
 
             expect(cell.editMode).toBeTruthy();
 
-            grid.pinRow(cell.row.rowID);
+            grid.pinRow(cell.row.key);
             fix.detectChanges();
 
             cell = grid.getCellByColumn(0, 'CompanyName');
@@ -671,7 +671,7 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             expect(cell.editMode).toBeTruthy();
-            grid.unpinRow(cell.row.rowID);
+            grid.unpinRow(cell.row.key);
             fix.detectChanges();
             cell = grid.getCellByColumn(0, 'CompanyName');
             expect(cell.editMode).toBeFalsy();
