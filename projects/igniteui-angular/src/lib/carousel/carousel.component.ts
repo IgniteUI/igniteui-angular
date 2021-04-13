@@ -25,12 +25,12 @@ import { IBaseEventArgs, mkenum, PlatformUtil } from '../core/utils';
 import { Subject, merge } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { IgxCarouselIndicatorDirective, IgxCarouselNextButtonDirective, IgxCarouselPrevButtonDirective } from './carousel.directives';
-import { AnimationBuilder, AnimationReferenceMetadata } from '@angular/animations';
-import { IgxSlideComponent, Direction } from './slide.component';
+import { AnimationBuilder } from '@angular/animations';
+import { IgxSlideComponent } from './slide.component';
 import { ICarouselResourceStrings } from '../core/i18n/carousel-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { HammerGestureConfig, HAMMER_GESTURE_CONFIG } from '@angular/platform-browser';
-import { IgxCarouselComponentBase } from './carousel-base';
+import { CarouselAnimationType, Direction, IgxCarouselComponentBase } from './carousel-base';
 
 let NEXT_ID = 0;
 
@@ -39,18 +39,6 @@ export const CarouselIndicatorsOrientation = mkenum({
     top: 'top'
 });
 export type CarouselIndicatorsOrientation = (typeof CarouselIndicatorsOrientation)[keyof typeof CarouselIndicatorsOrientation];
-
-export const CarouselAnimationType = mkenum({
-    none: 'none',
-    slide: 'slide',
-    fade: 'fade'
-});
-export type CarouselAnimationType = (typeof CarouselAnimationType)[keyof typeof CarouselAnimationType];
-
-export interface CarouselAnimationSettings {
-    enterAnimation: AnimationReferenceMetadata;
-    leaveAnimation: AnimationReferenceMetadata;
-}
 
 @Injectable()
 export class CarouselHammerConfig extends HammerGestureConfig {
@@ -239,7 +227,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      *
      * @memberOf IgxSlideComponent
      */
-    // @Input() public animationType = CarouselAnimationType.slide;
+    @Input() public animationType = CarouselAnimationType.slide;
 
     /**
      * The custom template, if any, that should be used when rendering carousel indicators
@@ -389,8 +377,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @internal
      */
     public stoppedByInteraction: boolean;
-    protected currentSlide: IgxSlideComponent;
-    protected previousSlide: IgxSlideComponent;
+    protected currentItem: IgxSlideComponent;
+    protected previousItem: IgxSlideComponent;
     private _interval: number;
     private _resourceStrings = CurrentResourceStrings.CarouselResStrings;
     private lastInterval: any;
@@ -481,7 +469,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @memberOf IgxCarouselComponent
      */
     public get current(): number {
-        return !this.currentSlide ? 0 : this.currentSlide.index;
+        return !this.currentItem ? 0 : this.currentItem.index;
     }
 
     /**
@@ -547,8 +535,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     constructor(private element: ElementRef, private iterableDiffers: IterableDiffers,
-        private animationBuilder: AnimationBuilder, private platformUtil: PlatformUtil) {
-        super(animationBuilder);
+        builder: AnimationBuilder, private platformUtil: PlatformUtil) {
+        super(builder);
         this.differ = this.iterableDiffers.find([]).create(null);
     }
 
@@ -648,11 +636,11 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         }
         event.preventDefault();
 
-        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
+        const slideWidth = this.currentItem.nativeElement.offsetWidth;
         const panOffset = (slideWidth / 1000);
         const deltaX = Math.abs(event.deltaX) + panOffset < slideWidth ? Math.abs(event.deltaX) : slideWidth - panOffset;
         const velocity = Math.abs(event.velocity);
-        this.resetSlideStyles(this.currentSlide);
+        this.resetSlideStyles(this.currentItem);
         if (this.incomingSlide) {
             this.resetSlideStyles(this.incomingSlide);
             if (slideWidth / 2 < deltaX || velocity > 1) {
@@ -667,9 +655,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 }
                 this.incomingSlide.active = true;
             } else {
-                this.currentSlide.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
-                this.previousSlide = this.incomingSlide;
-                this.previousSlide.previous = true;
+                this.currentItem.direction = event.deltaX > 0 ? Direction.NEXT : Direction.PREV;
+                this.previousItem = this.incomingSlide;
+                this.previousItem.previous = true;
                 this.animationPosition = this.animationType === CarouselAnimationType.fade ?
                     Math.abs((slideWidth - deltaX) / slideWidth) : deltaX / slideWidth;
                 this.playAnimations();
@@ -753,7 +741,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
      * @memberOf IgxCarouselComponent
      */
     public select(slide: IgxSlideComponent, direction: Direction = Direction.NONE) {
-        if (slide && slide !== this.currentSlide) {
+        if (slide && slide !== this.currentItem) {
             slide.direction = direction;
             slide.active = true;
         }
@@ -833,12 +821,12 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     protected getPreviousElement(): HTMLElement {
-        return this.previousSlide.nativeElement;
+        return this.previousItem.nativeElement;
     }
 
     protected getCurrentElement(): HTMLElement {
 
-        return this.currentSlide.nativeElement;
+        return this.currentItem.nativeElement;
     }
 
     private resetInterval() {
@@ -887,7 +875,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     private pan(event) {
-        const slideWidth = this.currentSlide.nativeElement.offsetWidth;
+        const slideWidth = this.currentItem.nativeElement.offsetWidth;
         const panOffset = (slideWidth / 1000);
         const deltaX = event.deltaX;
         const index = deltaX < 0 ? this.getNextIndex() : this.getPrevIndex();
@@ -908,8 +896,8 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
             this.stop();
         }
 
-        if (this.previousSlide && this.previousSlide.previous) {
-            this.previousSlide.previous = false;
+        if (this.previousItem && this.previousItem.previous) {
+            this.previousItem.previous = false;
         }
         this.finishAnimations();
 
@@ -925,9 +913,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         this.incomingSlide.previous = true;
 
         if (this.animationType === CarouselAnimationType.fade) {
-            this.currentSlide.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
+            this.currentItem.nativeElement.style.opacity = `${Math.abs(offset) / slideWidth}`;
         } else {
-            this.currentSlide.nativeElement.style.transform = `translateX(${deltaX}px)`;
+            this.currentItem.nativeElement.style.transform = `translateX(${deltaX}px)`;
             this.incomingSlide.nativeElement.style.transform = `translateX(${offset}px)`;
         }
     }
@@ -937,33 +925,24 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     }
 
     private onSlideActivated(slide: IgxSlideComponent) {
-        if (slide.active && slide !== this.currentSlide) {
+        if (slide.active && slide !== this.currentItem) {
             if (slide.direction === Direction.NONE) {
                 const newIndex = slide.index;
                 slide.direction = newIndex > this.current ? Direction.NEXT : Direction.PREV;
             }
 
-            if (this.currentSlide) {
-                if (this.previousSlide && this.previousSlide.previous) {
-                    this.previousSlide.previous = false;
+            if (this.currentItem) {
+                if (this.previousItem && this.previousItem.previous) {
+                    this.previousItem.previous = false;
                 }
-                this.currentSlide.direction = slide.direction;
-                this.currentSlide.active = false;
+                this.currentItem.direction = slide.direction;
+                this.currentItem.active = false;
 
-                this.previousSlide = this.currentSlide;
-                this.currentSlide = slide;
-                if (this.animationType !== CarouselAnimationType.none) {
-                    if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
-                        requestAnimationFrame(() => {
-                            this.resetAnimations();
-                            this.playAnimations();
-                        });
-                    } else {
-                        this.playAnimations();
-                    }
-                }
+                this.previousItem = this.currentItem;
+                this.currentItem = slide;
+                this.triggerAnimations();
             } else {
-                this.currentSlide = slide;
+                this.currentItem = slide;
             }
             this.onSlideChanged.emit({ carousel: this, slide });
             this.restartInterval();
@@ -990,7 +969,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 slide.total = this.total;
                 this.onSlideAdded.emit({ carousel: this, slide });
                 if (slide.active) {
-                    this.currentSlide = slide;
+                    this.currentItem = slide;
                 }
                 slide.activeChange.pipe(takeUntil(this.unsubscriber(slide))).subscribe(() => this.onSlideActivated(slide));
             });
@@ -1000,7 +979,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
                 this.onSlideRemoved.emit({ carousel: this, slide });
                 if (slide.active) {
                     slide.active = false;
-                    this.currentSlide = this.get(slide.index < this.total ? slide.index : this.total - 1);
+                    this.currentItem = this.get(slide.index < this.total ? slide.index : this.total - 1);
                 }
             });
 
@@ -1011,9 +990,9 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
     private updateSlidesSelection() {
         if (this.platformUtil.isBrowser) {
             requestAnimationFrame(() => {
-                if (this.currentSlide) {
-                    this.currentSlide.active = true;
-                    const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
+                if (this.currentItem) {
+                    this.currentItem.active = true;
+                    const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentItem.index);
                     activeSlides.forEach(slide => slide.active = false);
                 } else if (this.total) {
                     this.slides.first.active = true;
