@@ -481,7 +481,7 @@ describe('Grid nested data advanced editing', () => {
         fixture.detectChanges();
         await fixture.whenStable();
 
-        expect(grid.getRowByIndex(0).rowData.user.address.zip).toMatch('1618');
+        expect(grid.getRowByIndex(0).data.user.address.zip).toMatch('1618');
         expect(copiedData[2].user.address.zip).toMatch('1618');
     });
 });

@@ -1,3 +1,4 @@
+import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
 import { RowPinningPosition } from './common/enums';
@@ -20,10 +21,10 @@ export class IgxGridRow implements RowType {
     }
 
     /**
-     *  The data passed to the row component.
+     * The data record that populates the row.
      *
      * ```typescript
-     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * let rowData = row.data;
      * ```
      */
     public get data(): any {
@@ -39,10 +40,11 @@ export class IgxGridRow implements RowType {
     }
 
     /**
-     * Needs to be removed !
+     * @deprecated Use 'data' instead.
      *
-     * @hidden
+     * The data record that populates the row
      */
+    @DeprecateProperty(`'rowData' property is deprecated. Use 'data' instead.`)
     public get rowData(): any {
         return this.data;
     }
@@ -198,7 +200,7 @@ export class IgxGridRow implements RowType {
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.endEdit(false);
         }
-        const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
+        const row = new IgxRow(this.rowID, this.index, this.data, this.grid);
         this.gridAPI.update_row(row, value);
         this.grid.cdr.markForCheck();
     }
@@ -276,7 +278,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      */
     public get viewIndex(): number {
         if ((this.grid as any).groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.rowData);
+            return this.grid.filteredSortedData.indexOf(this.data);
         }
         return this.index + this.grid.page * this.grid.perPage;
     }

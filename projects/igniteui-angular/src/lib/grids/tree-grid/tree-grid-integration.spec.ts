@@ -1522,7 +1522,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const rowToPin = treeGrid.getRowByIndex(0);
             const primaryKey = treeGrid.primaryKey;
 
-            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            treeGrid.pinRow(rowToPin.data[primaryKey]);
             fix.detectChanges();
             fix.detectChanges();
 
@@ -1540,7 +1540,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const rowToPin = treeGrid.getRowByIndex(0);
             const primaryKey = treeGrid.primaryKey;
 
-            treeGrid.pinRow(rowToPin.rowData[primaryKey]);
+            treeGrid.pinRow(rowToPin.data[primaryKey]);
             fix.detectChanges();
 
             const thirdColumnField = treeGrid.columns[2].field;

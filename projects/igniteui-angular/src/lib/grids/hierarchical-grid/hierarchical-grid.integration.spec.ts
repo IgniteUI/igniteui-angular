@@ -229,7 +229,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.primaryKey = 'ID';
             fixture.detectChanges();
 
-            const rowData = hierarchicalGrid.getRowByKey('2').rowData;
+            const rowData = hierarchicalGrid.getRowByKey('2').data;
             expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
 
             hierarchicalGrid.sort({ fieldName: 'ChildLevels', dir: SortingDirection.Desc, ignoreCase: true });

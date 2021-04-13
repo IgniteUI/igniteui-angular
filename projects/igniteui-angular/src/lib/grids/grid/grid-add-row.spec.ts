@@ -859,7 +859,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(row2).not.toBeNull();
             expect(groupRows[2].expanded).toBeTrue();
             expect(groupRows[2].groupRow.records.length).toEqual(2);
-            expect(groupRows[2].groupRow.records[1]).toBe(row2.rowData);
+            expect(groupRows[2].groupRow.records[1]).toBe(row2.data);
         });
     });
 

@@ -176,7 +176,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: cell.row.rowData,
+                rowData: cell.row.data,
                 oldValue: cell.value,
                 newValue: cell.value,
                 column: cell.column,
@@ -1714,17 +1714,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.endRowEditTabStop(true, null);
             fix.detectChanges();
 
-            const rowData = Object.assign({}, cell.row.rowData, newRowData);
+            const rowData = Object.assign({}, cell.row.data, newRowData);
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.rowData).not.toEqual(rowData);
+            expect(cell.row.data).not.toEqual(rowData);
 
             grid.gridAPI.crudService.endRowEditTabStop(false, null);
             fix.detectChanges();
 
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.rowData).not.toEqual(rowData);
+            expect(cell.row.data).not.toEqual(rowData);
         });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {

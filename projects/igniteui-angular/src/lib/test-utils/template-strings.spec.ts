@@ -113,7 +113,7 @@ export class ColumnDefinitions {
     <igx-column [field]="'Avatar'" header="Photo" [searchable]="false">
         <ng-template igxCell let-cell="cell">
             <div class="cell__inner avatar-cell">
-                <img [src]="cell.row.rowData.Avatar" width="30px" height="30px"/>
+                <img [src]="cell.row.data.Avatar" width="30px" height="30px"/>
             </div>
         </ng-template>
     </igx-column>

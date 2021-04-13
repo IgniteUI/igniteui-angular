@@ -81,7 +81,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             expect(treeGrid.rowList.length).toBe(9);
             const addedRow = treeGrid.getRowByIndex(4);
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
 
         });
 

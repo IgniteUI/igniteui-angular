@@ -28,8 +28,9 @@ import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 import { DataType } from '../data-operations/data-util';
-import { IgxGridRow, IgxTreeGridRow } from './grid-public-row';
+import { IgxGridRow, IgxHierarchicalGridRow, IgxTreeGridRow } from './grid-public-row';
 import { IgxRowDirective } from './row.directive';
+import { IgxGridComponent } from './grid/grid.component';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { IgxTreeGridRowComponent } from './tree-grid/tree-grid-row.component';
 
@@ -92,8 +93,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get row(): RowType {
         if (this.grid instanceof IgxTreeGridComponent) {
             return new IgxTreeGridRow(this.grid, this.intRow.index, this.intRow.rowData, (this.intRow as IgxTreeGridRowComponent).treeRow);
-        } else {
+        } else if (this.grid instanceof IgxGridComponent) {
             return new IgxGridRow(this.grid, this.intRow.index, this.intRow.rowData);
+        } else {
+            return new IgxHierarchicalGridRow(this.grid, this.intRow.index, this.intRow.rowData);
         }
     }
 

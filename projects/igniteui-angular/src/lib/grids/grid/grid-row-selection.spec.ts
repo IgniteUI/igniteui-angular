@@ -1402,29 +1402,29 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should be able to select row through primaryKey and index', () => {
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['ProductName']).toMatch('Aniseed Syrup');
+            expect(grid.getRowByKey(2).data['ProductName']).toMatch('Aniseed Syrup');
             expect(grid.gridAPI.get_row_by_index(1).rowData['ProductName']).toMatch('Aniseed Syrup');
         });
 
         it('Should be able to update a cell in a row through primaryKey', () => {
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(198);
+            expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(198);
             grid.updateCell(300, 2, 'UnitsInStock');
             fix.detectChanges();
-            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(300);
+            expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(300);
         });
 
         it('Should be able to update row through primaryKey', () => {
             spyOn(grid.rowEdit, 'emit').and.callThrough();
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
-            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(198);
+            expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(198);
             grid.updateRow({ ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 300 }, 2);
             expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
             fix.detectChanges();
             expect(grid.gridAPI.get_row_by_index(1).rowData['UnitsInStock']).toEqual(300);
-            expect(grid.getRowByKey(2).rowData['UnitsInStock']).toEqual(300);
+            expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(300);
         });
 
         it('Should be able to delete a row through primaryKey', () => {
