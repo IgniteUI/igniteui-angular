@@ -443,8 +443,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _oldValue: Date | string;
     private _minDropdownValue: Date;
     private _maxDropdownValue: Date;
-    private _inputFormat: string;
-    private _displayFormat: string;
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
@@ -762,9 +760,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         if (isDate(this.value)) {
+            const oldValue = new Date(this.value);
             this.value.setHours(0, 0, 0);
-            this.dateTimeEditor.value = new Date(this.value);
-            this.setSelectedValue();
+            if (this.value.getTime() !== oldValue.getTime()) {
+                this.emitValueChange(oldValue, this.value);
+                this._dateValue.setHours(0, 0, 0);
+                this.dateTimeEditor.value = new Date(this.value);
+                this.setSelectedValue();
+            }
         } else {
             this.value = null;
         }
@@ -969,7 +972,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public nextAmPm(delta?: number) {
-        debugger;
         let ampm = this.getPartValue(this._selectedDate, 'ampm');
         if (!delta || (ampm === 'AM' && delta > 0) || (ampm === 'PM' && delta < 0)) {
             let hours = this._selectedDate.getHours();
