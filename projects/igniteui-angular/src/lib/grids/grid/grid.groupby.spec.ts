@@ -291,8 +291,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(dataRows.length).toEqual(4);
         // verify collapsed group sub records are not rendered
 
+        //  behavioral change! row should not be returned, as its parent is collapsed
         for (const rec of groupRows[0].groupRow.records) {
-            expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
+            expect(grid.getRowByKey(rec.ID)).toBeUndefined();
         }
 
         // toggle grouprow - expand
@@ -300,6 +301,11 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         fix.detectChanges();
         expect(groupRows[0].expanded).toEqual(true);
+
+        for (const rec of groupRows[0].groupRow.records) {
+            expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
+        }
+
         groupRows = grid.groupsRowList.toArray();
         dataRows = grid.dataRowList.toArray();
         expect(groupRows.length).toEqual(3);

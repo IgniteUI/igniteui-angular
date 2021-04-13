@@ -1089,10 +1089,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const rec = this.primaryKey ?
             this.filteredSortedData.find(record => record[this.primaryKey] === key) :
             this.filteredSortedData.find(record => record === key);
-        const index = this.filteredSortedData.indexOf(rec);
-        if (index < 0 || !rec) {
+        const index = this.allRowsData.indexOf(rec);
+        if (index < 0 || index > this.allRowsData.length) {
             return undefined;
         }
+
         return new IgxGridRow(this, index, rec);
     }
 

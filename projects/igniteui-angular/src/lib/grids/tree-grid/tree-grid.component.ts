@@ -661,13 +661,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const treeRow: ITreeGridRecord = this.primaryKey ? this.filteredSortedData.find(r => r.data && r.data[this.primaryKey] === key) :
-            this.filteredSortedData.find(r => r.rowData === key);
-        const index = this.filteredSortedData.findIndex(r => r === treeRow);
-        if (index < 0 || index >= this.allRowsData.length) {
+        const rec = this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
+            this.filteredSortedData.find(r => r === key);
+        const index = this.allRowsData.findIndex(r => r.data && r.data === rec);
+        if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
-        return new IgxTreeGridRow(this, index, treeRow.data, treeRow);
+        return new IgxTreeGridRow(this, index, rec);
     }
 
     /** @hidden */

@@ -431,10 +431,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      */
     public getRowByKey(key: any): RowType {
         const rec = this.primaryKey ?
-            this.filteredSortedData.find(record => record[this.primaryKey] === key) :
-            this.filteredSortedData.find(record => record === key);
-        const index = this.filteredSortedData.indexOf(rec);
-        if (index < 0 || index > this.filteredSortedData.length) {
+            this.allRowsData.find(record => record[this.primaryKey] === key) :
+            this.allRowsData.find(record => record === key);
+        const index = this.allRowsData.indexOf(rec);
+        if (index < 0 || index > this.allRowsData.length) {
             return undefined;
         }
 
