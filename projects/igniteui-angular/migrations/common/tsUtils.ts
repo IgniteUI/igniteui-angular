@@ -18,28 +18,29 @@ export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
 // }
 
-export const getIdentifierPositions = (sourceText: string, name: string): Array<{ start: number; end: number }> => {
-    const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
+export const getIdentifierPositions = (source: string | ts.SourceFile, name: string): Array<{ start: number; end: number }> => {
+    if (typeof source === 'string') {
+        source = ts.createSourceFile('', source, ts.ScriptTarget.Latest, true);
+    }
     const positions = [];
 
     const checkIdentifier = (node: ts.Node): boolean => {
-        if (node.kind !== ts.SyntaxKind.Identifier || !node.parent) {
+        if (!ts.isIdentifier(node) || !node.parent) {
             return false;
         }
         if (node.parent.kind === ts.SyntaxKind.PropertyDeclaration) {
+            // `const identifier = ...`
             return false;
         }
-        if (node.parent.kind === ts.SyntaxKind.PropertyAssignment ||
-            node.parent.kind === ts.SyntaxKind.PropertySignature) {
+        if (ts.isPropertyAssignment(node.parent) || ts.isPropertySignature(node.parent)) {
             // make sure it's not prop assign  `= { IgxClass: "fake"}`
             //                  definition `prop: { IgxClass: string; }`
             //                                     name: initializer
-            const propAssign: ts.PropertyAssignment | ts.PropertySignature = node.parent as ts.PropertyAssignment | ts.PropertySignature;
-            if (propAssign.name.getText() === name) {
+            if (node.parent.name.getText() === name) {
                 return false;
             }
         }
-        return (node as ts.Identifier).text === name;
+        return node.text === name;
     };
 
     const findIdentifiers = (node: ts.Node) => {
