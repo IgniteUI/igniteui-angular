@@ -104,12 +104,11 @@ describe('IgxSnackbar with custom content', () => {
         }).compileComponents();
     }));
 
-    let fixture; let domSnackbar; let snackbar;
+    let fixture; let snackbar;
     beforeEach(waitForAsync(() => {
         fixture = TestBed.createComponent(SnackbarCustomContentComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
-        domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
     }));
 
     it('should display a message, a custom content element and a button', () => {
