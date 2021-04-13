@@ -18,14 +18,14 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
     /**
      * @inheritdoc
      */
-    get canUndo(): boolean {
+    public get canUndo(): boolean {
         return this._undoStack.length > 0;
     }
 
     /**
      * @inheritdoc
      */
-    get canRedo(): boolean {
+    public get canRedo(): boolean {
         return this._redoStack.length > 0;
     }
 
