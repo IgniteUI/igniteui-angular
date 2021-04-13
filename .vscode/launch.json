@@ -26,11 +26,12 @@
             "args": [
                 "-r",
                 "ts-node/register",
-                "path/to/ng", "g",
-                "path/to/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>"
+                // e.g. "${env:AppData}/npm/node_modules/@angular/cli/bin/ng"
+                "<path/to/ng>", "g",
+                "<../path/to>/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>"
             ],
             "env": {
-                "TS_NODE_PROJECT": "path/to/igniteui-angular/projects/igniteui-angular/migrations/tsconfig.json"
+                "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/migrations/tsconfig.json"
             }
         }
     ]

@@ -244,7 +244,7 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
-    (langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null => {
+    (langServ: tss.LanguageService, entryPath: string, position: number): Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
         const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
         if (!definition) {
             return null;
@@ -253,6 +253,19 @@ export const getTypeDefinitionAtPosition =
         // if the definition's kind is a reference, the identifier is a template variable referred in an internal/external template
         if (definition.kind.toString() === 'reference') {
             return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
+        }
+        if (definition.kind.toString() === 'method') {
+            // TODO:
+            // const typeChecker = langServ.getProgram().getTypeChecker();
+            // typeChecker.getSymbolAtLocation() // need getTokenAtPosition / adapted getTokenAtPositionWorker from ts
+            // typeChecker.getReturnTypeOfSignature()
+
+            const maybeReturnType = langServ.getQuickInfoAtPosition(entryPath, position).displayParts?.pop();
+
+            // quick info (and getImplementationAtPosition) have the return type as last of the displayParts
+            // check if it's a className (potentially Ignite comp) and use for definition name:
+            definition.name = maybeReturnType.kind === 'className' ? maybeReturnType.text : '';
+            return definition;
         }
         let typeDefs = getTypeDefinitions(langServ, entryPath, definition.textSpan.start);
         // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
@@ -302,6 +315,12 @@ export const getTypeDefinitionAtPosition =
 
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
+        const prevChar = langServ.getProgram().getSourceFile(entryPath).getText().substr(matchPosition - 2, 1);
+        if (prevChar === ')') {
+            // methodCall().identifier
+            matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 2)[0]?.start ?? matchPosition;
+
+        }
         const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
         return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
     };
