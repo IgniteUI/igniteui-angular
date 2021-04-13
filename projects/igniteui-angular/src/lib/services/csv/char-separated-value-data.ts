@@ -32,7 +32,7 @@ export class CharSeparatedValueData {
             return '';
         }
 
-        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._escapeCharacters.push(this._delimiter);
 
         this._headerRecord = this.processHeaderRecord(keys);
@@ -52,7 +52,7 @@ export class CharSeparatedValueData {
             done('');
         }
 
-        this._isSpecialData = ExportUtilities.isSpecialData(this._data);
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._escapeCharacters.push(this._delimiter);
 
         this._headerRecord = this.processHeaderRecord(keys);

@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -96,11 +96,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.field);
             } else {
-                const defaultOwner = this._ownersMap.get('default');
+                const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
-                columnCount = this._ownersMap.get('default').columns.length;
-                rootKeys = this._ownersMap.get('default').columns.filter(c => c.field);
+                columnCount = defaultOwner.columns.length;
+                rootKeys = defaultOwner.columns.map(c => c.field);
             }
         }
 

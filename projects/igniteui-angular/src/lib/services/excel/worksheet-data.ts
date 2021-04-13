@@ -1,4 +1,4 @@
-import { ExportRecordType, IExportRecord, IMapRecord } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -31,10 +31,6 @@ export class WorksheetData {
         return !this.rowCount || !this.columnCount;
     }
 
-    public get keys(): string[] {
-        return this.rootKeys;
-    }
-
     public get isSpecialData(): boolean {
         return this._isSpecialData;
     }
@@ -48,13 +44,11 @@ export class WorksheetData {
             return;
         }
 
-        const actualData = this._data.filter(item => item.type !== ExportRecordType.HeaderRecord).map(item => item.data);
-
         if (this._data[0].type === ExportRecordType.HierarchicalGridRecord) {
             this.options.exportAsTable = false;
         }
 
-        this._isSpecialData = ExportUtilities.isSpecialData(actualData);
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._rowCount = this._data.length + 1;
         this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
     }

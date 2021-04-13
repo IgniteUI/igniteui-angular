@@ -61,7 +61,6 @@ export class WorksheetFile implements IExcelFile {
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
-    private globalCounter = 0;
 
     public writeElement() {}
 
@@ -69,9 +68,10 @@ export class WorksheetFile implements IExcelFile {
         return new Promise<void>(resolve => {
             this.prepareDataAsync(worksheetData, (cols, rows) => {
                 const hasTable = !worksheetData.isEmpty && worksheetData.options.exportAsTable;
+                const isHierarchicalGrid = worksheetData.data[0]?.type === ExportRecordType.HierarchicalGridRecord;
 
                 folder.file('sheet1.xml', ExcelStrings.getSheetXML(
-                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel));
+                    this.dimension, this.freezePane, cols, rows, hasTable, this.maxOutlineLevel, isHierarchicalGrid));
                 resolve();
             });
         });
@@ -97,7 +97,7 @@ export class WorksheetFile implements IExcelFile {
 
             for (let i = 0; i < worksheetData.rootKeys.length; i++) {
                 const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
+                const value = dictionary.saveValue(worksheetData.rootKeys[i], true);
                 sheetData += `<c r="${column}"${rowStyle} t="s"><v>${value}</v></c>`;
             }
             sheetData += '</row>';
@@ -132,7 +132,8 @@ export class WorksheetFile implements IExcelFile {
                         `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
             } else {
-                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="20" customWidth="1"/></cols>`;
+                const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
+                cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {
@@ -176,10 +177,9 @@ export class WorksheetFile implements IExcelFile {
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
 
-            const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j], this.globalCounter);
+            const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j]);
 
             rowData[j + 1] = cellData;
-            this.globalCounter++;
         }
 
         rowData[keys.length + 1] = '</row>';
@@ -188,7 +188,7 @@ export class WorksheetFile implements IExcelFile {
     }
 
     /* eslint-disable  @typescript-eslint/member-ordering */
-    private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string, globalCounter: number): string {
+    private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
         const fullRow = worksheetData.data[row - 1];
@@ -196,14 +196,12 @@ export class WorksheetFile implements IExcelFile {
 
         const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
-            isHeaderRecord ?
-                fullRow.data[key].header :
-                fullRow.data[key];
+            fullRow.data[key];
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
         } else {
-            const savedValue = dictionary.saveValue(cellValue, globalCounter, false);
+            const savedValue = dictionary.saveValue(cellValue, isHeaderRecord);
             const isSavedAsString = savedValue !== -1;
 
             const isSavedAsDate = !isSavedAsString && cellValue instanceof Date;
@@ -286,7 +284,7 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.keys;
+        const values = worksheetData.rootKeys;
         let sortString = '';
 
         let tableColumns = '<tableColumns count="' + columnCount + '">';

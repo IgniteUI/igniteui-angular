@@ -26,7 +26,7 @@ export class ExcelStrings {
         const fillsCount = isHierarchicalGrid ? 3 : 2;
 
         const additionalFill = fillsCount === 3 ?
-            '<fill><patternFill patternType="solid"><fgColor rgb="FF0D1822"/><bgColor indexed="64"/></patternFill> </fill>' :
+            '<fill><patternFill patternType="solid"><fgColor rgb="FF0D1822"/><bgColor indexed="64"/></patternFill></fill>' :
             '';
 
         const additionalFont = fontsCount === 2 ?
@@ -72,20 +72,20 @@ export class ExcelStrings {
         return retVal;
     }
 
-    public static getSheetXML(dimension: string, freezePane: string, cols: string, sheetData: string, hasTable: boolean, outlineLevel = 0): string {
+    public static getSheetXML(dimension: string, freezePane: string, cols: string, sheetData: string, hasTable: boolean, outlineLevel = 0, isHierarchicalGrid: boolean): string {
         const hasOutline = outlineLevel > 0;
         const tableParts = hasTable ? '<tableParts count="1"><tablePart r:id="rId1"/></tableParts>' : '';
         const sheetOutlineProp = hasOutline ? '<sheetPr><outlinePr summaryBelow="0"/></sheetPr>' : '';
         const sOutlineLevel =  hasOutline ? `outlineLevelRow="${outlineLevel}"` : '';
+        const dimensions = isHierarchicalGrid ? '' : `<dimension ref="${dimension}"/>`;
+
         // return ExcelStrings.XML_STRING +
         //     '<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"><dimension ref="' + dimension + '"/><sheetViews><sheetView tabSelected="1" workbookViewId="0">' + freezePane + '</sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" x14ac:dyDescent="0.25"/>' + cols + sheetData + '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>' + tableParts + '</worksheet>';
 
-
-        // TODO FIX !
-        //below sheetoutlineprop - <dimension ref="${dimension}"/>
         return `${ExcelStrings.XML_STRING}
 <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">
 ${sheetOutlineProp}
+${dimensions}
 <sheetViews><sheetView tabSelected="1" workbookViewId="0">${freezePane}</sheetView></sheetViews>
 <sheetFormatPr defaultRowHeight="15" ${sOutlineLevel} x14ac:dyDescent="0.25"/>
 ${cols}
