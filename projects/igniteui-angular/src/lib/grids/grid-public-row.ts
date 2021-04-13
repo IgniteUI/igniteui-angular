@@ -13,6 +13,13 @@ import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 export class IgxGridRow implements RowType {
     /**
+     * Returns the view index calculated per the grid page.
+     */
+    public get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
      *  The data passed to the row component.
      *
      * ```typescript
@@ -263,6 +270,10 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
         }
         return this._data ?? allRowsData[this.index];
     }
+
+    /**
+     * Returns the view index calculated per the grid page.
+     */
     public get viewIndex(): number {
         if ((this.grid as any).groupingExpressions.length) {
             return this.grid.filteredSortedData.indexOf(this.rowData);
@@ -357,7 +368,26 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
 }
 
 export class IgxHierarchicalGridRow extends IgxGridRow implements RowType {
+    /**
+     * @hidden
+     */
+    constructor(private _hgrid: IgxHierarchicalGridComponent, index: number, _data?: any, private _treeRow?: ITreeGridRecord) {
+        super(_hgrid, index, _data);
+    }
 
+    /**
+     * Returns true if row islands exist.
+     */
+    public get hasChildren(): boolean {
+        return  !!this.grid.childLayoutKeys.length;
+    }
+
+    /**
+     * Get a reference to the grid that contains the selected row.
+     */
+    protected get grid(): IgxHierarchicalGridComponent {
+        return this._hgrid as IgxHierarchicalGridComponent;
+    }
 }
 
 export class IgxGroupByRow implements RowType {

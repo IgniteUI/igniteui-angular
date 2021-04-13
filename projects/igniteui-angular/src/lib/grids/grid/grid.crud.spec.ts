@@ -359,7 +359,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.primaryKey = null;
         fix.detectChanges();
         expect(grid.primaryKey).toBeNull();
-        let firstRow = grid.gridAPI.get_row_by_index(0);
+        let firstRow = grid.getRowByIndex(0);
         firstRow.update({ index: 100, value: 99});
 
         fix.detectChanges();
