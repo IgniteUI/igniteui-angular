@@ -645,7 +645,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.allRowsData.length) {
+        if (index < 0 || index >= this.allRowsData.length + this.pinnedRecordsCount) {
             return undefined;
         }
         return this.createRow(index);

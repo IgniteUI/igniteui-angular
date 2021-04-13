@@ -1,5 +1,6 @@
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
+import { RowPinningPosition } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
@@ -15,13 +16,26 @@ export class IgxGridRow implements RowType {
      *  The data passed to the row component.
      *
      * ```typescript
-     * // get the row data for the first selected row
      * let selectedRowData = this.grid.selectedRows[0].rowData;
      * ```
      */
     public get data(): any {
-        return this._data ?? this.grid.allRowsData[this.index];
+        const grid = this.grid;
+        let allRowsData = grid.allRowsData;
+        if (!this._data) {
+            if (grid.pinnedRecordsCount) {
+                allRowsData = grid.pinning.rows !== RowPinningPosition.Bottom ?
+                    [...grid.pinnedRecords, ...grid.allRowsData] : [...grid.allRowsData, ...grid.pinnedRecords];
+            }
+        }
+        return this._data ?? allRowsData[this.index];
     }
+
+    /**
+     * Needs to be removed !
+     *
+     * @hidden
+     */
     public get rowData(): any {
         return this.data;
     }
@@ -158,7 +172,7 @@ export class IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _grid: IgxGridBaseDirective, index: number, private _data?: any) {
+    constructor(private _grid: IgxGridBaseDirective, index: number, protected _data?: any) {
         this.index = index;
     }
 
@@ -231,7 +245,28 @@ export class IgxGridRow implements RowType {
 }
 
 export class IgxTreeGridRow extends IgxGridRow implements RowType {
+    /**
+     *  The data passed to the row component.
+     *
+     * ```typescript
+     * let selectedRowData = this.grid.selectedRows[0].rowData;
+     * ```
+     */
+    public get data(): any {
+        const grid = this.grid;
+        let allRowsData = grid.allRowsData;
+        if (!this._data) {
+            if (grid.pinnedRecordsCount) {
+                allRowsData = grid.pinning.rows !== RowPinningPosition.Bottom ?
+                    [...grid.pinnedRecords, ...grid.allRowsData] : [...grid.allRowsData, ...grid.pinnedRecords];
+            }
+        }
+        return this._data ?? allRowsData[this.index];
+    }
     public get viewIndex(): number {
+        if ((this.grid as any).groupingExpressions.length) {
+            return this.grid.filteredSortedData.indexOf(this.rowData);
+        }
         return this.index + this.grid.page * this.grid.perPage;
     }
 
@@ -270,8 +305,8 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _tgrid: IgxTreeGridComponent, index: number, data?: any, private _treeRow?: ITreeGridRecord) {
-        super(_tgrid, index, data);
+    constructor(private _tgrid: IgxTreeGridComponent, index: number, _data?: any, private _treeRow?: ITreeGridRecord) {
+        super(_tgrid, index, _data);
     }
 
     /**
@@ -319,6 +354,10 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.rowID, val);
     }
+}
+
+export class IgxHierarchicalGridRow extends IgxGridRow implements RowType {
+
 }
 
 export class IgxGroupByRow implements RowType {

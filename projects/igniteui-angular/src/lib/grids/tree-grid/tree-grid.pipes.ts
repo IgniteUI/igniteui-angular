@@ -209,20 +209,17 @@ export class IgxTreeGridSortingPipe implements PipeTransform {
         }
 
         const filteredSortedData = [];
-        const treeRecords = [];
-        this.flattenTreeGridRecords(result, filteredSortedData, treeRecords);
-        grid.setTreeRecords(treeRecords);
+        this.flattenTreeGridRecords(result, filteredSortedData);
         grid.setFilteredSortedData(filteredSortedData, pinned);
 
         return result;
     }
 
-    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[], expanded: any[]) {
+    private flattenTreeGridRecords(records: ITreeGridRecord[], flatData: any[]) {
         if (records && records.length) {
             for (const record of records) {
                 flatData.push(record.data);
-                expanded.push(record);
-                this.flattenTreeGridRecords(record.children, flatData, expanded);
+                this.flattenTreeGridRecords(record.children, flatData);
             }
         }
     }

@@ -2853,7 +2853,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowEditable = false;
     private _currentRowState: any;
     private _filteredSortedData = null;
-    private _treeRecords = null;
 
     private _customDragIndicatorIconTemplate: TemplateRef<any>;
     private _cdrRequests = false;
@@ -2947,13 +2946,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public get filteredSortedData(): any[] {
         return this._filteredSortedData;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get treeRecords(): any[] {
-        return this._treeRecords;
     }
 
     /**
@@ -3525,16 +3517,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * A flat collection of the IgxTreeGrid records.
-     *
-     * @hidden
-     * @internal
-     */
-    public setTreeRecords(treeRecords: ITreeGridRecord[]) {
-        this._treeRecords = treeRecords;
-    }
-
-    /**
      * @hidden @internal
      */
     public resetHorizontalForOfs() {
@@ -4052,44 +4034,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             !col.columnGroup && !col.columnLayout &&
             col.visibleIndex === index
         );
-    }
-
-    /**
-     * Returns the `RowType` by index.
-     *
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByIndex(1);
-     * ```
-     * @param index
-     */
-    public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.filteredSortedData.length) {
-            return undefined;
-        }
-        return new IgxGridRow(this, index, this.filteredSortedData[index]);
-    }
-
-    /**
-     * Returns `RowType` object by the specified primary key.
-     *
-     * @remarks
-     * Requires that the `primaryKey` property is set.
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByKey("cell5");
-     * ```
-     * @param keyValue
-     */
-    public getRowByKey(keyValue: any): RowType {
-        const rec = this.primaryKey ?
-            this.filteredSortedData.find(record => record[this.primaryKey] === keyValue) :
-            this.filteredSortedData.find(record => record === keyValue);
-        const index = this.filteredSortedData.indexOf(rec);
-        if (index < 0 || !rec) {
-            return undefined;
-        }
-        return new IgxGridRow(this, index, rec);
     }
 
     /**

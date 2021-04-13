@@ -1068,10 +1068,33 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.allRowsData.length) {
+        if (index < 0 || index >= this.allRowsData.length + this.pinnedRecordsCount) {
             return undefined;
         }
         return this.createRow(index);
+    }
+
+    /**
+     * Returns `IgxGridRow` object by the specified primary key.
+     *
+     * @remarks
+     * Requires that the `primaryKey` property is set.
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey("cell5");
+     * ```
+     * @param keyValue
+     */
+    public getRowByKey(key: any): RowType {
+        const rec = this.primaryKey ?
+            this.allRowsData.find(record => record[this.primaryKey] === key) :
+            this.allRowsData.find(record => record === key);
+        const index = this.allRowsData.indexOf(rec);
+        if (index < 0 || index > this.allRowsData.length) {
+            return undefined;
+        }
+
+        return new IgxGridRow(this, index, rec);
     }
 
     /**

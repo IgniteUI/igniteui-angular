@@ -37,6 +37,8 @@ import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { RowType } from '../common/row.interface';
+import { IgxHierarchicalGridRow } from '../grid-public-row';
 
 let NEXT_ID = 0;
 
@@ -398,6 +400,45 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             this.onRowIslandChange()
         );
         super.ngAfterContentInit();
+    }
+
+    /**
+     * Returns the `RowType` by index.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByIndex(index: number): RowType {
+        if (index < 0 || index >= this.filteredSortedData.length) {
+            return undefined;
+        }
+        return new IgxHierarchicalGridRow(this, index, this.filteredSortedData[index]);
+    }
+
+    /**
+     * Returns `IgxHierarchicalGridRow` object by the specified primary key.
+     *
+     * @remarks
+     * Requires that the `primaryKey` property is set.
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey("cell5");
+     * ```
+     * @param keyValue
+     */
+    public getRowByKey(key: any): RowType {
+        const rec = this.primaryKey ?
+            this.allRowsData.find(record => record[this.primaryKey] === key) :
+            this.allRowsData.find(record => record === key);
+        const index = this.allRowsData.indexOf(rec);
+        if (index < 0 || index > this.allRowsData.length) {
+            return undefined;
+        }
+
+        return new IgxHierarchicalGridRow(this, index, rec);
     }
 
     /**
