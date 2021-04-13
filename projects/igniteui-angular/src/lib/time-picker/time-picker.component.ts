@@ -44,7 +44,7 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, IBaseEventArgs, isEqual } from '../core/utils';
+import { KEYS, IBaseEventArgs, isEqual, isDate } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -54,6 +54,7 @@ import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
+import { defaultCipherList } from 'constants';
 
 
 let NEXT_ID = 0;
@@ -144,7 +145,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public inputFormat : string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
+    public inputFormat: string = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
 
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
@@ -223,18 +224,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
     /**
-     * Delta values used to increment or decrement each editor time part on spin actions.
-     * All values default to `1`.
-     *
-     * @example
-     * ```html
-     * <igx-time-picker [spinDelta]="{ hour: 2, minute: 20 }"></igx-time-picker>
-     * ```
-     */
-    @Input()
-    public spinDelta: Pick<DatePartDeltas, 'hour' | 'minute' | 'second'>;
-
-    /**
      * Emitted after a selection has been done.
      *
      * @example
@@ -257,7 +246,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Output()
-    public valueChange = new EventEmitter<Date>();
+    public valueChange = new EventEmitter<Date | string>();
 
     /**
      * Emitted when the user types/spins invalid time in the time-picker editor.
@@ -515,14 +504,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      */
     @Input()
     public set value(value: Date | string) {
-        const oldValue = this._dateValue;
+        const oldValue = this._value;
         this._value = value;
         this._dateValue = this.parseToDate(value);
-        if (this.dateTimeEditor.value !== value) {
-            this.dateTimeEditor.value = value;
+        if (this.dateTimeEditor.value !== this._dateValue) {
+            this.dateTimeEditor.value = this._dateValue;
         }
-        this.emitValueChange(oldValue, this._dateValue);
-        this._onChangeCallback(this._dateValue);
+        this.emitValueChange(oldValue, this._value);
+        this._onChangeCallback(this._value);
     }
 
     /**
@@ -691,9 +680,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this.dateTimeEditor.displayFormat = this.displayFormat;
         }
         if (changes['inputFormat'] && this.dateTimeEditor) {
-            if (this.validateFormat(this.inputFormat)) {
-                this.inputFormat = DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT;
-            }
+            this.inputFormat = this.hasDateParts() ? DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT : this.inputFormat;
             this.dateTimeEditor.inputFormat = this.inputFormat;
         }
     }
@@ -774,11 +761,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this.close();
         }
 
-        const value = this._dateValue;
-        value.setHours(0, 0, 0);
-        this.value = value;
-        this.dateTimeEditor.value = new Date(this.value);
-        this.setSelectedValue();
+        if (isDate(this.value)) {
+            this.value.setHours(0, 0, 0);
+            this.dateTimeEditor.value = new Date(this.value);
+            this.setSelectedValue();
+        } else {
+            this.value = null;
+        }
     }
 
     /**
@@ -868,7 +857,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                     this.updateSelectedAmpm(previousDate);
                     this.updateSelectedMinutes();
                     this.updateSelectedSeconds();
-                    this.value = this._selectedDate;
                 }
                 break;
             case 'minuteList': {
@@ -878,7 +866,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this._minuteView = this.scrollListItem(minutes, this._minuteItems, DatePart.Minutes);
                 this._selectedDate = date;
                 this.updateSelectedSeconds();
-                this.value = this._selectedDate;
                 break;
             }
             case 'secondsList': {
@@ -887,7 +874,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 if (this.valueInRange(date, this._minDropdownValue, this._maxDropdownValue)) {
                     this._secondsView = this.scrollListItem(seconds, this._secondsItems, DatePart.Seconds);
                     this._selectedDate = date;
-                    this.value = this._selectedDate;
                 }
                 break;
             }
@@ -902,10 +888,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this._selectedDate = date;
                 this.updateSelectedMinutes();
                 this.updateSelectedSeconds();
-                this.value = this._selectedDate;
                 break;
             }
         }
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -934,7 +920,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.updateSelectedAmpm(previousDate);
 
         this._selectedDate = new Date(this._selectedDate);
-        this.value = this._selectedDate;
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -957,7 +943,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
         this._minuteView = this.scrollListItem(minutes, this._minuteItems, DatePart.Minutes);
         this._selectedDate = new Date(this._selectedDate);
-        this.value = this._selectedDate;
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -978,7 +964,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
         this._secondsView = this.scrollListItem(seconds, this._secondsItems, DatePart.Seconds);
         this._selectedDate = new Date(this._selectedDate);
-        this.value = this._selectedDate;
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -1002,7 +988,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this._ampmView = this.scrollListItem(ampm, this._ampmItems, DatePart.AmPm);
 
             this._selectedDate = new Date(this._selectedDate);
-            this.value = this._selectedDate;
+            this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
         }
     }
 
@@ -1207,7 +1193,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private initializeContainer() {
-        this.value = this._selectedDate;
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
         this._onTouchedCallback();
 
         if (this.showHoursList) {
@@ -1309,7 +1295,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return spinDelta;
     }
 
-    private emitValueChange(oldValue: Date, newValue: Date) {
+    private emitValueChange(oldValue: Date | string, newValue: Date | string) {
         if (!isEqual(oldValue, newValue)) {
             this.valueChange.emit(newValue);
         }
@@ -1383,6 +1369,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
     }
 
+    private toISOString(value: Date): string {
+        return value.toLocaleTimeString("en-GB", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+        });
+    }
+
     private isTimePart(datePart: DatePart): boolean {
         return (datePart === DatePart.Hours || datePart === DatePart.Minutes || datePart === DatePart.Seconds || datePart === DatePart.AmPm);
     }
@@ -1407,11 +1401,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return hour;
     }
 
-    private validateFormat(format: string): boolean {
-        return (format.indexOf('d') < 0 && format.indexOf('M') < 0 &&
-            format.indexOf('Y') < 0 && format.indexOf('y') < 0 &&
-            format.indexOf('L') < 0 && format.indexOf('E') < 0 &&
-            format.indexOf('W') < 0 && format.indexOf('w') < 0);
+    private hasDateParts(): boolean {
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
+        return inputDateParts.some(
+            p => p.type === DatePart.Date
+                || p.type === DatePart.Month
+                || p.type === DatePart.Year);
     }
 
     private attachOnKeydown(): void {
@@ -1442,9 +1437,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
         this.dateTimeEditor.valueChange.pipe(
             takeUntil(this._destroy$)).subscribe(date => {
-                if (!isEqual(date, this._dateValue)) {
-                    this.value = date;
-                }
+                this.value = isDate(this.value) ? this.parseToDate(date) : isDate(date) ? this.toISOString(date) : date;
                 this.setSelectedValue();
             });
 
