@@ -30,7 +30,7 @@ export interface IExportRecord {
     data: any;
     level: number;
     type: ExportRecordType;
-    owner?: any;
+    owner?: string | IgxGridBaseDirective;
     hidden?: boolean;
 }
 
