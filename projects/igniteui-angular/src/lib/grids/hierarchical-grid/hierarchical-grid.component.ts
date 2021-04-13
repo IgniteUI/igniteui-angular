@@ -804,9 +804,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         let row: RowType;
         let currentPageData: any[] = this.paging ? this.allRowsData : this.filteredSortedData;
 
-        if (this.pinnedRecordsCount) {
+        if (this.pinnedRecordsCount && this.paging) {
             currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
-                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
+                [...this.pinnedRecords, ...currentPageData] : [...currentPageData, ...this.pinnedRecords];
         }
         const rec: any = currentPageData[index];
 
