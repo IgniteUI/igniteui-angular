@@ -33,7 +33,7 @@ export const ButtonGroupAlignment = mkenum({
     horizontal: 'horizontal',
     vertical: 'vertical'
 });
-export type ButtonGroupAlignment = (typeof ButtonGroupAlignment)[keyof typeof ButtonGroupAlignment];
+export type ButtonGroupAlignment = typeof ButtonGroupAlignment[keyof typeof ButtonGroupAlignment];
 
 let NEXT_ID = 0;
 
@@ -61,7 +61,6 @@ let NEXT_ID = 0;
     selector: 'igx-buttongroup',
     templateUrl: 'buttongroup-content.component.html'
 })
-
 export class IgxButtonGroupComponent extends DisplayDensityBase implements AfterContentInit, AfterViewInit, OnDestroy {
     /**
      * A collection containing all buttons inside the button group.
@@ -123,6 +122,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Input() public multiSelection = false;
+
     /**
      * An @Input property that allows setting the buttons in the button group.
      * ```typescript
@@ -150,6 +150,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      */
     @Input() public values: any;
+
     /**
      * An @Input property that allows you to disable the `igx-buttongroup` component. By default it's false.
      * ```html
@@ -165,7 +166,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
             this._disabled = value;
 
             if (this.viewButtons && this.templateButtons) {
-                this.buttons.forEach((b) => b.disabled = this._disabled);
+                this.buttons.forEach((b) => (b.disabled = this._disabled));
             }
         }
     }
@@ -238,7 +239,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     @ViewChildren(IgxButtonDirective) private viewButtons: QueryList<IgxButtonDirective>;
     @ContentChildren(IgxButtonDirective) private templateButtons: QueryList<IgxButtonDirective>;
 
-
     /**
      * Returns true if the `igx-buttongroup` alignment is vertical.
      * Note that in order for the accessor to work correctly the property should be set explicitly.
@@ -264,14 +264,18 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public selectedIndexes: number[] = [];
 
     protected buttonClickNotifier$ = new Subject<boolean>();
+    protected buttonSelectedNotifier$ = new Subject<boolean>();
     protected queryListNotifier$ = new Subject<boolean>();
 
     private _isVertical: boolean;
     private _itemContentCssClass: string;
     private _disabled = false;
 
-    constructor(private _cdr: ChangeDetectorRef, private _renderer: Renderer2,
-        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+    constructor(
+        private _cdr: ChangeDetectorRef,
+        private _renderer: Renderer2,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions
+    ) {
         super(_displayDensityOptions);
     }
 
@@ -308,20 +312,16 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         }
 
         const button = this.buttons[index];
-        const buttonElement = button.nativeElement;
 
-        this.selectedIndexes.push(index);
-        button.selected = true;
-
-        this._renderer.setAttribute(buttonElement, 'aria-pressed', 'true');
-        this._renderer.addClass(buttonElement, 'igx-button-group__item--selected');
-
-        this.selected.emit({ button, index });
-
-        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
-        if (indexInViewButtons !== -1) {
-            this.values[indexInViewButtons].selected = true;
+        if(this.selectedIndexes.indexOf(index) === -1) {
+            this.selectedIndexes.push(index);
+            this.selected.emit({ button, index });
         }
+
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
+        this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
+
+        console.log('after selection', this.selectedIndexes);
 
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 1) {
@@ -352,20 +352,16 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         }
 
         const button = this.buttons[index];
-        const buttonElement = button.nativeElement;
-
         this.selectedIndexes.splice(this.selectedIndexes.indexOf(index), 1);
-        button.selected = false;
 
-        this._renderer.setAttribute(buttonElement, 'aria-pressed', 'false');
-        this._renderer.removeClass(buttonElement, 'igx-button-group__item--selected');
+        this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
+        this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
+
+        button.deselect();
+
+        console.log('after deselection', this.selectedIndexes);
 
         this.deselected.emit({ button, index });
-
-        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
-        if (indexInViewButtons !== -1) {
-            this.values[indexInViewButtons].selected = false;
-        }
     }
 
     /**
@@ -385,13 +381,14 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public ngAfterViewInit() {
         const initButtons = () => {
             // Cancel any existing buttonClick subscriptions
-            this.buttonClickNotifier$.next();
+            // this.buttonClickNotifier$.next();
 
             this.selectedIndexes.splice(0, this.selectedIndexes.length);
 
             // initial configuration
             this.buttons.forEach((button, index) => {
                 const buttonElement = button.nativeElement;
+                this._renderer.addClass(buttonElement, 'igx-button-group__item');
 
                 if (this.disabled) {
                     button.disabled = true;
@@ -401,8 +398,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                     this.selectButton(index);
                 }
 
-                button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((ev) => this._clickHandler(ev, index));
-                this._renderer.addClass(buttonElement, 'igx-button-group__item');
+                button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((_) => this._clickHandler(index));
+                button.buttonSelected
+                    .pipe(takeUntil(this.buttonSelectedNotifier$))
+                    .subscribe((_) => this.selectButton(index));
             });
         };
 
@@ -420,6 +419,9 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this.buttonClickNotifier$.next();
         this.buttonClickNotifier$.complete();
 
+        this.buttonSelectedNotifier$.next();
+        this.buttonSelectedNotifier$.complete();
+
         this.queryListNotifier$.next();
         this.queryListNotifier$.complete();
     }
@@ -427,11 +429,15 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     /**
      * @hidden
      */
-    public _clickHandler(_: MouseEvent, i: number) {
-        if (this.selectedIndexes.indexOf(i) !== -1) {
-            this.deselectButton(i);
-        } else {
+    public _clickHandler(i: number) {
+        if (this.selectedIndexes.indexOf(i) === 0 && !this.multiSelection) {
+            return;
+        }
+
+        if (this.selectedIndexes.indexOf(i) === -1) {
             this.selectButton(i);
+        } else {
+            this.deselectButton(i);
         }
     }
 }
@@ -449,6 +455,4 @@ export interface IButtonGroupEventArgs extends IBaseEventArgs {
     exports: [IgxButtonGroupComponent],
     imports: [IgxButtonModule, CommonModule, IgxRippleModule, IgxIconModule]
 })
-
-export class IgxButtonGroupModule {
-}
+export class IgxButtonGroupModule {}
