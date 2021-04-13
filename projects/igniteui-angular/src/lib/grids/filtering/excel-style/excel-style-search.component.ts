@@ -23,7 +23,7 @@ import { Subject } from 'rxjs';
 import { IgxListComponent } from '../../../list/public_api';
 import { IChangeCheckboxEventArgs } from '../../../checkbox/checkbox.component';
 import { takeUntil } from 'rxjs/operators';
-import { KEYS } from '../../../core/utils';
+import { PlatformUtil } from '../../../core/utils';
 
 @Directive({
     selector: '[igxExcelStyleLoading]'
@@ -36,7 +36,6 @@ export class IgxExcelStyleLoadingValuesTemplateDirective {
  * A component used for presenting Excel style search UI.
  */
 @Component({
-    preserveWhitespaces: false,
     selector: 'igx-excel-style-search',
     templateUrl: './excel-style-search.component.html'
 })
@@ -119,7 +118,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public displayedListData: FilterListItem[];
+    public displayedListData: FilterListItem[] = [];
 
     /**
      * @hidden @internal
@@ -136,7 +135,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     private _addToCurrentFilter: FilterListItem;
     private destroy$ = new Subject<boolean>();
 
-    constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent) {
+    constructor(public cdr: ChangeDetectorRef, public esf: IgxGridExcelStyleFilteringComponent, protected platform: PlatformUtil) {
         esf.loadingStart.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.displayedListData = [];
             this.isLoading = true;
@@ -275,14 +274,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public onInputKeyDown(event): void {
+    public onInputKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
-            case KEYS.ENTER:
+            case this.platform.KEYMAP.ENTER:
                 event.preventDefault();
                 this.applyFilter();
 
                 return;
-            case KEYS.ESCAPE || KEYS.ESCAPE_IE:
+            case this.platform.KEYMAP.ESCAPE:
                 if (this.searchValue) {
                     event.stopPropagation();
                     this.clearInput();

@@ -1,4 +1,4 @@
-import { PositionSettings, Size } from '../utilities';
+import { PositionSettings } from '../utilities';
 import { GlobalPositionStrategy } from './global-position-strategy';
 
 /**
@@ -11,10 +11,10 @@ export class ContainerPositionStrategy extends GlobalPositionStrategy {
     }
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size?: Size, document?: Document, initialCall?: boolean): void {
+    public position(contentElement: HTMLElement): void {
         contentElement.classList.add('igx-overlay__content--relative');
         contentElement.parentElement.classList.add('igx-overlay__wrapper--flex-container');
-        this.setPosition(contentElement, this.settings);
+        this.setPosition(contentElement);
     }
 }
 

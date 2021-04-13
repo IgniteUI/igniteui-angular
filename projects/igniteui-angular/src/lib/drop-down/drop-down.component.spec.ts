@@ -6,7 +6,7 @@ import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownComponent, IgxDropDownModule } from './public_api';
 import { ISelectionEventArgs } from './drop-down.common';
-import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs.component';
+import { IgxTabsComponent, IgxTabsModule } from '../tabs/tabs/public_api';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { CancelableEventArgs } from '../core/utils';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -31,7 +31,7 @@ const CSS_CLASS_DISABLED = 'igx-drop-down__item--disabled';
 const CSS_CLASS_HEADER = 'igx-drop-down__header';
 const CSS_CLASS_HEADER_COSY = 'igx-drop-down__header--cosy';
 const CSS_CLASS_HEADER_COMPACT = 'igx-drop-down__header--compact';
-const CSS_CLASS_TABS = '.igx-tabs__header-menu-item';
+const CSS_CLASS_TABS = '.igx-tabs__header-item';
 
 describe('IgxDropDown ', () => {
     let fixture;
@@ -52,7 +52,7 @@ describe('IgxDropDown ', () => {
         const mockForOf = jasmine.createSpyObj('IgxForOfDirective', ['totalItemCount']);
         it('should notify when selection has changed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -68,7 +68,7 @@ describe('IgxDropDown ', () => {
         });
         it('should fire onSelection with correct args', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -92,7 +92,7 @@ describe('IgxDropDown ', () => {
         });
         it('should notify when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -122,7 +122,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return selected item', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
@@ -137,7 +137,7 @@ describe('IgxDropDown ', () => {
         });
         it('setSelectedItem should return null when selection is cleared', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             (dropdown as any).virtDir.igxForOf = data;
@@ -152,7 +152,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call open method when dropdown is collapsed', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             spyOnProperty(dropdown, 'items', 'get').and.returnValue(data);
@@ -164,7 +164,7 @@ describe('IgxDropDown ', () => {
         });
         it('toggle should call close method when dropdown is opened', () => {
             const selectionService = new IgxSelectionAPIService();
-            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, selectionService, null);
+            dropdown = new IgxDropDownComponent({ nativeElement: null }, mockCdr, null, selectionService, null);
             dropdown.ngOnInit();
             (dropdown as any).virtDir = mockForOf;
             const mockToggle = jasmine.createSpyObj('IgxToggleDirective', ['open']);
@@ -850,14 +850,14 @@ describe('IgxDropDown ', () => {
         it('should properly scroll when virtualized', async () => {
             dropdown.toggle();
             fixture.detectChanges();
-            await wait(30);
+            await wait(50);
             let firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             let lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(lastItemElement.textContent.trim()).toEqual('Item 11');
             expect(firstItemElement.textContent.trim()).toEqual('Item 1');
             scroll.getScroll().scrollTop = scroll.getScroll().scrollHeight;
             fixture.detectChanges();
-            await wait(30);
+            await wait(50);
             firstItemElement = fixture.componentInstance.dropdownItems.first.element.nativeElement;
             lastItemElement = fixture.componentInstance.dropdownItems.last.element.nativeElement;
             expect(firstItemElement.textContent.trim()).toEqual('Item 1990');
@@ -890,12 +890,12 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem.value).toEqual({ name: fixture.componentInstance.items[5].name, id: 5 });
             expect(dropdown.items[5].selected).toBeTruthy();
             scroll.scrollTo(412);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeFalsy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(0);
             scroll.scrollTo(0);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             expect(items.toArray()[5].selected).toBeTruthy();
             expect(document.getElementsByClassName(CSS_CLASS_SELECTED).length).toEqual(1);
@@ -914,7 +914,7 @@ describe('IgxDropDown ', () => {
             expect(dropdown.selectedItem as any).toEqual(selectedItem);
             expect(items.toArray()[5].selected).toEqual(false);
             scroll.scrollTo(412);
-            await wait(30);
+            await wait(50);
             fixture.detectChanges();
             const selectedEntry = items.find(e => e.value === selectedItem.value && e.index === selectedItem.index);
             expect(selectedEntry).toBeTruthy();
@@ -928,9 +928,9 @@ describe('IgxDropDown ', () => {
             dropdown.selectItem(selectedItem);
             fixture.detectChanges();
             dropdown.toggle();
-            await wait(30);
+            await wait(50);
             dropdown.toggle();
-            await wait(30);
+            await wait(50);
             const itemsInView = virtualScroll.igxForContainerSize / virtualScroll.igxForItemSize;
             const expectedScroll = virtualScroll.getScrollForIndex(selectedItem.index)
                 - (itemsInView / 2 - 1) * virtualScroll.igxForItemSize;
@@ -1282,35 +1282,42 @@ class DoubleIgxDropDownComponent implements OnInit {
 
     public items: any[] = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         for (let index = 1; index < 100; index++) {
             this.items.push({ field: 'Item ' + index });
         }
     }
 }
+
 @Component({
     template: `
     <input (click)="toggleDropDown()">
     <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" (click)="toggleDropDown()">
-    <igx-tabs (tabItemSelected)="toggleDropDown()" tabsType="fixed">
-        <igx-tabs-group label="Tab111111111111111111111111">
-            <ng-template igxTab>
-                <div>T1</div>
-                </ng-template>
+    <igx-tabs (selectedItemChange)="toggleDropDown()" [tabAlignment]="justify">
+        <igx-tab-item>
+            <igx-tab-header>
+                Tab111111111111111111111111
+            </igx-tab-header>
+            <igx-tab-content>
                 <h1>Tab 1 Content</h1>
-            </igx-tabs-group>
-        <igx-tabs-group label="Tab 2">
-            <ng-template igxTab>
-                <div>T2</div>
-            </ng-template>
-            <h1>Tab 2 Content</h1>
-        </igx-tabs-group>
-        <igx-tabs-group label="Tab 3">
-            <ng-template igxTab>
-                <div>T3</div>
-            </ng-template>
-            <h1>Tab 3 Content</h1>
-        </igx-tabs-group>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item [selected]="true">
+            <igx-tab-header>
+                Tab 2
+            </igx-tab-header>
+            <igx-tab-content>
+                <h1>Tab 2 Content</h1>
+            </igx-tab-content>
+        </igx-tab-item>
+        <igx-tab-item>
+            <igx-tab-header>
+                Tab 3
+            </igx-tab-header>
+            <igx-tab-content>
+                <h1>Tab 3 Content</h1>
+            </igx-tab-content>
+        </igx-tab-item>
     </igx-tabs>
     <igx-drop-down igxDropDownItemNavigation (onSelection)="onSelection($event)"
     (onOpening)="onToggleOpening()" (onOpened)="onToggleOpened()"

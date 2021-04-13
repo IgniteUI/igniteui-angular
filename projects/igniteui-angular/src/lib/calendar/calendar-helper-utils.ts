@@ -18,6 +18,7 @@ export class HelperTestFunctions {
     public static WEEKSTART_LABEL_CSSCLASS = '.igx-calendar__label';
     public static VERTICAL_CALENDAR_CSSCLASS = '.igx-calendar--vertical';
     public static DAY_CSSCLASS = '.igx-calendar__date';
+    public static CURRENT_MONTH_DATES = '.igx-calendar__date:not(.igx-calendar__date--inactive)';
     public static CURRENT_DATE_CSSCLASS = '.igx-calendar__date--current';
     public static INACTIVE_DAYS_CSSCLASS = '.igx-calendar__date--inactive';
     public static HIDDEN_DAYS_CSSCLASS = '.igx-calendar__date--hidden';
@@ -111,7 +112,7 @@ export class HelperTestFunctions {
 
     public static getMonthViewDates(fixture, monthsViewNumber: number) {
         const month = HelperTestFunctions.getMonthView(fixture, monthsViewNumber);
-        return month.querySelectorAll(HelperTestFunctions.DAY_CSSCLASS);
+        return month.querySelectorAll(HelperTestFunctions.CURRENT_MONTH_DATES);
     }
 
     public static getMonthViewInactiveDates(fixture, monthsViewNumber: number) {

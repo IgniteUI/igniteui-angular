@@ -75,8 +75,8 @@ When the contents of the iterator changes, `igxForOf` makes the corresponding ch
 | Name | Description |
 | :--- | :--- |
 | *Event emitters* | *Notify for a change*                                           |
-| OnChunkLoad      | Used on chunk loaded. Emits after a new chunk has been loaded.  |
-| OnChunkPreload   | Used on chunk loading to emit the current state information - startIndex, chunkSize. Can be used for implementing remote load on demand for the igxFor data. |
+| chunkLoad      | Used on chunk loaded. Emits after a new chunk has been loaded.  |
+| chunkPreload   | Used on chunk loading to emit the current state information - startIndex, chunkSize. Can be used for implementing remote load on demand for the igxFor data. |
 
 ### Accessors
 
