@@ -429,7 +429,10 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
+
+        // eslint-disable-next-line no-bitwise
+        const clearSelection = !(+event.ctrlKey ^ +event.metaKey);
+        this.selectionService.selectRowById(this.rowID, clearSelection, event);
     }
 
     /**
