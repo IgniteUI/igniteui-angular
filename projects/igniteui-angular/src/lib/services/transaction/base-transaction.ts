@@ -47,24 +47,24 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    getTransactionLog(id?: any): T[] {
- return [];
-}
+    public getTransactionLog(_id?: any): T[] {
+        return [];
+    }
 
     /**
      * @inheritdoc
      */
-    undo(): void { }
+    public undo(): void { }
 
     /**
      * @inheritdoc
      */
-    redo(): void { }
+    public redo(): void { }
 
     /**
      * @inheritdoc
      */
-    getAggregatedChanges(mergeChanges: boolean): T[] {
+    public getAggregatedChanges(mergeChanges: boolean): T[] {
         const result: T[] = [];
         this._pendingStates.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
@@ -97,12 +97,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    commit(data: any[], id?: any): void { }
+    public commit(_data: any[], _id?: any): void { }
 
     /**
      * @inheritdoc
      */
-    clear(id?: any): void {
+    public clear(_id?: any): void {
         this._pendingStates.clear();
         this._pendingTransactions = [];
     }
@@ -117,7 +117,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
     /**
      * @inheritdoc
      */
-    public endPending(commit: boolean): void {
+    public endPending(_commit: boolean): void {
         this._isPending = false;
         this._pendingStates.clear();
         this._pendingTransactions = [];
