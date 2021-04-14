@@ -19,6 +19,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -315,6 +316,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const rec of groupRows[0].groupRow.records) {
             expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
+
+        const groupRow = grid.getRowByIndex(0);
+        expect(groupRow.isGroupByRow).toBe(true);
+        expect(groupRow.expanded).toBe(true);
+        groupRow.expanded = false;
+        tick();
+        fix.detectChanges();
+        expect(groupRow.expanded).toBe(false);
     }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {
@@ -570,6 +579,25 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(elem.attributes['aria-describedby'].value).toEqual(grid.id + '_Released');
             expect(elem.attributes['aria-expanded'].value).toEqual('true');
         }
+    }));
+
+    it('should not apply grouping if the grouping expressions value is the same reference', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        // group by string column
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+        spyOn(grid.groupingExpressionsChange, 'emit');
+        fix.detectChanges();
+        const firstCell = grid.getCellByColumn(2, 'Downloads');
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fix.detectChanges();
+        expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
     }));
 
     // GroupBy + Sorting integration
@@ -3396,6 +3424,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 @Component({
     template: `
         <igx-grid
+            [(groupingExpressions)]='currentGroupingExpressions'
             [width]='width'
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
@@ -3424,6 +3453,7 @@ export class DefaultGridComponent extends DataParent {
     public enableEditing = false;
     public enableGrouping = true;
     public currentSortExpressions;
+    public currentGroupingExpressions = [];
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;

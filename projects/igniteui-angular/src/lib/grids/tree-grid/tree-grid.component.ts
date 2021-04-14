@@ -645,7 +645,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.allRowsData.length + this.pinnedRecordsCount) {
+        if (index < 0 || index >= this.dataView.length) {
             return undefined;
         }
         return this.createRow(index);
@@ -663,11 +663,21 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public getRowByKey(key: any): RowType {
         const rec = this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
             this.filteredSortedData.find(r => r === key);
-        const index = this.allRowsData.findIndex(r => r.data && r.data === rec);
+        const index = this.dataView.findIndex(r => r.data && r.data === rec);
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
         }
         return new IgxTreeGridRow(this, index, rec);
+    }
+
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
     }
 
     /** @hidden */
@@ -681,6 +691,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return path.reverse();
+    }
+
+    /** @hidden */
+    public isTreeRow(record: any): boolean {
+        return record.rowID !== undefined && record.data;
     }
 
     protected findRecordIndexInView(rec) {
@@ -846,22 +861,20 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
     }
+
     private createRow(index: number): RowType {
         let row: RowType;
-        let currentPageData: any[] = this.allRowsData;
-
-        if (this.pinnedRecordsCount) {
-            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
-                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
-        }
-        const rec: any = currentPageData[index];
+        const rec: any = this.dataView[index];
 
         if (this.isSummaryRecord(rec)) {
             row = new IgxSummaryRow(this, index, rec.summaries);
         }
-        // if found record is a no a groupby or summary row, return IgxGridRow instance
+
         if (!row && rec) {
-            row = new IgxTreeGridRow(this, index, rec.data, rec);
+            const isTreeRow = this.isTreeRow(rec);
+            const data = isTreeRow ? rec.data : rec;
+            const treeRow = isTreeRow ? rec : undefined;
+            row = new IgxTreeGridRow(this, index, data, treeRow);
         }
 
         return row;

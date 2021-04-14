@@ -413,26 +413,14 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        const data = this.paging ? this.allRowsData : this.filteredSortedData;
-        if (index < 0 || index >= data.length + this.pinnedRecordsCount) {
+        if (index < 0 || index >= this.dataView.length) {
             return undefined;
         }
         return this.createRow(index);
     }
 
-    /**
-     * Returns `IgxHierarchicalGridRow` object by the specified primary key.
-     *
-     * @remarks
-     * Requires that the `primaryKey` property is set.
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByKey("cell5");
-     * ```
-     * @param keyValue
-     */
     public getRowByKey(key: any): RowType {
-        const data = this.paging ? this.allRowsData : this.filteredSortedData;
+        const data = this.dataView;
         const rec = this.primaryKey ?
             data.find(record => record[this.primaryKey] === key) :
             data.find(record => record === key);
@@ -442,6 +430,16 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         }
 
         return new IgxHierarchicalGridRow(this, index, rec);
+    }
+
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
     }
 
     /**
@@ -802,13 +800,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     private createRow(index: number): RowType {
         let row: RowType;
-        let currentPageData: any[] = this.paging ? this.allRowsData : this.filteredSortedData;
-
-        if (this.pinnedRecordsCount && this.paging) {
-            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
-                [...this.pinnedRecords, ...currentPageData] : [...currentPageData, ...this.pinnedRecords];
-        }
-        const rec: any = currentPageData[index];
+        const rec: any = this.dataView[index];
 
         if (!row && rec) {
             row = new IgxHierarchicalGridRow(this, index, rec);

@@ -189,7 +189,8 @@ describe('Row Pinning #grid', () => {
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
                 rowID,
                 insertAtIndex: undefined,
-                isPinned: true
+                isPinned: true,
+                row
             });
 
             row = grid.getRowByIndex(0);
@@ -325,6 +326,7 @@ describe('Row Pinning #grid', () => {
             expect(() => {
                 fix = TestBed.createComponent(GridRowPinningComponent);
                 grid = fix.componentInstance.instance;
+                fix.detectChanges();
                 grid.pinRow(fix.componentInstance.data[1]);
                 fix.detectChanges();
             }).not.toThrow();

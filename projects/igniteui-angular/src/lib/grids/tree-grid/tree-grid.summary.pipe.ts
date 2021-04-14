@@ -27,12 +27,9 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         const grid: IgxTreeGridComponent = this.gridAPI.grid;
 
         if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
-            grid.allRowsData = flatData;
             return flatData;
         }
-        const allRowsData = this.addSummaryRows(grid, flatData, summaryPosition, showSummaryOnCollapse);
-        grid.allRowsData = allRowsData;
-        return allRowsData;
+        return this.addSummaryRows(grid, flatData, summaryPosition, showSummaryOnCollapse);
     }
 
     private addSummaryRows(grid: IgxTreeGridComponent, collection: ITreeGridRecord[],

@@ -4,6 +4,7 @@ import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
 
 export interface RowType {
     index: number;
+    viewIndex?: number;
     isGroupByRow?: boolean;
     isSummaryRow?: boolean;
     summaries?: Map<string, IgxSummaryResult[]>;

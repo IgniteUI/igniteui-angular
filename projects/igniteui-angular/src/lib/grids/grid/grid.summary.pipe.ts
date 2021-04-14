@@ -33,12 +33,9 @@ export class IgxGridSummaryPipe implements PipeTransform {
         id: string, showSummary, pipeTrigger: number, summaryPipeTrigger: number): any[] {
 
         if (!collection.data || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
-            this.gridAPI.grid.allRowsData = collection.data;
             return collection.data;
         }
-        const allRowsData = this.addSummaryRows(id, collection, summaryPosition, showSummary);
-        this.gridAPI.grid.allRowsData = allRowsData;
-        return allRowsData;
+        return this.addSummaryRows(id, collection, summaryPosition, showSummary);
     }
 
     private addSummaryRows(gridId: string, collection: IGroupByResult, summaryPosition: GridSummaryPosition, showSummary): any[] {

@@ -10,6 +10,7 @@ import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { RowType } from './row.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -175,6 +176,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
      *   ID is either the primaryKey value or the data record instance.
      */
     readonly rowID: any;
+    row?: RowType | IgxRowDirective<IgxGridBaseDirective & GridType>;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
     /** Whether or noy the row is pinned or unpinned. */
