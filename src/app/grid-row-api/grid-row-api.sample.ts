@@ -195,11 +195,6 @@ export class GridRowAPISampleComponent implements OnInit {
         row.selected = !row.selected;
     }
 
-    public deleted(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, index: number) {
-        const row = grid.getRowByIndex(index);
-        row.selected = !row.selected;
-    }
-
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
