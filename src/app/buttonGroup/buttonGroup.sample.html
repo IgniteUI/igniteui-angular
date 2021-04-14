@@ -125,6 +125,7 @@
     </article>
 
     <article class="sample-column">
+        <h4 class="sample-title">Programmatic Selection</h4>
         <igx-buttongroup #programmatic>
             <button
                 igxButton
@@ -136,10 +137,18 @@
             </button>
         </igx-buttongroup>
         <div igxLayout igxLayoutJustify="flex-end">
-            <button igxButton="raised" (click)="switchContent()" style="margin: 16px 8px 0 0">
+            <button
+                igxButton="raised"
+                (click)="switchContent()"
+                style="margin: 16px 8px 0 0"
+            >
                 Move Selection
             </button>
-            <button igxButton="raised" (click)="selectLast()" style="margin: 16px 0 0 8px">
+            <button
+                igxButton="raised"
+                (click)="selectLast()"
+                style="margin: 16px 0 0 8px"
+            >
                 Select Last
             </button>
         </div>
