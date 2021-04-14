@@ -19,7 +19,15 @@ import {
     Injector,
     LOCALE_ID, Optional, ContentChildren, QueryList, OnChanges, SimpleChanges
 } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl, ValidationErrors, Validator, NG_VALIDATORS } from '@angular/forms';
+import {
+    ControlValueAccessor,
+    NG_VALUE_ACCESSOR,
+    NgControl,
+    AbstractControl,
+    ValidationErrors,
+    Validator,
+    NG_VALIDATORS
+} from '@angular/forms';
 import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
@@ -50,11 +58,10 @@ import { IgxTextSelectionModule } from '../directives/text-selection/text-select
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
+import { DatePart } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
-import { defaultCipherList } from 'constants';
 
 
 let NEXT_ID = 0;
@@ -150,7 +157,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /**
      * Gets/Sets the interaction mode - dialog or drop down.
      *
-     *  @example
+     * @example
      * ```html
      * <igx-time-picker mode="dialog"></igx-time-picker>
      * ```
@@ -159,14 +166,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
-    * Minimum value required for the picker to remain valid.
+    * The minimum value the picker will accept.
     *
     * @remarks
-    * If a `string` value is passed in, it must be in the defined input format.
+    * If a `string` value is passed in, it must be in ISO format.
     *
     * @example
     * ```html
-    * <igx-time-picker format="HH:mm" [minValue]="18:00"></igx-time-picker>
+    * <igx-time-picker [minValue]="18:00:00"></igx-time-picker>
     * ```
     */
     @Input()
@@ -180,14 +187,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Maximum value required for the picker to remain valid.
+    * The maximum value the picker will accept.
     *
     * @remarks
-    * If a `string` value is passed in, it must be in the defined input format.
+    * If a `string` value is passed in, it must be in ISO format.
     *
     * @example
     * ```html
-    * <igx-time-picker format="HH:mm" [maxValue]="20:30"></igx-time-picker>
+    * <igx-time-picker [maxValue]="20:30:00"></igx-time-picker>
     * ```
     */
     @Input()
@@ -572,11 +579,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * An @Input property that gets/sets the delta by which hour and minute items would be changed <br>
-     * when the user presses the Up/Down keys.
-     * By default `itemsDelta` is set to `{hours: 1, minutes: 1, seconds: 1}`
+     * Delta values used to increment or decrement each editor date part on spin actions and to display time portions in the dropdown/dialog.
+     * By default `itemsDelta` is set to `{hour: 1, minute: 1, second: 1}`
      * ```html
-     * <igx-time-picker [itemsDelta]="{hours:3, minutes:5, seconds:10}" id="time-picker"></igx-time-picker>
+     * <igx-time-picker [itemsDelta]="{hour:3, minute:5, second:10}" id="time-picker"></igx-time-picker>
      * ```
      */
     @Input()

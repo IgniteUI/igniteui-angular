@@ -2,7 +2,7 @@
 <igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && this.open()">
     <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text" [readonly]="!this.isDropdown"
         [spinDelta]="this.itemsDelta" [disabled]="this.disabled" [displayFormat]="this.displayFormat"
-        [placeholder]="this.placeholder" role="combobox" aria-haspopup="dialog"
+        role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
@@ -51,7 +51,7 @@
     </div>
 </ng-template>
 
-<div #toggleDirective="toggle" igxToggle class="igx-time-picker"
+<div #toggleDirective="toggle" igxToggle role="dialog" class="igx-time-picker"
     [ngClass]="{'igx-time-picker--dropdown': this.isDropdown, 'igx-time-picker--vertical': this.isVertical && !this.isDropdown}">
     <div *ngIf="!this.isDropdown" class="igx-time-picker__header">
         <h2 class="igx-time-picker__header-hour">
@@ -61,16 +61,16 @@
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
             <div *ngIf="this.showHoursList" #hourList [igxItemList]="'hourList'">
-                <span [igxTimeItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
+                <span role="spinbutton" [attr.aria-label]="hour" [igxTimeItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span [igxTimeItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
+                <span role="spinbutton" [attr.aria-label]="minute" [igxTimeItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
             <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span [igxTimeItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
+                <span role="spinbutton" [attr.aria-label]="seconds" [igxTimeItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span [igxTimeItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
+                <span role="spinbutton" [attr.aria-label]="ampm" [igxTimeItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
         <ng-container

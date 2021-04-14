@@ -15,11 +15,13 @@ import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
 import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
 import { IgxItemListDirective } from './time-picker.directives';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
+import { time } from 'console';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
 const CSS_CLASS_INPUTGROUP_DISABLED = 'igx-input-group--disabled';
-const CSS_CLASS_INPUT = 'igx-input-group__input';
+const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_DROPDOWN = '.igx-time-picker--dropdown';
 const CSS_CLASS_HOURLIST = '.igx-time-picker__hourList';
 const CSS_CLASS_MINUTELIST = '.igx-time-picker__minuteList';
@@ -41,7 +43,7 @@ describe('IgxTimePicker', () => {
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
         const mockInjector = jasmine.createSpyObj('Injector', { get: mockNgControl });
-        const mockDateTimeEditorDirective = jasmine.createSpyObj('IgxDateTimeEditorDirective', { value: null });
+        const mockDateTimeEditorDirective = jasmine.createSpyObj('IgxDateTimeEditorDirective', ['increment', 'decrement'], { value: null });
 
         it('should open/close the dropdown with open()/close() method', () => {
             timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector);
@@ -136,7 +138,6 @@ describe('IgxTimePicker', () => {
             const selectedDate = new Date(2020, 12, 12, 6, 45, 0);
             spyOn(timePicker.valueChange, 'emit').and.callThrough();
 
-
             timePicker.select(selectedDate);
             expect(timePicker.value).toEqual(selectedDate);
             expect(timePicker.valueChange.emit).toHaveBeenCalled();
@@ -163,6 +164,24 @@ describe('IgxTimePicker', () => {
             expect(timePicker.validationFailed.emit).toHaveBeenCalled();
             expect(timePicker.validationFailed.emit).toHaveBeenCalledWith(args);
         });
+
+        xit('should change date parts correctly with increment() and decrement() methods', () => {
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
+
+            const date = new Date(2020, 12, 12, 10, 30, 30);
+            timePicker.value = new Date(date);
+            timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
+            timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
+            timePicker.itemsDelta = { hour: 2, minute: 20, second: 1 };
+            spyOn(timePicker.valueChange, 'emit').and.callThrough();
+
+            timePicker.increment(DatePart.Hours);
+            date.setHours(date.getHours() + timePicker.itemsDelta.hour);
+            expect(timePicker.value).toEqual(date);
+            expect(timePicker.valueChange.emit).toHaveBeenCalled();
+            expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+        });
     });
 
     describe('Interaction tests', () => {
@@ -171,6 +190,8 @@ describe('IgxTimePicker', () => {
         let inputGroup: DebugElement;
         let input: DebugElement;
         let hourColumn: DebugElement;
+        let minutesColumn: DebugElement;
+        let ampmColumn: DebugElement;
         let toggleDirectiveElement: DebugElement;
         let toggleDirective: IgxToggleDirective;
 
@@ -294,7 +315,7 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
                 hourColumn.triggerEventHandler('wheel', event);
-                fixture.detectChanges();hourColumn.triggerEventHandler('wheel', event);
+                fixture.detectChanges(); hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
                 const selectedHour = fixture.componentInstance.date.getHours() - 3;
                 expect((timePicker.value as Date).getHours()).toEqual(selectedHour);
@@ -397,6 +418,34 @@ describe('IgxTimePicker', () => {
 
                 closingSub.unsubscribe();
             }));
+
+            it('should change date parts correctly with increment() and decrement() methods', () => {
+                const date = new Date(2020, 12, 12, 10, 30, 30);
+                timePicker.value = new Date(date);
+                timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
+                timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
+                timePicker.itemsDelta = { hour: 2, minute: 20, second: 15 };
+                fixture.detectChanges();
+                spyOn(timePicker.valueChange, 'emit').and.callThrough();
+
+                timePicker.increment(DatePart.Hours);
+                date.setHours(date.getHours() + timePicker.itemsDelta.hour);
+                expect(timePicker.value).toEqual(date);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(1);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+
+                timePicker.increment(DatePart.Minutes);
+                date.setMinutes(date.getMinutes() + timePicker.itemsDelta.minute);
+                expect(timePicker.value).toEqual(date);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(2);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+
+                timePicker.decrement(DatePart.Seconds);
+                date.setSeconds(date.getSeconds() - timePicker.itemsDelta.second);
+                expect(timePicker.value).toEqual(date);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(3);
+                expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
+            });
         });
 
         describe('Renedering tests', () => {
@@ -419,9 +468,20 @@ describe('IgxTimePicker', () => {
                 timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 hourColumn = fixture.debugElement.query(By.css(CSS_CLASS_HOURLIST));
+                minutesColumn = fixture.debugElement.query(By.css(CSS_CLASS_MINUTELIST));
+                ampmColumn = fixture.debugElement.query(By.css(CSS_CLASS_AMPMLIST));
                 toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
                 toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
             }));
+
+            it('should initialize all input properties with their default values', () => {
+                expect(timePicker.mode).toEqual(PickerInteractionMode.DropDown);
+                expect(timePicker.inputFormat).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
+                expect(timePicker.itemsDelta.hour).toEqual(1);
+                expect(timePicker.itemsDelta.minute).toEqual(1);
+                expect(timePicker.itemsDelta.second).toEqual(1);
+                expect(timePicker.disabled).toEqual(false);
+            });
 
             it('should be able to change the mode at runtime', fakeAsync(() => {
                 fixture.componentInstance.timePicker.mode = PickerInteractionMode.DropDown;
@@ -500,13 +560,52 @@ describe('IgxTimePicker', () => {
 
                 expect(selectedTime).toEqual(`${hours}:${minutes} ${ampm}`);
             }));
+
+            it('should apply all aria attributes correctly', fakeAsync(() => {
+                const input = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(input.getAttribute('role')).toEqual('combobox');
+                expect(input.getAttribute('aria-haspopup')).toEqual('dialog');
+                expect(input.getAttribute('aria-labelledby')).toEqual(timePicker.label.id);
+                expect(input.getAttribute('aria-expanded')).toEqual('false');
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(input.getAttribute('aria-expanded')).toEqual('true');
+                let hour = 8;
+                let minutes = 42;
+                let ampm = 0;
+                hourColumn.children.forEach(el => function () {
+                    expect(el.attributes.role).toEqual('spinbutton');
+                    const hours = hour < 10 ? `0${hour}` : `${hour}`;
+                    expect(el.attributes["ariaLabel"]).toEqual(hours);
+                    hour++;
+                });
+                minutesColumn.children.forEach(el => function () {
+                    expect(el.attributes.role).toEqual('spinbutton');
+                    expect(el.attributes["ariaLabel"]).toEqual(`${minutes}`);
+                    minutes++;
+                });
+                ampmColumn.children.forEach(el => function () {
+                    expect(el.attributes.role).toEqual('spinbutton');
+                    const ampmLabel = ampm === 3 ? 'AM' : ampm === 4 ? 'PM' : null;
+                    expect(el.attributes["ariaLabel"]).toEqual(ampmLabel);
+                    ampm++;
+                });
+                timePicker.close();
+                tick();[[]]
+                fixture.detectChanges();
+                expect(input.getAttribute('aria-expanded')).toEqual('false');
+            }));
+
         });
     });
 });
 
 @Component({
     template: `
-        <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue"></igx-time-picker>
+        <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
+        <label igxLabel>Select time</label>
+        </igx-time-picker>
     `
 })
 export class IgxTimePickerTestComponent {
