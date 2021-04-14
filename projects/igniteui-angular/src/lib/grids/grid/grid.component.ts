@@ -223,6 +223,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     set groupingExpressions(value: IGroupingExpression[]) {
+        if (this.groupingExpressions === value) {
+            return;
+        }
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
