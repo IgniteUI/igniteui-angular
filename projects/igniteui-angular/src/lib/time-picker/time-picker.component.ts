@@ -166,16 +166,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
 
     /**
-    * The minimum value the picker will accept.
-    *
-    * @remarks
-    * If a `string` value is passed in, it must be in ISO format.
-    *
-    * @example
-    * ```html
-    * <igx-time-picker [minValue]="18:00:00"></igx-time-picker>
-    * ```
-    */
+     * The minimum value the picker will accept.
+     *
+     * @remarks
+     * If a `string` value is passed in, it must be in ISO format.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [minValue]="18:00:00"></igx-time-picker>
+     * ```
+     */
     @Input()
     public set minValue(value: Date | string) {
         this._minValue = value;
@@ -187,16 +187,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * The maximum value the picker will accept.
-    *
-    * @remarks
-    * If a `string` value is passed in, it must be in ISO format.
-    *
-    * @example
-    * ```html
-    * <igx-time-picker [maxValue]="20:30:00"></igx-time-picker>
-    * ```
-    */
+     * The maximum value the picker will accept.
+     *
+     * @remarks
+     * If a `string` value is passed in, it must be in ISO format.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [maxValue]="20:30:00"></igx-time-picker>
+     * ```
+     */
     @Input()
     public set maxValue(value: Date | string) {
         this._maxValue = value;
@@ -219,10 +219,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /**
      * Sets the orientation of the picker's header.
-     * 
+     *
      * @remarks
      * Available in dialog mode only. Default value is `horizontal`.
-     * 
+     *
      * ```html
      * <igx-time-picker [headerOrientation]="'vertical'"></igx-time-picker>
      * ```
@@ -484,17 +484,17 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
 
     /**
-    * The currently selected value / time from the drop-down/dialog
-    *
-    * @remarks
-    * The current value is of type `Date`
-    *
-    * @example
-    * ```typescript
-    * const newValue: Date = new Date(2000, 2, 2, 10, 15, 15);
-    * this.timePicker.value = newValue;
-    * ```
-    */
+     * The currently selected value / time from the drop-down/dialog
+     *
+     * @remarks
+     * The current value is of type `Date`
+     *
+     * @example
+     * ```typescript
+     * const newValue: Date = new Date(2000, 2, 2, 10, 15, 15);
+     * this.timePicker.value = newValue;
+     * ```
+     */
     public get value(): Date | string {
         return this._value;
     }
@@ -579,7 +579,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Delta values used to increment or decrement each editor date part on spin actions and to display time portions in the dropdown/dialog.
+     * Delta values used to increment or decrement each editor date part on spin actions and
+     * to display time portions in the dropdown/dialog.
      * By default `itemsDelta` is set to `{hour: 1, minute: 1, second: 1}`
      * ```html
      * <igx-time-picker [itemsDelta]="{hour:3, minute:5, second:10}" id="time-picker"></igx-time-picker>
@@ -728,15 +729,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Closes the dropdown/dialog.
-    * ```html
-    * <igx-time-picker #timePicker></igx-time-picker>
-    * ```
-    * ```typescript
-    * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
-    * picker.close();
-    * ```
-    */
+     * Closes the dropdown/dialog.
+     * ```html
+     * <igx-time-picker #timePicker></igx-time-picker>
+     * ```
+     * ```typescript
+     * @ViewChild('timePicker', { read: IgxTimePickerComponent }) picker: IgxTimePickerComponent;
+     * picker.close();
+     * ```
+     */
     public close(): void {
         this.toggleRef.close();
     }
@@ -750,12 +751,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Clears the time picker value if it is a `string` or resets the time to `00:00:00` if the value is a Date object.
-    * @example
-    * ```typescript
-    * this.timePicker.clear();
-    * ```
-    */
+     * Clears the time picker value if it is a `string` or resets the time to `00:00:00` if the value is a Date object.
+     *
+     * @example
+     * ```typescript
+     * this.timePicker.clear();
+     * ```
+     */
     public clear(): void {
         if (this.disabled) {
             return;
@@ -780,12 +782,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Selects time from the igxTimePicker.
+     * Selects time from the igxTimePicker.
      *
      * @example
      * ```typescript
      * this.timePicker.select(date);
-     * 
+     *
      * @param date Date object containing the time to be selected.
      */
     public select(date: Date | string): void {
@@ -798,10 +800,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Increment specified TimePart.
-    *
-    * @param datePart The optional DatePart to increment. Defaults to Hours.
-    */
+     * Increment specified TimePart.
+     *
+     * @param datePart The optional DatePart to increment. Defaults to Hours.
+     */
     public increment(datePart?: DatePart): void {
         const timePart = datePart ? datePart : DatePart.Hours;
 
@@ -813,10 +815,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-    * Decrement specified TimePart.
-    *
-    * @param datePart The optional DatePart to decrement. Defaults to Hours.
-    */
+     * Decrement specified TimePart.
+     *
+     * @param datePart The optional DatePart to decrement. Defaults to Hours.
+     */
     public decrement(datePart?: DatePart): void {
         const timePart = datePart ? datePart : DatePart.Hours;
 
@@ -841,7 +843,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             case 'hourList':
                 const previousDate = new Date(date);
                 let ampm: string;
-                let selectedHour = parseInt(item, 10);
+                const selectedHour = parseInt(item, 10);
                 let hours = selectedHour;
 
                 if (this.showAmPmList) {
@@ -887,13 +889,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 break;
             }
             case 'ampmList': {
-                let hours = this._selectedDate.getHours();
-                hours = item === 'AM' ? hours - 12 : hours + 12;
-                date.setHours(hours);
+                let hour = this._selectedDate.getHours();
+                hour = item === 'AM' ? hour - 12 : hour + 12;
+                date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
-                hours = this.toTwelveHourFormat(date.getHours());
+                hour = this.toTwelveHourFormat(date.getHours());
                 this._ampmView = this.scrollListItem(item, this._ampmItems, DatePart.AmPm);
-                this._hourView = this.scrollListItem(hours, this._hourItems, DatePart.Hours);
+                this._hourView = this.scrollListItem(hour, this._hourItems, DatePart.Hours);
                 this._selectedDate = date;
                 this.updateSelectedMinutes();
                 this.updateSelectedSeconds();
@@ -909,7 +911,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const previousDate = new Date(this._selectedDate);
         const minHours = this._minDropdownValue?.getHours() || 0;
         const maxHours = this._maxDropdownValue?.getHours() || 24;
-        let previousHours = previousDate.getHours();
+        const previousHours = previousDate.getHours();
         let hours = previousHours + delta * this.itemsDelta.hour;
         if ((previousHours === maxHours && delta > 0) || (previousHours === minHours && delta < 0)) {
             hours = !this.spinLoop ? previousHours : delta > 0 ? minHours : maxHours;
@@ -1205,7 +1207,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._onTouchedCallback();
 
         if (this.showHoursList) {
-            const selectedHour = this.isTwelveHourFormat ? this.toTwelveHourFormat(this._selectedDate.getHours()) : this._selectedDate.getHours();
+            const hours = this._selectedDate.getHours();
+            const selectedHour = this.isTwelveHourFormat ? this.toTwelveHourFormat(hours) : hours;
             this._hourView = this.scrollListItem(selectedHour, this._hourItems, DatePart.Hours);
         }
         if (this.showMinutesList) {
@@ -1237,13 +1240,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private findArrayMinMax(array: any[]): any {
-        const filteredArray = array.filter(function (val) {
-            return val !== null
-        });
+        const filteredArray = array.filter(val => val !== null);
         return {
             min: Math.min(...filteredArray),
             max: Math.max(...filteredArray)
-        }
+        };
     }
 
     private updateSelectedMinutes() {
@@ -1312,7 +1313,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private emitValidationFailedEvent(previousValue: Date | string) {
         const args: IgxTimePickerValidationFailedEventArgs = {
             owner: this,
-            previousValue: previousValue
+            previousValue
         };
         this.validationFailed.emit(args);
     }
@@ -1378,15 +1379,18 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private toISOString(value: Date): string {
-        return value.toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
+        return value.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
         });
     }
 
     private isTimePart(datePart: DatePart): boolean {
-        return (datePart === DatePart.Hours || datePart === DatePart.Minutes || datePart === DatePart.Seconds || datePart === DatePart.AmPm);
+        return (datePart === DatePart.Hours ||
+            datePart === DatePart.Minutes ||
+            datePart === DatePart.Seconds ||
+            datePart === DatePart.AmPm);
     }
 
     private toTwelveHourFormat(hour: number): number {

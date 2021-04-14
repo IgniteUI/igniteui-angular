@@ -1,22 +1,18 @@
-import { IgxLabelDirective } from './../directives/label/label.directive';
-import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
-import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/public_api';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxToggleDirective, IgxToggleModule } from '../directives/toggle/toggle.directive';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
-import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
-import { IgxItemListDirective } from './time-picker.directives';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { KEYS } from '../core/utils';
+import { DatePart } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { time } from 'console';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -25,11 +21,10 @@ const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_DROPDOWN = '.igx-time-picker--dropdown';
 const CSS_CLASS_HOURLIST = '.igx-time-picker__hourList';
 const CSS_CLASS_MINUTELIST = '.igx-time-picker__minuteList';
-const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
+// const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = '.igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
-const CSS_CLASS_HEADER_AMPM = '.igx-time-picker__header-ampm';
 const CSS_CLASS_OVERLAY = 'igx-overlay';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 
@@ -55,7 +50,7 @@ describe('IgxTimePicker', () => {
             timePicker.open();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, "collapsed")?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
             timePicker.close();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
@@ -70,7 +65,7 @@ describe('IgxTimePicker', () => {
             timePicker.toggle();
             expect(mockToggleDirective.open).toHaveBeenCalledTimes(1);
 
-            (Object.getOwnPropertyDescriptor(mockToggleDirective, "collapsed")?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
+            (Object.getOwnPropertyDescriptor(mockToggleDirective, 'collapsed')?.get as jasmine.Spy<() => boolean>).and.returnValue(false);
             timePicker.toggle();
             expect(mockToggleDirective.close).toHaveBeenCalledTimes(1);
         });
@@ -239,7 +234,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.value).toEqual(pickerValue);
             }));
 
-            it('should open the dropdown with `ArrowDown` + `Alt` key press and close it and keep the current selection on outside click', fakeAsync(() => {
+            it('should open the dropdown with `ArrowDown` + `Alt` key press and close it on outside click', fakeAsync(() => {
                 input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
                 tick();
                 fixture.detectChanges();
@@ -465,7 +460,7 @@ describe('IgxTimePicker', () => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
-                timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
+                // timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 hourColumn = fixture.debugElement.query(By.css(CSS_CLASS_HOURLIST));
                 minutesColumn = fixture.debugElement.query(By.css(CSS_CLASS_MINUTELIST));
@@ -562,41 +557,43 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should apply all aria attributes correctly', fakeAsync(() => {
-                const input = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
-                expect(input.getAttribute('role')).toEqual('combobox');
-                expect(input.getAttribute('aria-haspopup')).toEqual('dialog');
-                expect(input.getAttribute('aria-labelledby')).toEqual(timePicker.label.id);
-                expect(input.getAttribute('aria-expanded')).toEqual('false');
+                const inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
+                expect(inputEl.getAttribute('role')).toEqual('combobox');
+                expect(inputEl.getAttribute('aria-haspopup')).toEqual('dialog');
+                expect(inputEl.getAttribute('aria-labelledby')).toEqual(timePicker.label.id);
+                expect(inputEl.getAttribute('aria-expanded')).toEqual('false');
+
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(input.getAttribute('aria-expanded')).toEqual('true');
+                expect(inputEl.getAttribute('aria-expanded')).toEqual('true');
+
                 let hour = 8;
                 let minutes = 42;
                 let ampm = 0;
-                hourColumn.children.forEach(el => function () {
+                hourColumn.children.forEach((el) => {
                     expect(el.attributes.role).toEqual('spinbutton');
                     const hours = hour < 10 ? `0${hour}` : `${hour}`;
-                    expect(el.attributes["ariaLabel"]).toEqual(hours);
+                    expect(el.attributes['ariaLabel']).toEqual(hours);
                     hour++;
                 });
-                minutesColumn.children.forEach(el => function () {
+                minutesColumn.children.forEach((el) => {
                     expect(el.attributes.role).toEqual('spinbutton');
-                    expect(el.attributes["ariaLabel"]).toEqual(`${minutes}`);
+                    expect(el.attributes['ariaLabel']).toEqual(`${minutes}`);
                     minutes++;
                 });
-                ampmColumn.children.forEach(el => function () {
+                ampmColumn.children.forEach((el) => {
                     expect(el.attributes.role).toEqual('spinbutton');
                     const ampmLabel = ampm === 3 ? 'AM' : ampm === 4 ? 'PM' : null;
-                    expect(el.attributes["ariaLabel"]).toEqual(ampmLabel);
+                    expect(el.attributes['ariaLabel']).toEqual(ampmLabel);
                     ampm++;
                 });
-                timePicker.close();
-                tick();[[]]
-                fixture.detectChanges();
-                expect(input.getAttribute('aria-expanded')).toEqual('false');
-            }));
 
+                timePicker.close();
+                tick();
+                fixture.detectChanges();
+                expect(inputEl.getAttribute('aria-expanded')).toEqual('false');
+            }));
         });
     });
 });
