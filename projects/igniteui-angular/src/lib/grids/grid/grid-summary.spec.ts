@@ -8,7 +8,10 @@ import {
     IgxNumberSummaryOperand,
     IgxSummaryOperand,
     IgxSummaryResult,
-    IgxGridGroupByRowComponent
+    IgxGridGroupByRowComponent,
+    IgxGroupByRow,
+    IgxSummaryRow,
+    IgxGridRow
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -1311,6 +1314,25 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 5, ['Count'], ['9']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 4, ['Min', 'Max'], ['19', '50']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 4, 5, ['Count'], ['3']);
+
+            fix.detectChanges();
+            // Get row by index and check it's type
+            GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 0, IgxGroupByRow);
+            GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 1, IgxGridRow);
+            GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 4, IgxSummaryRow);
+
+            // Check the API members - isSummaryRow
+            expect(grid.getRowByIndex(4).isSummaryRow).toBe(true);
+            // Check rowID, rowData, data, disabled
+            expect(grid.getRowByIndex(4).rowID).toBeUndefined();
+            expect(grid.getRowByIndex(4).rowData).toBeUndefined();
+            expect(grid.getRowByIndex(4).data).toBeUndefined();
+            expect(grid.getRowByIndex(4).disabled).toBeUndefined();
+            expect(grid.getRowByIndex(4).pinned).toBeUndefined();
+            expect(grid.getRowByIndex(4).selected).toBeUndefined();
+
+            // Get row by index and check summaries member
+            GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 4, Map);
         }));
 
         it('Grouping: Add not grouped row', (async () => {
