@@ -342,6 +342,21 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     }
 
     /**
+     * Sets whether the row is pinned.
+     * Default value is `false`.
+     * ```typescript
+     * row.pinned = !row.pinned;
+     * ```
+     */
+    public set pinned(val: boolean) {
+        if (val) {
+            this.pin();
+        } else {
+            this.unpin();
+        }
+    }
+
+    /**
      * Gets whether the row is expanded.
      *
      * ```typescript
@@ -350,6 +365,17 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      */
     public get expanded(): boolean {
         return this.grid.gridAPI.get_row_expansion_state(this.treeRow);
+    }
+
+    /**
+     * Expands/collapses the row.
+     *
+     * ```typescript
+     * row.expanded = true;
+     * ```
+     */
+    public set expanded(val: boolean) {
+        this.grid.gridAPI.set_row_expansion_state(this.key, val);
     }
 }
 
