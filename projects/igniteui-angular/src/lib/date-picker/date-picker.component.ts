@@ -372,19 +372,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public valueChange = new EventEmitter<Date>();
 
     /**
-     * Emitted when the user types/spins to a disabled date in the date-picker editor.
-     *
-     *  @example
-     * ```html
-     * <igx-date-picker (onDisabledDate)="onDisabledDate($event)"></igx-date-picker>
-     * ```
-     */
-    // eslint-disable-next-line @angular-eslint/no-output-on-prefix
-    @Output()
-    @DeprecateProperty('onDisabledDate has been deprecated.')
-    public onDisabledDate = new EventEmitter<IDatePickerDisabledDateEventArgs>(); // TODO: remove event args as well
-
-    /**
      * Emitted when the user types/spins invalid date in the date-picker editor.
      *
      *  @example
