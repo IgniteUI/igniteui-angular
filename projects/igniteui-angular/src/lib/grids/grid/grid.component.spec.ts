@@ -1095,7 +1095,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        fit(`should render all records exactly if height is 100% and parent container's height is unset and
+        it(`should render all records exactly if height is 100% and parent container's height is unset and
             there are fewer than 10 records in the data view`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '100%';
