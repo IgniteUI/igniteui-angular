@@ -108,6 +108,32 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[0]);
             fix.detectChanges();
 
+            // Check if the row is pinned to the bottom through the Row pinned API
+            expect(grid.getRowByIndex(0).pinned).toBe(true);
+
+            // Toggle pin state with row API
+            grid.getRowByIndex(0).pinned = false;
+            expect(grid.getRowByIndex(0).pinned).toBe(false);
+            fix.detectChanges();
+            grid.getRowByIndex(0).pinned = true;
+            expect(grid.getRowByIndex(0).pinned).toBe(true);
+            fix.detectChanges();
+
+            // Pin/Unpin with the methods
+            grid.getRowByIndex(0).unpin();
+            expect(grid.getRowByIndex(0).pinned).toBe(false);
+            fix.detectChanges();
+            grid.getRowByIndex(0).pin();
+            expect(grid.getRowByIndex(0).pinned).toBe(true);
+            fix.detectChanges();
+
+            // Check API methods
+            expect(grid.getRowByIndex(0).rowID).toBeTruthy();
+            expect(grid.getRowByIndex(0).rowData).toBeTruthy();
+            expect(grid.getRowByIndex(0).data).toBeTruthy();
+            expect(grid.getRowByIndex(0).disabled).toBe(false);
+            expect(grid.getRowByIndex(0).pinned).toBe(true);
+
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer[0].children.length).toBe(2);
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
@@ -156,6 +182,9 @@ describe('Row Pinning #grid', () => {
             row.pin();
             fix.detectChanges();
 
+            // Check pinned state with getRowByIndex after pin action
+            expect(row.pinned).toBe(true);
+
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
             expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
                 rowID,
@@ -166,6 +195,8 @@ describe('Row Pinning #grid', () => {
             row = grid.getRowByIndex(0);
             row.unpin();
             fix.detectChanges();
+            // Check pinned state with getRowByIndex after unpin action
+            expect(row.pinned).toBe(false);
 
             expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(2);
         });

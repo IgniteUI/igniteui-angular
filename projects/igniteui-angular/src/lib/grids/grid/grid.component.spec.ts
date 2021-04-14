@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, IgxGridRow, IgxGridRowComponent } from './public_api';
+import { IgxGridModule, IgxGridRow, IgxGridRowComponent, IgxGroupByRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -1095,7 +1095,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        fit(`should render all records exactly if height is 100% and parent container's height is unset and
+        it(`should render all records exactly if height is 100% and parent container's height is unset and
             there are fewer than 10 records in the data view`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '100%';
@@ -1755,7 +1755,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    fdescribe('IgxGrid - API methods', () => {
+    describe('IgxGrid - API methods', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -1981,6 +1981,59 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // Get row with the new getRowByIndex method
             expect(grid.getRowByIndex(32) instanceof IgxGridRow).toBe(true);
+
+            // GroupBy column and get the collapsed grouped row
+            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+
+            fix.detectChanges();
+            grid.groupBy({ fieldName: 'col1', dir: SortingDirection.Asc });
+            fix.detectChanges();
+
+            // First row is IgxGroupByRow second row is igxGridRow
+            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(1) instanceof IgxGridRow).toBe(true);
+
+            // expand/collapse first group row
+            grid.getRowByIndex(0).expanded = true;
+            fix.detectChanges();
+            expect(grid.getRowByIndex(0).expanded).toBe(true);
+
+            grid.getRowByIndex(0).expanded = false;
+            fix.detectChanges();
+            expect(grid.getRowByIndex(0).expanded).toBe(false);
+
+            // First row is still IgxGroupByRow and now the second row is as well IgxGroupByRow
+            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(1) instanceof IgxGroupByRow).toBe(true);
+
+            // Check hasChildren and other API members for igxGrid
+            expect(grid.getRowByIndex(2).hasChildren).toBe(false);
+            expect(grid.getRowByIndex(2).index).toEqual(2);
+            expect(grid.getRowByIndex(1).isSummaryRow).toBeUndefined();
+
+            // GroupByRow check
+            expect(grid.getRowByIndex(2).isGroupByRow).toBeUndefined();
+            expect(grid.getRowByIndex(1).isGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(2).groupRow).toBeUndefined();
+            expect(grid.getRowByIndex(1).groupRow).toBeTruthy();
+
+            // rowID and rowData check - first with group row (index 1) and then with IgxGridRow (index 2)
+            expect(grid.getRowByIndex(1).rowID).toBeUndefined();
+            expect(grid.getRowByIndex(1).rowData).toBeUndefined();
+            expect(grid.getRowByIndex(1).data).toBeUndefined();
+            expect(grid.getRowByIndex(1).disabled).toBeUndefined();
+            expect(grid.getRowByIndex(1).pinned).toBeUndefined();
+            expect(grid.getRowByIndex(1).selected).toBeUndefined();
+            expect(grid.getRowByIndex(2).rowID).toBeTruthy();
+            expect(grid.getRowByIndex(2).rowData).toBeTruthy();
+            expect(grid.getRowByIndex(2).data).toBeTruthy();
+            expect(grid.getRowByIndex(2).disabled).toBe(false);
+            expect(grid.getRowByIndex(2).pinned).toBe(false);
+            expect(grid.getRowByIndex(2).selected).toBe(false);
+
+            // Toggle selection
+            grid.getRowByIndex(2).selected = true;
+            expect(grid.getRowByIndex(2).selected).toBe(true);
         });
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {

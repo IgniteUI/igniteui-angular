@@ -2060,6 +2060,10 @@ export class GridSummaryFunctions {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
+    public static verifyRowWithIndexIsOfType(grid, index: number, type: any) {
+        expect(grid.getRowByIndex(index) instanceof type).toBe(true);
+    }
+
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
         // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
         const summary = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);

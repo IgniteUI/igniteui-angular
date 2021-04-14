@@ -1705,12 +1705,30 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
+            // Check getRowByIndex expanded, children and parent members
+            expect(treeGrid.getRowByIndex(0).expanded).toBe(true);
+            expect(treeGrid.getRowByIndex(0).children.length).toEqual(3);
+            expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
+
             const firstColumnField = treeGrid.columns[0].field;
             const pinnedChipExpectedPosition = treeGrid.getCellByColumn(1, firstColumnField);
             const pinnedRow = pinnedChipExpectedPosition.row;
 
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
             expect(pinnedRow.disabled).toBeFalsy();
+        });
+
+        it('should test getRowByIndex API members', () => {
+            treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
+            fix.detectChanges();
+
+            // Check getRowByIndex expanded, children and parent members
+            expect(treeGrid.getRowByIndex(0).expanded).toBe(true);
+            expect(treeGrid.getRowByIndex(0).children.length).toEqual(1);
+            expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
+
+            treeGrid.getRowByIndex(0).expanded = false;
+            expect(treeGrid.getRowByIndex(0).expanded).toBe(false);
         });
     });
 });

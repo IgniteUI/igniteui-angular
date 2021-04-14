@@ -2270,6 +2270,43 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(firstCell.selected).toBeFalsy();
         });
 
+        it(`Should verify getRowByIndex API editing members`, () => {
+            const row = grid.getRowByIndex(0);
+            row.delete();
+            fix.detectChanges();
+
+            // Check if row is deleted
+            expect(row.deleted).toBe(true);
+            spyOn(grid.gridAPI.crudService, 'endRowTransaction').and.callThrough();
+
+            const firstCell = grid.getCellByColumn(2, 'ProductName');
+            UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
+            fix.detectChanges();
+
+            // Check if row is in edit mode
+            expect(grid.getRowByIndex(2).inEditMode).toBe(true);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
+
+            const targetCell = grid.getCellByColumn(0, 'ProductName');
+            UIInteractions.simulateClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
+
+            expect(grid.getRowByIndex(2).inEditMode).toBe(false);
+
+            const newRow = {
+                ProductID: 123,
+                ProductName: 'DummyItem',
+                InStock: true,
+                UnitsInStock: 1,
+                OrderDate: new Date()
+            };
+            grid.getRowByIndex(2).update(newRow);
+            fix.detectChanges();
+            expect(grid.getRowByIndex(2).rowData.ProductID).toEqual(123);
+            expect(grid.getRowByIndex(2).rowData.ProductName).toEqual('DummyItem');
+        });
+
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {
             // This is not a valid scenario if the grid does not have transactions enabled
             fix.componentInstance.paging = true;
