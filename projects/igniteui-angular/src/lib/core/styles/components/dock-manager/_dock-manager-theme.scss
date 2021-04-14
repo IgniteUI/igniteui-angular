@@ -58,7 +58,7 @@
     $schema: $light-schema,
     $rest...
 ) {
-    $name: 'igc-dock-manager';
+    $name: 'igc-dockmanager';
     $dock-manager-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -75,7 +75,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 @mixin igc-dock-manager($theme) {
-    @include igx-css-vars($theme, $prefix: 'igc');
+    @include igx-css-vars($theme);
 }
 
 /// Adds typography styles for the dock manager component.

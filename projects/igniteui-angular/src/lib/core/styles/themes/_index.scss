@@ -316,7 +316,7 @@
         @include igx-divider(igx-divider-theme($schema: $schema));
     }
 
-    @if not(index($exclude, 'igc-dock-manager')) {
+    @if not(index($exclude, 'igc-dockmanager')) {
         @include igc-dock-manager(igc-dock-manager-theme($schema: $schema));
     }
 
