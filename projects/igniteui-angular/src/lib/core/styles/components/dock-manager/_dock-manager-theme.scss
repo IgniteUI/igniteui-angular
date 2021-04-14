@@ -72,6 +72,8 @@
     @return extend($theme, (name: $name), keywords($rest));
 }
 
+/// @param {Map} $theme - The theme used to style the component.
+/// @requires {mixin} igx-css-vars
 @mixin igc-dock-manager($theme) {
     @include igx-css-vars($theme, $prefix: 'igc');
 }
