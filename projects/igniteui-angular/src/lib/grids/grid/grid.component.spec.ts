@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IgxGridRow, IgxGridRowComponent } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -23,6 +23,7 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -1094,7 +1095,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(fix.componentInstance.grid.rowList.length).toBeGreaterThanOrEqual(10);
         });
 
-        it(`should render all records exactly if height is 100% and parent container's height is unset and
+        fit(`should render all records exactly if height is 100% and parent container's height is unset and
             there are fewer than 10 records in the data view`, fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             fix.componentInstance.grid.height = '100%';
@@ -1754,12 +1755,13 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    describe('IgxGrid - API methods', () => {
+    fdescribe('IgxGrid - API methods', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridDefaultRenderingComponent
+                    IgxGridDefaultRenderingComponent,
+                    IgxGridWrappedInContComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -1960,6 +1962,48 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(1)).toEqual(secondRow);
             expect(grid.getRowData(7)).toEqual({});
         });
+
+        it(`Verify that getRowByIndex returns correct data`, () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(35, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const virtRowsLength = grid.dataRowList.length;
+            const indexToCompare = 32;
+
+            expect(indexToCompare > virtRowsLength).toBe(true);
+            // Check if the comparable row is within the virt container
+            expect(grid.gridAPI.get_row_by_index(virtRowsLength - 1) instanceof IgxGridRowComponent).toBe(true);
+
+            // Check if the comparable row is outside the virt container
+            expect(grid.gridAPI.get_row_by_index(virtRowsLength + 1)).toEqual(undefined);
+
+            // Get row with the new getRowByIndex method
+            expect(grid.getRowByIndex(32) instanceof IgxGridRow).toBe(true);
+        });
+
+        it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
+            tick(16);
+
+            // Compare the result returned by both get_row_by_index and getRowByIndex
+            expect(grid.gridAPI.get_row_by_index(fix.componentInstance.pageSize + 1)).toBeUndefined();
+            expect(grid.getRowByIndex(fix.componentInstance.pageSize - 1) instanceof IgxGridRow).toBe(true);
+            expect(grid.getRowByIndex(fix.componentInstance.pageSize) instanceof IgxGridRow).toBe(false);
+
+            // Change page and check getRowByIndex
+            grid.page = 1;
+            fix.detectChanges();
+            tick();
+
+            // Return the first row after page change
+            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+        }));
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {
