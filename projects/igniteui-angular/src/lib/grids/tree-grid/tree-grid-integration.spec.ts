@@ -1707,7 +1707,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             // Check getRowByIndex expanded, children and parent members
             expect(treeGrid.getRowByIndex(0).expanded).toBe(true);
-            expect(treeGrid.getRowByIndex(0).children.length).toEqual(3);
+            expect(treeGrid.getRowByIndex(0).children.length).toEqual(1);
             expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
 
             const firstColumnField = treeGrid.columns[0].field;
