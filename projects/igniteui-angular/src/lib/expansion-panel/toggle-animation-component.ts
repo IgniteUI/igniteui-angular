@@ -21,7 +21,8 @@ export interface ToggleAnimationOwner {
     playCloseAnimation(element: ElementRef, onDone: () => void): void;
 }
 
-enum ANIMATION_TYPE {
+/** @hidden @internal */
+export enum ANIMATION_TYPE {
     OPEN = 'open',
     CLOSE = 'close',
 }

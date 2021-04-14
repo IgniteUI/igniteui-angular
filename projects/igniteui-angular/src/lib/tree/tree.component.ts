@@ -363,7 +363,8 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
      */
     public findNodes(searchTerm: any, comparer?: IgxTreeSearchResolver): IgxTreeNodeComponent<any>[] | null {
         const compareFunc = comparer || this._comparer;
-        return this.nodes.filter(node => compareFunc(searchTerm, node));
+        const results = this.nodes.filter(node => compareFunc(searchTerm, node));
+        return results?.length === 0 ? null : results;
     }
 
     /** @hidden @internal */

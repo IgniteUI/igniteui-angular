@@ -223,7 +223,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     public selectedChange = new EventEmitter<boolean>();
 
     /**
-     * Emitted when the node's `selected` property changes.
+     * Emitted when the node's `expanded` property changes.
      *
      * ```html
      * <igx-tree>
