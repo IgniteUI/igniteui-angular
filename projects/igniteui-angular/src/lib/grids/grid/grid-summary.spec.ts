@@ -1267,7 +1267,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
         });
 
-        fit('Grouping: Add grouped row', (async () => {
+        it('Grouping: Add grouped row', (async () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
