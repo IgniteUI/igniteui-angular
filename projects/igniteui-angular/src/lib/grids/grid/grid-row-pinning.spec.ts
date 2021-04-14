@@ -128,10 +128,9 @@ describe('Row Pinning #grid', () => {
             fix.detectChanges();
 
             // Check API methods
-            expect(grid.getRowByIndex(0).rowID).toBeTruthy();
+            expect(grid.getRowByIndex(0).key).toBeTruthy();
             expect(grid.getRowByIndex(0).rowData).toBeTruthy();
             expect(grid.getRowByIndex(0).data).toBeTruthy();
-            expect(grid.getRowByIndex(0).disabled).toBe(false);
             expect(grid.getRowByIndex(0).pinned).toBe(true);
 
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));

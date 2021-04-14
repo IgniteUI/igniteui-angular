@@ -17,11 +17,12 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 import { IgxGridModule } from '../grid/public_api';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
+import { IgxTreeGridComponent } from './tree-grid.component';
 
 describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
     configureTestSuite();
     let fix;
-    let treeGrid;
+    let treeGrid: IgxTreeGridComponent;;
 
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({

@@ -1226,7 +1226,7 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('Update cell', () => {
-            grid.updateCell(19, grid.getRowByKey(12).rowID, 'Age');
+            grid.updateCell(19, grid.getRowByKey(12).key, 'Age');
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -1253,7 +1253,7 @@ describe('IgxGrid - Summaries #grid', () => {
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
 
-            grid.updateCell(65, grid.getRowByKey(957).rowID, 'Age');
+            grid.updateCell(65, grid.getRowByKey(957).key, 'Age');
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -1267,7 +1267,7 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 4, ['Min', 'Max'], ['19', '44']);
         });
 
-        it('Grouping: Add grouped row', (async () => {
+        fit('Grouping: Add grouped row', (async () => {
             grid.groupBy({
                 fieldName: 'ParentID', dir: SortingDirection.Asc, ignoreCase: false
             });
@@ -1324,10 +1324,9 @@ describe('IgxGrid - Summaries #grid', () => {
             // Check the API members - isSummaryRow
             expect(grid.getRowByIndex(4).isSummaryRow).toBe(true);
             // Check rowID, rowData, data, disabled
-            expect(grid.getRowByIndex(4).rowID).toBeUndefined();
+            expect(grid.getRowByIndex(4).key).toBeUndefined();
             expect(grid.getRowByIndex(4).rowData).toBeUndefined();
             expect(grid.getRowByIndex(4).data).toBeUndefined();
-            expect(grid.getRowByIndex(4).disabled).toBeUndefined();
             expect(grid.getRowByIndex(4).pinned).toBeUndefined();
             expect(grid.getRowByIndex(4).selected).toBeUndefined();
 
@@ -1409,13 +1408,13 @@ describe('IgxGrid - Summaries #grid', () => {
             });
             fix.detectChanges();
 
-            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
+            grid.deleteRow(grid.getRowByIndex(1).key);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['7']);
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 3, 2, ['Count'], ['1']);
 
-            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
+            grid.deleteRow(grid.getRowByIndex(2).key);
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['6']);
@@ -1641,7 +1640,7 @@ describe('IgxGrid - Summaries #grid', () => {
             });
             fix.detectChanges();
 
-            grid.updateCell(-1, grid.getRowByKey(101).rowID, 'ParentID');
+            grid.updateCell(-1, grid.getRowByKey(101).key, 'ParentID');
             fix.detectChanges();
 
             GridSummaryFunctions.verifyColumnSummariesBySummaryRowIndex(fix, 0, 2, ['Count'], ['8']);
@@ -1653,7 +1652,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(groupRows[0].groupRow.value).toEqual(-1);
             expect(groupRows[1].groupRow.value).toEqual(17);
 
-            grid.updateCell(19, grid.getRowByKey(12).rowID, 'ParentID');
+            grid.updateCell(19, grid.getRowByKey(12).key, 'ParentID');
             fix.detectChanges();
             groupRows = grid.groupsRowList.toArray();
             expect(groupRows[0].groupRow.value).toEqual(-1);
@@ -2238,7 +2237,7 @@ describe('IgxGrid - Summaries #grid', () => {
             grid.getColumnByName('HireDate').hasSummary = false;
             fix.detectChanges();
 
-            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
+            grid.deleteRow(grid.getRowByIndex(1).key);
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -2250,7 +2249,7 @@ describe('IgxGrid - Summaries #grid', () => {
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(5);
 
-            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
+            grid.deleteRow(grid.getRowByIndex(1).key);
             fix.detectChanges();
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['6']);
@@ -2258,20 +2257,20 @@ describe('IgxGrid - Summaries #grid', () => {
         });
 
         it('CRUD: delete all nodes', () => {
-            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(5).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(8).rowID);
+            grid.deleteRow(grid.getRowByIndex(1).key);
+            grid.deleteRow(grid.getRowByIndex(2).key);
+            grid.deleteRow(grid.getRowByIndex(5).key);
+            grid.deleteRow(grid.getRowByIndex(8).key);
             fix.detectChanges();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2, ['Count'], ['4']);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(3);
 
-            grid.deleteRow(grid.gridAPI.get_row_by_index(1).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(5).rowID);
-            grid.deleteRow(grid.gridAPI.get_row_by_index(6).rowID);
+            grid.deleteRow(grid.getRowByIndex(1).key);
+            grid.deleteRow(grid.getRowByIndex(2).key);
+            grid.deleteRow(grid.getRowByIndex(5).key);
+            grid.deleteRow(grid.getRowByIndex(6).key);
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);

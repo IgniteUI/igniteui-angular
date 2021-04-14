@@ -2021,13 +2021,11 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowByIndex(1).rowID).toBeUndefined();
             expect(grid.getRowByIndex(1).rowData).toBeUndefined();
             expect(grid.getRowByIndex(1).data).toBeUndefined();
-            expect(grid.getRowByIndex(1).disabled).toBeUndefined();
             expect(grid.getRowByIndex(1).pinned).toBeUndefined();
             expect(grid.getRowByIndex(1).selected).toBeUndefined();
             expect(grid.getRowByIndex(2).rowID).toBeTruthy();
             expect(grid.getRowByIndex(2).rowData).toBeTruthy();
             expect(grid.getRowByIndex(2).data).toBeTruthy();
-            expect(grid.getRowByIndex(2).disabled).toBe(false);
             expect(grid.getRowByIndex(2).pinned).toBe(false);
             expect(grid.getRowByIndex(2).selected).toBe(false);
 

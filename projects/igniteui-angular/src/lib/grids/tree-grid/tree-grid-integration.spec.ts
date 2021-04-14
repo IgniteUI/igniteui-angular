@@ -1715,7 +1715,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const pinnedRow = pinnedChipExpectedPosition.row;
 
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
-            expect(pinnedRow.disabled).toBeFalsy();
         });
 
         it('should test getRowByIndex API members', () => {
