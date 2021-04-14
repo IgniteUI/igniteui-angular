@@ -168,7 +168,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     constructor(private cdr: ChangeDetectorRef, private builder: AnimationBuilder) { }
 
     /** @hidden */
-    ngAfterContentInit(): void {
+    public ngAfterContentInit(): void {
         if (this.body && this.header) {
             // schedule at end of turn:
             Promise.resolve().then(() => {
@@ -188,7 +188,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      *  <button (click)="myPanel.collapse($event)">Collpase Panel</button>
      * ```
      */
-    collapse(evt?: Event) {
+    public collapse(evt?: Event) {
         if (this.collapsed) { // If expansion panel is already collapsed, do nothing
             return;
         }
@@ -211,7 +211,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      *  <button (click)="myPanel.expand($event)">Expand Panel</button>
      * ```
      */
-    expand(evt?: Event) {
+    public expand(evt?: Event) {
         if (!this.collapsed) { // If the panel is already opened, do nothing
             return;
         }
@@ -234,7 +234,7 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
      *  <button (click)="myPanel.toggle($event)">Expand Panel</button>
      * ```
      */
-    toggle(evt?: Event) {
+    public toggle(evt?: Event) {
         if (this.collapsed) {
             this.open(evt);
         } else {
@@ -242,10 +242,10 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         }
     }
 
-    open(evt?: Event) {
+    public open(evt?: Event) {
         this.expand(evt);
     }
-    close(evt?: Event) {
+    public close(evt?: Event) {
         this.collapse(evt);
     }
 

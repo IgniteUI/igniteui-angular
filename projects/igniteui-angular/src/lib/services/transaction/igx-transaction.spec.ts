@@ -480,7 +480,6 @@ describe('IgxTransaction', () => {
         });
 
         it('Should properly confirm the length of the undo/redo stacks', () => {
-            const originalData = SampleTestData.generateProductData(11);
             const transaction = new IgxTransactionService();
             expect(transaction).toBeDefined();
 
