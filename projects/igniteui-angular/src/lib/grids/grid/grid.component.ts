@@ -1114,6 +1114,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return new IgxGridRow(this, index, rec);
     }
 
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
+    }
+
     /**
      * @hidden @internal
      */

@@ -19,6 +19,7 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
+import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
     configureTestSuite();
@@ -265,7 +266,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(5);
     }));
 
-    it('should allows expanding/collapsing groups.', fakeAsync(() => {
+    fit('should allows expanding/collapsing groups.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
@@ -315,6 +316,14 @@ describe('IgxGrid - GroupBy #grid', () => {
         for (const rec of groupRows[0].groupRow.records) {
             expect(grid.getRowByKey(rec.ID)).not.toBeUndefined();
         }
+
+        const groupRow = grid.getRowByIndex(0);
+        expect(groupRow.isGroupByRow).toBe(true);
+        expect(groupRow.expanded).toBe(true);
+        groupRow.expanded = false;
+        tick();
+        fix.detectChanges();
+        expect(groupRow.expanded).toBe(false);
     }));
 
     it('should allow changing the order of the groupBy columns.', fakeAsync(() => {

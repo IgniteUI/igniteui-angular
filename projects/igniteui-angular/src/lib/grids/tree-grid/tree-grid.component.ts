@@ -670,6 +670,16 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return new IgxTreeGridRow(this, index, rec);
     }
 
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
+    }
+
     /** @hidden */
     public generateRowPath(rowId: any): any[] {
         const path: any[] = [];
@@ -685,7 +695,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     /** @hidden */
     public isTreeRow(record: any): boolean {
-        return record.rowID && record.data;
+        return record.rowID !== undefined && record.data;
     }
 
     protected findRecordIndexInView(rec) {

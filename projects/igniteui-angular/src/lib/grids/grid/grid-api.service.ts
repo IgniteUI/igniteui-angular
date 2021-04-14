@@ -107,6 +107,12 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         }
     }
     public set_grouprow_expansion_state(groupRow: IGroupByRecord, value: boolean) {
+
+        if(this.grid.isExpandedGroup(groupRow) !== value) {
+            this.groupBy_toggle_group(groupRow);
+        } else {
+
+        }
         const grid = this.grid;
         if (grid.gridAPI.crudService.cellInEditMode) {
             this.crudService.endEdit(false);
