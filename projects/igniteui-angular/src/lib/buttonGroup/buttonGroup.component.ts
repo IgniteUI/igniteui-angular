@@ -307,6 +307,15 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
+        const button = this.buttons[index];
+        button.select();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public updateSelected(index: number) {
         if (index >= this.buttons.length || index < 0) {
             return;
         }
@@ -400,13 +409,13 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
                 }
 
                 if (button.selected) {
-                    this.selectButton(index);
+                    this.updateSelected(index);
                 }
 
                 button.buttonClick.pipe(takeUntil(this.buttonClickNotifier$)).subscribe((_) => this._clickHandler(index));
                 button.buttonSelected
                     .pipe(takeUntil(this.buttonSelectedNotifier$))
-                    .subscribe((_) => this.selectButton(index));
+                    .subscribe((_) => this.updateSelected(index));
             });
         };
 
