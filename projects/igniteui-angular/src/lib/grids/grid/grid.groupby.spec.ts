@@ -568,6 +568,25 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
+    it('should not apply grouping if the grouping expressions value is the same reference', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        // group by string column
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+        spyOn(grid.groupingExpressionsChange, 'emit');
+        fix.detectChanges();
+        const firstCell = grid.getCellByColumn(2, 'Downloads');
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fix.detectChanges();
+        expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
+    }));
+
     // GroupBy + Sorting integration
     it('should apply sorting on each group\'s records when non-grouped column is sorted.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -3387,6 +3406,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 @Component({
     template: `
         <igx-grid
+            [(groupingExpressions)]='currentGroupingExpressions'
             [width]='width'
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
@@ -3415,6 +3435,7 @@ export class DefaultGridComponent extends DataParent {
     public enableEditing = false;
     public enableGrouping = true;
     public currentSortExpressions;
+    public currentGroupingExpressions = [];
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
