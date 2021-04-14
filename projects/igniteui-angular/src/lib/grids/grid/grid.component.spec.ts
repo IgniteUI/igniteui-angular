@@ -1755,7 +1755,7 @@ describe('IgxGrid Component Tests #grid', () => {
         });
     });
 
-    fdescribe('IgxGrid - API methods', () => {
+    describe('IgxGrid - API methods', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
