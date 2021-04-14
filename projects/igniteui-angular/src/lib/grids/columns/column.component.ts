@@ -36,7 +36,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import {
     IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult, IgxTimeSummaryOperand
 } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
@@ -1608,8 +1608,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     break;
                 case DataType.Date:
                 case DataType.DateTime:
-                case DataType.Time:
                     this.summaries = IgxDateSummaryOperand;
+                    break;
+                case DataType.Time:
+                    this.summaries = IgxTimeSummaryOperand;
                     break;
                 case DataType.Currency:
                     this.summaries = IgxCurrencySummaryOperand;
