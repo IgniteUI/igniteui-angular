@@ -276,8 +276,8 @@ export class IgxTimeItemDirective {
                 return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === this.value;
             }
             case 'secondsList': {
-                const hourPart = inputDateParts.find(element => element.type === 'second');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+                const secondsPart = inputDateParts.find(element => element.type === 'second');
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart, secondsPart.format.length) === this.value;
             }
             case 'ampmList': {
                 const ampmPart = inputDateParts.find(element => element.format === 'tt');

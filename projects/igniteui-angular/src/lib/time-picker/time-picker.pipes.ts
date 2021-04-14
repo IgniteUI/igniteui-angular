@@ -11,7 +11,7 @@ export class TimeFormatPipe implements PipeTransform {
 
     public transform(value: Date): string {
         const format = this.timePicker.inputFormat.replace('tt', 'aa');
-        var datePipe = new DatePipe(this.timePicker.locale);
+        const datePipe = new DatePipe(this.timePicker.locale);
         return datePipe.transform(value, format);
     }
 }
