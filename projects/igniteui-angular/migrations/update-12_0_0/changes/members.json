@@ -1,40 +1,47 @@
 {
     "$schema": "../../common/schema/members-changes.schema.json",
-    "changes": [
-        {
-            "member": "onGridCreated",
-            "replaceWith": "gridCreated",
-            "definedIn": [
-                "IgxRowIslandComponent"
-            ]
-        },
-        {
-            "member": "onGridInitialized",
-            "replaceWith": "gridInitialized",
-            "definedIn": [
-                "IgxRowIslandComponent"
-            ]
-        },
-        {
-            "member": "onDataPreLoad",
-            "replaceWith": "dataPreLoad",
-            "definedIn": [
-                "IgxHierarchicalGridComponent"
-            ]
-        },
-        {
-            "member": "onDataPreLoad",
-            "replaceWith": "dataPreLoad",
-            "definedIn": [
-                "IgxGridComponent"
-            ]
-        },
-        {
-            "member": "onColumnToggled",
-            "replaceWith": "columnToggled",
-            "definedIn": [
-                "IgxColumnActionsComponent"
-            ]
-        }
-    ]
+  "changes": [
+    {
+      "member": "onGridCreated",
+      "replaceWith": "gridCreated",
+      "definedIn": [
+        "IgxRowIslandComponent"
+      ]
+    },
+    {
+      "member": "onGridInitialized",
+      "replaceWith": "gridInitialized",
+      "definedIn": [
+        "IgxRowIslandComponent"
+      ]
+    },
+    {
+      "member": "onDataPreLoad",
+      "replaceWith": "dataPreLoad",
+      "definedIn": [
+        "IgxHierarchicalGridComponent"
+      ]
+    },
+    {
+      "member": "onDataPreLoad",
+      "replaceWith": "dataPreLoad",
+      "definedIn": [
+        "IgxGridComponent"
+      ]
+    },
+    {
+      "member": "onColumnToggled",
+      "replaceWith": "columnToggled",
+      "definedIn": [
+        "IgxColumnActionsComponent"
+      ]
+    },
+    {
+      "member": "onColumnChange",
+      "replaceWith": "columnChange",
+      "definedIn": [
+        "IgxColumnComponent"
+      ]
+    }
+  ]
 }

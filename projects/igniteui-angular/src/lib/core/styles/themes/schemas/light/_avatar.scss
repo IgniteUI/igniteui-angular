@@ -13,7 +13,7 @@
 /// @prop {Number} border-radius [0] - The border radius. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} size - The size of the avatar.
 /// @requires {function} extend
-/// @requires {Map} $_default-shape-avatar
+/// @requires {Map} $_square-shape-avatar
 /// @see $default-palette
 $_light-avatar: extend(
     $_square-shape-avatar,

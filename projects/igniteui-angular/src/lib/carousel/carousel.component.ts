@@ -1112,16 +1112,18 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private updateSlidesSelection() {
-        requestAnimationFrame(() => {
-            if (this.currentSlide) {
-                this.currentSlide.active = true;
-                const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
-                activeSlides.forEach(slide => slide.active = false);
-            } else if (this.total) {
-                this.slides.first.active = true;
-            }
-            this.play();
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.currentSlide) {
+                    this.currentSlide.active = true;
+                    const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
+                    activeSlides.forEach(slide => slide.active = false);
+                } else if (this.total) {
+                    this.slides.first.active = true;
+                }
+                this.play();
+            });
+        }
     }
 }
 
