@@ -8,6 +8,158 @@
                 "selector": "igx-column",
                 "type": "component"
             }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igxDateTimeEditor",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDisabledDate",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChanged",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rangeSelected",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
         }
     ]
 }

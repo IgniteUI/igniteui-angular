@@ -1,0 +1,264 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "isSpinLoop",
+            "replaceWith": "spinLoop",
+            "definedIn": [
+                "IgxDateTimeEditorDirective"
+            ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxDateTimeEditorDirective"
+            ]
+        },
+        {
+            "member": "selectDate",
+            "replaceWith": "select",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "triggerTodaySelection",
+            "replaceWith": "selectToday",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "deselectDate",
+            "replaceWith": "clear",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "openDialog",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "editorTabIndex",
+            "replaceWith": "tabIndex",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "mask",
+            "replaceWith": "inputFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "monthsViewNumber",
+            "replaceWith": "displayMonthsCount",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "vertical",
+            "replaceWith": "headerOrientation",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "displayData",
+            "replaceWith": "displayFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "format",
+            "replaceWith": "inputFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "dropDownOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "modalOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "isSpinLoop",
+            "replaceWith": "spinLoop",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "okButtonClicked",
+            "replaceWith": "close",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "openDialog",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "format",
+            "replaceWith": "inputFormat",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onValueChanged",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "selectRange",
+            "replaceWith": "select",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "rangeSelected",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "monthsViewNumber",
+            "replaceWith": "displayMonthsCount",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        }
+    ]
+}
