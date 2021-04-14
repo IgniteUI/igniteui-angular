@@ -359,6 +359,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set groupingExpressions(value: IGroupingExpression[]) {
+        if (this.groupingExpressions === value) {
+            return;
+        }
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -775,12 +778,26 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
+    /**
+     * Returns whether the `IgxGridComponent` has group area.
+     *
+     * @example
+     * ```typescript
+     * let isGroupAreaVisible = this.grid.showGroupArea;
+     * ```
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [showGroupArea]="false"></igx-grid>
+     * ```
+     */
     @Input()
     public get showGroupArea(): boolean {
         return this._showGroupArea;
     }
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
+        this.notifyChanges(true);
     }
 
     /**
