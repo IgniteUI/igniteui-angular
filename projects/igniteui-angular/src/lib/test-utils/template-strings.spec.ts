@@ -463,31 +463,31 @@ export class ColumnDefinitions {
 
 export class EventSubscriptions {
 
-    public static onColumnInit = ` (onColumnInit)="columnInit($event)"`;
+    public static columnInit = ` (columnInit)="columnInit($event)"`;
 
     public static onSelection = ` (onSelection)="cellSelected($event)"`;
 
     public static onCellClick = ` (onCellClick)="cellClick($event)"`;
 
-    public static onDoubleClick = ` (onDoubleClick)="doubleClick($event)"`;
+    public static doubleClick = ` (doubleClick)="doubleClick($event)"`;
 
-    public static onContextMenu = ` (onContextMenu)="cellRightClick($event)"`;
+    public static contextMenu = ` (contextMenu)="cellRightClick($event)"`;
 
-    public static onColumnPinning = ` (onColumnPinning)="columnPinning($event)"`;
+    public static columnPin = ` (columnPin)="columnPinning($event)"`;
 
-    public static onRowAdded = ` (onRowAdded)="rowAdded($event)"`;
+    public static rowAdded = ` (rowAdded)="rowAdded($event)"`;
 
-    public static onRowDeleted = ` (onRowDeleted)="rowDeleted($event)"`;
+    public static rowDeleted = ` (rowDeleted)="rowDeleted($event)"`;
 
     public static onEditDone = ` (cellEdit)="editDone($event)"`;
 
-    public static onRowSelectionChange = ` (onRowSelectionChange)="rowSelectionChange($event)"`;
+    public static rowSelectionChange = ` (rowSelectionChange)="rowSelectionChange($event)"`;
 
-    public static onColumnResized = ` (onColumnResized)="columnResized($event)"`;
+    public static columnResized = ` (columnResized)="columnResized($event)"`;
 
-    public static onColumnMovingStart = ` (onColumnMovingStart)="onColumnMovingStarted($event)"`;
+    public static columnMovingStart = ` (columnMovingStart)="columnMovingStarted($event)"`;
 
-    public static onColumnMoving = ` (onColumnMoving)="onColumnMoving($event)"`;
+    public static columnMoving = ` (columnMoving)="columnMoving($event)"`;
 
-    public static onColumnMovingEnd = ` (onColumnMovingEnd)="onColumnMovingEnded($event)"`;
+    public static columnMovingEnd = ` (columnMovingEnd)="columnMovingEnded($event)"`;
 }

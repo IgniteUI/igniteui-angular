@@ -30,7 +30,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     }));
 
     it('Copy data with default settings', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         const range = { rowStart: 0, rowEnd: 1, columnStart: 1, columnEnd: 3 };
         grid.selectRange(range);
         fix.detectChanges();
@@ -43,7 +43,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data when there are no selected cells', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         const eventData = dispatchCopyEventOnGridBody(fix);
         expect(copySpy).toHaveBeenCalledTimes(1);
         expect(copySpy).toHaveBeenCalledWith({
@@ -54,7 +54,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data with different separator', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.separator = ';';
         grid.selectRange({ rowStart: 0, rowEnd: 0, columnStart: 0, columnEnd: 0 });
         grid.selectRange({ rowStart: 1, rowEnd: 1, columnStart: 1, columnEnd: 1 });
@@ -73,7 +73,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy data without headers', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.copyHeaders = false;
         grid.selectRange({ rowStart: 1, rowEnd: 2, columnStart: 2, columnEnd: 3 });
         fix.detectChanges();
@@ -96,7 +96,7 @@ describe('IgxGrid - Clipboard #grid', () => {
         fix.detectChanges();
         grid.page = 1;
         fix.detectChanges();
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.copyHeaders = false;
         grid.selectRange({ rowStart: 1, rowEnd: 2, columnStart: 2, columnEnd: 3 });
         fix.detectChanges();
@@ -107,7 +107,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Disable clipboardOptions', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.enabled = false;
         grid.selectRange({ rowStart: 0, rowEnd: 2, columnStart: 0, columnEnd: 3 });
         fix.detectChanges();
@@ -118,7 +118,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Disable copyFormatters', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         grid.clipboardOptions.copyFormatters = false;
         grid.selectRange({ rowStart: 1, rowEnd: 3, columnStart: 1, columnEnd: 1 });
         fix.detectChanges();
@@ -134,9 +134,9 @@ describe('IgxGrid - Clipboard #grid', () => {
         expect(eventData).toEqual('ProductNameHeader\r\n** NetAdvantage **\r\n** Ignite UI for Angular **\r\n** null **\r\n');
     });
 
-    it('Cancel onGridCopy event ', () => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
-        grid.onGridCopy.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
+    it('Cancel gridCopy event ', () => {
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
+        grid.gridCopy.pipe(take(1)).subscribe((e: CancelableEventArgs) => e.cancel = true);
         grid.selectRange({ rowStart: 1, rowEnd: 3, columnStart: 0, columnEnd: 3 });
         fix.detectChanges();
 
@@ -150,7 +150,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     });
 
     it('Copy when there is a cell in edit mode', fakeAsync(() => {
-        const copySpy = spyOn<any>(grid.onGridCopy, 'emit').and.callThrough();
+        const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         const cell = grid.getCellByColumn(0, 'ProductName');
         cell.nativeElement.dispatchEvent( new Event('dblclick'));
         tick(16);

@@ -806,7 +806,7 @@ describe('IgxGrid Master Detail #grid', () => {
 
             it('Should exclude expanded detail views when doing range cell selection', fakeAsync(() => {
                 grid.expandRow(fix.componentInstance.data[2].ID);
-                const selectionChangeSpy = spyOn<any>(grid.onRangeSelection, 'emit').and.callThrough();
+                const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
                 const startCell = grid.getCellByColumn(1, 'ContactName');
                 const endCell = grid.getCellByColumn(6, 'CompanyName');
                 const range = { rowStart: 1, rowEnd: 6, columnStart: 0, columnEnd: 1 };

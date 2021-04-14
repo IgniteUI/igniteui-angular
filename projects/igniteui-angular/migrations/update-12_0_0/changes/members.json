@@ -7,6 +7,240 @@
             "definedIn": [
                 "IgxColumnComponent"
             ]
+        },
+        {
+            "member": "onScroll",
+            "replaceWith": "gridScroll",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowSelectionChange",
+            "replaceWith": "rowSelectionChange",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnSelectionChange",
+            "replaceWith": "columnSelectionChange",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnInit",
+            "replaceWith": "columnInit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnResized",
+            "replaceWith": "columnResized",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent"
+            ]
         }
     ]
 }

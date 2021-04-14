@@ -43,7 +43,7 @@
 <div>Sample with Grids</div>
 <igx-splitter [type]="type" style='height: 60vh;'>
     <igx-splitter-pane minSize="100">
-        <igx-grid #grid1 class="grid" displayDensity="cosy" [rowSelection]="'single'" (onRowSelectionChange)="onCustomerSelection($event)"
+        <igx-grid #grid1 class="grid" displayDensity="cosy" [rowSelection]="'single'" (rowSelectionChange)="onCustomerSelection($event)"
         [data]="data1" [isLoading]="true" [primaryKey]="'CustomerID'" [autoGenerate]="false">
             <igx-column field="CustomerID" [hidden]='true'></igx-column>
             <igx-column field="CompanyName"></igx-column>
@@ -53,7 +53,7 @@
         </igx-grid>
     </igx-splitter-pane>
     <igx-splitter-pane>
-        <igx-grid #grid2 class="grid" [rowSelection]="'single'" (onRowSelectionChange)="onOrderSelection($event)"  displayDensity="cosy" [data]="data2" [isLoading]="true" [primaryKey]="'OrderID'" [autoGenerate]="false">
+        <igx-grid #grid2 class="grid" [rowSelection]="'single'" (rowSelectionChange)="onOrderSelection($event)"  displayDensity="cosy" [data]="data2" [isLoading]="true" [primaryKey]="'OrderID'" [autoGenerate]="false">
             <igx-column field="OrderID" [hidden]='true'></igx-column>
             <igx-column field="OrderDate"></igx-column>
             <igx-column field="ShipCountry"></igx-column>

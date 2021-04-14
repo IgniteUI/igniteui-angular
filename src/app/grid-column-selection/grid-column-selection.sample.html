@@ -16,7 +16,7 @@
             </div>
             <igx-grid #grid1 [data]="data" [displayDensity]="density" [columnSelection]="'multiple'" [allowFiltering]="true"
                 [rowSelection]="'multiple'" [filterMode]="'excelStyleFilter'" [paging]="false" [width]="'900px'"
-                [height]="'800px'" (onColumnSelectionChange)="onColumnSelection($event)">
+                [height]="'800px'" (columnSelectionChange)="onColumnSelection($event)">
                 <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                     <igx-grid-toolbar-actions>
                        <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>

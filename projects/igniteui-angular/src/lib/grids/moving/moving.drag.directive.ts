@@ -77,7 +77,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         const args = {
             source: this.column
         };
-        this.column.grid.onColumnMovingStart.emit(args);
+        this.column.grid.columnMovingStart.emit(args);
 
         this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
             if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
@@ -100,7 +100,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
                 source: this.column,
                 cancel: false
             };
-            this.column.grid.onColumnMoving.emit(args);
+            this.column.grid.columnMoving.emit(args);
 
             if (args.cancel) {
                 this.onEscape(event);

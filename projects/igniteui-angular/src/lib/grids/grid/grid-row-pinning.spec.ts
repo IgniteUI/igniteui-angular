@@ -148,16 +148,16 @@ describe('Row Pinning #grid', () => {
             expect(grid.pinnedRows[2].rowData).toBe(fix.componentInstance.data[1]);
         });
 
-        it('should emit onRowPinning on pin/unpin.', () => {
-            spyOn(grid.onRowPinning, 'emit').and.callThrough();
+        it('should emit rowPinning on pin/unpin.', () => {
+            spyOn(grid.rowPinning, 'emit').and.callThrough();
 
             let row = grid.getRowByIndex(0);
             let rowID = row.rowID;
             row.pin();
             fix.detectChanges();
 
-            expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onRowPinning.emit).toHaveBeenCalledWith({
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(1);
+            expect(grid.rowPinning.emit).toHaveBeenCalledWith({
                 row,
                 rowID,
                 insertAtIndex: undefined,
@@ -169,7 +169,7 @@ describe('Row Pinning #grid', () => {
             row.unpin();
             fix.detectChanges();
 
-            expect(grid.onRowPinning.emit).toHaveBeenCalledTimes(2);
+            expect(grid.rowPinning.emit).toHaveBeenCalledTimes(2);
         });
 
         it('should pin/unpin via grid API methods.', () => {

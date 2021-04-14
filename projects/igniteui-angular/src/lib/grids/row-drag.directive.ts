@@ -47,7 +47,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
                 owner: this.row.grid
             };
 
-            this.row.grid.onRowDragStart.emit(args);
+            this.row.grid.rowDragStart.emit(args);
             if (args.cancel) {
                 this.ghostElement.parentNode.removeChild(this.ghostElement);
                 this.ghostElement = null;
@@ -81,7 +81,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             owner: this.row.grid
         };
         this.zone.run(() => {
-            this.row.grid.onRowDragEnd.emit(args);
+            this.row.grid.rowDragEnd.emit(args);
         });
 
         const dropArea = this._lastDropArea;

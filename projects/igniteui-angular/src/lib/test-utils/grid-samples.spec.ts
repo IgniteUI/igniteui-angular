@@ -50,7 +50,7 @@ export class LargePinnedColGridComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid('',
-        EventSubscriptions.onColumnResized,
+        EventSubscriptions.columnResized,
         ColumnDefinitions.gridFeatures)
 })
 export class SortingAndResizingComponent extends BasicGridComponent {
@@ -231,7 +231,7 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` rowSelection = "multiple"`,
-        EventSubscriptions.onRowSelectionChange,
+        EventSubscriptions.rowSelectionChange,
         ColumnDefinitions.productBasic)
 })
 export class SelectionCancellableComponent extends BasicGridComponent {
@@ -346,7 +346,7 @@ export class ProductsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` style="margin-bottom: 20px;"`,
-        EventSubscriptions.onColumnInit,
+        EventSubscriptions.columnInit,
         ColumnDefinitions.generatedWithSummaries)
 })
 export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
@@ -380,7 +380,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnInit, ColumnDefinitions.generatedWithDataType)
+        EventSubscriptions.columnInit, ColumnDefinitions.generatedWithDataType)
 })
 export class NxMWithSummaryComponent extends GridNxMComponent {
     public columnsType = 'number';
@@ -391,7 +391,7 @@ export class NxMWithSummaryComponent extends GridNxMComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnInit, ColumnDefinitions.generatedEditable)
+        EventSubscriptions.columnInit, ColumnDefinitions.generatedEditable)
 })
 export class NxMWithSummaryEditableComponent extends NxMWithSummaryComponent {
     public hasEditableColumns = true;
@@ -400,7 +400,7 @@ export class NxMWithSummaryEditableComponent extends NxMWithSummaryComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnInit, '')
+        EventSubscriptions.columnInit, '')
 })
 export class NxMColumnWidthAndSummaryComponent extends NxMWithSummaryComponent {
     public columnInit(column) {
@@ -426,7 +426,7 @@ export class NxMColumnWidthAndSummaryComponent extends NxMWithSummaryComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid('',
-        EventSubscriptions.onColumnInit,
+        EventSubscriptions.columnInit,
         ColumnDefinitions.generatedEditable)
 })
 export class Grid5x5WithSummariesComponent extends NxMWithSummaryEditableComponent {
@@ -449,7 +449,7 @@ export class Grid5x5WithSummariesComponent extends NxMWithSummaryEditableCompone
 
 @Component({
     template: GridTemplateStrings.declareGrid('',
-        EventSubscriptions.onColumnInit,
+        EventSubscriptions.columnInit,
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid10x30WithSummariesComponent extends NxMWithSummaryComponent {
@@ -464,7 +464,7 @@ export class Grid10x30WithSummariesComponent extends NxMWithSummaryComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [width]="'1500px'"`,
-        EventSubscriptions.onColumnInit,
+        EventSubscriptions.columnInit,
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid30x1000WithSummariesComponent extends NxMWithSummaryComponent {
@@ -479,7 +479,7 @@ export class Grid30x1000WithSummariesComponent extends NxMWithSummaryComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [width]="'1500px'"`,
-        EventSubscriptions.onColumnInit,
+        EventSubscriptions.columnInit,
         ColumnDefinitions.generatedWithDataType)
 })
 export class Grid150x200WithSummariesComponent extends NxMWithSummaryComponent {
@@ -521,8 +521,8 @@ export class NullHeightComponent extends BasicGridComponent {
     template: `
         <igx-grid
             [data]="data"
-            ${EventSubscriptions.onRowAdded}
-            ${EventSubscriptions.onRowDeleted}
+            ${EventSubscriptions.rowAdded}
+            ${EventSubscriptions.rowDeleted}
             ${EventSubscriptions.onEditDone}
             [autoGenerate]="true">
         </igx-grid>
@@ -592,7 +592,7 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate" [height]="height" [width]="width"`,
-        `${EventSubscriptions.onColumnInit}${EventSubscriptions.onSelection}`, '')
+        `${EventSubscriptions.columnInit}${EventSubscriptions.onSelection}`, '')
 })
 export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
     public data = SampleTestData.contactInfoDataFull();
@@ -655,7 +655,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
-        `${EventSubscriptions.onSelection}${EventSubscriptions.onColumnPinning}`,
+        `${EventSubscriptions.onSelection}${EventSubscriptions.columnPin}`,
         ColumnDefinitions.generatedWithWidth)
 })
 export class PinningComponent extends GridWithSizeComponent
@@ -760,7 +760,7 @@ export class GridHireDateComponent extends BasicGridComponent {
     template: `<div style="margin: 50px;">
             ${GridTemplateStrings.declareGrid(
         `[height]="height" [width]="width" [rowSelection]="rowSelection" [autoGenerate]="autoGenerate"`,
-        EventSubscriptions.onColumnMovingStart + EventSubscriptions.onColumnMoving + EventSubscriptions.onColumnMovingEnd,
+        EventSubscriptions.columnMovingStart + EventSubscriptions.columnMoving + EventSubscriptions.columnMovingEnd,
         ColumnDefinitions.movableColumns)}</div>`
 })
 export class MovableColumnsComponent extends BasicGridComponent {
@@ -782,12 +782,12 @@ export class MovableColumnsComponent extends BasicGridComponent {
     public source: IgxColumnComponent;
     public target: IgxColumnComponent;
 
-    public onColumnMovingStarted(event) {
+    public columnMovingStarted(event) {
         this.countStart++;
         this.source = event.source;
     }
 
-    public onColumnMoving(event) {
+    public columnMoving(event) {
         this.count++;
         this.source = event.source;
 
@@ -796,7 +796,7 @@ export class MovableColumnsComponent extends BasicGridComponent {
         }
     }
 
-    public onColumnMovingEnded(event) {
+    public columnMovingEnded(event) {
         this.countEnd++;
         this.source = event.source;
         this.target = event.target;
@@ -819,7 +819,7 @@ export class MovableTemplatedColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="300px" width="500px" [autoGenerate]="autoGenerate" [paging]="paging"`,
-        EventSubscriptions.onColumnInit, '')}`
+        EventSubscriptions.columnInit, '')}`
 })
 export class MovableColumnsLargeComponent extends GridAutoGenerateComponent {
 
@@ -1789,7 +1789,7 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
             [width]='width'
             [height]='height'
             [data]="data"
-            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
@@ -1834,7 +1834,7 @@ export class IgxGridRowEditingWithFeaturesComponent extends DataParent {
             [height]='height'
             [data]="data"
             [columnWidth] = "'100px'"
-            [autoGenerate]="true" (onColumnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)"
             [rowEditable]="enableRowEditing">
         </igx-grid>
         <ng-template #dropArea>
