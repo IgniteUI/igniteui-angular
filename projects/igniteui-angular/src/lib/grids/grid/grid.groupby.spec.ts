@@ -266,7 +266,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(groupRows.length).toEqual(5);
     }));
 
-    fit('should allows expanding/collapsing groups.', fakeAsync(() => {
+    it('should allows expanding/collapsing groups.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         const grid = fix.componentInstance.instance;
         grid.primaryKey = 'ID';
