@@ -1082,7 +1082,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param index
      */
     public getRowByIndex(index: number): RowType {
-        if (index < 0 || index >= this.allRowsData.length + this.pinnedRecordsCount) {
+        if (index < 0 || index >= this.dataView.length) {
             return undefined;
         }
         return this.createRow(index);
@@ -1103,8 +1103,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const rec = this.primaryKey ?
             this.filteredSortedData.find(record => record[this.primaryKey] === key) :
             this.filteredSortedData.find(record => record === key);
-        const index = this.allRowsData.indexOf(rec);
-        if (index < 0 || index > this.allRowsData.length) {
+        const index = this.dataView.indexOf(rec);
+        if (index < 0 || index > this.dataView.length) {
             return undefined;
         }
 
@@ -1201,13 +1201,8 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private createRow(index: number): RowType {
         let row: RowType;
-        let currentPageData: any[] = this.allRowsData;
 
-        if (this.pinnedRecordsCount) {
-            currentPageData = this.pinning.rows !== RowPinningPosition.Bottom ?
-                [...this.pinnedRecords, ...this.allRowsData] : [...this.allRowsData, ...this.pinnedRecords];
-        }
-        const rec: any = currentPageData[index];
+        const rec: any = this.dataView[index];
 
         if (this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);

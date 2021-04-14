@@ -3216,10 +3216,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-     public isSummaryRecord(record: any): boolean {
+    public isSummaryRecord(record: any): boolean {
         return record.summaries && record.summaries.size;
     }
-
 
     /**
      * @hidden
@@ -5258,19 +5257,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set selectRowOnClick(enabled: boolean) {
         this._selectRowOnClick = enabled;
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get allRowsData(): any[] {
-        return this._allRowsData;
-    }
-    /**
-     * @hidden @internal
-     */
-    public set allRowsData(data: any[]) {
-        this._allRowsData = data;
     }
 
     /**

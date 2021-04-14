@@ -1,15 +1,11 @@
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
-import { RowPinningPosition } from './common/enums';
-import { GridType } from './common/grid.interface';
+import { FlatGridType, GridType, HierarchicalGridType, TreeGridType } from './common/grid.interface';
 import { RowType } from './common/row.interface';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridAPIService } from './grid/grid-api.service';
-import { IgxGridComponent } from './grid/grid.component';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxSummaryResult } from './summaries/grid-summary';
-import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 export class IgxGridRow implements RowType {
@@ -17,6 +13,9 @@ export class IgxGridRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
+        if ((this.grid as FlatGridType).groupingExpressions.length) {
+            return this.grid.filteredSortedData.indexOf(this.data);
+        }
         return this.index + this.grid.page * this.grid.perPage;
     }
 
@@ -28,15 +27,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public get data(): any {
-        const grid = this.grid;
-        let allRowsData = grid.allRowsData;
-        if (!this._data) {
-            if (grid.pinnedRecordsCount) {
-                allRowsData = grid.pinning.rows !== RowPinningPosition.Bottom ?
-                    [...grid.pinnedRecords, ...grid.allRowsData] : [...grid.allRowsData, ...grid.pinnedRecords];
-            }
-        }
-        return this._data ?? allRowsData[this.index];
+        return this._data ?? this.grid.data[this.index];
     }
 
     /**
@@ -85,25 +76,13 @@ export class IgxGridRow implements RowType {
         } else {
             this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
         }
-        this.grid.cdr.markForCheck();
-    }
-
-    /**
-     * Sets whether this specific row has disabled functionality for editing and row selection.
-     * Default value is `false`.
-     * ```typescript
-     * const isDisabled = row.disabled;
-     * ```
-     */
-    public get disabled(): boolean {
-        return this._disabled;
+        this.grid.notifyChanges();
     }
 
     /**
      * Returns the index of the row in the rows collection.
      */
     public index: number;
-    private _disabled = false;
 
     /**
      * Returns if the row is in delete state.
@@ -127,7 +106,7 @@ export class IgxGridRow implements RowType {
     /**
      * Returns the child rows. Always returns null for IgxGridRow.
      */
-    public get children(): any[] {
+    public get children(): null | ITreeGridRecord[] {
         return null;
     }
 
@@ -152,8 +131,10 @@ export class IgxGridRow implements RowType {
     /**
      * Get a reference to the grid that contains the selected row.
      */
-    protected get grid(): IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent {
-        return this._grid as IgxGridComponent;
+    protected get grid(): IgxGridBaseDirective & FlatGridType |
+        IgxGridBaseDirective & TreeGridType |
+        IgxGridBaseDirective & HierarchicalGridType {
+        return this._grid as IgxGridBaseDirective & FlatGridType;
     }
 
     /**
@@ -190,7 +171,7 @@ export class IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _grid: IgxGridBaseDirective, index: number, protected _data?: any) {
+    constructor(private _grid: IgxGridBaseDirective & GridType, index: number, protected _data?: any) {
         this.index = index;
     }
 
@@ -211,7 +192,7 @@ export class IgxGridRow implements RowType {
         }
         const row = new IgxRow(this.key, this.index, this.data, this.grid);
         this.gridAPI.update_row(row, value);
-        this.grid.cdr.markForCheck();
+        this.grid.notifyChanges();
     }
 
     /**
@@ -237,9 +218,7 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public pin(): boolean {
-        const pinned = this.grid.pinRow(this.key);
-        this._disabled = pinned;
-        return pinned;
+        return this.grid.pinRow(this.key);
     }
 
     /**
@@ -252,8 +231,6 @@ export class IgxGridRow implements RowType {
      * ```
      */
     public unpin(): boolean {
-        const unpinned = this.grid.unpinRow(this.key);
-        this._disabled = !unpinned;
         return this.grid.unpinRow(this.key);
     }
 
@@ -271,32 +248,26 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * ```
      */
     public get data(): any {
-        const grid = this.grid;
-        let allRowsData = grid.allRowsData;
-        if (!this._data) {
-            if (grid.pinnedRecordsCount) {
-                allRowsData = grid.pinning.rows !== RowPinningPosition.Bottom ?
-                    [...grid.pinnedRecords, ...grid.allRowsData] : [...grid.allRowsData, ...grid.pinnedRecords];
-            }
+        if (this._data) {
+            return this._data;
+        } else {
+            const rec = this.grid.dataView[this.index];
+            return this.grid.isTreeRow(rec) ? rec.data : rec;
         }
-        return this._data ?? allRowsData[this.index];
     }
 
     /**
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
-        if ((this.grid as any).groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.data);
-        }
         return this.index + this.grid.page * this.grid.perPage;
     }
 
     /**
      * Get a reference to the grid that contains the selected row.
      */
-    protected get grid(): IgxTreeGridComponent {
-        return this._tgrid as IgxTreeGridComponent;
+    protected get grid(): IgxGridBaseDirective & TreeGridType {
+        return this._tgrid;
     }
 
     /**
@@ -327,7 +298,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
     /**
      * @hidden
      */
-    constructor(private _tgrid: IgxTreeGridComponent, index: number, _data?: any, private _treeRow?: ITreeGridRecord) {
+    constructor(private _tgrid: IgxGridBaseDirective & TreeGridType, index: number, _data?: any, private _treeRow?: ITreeGridRecord) {
         super(_tgrid, index, _data);
     }
 
@@ -340,8 +311,7 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
      * ```
      */
     public get treeRow(): ITreeGridRecord {
-        const treeRow = this._treeRow ?? this._tgrid.records.get(this.key);
-        return treeRow;
+        return this._treeRow ?? this._tgrid.records.get(this.key);
     }
 
     /**
@@ -380,9 +350,17 @@ export class IgxTreeGridRow extends IgxGridRow implements RowType {
 
 export class IgxHierarchicalGridRow extends IgxGridRow implements RowType {
     /**
+     * Returns the view index calculated per the grid page.
+     */
+    public get viewIndex(): number {
+            return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
      * @hidden
      */
-    constructor(private _hgrid: IgxHierarchicalGridComponent, index: number, _data?: any, private _treeRow?: ITreeGridRecord) {
+    constructor(private _hgrid: IgxGridBaseDirective & HierarchicalGridType,
+        index: number, _data?: any) {
         super(_hgrid, index, _data);
     }
 
@@ -396,8 +374,8 @@ export class IgxHierarchicalGridRow extends IgxGridRow implements RowType {
     /**
      * Get a reference to the grid that contains the selected row.
      */
-    protected get grid(): IgxHierarchicalGridComponent {
-        return this._hgrid as IgxHierarchicalGridComponent;
+    protected get grid(): IgxGridBaseDirective & HierarchicalGridType {
+        return this._hgrid;
     }
 }
 
@@ -416,13 +394,13 @@ export class IgxGroupByRow implements RowType {
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
     public get groupRow(): IGroupByRecord {
-        return this._groupRow ? this._groupRow : this.grid.allRowsData[this.index];
+        return this._groupRow ? this._groupRow : this.grid.dataView[this.index];
     }
 
     /**
      * @hidden
      */
-     constructor(private _grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
+     constructor(private _grid: IgxGridBaseDirective & FlatGridType, index: number, private _groupRow?: IGroupByRecord) {
         this.index = index;
         this.isGroupByRow = true;
     }
@@ -445,21 +423,20 @@ export class IgxGroupByRow implements RowType {
         return this.grid.navigation.activeNode ? this.grid.navigation.activeNode.row === this.index : false;
     }
 
-    // todo TODO ?
     /**
      * Toggles the group row expanded/collapsed state.
      * ```typescript
      * groupRow.toggle()
      * ```
      */
-    public toggle() {
+    public toggle(): void {
         this.grid.toggleGroup(this.groupRow);
     }
 
     /**
      * Get a reference to the grid that contains the GroupBy row.
      */
-    protected get grid(): IgxGridComponent {
+    protected get grid(): IgxGridBaseDirective & FlatGridType {
         return this._grid;
     }
 
@@ -483,19 +460,19 @@ export class IgxSummaryRow implements RowType {
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
     public get summaries(): Map<string, IgxSummaryResult[]> {
-        return this._summaries ? this._summaries : this.grid.allRowsData[this.index].summaries;
+        return this._summaries ? this._summaries : this.grid.dataView[this.index].summaries;
     }
 
     /**
      * @hidden
      */
-     constructor(private _grid: IgxGridBaseDirective, index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
+    constructor(protected _grid: IgxGridBaseDirective & GridType, index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
         this.index = index;
         this.isSummaryRow = true;
     }
 
     /**
-     * Get a reference to the grid that contains the GroupBy row.
+     * Get a reference to the grid that contains the selected row.
      */
     protected get grid(): IgxGridBaseDirective & GridType {
         return this._grid;
