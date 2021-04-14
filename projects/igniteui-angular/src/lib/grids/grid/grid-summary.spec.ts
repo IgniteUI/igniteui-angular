@@ -1322,16 +1322,18 @@ describe('IgxGrid - Summaries #grid', () => {
             GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 4, IgxSummaryRow);
 
             // Check the API members - isSummaryRow
-            expect(grid.getRowByIndex(4).isSummaryRow).toBe(true);
+            const summaryRow4 = grid.getRowByIndex(4);
+            expect(summaryRow4.isSummaryRow).toBe(true);
             // Check rowID, rowData, data, disabled
-            expect(grid.getRowByIndex(4).key).toBeUndefined();
-            expect(grid.getRowByIndex(4).rowData).toBeUndefined();
-            expect(grid.getRowByIndex(4).data).toBeUndefined();
-            expect(grid.getRowByIndex(4).pinned).toBeUndefined();
-            expect(grid.getRowByIndex(4).selected).toBeUndefined();
+            expect(summaryRow4.key).toBeUndefined();
+            expect(summaryRow4.rowData).toBeUndefined();
+            expect(summaryRow4.data).toBeUndefined();
+            expect(summaryRow4.pinned).toBeUndefined();
+            expect(summaryRow4.selected).toBeUndefined();
 
             // Get row by index and check summaries member
-            GridSummaryFunctions.verifyRowWithIndexIsOfType(grid, 4, Map);
+            expect(summaryRow4 instanceof IgxSummaryRow).toBe(true);
+            expect(summaryRow4.summaries instanceof Map).toBe(true);
         }));
 
         it('Grouping: Add not grouped row', (async () => {
