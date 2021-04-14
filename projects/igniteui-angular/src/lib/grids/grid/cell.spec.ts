@@ -301,7 +301,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
             // should attach 'doubletap'
             expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
-            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.doubleClick,
+            expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,
                 { cssProps: {} as any });
 
             spyOn(grid.doubleClick, 'emit').and.callThrough();
@@ -310,7 +310,7 @@ describe('IgxGrid - Cell component #grid', () => {
                 type: 'doubletap',
                 preventDefault: jasmine.createSpy('preventDefault')
             };
-            firstCell.doubleClick(event as any);
+            firstCell.onDoubleClick(event as any);
             const args: IGridCellEventArgs = {
                 cell: firstCell,
                 event
