@@ -321,7 +321,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
         this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'true');
         this._renderer.addClass(button.nativeElement, 'igx-button-group__item--selected');
 
-        console.log('after selection', this.selectedIndexes);
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = true;
+        }
 
         // deselect other buttons if multiSelection is not enabled
         if (!this.multiSelection && this.selectedIndexes.length > 1) {
@@ -356,10 +359,12 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
 
         this._renderer.setAttribute(button.nativeElement, 'aria-pressed', 'false');
         this._renderer.removeClass(button.nativeElement, 'igx-button-group__item--selected');
-
         button.deselect();
 
-        console.log('after deselection', this.selectedIndexes);
+        const indexInViewButtons = this.viewButtons.toArray().indexOf(button);
+        if (indexInViewButtons !== -1) {
+            this.values[indexInViewButtons].selected = false;
+        }
 
         this.deselected.emit({ button, index });
     }

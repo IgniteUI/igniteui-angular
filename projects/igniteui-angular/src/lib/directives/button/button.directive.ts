@@ -23,8 +23,6 @@ const IgxButtonType = mkenum({
     FAB: 'fab'
 });
 
-let NEXT_ID = 0;
-
 /**
  * Determines the Button type.
  */
@@ -54,22 +52,6 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 })
 export class IgxButtonDirective extends DisplayDensityBase {
     private static ngAcceptInputType_type: IgxButtonType | '';
-
-    /**
-     * Sets/gets the `id` of the button.
-     * If not set, `id` will have value `"igx-button-0"`;
-     *
-     * @example
-     * ```html
-     * <button igxButton id="my-first-button"></igx-card>
-     * ```
-     * ```typescript
-     * let buttonId =  this.button.id;
-     * ```
-     */
-    @HostBinding('attr.id')
-    @Input()
-    public id = `igx-button-${NEXT_ID++}`;
 
     /**
      * Called when the button is clicked.
@@ -150,9 +132,8 @@ export class IgxButtonDirective extends DisplayDensityBase {
     @Input()
     public set selected(value: boolean) {
         if(this._selected !== value) {
-            if(!this.selected) {
+            if(!this._selected) {
                 this.buttonSelected.emit({
-                    id: this.id,
                     button: this
                 });
             }
@@ -238,7 +219,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton= "flat" igxLabel="Label"></button>
+     * <button igxButton="flat" igxLabel="Label"></button>
      * ```
      */
     @Input('igxLabel')
@@ -345,10 +326,18 @@ export class IgxButtonDirective extends DisplayDensityBase {
         return this._disabled ? this._disabled : null;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public select() {
         this.selected = true;
     }
 
+    /**
+     * @hidden
+     * @internal
+     */
     public deselect() {
         this._selected = false;
     }
@@ -356,7 +345,6 @@ export class IgxButtonDirective extends DisplayDensityBase {
 
 export interface IButtonEventArgs extends IBaseEventArgs {
     button: IgxButtonDirective;
-    id: string;
 }
 
 /**
