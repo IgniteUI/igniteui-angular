@@ -395,7 +395,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
     public ngAfterViewInit() {
         const initButtons = () => {
             // Cancel any existing buttonClick subscriptions
-            // this.buttonClickNotifier$.next();
+            this.buttonClickNotifier$.next();
 
             this.selectedIndexes.splice(0, this.selectedIndexes.length);
 
