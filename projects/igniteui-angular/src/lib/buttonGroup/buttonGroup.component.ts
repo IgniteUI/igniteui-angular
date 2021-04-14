@@ -307,6 +307,10 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @memberOf {@link IgxButtonGroupComponent}
      */
     public selectButton(index: number) {
+        if (index >= this.buttons.length || index < 0) {
+            return;
+        }
+
         const button = this.buttons[index];
         button.select();
     }
@@ -316,10 +320,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @internal
      */
     public updateSelected(index: number) {
-        if (index >= this.buttons.length || index < 0) {
-            return;
-        }
-
         const button = this.buttons[index];
 
         if(this.selectedIndexes.indexOf(index) === -1) {
