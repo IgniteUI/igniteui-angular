@@ -317,7 +317,7 @@
     }
 
     @if not(index($exclude, 'igc-dock-manager')) {
-        @include igx-css-vars(igc-dock-manager-theme($schema: $schema));
+        @include igc-dock-manager(igc-dock-manager-theme($schema: $schema));
     }
 
     @if not(index($exclude, 'igx-drop-down')) {

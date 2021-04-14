@@ -69,9 +69,12 @@
 
     $theme: apply-palette($dock-manager-schema, $palette);
 
-    @return extend($theme, (name: 'igc'), keywords($rest));
+    @return extend($theme, (name: $name), keywords($rest));
 }
 
+@mixin igc-dock-manager($theme) {
+    @include igx-css-vars($theme, $prefix: 'igc');
+}
 
 /// Adds typography styles for the dock manager component.
 /// @access private
