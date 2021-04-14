@@ -252,7 +252,7 @@
         $bg-active: map-get($theme, 'background-active');
 
         @if ($indigo-theme) {
-            @if type-of($bg-active == 'color') and lightness($bg-active) < 50 {
+            @if type-of($bg-active) == 'color' and lightness($bg-active) < 50 {
                 opacity: .8;
             } @else {
                 opacity: .3;
