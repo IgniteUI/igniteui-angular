@@ -13,7 +13,7 @@
                 <igx-column field="Country"></igx-column>
                 <igx-column field="Phone"></igx-column>
                 <igx-row-island #rowIsland1 [key]="'Orders'" [primaryKey]="'OrderID'" [autoGenerate]="false"
-                        [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland1)"
+                        [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland1)"
                         [rowEditable]="true">
                         <igx-column field="OrderID"></igx-column>
                         <igx-column field="OrderDate" [dataType]='"date"'></igx-column>
@@ -21,7 +21,7 @@
                         <igx-column field="ShipCity"></igx-column>
                         <igx-column field="ShipAddress"></igx-column>
                         <igx-row-island #rowIsland2 [key]="'Order_Details'" [height]="'300px'" [primaryKey]="'ProductID'"
-                                [autoGenerate]="false" [rowSelection]='selectionMode' (onGridCreated)="gridCreated($event, rowIsland2)">
+                                [autoGenerate]="false" [rowSelection]='selectionMode' (gridCreated)="gridCreated($event, rowIsland2)">
                                 <igx-column field="ProductID"></igx-column>
                                 <igx-column field="UnitPrice"></igx-column>
                                 <igx-column field="Quantity"></igx-column>

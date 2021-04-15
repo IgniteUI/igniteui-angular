@@ -566,6 +566,25 @@ describe('IgxGrid - GroupBy #grid', () => {
         }
     }));
 
+    it('should not apply grouping if the grouping expressions value is the same reference', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        fix.detectChanges();
+
+        // group by string column
+        const grid = fix.componentInstance.instance;
+        fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ReleaseDate', dir: SortingDirection.Asc, ignoreCase: false
+        });
+        fix.detectChanges();
+        spyOn(grid.groupingExpressionsChange, 'emit');
+        fix.detectChanges();
+        const firstCell = grid.getCellByColumn(2, 'Downloads');
+        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        fix.detectChanges();
+        expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
+    }));
+
     // GroupBy + Sorting integration
     it('should apply sorting on each group\'s records when non-grouped column is sorted.', fakeAsync(() => {
         const fix = TestBed.createComponent(DefaultGridComponent);
@@ -771,7 +790,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
         fix.detectChanges();
 
-        const origScrollHeight = parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10);
+        const origScrollHeight = parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10);
 
         // collapse all group rows currently in the view
         const grRows = grid.groupsRowList.toArray();
@@ -785,7 +804,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.rowList.toArray().length).toEqual(5);
 
         // verify scrollbar is updated - 4 rows x 51px are hidden.
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight - 204);
 
         grRows[0].toggle();
@@ -796,7 +815,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         expect(grid.dataRowList.toArray().length).toEqual(2);
         expect(grid.rowList.toArray().length).toEqual(5);
 
-        expect(parseInt(grid.verticalScrollContainer.getScroll().children[0].style.height, 10))
+        expect(parseInt((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).style.height, 10))
             .toEqual(origScrollHeight);
     }));
 
@@ -2146,7 +2165,6 @@ describe('IgxGrid - GroupBy #grid', () => {
 
     it('should apply group area if a column is groupable.', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
-        const grid = fix.componentInstance.instance;
         tick();
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
@@ -2159,7 +2177,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(GroupableGridComponent);
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
 
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
@@ -3373,7 +3390,6 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait();
 
         const groupRows = fix.debugElement.queryAll(By.css('igx-grid-groupby-row'));
-        const rows = fix.debugElement.queryAll(By.css('igx-grid-row'));
 
         expect(groupRows.length).toEqual(2);
         expect(grid.groupsRecords.length).toEqual(2);
@@ -3393,6 +3409,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 @Component({
     template: `
         <igx-grid
+            [(groupingExpressions)]='currentGroupingExpressions'
             [width]='width'
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
@@ -3421,6 +3438,7 @@ export class DefaultGridComponent extends DataParent {
     public enableEditing = false;
     public enableGrouping = true;
     public currentSortExpressions;
+    public currentGroupingExpressions = [];
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
@@ -3586,5 +3604,5 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(event, context) {}
+    public onGroupByRowClick(_event, _context) {}
 }

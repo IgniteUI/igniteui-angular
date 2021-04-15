@@ -20,7 +20,7 @@ import {
 } from '@angular/core';
 import { fromEvent, Subject, interval } from 'rxjs';
 import { takeUntil, debounce, tap } from 'rxjs/operators';
-import { KEYS } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 
 /**
  * @hidden
@@ -38,11 +38,6 @@ export class IgxCalendarYearDirective {
 
     @Output()
     public yearSelection = new EventEmitter<Date>();
-
-    @HostBinding('class.igx-calendar__year')
-    public get defaultCSS(): boolean {
-        return !this.isCurrentYear;
-    }
 
     @HostBinding('class.igx-calendar__year--current')
     public get currentCSS(): boolean {
@@ -73,7 +68,7 @@ export class IgxCalendarYearDirective {
         return this.elementRef.nativeElement;
     }
 
-    constructor(public elementRef: ElementRef) {}
+    constructor(public elementRef: ElementRef) { }
 
     @HostListener('click')
     public onClick() {
@@ -98,11 +93,6 @@ export class IgxCalendarMonthDirective {
     @Output()
     public monthSelection = new EventEmitter<Date>();
 
-    @HostBinding('class.igx-calendar__month')
-    public get defaultCSS(): boolean {
-        return !this.isCurrentMonth;
-    }
-
     @HostBinding('class.igx-calendar__month--current')
     public get currentCSS(): boolean {
         return this.isCurrentMonth;
@@ -116,7 +106,7 @@ export class IgxCalendarMonthDirective {
         return this.elementRef.nativeElement;
     }
 
-    constructor(public elementRef: ElementRef) {}
+    constructor(public elementRef: ElementRef) { }
 
     @HostListener('click')
     public onClick() {
@@ -133,7 +123,7 @@ export class IgxCalendarMonthDirective {
 })
 export class IgxCalendarHeaderTemplateDirective {
 
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -143,7 +133,7 @@ export class IgxCalendarHeaderTemplateDirective {
     selector: '[igxCalendarSubheader]'
 })
 export class IgxCalendarSubheaderTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -175,7 +165,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
      */
     private destroy$ = new Subject<boolean>();
 
-    constructor(private element: ElementRef, private zone: NgZone) { }
+    constructor(private element: ElementRef, private zone: NgZone, protected platform: PlatformUtil) { }
 
     /**
      * @hidden
@@ -208,7 +198,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
         this.zone.runOutsideAngular(() => {
             fromEvent(this.element.nativeElement, 'keydown').pipe(
                 tap((event: KeyboardEvent) => {
-                    if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+                    if (this.platform.isActivationKey(event)) {
                         event.preventDefault();
                         event.stopPropagation();
                     }
@@ -216,7 +206,7 @@ export class IgxCalendarScrollMonthDirective implements AfterViewInit, OnDestroy
                 debounce(() => interval(100)),
                 takeUntil(this.destroy$)
             ).subscribe((event: KeyboardEvent) => {
-                if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+                if (this.platform.isActivationKey(event)) {
                     this.zone.run(() => this.startScroll(true));
                 }
             });

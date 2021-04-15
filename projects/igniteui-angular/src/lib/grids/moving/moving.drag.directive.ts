@@ -2,7 +2,7 @@ import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Rend
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { IgxColumnComponent } from '../columns/column.component';
-import { KEYS, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 
 /**
@@ -18,11 +18,11 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     @Input('igxColumnMovingDrag')
     public data: any;
 
-    get column(): IgxColumnComponent {
+    public get column(): IgxColumnComponent {
         return this.data;
     }
 
-    get draggable(): boolean {
+    public get draggable(): boolean {
         return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
     }
 
@@ -80,7 +80,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         this.column.grid.onColumnMovingStart.emit(args);
 
         this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+            if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
                 this.onEscape(ev);
             }
         });

@@ -63,7 +63,6 @@ import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
 
-
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;
 
@@ -640,6 +639,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             const maxTime = this.maxDateValue;
             Object.assign(errors, DateTimeUtil.validateMinMax(date, minTime, maxTime, true, false));
         }
+
 
         return Object.keys(errors).length > 0 ? errors : null;
     }

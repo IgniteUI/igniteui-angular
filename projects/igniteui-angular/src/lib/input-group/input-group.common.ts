@@ -1,7 +1,7 @@
 /** @hidden */
 export abstract class IgxInputGroupBase {
-    disabled: boolean;
-    isFocused: boolean;
-    isRequired: boolean;
-    hasPlaceholder: boolean;
+    public disabled: boolean;
+    public isFocused: boolean;
+    public isRequired: boolean;
+    public hasPlaceholder: boolean;
 }

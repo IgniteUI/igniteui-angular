@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { KEYS } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -279,9 +279,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected renderer: Renderer2,
     protected elementRef: ElementRef,
     protected maskParser: MaskParsingService,
+    protected platform: PlatformUtil,
     @Inject(DOCUMENT) private _document: any,
     @Inject(LOCALE_ID) private _locale: any) {
-    super(elementRef, maskParser, renderer);
+    super(elementRef, maskParser, renderer, platform);
     this.document = this._document as Document;
     this.locale = this.locale || this._locale;
   }
@@ -294,9 +295,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     event.preventDefault();
     event.stopPropagation();
     if (event.deltaY > 0) {
-      this.increment();
-    } else {
       this.decrement();
+    } else {
+      this.increment();
     }
   }
 
@@ -368,9 +369,15 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    const errors = DateTimeUtil.validateMinMax(control.value,
-      this.minValue, this.maxValue,
-      this.hasTimeParts, this.hasDateParts);
+    let errors;
+    const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(valueDate,
+        minValueDate, maxValueDate,
+        this.hasTimeParts, this.hasDateParts);
+    }
 
     return Object.keys(errors).length > 0 ? errors : null;
   }
@@ -391,12 +398,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public setDisabledState?(isDisabled: boolean): void { }
+  public setDisabledState?(_isDisabled: boolean): void { }
 
   /** @hidden @internal */
-  public onInputChanged() {
-    super.onInputChanged();
+  public onInputChanged(isComposing: boolean) {
+    super.onInputChanged(isComposing);
     if (this.inputIsComplete()) {
       const parsedDate = this.parseDate(this.inputValue);
       if (DateTimeUtil.isValidDate(parsedDate)) {
@@ -418,17 +424,22 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onKeyDown(event: KeyboardEvent): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     super.onKeyDown(event);
+    const key = event.key;
+
     if (event.altKey) {
       return;
     }
-    if (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE ||
-      event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE) {
+
+    if (key === this.platform.KEYMAP.ARROW_DOWN || key === this.platform.KEYMAP.ARROW_UP) {
       this.spin(event);
       return;
     }
 
-    if (event.ctrlKey && event.key === KEYS.SEMICOLON) {
+    if (event.ctrlKey && key === this.platform.KEYMAP.SEMICOLON) {
       this.updateValue(new Date());
     }
 
@@ -501,8 +512,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return null;
     }
 
-    return DateTimeUtil.parseIsoDate(val)
-      || DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
+    const valueFormat = val.replace(/\d/g, '0');
+    const inputFormat = this.inputFormat.replace(/\w/g, '0');
+    if (new RegExp(valueFormat).test(inputFormat)) {
+      return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
+    }
+
+    return DateTimeUtil.parseIsoDate(val);
   }
 
   private getMaskedValue(): string {
@@ -540,9 +556,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return false;
     }
 
-    const errors = DateTimeUtil.validateMinMax(value,
-      this.minValue, this.maxValue,
-      this.hasTimeParts, this.hasDateParts);
+    let errors;
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(value,
+        this.minValue, this.maxValue,
+        this.hasTimeParts, this.hasDateParts);
+    }
 
     return Object.keys(errors).length === 0;
   }
@@ -592,7 +613,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private setDateValue(value: Date | string) {
     this._dateValue = DateTimeUtil.isValidDate(value)
       ? value
-      : DateTimeUtil.parseIsoDate(value);
+      : this.parseDate(value);
   }
 
   private updateValue(newDate: Date): void {
@@ -671,12 +692,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private spin(event: KeyboardEvent): void {
     event.preventDefault();
     switch (event.key) {
-      case KEYS.UP_ARROW:
-      case KEYS.UP_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_UP:
         this.increment();
         break;
-      case KEYS.DOWN_ARROW:
-      case KEYS.DOWN_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_DOWN:
         this.decrement();
         break;
     }
@@ -689,15 +708,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private moveCursor(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;
     switch (event.key) {
-      case KEYS.LEFT_ARROW:
-      case KEYS.LEFT_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_LEFT:
         if (event.ctrlKey) {
           event.preventDefault();
           this.setSelectionRange(this.getNewPosition(value));
         }
         break;
-      case KEYS.RIGHT_ARROW:
-      case KEYS.RIGHT_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_RIGHT:
         if (event.ctrlKey) {
           event.preventDefault();
           this.setSelectionRange(this.getNewPosition(value, 1));
