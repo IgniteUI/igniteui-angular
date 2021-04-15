@@ -103,10 +103,10 @@ export interface IFormatViews {
  * This interface is used to configure calendar format options.
  */
 export interface IFormatOptions {
-    day?: string;
-    month?: string;
-    weekday?: string;
-    year?: string;
+    day?: 'numeric' | '2-digit';
+    month?: 'numeric' | '2-digit' | 'long' | 'short' | 'narrow';
+    weekday?: 'long' | 'short' | 'narrow';
+    year?: 'numeric' | '2-digit';
 }
 
 /**
@@ -769,7 +769,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     private readonly spinDelta = 1;
     private readonly defaultLocale = 'en';
 
-    private _formatOptions = {
+    private _formatOptions: IFormatOptions = {
         day: 'numeric',
         month: 'short',
         weekday: 'short',
