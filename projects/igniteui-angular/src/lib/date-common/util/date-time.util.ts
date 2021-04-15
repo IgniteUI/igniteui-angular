@@ -106,6 +106,51 @@ export abstract class DateTimeUtil {
         return dateTimeParts;
     }
 
+    public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
+        let maskedValue;
+        const datePart = datePartInfo.type;
+        switch (datePart) {
+            case DatePart.Date:
+                maskedValue = value.getDate();
+                break;
+            case DatePart.Month:
+                // months are zero based
+                maskedValue = value.getMonth() + 1;
+                break;
+            case DatePart.Year:
+                if (partLength === 2) {
+                    maskedValue = this.prependValue(
+                        parseInt(value.getFullYear().toString().slice(-2), 10), partLength, '0');
+                } else {
+                    maskedValue = value.getFullYear();
+                }
+                break;
+            case DatePart.Hours:
+                if (datePartInfo.format.indexOf('h') !== -1) {
+                    maskedValue = this.prependValue(
+                        this.toTwelveHourFormat(value.getHours().toString()), partLength, '0');
+                } else {
+                    maskedValue = value.getHours();
+                }
+                break;
+            case DatePart.Minutes:
+                maskedValue = value.getMinutes();
+                break;
+            case DatePart.Seconds:
+                maskedValue = value.getSeconds();
+                break;
+            case DatePart.AmPm:
+                maskedValue = value.getHours() >= 12 ? 'PM' : 'AM';
+                break;
+        }
+
+        if (datePartInfo.type !== DatePart.AmPm) {
+            return this.prependValue(maskedValue, partLength, '0');
+        }
+
+        return maskedValue;
+    }
+
     /** Builds a date-time editor's default input format based on provided locale settings. */
     public static getDefaultInputFormat(locale: string): string {
         locale = locale || DateTimeUtil.DEFAULT_LOCALE;
@@ -355,13 +400,7 @@ export abstract class DateTimeUtil {
             const dateNow = new Date().toISOString();
             // eslint-disable-next-line prefer-const
             let [datePart, timePart] = dateNow.split(timeLiteral);
-            // transform the provided value to a numeric mask
-            // and use the mask parser to update it with the value
-            const format = timePart.replace(/\d/g, '0');
-            timePart = new MaskParsingService().replaceInMask(timePart, value,
-                { format, promptChar: '' }, 0, value.length).value;
-            timePart = timePart.substr(0, timePart.length - 1);
-            return new Date(`${datePart}T${timePart}`);
+            return new Date(`${datePart}T${value}`);
         }
 
         return null;
@@ -426,51 +465,6 @@ export abstract class DateTimeUtil {
     private static logMissingLocaleSettings(locale: string): void {
         console.warn(`Missing locale data for the locale ${locale}. Please refer to https://angular.io/guide/i18n#i18n-pipes`);
         console.warn('Using default browser locale settings.');
-    }
-
-    public static getPartValue(value: Date, datePartInfo: DatePartInfo, partLength: number): string {
-        let maskedValue;
-        const datePart = datePartInfo.type;
-        switch (datePart) {
-            case DatePart.Date:
-                maskedValue = value.getDate();
-                break;
-            case DatePart.Month:
-                // months are zero based
-                maskedValue = value.getMonth() + 1;
-                break;
-            case DatePart.Year:
-                if (partLength === 2) {
-                    maskedValue = this.prependValue(
-                        parseInt(value.getFullYear().toString().slice(-2), 10), partLength, '0');
-                } else {
-                    maskedValue = value.getFullYear();
-                }
-                break;
-            case DatePart.Hours:
-                if (datePartInfo.format.indexOf('h') !== -1) {
-                    maskedValue = this.prependValue(
-                        this.toTwelveHourFormat(value.getHours().toString()), partLength, '0');
-                } else {
-                    maskedValue = value.getHours();
-                }
-                break;
-            case DatePart.Minutes:
-                maskedValue = value.getMinutes();
-                break;
-            case DatePart.Seconds:
-                maskedValue = value.getSeconds();
-                break;
-            case DatePart.AmPm:
-                maskedValue = value.getHours() >= 12 ? 'PM' : 'AM';
-                break;
-        }
-
-        if (datePartInfo.type !== DatePart.AmPm) {
-            return this.prependValue(maskedValue, partLength, '0');
-        }
-
-        return maskedValue;
     }
 
     private static prependValue(value: number, partLength: number, prependChar: string): string {

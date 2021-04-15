@@ -41,7 +41,7 @@ import {
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
 import { Subject, fromEvent, Subscription, noop } from 'rxjs';
-import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
 import { OverlaySettings } from '../services/overlay/utilities';
@@ -62,7 +62,6 @@ import { DatePart } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
-
 
 let NEXT_ID = 0;
 const ITEMS_COUNT = 7;
@@ -109,6 +108,7 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
 })
 export class IgxTimePickerComponent extends PickerBaseDirective
     implements
+    IgxTimePickerBase,
     ControlValueAccessor,
     OnInit,
     OnChanges,
@@ -653,17 +653,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden */
     public ngOnInit(): void {
         this._ngControl = this._injector.get<NgControl>(NgControl, null);
-
-        this._minDropdownValue = this.setMinMaxDropdownValue('min');
-        this._maxDropdownValue = this.setMinMaxDropdownValue('max');
-        this.setSelectedValue();
-
-        this.generateHours();
-        this.generateMinutes();
-        this.generateSeconds();
-        if (this.showAmPmList) {
-            this.generateAmPm();
-        }
     }
 
     /** @hidden */
@@ -687,6 +676,24 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (changes['inputFormat'] && this.dateTimeEditor) {
             this.inputFormat = this.hasDateParts() ? DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT : this.inputFormat;
             this.dateTimeEditor.inputFormat = this.inputFormat;
+        }
+        if (changes['minValue'] || changes['maxValue']) {
+            this._minDropdownValue = this.setMinMaxDropdownValue('min');
+            this._maxDropdownValue = this.setMinMaxDropdownValue('max');
+            this.setSelectedValue();
+
+            if (this.showHoursList) {
+                this.generateHours();
+            }
+            if (this.showMinutesList) {
+                this.generateMinutes();
+            }
+            if (this.showSecondsList) {
+                this.generateSeconds();
+            }
+            if (this.showAmPmList) {
+                this.generateAmPm();
+            }
         }
     }
 
@@ -800,33 +807,33 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Increment specified TimePart.
+     * Increment a specified `DatePart`.
      *
-     * @param datePart The optional DatePart to increment. Defaults to Hours.
+     * @param datePart The optional DatePart to increment. Defaults to Hour.
+     * @param delta The optional delta to increment by. Overrides `itemsDelta`.
+     * @example
+     * ```typescript
+     * this.timePicker.increment(DatePart.Hours);
+     * ```
      */
-    public increment(datePart?: DatePart): void {
-        const timePart = datePart ? datePart : DatePart.Hours;
-
-        if (this.isTimePart) {
-            const spinDelta = this.getTimePartDelta(timePart);
-            this.dateTimeEditor.increment(timePart, spinDelta);
+    public increment(datePart?: DatePart, delta?: number): void {
+            this.dateTimeEditor.increment(datePart, delta);
             this.setSelectedValue();
-        }
     }
 
     /**
-     * Decrement specified TimePart.
+     * Decrement a specified `DatePart`
      *
-     * @param datePart The optional DatePart to decrement. Defaults to Hours.
+     * @param datePart The optional DatePart to decrement. Defaults to Hour.
+     * @param delta The optional delta to decrement by. Overrides `itemsDelta`.
+     * @example
+     * ```typescript
+     * this.timePicker.decrement(DatePart.Seconds);
+     * ```
      */
-    public decrement(datePart?: DatePart): void {
-        const timePart = datePart ? datePart : DatePart.Hours;
-
-        if (this.isTimePart) {
-            const spinDelta = this.getTimePartDelta(timePart);
-            this.dateTimeEditor.decrement(timePart, spinDelta);
+    public decrement(datePart?: DatePart, delta?: number): void {
+            this.dateTimeEditor.decrement(datePart, delta);
             this.setSelectedValue();
-        }
     }
 
     /** @hidden @internal */
@@ -1386,13 +1393,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         });
     }
 
-    private isTimePart(datePart: DatePart): boolean {
-        return (datePart === DatePart.Hours ||
-            datePart === DatePart.Minutes ||
-            datePart === DatePart.Seconds ||
-            datePart === DatePart.AmPm);
-    }
-
     private toTwelveHourFormat(hour: number): number {
         if (hour > 12) {
             hour -= 12;
@@ -1440,9 +1440,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 const wheelEvent = event as WheelEvent;
                 if (wheelEvent.deltaY) {
                     if (wheelEvent.deltaY < 0) {
-                        this.increment(this.dateTimeEditor.targetDatePart);
+                        this.increment();
                     } else {
-                        this.decrement(this.dateTimeEditor.targetDatePart);
+                        this.decrement();
                     }
                 }
             });

@@ -14,7 +14,7 @@ import {
     TemplateRef
 } from '@angular/core';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
+import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { IgxTimePickerComponent } from './time-picker.component';
 
 /** @hidden */
@@ -31,7 +31,7 @@ export class IgxItemListDirective {
     public isActive: boolean;
 
     constructor(
-        @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerComponent,
+        @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
         private elementRef: ElementRef
     ) { }
 

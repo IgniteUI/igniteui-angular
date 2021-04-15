@@ -1,17 +1,10 @@
-<!-- [preventSpinOnWheel]="!this.isDropdown" -->
-<igx-input-group [suppressInputAutofocus]="this.isDropdown" (click)="!this.isDropdown && this.open()">
+<igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown"
+    (click)="!this.isDropdown && this.open()">
     <input igxInput [igxDateTimeEditor]="this.inputFormat" type="text" [readonly]="!this.isDropdown"
-        [spinDelta]="this.itemsDelta" [disabled]="this.disabled" [displayFormat]="this.displayFormat"
-        role="combobox" aria-haspopup="dialog"
+        [minValue]="this.minValue" [maxValue]="this.maxValue" [locale]="this.locale" [spinDelta]="this.itemsDelta"
+        [spinLoop]="this.spinLoop" [placeholder]="this.placeholder" [disabled]="this.disabled"
+        [displayFormat]="this.displayFormat" [igxTextSelection]="this.isDropdown" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
-
-    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <ng-container *ngTemplateOutlet="defaultToggleIcon"></ng-container>
-    </igx-prefix>
-
-    <igx-suffix *ngIf="this.showClearButton" igxRipple (click)="this.clear()">
-        <ng-container *ngTemplateOutlet="defaultClearIcon"></ng-container>
-    </igx-suffix>
 
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
@@ -25,20 +18,15 @@
     <ng-container ngProjectAs="igx-hint">
         <ng-content select="igx-hint,[igxHint]"></ng-content>
     </ng-container>
+
+    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
+        <igx-icon fontSet="material">access_time</igx-icon>
+    </igx-prefix>
+
+    <igx-suffix *ngIf="this.showClearButton" igxRipple (click)="this.clear()">
+        <igx-icon fontSet="material">clear</igx-icon>
+    </igx-suffix>
 </igx-input-group>
-
-
-<ng-template #defaultToggleIcon>
-    <igx-icon fontSet="material">
-        access_time
-    </igx-icon>
-</ng-template>
-
-<ng-template #defaultClearIcon>
-    <igx-icon fontSet="material">
-        clear
-    </igx-icon>
-</ng-template>
 
 <ng-template #defaultTimePickerActions>
     <div *ngIf="this.cancelButtonLabel || this.okButtonLabel" class="igx-time-picker__buttons">
@@ -61,16 +49,20 @@
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
             <div *ngIf="this.showHoursList" #hourList [igxItemList]="'hourList'">
-                <span role="spinbutton" [attr.aria-label]="hour" [igxTimeItem]="hour" *ngFor="let hour of hourView">{{ hour }}</span>
+                <span role="spinbutton" [attr.aria-label]="hour" [igxTimeItem]="hour"
+                    *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span role="spinbutton" [attr.aria-label]="minute" [igxTimeItem]="minute" *ngFor="let minute of minuteView">{{ minute }}</span>
+                <span role="spinbutton" [attr.aria-label]="minute" [igxTimeItem]="minute"
+                    *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
             <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span role="spinbutton" [attr.aria-label]="seconds" [igxTimeItem]="seconds" *ngFor="let seconds of secondsView">{{ seconds }}</span>
+                <span role="spinbutton" [attr.aria-label]="seconds" [igxTimeItem]="seconds"
+                    *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span role="spinbutton" [attr.aria-label]="ampm" [igxTimeItem]="ampm" *ngFor="let ampm of ampmView">{{ ampm }}</span>
+                <span role="spinbutton" [attr.aria-label]="ampm" [igxTimeItem]="ampm"
+                    *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>
         <ng-container
