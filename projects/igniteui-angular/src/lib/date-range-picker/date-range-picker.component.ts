@@ -17,7 +17,7 @@ import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from 
 import { InteractionMode } from '../core/enums';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IToggleView } from '../core/navigation';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, KEYS } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { DatePickerUtil } from '../date-picker/date-picker.utils';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputDirective, IgxInputGroupComponent, IgxInputState, IgxLabelDirective } from '../input-group/public_api';
@@ -450,6 +450,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
 
     constructor(public element: ElementRef,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        protected platform: PlatformUtil,
         @Inject(LOCALE_ID) private localeId: any,
         private _injector: Injector) {
         super(_displayDensityOptions);
@@ -460,20 +461,17 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
-            case KEYS.UP_ARROW:
-            case KEYS.UP_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_UP:
                 if (event.altKey) {
                     this.close();
                 }
                 break;
-            case KEYS.DOWN_ARROW:
-            case KEYS.DOWN_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_DOWN:
                 if (event.altKey) {
                     this.open();
                 }
                 break;
-            case KEYS.ESCAPE:
-            case KEYS.ESCAPE_IE:
+            case this.platform.KEYMAP.ESCAPE:
                 this.close();
                 break;
         }
@@ -611,7 +609,7 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    get separatorClass(): string {
+    public get separatorClass(): string {
         return this.getComponentDensityClass('igx-date-range-picker__label');
     }
 
@@ -731,7 +729,9 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     /** @hidden @internal */
-    public handleSelection(selectionData: Date[]): void {
+    public handleSelection(selectionData: Date | Date[]): void {
+        // range picker always uses selection="range"
+        selectionData = selectionData as Date[];
         this.value = this.extractRange(selectionData);
         this.rangeSelected.emit(this.value);
         if (this.mode === InteractionMode.DropDown && selectionData?.length > 1) {

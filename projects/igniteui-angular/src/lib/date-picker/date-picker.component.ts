@@ -63,7 +63,7 @@ import {
 } from './date-picker.utils';
 import { DatePickerDisplayValuePipe, DatePickerInputValuePipe } from './date-picker.pipes';
 import { IDatePicker } from './date-picker.common';
-import { KEYS, isIE, isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { isEqual, IBaseEventArgs, mkenum, IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { IgxDatePickerTemplateDirective, IgxDatePickerActionsDirective } from './date-picker.directives';
 import { IgxCalendarContainerComponent } from './calendar-container.component';
 import { InteractionMode } from '../core/enums';
@@ -219,7 +219,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * <igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      * ```
      */
-    @Input() public locale: 'en';
+    @Input() public locale = 'en';
 
     /**
      * Gets/Sets the default template editor's tabindex.
@@ -457,7 +457,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * let template = this.template();
      * ```
      */
-    get template(): TemplateRef<any> {
+    public get template(): TemplateRef<any> {
         if (this.datePickerTemplateDirective) {
             return this.datePickerTemplateDirective.template;
         }
@@ -467,7 +467,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /**
      * Gets the context passed to the input group template.
      */
-    get context() {
+    public get context() {
         return {
             disabled: this.disabled,
             disabledDates: this.disabledDates,
@@ -808,11 +808,12 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
 
     constructor(@Inject(
         IgxOverlayService) private _overlayService: IgxOverlayService,
-        public element: ElementRef,
+        public element: ElementRef<HTMLElement>,
         private _cdr: ChangeDetectorRef,
         private _moduleRef: NgModuleRef<any>,
         private _injector: Injector,
-        private _renderer: Renderer2) {
+        private _renderer: Renderer2,
+        private platform: PlatformUtil) {
     }
 
     /**
@@ -963,7 +964,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
             fromEvent(this._inputElementRef.nativeElement, 'keydown').pipe(
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
-            ).subscribe((res) => this.onKeyDown(res));
+            ).subscribe((res: KeyboardEvent) => this.onKeyDown(res));
         }
 
         if (this._ngControl) {
@@ -997,7 +998,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     /** @hidden @internal */
     public ngOnDestroy(): void {
         if (this._componentID) {
-            this._overlayService.hide(this._componentID);
+            this._overlayService.detach(this._componentID);
         }
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
@@ -1071,7 +1072,9 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
         if (!this.collapsed || this.disabled) {
             return;
         }
-
+        if (this._componentID) {
+            this._overlayService.detach(this._componentID);
+        }
         switch (this.mode) {
             case InteractionMode.Dialog: {
                 this.hasHeader = true;
@@ -1168,22 +1171,21 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     /** @hidden @internal */
-    public onKeyDown(event) {
+    public onKeyDown(event: KeyboardEvent) {
+        const value = (event.target as HTMLInputElement).value;
         switch (event.key) {
-            case KEYS.UP_ARROW:
-            case KEYS.UP_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_UP:
                 event.preventDefault();
                 event.stopPropagation();
-                this.spinValue(event.target.value, 1, event.type);
+                this.spinValue(value, 1, event.type);
                 break;
-            case KEYS.DOWN_ARROW:
-            case KEYS.DOWN_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_DOWN:
                 if (event.altKey) {
                     this.openDialog();
                 } else {
                     event.preventDefault();
                     event.stopPropagation();
-                    this.spinValue(event.target.value, -1, event.type);
+                    this.spinValue(value, -1, event.type);
                 }
                 break;
             default:
@@ -1208,7 +1210,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
          * The IgxDateTimeEditor will be used to handle all inputs, i.e. this handler will be removed.
          * It extends the IgxMaskDirective which contains logic that handles this issue.
          */
-        if (isIE() && !this._isInEditMode && !this.inputGroup.isFocused) {
+        if (this.platform.isIE && !this._isInEditMode && !this.inputGroup.isFocused) {
             return;
         }
         const targetValue = event.target.value;
@@ -1361,6 +1363,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _onClosed(): void {
+        this._overlayService.detach(this._componentID);
         this.collapsed = true;
         this._componentID = null;
         this.onClosed.emit(this);
@@ -1407,7 +1410,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
     }
 
     private _setLocaleToDate(value: Date): string {
-        if (isIE()) {
+        if (this.platform.isIE) {
             // this is a workaround fixing the following IE11 issue:
             // IE11 has added character code 8206 (mark for RTL) to the output of toLocaleDateString() that
             // precedes each portion that comprises the total date... For more information read this article:

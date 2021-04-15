@@ -48,7 +48,7 @@ import { IgxOverlayOutletDirective, IgxToggleModule, IgxToggleDirective } from '
 import { TimeDisplayFormatPipe, TimeInputFormatPipe } from './time-picker.pipes';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, IBaseEventArgs, IBaseCancelableBrowserEventArgs } from '../core/utils';
+import { IBaseEventArgs, IBaseCancelableBrowserEventArgs, PlatformUtil } from '../core/utils';
 import { InteractionMode } from '../core/enums';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -815,7 +815,8 @@ export class IgxTimePickerComponent implements
 
     constructor(
         private _injector: Injector,
-        private _cdr: ChangeDetectorRef) { }
+        private _cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil) { }
 
     /**
      * @hidden
@@ -937,8 +938,7 @@ export class IgxTimePickerComponent implements
                 throttle(() => interval(0, animationFrameScheduler)),
                 takeUntil(this._destroy$)
             ).subscribe((event: KeyboardEvent) => {
-                if (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE ||
-                    event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE) {
+                if (event.key === this.platform.KEYMAP.ARROW_UP || event.key === this.platform.KEYMAP.ARROW_DOWN) {
                     this.spinOnEdit(event);
                 }
             });
@@ -1553,7 +1553,7 @@ export class IgxTimePickerComponent implements
 
         if (event.key) {
             const key = event.key;
-            sign = key === KEYS.DOWN_ARROW || key === KEYS.DOWN_ARROW_IE ? -1 : 1;
+            sign = key === this.platform.KEYMAP.ARROW_DOWN ? -1 : 1;
         }
 
         if (event.deltaY) {

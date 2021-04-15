@@ -30,9 +30,9 @@ import {
     AbsoluteScrollStrategy
 } from '../../../services/public_api';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
+import { PlatformUtil } from '../../../core/utils';
 
 /**
  * @hidden
@@ -96,7 +96,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) {}
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
@@ -208,12 +208,12 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
     }
 
-    public onKeyDown(eventArgs) {
+    public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
     }
 
-    public onApplyButtonKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.TAB && !eventArgs.shiftKey) {
+    public onApplyButtonKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === this.platform.KEYMAP.TAB && !eventArgs.shiftKey) {
             eventArgs.stopPropagation();
             eventArgs.preventDefault();
         }

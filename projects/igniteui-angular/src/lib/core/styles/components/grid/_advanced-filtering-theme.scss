@@ -30,7 +30,7 @@
         min-width: 660px;
         max-width: 720px;
         background-color: --var($theme, 'filtering-row-background');
-        box-shadow: igx-elevation($elevations, 12);
+        box-shadow: igx-elevation($elevation: 12);
         border-radius: rem(4px);
     }
 
@@ -271,7 +271,7 @@
             @if $bootstrap-theme {
                 background: igx-color($palette, 'error');
                 border-color: igx-color($palette, 'error');
-                color: hexrgba(igx-color($palette, 'grays', 100));
+                color: to-opaque(igx-color($palette, 'grays', 100));
             } @else {
                 color: igx-color($palette, 'error');
             }

@@ -45,6 +45,7 @@
     $subtitle-horizontal-alignment: null,
 ) {
     $name: 'data-chart';
+    $selector: 'igx-data-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -83,6 +84,7 @@
         $subtitle-margin,
         (
             name: $name,
+            selector: $selector,
             title-text-color: $title-text-color,
             subtitle-text-color: null,
             brushes: $brushes,
@@ -114,7 +116,9 @@
     $title-styles: igx-type-scale-category($type-scale, $title);
     $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);
 
-    @include igx-font-var('title-text-style', $title-styles, $name);
-    @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+    igx-data-chart {
+        @include igx-font-var('title-text-style', $title-styles, $name);
+        @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+    }
 }
 

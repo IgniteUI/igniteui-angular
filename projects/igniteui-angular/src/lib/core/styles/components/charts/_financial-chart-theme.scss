@@ -134,6 +134,7 @@
     $zoom-slider-x-axis-major-stroke-thickness: null
 ) {
     $name: 'financial-chart';
+    $selector: 'igx-financial-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -197,6 +198,7 @@
         $y-axis-title-margin,
         (
             name: $name,
+            selector: $selector,
             margin: $margin,
             title-alignment: $title-alignment,
             title-text-color: $title-text-color,
@@ -279,11 +281,13 @@
     $y-axis-label-styles: igx-type-scale-category($type-scale, $y-axis-label-text-style);
     $y-axis-title-styles: igx-type-scale-category($type-scale, $y-axis-title-text-style);
 
-    @include igx-font-var('title-text-style', $title-styles, $name);
-    @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
-    @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
-    @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
-    @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
-    @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
+    igx-financial-chart {
+        @include igx-font-var('title-text-style', $title-styles, $name);
+        @include igx-font-var('subtitle-text-style', $subtitle-styles, $name);
+        @include igx-font-var('x-axis-label-text-style', $x-axis-label-styles, $name);
+        @include igx-font-var('x-axis-title-text-style', $x-axis-title-styles, $name);
+        @include igx-font-var('y-axis-label-text-style', $y-axis-label-styles, $name);
+        @include igx-font-var('y-axis-title-text-style', $y-axis-title-styles, $name);
+    }
 }
 

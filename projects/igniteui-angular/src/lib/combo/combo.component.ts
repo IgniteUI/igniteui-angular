@@ -16,7 +16,7 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs } from '../core/utils';
+import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -110,7 +110,7 @@ export interface IComboSearchInputEventArgs extends IBaseCancelableEventArgs {
     searchText: string;
 }
 
-export interface IComboItemAdditionEvent extends IBaseEventArgs {
+export interface IComboItemAdditionEvent extends IBaseEventArgs, CancelableEventArgs {
     oldCollection: any[];
     addedItem: any;
     newCollection: any[];
@@ -783,8 +783,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     @Input()
     public get type(): IgxInputGroupType {
-            return this._type || this._inputGroupType || 'box';
-        }
+        return this._type || this._inputGroupType || 'box';
+    }
 
     public set type(val: IgxInputGroupType) {
         this._type = val;
@@ -1107,18 +1107,21 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         if (this.groupKey) {
             Object.assign(addedItem, { [this.groupKey]: this.defaultFallbackGroup });
         }
-        const oldCollection = this.data;
-        const newCollection = [...this.data];
-        newCollection.push(addedItem);
+        // expose shallow copy instead of this.data in event args so this.data can't be mutated
+        const oldCollection = [...this.data];
+        const newCollection = [...this.data, addedItem];
         const args: IComboItemAdditionEvent = {
-            oldCollection, addedItem, newCollection, owner: this
+            oldCollection, addedItem, newCollection, owner: this, cancel: false
         };
         this.onAddition.emit(args);
-        this.data.push(addedItem);
-        // If you mutate the array, no pipe is invoked and the display isn't updated;
-        // if you replace the array, the pipe executes and the display is updated.
+        if (args.cancel) {
+            return;
+        }
+        this.data.push(args.addedItem);
+        // trigger re-render
         this.data = cloneArray(this.data);
-        this.selectItems(this.comboAPI.valueKey !== null ? [addedItem[this.valueKey]] : [addedItem], false);
+        this.selectItems(this.valueKey !== null && this.valueKey !== undefined ?
+            [args.addedItem[this.valueKey]] : [args.addedItem], false);
         this.customValueFlag = false;
         this.searchInput.nativeElement.focus();
         this.dropdown.focusedItem = null;
@@ -1184,7 +1187,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             this.manageRequiredAsterisk();
             this.cdr.detectChanges();
         }
-        this.virtDir.onChunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
+        this.virtDir.chunkPreload.pipe(takeUntil(this.destroy$)).subscribe((e: IForOfState) => {
             const eventArgs: IForOfState = Object.assign({}, e, { owner: this });
             this.onDataPreLoad.emit(eventArgs);
         });
@@ -1553,9 +1556,9 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      */
     private getValueDisplayPairs(ids: any[]) {
         return this.data.filter(entry => ids.indexOf(entry[this.valueKey]) > -1).map(e => ({
-                [this.valueKey]: e[this.valueKey],
-                [this.displayKey]: e[this.displayKey]
-            }));
+            [this.valueKey]: e[this.valueKey],
+            [this.displayKey]: e[this.displayKey]
+        }));
     }
 
     private checkMatch(): void {

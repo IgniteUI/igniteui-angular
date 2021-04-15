@@ -21,17 +21,19 @@ import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/public_api';
 import { IgxGridBaseDirective } from './grid-base.directive';
-import { IgxGridSelectionService, IgxGridCRUDService, IgxRow } from './selection/selection.service';
+import { IgxGridSelectionService } from './selection/selection.service';
+import { IgxRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RowType } from './common/row.interface';
 
 @Directive({
     selector: '[igxRowBaseComponent]'
 })
-export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements RowType, DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -313,7 +315,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     // TODO: Refactor
     public get inEditMode(): boolean {
         if (this.grid.rowEditable) {
-            const editRowState = this.crudService.row;
+            const editRowState = this.grid.crudService.row;
             return (editRowState && editRowState.id === this.rowID) || false;
         } else {
             return false;
@@ -389,7 +391,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     constructor(
         public gridAPI: GridBaseAPIService<T>,
-        public crudService: IgxGridCRUDService,
         public selectionService: IgxGridSelectionService,
         public element: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef) { }
@@ -407,7 +408,10 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             this.selectionService.selectMultipleRows(this.rowID, this.rowData, event);
             return;
         }
-        this.selectionService.selectRowById(this.rowID, !event.ctrlKey, event);
+
+        // eslint-disable-next-line no-bitwise
+        const clearSelection = !(+event.ctrlKey ^ +event.metaKey);
+        this.selectionService.selectRowById(this.rowID, clearSelection, event);
     }
 
     /**
@@ -458,9 +462,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```
      */
     public update(value: any) {
-        const crudService = this.crudService;
+        const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
-            this.grid.endEdit(false);
+            this.grid.crudService.endEdit(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);

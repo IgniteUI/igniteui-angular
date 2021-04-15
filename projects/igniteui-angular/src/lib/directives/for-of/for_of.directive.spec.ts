@@ -223,13 +223,13 @@ describe('IgxForOf directive -', () => {
 
             expect(parseInt(displayContainer.style.top, 10)).toEqual(-5);
 
-            spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
+            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             fix.componentInstance.data = [{ 1: 1, 2: 2, 3: 3, 4: 4 }];
             fix.detectChanges();
 
             expect(parseInt(displayContainer.style.top, 10)).toEqual(0);
-            expect(fix.componentInstance.parentVirtDir.onChunkLoad.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.parentVirtDir.chunkLoad.emit).toHaveBeenCalledTimes(1);
         });
 
         it('should apply the changes when itemSize is changed.', () => {
@@ -404,6 +404,7 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should scroll to wheel event correctly', async () => {
+            fix.componentInstance.parentVirtDir.dc.instance._scrollInertia.smoothingDuration = 0;
             /* 120 is default mousewheel on Chrome, scroll 2 records down */
             await UIInteractions.simulateWheelEvent(displayContainer, 0, - 1 * 2 * 120);
             fix.detectChanges();
@@ -842,14 +843,14 @@ describe('IgxForOf directive -', () => {
         });
 
         it('should correctly scroll to the last element when using the scrollTo method', () => {
-            spyOn(fix.componentInstance.parentVirtDir.onChunkLoad, 'emit');
+            spyOn(fix.componentInstance.parentVirtDir.chunkLoad, 'emit');
 
             /**  Scroll to the last 49999 row. */
             fix.componentInstance.parentVirtDir.scrollTo(49999);
             fix.componentInstance.scrollTop(verticalScroller.scrollTop);
             fix.detectChanges();
 
-            expect(fix.componentInstance.parentVirtDir.onChunkLoad.emit).toHaveBeenCalledTimes(1);
+            expect(fix.componentInstance.parentVirtDir.chunkLoad.emit).toHaveBeenCalledTimes(1);
 
             const rowsRendered = displayContainer.querySelectorAll(DISPLAY_CONTAINER);
             for (let i = 0; i < 8; i++) {
@@ -872,10 +873,10 @@ describe('IgxForOf directive -', () => {
             expect(hDirective.getItemCountInView()).toBe(2);
         });
 
-        it('should emit the onChunkPreload/onChunkLoad only when startIndex or chunkSize have changed.', async () => {
+        it('should emit the chunkPreload/chunkLoad only when startIndex or chunkSize have changed.', async () => {
             const verticalDir = fix.componentInstance.parentVirtDir;
-            const chunkLoadSpy = spyOn<any>(verticalDir.onChunkLoad, 'emit').and.callThrough();
-            const chunkPreLoadSpy = spyOn<any>(verticalDir.onChunkPreload, 'emit').and.callThrough();
+            const chunkLoadSpy = spyOn<any>(verticalDir.chunkLoad, 'emit').and.callThrough();
+            const chunkPreLoadSpy = spyOn<any>(verticalDir.chunkPreload, 'emit').and.callThrough();
             // scroll so that start index does not change.
             fix.componentInstance.scrollTop(1);
             fix.detectChanges();
@@ -1615,7 +1616,7 @@ export class LocalService {
                 [igxForScrollOrientation]="'vertical'"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='"50px"'
-                (onChunkPreload)="dataLoading($event)">
+                (chunkPreload)="dataLoading($event)">
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     {{rowData}}
                 </div>
@@ -1659,7 +1660,7 @@ export class RemoteVirtualizationComponent implements OnInit, AfterViewInit {
                 [igxForTotalItemCount]="count | async"
                 [igxForContainerSize]='height'
                 [igxForItemSize]='"50px"'
-                (onChunkPreload)="dataLoading($event)">
+                (chunkPreload)="dataLoading($event)">
                 <div [style.display]="'flex'" [style.height]="'50px'">
                     {{rowData}}
                 </div>

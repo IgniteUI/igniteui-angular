@@ -7,6 +7,7 @@ import { GridType } from './grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
+import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
 
 /**
  * @hidden
@@ -17,7 +18,7 @@ import { IgxColumnActionsComponent } from '../column-actions/column-actions.comp
 })
 export class IgxGridCellStyleClassesPipe implements PipeTransform {
 
-    transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
+    public transform(cssClasses: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): string {
         if (!cssClasses) {
             return '';
         }
@@ -46,7 +47,8 @@ export class IgxGridCellStyleClassesPipe implements PipeTransform {
 })
 export class IgxGridCellStylesPipe implements PipeTransform {
 
-    transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number): { [prop: string]: any } {
+    public transform(styles: { [prop: string]: any }, _: any, data: any, field: string, index: number, __: number):
+     { [prop: string]: any } {
         const css = {};
         if (!styles) {
             return css;
@@ -70,7 +72,7 @@ export class IgxGridCellStylesPipe implements PipeTransform {
 })
 export class IgxGridNotGroupedPipe implements PipeTransform {
 
-    transform(value: any[]): any[] {
+    public transform(value: any[]): any[] {
         return value.filter(item => !item.columnGroup);
     }
 }
@@ -84,7 +86,7 @@ export class IgxGridNotGroupedPipe implements PipeTransform {
 })
 export class IgxGridTopLevelColumns implements PipeTransform {
 
-    transform(value: any[]): any[] {
+    public transform(value: any[]): any[] {
         return value.filter(item => item.level === 0);
     }
 }
@@ -116,7 +118,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any[], id: string, pipeTrigger: number) {
+    public transform(collection: any[], _id: string, _pipeTrigger: number) {
         const grid: IgxGridBaseDirective = this.gridAPI.grid;
 
         if (grid.transactions.enabled) {
@@ -153,7 +155,7 @@ export class IgxGridPaginatorOptionsPipe implements PipeTransform {
     pure: true
 })
 export class IgxHasVisibleColumnsPipe implements PipeTransform {
-    transform(values: any[], hasVisibleColumns) {
+    public transform(values: any[], hasVisibleColumns) {
         if (!(values && values.length)) {
             return values;
         }
@@ -173,7 +175,7 @@ export class IgxGridRowPinningPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    public transform(collection: any[], id: string, isPinned = false, pipeTrigger: number) {
+    public transform(collection: any[], id: string, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
 
         if (grid.hasPinnedRecords && isPinned) {
@@ -203,7 +205,7 @@ export class IgxColumnActionEnabledPipe implements PipeTransform {
     public transform(
         collection: IgxColumnComponent[],
         actionFilter: (value: IgxColumnComponent, index: number, array: IgxColumnComponent[]) => boolean,
-        pipeTrigger: number
+        _pipeTrigger: number
     ): IgxColumnComponent[] {
         if (!collection) {
             return collection;
@@ -229,7 +231,7 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
 
     constructor(@Inject(IgxColumnActionsComponent) protected columnActions: IgxColumnActionsComponent) { }
 
-    public transform(collection: IgxColumnComponent[], filterCriteria: string, pipeTrigger: number): IgxColumnComponent[] {
+    public transform(collection: IgxColumnComponent[], filterCriteria: string, _pipeTrigger: number): IgxColumnComponent[] {
         if (!collection) {
             return collection;
         }
@@ -238,8 +240,8 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
             const filterFunc = (c) => {
                 const filterText = c.header || c.field;
                 if (!filterText) {
- return false;
-}
+                    return false;
+                }
                 return filterText.toLocaleLowerCase().indexOf(filterCriteria.toLocaleLowerCase()) >= 0 ||
                     (c.children?.some(filterFunc) ?? false);
             };
@@ -257,7 +259,7 @@ export class IgxFilterActionColumnsPipe implements PipeTransform {
 })
 export class IgxSortActionColumnsPipe implements PipeTransform {
 
-    public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, pipeTrigger: number): IgxColumnComponent[] {
+    public transform(collection: IgxColumnComponent[], displayOrder: ColumnDisplayOrder, _pipeTrigger: number): IgxColumnComponent[] {
         if (displayOrder === ColumnDisplayOrder.Alphabetical) {
             return collection.sort((a, b) => (a.header || a.field).localeCompare(b.header || b.field));
         }
@@ -268,7 +270,7 @@ export class IgxSortActionColumnsPipe implements PipeTransform {
 @Pipe({ name: 'dataMapper' })
 export class IgxGridDataMapperPipe implements PipeTransform {
 
-    transform(data: any[], field: string, _: number, val: any, isNestedPath: boolean) {
+    public transform(data: any[], field: string, _: number, val: any, isNestedPath: boolean) {
         return isNestedPath ? resolveNestedPath(data, field) : val;
     }
 }
@@ -276,7 +278,7 @@ export class IgxGridDataMapperPipe implements PipeTransform {
 @Pipe({ name: 'igxStringReplace' })
 export class IgxStringReplacePipe implements PipeTransform {
 
-    transform(value: string, search: string | RegExp, replacement: string): string {
+    public transform(value: string, search: string | RegExp, replacement: string): string {
         return value.replace(search, replacement);
     }
 }
@@ -284,7 +286,7 @@ export class IgxStringReplacePipe implements PipeTransform {
 @Pipe({ name: 'transactionState' })
 export class IgxGridTransactionStatePipe implements PipeTransform {
 
-    transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
+    public transform(row_id: any, field: string, rowEditable: boolean, transactions: any, _: any, __: any, ___: any) {
         if (rowEditable) {
             const rowCurrentState = transactions.getAggregatedValue(row_id, false);
             if (rowCurrentState) {
@@ -302,8 +304,17 @@ export class IgxGridTransactionStatePipe implements PipeTransform {
 @Pipe({ name: 'columnFormatter' })
 export class IgxColumnFormatterPipe implements PipeTransform {
 
-    transform(value: any, formatter: (v: any) => any) {
+    public transform(value: any, formatter: (v: any) => any) {
         return formatter(value);
+    }
+}
+
+@Pipe({ name: 'summaryFormatter' })
+export class IgxSummaryFormatterPipe implements PipeTransform {
+
+    transform(summaryResult: IgxSummaryResult, summaryOperand: IgxSummaryOperand,
+        summaryFormatter: (s: IgxSummaryResult, o: IgxSummaryOperand) => any) {
+        return summaryFormatter(summaryResult, summaryOperand);
     }
 }
 
@@ -315,13 +326,14 @@ export class IgxGridAddRowPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
 
-    transform(collection: any, isPinned = false, pipeTrigger: number) {
+    public transform(collection: any, isPinned = false, _pipeTrigger: number) {
         const grid = this.gridAPI.grid;
-        if (!grid.rowEditable || !grid.addRowParent || grid.cancelAddMode || isPinned !== grid.addRowParent.isPinned) {
+        if (!grid.rowEditable || !grid.gridAPI.crudService.addRowParent || grid.gridAPI.crudService.cancelAddMode ||
+            isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
             return collection;
         }
         const copy = collection.slice(0);
-        const parentIndex = grid.addRowParent.index;
+        const parentIndex = grid.gridAPI.crudService.addRowParent.index;
         const row = grid.getEmptyRecordObjectFor(collection[parentIndex]);
         const rec = {
             recordRef: row,

@@ -1,4 +1,3 @@
-import { IgxOverlayService } from '../overlay';
 import { ScrollStrategy } from './scroll-strategy';
 
 /**
@@ -11,12 +10,12 @@ export class BlockScrollStrategy extends ScrollStrategy {
     private _initialScrollLeft: number;
     private _sourceElement: Element;
 
-    constructor(scrollContainer?: HTMLElement) {
-        super(scrollContainer);
+    constructor() {
+        super();
     }
 
     /** @inheritdoc */
-    public initialize(document: Document, overlayService: IgxOverlayService, id: string) {
+    public initialize(document: Document) {
         if (this._initialized) {
             return;
         }

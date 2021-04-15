@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild, DebugElement} from '@angular/core';
@@ -555,7 +555,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         GridFunctions.focusCell(fixture, firstCell);
         fixture.detectChanges();
 
-        const footerContent = fixture.debugElement.queryAll(By.css(GRID_FOOTER_CLASS))[2];
+        const footerContent = fixture.debugElement.queryAll(By.css(GRID_FOOTER_CLASS))[2].children[0];
         UIInteractions.triggerEventHandlerKeyDown('arrowright', footerContent, false, false, true);
         fixture.detectChanges();
         await wait(DEBOUNCE_TIME);
@@ -1024,7 +1024,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.selectedCell = event.cell;
     }
 
-    generateData(count: number, level: number) {
+    public generateData(count: number, level: number) {
         const prods = [];
         const currLevel = level;
         let children;

@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { ITabsSelectedItemChangeEventArgs } from 'igniteui-angular';
 
 @Component({
     selector: 'app-tabs-routing-sample',
@@ -56,5 +57,8 @@ export class TabsRoutingSampleComponent {
         this.router.navigateByUrl('/tabs-routing/view3');
     }
 
+    public selectedItemChanged(event: ITabsSelectedItemChangeEventArgs) {
+        console.log(event);
+    }
 }
 

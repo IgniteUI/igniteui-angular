@@ -34,9 +34,10 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridHeaderComponent } from '../headers/grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
-import { getNodeSizeViaRange } from '../../core/utils';
-import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand } from '../summaries/grid-summary';
+import {
+    IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult
+} from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
     IgxCellHeaderTemplateDirective,
@@ -48,6 +49,7 @@ import { MRLResizeColumnInfo, MRLColumnSizeInfo, IColumnPipeArgs } from './inter
 import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
+import { PlatformUtil } from '../../core/utils';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
 const DEFAULT_DIGITS_INFO = '1.0-3';
@@ -62,7 +64,6 @@ const DEFAULT_DIGITS_INFO = '1.0-3';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-column',
     template: ``
 })
@@ -79,11 +80,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    set field(value: string) {
+    public set field(value: string) {
         this._field = value;
         this.hasNestedPath = value?.includes('.');
     }
-    get field(): string {
+    public get field(): string {
         return this._field;
     }
     /**
@@ -141,7 +142,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @WatchColumnChanges()
     @Input()
-    get selectable(): boolean  {
+    public get selectable(): boolean {
         return this._selectable;
     }
 
@@ -154,7 +155,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set selectable(value: boolean) {
+    public set selectable(value: boolean) {
         this._selectable = value;
     }
 
@@ -173,7 +174,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
-    groupable = false;
+    public groupable = false;
     /**
      * Gets whether the column is editable.
      * Default value is `false`.
@@ -185,7 +186,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @WatchColumnChanges()
     @Input()
-    get editable(): boolean {
+    public get editable(): boolean {
         // Updating the primary key when grid has transactions (incl. row edit)
         // should not be allowed, as that can corrupt transaction state.
         const rowEditable = this.grid && this.grid.rowEditable;
@@ -212,7 +213,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set editable(editable: boolean) {
+    public set editable(editable: boolean) {
         this._editable = editable;
     }
     /**
@@ -246,6 +247,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @WatchColumnChanges()
     @Input()
     public resizable = false;
+
+    /**
+     * Sets/gets whether the column header is included in autosize logic.
+     * Useful when template for a column header is sized based on parent, for example a default `div`.
+     * Default value is `false`.
+     * ```typescript
+     * let isResizable = this.column.resizable;
+     * ```
+     * ```html
+     * <igx-column [resizable] = "true"></igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @WatchColumnChanges()
+    @Input()
+    public autosizeHeader = true;
+
     /**
      * Gets a value indicating whether the summary for the column is enabled.
      * ```typescript
@@ -257,7 +276,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
-    get hasSummary() {
+    public get hasSummary() {
         return this._hasSummary;
     }
     /**
@@ -269,7 +288,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set hasSummary(value) {
+    public set hasSummary(value) {
         this._hasSummary = value;
 
         if (this.grid) {
@@ -287,7 +306,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges(true)
     @WatchColumnChanges()
     @Input()
-    get hidden(): boolean {
+    public get hidden(): boolean {
         return this._hidden;
     }
     /**
@@ -304,7 +323,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set hidden(value: boolean) {
+    public set hidden(value: boolean) {
         if (this._hidden !== value) {
             this._hidden = value;
             this.hiddenChange.emit(this._hidden);
@@ -313,7 +332,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                 return;
             }
             if (this.grid) {
-                this.grid.endEdit(false);
+                this.grid.crudService.endEdit(false);
                 this.grid.summaryService.resetSummaryHeight();
                 this.grid.filteringService.refreshExpressions();
                 this.grid.filteringService.hideFilteringRowOnColumnVisibilityChange(this);
@@ -330,7 +349,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get selected(): boolean {
+    public get selected(): boolean {
         return this.grid.selectionService.isColumnSelected(this.field);
     }
 
@@ -343,7 +362,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set selected(value: boolean) {
+    public set selected(value: boolean) {
         if (this.selectable && value !== this.selected) {
             if (value) {
                 this.grid.selectionService.selectColumnsWithNoEvent([this.field]);
@@ -373,7 +392,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     /** @hidden */
     @Output()
-    public onColumnChange = new EventEmitter<void>();
+    public columnChange = new EventEmitter<void>();
 
     /**
      * Gets whether the hiding is disabled.
@@ -386,7 +405,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    disableHiding = false;
+    public disableHiding = false;
     /**
      * Gets whether the pinning is disabled.
      * ```typescript
@@ -398,7 +417,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    disablePinning = false;
+    public disablePinning = false;
     /**
      * Sets/gets whether the column is movable.
      * Default value is `false`.
@@ -450,7 +469,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this.widthSetByUser = true;
             // width could be passed as number from the template
             // host bindings are not px affixed so we need to ensure we affix simple number strings
-            if (typeof(value) === 'number' || value.match(/^[0-9]*$/)) {
+            if (typeof (value) === 'number' || value.match(/^[0-9]*$/)) {
                 value = value + 'px';
             }
             this._width = value;
@@ -549,7 +568,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    cellStyles = null;
+    public cellStyles = null;
     /**
      * When autogenerating columns, the formatter is used to format the display of the column data
      * without modifying the underlying bound values.
@@ -574,7 +593,38 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    formatter: (value: any) => any;
+    public formatter: (value: any) => any;
+
+    /**
+     * The summaryFormatter is used to format the display of the column summaries.
+     *
+     * In this example, we check to see if the column name is OrderDate, and then provide a method as the summaryFormatter
+     * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
+     *
+     * ```typescript
+     * onColumnInit(column: IgxColumnComponent) {
+     *   if (column.field == "OrderDate") {
+     *     column.summaryFormatter = this.summaryFormat;
+     *   }
+     * }
+     *
+     * summaryFormat(summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand): string {
+     *   const result = summary.summaryResult;
+     *   if(summaryResult.key !== 'count' && result !== null && result !== undefined) {
+     *      const pipe = new DatePipe('fr-FR');
+     *      return pipe.transform(result,'mediumDate');
+     *   }
+     *   return result;
+     * }
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @notifyChanges()
+    @WatchColumnChanges()
+    @Input()
+    public summaryFormatter: (summary: IgxSummaryResult, summaryOperand: IgxSummaryOperand) => any;
+
     /**
      * Sets/gets whether the column filtering should be case sensitive.
      * Default value is `true`.
@@ -678,7 +728,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    @Input() rowStart: number;
+    @Input()
+    public rowStart: number;
 
     /**
      * Column index from which the field is starting.
@@ -690,7 +741,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    @Input() colStart: number;
+    @Input()
+    public colStart: number;
 
     /**
      * @hidden
@@ -727,7 +779,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      */
     @ContentChild(IgxCollapsibleIndicatorTemplateDirective, { read: IgxCollapsibleIndicatorTemplateDirective, static: false })
-    protected collapseIndicatorTemplate:  IgxCollapsibleIndicatorTemplateDirective;
+    protected collapseIndicatorTemplate: IgxCollapsibleIndicatorTemplateDirective;
 
     /**
      * @hidden
@@ -744,7 +796,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get maxWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
+        return isPercentageWidth ? parseFloat(this.maxWidth) / 100 * gridAvailableSize : parseFloat(this.maxWidth);
     }
 
     /**
@@ -753,7 +805,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get maxWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.maxWidth && typeof this.maxWidth === 'string' && this.maxWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
+        return isPercentageWidth ? parseFloat(this.maxWidth) : parseFloat(this.maxWidth) / gridAvailableSize * 100;
     }
 
     /**
@@ -762,7 +814,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get minWidthPx() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
+        return isPercentageWidth ? parseFloat(this.minWidth) / 100 * gridAvailableSize : parseFloat(this.minWidth);
     }
 
     /**
@@ -771,7 +823,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get minWidthPercent() {
         const gridAvailableSize = this.grid.calcWidth;
         const isPercentageWidth = this.minWidth && typeof this.minWidth === 'string' && this.minWidth.indexOf('%') !== -1;
-        return isPercentageWidth ?  parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
+        return isPercentageWidth ? parseFloat(this.minWidth) : parseFloat(this.minWidth) / gridAvailableSize * 100;
     }
 
 
@@ -886,7 +938,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         if (this.grid) {
             this.grid.summaryService.removeSummariesCachePerColumn(this.field);
-            (this.grid as any)._summaryPipeTrigger++;
+            this.grid.summaryPipeTrigger++;
             this.grid.summaryService.resetSummaryHeight();
         }
     }
@@ -1004,7 +1056,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input('cellTemplate')
-    get bodyTemplate(): TemplateRef<any> {
+    public get bodyTemplate(): TemplateRef<any> {
         return this._bodyTemplate;
     }
     /**
@@ -1024,7 +1076,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set bodyTemplate(template: TemplateRef<any>) {
+    public set bodyTemplate(template: TemplateRef<any>) {
         this._bodyTemplate = template;
     }
     /**
@@ -1038,7 +1090,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input()
-    get headerTemplate(): TemplateRef<any> {
+    public get headerTemplate(): TemplateRef<any> {
         return this._headerTemplate;
     }
     /**
@@ -1059,7 +1111,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set headerTemplate(template: TemplateRef<any>) {
+    public set headerTemplate(template: TemplateRef<any>) {
         this._headerTemplate = template;
     }
     /**
@@ -1073,7 +1125,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input('cellEditorTemplate')
-    get inlineEditorTemplate(): TemplateRef<any> {
+    public get inlineEditorTemplate(): TemplateRef<any> {
         return this._inlineEditorTemplate;
     }
     /**
@@ -1091,7 +1143,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set inlineEditorTemplate(template: TemplateRef<any>) {
+    public set inlineEditorTemplate(template: TemplateRef<any>) {
         this._inlineEditorTemplate = template;
     }
     /**
@@ -1105,7 +1157,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @notifyChanges()
     @WatchColumnChanges()
     @Input('filterCellTemplate')
-    get filterCellTemplate(): TemplateRef<any> {
+    public get filterCellTemplate(): TemplateRef<any> {
         return this._filterCellTemplate;
     }
     /**
@@ -1123,7 +1175,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    set filterCellTemplate(template: TemplateRef<any>) {
+    public set filterCellTemplate(template: TemplateRef<any>) {
         this._filterCellTemplate = template;
     }
 
@@ -1135,7 +1187,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get cells(): IgxGridCellComponent[] {
+    public get cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
                 if (row.cells) {
@@ -1152,7 +1204,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get visibleIndex(): number {
+    public get visibleIndex(): number {
         if (!isNaN(this._vIndex)) {
             return this._vIndex;
         }
@@ -1192,7 +1244,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get columnGroup() {
+    public get columnGroup() {
         return false;
     }
     /**
@@ -1203,7 +1255,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get columnLayout() {
+    public get columnLayout() {
         return false;
     }
 
@@ -1215,7 +1267,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get columnLayoutChild() {
+    public get columnLayoutChild() {
         return this.parent && this.parent.columnLayout;
     }
 
@@ -1228,7 +1280,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get allChildren(): IgxColumnComponent[] {
+    public get allChildren(): IgxColumnComponent[] {
         return [];
     }
     /**
@@ -1240,7 +1292,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get level() {
+    public get level() {
         let ptr = this.parent;
         let lvl = 0;
 
@@ -1251,26 +1303,26 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return lvl;
     }
 
-    get isLastPinned(): boolean {
+    public get isLastPinned(): boolean {
         return this.grid.isPinningToStart &&
             this.grid.pinnedColumns[this.grid.pinnedColumns.length - 1] === this;
     }
 
-    get isFirstPinned(): boolean {
+    public get isFirstPinned(): boolean {
         const pinnedCols = this.grid.pinnedColumns.filter(x => !x.columnGroup);
         return !this.grid.isPinningToStart && pinnedCols[0] === this;
     }
 
-    get rightPinnedOffset(): string {
+    public get rightPinnedOffset(): string {
         return this.pinned && !this.grid.isPinningToStart ?
             - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
             null;
     }
 
-    get gridRowSpan(): number {
+    public get gridRowSpan(): number {
         return this.rowEnd && this.rowStart ? this.rowEnd - this.rowStart : 1;
     }
-    get gridColumnSpan(): number {
+    public get gridColumnSpan(): number {
         return this.colEnd && this.colStart ? this.colEnd - this.colStart : 1;
     }
 
@@ -1286,7 +1338,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     @notifyChanges(true)
     @Input()
-    set visibleWhenCollapsed(value: boolean) {
+    public set visibleWhenCollapsed(value: boolean) {
         this._visibleWhenCollapsed = value;
         this.visibleWhenCollapsedChange.emit(this._visibleWhenCollapsed);
         if (this.parent) {
@@ -1294,7 +1346,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
     }
 
-    get visibleWhenCollapsed(): boolean {
+    public get visibleWhenCollapsed(): boolean {
         return this._visibleWhenCollapsed;
     }
 
@@ -1317,14 +1369,15 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      * @memberof IgxColumnComponent
      */
+    @notifyChanges()
+    @WatchColumnChanges()
     @Input()
-    set pipeArgs(value: IColumnPipeArgs) {
+    public set pipeArgs(value: IColumnPipeArgs) {
         this._columnPipeArgs = Object.assign(this._columnPipeArgs, value);
         this.grid.summaryService.clearSummaryCache();
-        (this.grid as any)._pipeTrigger++;
-        this.grid.notifyChanges();
+        this.grid.pipeTrigger++;
     }
-    get pipeArgs(): IColumnPipeArgs {
+    public get pipeArgs(): IColumnPipeArgs {
         return this._columnPipeArgs;
     }
 
@@ -1335,7 +1388,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get collapsible() {
         return false;
     }
-    public set collapsible(_value: boolean) {}
+    public set collapsible(_value: boolean) { }
 
     /**
      * @hidden
@@ -1344,7 +1397,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get expanded() {
         return true;
     }
-    public set expanded(_value: boolean) {}
+    public set expanded(_value: boolean) { }
 
     /**
      * hidden
@@ -1369,7 +1422,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get filteringExpressionsTree(): FilteringExpressionsTree {
+    public get filteringExpressionsTree(): FilteringExpressionsTree {
         return this.grid.filteringExpressionsTree.find(this.field) as FilteringExpressionsTree;
     }
     /**
@@ -1498,7 +1551,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
 
-    constructor(public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>, public cdr: ChangeDetectorRef) { }
+    constructor(
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
+        public cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil,
+    ) { }
 
     /**
      * @hidden
@@ -1581,7 +1638,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     /**
      * @hidden
      */
-    getGridTemplate(isRow: boolean, isIE: boolean): string {
+    public getGridTemplate(isRow: boolean, isIE: boolean): string {
         if (isRow) {
             const rowsCount = this.grid.multiRowLayoutRowSize;
             return isIE ?
@@ -1790,7 +1847,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        grid.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = true;
         this.pinnedChange.emit(this._pinned);
@@ -1881,7 +1938,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
 
-        this.grid.endEdit(false);
+        this.grid.crudService.endEdit(false);
 
         this._pinned = false;
         this.pinnedChange.emit(this._pinned);
@@ -2002,7 +2059,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get topLevelParent() {
+    public get topLevelParent() {
         let parent = this.parent;
         while (parent && parent.parent) {
             parent = parent.parent;
@@ -2019,7 +2076,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get headerCell(): IgxGridHeaderComponent {
+    public get headerCell(): IgxGridHeaderComponent {
         return this.grid.headerCellList.find((header) => header.column === this);
     }
 
@@ -2032,7 +2089,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get filterCell(): IgxGridFilteringCellComponent {
+    public get filterCell(): IgxGridFilteringCellComponent {
         return this.grid.filterCellList.find((filterCell) => filterCell.column === this);
     }
 
@@ -2041,7 +2098,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * @memberof IgxColumnComponent
      */
-    get headerGroup(): IgxGridHeaderGroupComponent {
+    public get headerGroup(): IgxGridHeaderGroupComponent {
         return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
     }
 
@@ -2054,12 +2111,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * ```
      *
      * @memberof IgxColumnComponent
-     * @param byHeader Set if column should be autized based only on the header content
+     * @param byHeaderOnly Set if column should be autosized based only on the header content.
      */
-    public autosize(byHeader = false) {
+    public autosize(byHeaderOnly = false) {
         if (!this.columnGroup) {
-            const size = this.getAutoSize(byHeader);
-            this.width = size;
+            this.width = this.getAutoSize(byHeaderOnly);
             this.grid.reflow();
         }
     }
@@ -2070,15 +2126,25 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public getAutoSize(byHeader = false) {
         const size = !byHeader ? this.getLargestCellWidth() :
             (Object.values(this.getHeaderCellWidths()).reduce((a, b) => a + b) + 'px');
-        const gridAvailableSize = this.grid.calcWidth;
-        let newWidth;
         const isPercentageWidth = this.width && typeof this.width === 'string' && this.width.indexOf('%') !== -1;
+
+        let newWidth;
         if (isPercentageWidth) {
-            const percentageSize =  parseFloat(size) / gridAvailableSize * 100;
+            const gridAvailableSize = this.grid.calcWidth;
+            const percentageSize = parseFloat(size) / gridAvailableSize * 100;
             newWidth = percentageSize + '%';
         } else {
             newWidth = size;
         }
+
+        const maxWidth = isPercentageWidth ? this.maxWidthPercent : this.maxWidthPx;
+        const minWidth = isPercentageWidth ? this.minWidthPercent : this.minWidthPx;
+        if (this.maxWidth && (parseFloat(newWidth) > maxWidth)) {
+            newWidth = isPercentageWidth ? maxWidth + '%' : maxWidth + 'px';
+        } else if (parseFloat(newWidth) < minWidth) {
+            newWidth = isPercentageWidth ? minWidth + '%' : minWidth + 'px';
+        }
+
         return newWidth;
     }
 
@@ -2100,13 +2166,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      */
     public getHeaderCellWidths() {
         const range = this.grid.document.createRange();
-        let headerWidth;
-        if (this.headerTemplate && this.headerCell.elementRef.nativeElement.children[0].children.length > 0) {
-            headerWidth = Math.max(...Array.from(this.headerCell.elementRef.nativeElement.children[0].children)
-                .map((child) => getNodeSizeViaRange(range, child)));
-        } else {
-            headerWidth = getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
-        }
+
+        // We do not cover cases where there are children with width 100% and etc,
+        // because then we try to get new column size, based on header content, which is sized based on column size...
+        let headerWidth = this.platform.getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
@@ -2120,7 +2183,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
         const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
 
-        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize)};
+        return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
     }
 
     /**
@@ -2143,7 +2206,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             if (this.cells[0].nativeElement.children.length > 0) {
                 this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
             } else {
-                cellsContentWidths = this.cells.map((cell) => getNodeSizeViaRange(range, cell.nativeElement));
+                cellsContentWidths = this.cells.map((cell) => this.platform.getNodeSizeViaRange(range, cell.nativeElement));
             }
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
@@ -2154,7 +2217,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             largest.set(Math.max(...cellsContentWidths), cellPadding);
         }
 
-        if (this.headerCell) {
+        if (this.headerCell && this.autosizeHeader) {
             const headerCellWidths = this.getHeaderCellWidths();
             largest.set(headerCellWidths.width, headerCellWidths.padding);
         }
@@ -2227,7 +2290,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @internal
      */
     protected setExpandCollapseState() {
-        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c =>  {
+        this.children.filter(col => (col.visibleWhenCollapsed !== undefined)).forEach(c => {
             if (!this.collapsible) {
                 c.hidden = this.hidden; return;
             }

@@ -1,6 +1,7 @@
-import { Injectable, SecurityContext, Inject } from '@angular/core';
+import { Injectable, SecurityContext, Inject, OnDestroy, Optional } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';
 
 /**
@@ -31,7 +32,7 @@ export interface IgxIconLoadedEvent {
 @Injectable({
     providedIn: 'root'
 })
-export class IgxIconService {
+export class IgxIconService implements OnDestroy {
     /**
      * Observable that emits when an icon is successfully loaded
      * through a HTTP request.
@@ -49,8 +50,20 @@ export class IgxIconService {
     private _cachedSvgIcons: Set<string> = new Set<string>();
     private _iconLoaded = new Subject<IgxIconLoadedEvent>();
 
-    constructor(private _sanitizer: DomSanitizer, @Inject(DOCUMENT) private _document: any) {
+    constructor(
+        @Optional() private _sanitizer: DomSanitizer,
+        @Optional() private _httpClient: HttpClient,
+        @Optional() @Inject(DOCUMENT) private _document: any
+    ) {
         this.iconLoaded = this._iconLoaded.asObservable();
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public ngOnDestroy(): void {
+        this.cleanSvgContainer();
     }
 
     /**
@@ -112,7 +125,12 @@ export class IgxIconService {
                 throw new Error(`The URL provided was not trusted as a resource URL: "${url}".`);
             }
 
-            this.fetchSvg(name, url, family);
+            if (!this.isSvgIconCached(name, family)) {
+                this.fetchSvg(url).subscribe((res) => {
+                    this.cacheSvgIcon(name, res, family);
+                    this._iconLoaded.next({ name, value: res, family });
+                });
+            }
         } else {
             throw new Error('You should provide at least `name` and `url` to register an svg icon.');
         }
@@ -121,12 +139,16 @@ export class IgxIconService {
     /**
      *  Adds an SVG image to the cache. SVG source is its text.
      * ```typescript
-     *   this.iconService.addSvgIcon('simple', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+     *   this.iconService.addSvgIconFromText('simple', '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
      *   <path d="M74 74h54v54H74" /></svg>', 'svg-flags');
      * ```
      */
     public addSvgIconFromText(name: string, iconText: string, family: string = '') {
         if (name && iconText) {
+            if(this.isSvgIconCached(name, family)) {
+                return;
+            }
+
             this.cacheSvgIcon(name, iconText, family);
         } else {
             throw new Error('You should provide at least `name` and `iconText` to register an svg icon.');
@@ -157,37 +179,20 @@ export class IgxIconService {
     /**
      * @hidden
      */
-    private fetchSvg(name: string, url: string, family: string = '') {
-        const instance = this;
-        const httpRequest = new XMLHttpRequest();
-        httpRequest.open('GET', url, true);
-        httpRequest.responseType = 'text';
+    private fetchSvg(url: string): Observable<string> {
+        const req = this._httpClient.get(url, { responseType: 'text' });
+        return req;
+    }
 
-        // load – when the result is ready, that includes HTTP errors like 404.
-        httpRequest.onload = (event: ProgressEvent) => {
-            if (event) {
-                const request = event.target as XMLHttpRequest;
-                if (request.status === 200) {
-                    instance.cacheSvgIcon(name, request.responseText, family);
-                    instance._iconLoaded.next({ name, value: request.responseText, family });
-                } else {
-                    throw new Error(`Could not fetch SVG from url: ${url}; error: ${request.status} (${request.statusText})`);
-                }
-            } else {
-                throw new Error(`Could not fetch SVG from url: ${url};`);
-            }
-        };
+    /**
+     * @hidden
+     */
+    private cleanSvgContainer() {
+        const container = this._document.documentElement.querySelector('.igx-svg-container');
 
-        // error – when the request couldn’t be made, e.g.network down or invalid URL.
-        httpRequest.onerror = (event: ProgressEvent) => {
-            if (event) {
-                const request = event.target as XMLHttpRequest;
-                throw new Error(`Could not fetch SVG from url: ${url}; error status code: ${request.status} (${request.statusText})`);
-            }
-            throw new Error(`Could not fetch SVG from url: ${url};`);
-        };
-
-        httpRequest.send();
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
     }
 
     /**
@@ -209,7 +214,7 @@ export class IgxIconService {
                 svg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
                 svg.setAttribute('focusable', 'false'); // Disable IE11 default behavior to make SVGs focusable.
 
-                if (this._cachedSvgIcons.has(iconKey)) {
+                if (this.isSvgIconCached(name, family)) {
                     const oldChild = this._svgContainer.querySelector(`svg[id='${iconKey}']`);
                     this._svgContainer.removeChild(oldChild);
                 }

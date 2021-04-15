@@ -19,11 +19,11 @@
                 <igx-switch [(ngModel)]="target.tooltipDisabled">Disable tooltip</igx-switch>
             </div>
             <div class="bottomMargin">
-                <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.showDelay"></igx-slider>
+                <igx-slider [minValue]="0" [maxValue]="3000" [step]="100" [(ngModel)]="target.showDelay"></igx-slider>
                 <span>Show Delay: {{target.showDelay}}</span>
             </div>
             <div class="bottomMargin">
-                <igx-slider minValue="0" maxValue="3000" [step]="100" [(ngModel)]="target.hideDelay"></igx-slider>
+                <igx-slider [minValue]="0" [maxValue]="3000" [step]="100" [(ngModel)]="target.hideDelay"></igx-slider>
                 <span>Hide Delay: {{target.hideDelay}}</span>
             </div>
             <div>
@@ -55,10 +55,10 @@
                 </igx-card-content>
                 <igx-card-actions>
                     <div class="igx-card-actions__igroup--start">
-                        <span igxButton="icon" igxRipple igxRippleCentered="true">
+                        <span igxButton="icon" igxRipple [igxRippleCentered]="true">
                             <igx-icon>favorite</igx-icon>
                         </span>
-                        <span igxButton="icon" igxRipple igxRippleCentered="true">
+                        <span igxButton="icon" igxRipple [igxRippleCentered]="true">
                             <igx-icon>share</igx-icon>
                         </span>
                     </div>

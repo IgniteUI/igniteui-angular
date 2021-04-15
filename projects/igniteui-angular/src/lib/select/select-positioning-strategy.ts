@@ -2,8 +2,9 @@ import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, C
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
-import { isIE } from '../core/utils';
 import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
+import { PlatformUtil } from '../core/utils';
+import { Optional } from '@angular/core';
 
 /** @hidden @internal */
 export class SelectPositioningStrategy extends BaseFitPositionStrategy implements IPositionStrategy {
@@ -24,13 +25,17 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_xOffset = 0;
     private global_styles: SelectStyles = {};
 
-    constructor(public select: IgxSelectBase, settings?: PositionSettings) {
+    constructor(public select: IgxSelectBase, settings?: PositionSettings, @Optional() protected platform?: PlatformUtil) {
         super();
         this.settings = Object.assign({}, this._selectDefaultSettings, settings);
     }
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
+    public position(contentElement: HTMLElement,
+                    size: Size,
+                    document?: Document,
+                    initialCall?: boolean,
+                    target?: Point | HTMLElement): void {
         this.select.scrollContainer.scrollTop = 0;
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
@@ -77,7 +82,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
             // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
-            if (isIE()) {
+            if (this.platform?.isIE) {
                 this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
             }
         } else {

@@ -23,12 +23,12 @@
                 <span>Why not both?</span>
             </igx-chip>
 
-            <igx-chip selectable="true">
+            <igx-chip [selectable]="true">
                 <igx-icon igxPrefix>touch_app</igx-icon>
                 You can select me. Click!
             </igx-chip>
 
-            <igx-chip #me removable="true" (remove)="removeChip(me)">
+            <igx-chip #me [removable]="true" (remove)="removeChip(me)">
                 <igx-icon igxPrefix>mood_bad</igx-icon>
                 <span>You can remove me.</span>
             </igx-chip>

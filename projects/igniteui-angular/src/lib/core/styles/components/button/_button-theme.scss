@@ -8,7 +8,7 @@
 /// If only background color is specified, text/icon color
 /// will be assigned automatically to a contrasting color.
 /// Does ___not___ apply for disabled state colors.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for the component theme.
+/// @param {Map} $palette [null] - The palette used as basis for the component theme.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
 /// @param {Color} $background [null] - The background color of the button.
@@ -29,7 +29,6 @@
 ///
 /// @requires $default-palette
 /// @requires $light-schema
-/// @requires $elevations
 /// @requires apply-palette
 /// @requires extend
 /// @requires text-contrast
@@ -44,9 +43,9 @@
 ///   // Pass the theme to the igx-button component mixin
 ///   @include igx-button($my-button-theme);
 @function igx-button-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background: null,
     $foreground: null,
@@ -178,16 +177,8 @@
     );
 }
 
-/// @access private
-@mixin _icon-w-margin($margin, $left) {
-    * + igx-icon,
-    igx-icon + *:not(igx-icon) {
-        margin-#{$left}: $margin;
-    }
-}
-
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-button($theme) {
@@ -420,7 +411,7 @@
     }
 
     %igx-button--flat {
-        @include igx-css-vars($flat-theme);
+        @include igx-css-vars($flat-theme, '');
 
         background: --var($flat-theme, 'background');
         color: --var($flat-theme, 'foreground');
@@ -440,7 +431,7 @@
     }
 
     %igx-button--outlined {
-        @include igx-css-vars($outlined-theme);
+        @include igx-css-vars($outlined-theme, '');
 
         background: --var($outlined-theme, 'background');
         color: --var($outlined-theme, 'foreground');
@@ -490,7 +481,7 @@
     }
 
     %igx-button--raised {
-        @include igx-css-vars($raised-theme);
+        @include igx-css-vars($raised-theme, '');
 
         color: --var($raised-theme, 'foreground');
         background: --var($raised-theme, 'background');
@@ -534,7 +525,7 @@
     }
 
     %igx-button--fab {
-        @include igx-css-vars($fab-theme);
+        @include igx-css-vars($fab-theme, '');
 
         padding: map-get($button-floating-padding, 'comfortable');
         min-width: map-get($button-floating-size, 'comfortable');
@@ -564,19 +555,10 @@
             }
         }
 
-        igx-icon {
-            display: inline-flex;
-            order: -1;
-            margin: rem(8px) 0;
-            width: rem(24px);
-            height: rem(24px);
-            font-size: rem(24px);
-        }
-
-        * + igx-icon {
-            margin: 0;
-            margin-#{$right}: rem(12px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'comfortable'),
+            $left
+        );
     }
 
     %igx-button--fab-cosy {
@@ -584,9 +566,10 @@
         min-width: map-get($button-floating-size, 'cosy');
         min-height: map-get($button-floating-size, 'cosy');
 
-        * + igx-icon {
-            margin-#{$right}: rem(8px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'cosy'),
+            $left
+        );
     }
 
     %igx-button--fab-compact {
@@ -594,13 +577,14 @@
         min-width: map-get($button-floating-size, 'compact');
         min-height: map-get($button-floating-size, 'compact');
 
-        * + igx-icon {
-            margin-#{$right}: rem(4px);
-        }
+        @include _icon-w-margin(
+            map-get($icon-in-button-margin, 'compact'),
+            $left
+        );
     }
 
     %igx-button--icon {
-        @include igx-css-vars($icon-theme);
+        @include igx-css-vars($icon-theme, '');
 
         width: $button-icon-width;
         height: $button-icon-width;
@@ -668,13 +652,9 @@
     }
 
     %igx-button--fab {
-        p,
-        span,
-        div {
-            @include igx-type-style($type-scale, $text) {
-                text-align: center;
-                margin: 0;
-            }
+        @include igx-type-style($type-scale, $text) {
+            text-align: center;
+            margin: 0;
         }
     }
 }
