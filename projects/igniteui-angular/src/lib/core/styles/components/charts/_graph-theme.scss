@@ -61,6 +61,7 @@
     $value-stroke-thickness: null,
 ) {
     $name: 'bullet-graph';
+    $selector: 'igx-bullet-graph';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -75,6 +76,7 @@
         $theme,
         (
             name: $name,
+            selector: $selector,
             backing-brush: $backing-brush,
             backing-outline: $backing-outline,
             backing-stroke-thickness: $backing-stroke-thickness,

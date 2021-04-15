@@ -1,5 +1,4 @@
 import { Component, HostBinding, Input, ElementRef, Output, EventEmitter } from '@angular/core';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Represents individual resizable/collapsible panes.

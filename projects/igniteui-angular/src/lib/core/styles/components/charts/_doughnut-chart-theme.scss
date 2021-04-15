@@ -39,6 +39,7 @@
     $selected-slice-stroke-thickness: null,
 ) {
     $name: 'doughnut-chart';
+    $selector: 'igx-doughnut-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -53,6 +54,7 @@
         $theme,
         (
             name: 'ring-series',
+            selector: $selector,
             brushes: $brushes,
             outlines: $outlines,
             others-category-fill: $others-category-fill,
