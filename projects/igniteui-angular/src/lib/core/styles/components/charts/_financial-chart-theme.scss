@@ -134,6 +134,7 @@
     $zoom-slider-x-axis-major-stroke-thickness: null
 ) {
     $name: 'financial-chart';
+    $selector: 'igx-financial-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -197,6 +198,7 @@
         $y-axis-title-margin,
         (
             name: $name,
+            selector: $selector,
             margin: $margin,
             title-alignment: $title-alignment,
             title-text-color: $title-text-color,
