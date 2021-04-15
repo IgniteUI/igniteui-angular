@@ -444,10 +444,6 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * @hidden
      */
     public _clickHandler(i: number) {
-        if (this.selectedIndexes.indexOf(i) === 0 && !this.multiSelection) {
-            return;
-        }
-
         if (this.selectedIndexes.indexOf(i) === -1) {
             this.selectButton(i);
         } else {
