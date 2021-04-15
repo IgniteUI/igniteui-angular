@@ -1162,6 +1162,32 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         expect(child2Headers[2].nativeElement.innerText).toEqual('Col1');
         expect(child2Headers[3].nativeElement.innerText).toEqual('Col2');
     }));
+
+    it('test getRowByIndex API methods', fakeAsync(() => {
+        const row = hierarchicalGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        UIInteractions.simulateClickAndSelectEvent(row.expander);
+        fixture.detectChanges();
+
+        const child1Grids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
+        const child1Grid = child1Grids[0].query(By.css('igx-hierarchical-grid'));
+
+        const firstRow = child1Grid.componentInstance.getRowByIndex(0);
+        firstRow.expanded = true;
+        expect(firstRow.hasChildren).toBe(true);
+        expect(firstRow.children).toBeNull();
+        expect(firstRow.viewIndex).toEqual(0);
+        expect(firstRow.key).toBeDefined();
+        expect(firstRow.data.ID).toEqual('00');
+        expect(firstRow.pinned).toBe(false);
+        expect(firstRow.selected).toBe(false);
+        expect(firstRow.expanded).toBe(true);
+        expect(firstRow.deleted).toBe(false);
+        expect(firstRow.inEditMode).toBe(false);
+
+        // Toggle expanded state
+        firstRow.expanded = false;
+        expect(firstRow.expanded).toBe(false);
+    }));
 });
 
 describe('IgxHierarchicalGrid hide child columns', () => {
