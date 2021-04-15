@@ -84,7 +84,6 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
         return rowInGroup;
     }
 
-    // todo row
     public groupBy_toggle_group(groupRow: IGroupByRecord) {
         const grid = this.grid;
         if (grid.gridAPI.crudService.cellInEditMode) {

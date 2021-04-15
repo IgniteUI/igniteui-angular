@@ -2909,7 +2909,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     private _rowSelectionMode: GridSelectionMode = GridSelectionMode.none;
     private _selectRowOnClick = true;
     private _columnSelectionMode: GridSelectionMode = GridSelectionMode.none;
-    private _allRowsData: any[];
 
     private lastAddedRowIndex;
     private _currencyPositionLeft: boolean;

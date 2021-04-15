@@ -778,7 +778,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const selectedChildren = [];
         const rowToDeselect = this.getRowByKey(recordID);
         this.selectionService.deselectRow(recordID);
-        this._gridAPI.get_selected_children(rowToDeselect.children, selectedChildren);
+        this._gridAPI.get_selected_children((rowToDeselect as IgxTreeGridRow).treeRow, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
         }

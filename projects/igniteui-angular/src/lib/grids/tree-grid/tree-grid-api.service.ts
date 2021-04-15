@@ -125,7 +125,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
                 collection.indexOf(rowID);
 
             const selectedChildren = [];
-            this.get_selected_children(record.children, selectedChildren);
+            this.get_selected_children(record, selectedChildren);
             if (selectedChildren.length > 0) {
                 treeGrid.deselectRows(selectedChildren);
             }
@@ -146,16 +146,16 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         }
     }
 
-    public get_selected_children(children: ITreeGridRecord[], selectedRowIDs: any[]) {
+    public get_selected_children(record: ITreeGridRecord, selectedRowIDs: any[]) {
         const grid = this.grid;
-        if (!children || children.length === 0) {
+        if (!record.children || record.children.length === 0) {
             return;
         }
-        for (const child of children) {
+        for (const child of record.children) {
             if (grid.selectionService.isRowSelected(child.rowID)) {
                 selectedRowIDs.push(child.rowID);
             }
-            this.get_selected_children(child.children, selectedRowIDs);
+            this.get_selected_children(child, selectedRowIDs);
         }
     }
 

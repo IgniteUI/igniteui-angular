@@ -29,6 +29,7 @@ export class IgxTreeGridSummaryPipe implements PipeTransform {
         if (!flatData || !hasSummary || summaryCalculationMode === GridSummaryCalculationMode.rootLevelOnly) {
             return flatData;
         }
+
         return this.addSummaryRows(grid, flatData, summaryPosition, showSummaryOnCollapse);
     }
 

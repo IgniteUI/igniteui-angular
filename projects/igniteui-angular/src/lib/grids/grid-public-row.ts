@@ -152,7 +152,7 @@ abstract class BaseRow implements RowType {
         } else {
             this.grid.selectionService.deselectRowsWithNoEvent([this.key]);
         }
-        this.grid.notifyChanges();
+        this.grid.cdr.markForCheck();
     }
 
     /**
