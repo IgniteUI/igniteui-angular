@@ -29,6 +29,7 @@
 
 <ng-template #headerTemplate>
     <div #ghostTemplate class="igx-tree-node__wrapper"
+        [attr.role]="role"
         [tabIndex]="tabIndex"
         [ngClass]="{
             'igx-tree-node__wrapper--cosy': isCosy,

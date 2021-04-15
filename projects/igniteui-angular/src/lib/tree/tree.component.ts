@@ -425,6 +425,9 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
             this.navService.update_visible_cache(event.node, false);
         });
         this.nodeExpanding.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            if (event.cancel) {
+                return;
+            }
             this.navService.update_visible_cache(event.node, true);
         });
     }
@@ -436,11 +439,11 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
                 this.navService.update_visible_cache(node, nodeState);
             });
             node.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                const targetElement = this.navService.focusedNode.header.nativeElement;
+                const targetElement = this.navService.focusedNode?.header.nativeElement;
                 this.scrollNodeIntoView(targetElement);
             });
             node.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                const targetElement = this.navService.focusedNode.header.nativeElement;
+                const targetElement = this.navService.focusedNode?.header.nativeElement;
                 this.scrollNodeIntoView(targetElement);
             });
         });
