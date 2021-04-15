@@ -52,7 +52,7 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { IgxToggleModule, IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { ITimePickerResourceStrings } from '../core/i18n/time-picker-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
-import { KEYS, IBaseEventArgs, isEqual, isDate } from '../core/utils';
+import { IBaseEventArgs, isEqual, isDate, PlatformUtil } from '../core/utils';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { IgxLabelDirective } from '../directives/label/label.directive';
@@ -600,7 +600,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         @Inject(LOCALE_ID) protected _localeId: string,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType: IgxInputGroupType,
-        private _injector: Injector) {
+        private _injector: Injector,
+        private platform: PlatformUtil) {
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
     }
 
@@ -818,8 +819,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     public increment(datePart?: DatePart, delta?: number): void {
-            this.dateTimeEditor.increment(datePart, delta);
-            this.setSelectedValue();
+        this.dateTimeEditor.increment(datePart, delta);
+        this.setSelectedValue();
     }
 
     /**
@@ -833,8 +834,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     public decrement(datePart?: DatePart, delta?: number): void {
-            this.dateTimeEditor.decrement(datePart, delta);
-            this.setSelectedValue();
+        this.dateTimeEditor.decrement(datePart, delta);
+        this.setSelectedValue();
     }
 
     /** @hidden @internal */
@@ -1033,28 +1034,20 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
-            case KEYS.UP_ARROW:
-            case KEYS.UP_ARROW_IE:
-                if (this.isDropdown) {
-                    if (event.altKey) {
-                        this.close();
-                    }
+            case this.platform.KEYMAP.ARROW_UP:
+                if (event.altKey && this.isDropdown) {
+                    this.close();
                 }
                 break;
-            case KEYS.DOWN_ARROW:
-            case KEYS.DOWN_ARROW_IE:
-                if (this.isDropdown) {
-                    if (event.altKey) {
-                        this.open();
-                    }
+            case this.platform.KEYMAP.ARROW_DOWN:
+                if (event.altKey && this.isDropdown) {
+                    this.open();
                 }
                 break;
-            case KEYS.ESCAPE:
-            case KEYS.ESCAPE_IE:
+            case this.platform.KEYMAP.ESCAPE:
                 this.cancelButtonClick();
                 break;
-            case KEYS.SPACE:
-            case KEYS.SPACE_IE:
+            case this.platform.KEYMAP.SPACE:
                 this.open();
                 event.preventDefault();
                 break;
