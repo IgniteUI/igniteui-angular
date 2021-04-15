@@ -2283,8 +2283,9 @@ describe('IgxGrid - Row Editing #grid', () => {
             UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
+            const rowToUpdate = grid.getRowByIndex(2);
             // Check if row is in edit mode
-            expect(grid.getRowByIndex(2).inEditMode).toBe(true);
+            expect(rowToUpdate.inEditMode).toBe(true);
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
 
             const targetCell = grid.getCellByColumn(0, 'ProductName');
@@ -2292,19 +2293,31 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
 
-            expect(grid.getRowByIndex(2).inEditMode).toBe(false);
+            expect(rowToUpdate.inEditMode).toBe(false);
 
             const newRow = {
                 ProductID: 123,
                 ProductName: 'DummyItem',
-                InStock: true,
-                UnitsInStock: 1,
-                OrderDate: new Date()
             };
-            grid.getRowByIndex(2).update(newRow);
+
+            // Update with the visible row instance through get_row_by_index
+            grid.gridAPI.get_row_by_index(grid.getRowByIndex(2).index).update(newRow);
             fix.detectChanges();
             expect(grid.getRowByIndex(2).data.ProductID).toEqual(123);
             expect(grid.getRowByIndex(2).data.ProductName).toEqual('DummyItem');
+
+            const newRowUpdate = {
+                InStock: true,
+                UnitsInStock: 1,
+                ProductName: 'DummyItemNew',
+            };
+
+            // Update with the getRowByIndex API method
+            grid.getRowByIndex(3).update(newRowUpdate);
+            fix.detectChanges();
+            expect(grid.getRowByIndex(3).data.InStock).toBe(true);
+            expect(grid.getRowByIndex(3).data.UnitsInStock).toEqual(1);
+            expect(grid.getRowByIndex(3).data.ProductName).toEqual('DummyItemNew');
         });
 
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {
