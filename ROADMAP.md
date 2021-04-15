@@ -4,18 +4,19 @@
 
 ## Milestone 16 (Due by April, 2021)
 
-1. Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
-2. Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
+1. **[DONE]** Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
+2. **[DONE]** Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
 3. **[DONE]** Switch thumb templatable and add indeterminate state [#8949](https://github.com/IgniteUI/igniteui-angular/issues/8949)
-4. IgxDateTimeEditor should support spin delta [#7169](https://github.com/IgniteUI/igniteui-angular/issues/7169)
+4. **[DONE]** IgxDateTimeEditor should support spin delta [#7169](https://github.com/IgniteUI/igniteui-angular/issues/7169)
 5. Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
-6. Export Hierarchical Grid to Excel [#5848](https://github.com/IgniteUI/igniteui-angular/issues/5848)
+6. **[DONE]** Export Hierarchical Grid to Excel [#5848](https://github.com/IgniteUI/igniteui-angular/issues/5848)
 7. Tree component [#7475](https://github.com/IgniteUI/igniteui-angular/issues/7475)
 8. IgxDatePicker refactoring [#6483](https://github.com/IgniteUI/igniteui-angular/issues/6483)
 9. IgxTimePicker refactoring [#6482](https://github.com/IgniteUI/igniteui-angular/issues/6482)
-10. abs and Bottom Nav Components Refactoring [#8793](https://github.com/IgniteUI/igniteui-angular/issues/8793)
+10. **[DONE]** Tabs and Bottom Nav Components Refactoring [#8793](https://github.com/IgniteUI/igniteui-angular/issues/8793)
 11. Datetime and Time column types [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
-12. Add detach method to IgxOverlay [#6063](https://github.com/IgniteUI/igniteui-angular/issues/6063)
+12. **[DONE]** Add detach method to IgxOverlay [#6063](https://github.com/IgniteUI/igniteui-angular/issues/6063)
+13. **[DONE]** Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
 
 ## Going down the road
 
