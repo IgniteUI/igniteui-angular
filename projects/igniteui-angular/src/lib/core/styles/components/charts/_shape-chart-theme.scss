@@ -98,6 +98,7 @@
     $y-axis-title-margin: null,
 ) {
     $name: 'shape-chart';
+    $selector: 'igx-shape-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -168,6 +169,7 @@
         $y-axis-title-margin,
         (
             name: $name,
+            selector: $selector,
             title-text-color: $title-text-color,
             subtitle-text-color: $subtitle-text-color,
             brushes: $brushes,

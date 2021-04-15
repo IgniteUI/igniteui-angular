@@ -129,6 +129,7 @@
     $y-axis-tick-stroke-thickness: null
 ) {
     $name: 'category-chart';
+    $selector: 'igx-category-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -199,6 +200,7 @@
         $y-axis-title-margin,
         (
             name: $name,
+            selector: $selector,
             brushes: $brushes,
             marker-brushes: $marker-brushes,
             negative-brushes: $negative-brushes,

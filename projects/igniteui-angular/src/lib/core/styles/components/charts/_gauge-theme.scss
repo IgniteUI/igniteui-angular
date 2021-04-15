@@ -42,6 +42,7 @@
     $rest...
 ) {
     $name: 'linear-gauge';
+    $selector: 'igx-linear-gauge';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -57,6 +58,7 @@
         keywords($rest),
         (
             name: $name,
+            selector: $selector,
         ),
     );
 }
@@ -95,6 +97,7 @@
     $rest...
 ) {
     $name: 'radial-gauge';
+    $selector: 'igx-radial-gauge';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -110,6 +113,7 @@
         keywords($rest),
         (
             name: $name,
+            selector: $selector,
         ),
     );
 }
