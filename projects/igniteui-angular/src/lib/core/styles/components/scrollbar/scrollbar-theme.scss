@@ -19,7 +19,7 @@
 /// @example scss Change the background and track colors
 ///   $my-scrollbar-theme: igx-scrollbar-theme($thumb-background: black, $track-background: gray);
 ///   // Pass the theme to the igx-scrollbar component mixin
-///   @include igx-scrollbar($my-avatar-theme);
+///   @include igx-scrollbar($my-scrollbar-theme);
 @function igx-scrollbar-theme(
     $palette: null,
     $schema: $light-schema,
