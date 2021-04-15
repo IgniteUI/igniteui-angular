@@ -26,7 +26,7 @@ export class VirtualHelperComponent extends VirtualHelperBaseDirective implement
         super(elementRef, cdr, zone, document, platformUtil);
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.scrollWidth = this.scrollNativeSize;
     }
 

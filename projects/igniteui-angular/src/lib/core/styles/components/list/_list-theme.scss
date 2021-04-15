@@ -249,7 +249,7 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires igx-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires --var
 @mixin igx-list($theme) {

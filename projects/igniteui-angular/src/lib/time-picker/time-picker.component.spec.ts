@@ -101,6 +101,7 @@ describe('IgxTimePicker', () => {
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
 
+
             const date = new Date(2020, 12, 12, 0, 0, 0);
             timePicker.value = date;
 
@@ -538,6 +539,7 @@ describe('IgxTimePicker', () => {
                 expect(selectedAMPM).toEqual(ampm);
             }));
 
+
             it('should display selected time in dialog header', fakeAsync(() => {
                 fixture.componentInstance.timePicker.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
@@ -548,6 +550,7 @@ describe('IgxTimePicker', () => {
 
                 const hourHeader = fixture.debugElement.query(By.css(CSS_CLASS_HEADER_HOUR));
                 const selectedTime = hourHeader.children[0].nativeElement.innerText;
+
 
                 const hours = fixture.componentInstance.date.getHours().toString();
                 const minutes = fixture.componentInstance.date.getMinutes().toString();

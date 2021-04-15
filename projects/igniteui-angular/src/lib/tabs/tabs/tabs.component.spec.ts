@@ -29,13 +29,14 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
 import { IgxRightButtonStyleDirective } from './tabs.directives';
+import { PlatformUtil } from '../../core/utils';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
 const KEY_HOME_EVENT = new KeyboardEvent('keydown', { key: 'Home', bubbles: true });
 const KEY_END_EVENT = new KeyboardEvent('keydown', { key: 'End', bubbles: true });
 const KEY_ENTER_EVENT = new KeyboardEvent('keydown', { key: 'Enter', bubbles: true });
-const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: 'Spacebar', bubbles: true });
+const KEY_SPACE_EVENT = new KeyboardEvent('keydown', { key: ' ', bubbles: true });
 
 describe('IgxTabs', () => {
     configureTestSuite();
@@ -61,7 +62,7 @@ describe('IgxTabs', () => {
             imports: [IgxTabsModule, BrowserAnimationsModule,
                 IgxButtonModule, IgxIconModule, IgxDropDownModule, IgxToggleModule,
                 RoutingViewComponentsModule, IgxPrefixModule, IgxSuffixModule, RouterTestingModule.withRoutes(testRoutes)],
-            providers: [RoutingTestGuard]
+            providers: [RoutingTestGuard, PlatformUtil]
         }).compileComponents();
     }));
 

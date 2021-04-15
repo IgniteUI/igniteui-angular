@@ -6,112 +6,107 @@ $print-background: #eee;
 /// Defines printing styles for the igx-grid component.
 /// @group print
 @mixin igx-grid-print {
-    %grid-display {
-        %form-group-display,
-        %cbx-display,
-        %radio-display,
-        %igx-grid__grouparea,
-        %tooltip-display,
-        %aside,
-        %overlay-display,
-        %igx-ripple-display,
-        %igx-slider-display,
-        %igx-snackbar-display,
-        %switch-display,
-        %time-picker-display,
-        %igx-toast-display,
-        %igx-tabs,
-        %igx-navbar-display,
-        %igx-button--flat,
-        %igx-button--raised,
-        %igx-button--fab,
-        %igx-button--icon,
-        %igx-button--disabled,
-        %grid-tbody-scrollbar,
-        %vhelper-display,
-        %igx-paginator,
-        %igx-grid-toolbar__actions,
-        %grid__cbx-selection,
-        %igx-drop-area__icon,
-        %igx-drop-area__text,
-        %igx-grid__header-indentation,
-        %igx-grid__grouping-indicator,
-        %igx-grid__row-indentation,
-        %igx-grid__hierarchical-expander {
+    igx-grid {
+        igx-input-group,
+        igx-checkbox,
+        igx-radio,
+        .igx-grid__grouparea,
+        .igx-tooltip--desktop,
+        .igx-nav-drawer__aside,
+        .igx-overlay,
+        .igx-ripple,
+        igx-slider,
+        igx-snackbar,
+        igx-switch,
+        igx-time-picker,
+        igx-toast,
+        igx-tabs,
+        igx-navbar,
+        [igx-button],
+        .igx-grid__tbody-scrollbar,
+        igx-virtual-helper,
+        igx-paginator,
+        .igx-grid-toolbar__actions,
+        .igx-grid__cbx-selection,
+        .igx-drop-area__icon,
+        .igx-drop-area__text,
+        .igx-grid__header-indentation,
+        .igx-grid__grouping-indicator,
+        .igx-grid__row-indentation,
+        .igx-grid__hierarchical-expander {
             display: none !important;
         }
 
-        %igx-grid__grouparea,
-        %igx-paginator,
-        %igx-grid-toolbar__actions,
-        %igx-drop-area__icon,
-        %igx-drop-area__text,
-        %igx-grid__header-indentation,
-        %igx-grid__grouping-indicator,
-        %igx-grid__row-indentation,
-        %igx-grid__hierarchical-expander,
-        %igx-expansion-panel__header-icon--end,
-        %igx-expansion-panel__header-icon--start,
-        %grid-summaries-patch {
+        .igx-grid__grouparea,
+        igx-paginator,
+        .igx-grid-toolbar__actions,
+        .igx-drop-area__icon,
+        .igx-drop-area__text,
+        .igx-grid__header-indentation,
+        .igx-grid__grouping-indicator,
+        .igx-grid__row-indentation,
+        .igx-grid__hierarchical-expander,
+        .igx-expansion-panel__header-icon--end,
+        .igx-expansion-panel__header-icon--start,
+        .igx-grid__summaries-patch {
             display: none !important;
         }
 
 
-        %igx-grid__grouping-indicator {
+        .igx-grid__grouping-indicator {
             igx-icon {
                 display: none !important;
             }
         }
 
-        %igx-grid__filtering-cell {
+        .igx-grid__filtering-cell {
             height: 0 !important;
             border-top: none !important;
             border-right: none !important;
         }
 
-        %grid-tfoot,
-        %igx-grid__grouparea,
-        %igx-grid__filtering-cell,
-        %igx-grid__group-row,
-        %grid-cell-header,
-        %igx-grid-toolbar,
-        %grid-thead-title,
-        %grid-row,
-        %grid-thead {
+        .igx-grid__tfoot,
+        .igx-grid__grouparea,
+        .igx-grid__filtering-cell,
+        .igx-grid__group-row,
+        .igx-grid__thead-title,
+        igx-grid-toolbar,
+        igx-grid-row,
+        .igx-grid__thead {
             border-color: $border-color !important;
         }
 
-        %grid-display {
+        igx-grid {
             igx-icon {
                 color: #666 !important;
             }
         }
 
-        %grid-thead,
-        %igx-grid-toolbar,
-        %igx-grid__group-row,
-        %grid-tfoot {
+        .igx-grid__thead,
+        igx-grid-toolbar,
+        .igx-grid__group-row,
+        .igx-grid__tfoot {
             background: $print-background !important;
         }
 
-        %grid-cell-header-title,
-        %grid-cell-text {
+        .igx-grid__th-title,
+        .igx-grid__td-text {
             white-space: unset !important;
             text-overflow: initial !important;
             overflow: visible !important;
         }
 
-        %grid-cell-display {
+        .igx-grid__thead-title {
             igx-icon {
                 display: none;
             }
         }
 
-        %grid-summaries-patch {
+        .igx-grid__summaries-patch {
             display: none;
         }
 
-        %grid-cell--pinned-last {
+        .igx-grid__th--pinned-last {
             border-right: 2px solid red !important;
         }
     }

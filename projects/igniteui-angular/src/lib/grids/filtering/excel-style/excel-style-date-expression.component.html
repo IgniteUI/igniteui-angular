@@ -14,24 +14,21 @@
     </igx-select-item>
 </igx-select>
 
-<igx-date-picker #datePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [locale]="grid.locale" [outlet]="grid.outlet">
-    <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value">
-        <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity">
-            <input #input
-                    igxInput
-                    tabindex="0"
-                    (click)="openDialog(dropDownTarget.element.nativeElement)"
-                    [placeholder]="inputDatePlaceholder"
-                    autocomplete="off"
-                    [value]="
-                        column.formatter
-                        ? (value | columnFormatter:column.formatter)
-                        : (value | date:column.pipeArgs.format:undefined:grid.locale)
-                    "
-                    [readonly]="true"
-                    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
-        </igx-input-group>
-    </ng-template>
+<igx-date-picker #datePicker
+    [(value)]="expressionUI.expression.searchVal"
+    [locale]="grid.locale"
+    [outlet]="grid.outlet"
+    [displayDensity]="displayDensity"
+    (click)="datePicker.open()"
+    [readOnly]="true"
+    [placeholder]="inputDatePlaceholder"
+    [displayFormat]="column.pipeArgs.format"
+    [formatter]="column.formatter"
+    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
+    type="box">
+     <!-- disable default icons -->
+     <igx-picker-toggle></igx-picker-toggle>
+     <igx-picker-clear></igx-picker-clear>
 </igx-date-picker>
 
 <button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle" >

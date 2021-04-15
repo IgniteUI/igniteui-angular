@@ -10,7 +10,7 @@ import {
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
     ROW_ADD_KEYS,
-    isEdge
+    PlatformUtil
 } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
@@ -47,6 +47,8 @@ export class IgxGridNavigationService {
     public set activeNode(value: IActiveNode) {
         this._activeNode = value;
     }
+
+    constructor(protected platform: PlatformUtil) { }
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -214,7 +216,7 @@ export class IgxGridNavigationService {
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             rowIndex - this.grid.pinnedDataView.length : rowIndex;
         this.grid.verticalScrollContainer.scrollTo(scrollRowIndex);
-        this.grid.verticalScrollContainer.onChunkLoad
+        this.grid.verticalScrollContainer.chunkLoad
             .pipe(first()).subscribe(() => {
                 this.pendingNavigation = false;
                 if (cb) {
@@ -235,7 +237,7 @@ export class IgxGridNavigationService {
             return;
         }
         this.pendingNavigation = true;
-        this.grid.parentVirtDir.onChunkLoad
+        this.grid.parentVirtDir.chunkLoad
             .pipe(first())
             .subscribe(() => {
                 this.pendingNavigation = false;
@@ -336,7 +338,7 @@ export class IgxGridNavigationService {
                     this.grid.verticalScrollContainer.scrollPrevPage();
                 }
                 const editCell = this.grid.crudService.cell;
-                this.grid.verticalScrollContainer.onChunkLoad
+                this.grid.verticalScrollContainer.chunkLoad
                     .pipe(first()).subscribe(() => {
                         if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
                             this.grid.tbody.nativeElement.focus({ preventScroll: true });
@@ -398,7 +400,7 @@ export class IgxGridNavigationService {
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
                     this.grid.crudService.endEdit(false, event);
-                    if (isEdge()) {
+                    if (this.platform.isEdge) {
                         this.grid.cdr.detectChanges();
                     }
                     this.grid.tbody.nativeElement.focus();

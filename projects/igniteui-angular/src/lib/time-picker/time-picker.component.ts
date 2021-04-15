@@ -641,6 +641,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             Object.assign(errors, DateTimeUtil.validateMinMax(date, minTime, maxTime, true, false));
         }
 
+
         return Object.keys(errors).length > 0 ? errors : null;
     }
 

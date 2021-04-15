@@ -13,7 +13,7 @@ import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.compon
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy  } from '../../../services/public_api';
-import { KEYS, IBaseEventArgs } from '../../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
 import { IgxSelectComponent } from '../../../select/select.component';
@@ -103,7 +103,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {}
 
     public get conditions() {
         return this.column.filters.conditionList();
@@ -171,8 +171,8 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
         }
     }
 
-    public onLogicOperatorKeyDown(eventArgs, buttonIndex: number) {
-        if (eventArgs.key === KEYS.ENTER) {
+    public onLogicOperatorKeyDown(eventArgs: KeyboardEvent, buttonIndex: number) {
+        if (eventArgs.key === this.platform.KEYMAP.ENTER) {
             this.logicOperatorButtonGroup.selectButton(buttonIndex);
             this.logicOperatorChanged.emit({
                 target: this.expressionUI,

@@ -244,7 +244,7 @@ describe('IgxDatePicker', () => {
                 };
                 moduleRef = {}; // eslint-disable-line
                 injector = { get: () => ngModel }; // eslint-disable-line
-                inputGroup = new IgxInputGroupComponent(null, null, null, document, renderer2); // eslint-disable-line
+                inputGroup = new IgxInputGroupComponent(null, null, null, document, renderer2, mockPlatformUtil); // eslint-disable-line
                 renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
                 spyOn(renderer2, 'setAttribute').and.callFake(() => {
                 });
