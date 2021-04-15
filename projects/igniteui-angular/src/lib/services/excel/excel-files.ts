@@ -172,7 +172,7 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        const keys = Object.keys(record.data);
+        const keys = worksheetData.isSpecialData ? [record.data] : Object.keys(record.data);
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);

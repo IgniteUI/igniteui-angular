@@ -48,7 +48,7 @@ export class WorksheetData {
             this.options.exportAsTable = false;
         }
 
-        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
+        this._isSpecialData = ExportUtilities.isSpecialData(this._data[0].data);
         this._rowCount = this._data.length + 1;
         this._dataDictionary = new WorksheetDataDictionary(this.columnCount, this.options.columnWidth, this.columnWidths);
     }

@@ -156,7 +156,7 @@ export abstract class IgxBaseExporter {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
         }
-
+        //options.ignoreSorting = true;
         this.options = options;
 
         const columns = grid.columnList.toArray();
@@ -630,7 +630,7 @@ export abstract class IgxBaseExporter {
             return;
         }
 
-        const firstCol = this._ownersMap.get(grid).columns[0].field;
+        const firstCol = this._ownersMap.get(DEFAULT_OWNER).columns[0].field;
 
         for (const record of records) {
             let recordVal = record.value;
@@ -660,7 +660,6 @@ export abstract class IgxBaseExporter {
                 level: record.level,
                 hidden: !parentExpanded,
                 type: ExportRecordType.GroupedRecord,
-                owner: grid
             };
 
             this.flatRecords.push(groupExpression);
@@ -676,7 +675,6 @@ export abstract class IgxBaseExporter {
                         level: record.level + 1,
                         hidden: !(expanded && parentExpanded),
                         type: ExportRecordType.DataRecord,
-                        owner: grid
                     };
 
                     this.flatRecords.push(currentRecord);
@@ -686,7 +684,7 @@ export abstract class IgxBaseExporter {
     }
 
     private getColumns(columns: IgxColumnComponent[]): IColumnList {
-        const colList = new Array<IColumnInfo>(columns.length);
+        const colList = [];
         const colWidthList = new Array<number>(columns.filter(c => !c.hidden).length);
         const hiddenColumns = [];
         let indexOfLastPinnedColumn = -1;

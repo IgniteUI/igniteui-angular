@@ -33,6 +33,11 @@ export class JSZipFiles {
         'xl/sharedStrings.xml'
     ];
 
+    public static hGridDataFilesAndFoldersNames  = [
+        'xl/worksheets/sheet1.xml',
+        'xl/sharedStrings.xml'
+    ];
+
     public static templatesNames = [
         '_rels/',
         '_rels/.rels',
@@ -163,29 +168,29 @@ export class JSZipFiles {
 </Types>`;
     }
 
-    public static getSheetDataFile(sheetData: string, hasValues) {
+    public static getSheetDataFile(sheetData: string, hasValues: boolean, isHGrid: boolean) {
         if (hasValues) {
-            return `<?xml version="1.0" encoding="UTF-8"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
-`xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ` +
-`xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" ` +
-`xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">${ sheetData }` +
-`<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/><tableParts count="1">` +
-`<tablePart r:id="rId1"/></tableParts></worksheet>`;
+            const tablePart = isHGrid ? '' : '<tableParts count="1"><tablePart r:id="rId1"/></tableParts>';
 
+            return `<?xml version="1.0" encoding="UTF-8"?>
+            <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
+            `xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ` +
+            `xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" ` +
+            `xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac">${ sheetData }` +
+            `<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>${tablePart}</worksheet>`;
         } else {
             return `<?xml version="1.0" encoding="UTF-8"?>
-<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
-`xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ` +
-`xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" ` +
-`xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"><dimension ref="A1"/>` +
-`<sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" ` +
-`x14ac:dyDescent="0.25"/><sheetData/><pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" ` +
-`footer="0.3"/></worksheet>`;
+            <worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
+            `xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" ` +
+            `xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="x14ac" ` +
+            `xmlns:x14ac="http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac"><dimension ref="A1"/>` +
+            `<sheetViews><sheetView tabSelected="1" workbookViewId="0"></sheetView></sheetViews><sheetFormatPr defaultRowHeight="15" ` +
+            `x14ac:dyDescent="0.25"/><sheetData/><pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" ` +
+            `footer="0.3"/></worksheet>`;
         }
     }
 
-    public static createExpectedXML(xmlFile: ExcelFileTypes, currentData = '', hasValues = true): any {
+    public static createExpectedXML(xmlFile: ExcelFileTypes, currentData = '', hasValues = true, isHGrid: boolean = false): any {
         let resultXml;
         switch (xmlFile) {
             case ExcelFileTypes.RootRelsFile:
@@ -276,7 +281,7 @@ export class JSZipFiles {
             case ExcelFileTypes.WorksheetFile:
                 resultXml = {
                     name: JSZipFiles.templatesNames[11],
-                    content : JSZipFiles.getSheetDataFile(currentData, hasValues)
+                    content : JSZipFiles.getSheetDataFile(currentData, hasValues, isHGrid)
                 };
                 break;
             case ExcelFileTypes.ContentTypesFile:

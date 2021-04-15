@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -26,10 +26,16 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { IgxTreeGridPrimaryForeignKeyComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule, IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxNumberFilteringOperand } from '../../data-operations/filtering-condition';
-import { wait } from '../../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
+import { IgxHierarchicalGridExportComponent } from '../../test-utils/hierarchical-grid-components.spec';
+import { IgxHierarchicalGridModule,
+         IgxHierarchicalGridComponent,
+         IgxHierarchicalRowComponent
+} from '../../grids/hierarchical-grid/public_api';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -47,9 +53,10 @@ describe('Excel Exporter', () => {
                 GridWithEmptyColumnsComponent,
                 GridIDNameJobTitleHireDataPerformanceComponent,
                 GridHireDateComponent,
-                GridExportGroupedDataComponent
+                GridExportGroupedDataComponent,
+                IgxHierarchicalGridExportComponent
             ],
-            imports: [IgxGridModule, IgxTreeGridModule, NoopAnimationsModule]
+            imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
     }));
 
@@ -634,6 +641,101 @@ describe('Excel Exporter', () => {
 
     describe('', () => {
         let fix;
+        let hGrid: IgxHierarchicalGridComponent;
+
+        beforeEach(waitForAsync(() => {
+            options = createExportOptions('HierarchicalGridExcelExport');
+            fix = TestBed.createComponent(IgxHierarchicalGridExportComponent);
+            fix.detectChanges();
+
+            hGrid = fix.componentInstance.hGrid;
+        }));
+
+        it('should export hierarchical grid', async () => {
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalData);
+        });
+
+        it('should export hierarchical grid respecting options width.', async () => {
+            options = createExportOptions('HierarchicalGridExcelExport', 50);
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithColumnWidth);
+        });
+
+        it('should export sorted hierarchical grid data', async () => {
+            hGrid.sort({fieldName: 'GrammyNominations', dir: SortingDirection.Desc});
+
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportSortedHierarchicalData);
+        });
+
+        it('should export hierarchical grid data with ignored sorting', async () => {
+            hGrid.sort({fieldName: 'GrammyNominations', dir: SortingDirection.Desc});
+
+            options.ignoreSorting = true;
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalData);
+        });
+
+        it('should export filtered hierarchical grid data', async () => {
+            hGrid.filter('Debut', '2009', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportFilteredHierarchicalData);
+        });
+
+        it('should export hierarchical grid data with ignored filtering', async () => {
+            hGrid.filter('Debut', '2009', IgxStringFilteringOperand.instance().condition('contains'), true);
+            fix.detectChanges();
+
+            options.ignoreFiltering = true;
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalData);
+        });
+
+        it('should export hierarchical grid with expanded rows.', async () => {
+            const firstRow = hGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const secondRow = hGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
+            fix.detectChanges();
+            expect(firstRow.expanded).toBe(true);
+
+            let childGrids = hGrid.hgridAPI.getChildGrids(false);
+
+            const firstChildGrid = childGrids[0];
+            const firstChildRow = firstChildGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(firstChildRow.expander);
+            fix.detectChanges();
+            expect(firstChildRow.expanded).toBe(true);
+
+            const secondChildGrid = childGrids[1];
+            const secondChildRow = secondChildGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(secondChildRow.expander);
+            fix.detectChanges();
+            expect(secondChildRow.expanded).toBe(true);
+
+            UIInteractions.simulateClickAndSelectEvent(secondRow.expander);
+            fix.detectChanges();
+            expect(secondRow.expanded).toBe(true);
+
+            childGrids = hGrid.hgridAPI.getChildGrids(false);
+
+            const thirdChildGrid = childGrids[3];
+            const thirdChildRow = thirdChildGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+
+            UIInteractions.simulateClickAndSelectEvent(thirdChildRow.expander);
+            fix.detectChanges();
+            expect(thirdChildRow.expanded).toBe(true);
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
+        });
+    });
+
+    describe('', () => {
+        let fix;
         let treeGrid: IgxTreeGridComponent;
         beforeEach(waitForAsync(() => {
             options = createExportOptions('TreeGridExcelExport', 50);
@@ -855,9 +957,10 @@ describe('Excel Exporter', () => {
     };
 
     const exportAndVerify = async (component, exportOptions, expectedData) => {
+        const isHGrid = component instanceof IgxHierarchicalGridComponent;
         const wrapper = await getExportedData(component, exportOptions);
-        await wrapper.verifyStructure();
-        await wrapper.verifyDataFilesContent(expectedData);
+        await wrapper.verifyStructure(isHGrid);
+        await wrapper.verifyDataFilesContent(expectedData, '', isHGrid);
     };
 });
 

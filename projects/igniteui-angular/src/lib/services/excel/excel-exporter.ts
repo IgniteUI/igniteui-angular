@@ -97,10 +97,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.field);
             } else {
                 const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
+                const columns = defaultOwner.columns.filter(col => !col.skip);
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
-                columnCount = defaultOwner.columns.length;
-                rootKeys = defaultOwner.columns.map(c => c.field);
+                columnCount = columns.length;
+                rootKeys = columns.map(c => !ExportUtilities.isNullOrWhitespaces(c.field) ? c.field : c.header);
             }
         }
 
