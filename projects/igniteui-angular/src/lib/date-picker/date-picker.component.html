@@ -1,4 +1,4 @@
-<igx-input-group [suppressInputAutofocus]="true">
+<igx-input-group [displayDensity]="this.displayDensity" [type]="this.type" [suppressInputAutofocus]="true">
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
         <igx-icon [title]="this.value ? 'Change Date' : 'Choose Date'">today</igx-icon>
     </igx-prefix>
@@ -6,8 +6,8 @@
     <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput
         [igxDateTimeEditor]="this.inputFormat" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [spinDelta]="this.spinDelta" [spinLoop]="this.spinLoop" [displayFormat]="this.displayFormat"
-        [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown"
-        [igxTextSelection]="this.isDropdown" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"
+        [disabled]="this.disabled" [placeholder]="this.placeholder" [readonly]="!this.isDropdown || this.readOnly"
+        [igxTextSelection]="this.isDropdown && !this.readOnly" [locale]="this.locale" [attr.aria-expanded]="!this.collapsed"
         [attr.aria-labelledby]="this.label?.id" aria-haspopup="dialog" aria-autocomplete="none" role="combobox">
 
     <igx-suffix *ngIf="!this.clearComponents.length && this.value" (click)="this.clear()">

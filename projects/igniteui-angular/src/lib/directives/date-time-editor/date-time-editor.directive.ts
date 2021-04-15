@@ -294,9 +294,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     event.preventDefault();
     event.stopPropagation();
     if (event.deltaY > 0) {
-      this.increment();
-    } else {
       this.decrement();
+    } else {
+      this.increment();
     }
   }
 
@@ -368,9 +368,15 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    const errors = DateTimeUtil.validateMinMax(control.value,
-      this.minValue, this.maxValue,
-      this.hasTimeParts, this.hasDateParts);
+    let errors;
+    const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(valueDate,
+        minValueDate, maxValueDate,
+        this.hasTimeParts, this.hasDateParts);
+    }
 
     return Object.keys(errors).length > 0 ? errors : null;
   }
@@ -417,6 +423,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onKeyDown(event: KeyboardEvent): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     super.onKeyDown(event);
     const key = event.key;
 
@@ -502,8 +511,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return null;
     }
 
-    return DateTimeUtil.parseIsoDate(val)
-      || DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
+    const valueFormat = val.replace(/\d/g, '0');
+    const inputFormat = this.inputFormat.replace(/\w/g, '0');
+    if (new RegExp(valueFormat).test(inputFormat)) {
+      return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
+    }
+
+    return DateTimeUtil.parseIsoDate(val);
   }
 
   private getMaskedValue(): string {
@@ -541,9 +555,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return false;
     }
 
-    const errors = DateTimeUtil.validateMinMax(value,
-      this.minValue, this.maxValue,
-      this.hasTimeParts, this.hasDateParts);
+    let errors;
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(value,
+        this.minValue, this.maxValue,
+        this.hasTimeParts, this.hasDateParts);
+    }
 
     return Object.keys(errors).length === 0;
   }
@@ -593,7 +612,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private setDateValue(value: Date | string) {
     this._dateValue = DateTimeUtil.isValidDate(value)
       ? value
-      : DateTimeUtil.parseIsoDate(value);
+      : this.parseDate(value);
   }
 
   private updateValue(newDate: Date): void {
