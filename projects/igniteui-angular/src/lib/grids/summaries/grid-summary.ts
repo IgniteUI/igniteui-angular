@@ -255,32 +255,33 @@ export class IgxDateSummaryOperand extends IgxSummaryOperand {
     }
 }
 
-
+// @dynamic
 export class IgxTimeSummaryOperand extends IgxSummaryOperand {
     /**
      * Returns the latest time value in the data records. Compare only the time part of the date.
      * If filtering is applied, returns the latest time value in the filtered data records.
      * ```typescript
-     * IgxTimeSummaryOperand.latest(data);
+     * IgxTimeSummaryOperand.latestTime(data);
      * ```
      *
      * @memberof IgxTimeSummaryOperand
      */
-    public static latest(data: any[]) {
+    public static latestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
             first(data.filter(clear).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
     }
+
     /**
      * Returns the earliest time value in the data records. Compare only the time part of the date.
      * If filtering is applied, returns the earliest time value in the filtered data records.
      * ```typescript
-     * IgxTimeSummaryOperand.earliest(data);
+     * IgxTimeSummaryOperand.earliestTime(data);
      * ```
      *
      * @memberof IgxTimeSummaryOperand
      */
-    public static earliest(data: any[]) {
+    public static earliestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
             last(data.filter(clear).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
@@ -293,12 +294,12 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
         result.push({
             key: 'earliest',
             label: 'Earliest',
-            summaryResult: IgxTimeSummaryOperand.earliest(data)
+            summaryResult: IgxTimeSummaryOperand.earliestTime(data)
         });
         result.push({
             key: 'latest',
             label: 'Latest',
-            summaryResult: IgxTimeSummaryOperand.latest(data)
+            summaryResult: IgxTimeSummaryOperand.latestTime(data)
         });
         return result;
     }
