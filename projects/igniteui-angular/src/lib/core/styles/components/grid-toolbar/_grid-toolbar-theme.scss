@@ -5,9 +5,9 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $background-color [null] - The toolbar background color.
 /// @param {Color} $title-text-color [null] - The toolbar title text color.
 /// @param {Color} $dropdown-background [null] - The toolbar drop-down background color.
@@ -22,7 +22,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires text-contrast
 ///
 /// @example scss Change the toolbar background color
@@ -33,9 +32,9 @@
 ///   @include igx-grid-toolbar($my-toolbar-theme);
 
 @function igx-grid-toolbar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $background-color: null,
     $title-text-color: null,
@@ -48,6 +47,7 @@
     $item-focus-text-color: null
 ) {
     $name: 'igx-grid-toolbar';
+    $selector: 'igx-grid-toolbar, .igx-grid-toolbar__dd-list';
     $grid-toolbar-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -84,6 +84,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         elevations: $elevations,
 
@@ -100,14 +101,14 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires igx-color
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires em
 /// @requires --var
 @mixin igx-grid-toolbar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     $variant: map-get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
@@ -261,7 +262,7 @@
         background: --var($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
-        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
+        box-shadow: igx-elevation($elevation: 8);
     }
 
     %igx-grid-toolbar__dd-list-items {

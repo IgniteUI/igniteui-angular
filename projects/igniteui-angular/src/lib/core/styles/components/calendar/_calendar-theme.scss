@@ -13,7 +13,7 @@
 /// - year/month hover/selected colors
 /// If only background colors are specified, text/icon colors
 /// will be assigned automatically to a contrasting color.
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 /// @param {Color} $content-background [null] - The main content background color.
 /// @param {Color} $content-text-color [null] - The main content text color.
@@ -78,7 +78,7 @@
 ///   // Pass the theme to the igx-calendar component mixin
 ///   @include igx-calendar($my-calendar-theme);
 @function igx-calendar-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $content-background: null,
@@ -128,6 +128,7 @@
     $week-number-background: null,
 ) {
     $name: 'igx-calendar';
+    $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
     $calendar-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -260,7 +261,9 @@
     }
 
     @if not($date-disabled-text-color) and $date-disabled-background {
-        $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
+        @if type-of($date-disabled-background) == 'color' {
+            $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
+        }
     }
 
     @if not($week-number-color) and $week-number-background {
@@ -269,6 +272,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         content-background: $content-background,
         content-text-color: $content-text-color,
@@ -322,14 +326,15 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {function} text-contrast
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires em
 /// @requires rem
 /// @requires {mixin} ellipsis
 /// @requires --var
 @mixin igx-calendar($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
+    $palette: map-get($theme, 'palette');
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
@@ -375,7 +380,10 @@
 
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
-    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'));
+    $selected-hover-color: text-contrast(
+        map-get($theme, 'date-selected-background'),
+        $palette: $palette
+    );
 
     $current-color-variant: map-get((
         material: --var($theme, 'date-selected-background'),
@@ -592,115 +600,39 @@
         }
     }
 
+    %cal-value {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: --var($theme, 'content-text-color');
+        outline: none;
+
+        &:first-of-type {
+            padding-#{$left}: $cal-row-padding;
+        }
+
+        &:last-of-type {
+            padding-#{$right}: $cal-row-padding;
+        }
+
+        // 100 divided by the number of weekdays
+        min-width: 14.28%;
+
+        // Quantity Query selector
+        // 8 comes from the number of columns in the calendar
+        &:nth-last-child(8):first-child,
+        &:nth-last-child(8):first-child ~ * {
+            // 100 divided by the number of weekdays + weeks number column
+            min-width: 12.5% !important;
+        }
+    }
+
     %cal-row-display {
         display: flex;
         justify-content: space-between;
         margin: $cal-row-margin;
         padding: 0;
-
-        %cal-value {
-            &:first-of-type {
-                padding-#{$left}: $cal-row-padding;
-            }
-
-            &:last-of-type {
-                padding-#{$right}: $cal-row-padding;
-            }
-        }
-
-        %cal-value,
-        %cal-value--label {
-            // 100 divided by the number of weekdays
-            min-width: 14.28%;
-
-            // Quantity Query selector
-            // 8 comes from the number of columns in the calendar
-            &:nth-last-child(8):first-child,
-            &:nth-last-child(8):first-child ~ * {
-                // 100 divided by the number of weekdays + weeks number column
-                min-width: 12.5% !important;
-            }
-        }
-
-        %cal-value-date--week-number + %cal-value {
-            padding-#{$left}: 0 !important;
-        }
-
-        %label--week-number,
-        %cal-value-content--week-number {
-            position: relative;
-            color: --var($theme, 'week-number-color') !important;
-            border-radius: 0;
-            pointer-events: none;
-        }
-
-        %cal-value-date--week-number {
-            padding-#{$right}: 0 !important;
-            cursor: default;
-
-            &:hover,
-            &:focus {
-                %cal-value-content--week-number {
-                    color: --var($theme, 'week-number-color') !important;
-                }
-            }
-        }
-
-        %cal-value-content--week-number {
-            position: relative;
-            background: --var($theme, 'week-number-background') !important;
-            min-width: auto;
-
-            &::after {
-                display: none;
-            }
-
-            &::before {
-                content: '';
-                position: absolute;
-                width: 100%;
-                height: $cal-row-padding / 2;
-                #{$left}: 0;
-                top: 100%;
-                background: --var($theme, 'week-number-background') !important;
-            }
-        }
-
-        %label--week-number {
-            padding-#{$right}: 0 !important;
-            text-align: center;
-
-            span {
-                width: $cal-value-w;
-                position: relative;
-                background: --var($theme, 'week-number-background');
-
-                &::before,
-                &::after {
-                    content: '';
-                    position: absolute;
-                    width: 100%;
-                    background: --var($theme, 'week-number-background');
-                    #{$left}: 0;
-                }
-
-                &::after {
-                    top: 100%;
-                    height: if($not-bootstrap-theme, ($cal-row-padding / 2) + rem(2px), $cal-row-padding + rem(5px));
-                }
-
-                &::before {
-                    bottom: 100%;
-                    height: $cal-row-padding;
-                    border-top-left-radius: $border-radius;
-                    border-top-right-radius: $border-radius;
-                }
-            }
-        }
-
-        %label--week-number + %cal-value--label {
-            padding-#{$left}: 0 !important;
-        }
 
         &:first-of-type {
             @if $bootstrap-theme {
@@ -767,15 +699,6 @@
         }
     }
 
-    %cal-value {
-        position: relative;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: --var($theme, 'content-text-color');
-        outline: none;
-    }
-
     %cal-value--hover {
         @if $bootstrap-theme {
             color: --var($theme, 'date-selected-text-color');
@@ -789,7 +712,11 @@
     %cal-value--selected--hover {
         %cal-value-content {
             ::after {
-                background: rgba($selected-hover-color, .18);
+                @if type-of($selected-hover-color) == 'color' {
+                    background: rgba($selected-hover-color, .18);
+                } @else {
+                    background: $selected-hover-color;
+                }
             }
         }
     }
@@ -841,10 +768,98 @@
         color: --var($theme, 'weekend-text-color');
     }
 
+    %cal-value-date--week-number + %cal-value {
+        padding-#{$left}: 0 !important;
+    }
+
+    %label--week-number,
+    %cal-value-content--week-number {
+        position: relative;
+        color: --var($theme, 'week-number-color') !important;
+        border-radius: 0;
+        pointer-events: none;
+    }
+
+    %cal-value-date--week-number {
+        padding-#{$right}: 0 !important;
+        cursor: default;
+
+        &:hover,
+        &:focus {
+            %cal-value-content--week-number {
+                color: --var($theme, 'week-number-color') !important;
+            }
+        }
+    }
+
+    %cal-value-content--week-number {
+        position: relative;
+        background: --var($theme, 'week-number-background') !important;
+        min-width: auto;
+
+        &::after {
+            display: none;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: $cal-row-padding / 2;
+            #{$left}: 0;
+            top: 100%;
+            background: --var($theme, 'week-number-background') !important;
+        }
+    }
+
+    %label--week-number {
+        padding-#{$right}: 0 !important;
+        text-align: center;
+
+        span {
+            width: $cal-value-w;
+            position: relative;
+            background: --var($theme, 'week-number-background');
+
+            &::before,
+            &::after {
+                content: '';
+                position: absolute;
+                width: 100%;
+                background: --var($theme, 'week-number-background');
+                #{$left}: 0;
+            }
+
+            &::after {
+                top: 100%;
+                height: if($not-bootstrap-theme, ($cal-row-padding / 2) + rem(2px), $cal-row-padding + rem(5px));
+            }
+
+            &::before {
+                bottom: 100%;
+                height: $cal-row-padding;
+                border-top-left-radius: $border-radius;
+                border-top-right-radius: $border-radius;
+            }
+        }
+    }
+
+    %label--week-number + %cal-value--label {
+        padding-#{$left}: 0 !important;
+    }
+
     %cal-value--year {
         margin: 0;
         min-width: 8ch;
         line-height: rem(52px);
+
+        &:first-of-type {
+            padding-#{$left}: 0;
+        }
+
+        &:last-of-type {
+            padding-#{$right}: 0;
+        }
     }
 
     %cal-value--year-current {
@@ -864,6 +879,7 @@
 
     %cal-value--month-hover {
         color: --var($theme, 'month-hover-text-color');
+        outline-width: 0;
 
         &::after {
             background: --var($theme, 'month-hover-background');

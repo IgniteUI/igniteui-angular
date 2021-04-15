@@ -1,5 +1,8 @@
 @import 'node_modules/sass-true/sass/true';
 @import '../base/index';
+@import '../themes/index';
 
 @import 'functions.spec';
+@import 'mixins.spec';
+@import 'elevations.spec';
 

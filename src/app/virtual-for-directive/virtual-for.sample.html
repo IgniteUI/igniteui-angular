@@ -18,16 +18,16 @@
             <igx-input-group>
                 <input type='number' igxInput #input />
                 <igx-suffix>
-                    <button igxButton (click)='scrScrollTo(input.value)'>Go To Index</button>
+                    <button igxButton="raised" (click)='scrScrollTo(input.value)'>Go To Index</button>
                 </igx-suffix>
             </igx-input-group>
             <igx-buttongroup [alignment]="alignment">
-                <button igxButton (click)="scrNextRow()">Scroll Next Row</button>
-                <button igxButton (click)="scrPrevRow()">Scroll Prev Row</button>
-                <button igxButton (click)="scrNextPage()">Scroll Next Page</button>
-                <button igxButton (click)="scrPrevPage()">Scroll Prev Page</button>
-                <button igxButton (click)="verticalVisibleItemCount()">Get visible item count</button>
-                <button igxButton (click)="changeItemSize()">Change Item Size</button>
+                <button igxButton="raised" (click)="scrNextRow()">Scroll Next Row</button>
+                <button igxButton="raised" (click)="scrPrevRow()">Scroll Prev Row</button>
+                <button igxButton="raised" (click)="scrNextPage()">Scroll Next Page</button>
+                <button igxButton="raised" (click)="scrPrevPage()">Scroll Prev Page</button>
+                <button igxButton="raised" (click)="verticalVisibleItemCount()">Get visible item count</button>
+                <button igxButton="raised" (click)="changeItemSize()">Change Item Size</button>
             </igx-buttongroup>
         </div>
     </div>
@@ -52,21 +52,21 @@
     <igx-input-group>
         <input type='number' igxInput #inputHorizontal/>
         <igx-suffix>
-            <button igxButton (click)='scrHorizontalScrollTo(inputHorizontal.value)'>Go To Index</button>
+            <button igxButton="raised" (click)='scrHorizontalScrollTo(inputHorizontal.value)'>Go To Index</button>
         </igx-suffix>
     </igx-input-group>
     <igx-buttongroup>
-        <button igxButton (click)="scrNextCol()">Scroll Next Column</button>
-        <button igxButton (click)="scrPrevCol()">Scroll Prev Column</button>
+        <button igxButton="raised" (click)="scrNextCol()">Scroll Next Column</button>
+        <button igxButton="raised" (click)="scrPrevCol()">Scroll Prev Column</button>
     </igx-buttongroup>
     <br />
     <igx-buttongroup>
-        <button igxButton (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
-        <button igxButton (click)="scrPrevHorizontalPage()">Scroll Prev Horizontal Page</button>
+        <button igxButton="raised" (click)="scrNextHorizontalPage()">Scroll Next Horizontal Page</button>
+        <button igxButton="raised" (click)="scrPrevHorizontalPage()">Scroll Prev Horizontal Page</button>
     </igx-buttongroup>
     <br />
     <igx-buttongroup>
-        <button igxButton (click)="horizontalVisibleItemCount()">Get visible item count</button>
+        <button igxButton="raised" (click)="horizontalVisibleItemCount()">Get visible item count</button>
     </igx-buttongroup>
 </article>
 
@@ -105,7 +105,7 @@
 <article>
     <h4 class="sample-title">Remote Virtualization</h4>
     <div style='height: 500px; position: relative; overflow: hidden'>
-        <ng-template igxFor let-item [igxForOf]="remoteData | async" (onChunkPreload)="chunkLoading($event)"
+        <ng-template igxFor let-item [igxForOf]="remoteData | async" (chunkPreload)="chunkLoading($event)"
             [igxForScrollOrientation]="'vertical'" [igxForContainerSize]='"500px"' [igxForItemSize]='"50px"'
             [igxForTotalItemCount]="totalCount | async" let-rowIndex="index" #virtDirRemote>
             <div style='height: 50px;'>Index: {{rowIndex}}, ID: {{item.ProductID}}, Name : {{item.ProductName}}

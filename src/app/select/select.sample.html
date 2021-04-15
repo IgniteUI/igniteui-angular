@@ -5,7 +5,7 @@
         <button igxButton="raised" (click)="btnRemoveBr()">- white space</button>
     </div>
     <igx-select #displayDensitySelect
-    [required]="true"
+    required
     [placeholder]="'Pick One'"
     [(ngModel)]="value"
     [ngModelOptions]="{updateOn: 'blur'}" #selectModel="ngModel"

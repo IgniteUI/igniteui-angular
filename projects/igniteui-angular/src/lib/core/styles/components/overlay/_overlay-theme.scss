@@ -5,7 +5,7 @@
 /// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
 ////
 
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
 /// @param {Color} $background-color [null] - The background color used for modal overlays.
@@ -21,11 +21,12 @@
 ///   igx-overlay($my-overlay-theme);
 ///
 @function igx-overlay-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
     $background-color: null
 ) {
     $name: 'igx-overlay';
+    $selector: '.igx-overlay__wrapper--modal, .igx-overlay__content--modal';
     $overlay-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -38,18 +39,19 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
-        background-color: $background-color
+        background-color: $background-color,
     ));
 }
 
 ///
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires --var
 ///
 @mixin igx-overlay($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %overlay-display {
         width: 0;

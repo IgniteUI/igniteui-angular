@@ -10,7 +10,7 @@ import {
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
     ROW_ADD_KEYS,
-    isEdge
+    PlatformUtil
 } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
@@ -48,6 +48,8 @@ export class IgxGridNavigationService {
         this._activeNode = value;
     }
 
+    constructor(protected platform: PlatformUtil) { }
+
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (this.grid.crudService.cell && NAVIGATION_KEYS.has(key)) {
@@ -66,7 +68,7 @@ export class IgxGridNavigationService {
     dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
-            !this.grid.crudService.rowEditingBlocked && !this.grid.rowInEditMode) {
+            !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
             return;
         }
         const shift = event.shiftKey;
@@ -214,7 +216,7 @@ export class IgxGridNavigationService {
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             rowIndex - this.grid.pinnedDataView.length : rowIndex;
         this.grid.verticalScrollContainer.scrollTo(scrollRowIndex);
-        this.grid.verticalScrollContainer.onChunkLoad
+        this.grid.verticalScrollContainer.chunkLoad
             .pipe(first()).subscribe(() => {
                 this.pendingNavigation = false;
                 if (cb) {
@@ -235,7 +237,7 @@ export class IgxGridNavigationService {
             return;
         }
         this.pendingNavigation = true;
-        this.grid.parentVirtDir.onChunkLoad
+        this.grid.parentVirtDir.chunkLoad
             .pipe(first())
             .subscribe(() => {
                 this.pendingNavigation = false;
@@ -336,7 +338,7 @@ export class IgxGridNavigationService {
                     this.grid.verticalScrollContainer.scrollPrevPage();
                 }
                 const editCell = this.grid.crudService.cell;
-                this.grid.verticalScrollContainer.onChunkLoad
+                this.grid.verticalScrollContainer.chunkLoad
                     .pipe(first()).subscribe(() => {
                         if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
                             this.grid.tbody.nativeElement.focus({ preventScroll: true });
@@ -397,8 +399,8 @@ export class IgxGridNavigationService {
                 }
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
-                    this.grid.endEdit(false, event);
-                    if (isEdge()) {
+                    this.grid.crudService.endEdit(false, event);
+                    if (this.platform.isEdge) {
                         this.grid.cdr.detectChanges();
                     }
                     this.grid.tbody.nativeElement.focus();
@@ -527,12 +529,13 @@ export class IgxGridNavigationService {
     protected handleEditing(shift: boolean, event: KeyboardEvent) {
         const next = shift ? this.grid.getPreviousCell(this.activeNode.row, this.activeNode.column, col => col.editable) :
             this.grid.getNextCell(this.activeNode.row, this.activeNode.column, col => col.editable);
-        if (!this.grid.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
-            this.grid.endEdit(true, event);
+        if (!this.grid.crudService.rowInEditMode && this.isActiveNode(next.rowIndex, next.visibleColumnIndex)) {
+            this.grid.crudService.endEdit(true, event);
+            this.grid.tbody.nativeElement.focus();
             return;
         }
         event.preventDefault();
-        if ((this.grid.rowInEditMode && this.grid.rowEditTabs.length) &&
+        if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
                 this.grid.gridAPI.submit_add_value(event);
@@ -549,7 +552,7 @@ export class IgxGridNavigationService {
             return;
         }
 
-        if (this.grid.rowInEditMode && !this.grid.rowEditTabs.length) {
+        if (this.grid.crudService.rowInEditMode && !this.grid.rowEditTabs.length) {
             if (shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {
                 next.visibleColumnIndex = this.grid.lastEditableColumnIndex;
             } else if (!shift && next.rowIndex === this.activeNode.row && next.visibleColumnIndex === this.activeNode.column) {

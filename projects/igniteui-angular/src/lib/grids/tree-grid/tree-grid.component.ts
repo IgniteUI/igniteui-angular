@@ -28,7 +28,7 @@ import {
 import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
-import { IgxGridSelectionService, IgxGridCRUDService } from '../selection/selection.service';
+import { IgxGridSelectionService } from '../selection/selection.service';
 import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
@@ -39,6 +39,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridSelectionMode } from '../common/enums';
+import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
 
@@ -51,7 +52,7 @@ let NEXT_ID = 0;
  *
  * Example:
  * ```html
- * <igx-tree-grid [data]="employeeData" primaryKey="employeeID" foreignKey="PID" autoGenerate="false">
+ * <igx-tree-grid [data]="employeeData" primaryKey="employeeID" foreignKey="PID" [autoGenerate]="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
@@ -143,6 +144,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     @Input()
     public loadChildrenOnDemand: (parentID: any, done: (children: any[]) => void) => void;
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.role')
+    public role = 'treegrid';
 
     /**
      * An @Input property that sets the value of the `id` attribute. If not provided it will be automatically generated.
@@ -515,7 +522,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         if (this.primaryKey && this.foreignKey) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
-            this._pipeTrigger++;
+            this.pipeTrigger++;
             this.cdr.detectChanges();
         }
     }
@@ -538,10 +545,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     public addRow(data: any, parentRowID?: any) {
-        super.endEdit(true);
+        this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
         this.onRowAdded.emit({ data });
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         this.notifyChanges();
     }
 
@@ -640,19 +647,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * @hidden
-     * @internal
-     */
-    protected _getParentRecordId() {
-        if (this.addRowParent.asChild) {
-            return super._getParentRecordId();
-        } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {
-            const spawnedForRecord = this._gridAPI.get_rec_by_id(this.addRowParent.rowID);
-            return spawnedForRecord?.parent?.rowID;
-        }
-    }
-
-    /**
      * @hidden @internal
      */
     protected getDataBasedBodyHeight(): number {
@@ -685,7 +679,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         if (delayScrolling) {
-            this.verticalScrollContainer.onDataChanged.pipe(first()).subscribe(() => {
+            this.verticalScrollContainer.dataChanged.pipe(first()).subscribe(() => {
                 this.scrollDirective(this.verticalScrollContainer,
                     typeof (row) === 'number' ? row : this.unpinnedDataView.indexOf(record));
             });
@@ -766,7 +760,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             parentData[this.childDataKey] = children;
         }
         this.selectionService.clearHeaderCBState();
-        this._pipeTrigger++;
+        this.pipeTrigger++;
         if (this.rowSelection === GridSelectionMode.multipleCascade) {
             // Force pipe triggering for building the data structure
             this.cdr.detectChanges();

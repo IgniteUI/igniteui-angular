@@ -8,6 +8,19 @@
 
 .column-span {
     grid-column: auto / span 2;
+
+    > div {
+        margin-bottom: 24px;
+    }
+}
+
+.action-button {
+    margin-right: 24px;
+}
+
+.action-button,
+.sample-actions {
+    margin-bottom: 24px;
 }
 
 .my-tab-content {

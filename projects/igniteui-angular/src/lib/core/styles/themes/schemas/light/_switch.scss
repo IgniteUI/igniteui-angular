@@ -12,9 +12,9 @@
 ///
 /// @property {Map} thumb-on-color [igx-color: ('secondary', 500)] - The color of the thumb when the switch is on.
 /// @property {Map} track-on-color [igx-color: ('secondary', 500), rgba: .5] - The color of the track when the switch is on.
-/// @property {Map} thumb-off-color [igx-color: ('grays', 200), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {Map} thumb-off-color [igx-color: ('grays', 200), to-opaque: #fff] - The color of the thumb when the switch is off.
 /// @property {Map} track-off-color [igx-color: ('grays', 600)] - The color of the track when the switch is off.
-/// @property {Map} thumb-disabled-color [igx-color: ('grays', 400), hexrgba: #fff] - The color of the thumb when the switch is disabled.
+/// @property {Map} thumb-disabled-color [igx-color: ('grays', 400), to-opaque: #fff] - The color of the thumb when the switch is disabled.
 /// @property {Map} track-disabled-color [igx-color: ('grays', 300)] - The color of the track when the switch is disabled.
 /// @property {Map} label-color [igx-color: ('grays', 900)] - The color of the switch label
 /// @property {Map} label-disabled-color [igx-color: ('grays', 400)] - The color of the switch label when the switch is disabled
@@ -59,7 +59,7 @@ $_light-switch: extend(
 
         thumb-off-color: (
             igx-color: ('grays', 200),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         track-disabled-color: (
@@ -72,7 +72,7 @@ $_light-switch: extend(
 
         thumb-disabled-color: (
             igx-color: ('grays', 400),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         label-color: (
@@ -88,14 +88,14 @@ $_light-switch: extend(
 /// Generates a fluent switch schema.
 /// @type {Map}
 ///
-/// @property {Map} border-color [igx-color('grays', 500), hexrgba: #fff] - The border color of the switch.
-/// @property {Map} border-hover-color [igx-color('grays', 800), hexrgba: #fff] - The border color of the switch on hover.
-/// @property {Map} border-disabled-color [igx-color('grays', 300), hexrgba: #fff] - The border color of the disabled switch.
+/// @property {Map} border-color [igx-color('grays', 500), to-opaque: #fff] - The border color of the switch.
+/// @property {Map} border-hover-color [igx-color('grays', 800), to-opaque: #fff] - The border color of the switch on hover.
+/// @property {Map} border-disabled-color [igx-color('grays', 300), to-opaque: #fff] - The border color of the disabled switch.
 /// @property {Map} border-on-color [igx-color('primary', 500)] - The border color of the on-switch.
 /// @property {Map} border-on-hover-color [igx-color('primary', 500)] - The border color of the  on-switch.
 ///
 /// @property {Color} thumb-on-color [#fff] - The color of the thumb when the switch is on.
-/// @property {Map} thumb-off-color [igx-color: ('grays', 900), hexrgba: #fff] - The color of the thumb when the switch is off.
+/// @property {Map} thumb-off-color [igx-color: ('grays', 900), to-opaque: #fff] - The color of the thumb when the switch is off.
 /// @property {Map} track-on-color [igx-color: ('secondary', 500)] - The color of the track when the switch is on.
 /// @property {Color} track-off-color [transparent] - The color of the track when the switch is off.
 /// @property {Map} focus-outline-color [igx-color: ('grays', 800)] - The focus outlined color.
@@ -117,17 +117,17 @@ $_fluent-switch: extend(
 
         border-color: (
             igx-color: ('grays', 500),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         border-hover-color:(
             igx-color: ('grays', 800),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         border-disabled-color:(
             igx-color: ('grays', 300),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         border-on-color:(
@@ -142,7 +142,7 @@ $_fluent-switch: extend(
 
         thumb-off-color: (
             igx-color: ('grays', 900),
-            hexrgba: #fff
+            to-opaque: #fff
         ),
 
         track-on-color: (

@@ -14,7 +14,7 @@ import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive'
 export class IgxColumnMovingDropDirective extends IgxDropDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrop')
-    set data(val: any) {
+    public set data(val: any) {
         if (val instanceof IgxColumnComponent) {
             this._column = val;
         }
@@ -24,16 +24,16 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
     }
 
-    get column(): IgxColumnComponent {
+    public get column(): IgxColumnComponent {
         return this._column;
     }
 
-    get isDropTarget(): boolean {
+    public get isDropTarget(): boolean {
         return this._column && this._column.grid.hasMovableColumns && this.cms.column.movable &&
             ((!this._column.pinned && this.cms.column.disablePinning) || !this.cms.column.disablePinning);
     }
 
-    get horizontalScroll(): any {
+    public get horizontalScroll(): any {
         if (this._hVirtDir) {
             return this._hVirtDir;
         }
@@ -160,11 +160,6 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
         }
 
         if (this.isDropTarget) {
-            const args = {
-                source: this.cms.column,
-                target: this.column
-            };
-
             this.column.grid.moveColumn(this.cms.column, this.column, this._dropPos);
 
             this.column.grid.draggedColumn = null;

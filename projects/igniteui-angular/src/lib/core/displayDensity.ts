@@ -48,7 +48,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
      * ```
      */
     @Input()
-    public get displayDensity(): DisplayDensity | string {
+    public get displayDensity(): DisplayDensity {
         return this._displayDensity ||
             ((this.displayDensityOptions && this.displayDensityOptions.displayDensity) || DisplayDensity.comfortable);
     }
@@ -56,7 +56,7 @@ export class DisplayDensityBase implements DoCheck, OnInit {
     /**
      * Sets the theme of the component.
      */
-    public set displayDensity(val: DisplayDensity | string) {
+    public set displayDensity(val: DisplayDensity) {
         const currentDisplayDensity = this._displayDensity;
         this._displayDensity = val as DisplayDensity;
 

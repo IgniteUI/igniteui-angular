@@ -57,7 +57,7 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         };
     }
 
-    get viewIndex(): number {
+    public get viewIndex(): number {
         return this.index + this.grid.page * this.grid.perPage;
     }
 
@@ -149,13 +149,14 @@ export class IgxHierarchicalRowComponent extends IgxRowDirective<IgxHierarchical
         }
     }
 
+    // TODO: consider moving into CRUD
     protected endEdit(grid: IgxHierarchicalGridComponent) {
-        if (grid.crudService.cellInEditMode) {
-            grid.endEdit();
+        if (grid.gridAPI.crudService.cellInEditMode) {
+            grid.gridAPI.crudService.endEdit();
         }
         grid.hgridAPI.getChildGrids(true).forEach(g => {
-            if (g.crudService.cellInEditMode) {
-            g.endEdit();
+            if (g.gridAPI.crudService.cellInEditMode) {
+            g.gridAPI.crudService.endEdit();
         }
 });
     }

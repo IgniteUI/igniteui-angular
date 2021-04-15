@@ -6,9 +6,9 @@
 ////
 
 /// Column actions Theme
-/// @param {Map} $palette [$default-palette] - The palette used as basis for styling the component.
+/// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
-/// @param {Map} $elevations [$elevations] - The elevations (shadows) map to be used.
+/// @param {Map} $elevations [null] - The elevations (shadows) map to be used.
 /// @param {Color} $title-color [null]- The text color used for the title of the list.
 /// @param {Color} $background-color [null] - The background color of the panel.
 ///
@@ -17,7 +17,6 @@
 /// @requires apply-palette
 /// @requires extend
 /// @requires igx-elevation
-/// @requires $elevations
 /// @requires text-contrast
 ///
 /// @example scss Change the title color
@@ -26,9 +25,9 @@
 ///   @include igx-column-actions($column-actions-theme);
 ////
 @function igx-column-actions-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
-    $elevations: $elevations,
+    $elevations: null,
 
     $title-color: null,
     $background-color: null
@@ -58,11 +57,11 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @requires {mixin} igx-root-css-vars
+/// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires --var
 @mixin igx-column-actions($theme) {
-    @include igx-root-css-vars($theme);
+    @include igx-css-vars($theme);
 
     %column-actions-display {
         display: flex;

@@ -1,6 +1,6 @@
 import { Directive, Input, ElementRef, NgZone, OnInit, NgModule, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { isIE } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 
 /**
  * @hidden
@@ -19,6 +19,12 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
 
     @Input()
     public inertiaStep = 1.5;
+
+    @Input()
+    public smoothingStep = 1.5;
+
+    @Input()
+    public smoothingDuration = 0.5;
 
     @Input()
     public swipeToleranceX = 20;
@@ -62,7 +68,7 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
     private baseDeltaMultiplier = 1 / 120;
     private firefoxDeltaMultiplier = 1 / 30;
 
-    constructor(private element: ElementRef, private _zone: NgZone) { }
+    constructor(private element: ElementRef, private _zone: NgZone, private platform: PlatformUtil) { }
 
     public ngOnInit(): void {
         this._zone.runOutsideAngular(() => {
@@ -112,13 +118,14 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         if (evt.ctrlKey) {
             return;
         }
-        if (evt.shiftKey && isIE()) {
+        if (evt.shiftKey && this.platform.isIE) {
             evt.preventDefault();
         }
         let scrollDeltaX;
         let scrollDeltaY;
         const scrollStep = this.wheelStep;
         const minWheelStep = 1 / this.wheelStep;
+        const smoothing = this.smoothingDuration !== 0 && !this.platform.isIE;
 
         this._startX = this.IgxScrollInertiaScrollContainer.scrollLeft;
         this._startY = this.IgxScrollInertiaScrollContainer.scrollTop;
@@ -151,24 +158,34 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
             const deltaScaledY = evt.deltaY * (evt.deltaMode === 0 ? this.firefoxDeltaMultiplier : 1);
             scrollDeltaY = this.calcAxisCoords(deltaScaledY, -1, 1);
         }
+
         if (scrollDeltaX && this.IgxScrollInertiaDirection === 'horizontal') {
-            this._scrollToX(
-                this._startX + scrollDeltaX * scrollStep
-            );
-            const curScrollLeft = this.IgxScrollInertiaScrollContainer.scrollLeft;
+            const nextLeft = this._startX + scrollDeltaX * scrollStep;
+            if (!smoothing) {
+                this._scrollToX(nextLeft);
+            } else {
+                this._smoothWheelScroll(scrollDeltaX);
+            }
             const maxScrollLeft = parseInt(this.IgxScrollInertiaScrollContainer.children[0].style.width, 10);
-            if (0 < curScrollLeft && curScrollLeft < maxScrollLeft) {
+            if (0 < nextLeft && nextLeft < maxScrollLeft) {
                 // Prevent navigating through pages when scrolling on Mac
                 evt.preventDefault();
             }
         } else if (evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'horizontal') {
-            const step = this._startX + scrollDeltaY * scrollStep;
-            this._scrollToX(step);
+            if (!smoothing) {
+                const step = this._startX + scrollDeltaY * scrollStep;
+                this._scrollToX(step);
+            } else {
+                this._smoothWheelScroll(scrollDeltaY);
+            }
         } else if (!evt.shiftKey && scrollDeltaY && this.IgxScrollInertiaDirection === 'vertical') {
-            this._scrollToY(
-                this._startY + scrollDeltaY * scrollStep
-            );
-            this.preventParentScroll(evt, true);
+            const nextTop = this._startY + scrollDeltaY * scrollStep;
+            if (!smoothing) {
+                this._scrollToY(nextTop);
+            } else {
+                this._smoothWheelScroll(scrollDeltaY);
+            }
+            this.preventParentScroll(evt, true, nextTop);
         }
     }
 
@@ -176,8 +193,8 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
      * @hidden
      * When there is still room to scroll up/down prevent the parent elements from scrolling too.
      */
-    protected preventParentScroll(evt, preventDefault) {
-        const curScrollTop = this.IgxScrollInertiaScrollContainer.scrollTop;
+    protected preventParentScroll(evt, preventDefault, nextTop = 0) {
+        const curScrollTop = nextTop === 0 ? this.IgxScrollInertiaScrollContainer.scrollTop : nextTop;
         const maxScrollTop = this.IgxScrollInertiaScrollContainer.children[0].scrollHeight -
             this.IgxScrollInertiaScrollContainer.offsetHeight;
         if (0 < curScrollTop && curScrollTop < maxScrollTop) {
@@ -419,6 +436,31 @@ export class IgxScrollInertiaDirective implements OnInit, OnDestroy {
         }
 
         return false;
+    }
+
+    protected _smoothWheelScroll(delta) {
+        this._nextY = this.IgxScrollInertiaScrollContainer.scrollTop;
+        this._nextX = this.IgxScrollInertiaScrollContainer.scrollLeft;
+        let x = -1;
+        let wheelInertialAnimation = null;
+        const inertiaWheelStep = () => {
+            if (x > 1) {
+                cancelAnimationFrame(wheelInertialAnimation);
+                return;
+            }
+            const nextScroll = ((-3 * x * x + 3) * delta * 2) * this.smoothingStep;
+            if (this.IgxScrollInertiaDirection === 'vertical') {
+                this._nextY += nextScroll;
+                this._scrollToY(this._nextY);
+            } else {
+                this._nextX += nextScroll;
+                this._scrollToX(this._nextX);
+            }
+            //continue the inertia
+            x += 0.08 * (1 / this.smoothingDuration);
+            wheelInertialAnimation = requestAnimationFrame(inertiaWheelStep);
+        };
+        wheelInertialAnimation = requestAnimationFrame(inertiaWheelStep);
     }
 
     protected _inertiaInit(speedX, speedY) {

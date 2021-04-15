@@ -24,7 +24,7 @@ import { IgxDirectionality } from '../../services/direction/directionality';
 })
 export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     @Input()
-    public value: number;
+    public value: any;
 
     @Input()
     public continuous: boolean;

@@ -19,9 +19,9 @@ import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { IgxGridHeaderComponent } from './grid-header.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
-import { isIE } from '../../core/utils';
 import { GridType } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
+import { PlatformUtil } from '../../core/utils';
 
 const Z_INDEX = 9999;
 
@@ -67,6 +67,11 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @HostBinding('style.grid-column-start')
     get colStart(): number {
         return this.column.colStart;
+    }
+
+    @HostBinding('attr.id')
+    public get headerID() {
+        return `${this.gridID}_-1_${this.column.level}_${this.column.visibleIndex}`;
     }
 
     /**
@@ -199,7 +204,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
 
     @HostBinding('style.display')
     get groupDisplayStyle(): string {
-        return this.grid.hasColumnLayouts && this.column.children && !isIE() ? 'flex' : '';
+        return this.grid.hasColumnLayouts && this.column.children && !this.platform.isIE ? 'flex' : '';
     }
 
     /**
@@ -270,7 +275,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         public element: ElementRef,
         public colResizingService: IgxColumnResizingService,
-        public filteringService: IgxFilteringService) { }
+        public filteringService: IgxFilteringService,
+        protected platform: PlatformUtil) { }
 
     /**
      * @hidden

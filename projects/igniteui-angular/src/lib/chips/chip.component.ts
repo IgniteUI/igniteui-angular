@@ -22,9 +22,10 @@ import {
     IDropDroppedEventArgs
 } from '../directives/drag-drop/drag-drop.directive';
 import { IBaseEventArgs } from '../core/utils';
+import { IChipResourceStrings } from '../core/i18n/chip-resources';
+import { CurrentResourceStrings } from '../core/i18n/resources';
 import { fromEvent } from 'rxjs';
 import { take, filter } from 'rxjs/operators';
-
 
 export interface IBaseChipEventArgs extends IBaseEventArgs {
     originalEvent: IDragBaseEventArgs | IDropBaseEventArgs | KeyboardEvent | MouseEvent | TouchEvent;
@@ -70,7 +71,7 @@ let CHIP_ID = 0;
  * @example
  * ```html
  * <igx-chip class="chipStyle" [id]="901" [draggable]="true" [removable]="true" (remove)="chipRemoved($event)">
- *    <igx-avatar class="chip-avatar-resized" igxPrefix roundShape="true"></igx-avatar>
+ *    <igx-avatar class="chip-avatar-resized" igxPrefix [roundShape]="true"></igx-avatar>
  * </igx-chip>
  * ```
  */
@@ -90,6 +91,17 @@ export class IgxChipComponent extends DisplayDensityBase {
     @HostBinding('attr.id')
     @Input()
     public id = `igx-chip-${CHIP_ID++}`;
+
+    /**
+     * Returns the `role` attribute of the chip.
+     *
+     * @example
+     * ```typescript
+     * let chipRole = this.chip.role;
+     * ```
+     */
+    @HostBinding('attr.role')
+    public role = 'option';
 
     /**
      * An @Input property that sets the value of `tabindex` attribute. If not provided it will use the element's tabindex if set.
@@ -240,6 +252,7 @@ export class IgxChipComponent extends DisplayDensityBase {
      * <igx-chip #myChip [id]="'igx-chip-1'" [selectable]="true" [(selected)]="model.isSelected">
      * ```
      */
+    @HostBinding('attr.aria-selected')
     @Input()
     public set selected(newValue: boolean) {
         this.changeSelection(newValue);
@@ -296,6 +309,22 @@ export class IgxChipComponent extends DisplayDensityBase {
      */
     public get color() {
         return this.chipArea.nativeElement.style.backgroundColor;
+    }
+
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IChipResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): IChipResourceStrings {
+        return this._resourceStrings;
     }
 
     /**
@@ -494,6 +523,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     protected _selected = false;
     protected _selectedItemClass = 'igx-chip__item--selected';
     protected _movedWhileRemoving = false;
+    private _resourceStrings = CurrentResourceStrings.ChipResStrings;
 
     constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {

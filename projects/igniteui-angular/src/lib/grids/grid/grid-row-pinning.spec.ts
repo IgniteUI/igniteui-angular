@@ -1176,7 +1176,7 @@ describe('Row Pinning #grid', () => {
 @Component({
     template: `
         <igx-grid
-            [allowFiltering]='true'
+            [allowFiltering]="true"
             [pinning]='pinningConfig'
             [width]='"800px"'
             [height]='"500px"'
@@ -1209,13 +1209,13 @@ export class GridRowPinningComponent {
     `
 })
 export class GridRowPinningWithMRLComponent extends GridRowPinningComponent {
-    cols: Array<any> = [
+    public cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
         { field: 'CompanyName', rowStart: 1, colStart: 2 },
         { field: 'ContactName', rowStart: 1, colStart: 3 },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
     ];
-    colGroups = [
+    public colGroups = [
         {
             group: 'group1',
             columns: this.cols

@@ -509,14 +509,14 @@ export class IgxTreeGridWrappedInContComponent {
     public height = null;
     public paging = false;
     public pageSize = 5;
-    public density = DisplayDensity.comfortable;
+    public density: DisplayDensity = DisplayDensity.comfortable;
     public outerWidth = 800;
     public outerHeight: number;
 
     public isHorizontalScrollbarVisible() {
         const scrollbar = this.treeGrid.headerContainer.getScroll();
         if (scrollbar) {
-            return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+            return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
         }
 
         return false;
@@ -534,7 +534,7 @@ export class IgxTreeGridWrappedInContComponent {
     public isVerticalScrollbarVisible() {
         const scrollbar = this.treeGrid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
-            return scrollbar.offsetHeight < scrollbar.children[0].offsetHeight;
+            return scrollbar.offsetHeight < (scrollbar.children[0] as HTMLElement).offsetHeight;
         }
         return false;
     }

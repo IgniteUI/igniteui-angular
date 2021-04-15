@@ -33,7 +33,7 @@ import {
 import { IgxThumbLabelComponent } from './label/thumb-label.component';
 import { IgxTicksComponent } from './ticks/ticks.component';
 import { IgxTickLabelsPipe } from './ticks/tick.pipe';
-import { isIE, resizeObservable } from '../core/utils';
+import { PlatformUtil, resizeObservable } from '../core/utils';
 import { IgxDirectionality } from '../services/direction/directionality';
 
 let NEXT_ID = 0;
@@ -676,7 +676,7 @@ export class IgxSliderComponent implements
      * ```
      */
     @Input()
-    public tickLabelsOrientation = TickLabelsOrientation.Horizontal;
+    public tickLabelsOrientation: TickLabelsOrientation = TickLabelsOrientation.Horizontal;
 
     /**
      * @hidden
@@ -777,7 +777,8 @@ export class IgxSliderComponent implements
                 private _el: ElementRef,
                 private _cdr: ChangeDetectorRef,
                 private _ngZone: NgZone,
-                private _dir: IgxDirectionality) {
+                private _dir: IgxDirectionality,
+                private platform: PlatformUtil) {
         this.stepDistance = this._step;
     }
 
@@ -1016,7 +1017,7 @@ export class IgxSliderComponent implements
             this.changeThumbFocusableState(this.disabled);
         });
 
-        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(change => {
+        this.labelRefs.changes.pipe(takeUntil(this._destroyer$)).subscribe(() => {
             const labelFrom = this.labelRefs.find((label: IgxThumbLabelComponent) => label.type === SliderHandle.FROM);
             this.positionHandler(null, labelFrom, this.lowerValue);
         });
@@ -1285,7 +1286,7 @@ export class IgxSliderComponent implements
         }
 
         const renderCallbackExecution = !this.continuous ? this.generateTickMarks(
-            isIE() ? 'white' : 'var(--igx-slider-track-step-color, white)', interval) : null;
+            this.platform.isIE ? 'white' : 'var(--igx-slider-track-step-color, var(--track-step-color, white))', interval) : null;
         this.renderer.setStyle(this.ticks.nativeElement, 'background', renderCallbackExecution);
     }
 

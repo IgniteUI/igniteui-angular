@@ -22,6 +22,7 @@
     $plot-area-background: null
 ) {
     $name: 'geo-map';
+    $selector: 'igx-geographic-map';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -34,6 +35,7 @@
 
     @return extend( $theme, (
         name: $name,
-        plot-area-background: $plot-area-background
+        selector: $selector,
+        plot-area-background: $plot-area-background,
     ));
 }

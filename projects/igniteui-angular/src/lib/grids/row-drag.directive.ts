@@ -1,6 +1,5 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
-import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
 import { IgxRowDirective, IgxGridBaseDirective } from './grid/public_api';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
@@ -61,7 +60,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.row.grid.markForCheck();
 
             this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-                if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+                if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
                     this._lastDropArea = false;
                     this.onPointerUp(event);
                 }
@@ -95,7 +94,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     protected createGhost(pageX, pageY) {
-        this.row.grid.endEdit(false);
+        this.row.grid.gridAPI.crudService.endEdit(false);
         this.row.grid.markForCheck();
         this.ghostContext = {
             $implicit: this.row.rowData,
@@ -145,7 +144,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this._unsubscribe();
     }
 
-    private transitionEndEvent = (evt?) => {
+    private transitionEndEvent = () => {
         if (this.ghostElement) {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
