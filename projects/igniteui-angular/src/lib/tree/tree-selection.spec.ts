@@ -587,6 +587,8 @@ describe('IgxTree - Selection #treeView', () => {
             expect((tree as any).selectionService.deselectNodesWithNoEvent)
                 .toHaveBeenCalledWith([tree.nodes.toArray()[0], tree.nodes.toArray()[1]]);
         });
+        navService.ngOnDestroy();
+        tree.ngOnDestroy();
     });
 
     describe('IgxTreeNode - API Tests', () => {
@@ -635,6 +637,8 @@ describe('IgxTree - Selection #treeView', () => {
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalled();
             expect((node as any).selectionService.isNodeIndeterminate).toHaveBeenCalledWith(node);
         });
+
+        navService.ngOnDestroy();
     });
 });
 

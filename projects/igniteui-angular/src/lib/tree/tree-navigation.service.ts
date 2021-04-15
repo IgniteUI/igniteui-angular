@@ -22,7 +22,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     constructor(private treeService: IgxTreeService, private selectionService: IgxTreeSelectionService) {
         this._cacheChange.subscribe(() => {
             this._visibleChildren =
-                this.tree.nodes ?
+                this.tree?.nodes ?
                     this.tree.nodes.filter(e => !(this._invisibleChildren.has(e) || this._disabledChildren.has(e))) :
                     [];
         });
@@ -204,8 +204,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleUpDownArrow(isUp: boolean, event: KeyboardEvent): void {
-        const next = isUp ? this.getVisibleNode(this.focusedNode, -1) :
-            this.getVisibleNode(this.focusedNode, 1);
+        const next = this.getVisibleNode(this.focusedNode, isUp ? -1 : 1);
         if (next === this.focusedNode) {
             return;
         }
