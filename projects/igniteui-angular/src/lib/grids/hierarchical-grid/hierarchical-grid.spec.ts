@@ -706,7 +706,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         const cell = childGrid.getRowByIndex(0).cells.toArray()[0];
         const ri1 = fixture.componentInstance.rowIsland1;
 
-        spyOn(ri1.onCellClick, 'emit').and.callThrough();
+        spyOn(ri1.cellClick, 'emit').and.callThrough();
 
         const event = new Event('click');
         cell.nativeElement.dispatchEvent(event);
@@ -717,8 +717,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         };
 
         fixture.detectChanges();
-        expect(ri1.onCellClick.emit).toHaveBeenCalledTimes(1);
-        expect(ri1.onCellClick.emit).toHaveBeenCalledWith(args);
+        expect(ri1.cellClick.emit).toHaveBeenCalledTimes(1);
+        expect(ri1.cellClick.emit).toHaveBeenCalledWith(args);
     });
 
     it('should filter correctly on row island',

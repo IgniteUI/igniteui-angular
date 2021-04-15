@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const waitForGridScroll = grid => new Promise<void>(resolve => grid.onScroll.pipe(first()).subscribe(() => {
+export const waitForGridScroll = grid => new Promise<void>(resolve => grid.gridScroll.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
     resolve();
 }));
