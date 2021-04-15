@@ -117,7 +117,7 @@
             [style.width.%]="100"
             [outlet]="grid.outlet"
             mode="dropdown"
-            format="hh:mm:ss tt"
+            [format]="column.defaultTimeFormat"
             [(value)]="editValue"
             [igxFocus]="true"
             >
@@ -126,7 +126,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
         <igx-input-group>
-            <input type="text" igxInput [igxDateTimeEditor]="'dd/MM/yyyy HH:mm tt'" [(ngModel)]="editValue" [igxFocus]="true"/>
+            <input type="text" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">

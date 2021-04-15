@@ -26,6 +26,10 @@ export interface IGridResourceStrings {
     igx_grid_filter_notNull?: string;
     igx_grid_filter_before?: string;
     igx_grid_filter_after?: string;
+    igx_grid_filter_at?: string;
+    igx_grid_filter_not_at?: string;
+    igx_grid_filter_at_before?: string;
+    igx_grid_filter_at_after?: string;
     igx_grid_filter_today?: string;
     igx_grid_filter_yesterday?: string;
     igx_grid_filter_thisMonth?: string;
@@ -153,6 +157,10 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_notNull: 'Not Null',
     igx_grid_filter_before: 'Before',
     igx_grid_filter_after: 'After',
+    igx_grid_filter_at: 'At',
+    igx_grid_filter_not_at: 'Not At',
+    igx_grid_filter_at_before: 'At or Before',
+    igx_grid_filter_at_after: 'At or After',
     igx_grid_filter_today: 'Today',
     igx_grid_filter_yesterday: 'Yesterday',
     igx_grid_filter_thisMonth: 'This Month',

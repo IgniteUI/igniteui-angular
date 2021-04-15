@@ -61,13 +61,13 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'time'">
         <igx-time-picker [style.width.%]="100" [outlet]="grid.outlet"
-            mode="dropdown" format="hh:mm:ss tt" [(value)]="editValue" [igxFocus]="true" >
+            mode="dropdown" [format]="column.defaultTimeFormat" [(value)]="editValue" [igxFocus]="true" >
             <label igxLabel></label>
         </igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">
         <igx-input-group>
-            <input type="text" igxInput [igxDateTimeEditor]="'dd/MM/yyyy HH:mm tt'" [(ngModel)]="editValue" [igxFocus]="true"/>
+            <input type="text" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
         </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">

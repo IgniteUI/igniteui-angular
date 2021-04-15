@@ -86,6 +86,7 @@
         tabindex="0"
         mode="dropdown"
         [value]="value"
+        [format]="column.defaultTimeFormat"
         [outlet]="filteringService.grid.outlet"
         (onValueChanged)="onDateSelected($event.newValue)"
         (onClosed)="datePickerClose()">
@@ -134,7 +135,7 @@
             igxInput
             tabindex="0"
             [placeholder]="placeholder"
-            [igxDateTimeEditor]="'dd/MM/yyyy HH:mm'"
+            [igxDateTimeEditor]="column.defaultDateTimeFormat"
             [value]="value"
             (valueChange)="onInput($event)"
             [readonly]="isUnaryCondition"

@@ -21,7 +21,9 @@ import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -1417,6 +1419,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public hasNestedPath: boolean;
 
     /**
+     * @hidden
+     * @internal
+     */
+    public defaultTimeFormat = 'hh:mm:ss tt';
+
+    /**
+     * @hidden
+     * @internal
+     */
+     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
+
+
+    /**
      * Returns the filteringExpressionsTree of the column.
      * ```typescript
      * let tree =  this.column.filteringExpressionsTree;
@@ -1635,9 +1650,13 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
                 case DataType.Date:
-                case DataType.Time:
-                case DataType.DateTime:
                     this.filters = IgxDateFilteringOperand.instance();
+                    break;
+                case DataType.Time:
+                    this.filters = IgxTimeFilteringOperand.instance();
+                    break;
+                case DataType.DateTime:
+                    this.filters = IgxDateTimeFilteringOperand.instance();
                     break;
                 case DataType.String:
                 default:

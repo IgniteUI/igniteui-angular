@@ -208,7 +208,7 @@
                     </ng-template>
                 </igx-date-picker>
 
-                <igx-time-picker *ngIf="selectedColumn && selectedColumn.dataType === 'time'"
+                <igx-time-picker *ngIf="selectedColumn && selectedColumn.dataType === 'time'" [format]="selectedColumn.defaultTimeFormat"
                                 mode="dropdown" [(ngModel)]="searchValue" [outlet]="grid.outlet">
                 <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value">
                     <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'">
@@ -235,7 +235,7 @@
                 [displayDensity]="'compact'">
                     <input #input igxInput tabindex="0"
                         [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
-                        [igxDateTimeEditor]="'dd/MM/yyyy HH:mm'"
+                        [igxDateTimeEditor]="selectedColumn.defaultDateTimeFormat"
                         [(ngModel)]="searchValue"
                         [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
                 </igx-input-group>
