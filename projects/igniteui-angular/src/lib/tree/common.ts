@@ -20,6 +20,8 @@ export interface IgxTree {
     /** @hidden @internal */
     displayDensity: DisplayDensity;
     /** @hidden @internal */
+    forceSelect: IgxTreeNode<any>[];
+    /** @hidden @internal */
     disabledChange: EventEmitter<IgxTreeNode<any>>;
     /** @hidden @internal */
     activeNodeBindingChange: EventEmitter<IgxTreeNode<any>>;
@@ -40,6 +42,8 @@ export interface IgxTreeNode<T> {
     parentNode?: IgxTreeNode<any> | null;
     path: IgxTreeNode<any>[];
     expanded: boolean | null;
+    /** @hidden @internal */
+    indeterminate: boolean;
     selected: boolean | null;
     disabled: boolean;
     /** @hidden @internal */

@@ -28,6 +28,16 @@
             <input igxInput [(ngModel)]="loadDuration" id="load-time" type="number">
         </igx-input-group>
 
+        <igx-input-group type="border">
+            <label igxLabel for="addParent">Target Parent</label>
+            <input igxInput #addParent id="addParent" type="string">
+        </igx-input-group>
+
+        <igx-input-group type="border">
+            <label igxLabel for="delete">Delete Nodes</label>
+            <input igxInput #deleteNodes id="delete" type="string">
+        </igx-input-group>
+
         <igx-switch [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
     </div>
 
@@ -42,6 +52,11 @@
             <button igxButton (click)="addItem()">Add nodes</button>
             <button igxButton (click)="resetData()">Reset nodes</button>
             <button igxButton (click)="setDummy()">Dummy nodes</button>
+            <button igxButton (click)="addDataChild('FRANS')">Add Child</button>
+            <button igxButton (click)="deleteLastChild('FRANS')">Delete Child</button>
+            <button igxButton (click)="cancer('FRANS')">Add Stuff</button>
+            <button igxButton (click)="addSeveralNodes('FRANS')">Add Several</button>
+            <button igxButton (click)="deleteNodesFromParent(addParent.value, deleteNodes.value)">Delete Nodes</button>
 
         </div>
         <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
@@ -52,6 +67,7 @@
                 <p>IgxTree (templated with icon and text)</p>
                 <igx-tree #tree1 (blur)="handleActive($event)" [singleBranchExpand]="singleBranchExpand"
                     [displayDensity]="density"
+                    [selection]="'Cascading'"
                     [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)"
                     (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
                     (activeNodeChanged)="activeNodeChanged($event)"
@@ -75,14 +91,15 @@
                         [(selected)]="node.selected">
                         <div class="sample-template-center">
                             <igx-icon>face</igx-icon>
-                            <span class="sample-ellipsis">{{ node.CompanyName }}</span>
+                            <span class="sample-ellipsis">{{ node.ID }}</span>
                         </div>
+                        <igx-tree-node *ngIf="node.ID === 'FRANS'" [data]="{ ID: 'NA_FRANCO_DETETO'}">NA_FRANCO_DETETO</igx-tree-node>
                         <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child"
-                            [(selected)]="child.selected" [expanded]="true" [active]="true">
-                            {{ child.CompanyName }}
+                            [selected]="true" [expanded]="true" [active]="true">
+                            {{ child.ID }}
                             <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild"
                                 [(selected)]="leafchild.selected" [expanded]="true" [active]="true">
-                                {{ leafchild.CompanyName }}
+                                {{ leafchild.ID }}
                             </igx-tree-node>
                         </igx-tree-node>
                     </igx-tree-node>

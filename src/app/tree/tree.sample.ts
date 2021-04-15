@@ -2,9 +2,10 @@ import { useAnimation } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import {
     DisplayDensity, growVerIn, growVerOut,
-    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeNode, IgxTreeComponent
+    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeNode, IgxTreeComponent, IgxTree
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
+import { cloneDeep } from 'lodash';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 interface CompanyData {
@@ -40,7 +41,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public selectionModes = [];
 
-    public selectionMode = 'None';
+    public selectionMode = 'Cascading';
 
     public animationDuration = 400;
 
@@ -74,6 +75,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     public asyncItems = new Subject<CompanyData[]>();
     public loadDuration = 6000;
     private iteration = 0;
+    private addedIndex = 0;
 
     private initData: CompanyData[];
 
@@ -83,8 +85,8 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
             { label: 'Multiple', selectMode: 'Multiple', selected: this.selectionMode === 'Multiple', togglable: true },
             { label: 'Cascade', selectMode: 'Cascading', selected: this.selectionMode === 'Cascading', togglable: true }
         ];
-        this.data = HIERARCHICAL_SAMPLE_DATA;
-        this.initData = HIERARCHICAL_SAMPLE_DATA;
+        this.data = cloneDeep(HIERARCHICAL_SAMPLE_DATA);
+        this.initData = cloneDeep(HIERARCHICAL_SAMPLE_DATA);
         this.mapData(this.data);
     }
 
@@ -94,6 +96,101 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     public handleEvent(event: any) {
         // event.cancel = true;
+    }
+
+
+    public addDataChild(key: string) {
+        const targetNode = this.getNodeByName(key);
+        if (!targetNode.data.ChildCompanies) {
+            targetNode.data.ChildCompanies = [];
+        }
+        const data = targetNode.data.ChildCompanies;
+        data.push(Object.assign({}, data[data.length - 1],
+            { CompanyName: `Added ${this.addedIndex++}`, selected: this.addedIndex % 2 === 0, ChildCompanies: [] }));
+        this.cdr.detectChanges();
+    }
+
+    public cancer(key: string) {
+        const arr = [{
+            ID: 'Some1',
+            CompanyName: 'Test 1',
+            ChildCompanies: [{
+                ID: 'Some2',
+                CompanyName: 'Test 2',
+                selected: true
+            },
+            {
+                ID: 'Some3',
+                CompanyName: 'Test 3',
+                selected: true
+            }]
+        }];
+        this.getNodeByName(key).data.ChildCompanies = arr;
+        this.cdr.detectChanges();
+
+    }
+
+    public deleteLastChild(key: string) {
+        const targetNode = this.getNodeByName(key);
+        if (!targetNode.data.ChildCompanies) {
+            targetNode.data.ChildCompanies = [];
+        }
+        const data = targetNode.data.ChildCompanies;
+        data.splice(data.length - 1, 1);
+    }
+
+    public deleteNodesFromParent(key: string, deleteNodes: string) {
+        const parent = this.getNodeByName(key);
+        const nodeIds = deleteNodes.split(';');
+        nodeIds.forEach((nodeId) => {
+            const index = parent.data.ChildCompanies.findIndex(e => e.ID === nodeId);
+            parent.data.ChildCompanies.splice(index, 1);
+        });
+        // this.cdr.detectChanges();
+        // requestAnimationFrame(() => {
+        //     if (parent.children.toArray().every(e => e.selected)) {
+        //         parent.selected = true;
+        //     } else if (parent.children.toArray().every(e => !e.selected)) {
+        //         if (parent.children.toArray().every(e => !e.indeterminate)) {
+        //             parent.selected = true;
+        //         }
+        //         parent.selected = false;
+        //     }
+        // });
+    }
+
+    public addNodesToParent(key: string) {
+        const parent = this.getNodeByName(key);
+
+    }
+
+    public addSeveralNodes(key: string) {
+        const targetNode = this.getNodeByName(key);
+        if (!targetNode.data.ChildCompanies) {
+            targetNode.data.ChildCompanies = [];
+        }
+        const arr = [{
+            ID: 'Some1',
+            CompanyName: 'Test 1',
+            selected: false,
+            ChildCompanies: [{
+                ID: 'Some4',
+                CompanyName: 'Test 5',
+                selected: true,
+            }]
+        },
+        {
+            ID: 'Some2',
+            CompanyName: 'Test 2',
+            selected: false
+        },
+        {
+            ID: 'Some3',
+            CompanyName: 'Test 3',
+            selected: false
+        }];
+        this.getNodeByName(key).data.ChildCompanies = arr;
+        this.cdr.detectChanges();
     }
 
     public handleRemote(node: IgxTreeNodeComponent<any>, event: boolean) {
@@ -140,7 +237,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     }
 
     public selectCellSelectionMode(args) {
-        this.tree.selection = this.selectionModes[args.index].selectMode;
+        // this.tree.selection = this.selectionModes[args.index].selectMode;
     }
 
     public changeDensity(args) {
@@ -256,6 +353,10 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
 
     private containsComparer: IgxTreeSearchResolver =
         (term: any, node: IgxTreeNodeComponent<any>) => node.data?.ID?.toLowerCase()?.indexOf(term.toLowerCase()) > -1;
+
+    private getNodeByName(key: string) {
+        return this.tree.findNodes(key, (_term: string, n: IgxTreeNodeComponent<any>) => n.data?.ID === _term)[0];
+    }
 }
 
 

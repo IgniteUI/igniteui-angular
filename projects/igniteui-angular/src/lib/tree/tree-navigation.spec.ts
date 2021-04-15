@@ -1,7 +1,6 @@
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { waitForAsync, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { IgxTreeNavigationComponent, IgxTreeScrollComponent } from './tree-samples.spec';
-import { IgxTreeModule, IgxTreeComponent, IGX_TREE_SELECTION_TYPE, IgxTree, IgxTreeNodeComponent, IgxTreeNode } from './public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxTreeNavigationService } from './tree-navigation.service';
@@ -9,6 +8,9 @@ import { ElementRef, EventEmitter } from '@angular/core';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeService } from './tree.service';
+import { IgxTreeComponent, IgxTreeModule } from './tree.component';
+import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
+import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
 describe('IgxTree - Keyboard Navigation #treeView', () => {
     configureTestSuite();
@@ -725,12 +727,10 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             expect(nav.update_visible_cache).not.toHaveBeenCalled();
             // nav service will now be updated after any of the following are emitted
             const emitNode = tree.nodes.first;
-            emitNode.disabled = true;
             tree.disabledChange.emit(emitNode);
             expect(nav.init_invisible_cache).not.toHaveBeenCalled();
             expect(nav.update_disabled_cache).toHaveBeenCalledTimes(1);
             expect(nav.update_visible_cache).toHaveBeenCalledTimes(0);
-            emitNode.disabled = false;
             tree.disabledChange.emit(emitNode);
             expect(nav.update_disabled_cache).toHaveBeenCalledTimes(2);
             tree.nodeCollapsing.emit({
@@ -757,10 +757,8 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             // init cache when tree nodes collection changes;
             (tree.nodes as any).changes.emit();
             expect(nav.init_invisible_cache).toHaveBeenCalledTimes(2);
-            emitNode.expanded = true;
             emitNode.expandedChange.emit(true);
             expect(nav.update_visible_cache).toHaveBeenCalledTimes(3);
-            emitNode.expanded = false;
             emitNode.expandedChange.emit(false);
             expect(nav.update_visible_cache).toHaveBeenCalledTimes(4);
             nav.ngOnDestroy();

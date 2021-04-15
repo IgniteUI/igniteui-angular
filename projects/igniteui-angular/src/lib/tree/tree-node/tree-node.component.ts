@@ -446,6 +446,10 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     }
 
     public set selected(val: boolean) {
+        if (!(this.tree?.nodes && this.tree.nodes.find((e) => e === this)) && val) {
+            this.tree.forceSelect.push(this);
+            return;
+        }
         if (val && !this.selectionService.isNodeSelected(this)) {
             this.selectionService.selectNodesWithNoEvent([this]);
         }
@@ -609,6 +613,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     public ngOnDestroy() {
         super.ngOnDestroy();
+        this.selectionService.ensureStateOnNodeDelete(this);
     }
 
     /**

@@ -66,7 +66,7 @@ export class IgxTreeSelectionService {
     }
 
     /** Select specified nodes. No event is emitted. */
-    public selectNodesWithNoEvent(nodes: IgxTreeNode<any>[], clearPrevSelection = false): void {
+    public selectNodesWithNoEvent(nodes: IgxTreeNode<any>[], clearPrevSelection = false, shouldEmit = true): void {
         if (this.tree && this.tree.selection === IGX_TREE_SELECTION_TYPE.Cascading) {
             this.cascadeSelectNodesWithNoEvent(nodes, clearPrevSelection);
             return;
@@ -79,11 +79,13 @@ export class IgxTreeSelectionService {
         }
         nodes.forEach(node => this.nodeSelection.add(node));
 
-        this.emitSelectedChangeEvent(oldSelection);
+        if (shouldEmit) {
+            this.emitSelectedChangeEvent(oldSelection);
+        }
     }
 
     /** Deselect specified nodes. No event is emitted. */
-    public deselectNodesWithNoEvent(nodes?: IgxTreeNode<any>[]): void {
+    public deselectNodesWithNoEvent(nodes?: IgxTreeNode<any>[], shouldEmit = true): void {
         const oldSelection = this.getSelectedNodes();
 
         if (!nodes) {
@@ -94,7 +96,42 @@ export class IgxTreeSelectionService {
             nodes.forEach(node => this.nodeSelection.delete(node));
         }
 
-        this.emitSelectedChangeEvent(oldSelection);
+        if (shouldEmit) {
+            this.emitSelectedChangeEvent(oldSelection);
+        }
+    }
+
+    /** Called on `node.ngOnDestroy` to ensure state is correct after node is removed */
+    public ensureStateOnNodeDelete(node: IgxTreeNode<any>): void {
+        if (this.tree?.selection !== IGX_TREE_SELECTION_TYPE.Cascading) {
+            return;
+        }
+        requestAnimationFrame(() => {
+            if (this.isNodeSelected(node)) {
+                // node is destroyed, do not emit event
+                this.deselectNodesWithNoEvent([node], false);
+            } else {
+                if (!node.parentNode) {
+                    return;
+                }
+                const assitantLeafNode = node.parentNode?.allChildren.find(e => !e._children?.length);
+                if (!assitantLeafNode) {
+                    return;
+                }
+                this.retriggerNodeState(assitantLeafNode);
+            }
+        });
+    }
+
+    /** Retriggers a node's selection state */
+    private retriggerNodeState(node: IgxTreeNode<any>): void {
+        if (node.selected) {
+            this.nodeSelection.delete(node);
+            this.selectNodesWithNoEvent([node], false, false);
+        } else {
+            this.nodeSelection.add(node);
+            this.deselectNodesWithNoEvent([node], false);
+        }
     }
 
     /** Returns array of the selected nodes. */

@@ -255,6 +255,9 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
      */
     public activeNodeBindingChange = new EventEmitter<IgxTreeNode<any>>();
 
+    /** @hidden @internal */
+    public forceSelect = [];
+
     private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
@@ -434,6 +437,12 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
 
     private subToChanges() {
         this.unsubChildren$.next();
+        // TODO: Not a hack
+        const toBeSelected = [...this.forceSelect];
+        requestAnimationFrame(() => {
+            this.selectionService.selectNodesWithNoEvent(toBeSelected);
+        });
+        this.forceSelect = [];
         this.nodes.forEach(node => {
             node.expandedChange.pipe(takeUntil(this.unsubChildren$)).subscribe(nodeState => {
                 this.navService.update_visible_cache(node, nodeState);

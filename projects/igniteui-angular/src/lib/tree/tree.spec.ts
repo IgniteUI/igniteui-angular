@@ -35,7 +35,7 @@ describe('IgxTree #treeView', () => {
             mockTreeService = jasmine.createSpyObj('treeService',
                 ['register', 'collapse', 'expand', 'collapsing', 'isExpanded']);
             mockSelectionService = jasmine.createSpyObj('selectionService',
-                ['register', 'deselectNodesWithNoEvent']);
+                ['register', 'deselectNodesWithNoEvent', 'ensureStateOnNodeDelete', 'selectNodesWithNoEvent']);
             mockElementRef = jasmine.createSpyObj('elementRef', [], {
                 nativeElement: jasmine.createSpyObj('nativeElement', ['focus'], {})
             });
@@ -352,6 +352,13 @@ describe('IgxTree #treeView', () => {
                 const childNode = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
                     mockNavService, mockCdr, mockBuilder, mockElementRef, node);
                 expect(childNode.path).toEqual([node, childNode]);
+            });
+
+            it('Should clear itself from selection service on destroy', () => {
+                const node = new IgxTreeNodeComponent<any>(mockTree, mockSelectionService, mockTreeService,
+                    mockNavService, mockCdr, mockBuilder, mockElementRef, null);
+                node.ngOnDestroy();
+                expect(mockSelectionService.ensureStateOnNodeDelete).toHaveBeenCalledWith(node);
             });
         });
         describe('IgxTreeService', () => {

@@ -580,5 +580,74 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
             };
             expect(mockTree.nodeSelection.emit).toHaveBeenCalledWith(expected);
         });
+
+        it('Should ensure correct state after a node entry is destroyed', () => {
+            // instant frames go 'BRRRR'
+            spyOn(window, 'requestAnimationFrame').and.callFake((callback: any) => callback());
+            const deselectSpy = spyOn(selectionService, 'deselectNodesWithNoEvent');
+            const selectSpy = spyOn(selectionService, 'selectNodesWithNoEvent');
+            const tree = {
+                selection: IGX_TREE_SELECTION_TYPE.None
+            } as any;
+            const selectedNodeSpy = spyOn(selectionService, 'isNodeSelected').and.returnValue(false);
+            const mockNode = {
+                selected: false
+            } as any;
+            selectionService.register(tree);
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(deselectSpy).not.toHaveBeenCalled();
+            expect(selectSpy).not.toHaveBeenCalled();
+            expect(selectedNodeSpy).not.toHaveBeenCalled();
+            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(deselectSpy).not.toHaveBeenCalled();
+            expect(selectSpy).not.toHaveBeenCalled();
+            expect(selectedNodeSpy).not.toHaveBeenCalled();
+            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            selectedNodeSpy.and.returnValue(true);
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(selectedNodeSpy).toHaveBeenCalledTimes(1);
+            expect(selectedNodeSpy).toHaveBeenCalledWith(mockNode);
+            expect(deselectSpy).toHaveBeenCalledTimes(1);
+            expect(deselectSpy).toHaveBeenCalledWith([mockNode], false);
+            expect(selectSpy).not.toHaveBeenCalled();
+            mockNode.parentNode = false;
+            selectedNodeSpy.and.returnValue(false);
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(selectedNodeSpy).toHaveBeenCalledTimes(2);
+            expect(deselectSpy).toHaveBeenCalledTimes(1);
+            expect(selectSpy).not.toHaveBeenCalled();
+            const childrenSpy = jasmine.createSpyObj('creep', ['find']);
+            childrenSpy.find.and.returnValue(null);
+            mockNode.parentNode = {
+                allChildren: childrenSpy
+            };
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(selectedNodeSpy).toHaveBeenCalledTimes(3);
+            expect(deselectSpy).toHaveBeenCalledTimes(1);
+            expect(selectSpy).not.toHaveBeenCalled();
+            const mockChild = {
+                selected: true
+            } as any;
+            childrenSpy.find.and.returnValue(mockChild);
+
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(selectedNodeSpy).toHaveBeenCalledTimes(4);
+            expect(deselectSpy).toHaveBeenCalledTimes(1);
+            expect(selectSpy).toHaveBeenCalledTimes(1);
+            expect(selectSpy).toHaveBeenCalledWith([mockChild], false, false);
+
+            mockChild.selected = false;
+            selectionService.ensureStateOnNodeDelete(mockNode);
+            expect(selectedNodeSpy).toHaveBeenCalledTimes(5);
+            expect(deselectSpy).toHaveBeenCalledTimes(2);
+            expect(deselectSpy).toHaveBeenCalledWith([mockChild], false);
+            expect(selectSpy).toHaveBeenCalledTimes(1);
+        });
     });
 });
