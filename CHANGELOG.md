@@ -10,8 +10,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
         - `onScroll` -> `gridScroll`
         - `onSelection` -> `selected`
-        - `onRowSelectionChange` -> `rowSelectionChange`
-        - `onColumnSelectionChange` -> `columnSelectionChange`
+        - `onRowSelectionChange` -> `rowSelected`
+        - `onColumnSelectionChange` -> `columnSelected`
         - `onColumnPinning` -> `columnPin`
         - `onColumnInit` -> `columnInit`
         - `onSortingDone` -> `sortingDone`

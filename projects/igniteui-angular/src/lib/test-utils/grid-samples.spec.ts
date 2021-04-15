@@ -231,13 +231,13 @@ export class RowSelectionWithoutPrimaryKeyComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` rowSelection = "multiple"`,
-        EventSubscriptions.rowSelectionChange,
+        EventSubscriptions.rowSelected,
         ColumnDefinitions.productBasic)
 })
 export class SelectionCancellableComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductData();
 
-    public rowSelectionChange(evt) {
+    public rowSelected(evt) {
         if (evt.added.length > 0 && (evt.added[0].ProductID) % 2 === 0) {
             evt.newSelection = evt.oldSelection || [];
         }

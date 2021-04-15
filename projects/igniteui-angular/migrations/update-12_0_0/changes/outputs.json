@@ -130,6 +130,14 @@
             }
         },
         {
+            "name": "onScroll",
+            "replaceWith": "gridScroll",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onSelection",
             "replaceWith": "selected",
             "owner": {
@@ -154,8 +162,16 @@
             }
         },
         {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onRowSelectionChange",
-            "replaceWith": "rowSelectionChange",
+            "replaceWith": "rowSelected",
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -163,7 +179,7 @@
         },
         {
             "name": "onRowSelectionChange",
-            "replaceWith": "rowSelectionChange",
+            "replaceWith": "rowSelected",
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -171,15 +187,23 @@
         },
         {
             "name": "onRowSelectionChange",
-            "replaceWith": "rowSelectionChange",
+            "replaceWith": "rowSelected",
             "owner": {
                 "selector": "igx-hierarchical-grid",
                 "type": "component"
             }
         },
         {
+            "name": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onColumnSelectionChange",
-            "replaceWith": "columnSelectionChange",
+            "replaceWith": "columnSelected",
             "owner": {
                 "selector": "igx-grid",
                 "type": "component"
@@ -187,7 +211,7 @@
         },
         {
             "name": "onColumnSelectionChange",
-            "replaceWith": "columnSelectionChange",
+            "replaceWith": "columnSelected",
             "owner": {
                 "selector": "igx-tree-grid",
                 "type": "component"
@@ -195,9 +219,17 @@
         },
         {
             "name": "onColumnSelectionChange",
-            "replaceWith": "columnSelectionChange",
+            "replaceWith": "columnSelected",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -226,6 +258,14 @@
             }
         },
         {
+            "name": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onColumnInit",
             "replaceWith": "columnInit",
             "owner": {
@@ -246,6 +286,14 @@
             "replaceWith": "columnInit",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnInit",
+            "replaceWith": "columnInit",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -274,6 +322,14 @@
             }
         },
         {
+            "name": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onFilteringDone",
             "replaceWith": "filteringDone",
             "owner": {
@@ -294,6 +350,14 @@
             "replaceWith": "filteringDone",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -322,6 +386,14 @@
             }
         },
         {
+            "name": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onRowAdded",
             "replaceWith": "rowAdded",
             "owner": {
@@ -342,6 +414,14 @@
             "replaceWith": "rowAdded",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -370,6 +450,14 @@
             }
         },
         {
+            "name": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onColumnResized",
             "replaceWith": "columnResized",
             "owner": {
@@ -390,6 +478,14 @@
             "replaceWith": "columnResized",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnResized",
+            "replaceWith": "columnResized",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -418,6 +514,14 @@
             }
         },
         {
+            "name": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onDoubleClick",
             "replaceWith": "doubleClick",
             "owner": {
@@ -438,6 +542,14 @@
             "replaceWith": "doubleClick",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -466,6 +578,14 @@
             }
         },
         {
+            "name": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onColumnMovingStart",
             "replaceWith": "columnMovingStart",
             "owner": {
@@ -486,6 +606,14 @@
             "replaceWith": "columnMovingStart",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -514,6 +642,14 @@
             }
         },
         {
+            "name": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onColumnMovingEnd",
             "replaceWith": "columnMovingEnd",
             "owner": {
@@ -534,6 +670,14 @@
             "replaceWith": "columnMovingEnd",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -562,6 +706,14 @@
             }
         },
         {
+            "name": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onRowDragStart",
             "replaceWith": "rowDragStart",
             "owner": {
@@ -582,6 +734,14 @@
             "replaceWith": "rowDragStart",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -610,6 +770,14 @@
             }
         },
         {
+            "name": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onGridCopy",
             "replaceWith": "gridCopy",
             "owner": {
@@ -630,6 +798,14 @@
             "replaceWith": "gridCopy",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -658,6 +834,14 @@
             }
         },
         {
+            "name": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "owner": {
+                "selector": "igx-row-toggle",
+                "type": "component"
+            }
+        },
+        {
             "name": "onRowPinning",
             "replaceWith": "rowPinning",
             "owner": {
@@ -678,6 +862,14 @@
             "replaceWith": "rowPinning",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         },
@@ -706,6 +898,14 @@
             }
         },
         {
+            "name": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onRangeSelection",
             "replaceWith": "rangeSelected",
             "owner": {
@@ -726,6 +926,14 @@
             "replaceWith": "rangeSelected",
             "owner": {
                 "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "owner": {
+                "selector": "igx-row-island",
                 "type": "component"
             }
         }

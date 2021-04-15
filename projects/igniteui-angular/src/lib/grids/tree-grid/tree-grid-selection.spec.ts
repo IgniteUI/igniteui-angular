@@ -330,7 +330,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('Header checkbox should NOT select/deselect all rows when selectionMode is single', () => {
-            spyOn(treeGrid.rowSelectionChange, 'emit').and.callThrough();
+            spyOn(treeGrid.rowSelected, 'emit').and.callThrough();
             treeGrid.rowSelection = GridSelectionMode.single;
             fix.detectChanges();
 
@@ -340,7 +340,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
             TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
             expect(treeGrid.selectedRows).toEqual([]);
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledTimes(0);
 
             TreeGridFunctions.clickHeaderRowSelectionCheckbox(fix);
             fix.detectChanges();
@@ -348,7 +348,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyHeaderCheckboxSelection(fix, false);
             TreeGridFunctions.verifyDataRowsSelection(fix, [], false);
             expect(treeGrid.selectedRows).toEqual([]);
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('should be able to select row of any level', () => {
@@ -1600,13 +1600,13 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 6, true, true);
         }));
 
-        it(`Setting true to the cancel property of the rowSelectionChange event should not modify the selected rows collection`, () => {
+        it(`Setting true to the cancel property of the rowSelected event should not modify the selected rows collection`, () => {
 
-            treeGrid.rowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+            treeGrid.rowSelected.subscribe((e: IRowSelectionEventArgs) => {
                 e.cancel = true;
             });
 
-            spyOn(treeGrid.rowSelectionChange, 'emit').and.callThrough();
+            spyOn(treeGrid.rowSelected, 'emit').and.callThrough();
 
             treeGrid.selectionService.selectRowsWithNoEvent([317]);
             fix.detectChanges();
@@ -1623,7 +1623,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 cancel: true
             };
 
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledWith(args);
 
             fix.detectChanges();
             expect(getVisibleSelectedRows(fix).length).toBe(4);
@@ -1683,11 +1683,11 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('selectRowById event SHOULD be emitted correctly with valid arguments.', () => {
-            spyOn(treeGrid.rowSelectionChange, 'emit').and.callThrough();
+            spyOn(treeGrid.rowSelected, 'emit').and.callThrough();
             treeGrid.selectionService.selectRowsWithNoEvent([317]);
             fix.detectChanges();
 
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledTimes(0);
             expect(getVisibleSelectedRows(fix).length).toBe(4);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 0, false, null);
             TreeGridFunctions.verifyRowByIndexSelectionAndCheckboxState(fix, 3, true, true);
@@ -1707,7 +1707,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 cancel: false
             };
 
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledWith(args);
 
             treeGrid.cdr.detectChanges();
 
@@ -1723,10 +1723,10 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         });
 
         it('After changing the newSelection arguments of onSelectedRowChange, the arguments SHOULD be correct.', () => {
-            treeGrid.rowSelectionChange.subscribe((e: IRowSelectionEventArgs) => {
+            treeGrid.rowSelected.subscribe((e: IRowSelectionEventArgs) => {
                 e.newSelection = [847, 663];
             });
-            spyOn(treeGrid.rowSelectionChange, 'emit').and.callThrough();
+            spyOn(treeGrid.rowSelected, 'emit').and.callThrough();
 
             treeGrid.selectionService.selectRowsWithNoEvent([317], true);
             fix.detectChanges();
@@ -1742,7 +1742,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
                 cancel: false
             };
 
-            expect(treeGrid.rowSelectionChange.emit).toHaveBeenCalledWith(selectionArgs);
+            expect(treeGrid.rowSelected.emit).toHaveBeenCalledWith(selectionArgs);
 
             treeGrid.cdr.detectChanges();
 

@@ -8,7 +8,7 @@
     [allowFiltering]="true"
     primaryKey = "id"
     filterMode="excelStyleFilter"
-    (rowSelectionChange)="handleRowSelectionChange($event)"
+    (rowSelected)="handleRowSelectionChange($event)"
     rowSelection="single"
     #grid>
     <igx-column *ngFor="let each of nestedConfigColumns"

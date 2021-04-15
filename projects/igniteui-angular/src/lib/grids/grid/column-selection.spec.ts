@@ -58,7 +58,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         }));
 
         it('setting selected and selectable properties ', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             grid.columnList.forEach(column => {
                 expect(column.selectable).toBeTruthy();
                 expect(column.selected).toBeFalsy();
@@ -81,17 +81,17 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(col, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('selecting a column with mouse click', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             colProductName.selectable = false;
             fix.detectChanges();
 
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
             let args: IColumnSelectionEventArgs = {
                 oldSelection: [],
                 newSelection: ['ProductID'],
@@ -100,17 +100,17 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridFunctions.clickColumnHeaderUI('ProductName', fix);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductName, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
             args = {
                 oldSelection: ['ProductID'],
                 newSelection: ['InStock'],
@@ -119,11 +119,11 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridFunctions.clickColumnHeaderUI('InStock', fix);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colInStock, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
             args = {
                 oldSelection: ['InStock'],
                 newSelection: [],
@@ -132,7 +132,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
         });
 
         it('verify selectable class is applied when hover a column', () => {
@@ -180,11 +180,11 @@ describe('IgxGrid - Column Selection #grid', () => {
             });
         });
 
-        it('verify canceling event columnSelectionChange', () => {
+        it('verify canceling event columnSelected', () => {
             GridFunctions.clickColumnHeaderUI('ProductID', fix);
             GridSelectionFunctions.verifyColumnAndCellsSelected(colProductID);
 
-            grid.columnSelectionChange.subscribe((e: IColumnSelectionEventArgs) => {
+            grid.columnSelected.subscribe((e: IColumnSelectionEventArgs) => {
                 e.cancel = true;
             });
 
@@ -212,7 +212,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify method selectColumns', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             const colUnits = grid.getColumnByName('UnitsInStock');
             const colOrderDate = grid.getColumnByName('OrderDate');
             // select columns with array of fields
@@ -249,11 +249,11 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnSelected(colProductID);
             GridSelectionFunctions.verifyColumnsSelected([colOrderDate, colInStock, colProductName], false);
             expect(grid.selectedColumns()).toEqual([colProductID]);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('verify method deselectColumns', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             grid.columns.forEach(col => col.selected = true);
 
             const colUnits = grid.getColumnByName('UnitsInStock');
@@ -284,7 +284,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         });
 
         it('verify methods selectAllColumns  and deselectAllColumns', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             // select all columns
             grid.selectAllColumns();
             fix.detectChanges();
@@ -311,7 +311,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 expect(c.selected).toEqual(true);
             });
 
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('verify method getSelectedColumnsData', () => {
@@ -362,7 +362,7 @@ describe('IgxGrid - Column Selection #grid', () => {
         }));
 
         it('selecting a column with ctrl + mouse click', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             colProductName.selectable = false;
             fix.detectChanges();
 
@@ -370,7 +370,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             grid.cdr.detectChanges();
 
             GridSelectionFunctions.verifyColumnSelected(colProductID);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
             let args: IColumnSelectionEventArgs = {
                 oldSelection: [],
                 newSelection: ['ProductID'],
@@ -379,14 +379,14 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
             grid.cdr.detectChanges();
 
             GridSelectionFunctions.verifyColumnSelected(colProductID);
             GridSelectionFunctions.verifyColumnSelected(colInStock);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
             args = {
                 oldSelection: ['ProductID'],
                 newSelection: ['ProductID', 'InStock'],
@@ -395,11 +395,11 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickOnColumnToSelect(colProductName, true);
             grid.cdr.detectChanges();
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
 
             const colOrderDate = grid.getColumnByName('OrderDate');
             GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, true);
@@ -408,7 +408,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnSelected(colProductID);
             GridSelectionFunctions.verifyColumnSelected(colInStock);
             GridSelectionFunctions.verifyColumnSelected(colOrderDate);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
             args = {
                 oldSelection: ['ProductID', 'InStock'],
                 newSelection: ['ProductID', 'InStock', 'OrderDate'],
@@ -417,7 +417,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickOnColumnToSelect(colInStock, true);
             grid.cdr.detectChanges();
@@ -425,7 +425,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnSelected(colProductID);
             GridSelectionFunctions.verifyColumnSelected(colOrderDate);
             GridSelectionFunctions.verifyColumnSelected(colInStock, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(4);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(4);
             args = {
                 oldSelection: ['ProductID', 'InStock', 'OrderDate'],
                 newSelection: ['ProductID', 'OrderDate'],
@@ -434,14 +434,14 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
             GridSelectionFunctions.clickOnColumnToSelect(colOrderDate);
             grid.cdr.detectChanges();
 
             GridSelectionFunctions.verifyColumnSelected(colProductID, false);
             GridSelectionFunctions.verifyColumnSelected(colOrderDate);
             GridSelectionFunctions.verifyColumnSelected(colInStock, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(5);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(5);
             args = {
                 oldSelection: ['ProductID', 'OrderDate'],
                 newSelection: ['OrderDate'],
@@ -450,11 +450,11 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
         });
 
         it('selecting a column with shift + mouse click', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             const colUnits = grid.getColumnByName('UnitsInStock');
             const colOrderDate = grid.getColumnByName('OrderDate');
             colUnits.selected = true;
@@ -466,7 +466,7 @@ describe('IgxGrid - Column Selection #grid', () => {
 
             GridSelectionFunctions.verifyColumnSelected(colUnits);
             GridSelectionFunctions.verifyColumnSelected(colInStock);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
             let args: IColumnSelectionEventArgs = {
                 oldSelection: ['UnitsInStock'],
                 newSelection: ['UnitsInStock', 'InStock'],
@@ -475,7 +475,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickOnColumnToSelect(colOrderDate, false, true);
             grid.cdr.detectChanges();
@@ -483,7 +483,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnSelected(colOrderDate);
             GridSelectionFunctions.verifyColumnSelected(colInStock);
             GridSelectionFunctions.verifyColumnSelected(colUnits);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
             args = {
                 oldSelection: ['UnitsInStock', 'InStock'],
                 newSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
@@ -492,7 +492,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
 
             GridSelectionFunctions.clickOnColumnToSelect(colProductID, false, true);
             grid.cdr.detectChanges();
@@ -502,7 +502,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnSelected(colProductID);
             GridSelectionFunctions.verifyColumnSelected(colInStock);
             GridSelectionFunctions.verifyColumnSelected(colUnits);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
             args = {
                 oldSelection: ['UnitsInStock', 'InStock', 'OrderDate'],
                 newSelection: ['UnitsInStock', 'InStock', 'ProductID'],
@@ -511,7 +511,7 @@ describe('IgxGrid - Column Selection #grid', () => {
                 event: jasmine.anything() as any,
                 cancel: false
             };
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnSelected.emit).toHaveBeenCalledWith(args);
         });
 
         it('Verify changing selection to none', () => {
@@ -637,7 +637,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const companyName = grid.getColumnByName('CompanyName');
             const contactName = grid.getColumnByName('ContactName');
             const contactTitle = grid.getColumnByName('ContactTitle');
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
 
             // verify setting selected true on a column group
             genInf.selected = true;
@@ -661,7 +661,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnsSelected([companyName, contactName, contactTitle]);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, genInf);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('setting selected on a column group with no selectable children', () => {
@@ -673,7 +673,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const postalCode = grid.getColumnByName('PostalCode');
             const city = grid.getColumnByName('City');
             const address = grid.getColumnByName('Address');
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
 
             // verify setting selected true on a column group
             countryInf.selected = true;
@@ -692,7 +692,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             GridSelectionFunctions.verifyColumnGroupSelected(fix, countryInf, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, regInf, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, cityInf, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('setting selectable false to group children', () => {
@@ -701,7 +701,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             const companyName = grid.getColumnByName('CompanyName');
             const contactName = grid.getColumnByName('ContactName');
             const contactTitle = grid.getColumnByName('ContactTitle');
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
 
             // verify setting selected true on a column group
             contactName.selectable = false;
@@ -717,7 +717,7 @@ describe('IgxGrid - Column Selection #grid', () => {
             fix.detectChanges();
             GridSelectionFunctions.verifyColumnGroupSelected(fix, personDetails, false);
             GridSelectionFunctions.verifyColumnGroupSelected(fix, genInf, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(0);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(0);
         });
 
         it('verify that when hover group all its selectable children have correct classes', () => {

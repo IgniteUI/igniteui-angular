@@ -124,7 +124,7 @@ export class IgxTreeGridSelectionService extends IgxGridSelectionService {
         // retrieve rows/parents/children which has been added/removed from the selection
         this.handleAddedAndRemovedArgs(args);
 
-        this.grid.rowSelectionChange.emit(args);
+        this.grid.rowSelected.emit(args);
 
         if (args.cancel) {
             return;

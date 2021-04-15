@@ -550,7 +550,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Column selection: Should be able to select columns when columnSelection is single', () => {
-            spyOn(grid.columnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             const columnID = grid.getColumnByName('ID');
             const columnParentID = grid.getColumnByName('ParentID');
             const columnName = grid.getColumnByName('Name');
@@ -593,7 +593,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnName, false);
-            expect(grid.columnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
         });
 
         it('Group by: Should be able group columns with keyboard', () => {

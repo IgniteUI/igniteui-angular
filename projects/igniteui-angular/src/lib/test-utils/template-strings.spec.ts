@@ -481,7 +481,7 @@ export class EventSubscriptions {
 
     public static onEditDone = ` (cellEdit)="editDone($event)"`;
 
-    public static rowSelectionChange = ` (rowSelectionChange)="rowSelectionChange($event)"`;
+    public static rowSelected = ` (rowSelected)="rowSelected($event)"`;
 
     public static columnResized = ` (columnResized)="columnResized($event)"`;
 

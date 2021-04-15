@@ -41,9 +41,9 @@ export interface IEditDone {
     editDone(event): void;
 }
 
-/* Add to template: ` (rowSelectionChange)="rowSelectionChange($event)"` */
+/* Add to template: ` (rowSelected)="rowSelectionChange($event)"` */
 export interface IGridRowSelectionChange {
-    rowSelectionChange(event): void;
+    rowSelected(event): void;
 }
 
 /* Add to template: ` (columnResized)="columnResized($event)"` */
