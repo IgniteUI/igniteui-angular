@@ -108,30 +108,6 @@ describe('Row Pinning #grid', () => {
             grid.pinRow(fix.componentInstance.data[0]);
             fix.detectChanges();
 
-            // Check if the row is pinned to the bottom through the Row pinned API
-            expect(grid.getRowByIndex(0).pinned).toBe(true);
-
-            // Toggle pin state with row API
-            grid.getRowByIndex(0).pinned = false;
-            expect(grid.getRowByIndex(0).pinned).toBe(false);
-            fix.detectChanges();
-            grid.getRowByIndex(0).pinned = true;
-            expect(grid.getRowByIndex(0).pinned).toBe(true);
-            fix.detectChanges();
-
-            // Pin/Unpin with the methods
-            grid.getRowByIndex(0).unpin();
-            expect(grid.getRowByIndex(0).pinned).toBe(false);
-            fix.detectChanges();
-            grid.getRowByIndex(0).pin();
-            expect(grid.getRowByIndex(0).pinned).toBe(true);
-            fix.detectChanges();
-
-            // Check API methods
-            expect(grid.getRowByIndex(0).key).toBeTruthy();
-            expect(grid.getRowByIndex(0).data).toBeTruthy();
-            expect(grid.getRowByIndex(0).pinned).toBe(true);
-
             pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer[0].children.length).toBe(2);
             expect(pinRowContainer[0].children[0].context.rowID).toBe(fix.componentInstance.data[1]);
@@ -795,6 +771,71 @@ describe('Row Pinning #grid', () => {
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, unpinnedRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridUnpinnedRow, fix.componentInstance.colGroups);
         });
+
+        it('should test getRowByIndex API members.', () => {
+            fix.componentInstance.pinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Bottom };
+            fix.detectChanges();
+
+            // pin 1st
+            grid.pinRow(fix.componentInstance.data[0]);
+            fix.detectChanges();
+            const firstRow = grid.getRowByIndex(0);
+            // Check if the row is pinned to the bottom through the Row pinned API
+            expect(firstRow.pinned).toBe(true);
+
+            // Toggle pin state with row API
+            firstRow.pinned = false;
+            expect(firstRow.pinned).toBe(false);
+            fix.detectChanges();
+            firstRow.pinned = true;
+            expect(firstRow.pinned).toBe(true);
+            fix.detectChanges();
+
+            // Check dom existence
+            expect(grid.pinnedRows.length).toBe(1);
+            let pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children[0].nativeElement)
+                .toBe(grid.gridAPI.get_row_by_index(fix.componentInstance.data.length).nativeElement);
+
+            // Pin/Unpin with the methods
+            firstRow.unpin();
+            expect(firstRow.pinned).toBe(false);
+            fix.detectChanges();
+            firstRow.pin();
+            expect(firstRow.pinned).toBe(true);
+            fix.detectChanges();
+
+            // Check again pinned row presence
+            pinRowContainer = fix.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
+            expect(pinRowContainer[0].children[0].nativeElement)
+                .toBe(grid.gridAPI.get_row_by_index(fix.componentInstance.data.length).nativeElement);
+
+            // Check select
+            firstRow.selected = true;
+            fix.detectChanges();
+            expect(firstRow.selected).toBe(true);
+
+            // Check pinned row existence after the selection
+            expect(pinRowContainer[0].children[0].nativeElement.offsetParent).toBeDefined();
+            expect(pinRowContainer[0].children[0].nativeElement.offsetWidth).toBeGreaterThan(0);
+
+            firstRow.selected = false;
+            fix.detectChanges();
+            expect(firstRow.selected).toBe(false);
+
+            // Delete row
+            firstRow.delete();
+            fix.detectChanges();
+            expect(grid.gridAPI.get_row_by_index(0).rowData.ID).toEqual('ANATR');
+            // TO DO Check pinned row existence after the row deletion
+            expect(pinRowContainer[0].children[0].nativeElement.offsetParent).toBeNull();
+            expect(pinRowContainer[0].children[0].nativeElement.offsetWidth).toEqual(0);
+
+            // Check API methods
+            expect(firstRow.key).toBeTruthy();
+            expect(firstRow.data).toBeTruthy();
+            expect(firstRow.pinned).toBe(true);
+        });
     });
 
     describe(' Hiding', () => {
@@ -1228,7 +1269,8 @@ export class GridRowPinningComponent {
 
 @Component({
     template: `
-    <igx-grid [data]="data" height="500px" [pinning]='pinningConfig'>
+    <igx-grid [data]="data" height="500px" [pinning]='pinningConfig' [rowSelection]="'single'"
+        [rowEditable]="true">
         <igx-column-layout *ngFor='let group of colGroups'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
