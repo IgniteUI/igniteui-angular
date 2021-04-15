@@ -37,6 +37,7 @@
     $text-color: null,
 ) {
     $name: 'funnel-chart';
+    $selector: 'igx-funnel-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -49,6 +50,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         brushes: $brushes,
         outlines: $outlines,
         outer-label-alignment: $outer-label-alignment,
