@@ -17,7 +17,9 @@ import {
     IgxStringFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxDateFilteringOperand
+    IgxDateFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
@@ -228,9 +230,11 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
             case DataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
-            case DataType.Time:
-            case DataType.DateTime:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
+            case DataType.Time:
+                return IgxTimeFilteringOperand.instance().condition(conditionName);
+            case DataType.DateTime:
+                return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
         }

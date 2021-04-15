@@ -582,7 +582,7 @@ export class IgxTimeFilteringOperand extends IgxFilteringOperand {
         if (!target) {
             return false;
         }
-        return searchVal.has(target.toISOString());
+        return searchVal.has(target);
     }
 
     protected validateInputData(target: Date) {

@@ -16,7 +16,8 @@ import { FilteringExpressionsTree } from '../../../data-operations/filtering-exp
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DataType } from '../../../data-operations/data-util';
 import {
-    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand, IgxStringFilteringOperand
+    IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
+    IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { ExpressionUI } from '../grid-filtering.service';
 import { Subject } from 'rxjs';
@@ -360,7 +361,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                         if (this.esf.column.dataType === DataType.Boolean) {
                             condition = this.createCondition(element.value.toString());
                         } else {
-                            condition = this.createCondition('equals');
+                            const filterCondition = this.esf.column.dataType === DataType.Time ? 'at' : 'equals';
+                            condition = this.createCondition(filterCondition);
                         }
                     } else {
                         condition = this.createCondition('empty');
@@ -379,7 +381,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     blanksItem = selectedItems[blanksItemIndex];
                     selectedItems.splice(blanksItemIndex, 1);
                 }
-
                 filterTree.filteringOperands.push({
                     condition: this.createCondition('in'),
                     fieldName: this.esf.column.field,
@@ -419,9 +420,11 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
             case DataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
-            case DataType.DateTime:
-            case DataType.Time:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
+            case DataType.Time:
+                return IgxTimeFilteringOperand.instance().condition(conditionName);
+            case DataType.DateTime:
+                return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
         }
