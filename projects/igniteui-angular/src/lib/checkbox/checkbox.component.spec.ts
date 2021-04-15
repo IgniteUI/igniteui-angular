@@ -381,7 +381,7 @@ class CheckboxReadonlyComponent {
 })
 class CheckboxExternalLabelComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-    label = 'My Label';
+    public label = 'My Label';
 }
 
 @Component({
@@ -389,7 +389,7 @@ class CheckboxExternalLabelComponent {
 })
 class CheckboxInvisibleLabelComponent {
     @ViewChild('cb', { static: true }) public cb: IgxCheckboxComponent;
-    label = 'Invisible Label';
+    public label = 'Invisible Label';
 }
 
 @Component({
