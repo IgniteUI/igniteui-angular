@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { KEYS } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -278,9 +278,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     protected renderer: Renderer2,
     protected elementRef: ElementRef,
     protected maskParser: MaskParsingService,
+    protected platform: PlatformUtil,
     @Inject(DOCUMENT) private _document: any,
     @Inject(LOCALE_ID) private _locale: any) {
-    super(elementRef, maskParser, renderer);
+    super(elementRef, maskParser, renderer, platform);
     this.document = this._document as Document;
     this.locale = this.locale || this._locale;
   }
@@ -390,12 +391,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public setDisabledState?(isDisabled: boolean): void { }
+  public setDisabledState?(_isDisabled: boolean): void { }
 
   /** @hidden @internal */
-  public onInputChanged() {
-    super.onInputChanged();
+  public onInputChanged(isComposing: boolean) {
+    super.onInputChanged(isComposing);
     if (this.inputIsComplete()) {
       const parsedDate = this.parseDate(this.inputValue);
       if (DateTimeUtil.isValidDate(parsedDate)) {
@@ -418,16 +418,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   /** @hidden @internal */
   public onKeyDown(event: KeyboardEvent): void {
     super.onKeyDown(event);
+    const key = event.key;
+
     if (event.altKey) {
       return;
     }
-    if (event.key === KEYS.UP_ARROW || event.key === KEYS.UP_ARROW_IE ||
-      event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE) {
+
+    if (key === this.platform.KEYMAP.ARROW_DOWN || key === this.platform.KEYMAP.ARROW_UP) {
       this.spin(event);
       return;
     }
 
-    if (event.ctrlKey && event.key === KEYS.SEMICOLON) {
+    if (event.ctrlKey && key === this.platform.KEYMAP.SEMICOLON) {
       this.updateValue(new Date());
     }
 
@@ -670,12 +672,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private spin(event: KeyboardEvent): void {
     event.preventDefault();
     switch (event.key) {
-      case KEYS.UP_ARROW:
-      case KEYS.UP_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_UP:
         this.increment();
         break;
-      case KEYS.DOWN_ARROW:
-      case KEYS.DOWN_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_DOWN:
         this.decrement();
         break;
     }
@@ -688,15 +688,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private moveCursor(event: KeyboardEvent): void {
     const value = (event.target as HTMLInputElement).value;
     switch (event.key) {
-      case KEYS.LEFT_ARROW:
-      case KEYS.LEFT_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_LEFT:
         if (event.ctrlKey) {
           event.preventDefault();
           this.setSelectionRange(this.getNewPosition(value));
         }
         break;
-      case KEYS.RIGHT_ARROW:
-      case KEYS.RIGHT_ARROW_IE:
+      case this.platform.KEYMAP.ARROW_RIGHT:
         if (event.ctrlKey) {
           event.preventDefault();
           this.setSelectionRange(this.getNewPosition(value, 1));

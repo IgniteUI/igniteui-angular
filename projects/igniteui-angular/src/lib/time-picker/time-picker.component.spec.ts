@@ -1705,7 +1705,7 @@ describe('IgxTimePicker', () => {
             }));
 
         it('should apply disabled style for time outside the min and max values', fakeAsync(() => {
-            timePicker = new IgxTimePickerComponent(null, null);
+            timePicker = new IgxTimePickerComponent(null, null, null);
             fixture.detectChanges();
             timePicker.format = 'hh:mm:ss tt';
             const date = new Date(2018, 10, 27, 9, 50, 58);
@@ -2210,11 +2210,11 @@ describe('IgxTimePicker', () => {
             renderer2 = { setAttribute: () => { } };
             spyOn(renderer2, 'setAttribute').and.callFake(() => {});
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(element, null, null, document, renderer2);
+            inputGroup = new IgxInputGroupComponent(element, null, null, document, renderer2, null);
         });
 
         it('should initialize time picker with required correctly', () => {
-            const timePicker = new IgxTimePickerComponent(injector, cdr);
+            const timePicker = new IgxTimePickerComponent(injector, cdr, null);
             timePicker['_inputGroup'] = inputGroup;
             timePicker['toggleRef'] = toggleRef;
             ngModel.control.validator = () => ({ required: true });
@@ -2227,7 +2227,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should update inputGroup isRequired correctly', () => {
-            const timePicker = new IgxTimePickerComponent(injector, cdr);
+            const timePicker = new IgxTimePickerComponent(injector, cdr, null);
             timePicker['_inputGroup'] = inputGroup;
             timePicker['toggleRef'] = toggleRef;
             timePicker.ngOnInit();

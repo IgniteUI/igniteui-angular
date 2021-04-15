@@ -8,3 +8,7 @@
 .tab-content {
     padding: 16px;
 }
+
+.igx-bottom-nav-item-content {
+    padding: 10px;
+}

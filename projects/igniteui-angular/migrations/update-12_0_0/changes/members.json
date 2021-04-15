@@ -1,6 +1,13 @@
 {
     "$schema": "../../common/schema/members-changes.schema.json",
     "changes": [
+    	{
+            "member": "onColumnChange",
+            "replaceWith": "columnChange",
+            "definedIn": [
+                "IgxColumnComponent"
+            ]
+        },
         {
             "member": "isSpinLoop",
             "replaceWith": "spinLoop",

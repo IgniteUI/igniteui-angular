@@ -74,6 +74,22 @@
             }
         },
         {
+            "name": "class",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "class",
+            "remove": true,
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        },
+        {
             "name": "isSpinLoop",
             "replaceWith": "spinLoop",
             "owner": {

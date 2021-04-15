@@ -374,7 +374,7 @@ export class DefaultSizeAndSummaryComponent extends BasicGridComponent {
 
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
-        return scrollbar.offsetWidth < scrollbar.children[0].offsetWidth;
+        return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
     }
 }
 

@@ -17,7 +17,7 @@ import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { IBaseCancelableBrowserEventArgs, isDate, KEYS, parseDate } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -427,6 +427,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: any,
+        protected platform: PlatformUtil,
         private _injector: Injector,
         private _moduleRef: NgModuleRef<any>,
         @Inject(IgxOverlayService) private _overlayService: IgxOverlayService,
@@ -440,14 +441,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
-            case KEYS.UP_ARROW:
-            case KEYS.UP_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_UP:
                 if (event.altKey) {
                     this.close();
                 }
                 break;
-            case KEYS.DOWN_ARROW:
-            case KEYS.DOWN_ARROW_IE:
+            case this.platform.KEYMAP.ARROW_DOWN:
                 if (event.altKey) {
                     this.open();
                 }
