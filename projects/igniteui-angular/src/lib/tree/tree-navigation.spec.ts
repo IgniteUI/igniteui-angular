@@ -402,7 +402,7 @@ describe('IgxTree - Keyboard Navigation #treeView', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', tree.nodes.toArray()[2].nativeElement);
             fix.detectChanges();
 
-            tree.nodes.toArray()[2].children.forEach(child => {
+            tree.nodes.toArray()[2]._children.forEach(child => {
                 child.disabled = true;
             });
             fix.detectChanges();

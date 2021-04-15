@@ -5,6 +5,7 @@ import { IgxTreeService } from './tree.service';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { Subject } from 'rxjs';
 
+/** @hidden @internal */
 @Injectable()
 export class IgxTreeNavigationService implements OnDestroy {
     private tree: IgxTree;
@@ -85,7 +86,7 @@ export class IgxTreeNavigationService implements OnDestroy {
 
     public update_visible_cache(node: IgxTreeNode<any>, expanded: boolean, shouldEmit = true): void {
         if (expanded) {
-            node.children.forEach(child => {
+            node._children.forEach(child => {
                 this._invisibleChildren.delete(child);
                 this.update_visible_cache(child, child.expanded, false);
             });
@@ -174,7 +175,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleArrowLeft(): void {
-        if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode.children?.length) {
+        if (this.focusedNode.expanded && !this.treeService.collapsingNodes.has(this.focusedNode) && this.focusedNode._children?.length) {
             this.activeNode = this.focusedNode;
             this.focusedNode.collapse();
         } else {
@@ -186,7 +187,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleArrowRight(): void {
-        if (this.focusedNode.children.length > 0) {
+        if (this.focusedNode._children.length > 0) {
             if (!this.focusedNode.expanded) {
                 this.activeNode = this.focusedNode;
                 this.focusedNode.expand();
@@ -195,7 +196,7 @@ export class IgxTreeNavigationService implements OnDestroy {
                     this.focusedNode.expand();
                     return;
                 }
-                const firstChild = this.focusedNode.children.find(node => !node.disabled);
+                const firstChild = this.focusedNode._children.find(node => !node.disabled);
                 if (firstChild) {
                     this.setFocusedAndActiveNode(firstChild);
                 }
@@ -217,7 +218,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleAsterisk(): void {
-        const nodes = this.focusedNode.parentNode ? this.focusedNode.parentNode.children : this.tree.rootNodes;
+        const nodes = this.focusedNode.parentNode ? this.focusedNode.parentNode._children : this.tree.rootNodes;
         nodes?.forEach(node => {
             if (!node.disabled && (!node.expanded || this.treeService.collapsingNodes.has(node))) {
                 node.expand();

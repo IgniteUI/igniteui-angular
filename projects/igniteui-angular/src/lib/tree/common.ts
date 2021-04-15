@@ -55,7 +55,8 @@ export interface IgxTreeNode<T> {
     tabIndex: number;
     /** @hidden @internal */
     allChildren: QueryList<IgxTreeNode<any>>;
-    children: QueryList<IgxTreeNode<any>> | null;
+    /** @hidden @internal */
+    _children: QueryList<IgxTreeNode<any>> | null;
     selectedChange: EventEmitter<boolean>;
     expandedChange: EventEmitter<boolean>;
     expand(): void;

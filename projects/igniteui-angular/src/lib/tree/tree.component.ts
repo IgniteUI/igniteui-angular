@@ -471,6 +471,8 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
 }
 
 /**
+ * @hidden
+ *
  * NgModule defining the components and directives needed for `igx-tree`
  */
 @NgModule({

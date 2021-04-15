@@ -123,7 +123,7 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
  *  ...
  *    <igx-tree-node [data]="data" [selected]="service.isNodeSelected(data.Key)" [expanded]="service.isNodeExpanded(data.Key)">
  *      {{ data.FirstName }} {{ data.LastName }}
- *    </tree>
+ *    </igx-tree-node>
  *  ...
  *  </igx-tree>
  * ```
@@ -136,9 +136,32 @@ export class IgxTreeNodeLinkDirective implements OnDestroy {
     ]
 })
 export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements IgxTreeNode<T>, OnInit, AfterViewInit, OnDestroy {
+    /**
+     * The data entry that the node is visualizing.
+     *
+     * @remarks
+     * Required for searching through nodes.
+     *
+     * @example
+     * ```html
+     *  <igx-tree>
+     *  ...
+     *    <igx-tree-node [data]="data">
+     *      {{ data.FirstName }} {{ data.LastName }}
+     *    </igx-tree-node>
+     *  ...
+     *  </igx-tree>
+     * ```
+     */
     @Input()
     public data: T;
 
+    /**
+     * To be used for load-on-demand scenarios in order to specify whether the node is loading data.
+     *
+     * @remarks
+     * Loading nodes do not render children.
+     */
     @Input()
     public loading = false;
 
@@ -210,7 +233,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * ```html
      * <igx-tree>
-     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="data.selected">
+     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(selected)]="node.selected">
+     *      </igx-tree-node>
      * </igx-tree>
      * ```
      *
@@ -227,7 +251,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      *
      * ```html
      * <igx-tree>
-     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="data.expanded">
+     *      <igx-tree-node *ngFor="let node of data" [data]="node" [(expanded)]="node.expanded">
+     *      </igx-tree-node>
      * </igx-tree>
      * ```
      *
@@ -290,28 +315,28 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
     @ContentChildren(IgxTreeNodeLinkDirective, { read: ElementRef })
     public linkChildren: QueryList<ElementRef>;
 
-    // TODO: Public API should expose array or null, not query list
+    /** @hidden @internal */
     @ContentChildren(IGX_TREE_NODE_COMPONENT, { read: IGX_TREE_NODE_COMPONENT })
-    public children: QueryList<IgxTreeNode<any>>;
+    public _children: QueryList<IgxTreeNode<any>>;
 
     /** @hidden @internal */
     @ContentChildren(IGX_TREE_NODE_COMPONENT, { read: IGX_TREE_NODE_COMPONENT, descendants: true })
     public allChildren: QueryList<IgxTreeNode<any>>;
 
-    // TODO: Expose in public API instead of `children` query list
     /**
      * Return the child nodes of the node (if any)
      *
      * @remark
      * Returns `null` if node does not have children
      *
+     * @example
      * ```typescript
      * const node: IgxTreeNode<any> = this.tree.findNodes(data[0])[0];
      * const children: IgxTreeNode<any>[] = node.children;
      * ```
      */
-    public get _children(): IgxTreeNode<any>[] {
-        return this.children?.length ? this.children.toArray() : null;
+    public get children(): IgxTreeNode<any>[] {
+        return this._children?.length ? this._children.toArray() : null;
     }
 
     // TODO: will be used in Drag and Drop implementation
@@ -478,6 +503,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         return this.element.nativeElement;
     }
 
+    /** @hidden @internal */
     public ngOnInit() {
         this.openAnimationDone.pipe(takeUntil(this.destroy$)).subscribe(
             () => {
@@ -491,6 +517,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
         });
     }
 
+    /** @hidden @internal */
     public ngAfterViewInit() { }
 
     /**
