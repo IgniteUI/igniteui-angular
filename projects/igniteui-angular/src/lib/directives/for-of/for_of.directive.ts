@@ -157,34 +157,34 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     /**
      * An event that is emitted after a new chunk has been loaded.
      * ```html
-     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkLoad)="chunkLoad($event)"></ng-template>
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (chunkLoad)="loadChunk($event)"></ng-template>
      * ```
      * ```typescript
-     * chunkLoad(e){
+     * loadChunk(e){
      * alert("chunk loaded!");
      * }
      * ```
      */
     @Output()
-    public onChunkLoad = new EventEmitter<IForOfState>();
+    public chunkLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden @internal
      * An event that is emitted when scrollbar visibility has changed.
      */
     @Output()
-    public onScrollbarVisibilityChanged = new EventEmitter<any>();
+    public scrollbarVisibilityChanged = new EventEmitter<any>();
 
     /**
      * An event that is emitted after the rendered content size of the igxForOf has been changed.
      */
     @Output()
-    public onContentSizeChange = new EventEmitter<any>();
+    public contentSizeChange = new EventEmitter<any>();
 
     /**
      * An event that is emitted after data has been changed.
      * ```html
-     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onDataChanged)="dataChanged($event)"></ng-template>
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (dataChanged)="dataChanged($event)"></ng-template>
      * ```
      * ```typescript
      * dataChanged(e){
@@ -193,16 +193,16 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Output()
-    public onDataChanged = new EventEmitter<any>();
+    public dataChanged = new EventEmitter<any>();
 
     @Output()
-    public onBeforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
+    public beforeViewDestroyed = new EventEmitter<EmbeddedViewRef<any>>();
 
     /**
      * An event that is emitted on chunk loading to emit the current state information - startIndex, endIndex, totalCount.
      * Can be used for implementing remote load on demand for the igxFor data.
      * ```html
-     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (onChunkPreload)="chunkPreload($event)"></ng-template>
+     * <ng-template igxFor [igxForOf]="data" [igxForScrollOrientation]="'horizontal'" (chunkPreload)="chunkPreload($event)"></ng-template>
      * ```
      * ```typescript
      * chunkPreload(e){
@@ -211,7 +211,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Output()
-    public onChunkPreload = new EventEmitter<IForOfState>();
+    public chunkPreload = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -509,7 +509,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange(changes);
+            this._recalcOnContainerChange();
         }
     }
 
@@ -529,7 +529,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this._applyChanges();
                     this.cdr.markForCheck();
                     this._updateScrollOffset();
-                    this.onDataChanged.emit();
+                    this.dataChanged.emit();
                 });
             }
         }
@@ -772,8 +772,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
             // update scrBar heights/widths
             if (this.igxForScrollOrientation === 'horizontal') {
-                const totalWidth = parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10) + totalDiff;
-                this.scrollComponent.nativeElement.children[0].style.width = totalWidth + 'px';
+                const totalWidth = parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10) + totalDiff;
+                (this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width = totalWidth + 'px';
             }
             const reducer = (acc, val) => acc + val;
             if (this.igxForScrollOrientation === 'vertical') {
@@ -854,7 +854,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
-            this.onChunkLoad.emit(this.state);
+            this.chunkLoad.emit(this.state);
         }
     }
 
@@ -862,7 +862,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.recalcUpdateSizes();
         this._applyChanges();
         this._updateScrollOffset();
-        this.onContentSizeChange.emit();
+        this.contentSizeChange.emit();
     }
 
     /**
@@ -881,7 +881,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         this.state.startIndex = newStart;
 
         if (diff) {
-            this.onChunkPreload.emit(this.state);
+            this.chunkPreload.emit(this.state);
             if (!this.isRemote) {
 
                 // recalculate and apply page size.
@@ -997,7 +997,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
             return;
         }
         const prevStartIndex = this.state.startIndex;
@@ -1007,7 +1007,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
         this.dc.changeDetectorRef.detectChanges();
         if (prevStartIndex !== this.state.startIndex) {
-            this.onChunkLoad.emit(this.state);
+            this.chunkLoad.emit(this.state);
         }
     }
 
@@ -1061,7 +1061,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                 this.updateTemplateContext(embView.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
-                this.onChunkLoad.emit(this.state);
+                this.chunkLoad.emit(this.state);
             }
         }
     }
@@ -1255,7 +1255,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         }
         if (scrollable !== this.isScrollable()) {
             // scrollbar visibility has changed
-            this.onScrollbarVisibilityChanged.emit();
+            this.scrollbarVisibilityChanged.emit();
         }
     }
 
@@ -1274,14 +1274,14 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
         return height;
     }
 
-    protected _recalcOnContainerChange(changes: SimpleChanges) {
+    protected _recalcOnContainerChange() {
         this.dc.instance._viewContainer.element.nativeElement.style.top = '0px';
         this.dc.instance._viewContainer.element.nativeElement.style.left = '0px';
         const prevChunkSize = this.state.chunkSize;
         this.applyChunkSizeChange();
         this._recalcScrollBarSize();
         if (prevChunkSize !== this.state.chunkSize) {
-            this.onChunkLoad.emit(this.state);
+            this.chunkLoad.emit(this.state);
         }
         if (this.sizesCache && this.igxForScrollOrientation === 'horizontal') {
             // Updating horizontal chunks and offsets based on the new scrollLeft
@@ -1296,7 +1296,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
-        this.onBeforeViewDestroyed.emit(oldElem);
+        this.beforeViewDestroyed.emit(oldElem);
         // also detach from ViewContainerRef to make absolutely sure this is removed from the view container.
         this.dc.instance._vcr.detach(this.dc.instance._vcr.length - 1);
         oldElem.destroy();
@@ -1453,7 +1453,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
      * An event that is emitted after data has been changed but before the view is refreshed
      */
     @Output()
-    public onDataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
+    public dataChanging = new EventEmitter<IForOfDataChangingEventArgs>();
 
     constructor(
         _viewContainer: ViewContainerRef,
@@ -1498,7 +1498,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
         const containerSize = 'igxForContainerSize';
         if (containerSize in changes && !changes[containerSize].firstChange && this.igxForOf) {
-            this._recalcOnContainerChange(changes);
+            this._recalcOnContainerChange();
         }
     }
 
@@ -1518,7 +1518,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 const args: IForOfDataChangingEventArgs = {
                     containerSize: this.igxForContainerSize
                 };
-                this.onDataChanging.emit(args);
+                this.dataChanging.emit(args);
                 //  re-init cache.
                 if (!this.igxForOf) {
                     this.igxForOf = [];
@@ -1535,7 +1535,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this._updateSizeCache(changes);
                 this._applyChanges();
                 this._updateScrollOffset();
-                this.onDataChanged.emit();
+                this.dataChanged.emit();
             }
         }
     }
@@ -1559,7 +1559,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     public onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!this.scrollComponent || !parseInt(this.scrollComponent.nativeElement.children[0].style.width, 10)) {
+        if (!this.scrollComponent || !parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
             return;
         }
         // Updating horizontal chunks
@@ -1720,7 +1720,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
                 this.updateTemplateContext(embView.context, i);
             }
             if (prevChunkSize !== this.state.chunkSize) {
-                this.onChunkLoad.emit(this.state);
+                this.chunkLoad.emit(this.state);
             }
         }
     }

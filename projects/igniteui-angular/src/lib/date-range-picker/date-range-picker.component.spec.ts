@@ -50,7 +50,8 @@ describe('IgxDateRangePicker', () => {
         let mockInjector;
         let ngModuleRef: any;
         const elementRef = { nativeElement: null };
-        const calendar = new IgxCalendarComponent();
+        const platform = {} as any;
+        const calendar = new IgxCalendarComponent(platform);
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
@@ -135,7 +136,7 @@ describe('IgxDateRangePicker', () => {
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
             // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
@@ -153,7 +154,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should emit valueChange on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, null, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
             // dateRange.calendar = calendar;
             spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
@@ -180,7 +181,7 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', null, null, null);
+            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', platform, null, null, null, null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
             spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
@@ -214,7 +215,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should validate correctly minValue and maxValue', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null);
             dateRange.ngOnInit();
 
             // dateRange.calendar = calendar;
@@ -239,7 +240,7 @@ describe('IgxDateRangePicker', () => {
         });
 
         it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, ngModuleRef, overlay);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, ngModuleRef, overlay);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
@@ -265,7 +266,7 @@ describe('IgxDateRangePicker', () => {
         }));
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, mockInjector, null, null);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null);
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
@@ -761,7 +762,7 @@ describe('IgxDateRangePicker', () => {
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.DAY_CSSCLASS));
+                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
             });
 
             const verifyDateRange = () => {

@@ -24,17 +24,16 @@ import { IBaseChipEventArgs, IgxChipsAreaComponent, IgxChipComponent } from '../
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.component';
 import { IgxFilteringService } from '../grid-filtering.service';
-import { KEYS, isEdge, isIE } from '../../../core/utils';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { PlatformUtil } from '../../../core/utils';
 
 /**
  * @hidden
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
@@ -162,12 +161,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private isComposing = false;
     private _cancelChipClick = false;
 
-    constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
+    constructor(
+        public filteringService: IgxFilteringService,
+        public element: ElementRef,
+        public cdr: ChangeDetectorRef,
+        protected platform: PlatformUtil
+    ) { }
 
     @HostListener('keydown', ['$event'])
-    public onKeydownHandler(evt) {
-        if (evt.key === KEYS.ESCAPE || evt.key === KEYS.ESCAPE_IE ||
-            evt.ctrlKey && evt.shiftKey && evt.key.toLowerCase() === 'l') {
+    public onKeydownHandler(evt: KeyboardEvent) {
+        if (this.platform.isFilteringKeyCombo(evt)) {
                 evt.preventDefault();
                 evt.stopPropagation();
                 this.close();
@@ -236,10 +239,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on the input group's prefix.
      */
     public onPrefixKeyDown(event: KeyboardEvent) {
-        if ((event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) && this.dropDownConditions.collapsed) {
+        if (this.platform.isActivationKey(event) && this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
             event.stopImmediatePropagation();
-        } else if (event.key === KEYS.TAB && !this.dropDownConditions.collapsed) {
+        } else if (event.key === this.platform.KEYMAP.TAB && !this.dropDownConditions.collapsed) {
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
     }
@@ -251,23 +254,23 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.isKeyPressed = true;
         event.stopPropagation();
         if (this.column.dataType === DataType.Boolean) {
-            if (event.key === KEYS.ENTER || event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE) {
+            if (this.platform.isActivationKey(event)) {
                 this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
                 return;
             }
         }
-        if (event.key === KEYS.ENTER) {
+        if (event.key === this.platform.KEYMAP.ENTER) {
             if (this.isComposing) {
                 return;
             }
             this.commitInput();
-        } else if (event.altKey && (event.key === KEYS.DOWN_ARROW || event.key === KEYS.DOWN_ARROW_IE)) {
+        } else if (event.altKey && (event.key === this.platform.KEYMAP.ARROW_DOWN)) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
-        } else if (event.key === KEYS.ESCAPE || event.key === KEYS.ESCAPE_IE ||
-            event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'l') {
-                this.close();
+        } else if (this.platform.isFilteringKeyCombo(event)) {
+            event.preventDefault();
+            this.close();
         }
     }
 
@@ -286,7 +289,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
 
-        if (isEdge() && target.type !== 'number' || this.isKeyPressed && isIE() || target.value || target.checkValidity()) {
+        if (this.platform.isEdge && target.type !== 'number'
+            || this.isKeyPressed && this.platform.isIE || target.value || target.checkValidity()) {
             this.value = target.value;
         }
     }
@@ -399,7 +403,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on clear button.
      */
     public onClearKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+        if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             this.clearInput();
             this.focusEditElement();
@@ -418,7 +422,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for keydown on commit button.
      */
     public onCommitKeyDown(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+        if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             this.commitInput();
             this.focusEditElement();
@@ -566,7 +570,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for chip keydown event.
      */
     public onChipKeyDown(eventArgs: KeyboardEvent, item: ExpressionUI) {
-        if (eventArgs.key === KEYS.ENTER) {
+        if (eventArgs.key === this.platform.KEYMAP.ENTER) {
             eventArgs.preventDefault();
 
             this.toggleChip(item);
@@ -576,8 +580,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /**
      * Scrolls the first chip into view if the tab key is pressed on the left arrow.
      */
-    public onLeftArrowKeyDown(event) {
-        if (event.key === KEYS.TAB) {
+    public onLeftArrowKeyDown(event: KeyboardEvent) {
+        if (event.key === this.platform.KEYMAP.TAB) {
             this.chipAreaScrollOffset = 0;
             this.transform(this.chipAreaScrollOffset);
         }

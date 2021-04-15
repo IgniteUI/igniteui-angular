@@ -1,6 +1,6 @@
 import { IgxCalendarBaseDirective } from './calendar-base';
 import { Directive, ViewChildren, ElementRef, QueryList, Input } from '@angular/core';
-import { KEYS, mkenum } from '../core/utils';
+import { mkenum } from '../core/utils';
 
 export const IgxCalendarView = mkenum({
     Month: 'month',
@@ -113,8 +113,8 @@ export class IgxMonthPickerBaseDirective extends IgxCalendarBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event, activeViewIdx = 0) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+    public activeViewDecadeKB(event: KeyboardEvent, activeViewIdx = 0) {
+        if (this.platform.isActivationKey(event)) {
             event.preventDefault();
             this.activeViewDecade(activeViewIdx);
         }

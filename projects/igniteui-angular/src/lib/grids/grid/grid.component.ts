@@ -50,7 +50,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
  * has been bound, it can be manipulated through filtering, sorting & editing operations.
  * @example
  * ```html
- * <igx-grid [data]="employeeData" autoGenerate="false">
+ * <igx-grid [data]="employeeData" [autoGenerate]="false">
  *   <igx-column field="first" header="First Name"></igx-column>
  *   <igx-column field="last" header="Last Name"></igx-column>
  *   <igx-column field="role" header="Role"></igx-column>
@@ -81,11 +81,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      *
      * @example
      * ```typescript
-     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (onDataPreLoad)='handleDataPreloadEvent()'></igx-grid>
+     *  <igx-grid #grid [data]="localData" [autoGenerate]="true" (dataPreLoad)='handleDataPreloadEvent()'></igx-grid>
      * ```
      */
     @Output()
-    public onDataPreLoad = new EventEmitter<IForOfState>();
+    public dataPreLoad = new EventEmitter<IForOfState>();
 
     /**
      * @hidden
@@ -359,6 +359,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     public set groupingExpressions(value: IGroupingExpression[]) {
+        if (this.groupingExpressions === value) {
+            return;
+        }
         if (value && value.length > 10) {
             throw Error('Maximum amount of grouped columns is 10.');
         }
@@ -775,12 +778,26 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
+    /**
+     * Returns whether the `IgxGridComponent` has group area.
+     *
+     * @example
+     * ```typescript
+     * let isGroupAreaVisible = this.grid.showGroupArea;
+     * ```
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [data]="Data" [showGroupArea]="false"></igx-grid>
+     * ```
+     */
     @Input()
     public get showGroupArea(): boolean {
         return this._showGroupArea;
     }
     public set showGroupArea(value: boolean) {
         this._showGroupArea = value;
+        this.notifyChanges(true);
     }
 
     /**
@@ -982,7 +999,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public ngAfterViewInit() {
         super.ngAfterViewInit();
-        this.verticalScrollContainer.onBeforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
+        this.verticalScrollContainer.beforeViewDestroyed.pipe(takeUntil(this.destroy$)).subscribe((view) => {
             const rowData = view.context.$implicit;
             if (this.isDetailRecord(rowData)) {
                 const cachedData = this.childDetailTemplates.get(rowData.detailsData);
@@ -1030,7 +1047,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public dataLoading(event) {
-        this.onDataPreLoad.emit(event);
+        this.dataPreLoad.emit(event);
     }
 
     /**
@@ -1118,7 +1135,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
-            this.navigation = new IgxGridMRLNavigationService();
+            this.navigation = new IgxGridMRLNavigationService(this.platform);
             this.navigation.grid = this;
         }
     }
