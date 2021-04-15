@@ -304,8 +304,7 @@ ${noteText}
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
     });
-    
-    
+
     it('Should update the css selectors', async () => {
         appTree.create('/testSrc/appPrefix/component/custom.component.scss', `
 igx-tabs-group {
@@ -338,6 +337,8 @@ igx-bottom-nav-content {
 igx-bottom-nav-header {
     padding: 8px;
 }`);
+
+    });
 
     // IgxDateTimeEditor
     it('should update isSpinLoop', async () => {
