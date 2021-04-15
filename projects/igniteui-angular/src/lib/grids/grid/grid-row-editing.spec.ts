@@ -2303,8 +2303,8 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
             grid.getRowByIndex(2).update(newRow);
             fix.detectChanges();
-            expect(grid.getRowByIndex(2).rowData.ProductID).toEqual(123);
-            expect(grid.getRowByIndex(2).rowData.ProductName).toEqual('DummyItem');
+            expect(grid.getRowByIndex(2).data.ProductID).toEqual(123);
+            expect(grid.getRowByIndex(2).data.ProductName).toEqual('DummyItem');
         });
 
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {

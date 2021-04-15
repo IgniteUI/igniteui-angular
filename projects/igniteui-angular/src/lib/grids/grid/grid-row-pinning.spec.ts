@@ -129,7 +129,6 @@ describe('Row Pinning #grid', () => {
 
             // Check API methods
             expect(grid.getRowByIndex(0).key).toBeTruthy();
-            expect(grid.getRowByIndex(0).rowData).toBeTruthy();
             expect(grid.getRowByIndex(0).data).toBeTruthy();
             expect(grid.getRowByIndex(0).pinned).toBe(true);
 

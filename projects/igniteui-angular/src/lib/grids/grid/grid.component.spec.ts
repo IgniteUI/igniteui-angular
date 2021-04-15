@@ -2017,14 +2017,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowByIndex(2).groupRow).toBeUndefined();
             expect(grid.getRowByIndex(1).groupRow).toBeTruthy();
 
-            // rowID and rowData check - first with group row (index 1) and then with IgxGridRow (index 2)
-            expect(grid.getRowByIndex(1).rowID).toBeUndefined();
-            expect(grid.getRowByIndex(1).rowData).toBeUndefined();
+            // key and rowData check - first with group row (index 1) and then with IgxGridRow (index 2)
+            expect(grid.getRowByIndex(1).key).toBeUndefined();
             expect(grid.getRowByIndex(1).data).toBeUndefined();
             expect(grid.getRowByIndex(1).pinned).toBeUndefined();
             expect(grid.getRowByIndex(1).selected).toBeUndefined();
-            expect(grid.getRowByIndex(2).rowID).toBeTruthy();
-            expect(grid.getRowByIndex(2).rowData).toBeTruthy();
+            expect(grid.getRowByIndex(2).key).toBeTruthy();
             expect(grid.getRowByIndex(2).data).toBeTruthy();
             expect(grid.getRowByIndex(2).pinned).toBe(false);
             expect(grid.getRowByIndex(2).selected).toBe(false);
