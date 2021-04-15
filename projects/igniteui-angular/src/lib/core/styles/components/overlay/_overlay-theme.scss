@@ -26,6 +26,7 @@
     $background-color: null
 ) {
     $name: 'igx-overlay';
+    $selector: '.igx-overlay__wrapper--modal, .igx-overlay__content--modal';
     $overlay-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -38,8 +39,9 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
-        background-color: $background-color
+        background-color: $background-color,
     ));
 }
 
