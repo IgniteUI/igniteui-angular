@@ -158,10 +158,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { RowType } from './common/row.interface';
-import { IgxGridRow } from './grid-public-row';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IgxGridComponent } from './grid/grid.component';
-import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 let FAKE_ROW_ID = -1;
 
