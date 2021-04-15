@@ -1,7 +1,7 @@
 import { TreeGridAddRowSampleComponent } from './tree-grid-add-row/tree-grid-add-row.sample';
 import { BrowserModule, HammerModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
@@ -146,6 +146,7 @@ import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-common/picker-icons.common';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
+import { TestInterceptorClass } from './interceptor.service';
 
 const components = [
     ActionStripSampleComponent,
@@ -316,7 +317,12 @@ const components = [
         IgxIconService,
         IgxCsvExporterService,
         IgxOverlayService,
-        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) }
+        { provide: DisplayDensityToken, useFactory: () => ({ displayDensity: DisplayDensity.comfortable }) },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TestInterceptorClass,
+            multi: true
+        }
     ],
     bootstrap: [AppComponent]
 })

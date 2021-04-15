@@ -9,7 +9,7 @@ export interface IDropStrategy {
 // @dynamic
 export class IgxDefaultDropStrategy implements IDropStrategy {
 
-    public dropAction(drag: IgxDragDirective, drop: IgxDropDirective, atIndex: number) { }
+    public dropAction(_drag: IgxDragDirective, _drop: IgxDropDirective, _atIndex: number) { }
 }
 
 // @dynamic
@@ -17,7 +17,7 @@ export class IgxAppendDropStrategy implements IDropStrategy {
 
     constructor(private _renderer: Renderer2) { }
 
-    public dropAction(drag: IgxDragDirective, drop: IgxDropDirective, atIndex: number) {
+    public dropAction(drag: IgxDragDirective, drop: IgxDropDirective, _atIndex: number) {
         const dragElement = drag.element.nativeElement;
         const dropAreaElement = drop.element.nativeElement;
         this._renderer.removeChild(dragElement.parentNode, dragElement);
@@ -30,7 +30,7 @@ export class IgxPrependDropStrategy implements IDropStrategy {
 
     constructor(private _renderer: Renderer2) { }
 
-    public dropAction(drag: IgxDragDirective, drop: IgxDropDirective, atIndex: number) {
+    public dropAction(drag: IgxDragDirective, drop: IgxDropDirective, _atIndex: number) {
         const dragElement = drag.element.nativeElement;
         const dropAreaElement = drop.element.nativeElement;
         this._renderer.removeChild(dragElement.parentNode, dragElement);

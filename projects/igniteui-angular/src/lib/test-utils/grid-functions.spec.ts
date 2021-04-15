@@ -186,11 +186,6 @@ export class GridFunctions {
         hScrollbar.scrollLeft = newLeft;
     }
 
-    public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getScroll();
-        hScrollbar.scrollRight = newRight;
-    }
-
     public static scrollTop(grid: IgxGridComponent, newTop: number) {
         const vScrollbar = grid.verticalScrollContainer.getScroll();
         vScrollbar.scrollTop = newTop;

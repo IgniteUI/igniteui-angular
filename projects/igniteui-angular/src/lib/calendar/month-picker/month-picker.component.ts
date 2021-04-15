@@ -9,7 +9,6 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { trigger, transition, useAnimation } from '@angular/animations';
 import { fadeIn, scaleInCenter, slideInLeft, slideInRight } from '../../animations/main';
-import { KEYS } from '../../core/utils';
 import { IgxMonthsViewComponent } from '../months-view/months-view.component';
 import { IgxMonthPickerBaseDirective, IgxCalendarView } from '../month-picker-base';
 import { IgxYearsViewComponent } from '../years-view/years-view.component';
@@ -170,14 +169,14 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public activeViewDecadeKB(event) {
+    public activeViewDecadeKB(event: KeyboardEvent) {
         super.activeViewDecadeKB(event);
 
-        if (event.key === KEYS.RIGHT_ARROW || event.key === KEYS.RIGHT_ARROW_IE) {
+        if (event.key === this.platform.KEYMAP.ARROW_RIGHT) {
             this.nextYear(event);
         }
 
-        if (event.key === KEYS.LEFT_ARROW || event.key === KEYS.LEFT_ARROW_IE) {
+        if (event.key === this.platform.KEYMAP.ARROW_LEFT) {
             this.previousYear(event);
         }
 
@@ -202,8 +201,8 @@ export class IgxMonthPickerComponent extends IgxMonthPickerBaseDirective {
     /**
      * @hidden
      */
-    public changeYearKB(event, next = true) {
-        if (event.key === KEYS.SPACE || event.key === KEYS.SPACE_IE || event.key === KEYS.ENTER) {
+    public changeYearKB(event: KeyboardEvent, next = true) {
+        if (this.platform.isActivationKey(event)) {
             event.stopPropagation();
             if (next) {
                 this.nextYear();
