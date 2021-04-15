@@ -35,9 +35,7 @@ import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directi
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
-import {
-    IDatePickerDisabledDateEventArgs, IDatePickerValidationFailedEventArgs
-} from './date-picker.common';
+import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
 import { IgxPickerToggleComponent, IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
 
 let NEXT_ID = 0;
@@ -828,14 +826,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToDateEditorEvents(): void {
-        this.dateTimeEditor.valueChange.pipe(
-            takeUntil(this._destroy$)).subscribe(newDate => {
-                this.value = newDate;
-                const dateValue = DateTimeUtil.isValidDate(newDate) ? newDate : DateTimeUtil.parseIsoDate(newDate);
-                if (newDate && this.disabledDates && !isDateInRanges(dateValue, this.disabledDates)) {
-                    this.onDisabledDate.emit({ currentValue: this.dateValue, datePicker: this });
-                }
-            });
         this.dateTimeEditor.validationFailed.pipe(
             takeUntil(this._destroy$)).subscribe((event) => {
                 this.validationFailed.emit({
