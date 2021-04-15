@@ -380,11 +380,11 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         });
         this.activeNodeBindingChange.pipe(takeUntil(this.destroy$)).subscribe((node) => {
             this.expandToNode(this.navService.activeNode);
-            this.scrollNodeIntoView(node);
+            this.scrollNodeIntoView(node?.header?.nativeElement);
         });
         this.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
-                this.scrollElementIntoView(this.navService.activeNode?.header.nativeElement);
+                this.scrollNodeIntoView(this.navService.activeNode?.header.nativeElement);
             });
         });
         this.subToCollapsing();
@@ -395,7 +395,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
         this.nodes.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
-        this.scrollNodeIntoView(this.navService.activeNode);
+        this.scrollNodeIntoView(this.navService.activeNode?.header?.nativeElement);
         this.subToChanges();
     }
 
@@ -425,6 +425,9 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
             this.navService.update_visible_cache(event.node, false);
         });
         this.nodeExpanding.pipe(takeUntil(this.destroy$)).subscribe(event => {
+            if (event.cancel) {
+                return;
+            }
             this.navService.update_visible_cache(event.node, true);
         });
     }
@@ -436,41 +439,30 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
                 this.navService.update_visible_cache(node, nodeState);
             });
             node.closeAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                const targetElement = this.navService.focusedNode.header.nativeElement;
-                this.scrollElementIntoView(targetElement);
+                const targetElement = this.navService.focusedNode?.header.nativeElement;
+                this.scrollNodeIntoView(targetElement);
             });
             node.openAnimationDone.pipe(takeUntil(this.unsubChildren$)).subscribe(() => {
-                const targetElement = this.navService.focusedNode.header.nativeElement;
-                this.scrollElementIntoView(targetElement);
+                const targetElement = this.navService.focusedNode?.header.nativeElement;
+                this.scrollNodeIntoView(targetElement);
             });
         });
         this.navService.init_invisible_cache();
     }
 
-    private scrollNodeIntoView(node: IgxTreeNode<any>) {
-        if (this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
-            if (!node) {
-                return;
-            }
-            this.nativeElement.scrollTop = node.nativeElement.offsetTop;
-        }
-    }
-
-    // TODO: check if this can be done w/o el.scollIntoView();
-    private scrollElementIntoView(el: HTMLElement): void {
+    private scrollNodeIntoView(el: HTMLElement) {
         if (!el) {
             return;
         }
-        const rect = this.nativeElement.getBoundingClientRect();
-        const targetRect = el.getBoundingClientRect();
-        let scrollFlag;
-        if (rect.top > targetRect.top) {
-            scrollFlag = true;
-        } else if (rect.bottom < targetRect.bottom) {
-            scrollFlag = false;
-        }
-        if (scrollFlag !== undefined) {
-            el.scrollIntoView(scrollFlag);
+        const nodeRect = el.getBoundingClientRect();
+        const treeRect = this.nativeElement.getBoundingClientRect();
+        const topOffset = treeRect.top > nodeRect.top ? nodeRect.top - treeRect.top : 0;
+        const bottomOffset = treeRect.bottom < nodeRect.bottom ? nodeRect.bottom - treeRect.bottom : 0;
+        const shouldScroll = !!topOffset || !!bottomOffset;
+        if (shouldScroll && this.nativeElement.scrollHeight > this.nativeElement.clientHeight) {
+            // this.nativeElement.scrollTop = nodeRect.y - treeRect.y - nodeRect.height;
+            this.nativeElement.scrollTop =
+            this.nativeElement.scrollTop + bottomOffset + topOffset + (topOffset ? -1 : +1) * nodeRect.height;
         }
     }
 

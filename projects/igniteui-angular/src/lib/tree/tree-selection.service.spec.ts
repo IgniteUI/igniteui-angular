@@ -23,11 +23,11 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
     beforeEach(() => {
         selectionService = new IgxTreeSelectionService();
-        mockNodesLevel1 = TreeTestFunctions.createNodeSpies(3, null, [mockQuery2, mockQuery3], [mockQuery6, mockQuery3]);
-        mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
-        mockNodesLevel2_2 = TreeTestFunctions.createNodeSpies(1, mockNodesLevel1[1], null);
-        mockNodesLevel3_1 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[0], null);
-        mockNodesLevel3_2 = TreeTestFunctions.createNodeSpies(2, mockNodesLevel2_1[1], null);
+        mockNodesLevel1 = TreeTestFunctions.createNodeSpies(0, 3, null, [mockQuery2, mockQuery3], [mockQuery6, mockQuery3]);
+        mockNodesLevel2_1 = TreeTestFunctions.createNodeSpies(1, 2, mockNodesLevel1[0], [mockQuery4, mockQuery5], [mockQuery4, mockQuery5]);
+        mockNodesLevel2_2 = TreeTestFunctions.createNodeSpies(1, 1, mockNodesLevel1[1], null);
+        mockNodesLevel3_1 = TreeTestFunctions.createNodeSpies(2, 2, mockNodesLevel2_1[0], null);
+        mockNodesLevel3_2 = TreeTestFunctions.createNodeSpies(2, 2, mockNodesLevel2_1[1], null);
         allNodes = [
             mockNodesLevel1[0],
             mockNodesLevel2_1[0],

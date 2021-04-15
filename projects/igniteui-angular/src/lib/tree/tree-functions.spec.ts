@@ -42,7 +42,8 @@ export class TreeTestFunctions {
     }
 
     public static createNodeSpy(
-    properties: { [key: string]: any } = null, methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
+        properties: { [key: string]: any } = null,
+        methodNames: (keyof IgxTreeNode<any>)[] = ['selected']): jasmine.SpyObj<IgxTreeNode<any>> {
         if (!properties) {
             return jasmine.createSpyObj<IgxTreeNodeComponent<any>>(methodNames);
         }
@@ -50,6 +51,7 @@ export class TreeTestFunctions {
     }
 
     public static createNodeSpies(
+        level: number,
         count: number,
         parentNode?: IgxTreeNodeComponent<any>,
         children?: any[],
@@ -59,6 +61,11 @@ export class TreeTestFunctions {
         const mockEmitter: EventEmitter<boolean> = jasmine.createSpyObj('emitter', ['emit']);
         for (let i = 0; i < count; i++) {
             nodesArr.push(this.createNodeSpy({
+                level,
+                expanded: false,
+                disabled: false,
+                tabIndex: null,
+                header: { nativeElement: { focus: () => undefined } },
                 parentNode: parentNode ? parentNode : null,
                 children: children ? children[i] : null,
                 allChildren: allChildren ? allChildren[i] : null,

@@ -23,12 +23,13 @@
 
 <!-- separated in a template in case this ever needs to be templatable -->
 <ng-template #selectMarkerTemplate>
-    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate">
+    <igx-checkbox [checked]="selected" [readonly]="true" [indeterminate]="indeterminate" [tabindex]="-1">
     </igx-checkbox>
 </ng-template>
 
 <ng-template #headerTemplate>
     <div #ghostTemplate class="igx-tree-node__wrapper"
+        [attr.role]="role"
         [tabIndex]="tabIndex"
         [ngClass]="{
             'igx-tree-node__wrapper--cosy': isCosy,

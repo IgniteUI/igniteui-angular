@@ -282,8 +282,8 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
 
     /** @hidden @internal */
     @HostBinding('attr.role')
-    public get roleAttr() {
-        return this.linkChildren ? 'none' : 'treeitem';
+    public get role() {
+        return this.hasLinkChildren ? 'none' : 'treeitem';
     };
 
     /** @hidden @internal */
