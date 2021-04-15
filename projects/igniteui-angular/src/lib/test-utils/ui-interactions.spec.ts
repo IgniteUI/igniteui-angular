@@ -14,7 +14,7 @@ export const waitForActiveNodeChange = grid => new Promise<void>(resolve => grid
     resolve();
 }));
 
-export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.onSelection.pipe(first()).subscribe(() => {
+export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.selected.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
     resolve();
 }));

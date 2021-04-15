@@ -18,8 +18,7 @@ All notable changes for each version of this project will be documented in this 
         - `onFilteringDone` -> `filteringDone`
         - `onPagingDone` -> `pagingDone`
         - `onRowAdded` -> `rowAdded`
-        - `onRowDeleted` -> `sortingDone`
-        - `onSortingDone` -> `rowDeleted`
+        - `onRowDeleted` -> `rowDeleted`
         - `onColumnResized` -> `columnResized`
         - `onContextMenu` -> `contextMenu`
         - `onDoubleClick` -> `doubleClick`

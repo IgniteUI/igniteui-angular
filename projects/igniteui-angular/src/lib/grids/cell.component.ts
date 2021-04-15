@@ -681,7 +681,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
-        this.grid.onCellClick.emit({
+        this.grid.cellClick.emit({
             cell: this,
             event
         });
@@ -852,7 +852,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
         }
-        if (this.selectionService.pointerUp(this.selectionNode, this.grid.onRangeSelected)) {
+        if (this.selectionService.pointerUp(this.selectionNode, this.grid.rangeSelected)) {
             this.grid.cdr.detectChanges();
             if (this.platformUtil.isIE) {
                 this.grid.tbody.nativeElement.focus({ preventScroll: true });
@@ -891,10 +891,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.selectionService.primaryButton = true;
         if (this.cellSelectionMode === GridSelectionMode.multiple && this.selectionService.activeElement) {
             this.selectionService.add(this.selectionService.activeElement, false); // pointer events handle range generation
-            this.selectionService.keyboardStateOnFocus(node, this.grid.onRangeSelected, this.nativeElement);
+            this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.onSelection.emit({ cell: this, event });
+            this.grid.selected.emit({ cell: this, event });
         }
     }
 

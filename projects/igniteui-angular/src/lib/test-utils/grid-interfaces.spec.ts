@@ -1,5 +1,5 @@
 
-/* Add to template: (onSelection)="cellSelected($event)" */
+/* Add to template: (selected)="cellSelected($event)" */
 export interface IGridSelection {
     cellSelected(event);
 }

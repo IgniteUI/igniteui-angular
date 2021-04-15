@@ -592,7 +592,7 @@ export class GridDeclaredColumnsComponent extends BasicGridComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [autoGenerate]="autoGenerate" [height]="height" [width]="width"`,
-        `${EventSubscriptions.columnInit}${EventSubscriptions.onSelection}`, '')
+        `${EventSubscriptions.columnInit}${EventSubscriptions.selected}`, '')
 })
 export class PinOnInitAndSelectionComponent extends GridWithSizeComponent {
     public data = SampleTestData.contactInfoDataFull();
@@ -655,7 +655,7 @@ export class GridPinningMRLComponent extends PinOnInitAndSelectionComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [height]="height" [width]="width"`,
-        `${EventSubscriptions.onSelection}${EventSubscriptions.columnPin}`,
+        `${EventSubscriptions.selected}${EventSubscriptions.columnPin}`,
         ColumnDefinitions.generatedWithWidth)
 })
 export class PinningComponent extends GridWithSizeComponent
@@ -941,7 +941,7 @@ class AgeSummaryTest extends IgxNumberSummaryOperand {
 
 @Component({
     template: GridTemplateStrings.declareGrid(`[height]="gridHeight" [columnWidth]="defaultWidth" [width]="gridWidth"`,
-        `${EventSubscriptions.onSelection}`, ColumnDefinitions.generatedWithWidth)
+        `${EventSubscriptions.selected}`, ColumnDefinitions.generatedWithWidth)
 })
 export class VirtualGridComponent extends BasicGridComponent {
     public gridWidth = '800px';

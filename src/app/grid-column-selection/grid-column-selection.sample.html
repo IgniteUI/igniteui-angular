@@ -5,7 +5,7 @@
                 <button igxButton="raised" [igxToggleAction]="dropDownComfortable"
                     [igxDropDownItemNavigation]="dropDownComfortable" displayDensity="comfortable">
                     Column Selection: {{grid1.columnSelection}}</button>
-                <igx-drop-down #dropDownComfortable (onSelection)="onSelection($event)" displayDensity="comfortable">
+                <igx-drop-down #dropDownComfortable (selected)="selected($event)" displayDensity="comfortable">
                     <igx-drop-down-item *ngFor="let item of selectionModes">
                         {{ item }}
                     </igx-drop-down-item>

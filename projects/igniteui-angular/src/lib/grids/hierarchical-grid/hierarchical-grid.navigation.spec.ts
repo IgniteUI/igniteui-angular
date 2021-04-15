@@ -1000,10 +1000,10 @@ describe('IgxHierarchicalGrid Smaller Child Navigation #hGrid', () => {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #grid1 [data]="data" (onSelection)='onSelection($event)'
+    <igx-hierarchical-grid #grid1 [data]="data" (selected)='selected($event)'
      [autoGenerate]="true" [height]="'400px'" [width]="'500px'" #hierarchicalGrid primaryKey="ID" [expandChildren]='true'>
-        <igx-row-island (onSelection)='onSelection($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
-            <igx-row-island (onSelection)='onSelection($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
+        <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland>
+            <igx-row-island (selected)='selected($event)' [key]="'childData'" [autoGenerate]="true" [height]="null" #rowIsland2 >
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`
@@ -1020,7 +1020,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         this.data = this.generateData(20, 3);
     }
 
-    public onSelection(event: IGridCellEventArgs) {
+    public selected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
     }
 

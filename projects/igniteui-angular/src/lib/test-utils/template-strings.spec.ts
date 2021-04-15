@@ -465,7 +465,7 @@ export class EventSubscriptions {
 
     public static columnInit = ` (columnInit)="columnInit($event)"`;
 
-    public static onSelection = ` (onSelection)="cellSelected($event)"`;
+    public static selected = ` (selected)="cellSelected($event)"`;
 
     public static onCellClick = ` (onCellClick)="cellClick($event)"`;
 
