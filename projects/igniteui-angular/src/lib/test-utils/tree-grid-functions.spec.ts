@@ -1,9 +1,10 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowDirective, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
+import { IgxTreeGridComponent, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
+import { IgxRowDirective } from '../grids/row.directive';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -304,7 +305,7 @@ export class TreeGridFunctions {
 
         // Verify selection of row through treeGrid
         const selectedRows = (treeGridComponent as IgxTreeGridComponent).selectedRows;
-        expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
+        expect(selectedRows.includes(rowComponent.key)).toBe(expectedSelection);
     }
 
     /**
@@ -357,7 +358,7 @@ export class TreeGridFunctions {
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
-            expect(selectedRows.includes(rowComponent.rowID)).toBe(false);
+            expect(selectedRows.includes(rowComponent.key)).toBe(false);
         }  else {
             expect(checkboxComponent.checked).toBe(expectedCheckboxState, 'Incorrect checkbox selection state');
             expect(checkboxComponent.nativeCheckbox.nativeElement.checked).toBe(
@@ -369,7 +370,7 @@ export class TreeGridFunctions {
 
             // Verify selection of row through treeGrid
             const selectedRows = (treeGrid as IgxTreeGridComponent).selectedRows;
-            expect(selectedRows.includes(rowComponent.rowID)).toBe(expectedSelection);
+            expect(selectedRows.includes(rowComponent.key)).toBe(expectedSelection);
         }
     }
 

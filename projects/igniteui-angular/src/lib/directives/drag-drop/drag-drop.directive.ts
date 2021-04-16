@@ -179,7 +179,13 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input('igxDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data;
+    }
 
     /**
      * An @Input property that indicates when the drag should start.
@@ -571,6 +577,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
+    protected _data: any;
 
     /**
      * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.

@@ -1158,7 +1158,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
 
-        const row = grid.getRowByIndex(NAVIGATE);
+        const row = grid.gridAPI.get_row_by_index(NAVIGATE);
         expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     }));
 });
