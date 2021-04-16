@@ -365,7 +365,7 @@ export class HGridMultiRowDragComponent {
 
         expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
             .toEqual(`
-import { IgxGridComponent, RowType, RowPinningPosition} from 'igniteui-angular';
+import { IgxGridComponent, RowType, RowPinningPosition } from 'igniteui-angular';
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: RowType = args.dragData;

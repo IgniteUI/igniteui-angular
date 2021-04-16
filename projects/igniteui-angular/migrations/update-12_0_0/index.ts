@@ -318,7 +318,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
         typyingsToReplace.forEach((n, i) => {
             if (content.indexOf(n) !== -1) {
-                content = content.split(n).join(replacements[i % 2]);
+                content = content.split(n).join(replacements[i % 3]);
             }
         });
         host.overwrite(entryPath, content);
