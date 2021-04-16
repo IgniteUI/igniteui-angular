@@ -1,5 +1,5 @@
 Write-Host "angularDocsRoot value is: " $angularDocsRoot; #angularDocsRoot octo variable
-$isLatest = "VariableIsLatest";
+$isLatest = $VariableIsLatest;
 $tag = "VariableValue";
 $path = $angularDocsRoot;
 $newPath = $path -replace $tagFolder, $tag #tagFolder octo variable
