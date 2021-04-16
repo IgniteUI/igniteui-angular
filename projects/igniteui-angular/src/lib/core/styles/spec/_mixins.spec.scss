@@ -29,6 +29,21 @@
         }
     }
 
+    @include it('should autoprefix web component themes like dockmanager with "igc"'){
+        $theme: igc-dock-manager-theme();
+        $key: 'active-color';
+
+        @include assert() {
+            @include output() {
+                @include css-vars-from-theme($theme);
+            }
+
+            @include contains() {
+                --igc-active-color: var(--igc-dockmanager-#{$key}, #{map-get($theme, #{$key})});
+            }
+        }
+    }
+
     @include it('should not generate variables for name, palette, variant, selector and elevation') {
         $theme: (
             name: green-theme,

@@ -61,7 +61,7 @@
             "name": "onDataChanging",
             "replaceWith": "dataChanging",
             "owner": {
-                "selector": "[igxFor][igxForOf]",
+                "selector": "[igxGridFor][igxGridForOf]",
                 "type": "directive"
             }
         },
