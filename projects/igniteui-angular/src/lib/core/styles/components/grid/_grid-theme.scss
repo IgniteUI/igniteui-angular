@@ -1550,7 +1550,7 @@
         min-width: 3ch;
         user-select: none;
         cursor: initial;
-        // flex-grow: 1; /* hey IE, the text should take most of the space */
+        flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
         line-height: map-get($grid-header-height, 'comfortable') / $grid-head-fs;
         transition: opacity 250ms ease-in-out, color 250ms ease-in-out;

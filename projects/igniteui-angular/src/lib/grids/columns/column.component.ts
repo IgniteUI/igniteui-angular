@@ -2169,7 +2169,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         // We do not cover cases where there are children with width 100% and etc,
         // because then we try to get new column size, based on header content, which is sized based on column size...
-        let headerWidth = this.platform.getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement);
+        let headerWidth = this.platform.getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement,
+            this.headerGroup.elementRef.nativeElement);
 
         if (this.sortable || this.filterable) {
             headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;

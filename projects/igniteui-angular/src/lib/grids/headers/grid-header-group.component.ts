@@ -276,7 +276,8 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         public element: ElementRef,
         public colResizingService: IgxColumnResizingService,
         public filteringService: IgxFilteringService,
-        protected platform: PlatformUtil) { }
+        protected platform: PlatformUtil,
+        public elementRef: ElementRef) { }
 
     /**
      * @hidden

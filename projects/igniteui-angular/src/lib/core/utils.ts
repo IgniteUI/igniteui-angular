@@ -224,13 +224,25 @@ export class PlatformUtil {
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
      * ```
      */
-    public getNodeSizeViaRange(range: Range, node: HTMLElement) {
+    public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
+        let shnWidth;
+        let shnMinWidth;
+        let shnFlexBasis;
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = 'visible';
+        }
+
+        if (sizeHoldingNode) {
+            shnWidth = sizeHoldingNode.style.width;
+            shnMinWidth = sizeHoldingNode.style.minWidth;
+            shnFlexBasis = sizeHoldingNode.style.flexBasis;
+            sizeHoldingNode.style.width = '';
+            sizeHoldingNode.style.minWidth = '';
+            sizeHoldingNode.style.flexBasis = '';
         }
 
         range.selectNodeContents(node);
@@ -239,6 +251,12 @@ export class PlatformUtil {
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = overflow;
+        }
+
+        if (sizeHoldingNode) {
+            sizeHoldingNode.style.width = shnWidth;
+            sizeHoldingNode.style.minWidth = shnMinWidth;
+            sizeHoldingNode.style.flexBasis = shnFlexBasis;
         }
 
         return width;
