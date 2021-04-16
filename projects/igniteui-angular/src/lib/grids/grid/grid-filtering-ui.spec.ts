@@ -2006,7 +2006,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
             const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
             const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
-            expect(filterIcons.length).toEqual(4, 'incorrect esf filter icons count');
+            expect(filterIcons.length).toEqual(6, 'incorrect esf filter icons count');
 
             // Verify the condition was submitted.
             const header = GridFunctions.getColumnHeader('ProductName', fix);
