@@ -1122,7 +1122,7 @@ export class IgxSliderComponent implements
         }
 
         if (this.hasValueChanged(oldValue)) {
-            this.emitValueChanged(oldValue);
+            this.emitValueChange(oldValue);
         }
     }
 
@@ -1434,7 +1434,7 @@ export class IgxSliderComponent implements
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
-    private emitValueChanged(oldValue: number | IRangeSliderValue) {
+    private emitValueChange(oldValue: number | IRangeSliderValue) {
         this.valueChange.emit({ oldValue, value: this.value });
     }
 }
