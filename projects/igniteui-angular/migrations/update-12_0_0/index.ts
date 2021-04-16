@@ -275,7 +275,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         rowsImports.forEach((n, i) => {
             if (content.indexOf(n) !== -1) {
                 if (importChanged === 0) {
-                    content = content.replace(n, 'RowType, ')
+                    content = content.replace(n, 'RowType, ');
                     importChanged++;
                 } else {
                     content = content.split(n).join('');
@@ -286,7 +286,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         rowsImportsNoSpace.forEach((n, i) => {
             if (content.indexOf(n) !== -1) {
                 if (importChanged === 0) {
-                    content = content.replace(n, 'RowType,')
+                    content = content.replace(n, 'RowType,');
                     importChanged++;
                 } else {
                     content = content.split(n).join('');
@@ -297,7 +297,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         rowsImportsEnd.forEach((n, i) => {
             if (content.indexOf(n) !== -1) {
                 if (importChanged === 0) {
-                    content = content.replace(n, ', RowType }')
+                    content = content.replace(n, ', RowType }');
                     importChanged++;
                 } else {
                     content = content.split(n).join(' }');

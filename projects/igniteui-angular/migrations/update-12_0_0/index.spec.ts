@@ -342,7 +342,7 @@ igx-bottom-nav-header {
     it('Should update row component types with RowType', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/rows.component.ts', `
-import { IgxGridGroupByRowComponent, IgxTreeGridRowComponent, IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent, RowPinningPosition } from 'igniteui-angular';
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: IgxHierarchicalRowComponent = args.dragData;
