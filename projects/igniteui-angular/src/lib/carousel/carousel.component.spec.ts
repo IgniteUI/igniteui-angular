@@ -5,13 +5,13 @@ import {
     IgxCarouselComponent,
     IgxCarouselModule,
     ISlideEventArgs,
-    CarouselIndicatorsOrientation,
-    CarouselAnimationType
+    CarouselIndicatorsOrientation
 } from './carousel.component';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSlideComponent } from './slide.component';
+import { CarouselAnimationType } from './carousel-base';
 
 describe('Carousel', () => {
     configureTestSuite();
