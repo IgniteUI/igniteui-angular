@@ -40,7 +40,7 @@
             </igx-column>
             <igx-column width='100px' [filterable]='false'>
                 <ng-template igxCell let-cell="cell" let-val>
-                    <button (click)="grid1.deleteRow(cell.row.rowID)">Delete</button>
+                    <button (click)="grid1.deleteRow(cell.row.key)">Delete</button>
                 </ng-template>
             </igx-column>
             <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"

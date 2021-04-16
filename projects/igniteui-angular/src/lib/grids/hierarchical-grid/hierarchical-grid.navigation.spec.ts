@@ -102,7 +102,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         // parent should scroll down so that cell in child is in view.
         const selectedCell = fixture.componentInstance.selectedCell;
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-        const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+        const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
         expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
@@ -181,7 +181,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // check if child row is in view of parent.
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-        const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+        const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
         expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
@@ -268,7 +268,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
        // check if child row is in view of parent.
        const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-       const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+       const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
        expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
@@ -302,7 +302,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
       // check if child row is in view of parent.
       const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-      const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+      const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
       expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
     }));
 
@@ -393,7 +393,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         // check if selected row is in view of parent.
         const selectedCell = fixture.componentInstance.selectedCell;
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-        const rowOffsets = selectedCell.row.nativeElement.getBoundingClientRect();
+        const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
         expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
 
         expect(  hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
@@ -486,7 +486,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         // second data row in parent should be focused
-        const parentRow2 = hierarchicalGrid.getRowByIndex(2);
+        const parentRow2 = hierarchicalGrid.gridAPI.get_row_by_index(2);
         const parentCell2 = parentRow2.cells.toArray()[0];
 
         let selectedCell = fixture.componentInstance.selectedCell;
@@ -695,7 +695,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 
             let nextCell =  nestedChild.dataRowList.toArray()[0].cells.toArray()[0];
             let currScrTop = hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop;
-            const elemHeight = nestedChildCell.row.nativeElement.clientHeight;
+            const elemHeight = nestedChildCell.intRow.nativeElement.clientHeight;
             // check if parent of parent has been scroll up so that the focused cell is in view
             expect(oldScrTop - currScrTop).toEqual(elemHeight);
             oldScrTop = currScrTop;
@@ -734,7 +734,7 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
             await wait(DEBOUNCE_TIME);
             fixture.detectChanges();
             // check if parent has scrolled down to show focused cell.
-            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.row.nativeElement.clientHeight);
+            expect(child.verticalScrollContainer.getScroll().scrollTop).toBe(nestedChildCell.intRow.nativeElement.clientHeight);
             const nextCell = nestedChild.dataRowList.toArray()[2].cells.toArray()[0];
 
             expect(nextCell.selected).toBe(true);
