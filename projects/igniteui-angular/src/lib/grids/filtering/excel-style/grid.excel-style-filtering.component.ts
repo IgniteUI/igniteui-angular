@@ -614,7 +614,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             dir: SortingDirection.Asc,
             fieldName: 'value',
             ignoreCase: true,
-            strategy: DefaultSortingStrategy.instance() // TODO: or this.column.grid.sortStrategy
+            strategy: this.column.sortStrategy
         }];
         this.listData = sorting.sort(this.listData, expressions);
 
