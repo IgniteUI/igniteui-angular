@@ -4058,8 +4058,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
-                [true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702', '1,000'],
+                [true, true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -4845,38 +4845,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', async () => {
+        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             expect(column.filteringIgnoreCase).toBeTrue();
 
-            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
             fix.detectChanges();
-            await wait(100);
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'a', 'Custom'],
+                [true, true, true]);
+        }));
 
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-        });
-
-        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', async () => {
+        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             column.filteringIgnoreCase = false;
             expect(column.filteringIgnoreCase).toBeFalse();
 
-            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
             fix.detectChanges();
-            await wait(100);
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-
-            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-            expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
-            expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
-        });
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'Custom', 'a', 'custoM', 'custom'],
+                [true, true, true, true, true]);
+        }));
 
         it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
             // Open excel style filtering dialog.
@@ -5281,7 +5275,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             // Open excel style custom filtering dialog.
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
             fix.detectChanges();
 
@@ -5761,7 +5755,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             tick(1050);
             fix.detectChanges();
-
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {
