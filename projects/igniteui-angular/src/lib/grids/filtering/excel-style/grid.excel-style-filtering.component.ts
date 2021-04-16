@@ -613,7 +613,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const expressions = [{
             dir: SortingDirection.Asc,
             fieldName: 'value',
-            ignoreCase: true,
+            ignoreCase: this.column.filteringIgnoreCase,
             strategy: this.column.sortStrategy
         }];
         this.listData = sorting.sort(this.listData, expressions);
