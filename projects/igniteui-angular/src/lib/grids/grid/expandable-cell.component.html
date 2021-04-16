@@ -61,7 +61,7 @@
     </ng-container>
     <ng-container *ngIf="column.dataType === 'time'">
         <igx-time-picker [style.width.%]="100" [outlet]="grid.outlet"
-            mode="dropdown" [format]="column.defaultTimeFormat" [(value)]="editValue" [igxFocus]="true" >
+            mode="dropdown" [format]="column.defaultTimeFormat" [(ngModel)]="editValue" [igxFocus]="true" >
             <label igxLabel></label>
         </igx-time-picker>
     </ng-container>
