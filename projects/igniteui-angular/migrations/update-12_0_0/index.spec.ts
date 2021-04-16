@@ -338,4 +338,50 @@ igx-bottom-nav-header {
     padding: 8px;
 }`);
     });
+
+    it('Should update row component types with RowType', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/rows.component.ts', `
+import { IgxGridGroupByRowComponent, IgxTreeGridRowComponent, IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent, RowPinningPosition } from 'igniteui-angular';
+export class HGridMultiRowDragComponent {
+    public onDropAllowed(args: IDropDroppedEventArgs)
+        const hierRow: IgxHierarchicalRowComponent = args.dragData;
+        const row: IgxGridRowComponent = args.dragData;
+        const treeRow: IgxTreeGridRowComponent = args.dragData;
+        const groupByRow: IgxGridGroupByRowComponent = args.dragData;
+        const children = (cell.row as IgxTreeGridRowComponent).children;
+    }
+    public ngOnInit() {
+        const hierRow: this.hierGrid1.getRowByIndex(0) as IgxHierarchicalRowComponent;
+        const row: this.grid1.getRowByIndex(0) as IgxGridRowComponent;
+        const treeRow: this.treeGrid1.getRowByIndex(0) as IgxTreeGridRowComponent;
+        const hierRowComp: this.hierGrid1.hGridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+        const rowComp: this.grid1.gridAPI.get_row_by_index(0) as IgxGridRowComponent;
+        const treeRowComp: this.gridAPI.get_row_by_index(0) as IgxTreeGridRowComponent;
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
+            .toEqual(`
+import { IgxGridComponent, RowType, RowPinningPosition} from 'igniteui-angular';
+export class HGridMultiRowDragComponent {
+    public onDropAllowed(args: IDropDroppedEventArgs)
+        const hierRow: RowType = args.dragData;
+        const row: RowType = args.dragData;
+        const treeRow: RowType = args.dragData;
+        const groupByRow: RowType = args.dragData;
+        const children = (cell.row as RowType).children;
+    }
+    public ngOnInit() {
+        const hierRow: this.hierGrid1.getRowByIndex(0) as RowType;
+        const row: this.grid1.getRowByIndex(0) as RowType;
+        const treeRow: this.treeGrid1.getRowByIndex(0) as RowType;
+        const hierRowComp: this.hierGrid1.hGridAPI.get_row_by_index(0) as RowType;
+        const rowComp: this.grid1.gridAPI.get_row_by_index(0) as RowType;
+        const treeRowComp: this.gridAPI.get_row_by_index(0) as RowType;
+    }
+}`);
+    });
 });
