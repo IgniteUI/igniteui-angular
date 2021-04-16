@@ -324,5 +324,5 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         host.overwrite(entryPath, content);
     }
 
-    applyChanges();
+    update.applyChanges();
 };
