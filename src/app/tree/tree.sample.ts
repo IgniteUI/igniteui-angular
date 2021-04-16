@@ -2,7 +2,7 @@ import { useAnimation } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import {
     DisplayDensity, growVerIn, growVerOut,
-    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeNode, IgxTreeComponent, IgxTree
+    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash';
@@ -37,7 +37,7 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
     public tree: IgxTreeComponent;
 
     @ViewChild('test', { static: true })
-    public testNode: IgxTreeNode<any>;
+    public testNode: IgxTreeNodeComponent<any>;
 
     public selectionModes = [];
 
