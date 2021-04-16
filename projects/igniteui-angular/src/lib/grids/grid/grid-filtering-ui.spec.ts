@@ -5249,6 +5249,47 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[2].innerText).toBe('No', 'incorrect list item label');
             expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
         });
+
+        it('Should sort items in excel style search case INsensitive', fakeAsync(() => {
+            const data = [
+                {
+                    Downloads: 254,
+                    ID: 1,
+                    ProductName: 'Ignite UI for JavaScript',
+                    ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15),
+                    Released: false,
+                    AnotherField: 'BWord'
+                },
+                {
+                    Downloads: 127,
+                    ID: 2,
+                    ProductName: 'NetAdvantage',
+                    ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1),
+                    Released: true,
+                    AnotherField: 'bWord'
+                },
+                {
+                    Downloads: 20,
+                    ID: 3,
+                    ProductName: 'Ignite UI for Angular',
+                    ReleaseDate: null,
+                    Released: null,
+                    AnotherField: 'aWord'
+                }
+            ];
+            fix.componentInstance.data = data;
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog.
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify items order
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'aWord', 'BWord'],
+                [true, true, true]);
+        }));
     });
 
     describe('Templates: ', () => {
@@ -6298,6 +6339,7 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
+    expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
     expect(labelElements.length).toBeGreaterThan(2);
     expect(checkboxElements.length).toBeGreaterThan(2);
     labels.forEach((l, index) => {
