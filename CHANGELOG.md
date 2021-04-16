@@ -33,7 +33,17 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onValueChange` event is renamed to `valueChange`
 - `IgxDatePicker`
     - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
-        // TODO snippet with directives for the new templating
+        ```html
+            <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxPrefix (click)="datePicker.toggle()">
+                    calendar_view_day
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="datePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-date-picker>
+        ```
     - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
     - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
@@ -45,7 +55,17 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onDisabledDate` event is removed.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 - `IgxTimePicker`
-        // TODO snippet with directives for the new templating
+        ```html
+            <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="HH:mm:ss">
+                <label igxLabel>Time: </label>
+                <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
+                    calendar_view_day
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="timePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-time-picker>
+        ```
     - **Breaking Change** - `format` is replaced by `inputFormat`.
     - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
