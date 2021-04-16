@@ -4746,7 +4746,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
-            row: row
+            row
         };
         this.onRowPinning.emit(eventArgs);
         this.crudService.endEdit(false);
