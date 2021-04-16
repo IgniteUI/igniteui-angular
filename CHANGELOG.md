@@ -97,7 +97,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSliderComponent`
     - **Breaking Change** - The following outputs are renamed:
         - `onValueChange` to `valueChange`
-        - `onValueChanged` to `valueChanged`
+        - `onValueChanged` to `dragFinished`
 - `IgxCircularProgressBarComponent`
     - **Breaking Change** - The following outputs are renamed:
         - `onProgressChanged` to `progressChanged`

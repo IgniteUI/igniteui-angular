@@ -115,7 +115,7 @@
         },
         {
             "name": "onValueChanged",
-            "replaceWith": "valueChanged",
+            "replaceWith": "dragFinished",
             "owner": {
                 "selector": "igx-slider",
                 "type": "component"

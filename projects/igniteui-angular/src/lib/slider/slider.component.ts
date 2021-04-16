@@ -708,11 +708,11 @@ export class IgxSliderComponent implements
      * }
      * ```
      * ```html
-     * <igx-slider (valueChanged)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * <igx-slider (dragFinished)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
      */
     @Output()
-    public valueChanged = new EventEmitter<number | IRangeSliderValue>();
+    public dragFinished = new EventEmitter<number | IRangeSliderValue>();
 
     /**
      * @hidden
@@ -814,7 +814,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
-        this.valueChanged.emit(this.value);
+        this.dragFinished.emit(this.value);
     }
 
     /**

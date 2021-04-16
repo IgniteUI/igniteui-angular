@@ -1342,12 +1342,12 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toEqual(expectedMaxVal);
         });
 
-        it('Should emit onValueChanged only when stop interacting with the slider', () => {
+        it('Should emit dragFinished only when stop interacting with the slider', () => {
             const fix = TestBed.createComponent(SliderTestComponent);
             fix.detectChanges();
 
             const instance = fix.componentInstance;
-            const spyOnValueChanged = spyOn<any>(instance.slider.valueChanged, 'emit').and.callThrough();
+            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit').and.callThrough();
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
             const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
             thumbTo.triggerEventHandler('focus', null);
@@ -1356,18 +1356,18 @@ describe('IgxSlider', () => {
             sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: () => {  }});
             fix.detectChanges();
             let currentValue = instance.slider.value;
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
             sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: () => {  }});
             fix.detectChanges();
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
 
             currentValue = instance.slider.value;
             sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: () => {  }});
             fix.detectChanges();
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(1);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(1);
             expect(instance.slider.value).toEqual(currentValue);
         });
     });

@@ -10,7 +10,7 @@
         },
         {
             "member": "onValueChanged",
-            "replaceWith": "valueChanged",
+            "replaceWith": "dragFinished",
             "definedIn": [
                 "IgxSliderComponent"
             ]

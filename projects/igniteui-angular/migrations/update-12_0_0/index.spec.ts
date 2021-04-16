@@ -89,7 +89,7 @@ $theme: igx-avatar-theme(
         );
     });
 
-    it('should replace onValueChange and onValueChanged with valueChange and valueChanged in igx-slider', async () => {
+    it('should replace onValueChange and onValueChanged with valueChange and dragFinished in igx-slider', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/slider.component.html`,
             `<igx-slider
@@ -103,7 +103,7 @@ $theme: igx-avatar-theme(
         expect(tree.readContent('/testSrc/appPrefix/component/slider.component.html')).toEqual(
             `<igx-slider
             (valueChange)="someHandler($event)"
-            (valueChanged)="someHandler($event)"
+            (dragFinished)="someHandler($event)"
             ></igx-slider>`
         );
     });
