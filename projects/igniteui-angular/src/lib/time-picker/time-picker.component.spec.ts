@@ -10,7 +10,7 @@ import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { KEYS } from '../core/utils';
+import { PlatformUtil } from '../core/utils';
 import { DatePart } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 
@@ -41,7 +41,7 @@ describe('IgxTimePicker', () => {
         const mockDateTimeEditorDirective = jasmine.createSpyObj('IgxDateTimeEditorDirective', ['increment', 'decrement'], { value: null });
 
         it('should open/close the dropdown with open()/close() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -56,7 +56,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should open/close the dropdown with toggle() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -71,7 +71,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should reset value and emit valueChange with clear() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -96,7 +96,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is \'00:00:00\' and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -112,7 +112,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should not emit valueChange when value is null and is cleared', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
@@ -125,7 +125,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should select time and trigger valueChange event with select() method', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
@@ -141,7 +141,7 @@ describe('IgxTimePicker', () => {
         });
 
         it('should fire vallidationFailed on selecting time outside min/max range', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
@@ -162,7 +162,7 @@ describe('IgxTimePicker', () => {
         });
 
         xit('should change date parts correctly with increment() and decrement() methods', () => {
-            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null);
+            timePicker = new IgxTimePickerComponent(elementRef, null, null, null, null, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
@@ -202,7 +202,8 @@ describe('IgxTimePicker', () => {
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule],
+                    providers: [PlatformUtil]
                 }).compileComponents();
             }));
             beforeEach(fakeAsync(() => {
@@ -280,7 +281,7 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should open/close the dropdown and keep the current selection on Space/Enter key press', fakeAsync(() => {
-                UIInteractions.triggerKeyDownEvtUponElem(KEYS.SPACE, input.nativeElement, true);
+                UIInteractions.triggerKeyDownEvtUponElem('Space', input.nativeElement, true);
                 tick();
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeFalsy();
@@ -289,7 +290,7 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
 
-                UIInteractions.triggerKeyDownEvtUponElem(KEYS.ENTER, hourColumn.nativeElement);
+                UIInteractions.triggerKeyDownEvtUponElem('Enter', hourColumn.nativeElement);
                 tick();
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTruthy();
@@ -316,7 +317,7 @@ describe('IgxTimePicker', () => {
                 const selectedHour = fixture.componentInstance.date.getHours() - 3;
                 expect((timePicker.value as Date).getHours()).toEqual(selectedHour);
 
-                UIInteractions.triggerKeyDownEvtUponElem(KEYS.ESCAPE, input.nativeElement, true);
+                UIInteractions.triggerKeyDownEvtUponElem('Escape', input.nativeElement, true);
                 tick();
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTruthy();
