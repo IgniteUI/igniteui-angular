@@ -30,6 +30,18 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             labelDirective: 'igxTabHeaderLabel'
         }
     ];
+
+    const EDITOR_COMPONENTS = [{
+        COMPONENT: 'igx-date-picker',
+        TEMPLATE_DIRECTIVE: 'igxDatePickerTemplate',
+        TEMPLATE_WARN_MSG: `\n<!-- The following template is not used valid in the new version! -->\n`
+     }, {
+        COMPONENT: 'igx-time-picker',
+        TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
+        TEMPLATE_WARN_MSG: `\n<!-- The following template is not used valid in the new version! -->\n`
+     }];
+    const EDITOR_PROPS = ['[mode]', 'mode'];
+
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
@@ -214,6 +226,25 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             if (changed) {
                 host.overwrite(sassPath, newContent);
             }
+        }
+    }
+
+    for (const comp of EDITOR_COMPONENTS) {
+        for (const path of htmlFiles) {
+
+            // Insert a comment for editors old templates
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+                .map(editor => findElementNodes([editor], 'ng-template'))
+                .reduce((prev, curr) => prev.concat(curr), [])
+                .filter(template => hasAttribute(template as Element, comp.TEMPLATE_DIRECTIVE))
+                .map(node => getSourceOffset(node as Element))
+                .forEach(offset => {
+                    const { startTag, file } = offset;
+                    addChange(file.url, new FileChange(startTag.start, comp.TEMPLATE_WARN_MSG));
+                });
+
+            applyChanges();
+            changes.clear();
         }
     }
 
