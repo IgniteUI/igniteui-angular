@@ -1479,11 +1479,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should calculate row indices correctly after row pinning', async () => {
-            // getRowByndex creates row on demand, and returns data at the row.index as per the grid state at the moment
-            // thats why we need to keep the key now. if we read firstRow.key later
-            // it will return the diff key. euqal to treeGrid.getRowByIndex(0).key
-            const firstRowKey = treeGrid.getRowByIndex(0).key;
-            const secondRowKey = treeGrid.getRowByIndex(1).key;
+            const firstRow = treeGrid.getRowByIndex(0);
+            const secondRow = treeGrid.getRowByIndex(1);
 
             treeGrid.pinRow(711);
             fix.detectChanges();
@@ -1491,16 +1488,16 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             await wait();
 
             expect(treeGrid.getRowByIndex(0).key).toBe(711);
-            expect(treeGrid.getRowByIndex(1).key).toBe(firstRowKey);
-            expect(treeGrid.getRowByIndex(2).key).toBe(secondRowKey);
+            expect(treeGrid.getRowByIndex(1).key).toBe(firstRow.key);
+            expect(treeGrid.getRowByIndex(2).key).toBe(secondRow.key);
 
             treeGrid.unpinRow(711);
             fix.detectChanges();
 
             await wait();
 
-            expect(treeGrid.getRowByIndex(0).key).toBe(firstRowKey);
-            expect(treeGrid.getRowByIndex(1).key).toBe(secondRowKey);
+            expect(treeGrid.getRowByIndex(0).key).toBe(firstRow.key);
+            expect(treeGrid.getRowByIndex(1).key).toBe(secondRow.key);
         });
 
         it('should disable pinned row instance in the body', () => {
