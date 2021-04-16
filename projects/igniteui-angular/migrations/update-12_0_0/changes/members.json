@@ -12,42 +12,48 @@
             "member": "onChunkLoad",
             "replaceWith": "chunkLoad",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onScrollbarVisibilityChanged",
             "replaceWith": "scrollbarVisibilityChanged",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onContentSizeChange",
             "replaceWith": "contentSizeChange",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onDataChanged",
             "replaceWith": "dataChanged",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onBeforeViewDestroyed",
             "replaceWith": "beforeViewDestroyed",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onChunkPreload",
             "replaceWith": "chunkPreload",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
