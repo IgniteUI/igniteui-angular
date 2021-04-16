@@ -601,7 +601,7 @@ describe('IgxTimePicker', () => {
             it('should select minValue when value does not match dropdown values', fakeAsync(() => {
                 fixture.componentInstance.minValue = new Date(2021, 24, 2, 9, 0, 0);
                 fixture.componentInstance.maxValue = new Date(2021, 24, 2, 16, 0, 0);
-                timePicker.itemsDelta = {hour:2, minute: 15, second: 30}
+                timePicker.itemsDelta = {hour:2, minute: 15, second: 30};
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -621,7 +621,7 @@ describe('IgxTimePicker', () => {
             it('should select minValue when value is outside the min/max range', fakeAsync(() => {
                 fixture.componentInstance.minValue = new Date(2021, 24, 2, 13, 0, 0);
                 fixture.componentInstance.maxValue = new Date(2021, 24, 2, 19, 0, 0);
-                timePicker.itemsDelta = {hour:2, minute: 15, second: 30}
+                timePicker.itemsDelta = {hour:2, minute: 15, second: 30};
                 fixture.detectChanges();
 
                 timePicker.open();

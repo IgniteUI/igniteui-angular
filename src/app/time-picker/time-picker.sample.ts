@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxTimePickerComponent, PickerInteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings } from 'igniteui-angular';
+import { IgxTimePickerComponent, PickerInteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings, DatePart } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -16,16 +16,16 @@ export class TimePickerSampleComponent implements AfterViewInit {
     // public max = '19:00';
     // public min = '09:00';
 
-    public itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
+    public itemsDelta = { hour: 1, minute: 15, second: 20 };
     public format = 'hh:mm:ss tt';
-    public isSpinLoop = true;
+    public spinLoop = true;
     public isVertical = true;
     public mode = PickerInteractionMode.DropDown;
 
-    public date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     public date = new Date(2018, 10, 27, 11, 45, 0, 0);
     public min = new Date(2018, 10, 27, 9, 30, 15, 0);
-   // public max = new Date(2018, 10, 27, 14, 20, 30, 0);
+    public max = new Date(2018, 10, 27, 14, 20, 30, 0);
+    public date1 = new Date(2018, 10, 27, 17, 45, 0, 0);
     public val = new Date(0, 0, 0, 19, 35, 30, 0);
     public today = new Date(Date.now());
 
@@ -42,7 +42,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
     }
 
     public showDate(date) {
-        return date ? date.toLocaleString() : 'Value is null.';
+        return this.tp.value ? this.tp.value.toLocaleString() : 'Value is null.';
     }
 
     public change() {
@@ -70,10 +70,10 @@ export class TimePickerSampleComponent implements AfterViewInit {
         picker.close();
     }
 
-    public increment(){
-        this.tp.increment(DatePart.Hours);
+    public increment() {
+        this.tp.increment();
     }
-    public decrement(){
-        this.tp.decrement(DatePart.Hours);
+    public decrement() {
+        this.tp.decrement(DatePart.Minutes);
     }
 }

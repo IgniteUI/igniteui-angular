@@ -6,6 +6,10 @@
         [displayFormat]="this.displayFormat" [igxTextSelection]="this.isDropdown" role="combobox" aria-haspopup="dialog"
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
+    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
+        <igx-icon fontSet="material">access_time</igx-icon>
+    </igx-prefix>
+
     <ng-container ngProjectAs="[igxLabel]">
         <ng-content select="[igxLabel]"></ng-content>
     </ng-container>
@@ -18,10 +22,6 @@
     <ng-container ngProjectAs="igx-hint">
         <ng-content select="igx-hint,[igxHint]"></ng-content>
     </ng-container>
-
-    <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon fontSet="material">access_time</igx-icon>
-    </igx-prefix>
 
     <igx-suffix *ngIf="this.showClearButton" igxRipple (click)="this.clear()">
         <igx-icon fontSet="material">clear</igx-icon>

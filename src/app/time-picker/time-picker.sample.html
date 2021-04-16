@@ -1,75 +1,49 @@
-<!-- <form>
-    <igx-time-picker #tp #time="ngModel" name="time" (opened)="valueChanged($event)" [minValue]="'09:15:20 AM'" [maxValue]="'11:15:20 AM'"
-        (validationFailed)="validationFailed($event)" (valueChange)="valueChanged($event)" [mode]="mode" [spinLoop]="isSpinLoop" [(ngModel)]="date"
-        [itemsDelta]="itemsDelta" [displayFormat]="format" [disabled]="false">
-        <label igxLabel>Custom label</label>
-    </igx-time-picker>
-</form> -->
-
-<!-- <p>
-    Min: {{time?.errors?.minValue}}
-    Max: {{time?.errors?.maxValue}}
-</p> -->
-
-<igx-time-picker #tp [value]="date" [inputFormat]="'hh:mm:ss tt'" [mode]="'dropdown'" [minValue]="min" 
-(valueChange)="valueChanged($event)" (validationFailed)="validationFailed($event)" [itemsDelta]="{hour:2, minute:20, second:10}" [spinLoop]="true" >
-    <!-- <ng-template igxTimePickerActions>
-        <div class="action-buttons">
-            <button igxButton="flat" (click)="selectToday(picker)">Today</button>
-        </div>
-    </ng-template> -->
-</igx-time-picker>
-<button (click)="increment()">Increment</button>
-<button (click)="decrement()">Decrement</button>
-
-<igx-time-picker #tp1 [value]="date1" [inputFormat]="'mm:ss'" [mode]="'dropdown'" [minValue]="min" 
-(valueChange)="valueChanged($event)" (validationFailed)="validationFailed($event)" [itemsDelta]="{hour:1, minute:10, second:5}" [spinLoop]="false" >
-</igx-time-picker>
-
-<!-- [itemsDelta]="{hours:1, minutes:250, seconds:10}  [minValue]="min" [maxValue]="max"" -->
-<!-- <div class="columns-container">
+<div class="columns-container">
     <article class="timepicker-column">
-        <h4 class="sample-title">Time Picker with Dropdown</h4>
-        <div class="sample-description">{{showDate(date)}}</div>
+        <h4 class="sample-title">Time Picker with Date value binding</h4>
         <div class="preview">
-            <igx-time-picker #tp (onValueChanged)="valueChanged($event)" [minValue]="'9:15:20 AM'" [maxValue]="'11:15:20 AM'"
-                (onValidationFailed)="validationFailed($event)" [mode]="'dropdown'" [isSpinLoop]="isSpinLoop"
-                [(ngModel)]="date" [itemsDelta]="itemsDelta" [format]="format">
-                <label igxLabel>Custom label</label>
+            <igx-time-picker #tp [value]="date" [minValue]="min" [maxValue]="max" [spinLoop]="spinLoop"
+                [itemsDelta]="itemsDelta" [inputFormat]="format" (valueChange)="valueChanged($event)"
+                (validationFailed)="validationFailed($event)">
             </igx-time-picker>
         </div>
     </article>
     <article class="timepicker-column">
-        <h4 class="sample-title">Time Picker with Dropdown Hour Mode</h4>
-        <div class="sample-description">{{showDate(date1)}}</div>
-        <div class="sample-description">Mask: {{hourModeTimePicker.mask}}, Format: {{hourModeTimePicker.format}}</div>
+        <h4 class="sample-title">Time Picker with string value binding</h4>
         <div class="preview">
-            <igx-time-picker #hourModeTimePicker [mode]="'dropdown'" [(ngModel)]="date1" [format]="'h tt'">
+            <igx-time-picker #tp1 [value]="'08:30:00'" [spinLoop]="false"
+                [itemsDelta]="{ hour: 1, minute: 30, second: 20 }" [inputFormat]="'hh:mm tt'"
+                (valueChange)="valueChanged($event)" (validationFailed)="validationFailed($event)">
+            </igx-time-picker>
+        </div>
+    </article>
+    <article class="timepicker-column">
+        <h4 class="sample-title">Time Picker with ngModel binding</h4>
+        <div class="preview">
+            <igx-time-picker #hourModeTimePicker [(ngModel)]="date1" [inputFormat]="'hh:mm tt'"
+                [displayFormat]="'hh tt'">
             </igx-time-picker>
         </div>
     </article>
     <article class="timepicker-column">
         <h4 class="sample-title">Horizontal Time Picker</h4>
-        <p class="sample-description">AM/PM Time format</p>
         <div class="preview">
-            <igx-time-picker format="h:mm tt"></igx-time-picker>
+            <igx-time-picker [mode]="'dialog'" [inputFormat]="'hh:mm tt'"></igx-time-picker>
         </div>
     </article>
     <article class="timepicker-column">
         <h4 class="sample-title">Vertical Time Picker</h4>
-        <p class="sample-description">Vertical dialog</p>
         <div class="preview">
-            <igx-time-picker [vertical]="true" format="h:mm tt"></igx-time-picker>
+            <igx-time-picker [mode]="'dialog'" [headerOrientation]="'vertical'" [inputFormat]="'hh:mm tt'"></igx-time-picker>
         </div>
     </article>
     <article class="timepicker-column">
         <h4 class="sample-title">24h Time Picker</h4>
-        <p class="sample-description">24h Time Format</p>
         <div class="preview">
-            <igx-time-picker format="H:mm" [okButtonLabel]="''" [cancelButtonLabel]="''"></igx-time-picker>
+            <igx-time-picker [inputFormat]="'HH:mm'" [okButtonLabel]="''" [cancelButtonLabel]="''"></igx-time-picker>
         </div>
     </article>
-    <article class="timepicker-column">
+    <!-- <article class="timepicker-column">
         <h4 class="sample-title">Templated Time Picker</h4>
         <p class="sample-description">Time picker with templated input group</p>
         <div class="preview">
@@ -134,7 +108,7 @@
                         <label igxLabel>Time</label>
                         <input #target igxInput [value]="displayValue" (blur)="onBlur(target.value, value)"/>
                         <igx-suffix>
-                            <igx-icon (click)="openDialog(target)">access_time</igx-icon>
+                            <igx-icon (click)="open(target)">access_time</igx-icon>
                         </igx-suffix>
                     </igx-input-group>
                 </ng-template>
@@ -145,5 +119,5 @@
                 </ng-template>
             </igx-time-picker>
         </div>
-    </article>
-</div> -->
+    </article> -->
+</div>
