@@ -1,5 +1,10 @@
 import { Component, ViewChild, AfterViewInit } from '@angular/core';
-import { IgxTimePickerComponent, PickerInteractionMode, IgxInputDirective, AutoPositionStrategy, OverlaySettings, DatePart } from 'igniteui-angular';
+import { IgxTimePickerComponent,
+    PickerInteractionMode,
+    IgxInputDirective,
+    AutoPositionStrategy,
+    OverlaySettings,
+    DatePart } from 'igniteui-angular';
 
 @Component({
     selector: 'app-time-picker-sample',
@@ -41,7 +46,7 @@ export class TimePickerSampleComponent implements AfterViewInit {
         // this.myOverlaySettings.target = this.target.nativeElement;
     }
 
-    public showDate(date) {
+    public showDate() {
         return this.tp.value ? this.tp.value.toLocaleString() : 'Value is null.';
     }
 
