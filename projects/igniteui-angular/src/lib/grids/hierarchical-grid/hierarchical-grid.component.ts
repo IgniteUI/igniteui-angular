@@ -760,7 +760,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    private createRow(index: number): RowType {
+    protected createRow(index: number): RowType {
         let row: RowType;
         const rec: any = this.dataView[index];
 

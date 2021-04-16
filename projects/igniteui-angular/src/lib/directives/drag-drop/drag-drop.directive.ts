@@ -187,8 +187,6 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
         return this._data;
     }
 
-    protected _data: any;
-
     /**
      * An @Input property that indicates when the drag should start.
      * By default the drag starts after the draggable element is moved by 5px.
@@ -579,6 +577,7 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
 
     protected _destroy = new Subject<boolean>();
     protected _removeOnDestroy = true;
+    protected _data: any;
 
     /**
      * An @Input property that specifies the offset of the dragged element relative to the mouse in pixels.

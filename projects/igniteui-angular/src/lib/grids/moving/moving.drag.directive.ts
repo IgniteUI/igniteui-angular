@@ -24,8 +24,6 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this._data;
     }
 
-    protected _data: any;
-
     public get column(): IgxColumnComponent {
         return this.data;
     }
@@ -38,6 +36,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
+    protected _data: any;
     private subscription$: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
