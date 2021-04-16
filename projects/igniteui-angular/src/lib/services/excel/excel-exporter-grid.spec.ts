@@ -1,4 +1,4 @@
-import { TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
@@ -35,7 +35,6 @@ import { IgxHierarchicalGridModule,
          IgxHierarchicalGridComponent,
          IgxHierarchicalRowComponent
 } from '../../grids/hierarchical-grid/public_api';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -147,7 +146,6 @@ describe('Excel Exporter', () => {
             await wait();
 
             const grid = fix.componentInstance.grid;
-            options.ignoreColumnsOrder = true;
             options.ignoreColumnsVisibility = false;
 
             expect(grid.visibleColumns.length).toEqual(3, 'Invalid number of visible columns!');
