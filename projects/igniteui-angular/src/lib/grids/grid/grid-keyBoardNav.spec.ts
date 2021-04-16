@@ -2,8 +2,7 @@ import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxGridCellComponent,
-    IgxGridModule,
-    IgxGridGroupByRowComponent,
+    IgxGridModule
 } from './public_api';
 import { IgxGridComponent } from './grid.component';
 import { IGridCellEventArgs, IActiveNodeChangeEventArgs } from '../common/events';
@@ -20,6 +19,7 @@ import {
 
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { DebugElement } from '@angular/core';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 const DEBOUNCETIME = 30;
 

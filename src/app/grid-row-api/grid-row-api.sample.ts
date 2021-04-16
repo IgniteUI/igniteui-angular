@@ -7,7 +7,8 @@ import {
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
     IPinningConfig,
-    RowPinningPosition
+    RowPinningPosition,
+    IRowDragStartEventArgs
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -24,12 +25,17 @@ export class GridRowAPISampleComponent implements OnInit {
     @ViewChild('grid', { static: true })
     private grid: IgxGridComponent;
 
+    @ViewChild('targetGrid', { static: true })
+    private targetGrid: IgxGridComponent;
+
     @ViewChild('treeGrid', { static: true })
     private treeGrid: IgxTreeGridComponent;
 
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxTreeGridComponent;
-
+    public countIcon = 'drag_indicator';
+    public dragIcon = 'arrow_right_alt';
+    public data2: any;
     public data: any[];
     public treeGridHierData: any[];
     public hierarchicalData: any[];
@@ -258,5 +264,37 @@ export class GridRowAPISampleComponent implements OnInit {
         });
 
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
+    }
+
+    public onRowDragEnd(args) {
+        args.animation = true;
+    }
+
+    public onDropAllowed(args) {
+        let selected = false;
+        const ids = this.grid.selectedRows;
+        const selectedRowData = this.grid.data.filter((record) => ids.includes(record.ID));
+        selectedRowData.forEach((rowData) => {
+            selected = true;
+            this.targetGrid.addRow(rowData);
+            this.grid.deleteRow(rowData.ID);
+        });
+        if (selected === false) {
+            this.targetGrid.addRow(args.dragData.rowData);
+            // this.grid.deleteRow(args.dragData.rowID);
+        }
+    }
+
+    public onEnter(args) {
+        this.dragIcon = 'add';
+    }
+    public onRowDragStart(args: IRowDragStartEventArgs) {
+        const row = args.dragData;
+        const count = this.grid.selectedRows.length || 1;
+        this.countIcon = `filter_${count > 9 ? '9_plus' : `${count}`}`;
+    }
+    public onLeave(args) {
+        this.onRowDragStart(args);
+        this.dragIcon = 'arrow_right_alt';
     }
 }

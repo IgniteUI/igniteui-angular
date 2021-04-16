@@ -25,7 +25,8 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-grid #grid [data]="data" [pinning]="pinningConfig" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
+        <igx-grid #grid [rowDraggable]="true" (onRowDragStart)="onRowDragStart($event)"
+        (onRowDragEnd)="onRowDragEnd($event)" [data]="data" [pinning]="pinningConfig" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
@@ -35,6 +36,21 @@
             </ng-template>
             <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
             </igx-column>
+            <ng-template let-data igxRowDragGhost>
+                <div class="allow-drop"> 
+                    <igx-icon family="material">{{dragIcon}}{{countIcon}}</igx-icon> 
+                </div>
+            </ng-template>
+        </igx-grid>
+
+        <igx-grid #targetGrid igxDrop [data]="data2" [height]="'480px'" [autoGenerate]="false"
+        [emptyGridTemplate]="dragHereTemplate" (enter)="onEnter($event)" (leave)="onLeave($event)"
+        (dropped)="onDropAllowed($event)" [primaryKey]="'ID'">
+            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
+            </igx-column>
+            <ng-template #dragHereTemplate>
+                <div class="empty-grid">Drop a row to add it to the grid</div>
+            </ng-template>
         </igx-grid>
     </div>
     <div class="log-wrapper">

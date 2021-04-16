@@ -10,10 +10,10 @@ import { IgxActionStripModule } from '../action-strip.module';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import {
-    IgxHierarchicalRowComponent,
     IgxHierarchicalGridComponent,
     IgxHierarchicalGridModule
 } from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;

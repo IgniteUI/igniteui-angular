@@ -1,10 +1,11 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowDirective, IgxGridBaseDirective } from './grid/public_api';
+import { IgxGridBaseDirective } from './grid/public_api';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { GridType } from './common/grid.interface';
 import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
+import { IgxRowDirective } from './row.directive';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';

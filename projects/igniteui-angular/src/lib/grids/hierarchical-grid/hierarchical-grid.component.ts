@@ -39,7 +39,6 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IgxGridCRUDService } from '../common/crud.service';
 import { RowType } from '../common/row.interface';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
-import { RowPinningPosition } from '../common/enums';
 
 let NEXT_ID = 0;
 

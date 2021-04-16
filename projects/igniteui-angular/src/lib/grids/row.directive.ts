@@ -28,7 +28,6 @@ import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RowType } from './common/row.interface';
 
 @Directive({
     selector: '[igxRowBaseComponent]'

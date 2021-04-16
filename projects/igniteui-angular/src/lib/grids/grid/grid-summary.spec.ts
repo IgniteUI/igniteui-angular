@@ -8,7 +8,6 @@ import {
     IgxNumberSummaryOperand,
     IgxSummaryOperand,
     IgxSummaryResult,
-    IgxGridGroupByRowComponent,
     IgxGroupByRow,
     IgxSummaryRow,
     IgxGridRow
@@ -31,6 +30,7 @@ import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { DropPosition } from '../moving/moving.service';
 import { DatePipe } from '@angular/common';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Summaries #grid', () => {
     configureTestSuite();

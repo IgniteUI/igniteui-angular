@@ -2,11 +2,10 @@ import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_api';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IGridDataBindable, GridType } from './grid.interface';
+import { GridType } from './grid.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
@@ -178,7 +177,7 @@ export interface IPinRowEventArgs extends IBaseEventArgs {
      *   ID is either the primaryKey value or the data record instance.
      */
     readonly rowID: any;
-    row?: RowType | IgxRowDirective<IgxGridBaseDirective & GridType>;
+    row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
     /** Whether or noy the row is pinned or unpinned. */

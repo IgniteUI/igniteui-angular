@@ -4,9 +4,10 @@ import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxRowDirective, IgxGridBaseDirective } from '../grid/public_api';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { IPathSegment } from './hierarchical-grid-base.directive';
+import { IgxRowDirective } from '../row.directive';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {

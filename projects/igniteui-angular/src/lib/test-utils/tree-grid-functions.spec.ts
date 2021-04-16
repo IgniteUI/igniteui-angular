@@ -1,9 +1,10 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxRowDirective, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
+import { IgxTreeGridComponent, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
+import { IgxRowDirective } from '../grids/row.directive';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';

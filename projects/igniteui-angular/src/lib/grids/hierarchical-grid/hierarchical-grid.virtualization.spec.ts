@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from './public_api';
+import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -14,6 +14,7 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     configureTestSuite();
