@@ -9,7 +9,7 @@ import {
     SelectorChanges, ThemePropertyChanges, ImportsChanges, MemberChanges
 } from './schema';
 import {
-    getLanguageService, getRenamePositions, findMatches, replaceMatch,
+    getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
     createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME
 } from './tsUtils';
 import {
@@ -397,10 +397,15 @@ export class UpdateChanges {
         let content = this.host.read(entryPath).toString();
         const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
-            const matches = findMatches(content, change);
+
+            if (!content.includes(change.member)) {
+                continue;
+            }
+            const source = langServ.getProgram().getSourceFile(entryPath);
+            const matches = getIdentifierPositions(source, change.member);
             for (const matchPosition of matches) {
-                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {
-                    changes.add({ change, position: matchPosition });
+                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition.start)) {
+                    changes.add({ change, position: matchPosition.start });
                 }
             }
         }
