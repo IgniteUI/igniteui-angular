@@ -11,7 +11,9 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -6057,6 +6059,14 @@ const checkUIForType = (type: string, elem: DebugElement) => {
         case 'bool':
             expectedConditions = IgxBooleanFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'text';
+            break;
+        case 'dateTime':
+            expectedConditions = IgxDateTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedInputType = 'text';
+            break;
+        case 'time':
+            expectedConditions = IgxTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedInputType = 'timePicker';
             break;
     }
     GridFunctions.openFilterDD(elem);

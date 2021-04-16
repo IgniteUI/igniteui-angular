@@ -62,7 +62,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
 
-        this.data = SAMPLE_DATA.slice(0);
+        this.data = SAMPLE_DATA.slice(22);
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
