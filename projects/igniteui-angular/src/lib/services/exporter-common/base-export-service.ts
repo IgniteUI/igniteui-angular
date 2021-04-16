@@ -685,12 +685,12 @@ export abstract class IgxBaseExporter {
 
     private getColumns(columns: IgxColumnComponent[]): IColumnList {
         const colList = [];
-        const colWidthList = new Array<number>(columns.filter(c => !c.hidden).length);
+        const colWidthList = [];
         const hiddenColumns = [];
         let indexOfLastPinnedColumn = -1;
         let lastVisibleColumnIndex = -1;
 
-        columns.forEach((column, i) => {
+        columns.forEach((column) => {
             const columnHeader = !ExportUtilities.isNullOrWhitespaces(column.header) ? column.header : column.field;
             const exportColumn = !column.hidden || this.options.ignoreColumnsVisibility;
             const index = this.options.ignoreColumnsOrder || this.options.ignoreColumnsVisibility ? column.index : column.visibleIndex;
@@ -748,6 +748,7 @@ export abstract class IgxBaseExporter {
     private resetDefaults() {
         this._sort = null;
         this.flatRecords = [];
+        this.options = {} as IgxExporterOptionsBase;
         this._ownersMap.clear();
     }
 
