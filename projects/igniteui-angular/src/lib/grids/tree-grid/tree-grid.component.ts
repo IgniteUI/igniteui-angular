@@ -769,6 +769,27 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     */
+    protected createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+
+        if (!row && rec) {
+            const isTreeRow = this.isTreeRow(rec);
+            const data = isTreeRow ? rec.data : rec;
+            const treeRow = isTreeRow ? rec : undefined;
+            row = new IgxTreeGridRow(this, index, data, treeRow);
+        }
+
+        return row;
+    }
+
+    /**
      * @description A recursive way to deselect all selected children of a given record
      * @param recordID ID of the record whose children to deselect
      * @hidden
@@ -860,23 +881,5 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 this.notifyChanges();
             }
         });
-    }
-
-    private createRow(index: number): RowType {
-        let row: RowType;
-        const rec: any = this.dataView[index];
-
-        if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
-        }
-
-        if (!row && rec) {
-            const isTreeRow = this.isTreeRow(rec);
-            const data = isTreeRow ? rec.data : rec;
-            const treeRow = isTreeRow ? rec : undefined;
-            row = new IgxTreeGridRow(this, index, data, treeRow);
-        }
-
-        return row;
     }
 }

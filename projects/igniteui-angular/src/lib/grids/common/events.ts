@@ -151,13 +151,15 @@ export interface ICellPosition {
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
+    dragData: RowType;
+    dragElement: HTMLElement;
     animation: boolean;
 }
 
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
+    dragData: RowType;
+    dragElement: HTMLElement;
 }
 
 export interface IRowToggleEventArgs extends IBaseEventArgs {

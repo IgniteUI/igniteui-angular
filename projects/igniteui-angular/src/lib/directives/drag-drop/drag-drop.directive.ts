@@ -179,7 +179,15 @@ export class IgxDragDirective implements AfterContentInit, OnDestroy {
      * @memberof IgxDragDirective
      */
     @Input('igxDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data;
+    }
+
+    protected _data: any;
 
     /**
      * An @Input property that indicates when the drag should start.

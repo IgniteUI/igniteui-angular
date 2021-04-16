@@ -21,12 +21,18 @@ const cellActiveClass = 'igx-grid__td--active';
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     @Input('igxRowDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data.grid.createRow(this._data.index, this._data.rowData);
+    }
 
     private subscription$: Subscription;
     private _rowDragStarted = false;
     private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.data;
+        return this._data;
     }
 
     public onPointerDown(event) {
@@ -42,7 +48,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
                 dragDirective: this,
-                dragData: this.row,
+                dragData: this.data,
+                dragElement: this.row.nativeElement,
                 cancel: false,
                 owner: this.row.grid
             };
@@ -76,7 +83,8 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
         const args: IRowDragEndEventArgs = {
             dragDirective: this,
-            dragData: this.row,
+            dragData: this.data,
+            dragElement: this.row.nativeElement,
             animation: false,
             owner: this.row.grid
         };

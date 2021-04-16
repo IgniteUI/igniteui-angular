@@ -756,6 +756,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return super._shouldAutoSize(renderedHeight);
     }
 
+
+    /**
+     * @hidden
+     */
+    private createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (!row && rec) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
+    }
+
     private updateSizes() {
         if (document.body.contains(this.nativeElement) && this.isPercentWidth) {
             this.reflow();
@@ -796,16 +811,5 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
     private hg_horizontalScrollHandler(event) {
         this.scrollLeft = event.target.scrollLeft;
-    }
-
-    private createRow(index: number): RowType {
-        let row: RowType;
-        const rec: any = this.dataView[index];
-
-        if (!row && rec) {
-            row = new IgxHierarchicalGridRow(this, index, rec);
-        }
-
-        return row;
     }
 }

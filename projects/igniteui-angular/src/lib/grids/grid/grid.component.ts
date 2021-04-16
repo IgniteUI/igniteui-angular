@@ -1184,6 +1184,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this._gridAPI.sort_multiple(this._groupingExpressions);
     }
 
+    /**
+     * @hidden @internal
+     */
+    protected createRow(index: number): RowType {
+        let row: RowType;
+
+        const rec: any = this.dataView[index];
+
+        if (this.isGroupByRecord(rec)) {
+            row = new IgxGroupByRow(this, index, rec);
+        }
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
+
+        return row;
+    }
+
     private _setupNavigationService() {
         if (this.hasColumnLayouts) {
             this.navigation = new IgxGridMRLNavigationService(this.platform);
@@ -1210,24 +1232,5 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 col.hidden = value;
             });
         }
-    }
-
-    private createRow(index: number): RowType {
-        let row: RowType;
-
-        const rec: any = this.dataView[index];
-
-        if (this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow(this, index, rec);
-        }
-        if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
-        }
-        // if found record is a no a groupby or summary row, return IgxGridRow instance
-        if (!row && rec) {
-            row = new IgxGridRow(this, index, rec);
-        }
-
-        return row;
     }
 }

@@ -16,7 +16,15 @@ import { IgxColumnMovingService } from './moving.service';
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data;
+    }
+
+    protected _data: any;
 
     public get column(): IgxColumnComponent {
         return this.data;
