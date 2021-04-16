@@ -56,7 +56,8 @@
     <input #input igxInput tabindex="0"
         [placeholder]="inputDatePlaceholder"
         [igxDateTimeEditor]="column.defaultDateTimeFormat"
-        [(ngModel)]="expressionUI.expression.searchVal"/>
+        [(ngModel)]="expressionUI.expression.searchVal"
+        [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
 </igx-input-group>
 
 <button (click)="onRemoveButtonClick()" igxButton="icon" [displayDensity]="displayDensity" *ngIf="!isSingle" >
