@@ -1,5 +1,5 @@
 {
-    "$schema": "../../common/schema/members-changes.schema.json",
+  "$schema": "../../common/schema/members-changes.schema.json",
   "changes": [
     {
       "member": "onGridCreated",
@@ -41,6 +41,55 @@
       "replaceWith": "columnChange",
       "definedIn": [
         "IgxColumnComponent"
+      ]
+    },
+    {
+      "member": "onChunkLoad",
+      "replaceWith": "chunkLoad",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onScrollbarVisibilityChanged",
+      "replaceWith": "scrollbarVisibilityChanged",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onContentSizeChange",
+      "replaceWith": "contentSizeChange",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onDataChanged",
+      "replaceWith": "dataChanged",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onBeforeViewDestroyed",
+      "replaceWith": "beforeViewDestroyed",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onChunkPreload",
+      "replaceWith": "chunkPreload",
+      "definedIn": [
+        "IgxForOfDirective"
+      ]
+    },
+    {
+      "member": "onDataChanging",
+      "replaceWith": "dataChanging",
+      "definedIn": [
+        "IgxGridForOfDirective"
       ]
     }
   ]

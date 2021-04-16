@@ -41,6 +41,7 @@
     $radius-factor: null,
 ) {
     $name: 'pie-chart';
+    $selector: 'igx-pie-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -53,6 +54,7 @@
 
     @return extend( $theme, (
         name: $name,
+        selector: $selector,
         brushes: $brushes,
         outlines: $outlines,
         label-extent: $label-extent,
