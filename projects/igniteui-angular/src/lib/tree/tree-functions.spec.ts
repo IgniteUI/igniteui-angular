@@ -67,7 +67,7 @@ export class TreeTestFunctions {
                 tabIndex: null,
                 header: { nativeElement: { focus: () => undefined } },
                 parentNode: parentNode ? parentNode : null,
-                children: children ? children[i] : null,
+                _children: children ? children[i] : null,
                 allChildren: allChildren ? allChildren[i] : null,
                 selectedChange: mockEmitter
             }));
