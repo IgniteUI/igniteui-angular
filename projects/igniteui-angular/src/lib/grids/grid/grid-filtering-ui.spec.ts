@@ -675,8 +675,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 const filteringCells = GridFunctions.getFilteringCells(fix);
                 const filteringChips = GridFunctions.getFilteringChips(fix);
-                expect(filteringCells.length).toBe(6);
-                expect(filteringChips.length).toBe(5);
+                expect(filteringCells.length).toBe(8);
+                expect(filteringChips.length).toBe(7);
 
                 let idCellChips = GridFunctions.getFilteringChipPerIndex(fix, 0);
                 expect(idCellChips.length).toBe(0);
@@ -2230,21 +2230,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             let filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(6);
+            expect(filteringCells.length).toEqual(8);
 
             // hide column
             grid.getColumnByName('ID').hidden = true;
             fix.detectChanges();
 
             filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(5);
+            expect(filteringCells.length).toEqual(7);
             expect(GridFunctions.getChipText(filteringCells[0])).toEqual('Angular');
 
             grid.getColumnByName('ProductName').hidden = true;
             fix.detectChanges();
 
             filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(4);
+            expect(filteringCells.length).toEqual(6);
 
             for (const filterCell of filteringCells) {
                 expect(GridFunctions.getChipText(filterCell)).toEqual('Filter');
@@ -2984,7 +2984,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
 
-            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 5);
+            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 7);
         }));
 
         it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
@@ -3355,7 +3355,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.onColumnVisibilityChanged, 'emit');
 
             const column = grid.columns.find((col) => col.field === 'ProductName');
-            GridFunctions.verifyColumnIsHidden(column, false, 6);
+            GridFunctions.verifyColumnIsHidden(column, false, 8);
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
