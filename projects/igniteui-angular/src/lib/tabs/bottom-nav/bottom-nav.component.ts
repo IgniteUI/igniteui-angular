@@ -25,15 +25,15 @@ let NEXT_BOTTOM_NAV_ITEM_ID = 0;
  * ```html
  * <igx-bottom-nav>
  *     <igx-bottom-nav-item>
-           <igx-bottom-nav-header>
-               <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
-               <span igxBottomNavHeaderLabel>Tab 1</span>
-           </igx-bottom-nav-header>
-           <igx-bottom-nav-content>
-               Content 1
-           </igx-bottom-nav-content>
-       </igx-bottom-nav-item>
-       ...
+ *         <igx-bottom-nav-header>
+ *             <igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
+ *             <span igxBottomNavHeaderLabel>Tab 1</span>
+ *         </igx-bottom-nav-header>
+ *         <igx-bottom-nav-content>
+ *             Content 1
+ *         </igx-bottom-nav-content>
+ *     </igx-bottom-nav-item>
+ *     ...
  * </igx-bottom-nav>
  * ```
  */
