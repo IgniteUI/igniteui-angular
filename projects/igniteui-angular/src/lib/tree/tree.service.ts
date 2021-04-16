@@ -34,7 +34,12 @@ export class IgxTreeService {
         }
     }
 
-    public collapsing(node: IgxTreeNode<any>) {
+    /**
+     * Adds a node to the `collapsing` collection
+     *
+     * @param node target node
+     */
+    public collapsing(node: IgxTreeNode<any>): void {
         this.collapsingNodes.add(node);
     }
 

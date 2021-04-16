@@ -8,14 +8,6 @@
     </div>
 </div>
 <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
-    <!-- <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium quam accusamus velit, molestias quasi expedita tempore. Numquam earum laudantium deserunt fuga asperiores nesciunt alias aperiam neque, sed rem quod suscipit?</p> -->
 
     <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutItemAlign="center" class="controls">
         <igx-input-group type="border">
@@ -29,12 +21,12 @@
         </igx-input-group>
 
         <igx-input-group type="border">
-            <label igxLabel for="addParent">Target Parent</label>
+            <label igxLabel for="addParent">Target Parent (key)</label>
             <input igxInput #addParent id="addParent" type="string">
         </igx-input-group>
 
         <igx-input-group type="border">
-            <label igxLabel for="delete">Delete Nodes</label>
+            <label igxLabel for="delete">Nodes To Delete (key)</label>
             <input igxInput #deleteNodes id="delete" type="string">
         </igx-input-group>
 
@@ -52,30 +44,33 @@
             <button igxButton (click)="addItem()">Add nodes</button>
             <button igxButton (click)="resetData()">Reset nodes</button>
             <button igxButton (click)="setDummy()">Dummy nodes</button>
-            <button igxButton (click)="addDataChild('FRANS')">Add Child</button>
-            <button igxButton (click)="deleteLastChild('FRANS')">Delete Child</button>
-            <button igxButton (click)="cancer('FRANS')">Add Stuff</button>
-            <button igxButton (click)="addSeveralNodes('FRANS')">Add Several</button>
+            <button igxButton (click)="addSeveralNodes(addParent.value)">Add Several Children</button>
             <button igxButton (click)="deleteNodesFromParent(addParent.value, deleteNodes.value)">Delete Nodes</button>
 
         </div>
-        <igx-buttongroup [values]="selectionModes" (selected)="selectCellSelectionMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode($event)"></igx-buttongroup>
         <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
 
         <div igxLayout igxLayoutDir="row">
             <div igxLayout igxLayoutDir="column" class="tree-container">
                 <p>IgxTree (templated with icon and text)</p>
-                <igx-tree #tree1 (blur)="handleActive($event)" [singleBranchExpand]="singleBranchExpand"
+                <igx-tree #tree1
+                    [singleBranchExpand]="singleBranchExpand"
                     [displayDensity]="density"
                     [selection]="'Cascading'"
-                    [animationSettings]="animationSettings" (nodeSelection)="nodeSelection($event)"
-                    (keydown)="keydown($event)" (nodeCollapsing)="handleEvent($event)"
+                    [animationSettings]="animationSettings"
+                    (nodeSelection)="nodeSelection($event)"
+                    (nodeExpanding)="handleNodeExpanding($event)"
+                    (nodeExpanded)="handleNodeExpanded($event)"
+                    (nodeCollapsing)="handleNodeCollapsing($event)"
+                    (nodeCollapsed)="handleNodeCollapsed($event)"
                     (activeNodeChanged)="activeNodeChanged($event)"
+                    (keydown)="keydown($event)"
                     class="sample-scroll">
                     <igx-tree-node [disabled]="true">Disabled node</igx-tree-node>
                     <igx-tree-node #loadingNode [loading]="true" (expandedChange)="handleRemote(loadingNode, $event)">
                         Load on demand
-                        <igx-tree-node *ngFor="let item of (asyncItems | async) || [{ ID: 'dummy', CompanyName: ''}]">
+                        <igx-tree-node *ngFor="let item of (asyncItems | async) || [{ ID: 'dummy', CompanyName: ''}]" [disabled]="loadingNode.loading">
                             {{ item.CompanyName }}
                         </igx-tree-node>
                     </igx-tree-node>

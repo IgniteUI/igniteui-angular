@@ -437,7 +437,6 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
 
     private subToChanges() {
         this.unsubChildren$.next();
-        // TODO: Not a hack
         const toBeSelected = [...this.forceSelect];
         requestAnimationFrame(() => {
             this.selectionService.selectNodesWithNoEvent(toBeSelected);

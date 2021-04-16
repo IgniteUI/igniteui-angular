@@ -2,7 +2,8 @@ import { useAnimation } from '@angular/animations';
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, OnDestroy } from '@angular/core';
 import {
     DisplayDensity, growVerIn, growVerOut,
-    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent
+    IgxTreeNodeComponent, IgxTreeSearchResolver, IgxTreeComponent, ITreeNodeTogglingEventArgs,
+    ITreeNodeToggledEventArgs, ITreeNodeSelectionEvent, IgxTreeNode
 } from 'igniteui-angular';
 import { Subject } from 'rxjs';
 import { cloneDeep } from 'lodash';
@@ -94,8 +95,20 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         this.data = generateHierarchicalData('ChildCompanies', 3, 6, 0);
     }
 
-    public handleEvent(event: any) {
-        // event.cancel = true;
+    public handleNodeExpanding(_event: ITreeNodeTogglingEventArgs) {
+        // do something w/ data
+    }
+
+    public handleNodeExpanded(_event: ITreeNodeToggledEventArgs) {
+        // do something w/ data
+    }
+
+    public handleNodeCollapsing(_event: ITreeNodeTogglingEventArgs) {
+        // do something w/ data
+    }
+
+    public handleNodeCollapsed(_event: ITreeNodeToggledEventArgs) {
+        // do something w/ data
     }
 
 
@@ -108,26 +121,6 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         data.push(Object.assign({}, data[data.length - 1],
             { CompanyName: `Added ${this.addedIndex++}`, selected: this.addedIndex % 2 === 0, ChildCompanies: [] }));
         this.cdr.detectChanges();
-    }
-
-    public cancer(key: string) {
-        const arr = [{
-            ID: 'Some1',
-            CompanyName: 'Test 1',
-            ChildCompanies: [{
-                ID: 'Some2',
-                CompanyName: 'Test 2',
-                selected: true
-            },
-            {
-                ID: 'Some3',
-                CompanyName: 'Test 3',
-                selected: true
-            }]
-        }];
-        this.getNodeByName(key).data.ChildCompanies = arr;
-        this.cdr.detectChanges();
-
     }
 
     public deleteLastChild(key: string) {
@@ -146,22 +139,6 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
             const index = parent.data.ChildCompanies.findIndex(e => e.ID === nodeId);
             parent.data.ChildCompanies.splice(index, 1);
         });
-        // this.cdr.detectChanges();
-        // requestAnimationFrame(() => {
-        //     if (parent.children.toArray().every(e => e.selected)) {
-        //         parent.selected = true;
-        //     } else if (parent.children.toArray().every(e => !e.selected)) {
-        //         if (parent.children.toArray().every(e => !e.indeterminate)) {
-        //             parent.selected = true;
-        //         }
-        //         parent.selected = false;
-        //     }
-        // });
-    }
-
-    public addNodesToParent(key: string) {
-        const parent = this.getNodeByName(key);
-
     }
 
     public addSeveralNodes(key: string) {
@@ -209,34 +186,18 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         }, this.loadDuration);
     }
 
-    public handleActive(event: any) {
-        const activeNodes = this.tree.findNodes(true, (_anything, node) => node.active);
-        if (activeNodes) {
-            activeNodes.forEach(e => e.active = false);
-        }
-    }
-
     public ngAfterViewInit() {
         this.tree.nodes.toArray().forEach(node => {
             node.selectedChange.subscribe((ev) => {
                 // console.log(ev);
             });
         });
-        // if (localStorage.getItem('activeNode')) {
-        //     this.activatedNode = this.customSearch(JSON.parse(localStorage.getItem('activeNode')).ID)[0];
-        //     this.cdr.detectChanges();
-        // }
     }
 
     public ngOnDestroy() {
-        // if (this.activatedNode) {
-        //     localStorage.setItem('activeNode', JSON.stringify(this.activatedNode.data));
-        // } else {
-        //     localStorage.setItem('activeNode', JSON.stringify(this.testNode.data));
-        // }
     }
 
-    public selectCellSelectionMode(args) {
+    public toggleSelectionMode(args) {
         // this.tree.selection = this.selectionModes[args.index].selectMode;
     }
 
@@ -321,9 +282,9 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         this.cdr.detectChanges();
     }
 
-    public nodeSelection(event) {
+    public nodeSelection(event: ITreeNodeSelectionEvent) {
         // console.log(event);
-        if (event.newSelection.find(x => x.id === 'igxTreeNode_1')) {
+        if (event.newSelection.find(x => x.data.ID === 'igxTreeNode_1')) {
             //event.newSelection = [...event.newSelection, this.tree.nodes.toArray()[0]];
         }
     }
@@ -334,11 +295,11 @@ export class TreeSampleComponent implements AfterViewInit, OnDestroy {
         return searchResult;
     }
 
-    public activeNodeChanged(evt) {
-        // console.log(evt);
+    public activeNodeChanged(_event: IgxTreeNode<any>) {
+        // active node changed
     }
 
-    public keydown(evt) {
+    public keydown(_event: KeyboardEvent) {
         // console.log(evt);
     }
 

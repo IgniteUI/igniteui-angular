@@ -40,6 +40,7 @@ export interface IgxTree {
 // Item interfaces
 export interface IgxTreeNode<T> {
     parentNode?: IgxTreeNode<any> | null;
+    loading: boolean;
     path: IgxTreeNode<any>[];
     expanded: boolean | null;
     /** @hidden @internal */
