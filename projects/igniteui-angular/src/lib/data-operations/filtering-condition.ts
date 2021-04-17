@@ -536,47 +536,6 @@ export class IgxTimeFilteringOperand extends IgxFilteringOperand {
         }].concat(this.operations);
     }
 
-    /**
-     * Splits a Date object into parts
-     *
-     * @memberof IgxDateFilteringOperand
-     */
-    public static getDateParts(date: Date, dateFormat?: string): IDateParts {
-        const res = {
-            day: null,
-            hours: null,
-            milliseconds: null,
-            minutes: null,
-            month: null,
-            seconds: null,
-            year: null
-        };
-        if (!date || !dateFormat) {
-            return res;
-        }
-        if (dateFormat.indexOf('y') >= 0) {
-            res.year = date.getFullYear();
-        }
-        if (dateFormat.indexOf('M') >= 0) {
-            res.month = date.getMonth();
-        }
-        if (dateFormat.indexOf('d') >= 0) {
-            res.day = date.getDate();
-        }
-        if (dateFormat.indexOf('h') >= 0) {
-            res.hours = date.getHours();
-        }
-        if (dateFormat.indexOf('m') >= 0) {
-            res.minutes = date.getMinutes();
-        }
-        if (dateFormat.indexOf('s') >= 0) {
-            res.seconds = date.getSeconds();
-        }
-        if (dateFormat.indexOf('f') >= 0) {
-            res.milliseconds = date.getMilliseconds();
-        }
-        return res;
-    }
 
     protected findValueInSet(target: any, searchVal: Set<any>) {
         if (!target) {
