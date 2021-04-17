@@ -80,23 +80,6 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
     /**
      * @hidden
      */
-    public calculateSizeToFit(range: any): number {
-        const indicatorWidth = this.indicator.nativeElement.getBoundingClientRect().width;
-        const indicatorStyle = this.document.defaultView.getComputedStyle(this.indicator.nativeElement);
-        const indicatorMargin = parseFloat(indicatorStyle.marginRight);
-        let leftPadding = 0;
-        if (this.indentationDiv) {
-            const indentationStyle = this.document.defaultView.getComputedStyle(this.indentationDiv.nativeElement);
-            leftPadding = parseFloat(indentationStyle.paddingLeft);
-        }
-        const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child: HTMLElement) => this.platformUtil.getNodeSizeViaRange(range, child)));
-        return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
-    }
-
-    /**
-     * @hidden
-     */
     public get iconTemplate() {
         if (this.expanded) {
             return this.grid.rowExpandedIndicatorTemplate || this.defaultExpandedTemplate;
