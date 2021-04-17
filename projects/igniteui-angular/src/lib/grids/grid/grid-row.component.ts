@@ -35,8 +35,4 @@ export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
             row
         };
     }
-
-    get expanded() {
-        return this.gridAPI.get_row_expansion_state(this.rowData);
-    }
 }

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IgxRowDirective, IRowDataEventArgs } from '../grid/public_api';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
+import { IgxRowDirective } from '../row.directive';
 import { GridType } from './grid.interface';
 
 export class IgxRow {
@@ -123,7 +124,7 @@ export class IgxGridCRUDService {
     private _rowEditingBlocked = false;
 
     public createCell(cell): IgxCell {
-        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
+        return new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.intRow.rowData, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxRow {
@@ -189,7 +190,7 @@ export class IgxGridCRUDService {
                 this.grid.tbody.nativeElement.focus();
             }
         } else {
-            if (cell?.row.addRow) {
+            if (cell?.intRow.addRow) {
                 this.beginAddRow(cell, event);
                 return;
             }
