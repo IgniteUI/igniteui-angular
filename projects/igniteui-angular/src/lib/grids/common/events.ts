@@ -2,14 +2,14 @@ import { IBaseEventArgs, CancelableEventArgs } from '../../core/utils';
 import { IgxBaseExporter, IgxExporterOptionsBase } from '../../services/public_api';
 import { GridKeydownTargetType } from './enums';
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
-import { IGridDataBindable, GridType } from './grid.interface';
+import { GridType } from './grid.interface';
 import { IgxGridCellComponent } from '../cell.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridBaseDirective } from '../grid-base.directive';
-import { IgxRowDirective } from '../row.directive';
 import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
+import { RowType } from './row.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {
@@ -150,13 +150,15 @@ export interface ICellPosition {
 
 export interface IRowDragEndEventArgs extends IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
+    dragData: RowType;
+    dragElement: HTMLElement;
     animation: boolean;
 }
 
 export interface IRowDragStartEventArgs extends CancelableEventArgs, IBaseEventArgs {
     dragDirective: IgxDragDirective;
-    dragData: IgxRowDirective<IgxGridBaseDirective & IGridDataBindable>;
+    dragData: RowType;
+    dragElement: HTMLElement;
 }
 
 export interface IRowToggleEventArgs extends IBaseEventArgs {
@@ -171,15 +173,11 @@ export interface IRowToggleEventArgs extends IBaseEventArgs {
  */
 export interface IPinRowEventArgs extends IBaseEventArgs {
     /**
-     * The row component instance, that was pinned/unpinned.
-     * May be undefined if row does not exist in the current visible data.
-     */
-    readonly row?: IgxRowDirective<IgxGridBaseDirective & GridType>;
-    /**
      * The ID of the row, that was pinned/unpinned.
      *   ID is either the primaryKey value or the data record instance.
      */
     readonly rowID: any;
+    row?: RowType;
     /** The index at which to pin the row in the pinned rows collection. */
     insertAtIndex?: number;
     /** Whether or noy the row is pinned or unpinned. */

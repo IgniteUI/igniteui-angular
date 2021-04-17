@@ -36,9 +36,10 @@ import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives
 import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
-import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridSelectionMode } from '../common/enums';
+import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
+import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 
 let NEXT_ID = 0;
@@ -570,7 +571,16 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @internal
      */
     public getInitialPinnedIndex(rec) {
-        return this._pinnedRecordIDs.indexOf(rec.rowID);
+        const id = this.gridAPI.get_row_id(rec);
+        return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public isRecordPinned(rec) {
+        return this.getInitialPinnedIndex(rec.data) !== -1;
     }
 
     /**
@@ -625,6 +635,51 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     }
 
+    /**
+     * Returns the `IgxTreeGridRow` by index.
+     *
+     * @example
+     * ```typescript
+     * const myRow = treeGrid.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByIndex(index: number): RowType {
+        if (index < 0 || index >= this.dataView.length) {
+            return undefined;
+        }
+        return this.createRow(index);
+    }
+
+    /**
+     * Returns the `RowType` object by the specified primary key.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.treeGrid.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByKey(key: any): RowType {
+        const rec = this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
+            this.filteredSortedData.find(r => r === key);
+        const index = this.dataView.findIndex(r => r.data && r.data === rec);
+        if (index < 0 || index >= this.filteredSortedData.length) {
+            return undefined;
+        }
+        return new IgxTreeGridRow(this, index, rec);
+    }
+
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
+    }
+
     /** @hidden */
     public generateRowPath(rowId: any): any[] {
         const path: any[] = [];
@@ -636,6 +691,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return path.reverse();
+    }
+
+    /** @hidden */
+    public isTreeRow(record: any): boolean {
+        return record.rowID !== undefined && record.data;
     }
 
     protected findRecordIndexInView(rec) {
@@ -709,6 +769,27 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * @hidden
+     */
+    protected createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+
+        if (!row && rec) {
+            const isTreeRow = this.isTreeRow(rec);
+            const data = isTreeRow ? rec.data : rec;
+            const treeRow = isTreeRow ? rec : undefined;
+            row = new IgxTreeGridRow(this, index, data, treeRow);
+        }
+
+        return row;
+    }
+
+    /**
      * @description A recursive way to deselect all selected children of a given record
      * @param recordID ID of the record whose children to deselect
      * @hidden
@@ -716,9 +797,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     private deselectChildren(recordID): void {
         const selectedChildren = [];
-        const rowToDeselect = (this.getRowByKey(recordID) as IgxTreeGridRowComponent).treeRow;
+        const rowToDeselect = this.getRowByKey(recordID);
         this.selectionService.deselectRow(recordID);
-        this._gridAPI.get_selected_children(rowToDeselect, selectedChildren);
+        this._gridAPI.get_selected_children((rowToDeselect as IgxTreeGridRow).treeRow, selectedChildren);
         if (selectedChildren.length > 0) {
             selectedChildren.forEach(x => this.deselectChildren(x));
         }

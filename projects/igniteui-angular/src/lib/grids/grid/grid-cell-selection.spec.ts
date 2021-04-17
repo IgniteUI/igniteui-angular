@@ -1,7 +1,7 @@
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxGridModule, IgxGridGroupByRowComponent, IgxGridComponent } from './public_api';
+import { IgxGridModule, IgxGridComponent } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import {
     SelectionWithScrollsComponent,
@@ -19,6 +19,7 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DebugElement } from '@angular/core';
 import { DropPosition } from '../moving/moving.service';
+import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Cell selection #grid', () => {
     configureTestSuite();
@@ -1374,7 +1375,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
             expect(grid.selectedCells.length).toBe(1);
 
-            const row = grid.getRowByIndex(3);
+            const row = grid.gridAPI.get_row_by_index(3);
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
@@ -1436,7 +1437,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             fix.detectChanges();
 
             expect(grid.selectedCells.length).toBe(1);
-            const row = grid.getRowByIndex(3);
+            const row = grid.gridAPI.get_row_by_index(3);
             expect(row.focused).toBe(true);
 
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown', row.nativeElement, true);
@@ -1470,7 +1471,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 2; i < 10; i++) {
                 let obj = grid.getCellByColumn(i, 'Name');
                 if (!obj) {
-                    obj = grid.getRowByIndex(i);
+                    obj = grid.gridAPI.get_row_by_index(i);
                 }
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', obj.nativeElement, true, false, true);
                 await wait(50);
@@ -1511,7 +1512,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 2; i < 10; i++) {
                 let obj = grid.getCellByColumn(i, 'ParentID');
                 if (!obj) {
-                    obj = grid.getRowByIndex(i);
+                    obj = grid.gridAPI.get_row_by_index(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
                             .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
@@ -1538,7 +1539,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 10; i > 3; i--) {
                 let obj = grid.getCellByColumn(i, 'Name');
                 if (!obj) {
-                    obj = grid.getRowByIndex(i);
+                    obj = grid.gridAPI.get_row_by_index(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
                             .summaryCells.find(sCell => sCell.visibleColumnIndex === 2);
@@ -1587,7 +1588,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             for (let i = 2; i < 8; i++) {
                 let obj = grid.getCellByColumn(i, 'ID');
                 if (!obj) {
-                    obj = grid.getRowByIndex(i);
+                    obj = grid.gridAPI.get_row_by_index(i);
                     if (!(obj instanceof IgxGridGroupByRowComponent)) {
                         obj = grid.summariesRowList.find(row => row.index === i)
                             .summaryCells.find(sCell => sCell.visibleColumnIndex === 0);

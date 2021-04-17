@@ -269,51 +269,93 @@
             ]
         },
         {
+            "member": "onGridCreated",
+            "replaceWith": "gridCreated",
+            "definedIn": [
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onGridInitialized",
+            "replaceWith": "gridInitialized",
+            "definedIn": [
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "definedIn": [
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "definedIn": [
+                "IgxGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnToggled",
+            "replaceWith": "columnToggled",
+            "definedIn": [
+                "IgxColumnActionsComponent"
+            ]
+        },
+        {
             "member": "onChunkLoad",
             "replaceWith": "chunkLoad",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onScrollbarVisibilityChanged",
             "replaceWith": "scrollbarVisibilityChanged",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onContentSizeChange",
             "replaceWith": "contentSizeChange",
             "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onDataChanged",
-            "replaceWith": "dataChanged",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onBeforeViewDestroyed",
-            "replaceWith": "beforeViewDestroyed",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onChunkPreload",
-            "replaceWith": "chunkPreload",
-            "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onDataChanging",
             "replaceWith": "dataChanging",
             "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "definedIn": [
+                "IgxForOfDirective",
                 "IgxGridForOfDirective"
             ]
         }

@@ -12,7 +12,6 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
     IgxGridCellComponent,
-    IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridBaseDirective
 } from '../grids/grid/public_api';
@@ -21,6 +20,7 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 import { parseDate } from '../core/utils';
+import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -2058,6 +2058,10 @@ export class GridSummaryFunctions {
         const summaryRow = rowIndex ? GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, rowIndex)
             : GridSummaryFunctions.getRootSummaryRow(fix);
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
+    }
+
+    public static verifyRowWithIndexIsOfType(grid, index: number, type: any) {
+        expect(grid.getRowByIndex(index) instanceof type).toBe(true);
     }
 
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {

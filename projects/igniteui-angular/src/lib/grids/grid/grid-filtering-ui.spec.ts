@@ -11,7 +11,9 @@ import {
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { IgxDatePickerComponent } from '../../date-picker/date-picker.component';
 import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-cell.component';
@@ -673,8 +675,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
                 const filteringCells = GridFunctions.getFilteringCells(fix);
                 const filteringChips = GridFunctions.getFilteringChips(fix);
-                expect(filteringCells.length).toBe(6);
-                expect(filteringChips.length).toBe(5);
+                expect(filteringCells.length).toBe(8);
+                expect(filteringChips.length).toBe(7);
 
                 let idCellChips = GridFunctions.getFilteringChipPerIndex(fix, 0);
                 expect(idCellChips.length).toBe(0);
@@ -2004,7 +2006,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
             const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
             const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
-            expect(filterIcons.length).toEqual(4, 'incorrect esf filter icons count');
+            expect(filterIcons.length).toEqual(6, 'incorrect esf filter icons count');
 
             // Verify the condition was submitted.
             const header = GridFunctions.getColumnHeader('ProductName', fix);
@@ -2228,21 +2230,21 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             fix.detectChanges();
 
             let filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(6);
+            expect(filteringCells.length).toEqual(8);
 
             // hide column
             grid.getColumnByName('ID').hidden = true;
             fix.detectChanges();
 
             filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(5);
+            expect(filteringCells.length).toEqual(7);
             expect(GridFunctions.getChipText(filteringCells[0])).toEqual('Angular');
 
             grid.getColumnByName('ProductName').hidden = true;
             fix.detectChanges();
 
             filteringCells = GridFunctions.getFilteringCells(fix);
-            expect(filteringCells.length).toEqual(4);
+            expect(filteringCells.length).toEqual(6);
 
             for (const filterCell of filteringCells) {
                 expect(GridFunctions.getChipText(filterCell)).toEqual('Filter');
@@ -2982,7 +2984,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledWith(args);
 
-            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 5);
+            GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 7);
         }));
 
         it('Should not select values in list if two values with And operator are entered.', fakeAsync(() => {
@@ -3353,7 +3355,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             spyOn(grid.columnVisibilityChanged, 'emit');
 
             const column = grid.columns.find((col) => col.field === 'ProductName');
-            GridFunctions.verifyColumnIsHidden(column, false, 6);
+            GridFunctions.verifyColumnIsHidden(column, false, 8);
 
             // Open excel style filtering component and hide 'ProductName' column through header icon
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
@@ -6057,6 +6059,14 @@ const checkUIForType = (type: string, elem: DebugElement) => {
         case 'bool':
             expectedConditions = IgxBooleanFilteringOperand.instance().operations.filter(f => !f.hidden);
             expectedInputType = 'text';
+            break;
+        case 'dateTime':
+            expectedConditions = IgxDateTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedInputType = 'text';
+            break;
+        case 'time':
+            expectedConditions = IgxTimeFilteringOperand.instance().operations.filter(f => !f.hidden);
+            expectedInputType = 'timePicker';
             break;
     }
     GridFunctions.openFilterDD(elem);

@@ -568,7 +568,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
 
                 // check row DOM
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
 
                 GridSelectionFunctions.verifyRowHasCheckbox(row);
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeDefined();
@@ -684,7 +684,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(pinnedCols.length).toBe(3);
 
                 expect(grid.getColumnByName('CompanyName').isFirstPinned).toBeTruthy();
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 // check cells are rendered after main display container and have left offset
                 for (let i = 0; i <= pinnedCols.length - 1; i++) {
                     const elem = row.children[i + 1];
@@ -706,7 +706,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 // check row DOM
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
                 expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();
