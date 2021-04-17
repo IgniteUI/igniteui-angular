@@ -11,7 +11,8 @@ import {
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxDateFilteringOperand,
-    IgxTimeFilteringOperand
+    IgxTimeFilteringOperand,
+    IgxDateTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -448,6 +449,23 @@ describe('IgxGrid - Filtering actions #grid', () => {
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(8);
         grid.filter('ReleaseTime', null, IgxTimeFilteringOperand.instance().condition('notNull'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+    }));
+
+    it('should correctly filter by \'dateTime\' filtering conditions', fakeAsync(() => {
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.todayFullDate;
+
+        // Equals 11:15:35
+        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+            IgxDateTimeFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Does not equal 11:15:35
+        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+            IgxDateTimeFilteringOperand.instance().condition('doesNotEqual'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(7);
     }));
