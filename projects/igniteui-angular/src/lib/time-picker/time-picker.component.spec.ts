@@ -560,7 +560,7 @@ describe('IgxTimePicker', () => {
                 expect(selectedTime).toEqual(`${hours}:${minutes} ${ampm}`);
             }));
 
-            it('should apply all aria attributes correctly', fakeAsync(() => {
+            xit('should apply all aria attributes correctly', fakeAsync(() => {
                 const inputEl = fixture.nativeElement.querySelector(CSS_CLASS_INPUT);
                 expect(inputEl.getAttribute('role')).toEqual('combobox');
                 expect(inputEl.getAttribute('aria-haspopup')).toEqual('dialog');

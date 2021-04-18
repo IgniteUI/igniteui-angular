@@ -49,19 +49,35 @@
     <div class="igx-time-picker__main">
         <div class="igx-time-picker__body">
             <div *ngIf="this.showHoursList" #hourList [igxItemList]="'hourList'">
-                <span role="spinbutton" [attr.aria-label]="hour" [igxTimeItem]="hour"
+                <span [igxTimeItem]="hour" #timeItem="timeItem" aria-label="hour"
+                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                    [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
+                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
                     *ngFor="let hour of hourView">{{ hour }}</span>
             </div>
             <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
-                <span role="spinbutton" [attr.aria-label]="minute" [igxTimeItem]="minute"
+                <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
+                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                    [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
+                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
                     *ngFor="let minute of minuteView">{{ minute }}</span>
             </div>
             <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
-                <span role="spinbutton" [attr.aria-label]="seconds" [igxTimeItem]="seconds"
+                <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
+                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                    [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
+                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
                     *ngFor="let seconds of secondsView">{{ seconds }}</span>
             </div>
             <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
-                <span role="spinbutton" [attr.aria-label]="ampm" [igxTimeItem]="ampm"
+                <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
+                    [attr.role]="timeItem.isSelectedTime ? 'spinbutton' : null"
+                    [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
+                    [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
+                    [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
                     *ngFor="let ampm of ampmView">{{ ampm }}</span>
             </div>
         </div>

@@ -405,6 +405,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._selectedDate;
     }
 
+    /** @hidden @internal */
+    public get minDropdownValue(): Date {
+        return this._minDropdownValue;
+    }
+
+    /** @hidden @internal */
+    public get maxDropdownValue(): Date {
+        return this._maxDropdownValue;
+    }
+
     private get required(): boolean {
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.
@@ -417,9 +427,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private get minDateValue(): Date {
         if (!this._dateMinValue) {
-            const date = new Date();
-            date.setHours(0, 0, 0);
-            return date;
+            const minDate = new Date();
+            minDate.setHours(0, 0, 0);
+            return minDate;
         }
 
         return this._dateMinValue;
@@ -427,10 +437,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private get maxDateValue(): Date {
         if (!this._dateMaxValue) {
-            const date = new Date();
-            date.setHours(23, 59, 59);
-
-            return date;
+            const maxDate = new Date();
+            maxDate.setHours(23, 59, 59);
+            return maxDate;
         }
 
         return this._dateMaxValue;
@@ -649,14 +658,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public validate(control: AbstractControl): ValidationErrors | null {
         const value = control.value;
         const errors = {};
-        if (value && (this.minValue || this.maxValue)) {
-            const date = this.parseToDate(value);
-            const minTime = this.minDateValue;
-            const maxTime = this.maxDateValue;
-            Object.assign(errors, DateTimeUtil.validateMinMax(date, minTime, maxTime, true, false));
+        if (!value) {
+            Object.assign(errors, { value: true });
         }
-
-
+        Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, false));
         return Object.keys(errors).length > 0 ? errors : null;
     }
 
@@ -1139,9 +1144,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const min = new Date(this._minDropdownValue);
         const max = new Date(this._maxDropdownValue);
         const time = new Date(this._selectedDate);
-        time.setSeconds(0);
-        min.setSeconds(0);
-        max.setSeconds(0);
+        if (this.showHoursList) {
+            time.setSeconds(0, 0);
+            min.setSeconds(0, 0);
+            max.setSeconds(0, 0);
+        }
 
         for (let i = 0; i < minuteItemsCount; i++) {
             const minutes = i * this.itemsDelta.minute;
@@ -1167,7 +1174,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         for (let i = 0; i < secondsItemsCount; i++) {
             const seconds = i * this.itemsDelta.second;
             time.setSeconds(seconds);
-            if (time >= this._minDropdownValue && time <= this._maxDropdownValue) {
+            if (time.getTime() >= this._minDropdownValue.getTime() && time.getTime() <= this._maxDropdownValue.getTime()) {
                 this._secondsItems.push(i * this.itemsDelta.second);
             }
         }
@@ -1198,7 +1205,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private initializeContainer() {
-        this.updateValue();
+        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
         this._onTouchedCallback();
 
         if (this.showHoursList) {
@@ -1341,7 +1348,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         let delta: number;
 
         const sign = value === 'min' ? 1 : -1;
-        const time = value === 'min' ? this.minDateValue : this.maxDateValue;
+        const time = value === 'min' ? new Date(this.minDateValue) : new Date(this.maxDateValue);
 
         const hours = time.getHours();
         const minutes = time.getMinutes();
@@ -1362,7 +1369,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private setSelectedValue() {
-        this._selectedDate = this._dateValue ? new Date(this._dateValue) : this._minDropdownValue;
+        this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this._minDropdownValue);
         if (!this._selectedDate || this._selectedDate < this._minDropdownValue ||
             this._selectedDate > this._maxDropdownValue ||
             this._selectedDate.getHours() % this.itemsDelta.hour > 0 ||
