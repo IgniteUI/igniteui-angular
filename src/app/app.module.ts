@@ -144,6 +144,7 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
 import { TreeSampleComponent } from './tree/tree.sample';
@@ -216,6 +217,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
+    GridRowAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,

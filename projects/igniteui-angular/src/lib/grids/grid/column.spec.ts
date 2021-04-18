@@ -408,7 +408,7 @@ describe('IgxGrid - Column properties #grid', () => {
         grid.columns.forEach(c => c.cellStyles = styles);
         fix.detectChanges();
 
-        const row = grid.getRowByIndex(0);
+        const row = grid.gridAPI.get_row_by_index(0);
         row.cells.forEach(cell => expect(cell.nativeElement.getAttribute('style')).toMatch('background: black'));
     });
 
