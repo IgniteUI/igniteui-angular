@@ -18,7 +18,7 @@ import {
     AfterViewInit,
     Injector,
     PipeTransform,
-    LOCALE_ID, Optional, ContentChildren, QueryList, OnChanges, SimpleChanges
+    LOCALE_ID, Optional, ContentChildren, QueryList, OnChanges, SimpleChanges, HostListener
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -690,7 +690,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngAfterViewInit(): void {
-        this.attachOnKeydown();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
         if (this._ngControl) {
@@ -1038,6 +1037,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
+    @HostListener('keydown', ['$event'])
     public onKeyDown(event: KeyboardEvent): void {
         switch (event.key) {
             case this.platform.KEYMAP.ARROW_UP:
@@ -1430,12 +1430,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         } else {
             this.value = this.toISOString(this._selectedDate);
         }
-    }
-
-    private attachOnKeydown(): void {
-        fromEvent(this.getEditElement(), 'keydown')
-            .pipe(takeUntil(this._destroy$))
-            .subscribe((evt: KeyboardEvent) => this.onKeyDown(evt));
     }
 
     private subscribeToDateEditorEvents(): void {
