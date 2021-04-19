@@ -74,42 +74,33 @@
 </ng-template>
 
 <ng-template #defaultTimeUI>
-    <igx-time-picker
-        tabindex="0"
-        mode="dropdown"
-        [value]="value"
-        [format]="column.defaultTimeFormat"
+    <igx-time-picker #timePicker
+        [(value)]="value"
+        [inputFormat]="column.defaultTimeFormat"
+        [formatter]="column.formatter"
         [outlet]="filteringService.grid.outlet"
-        (onValueChanged)="onDateSelected($event.newValue)"
-        (onClosed)="datePickerClose()">
-        <ng-template igxTimePickerTemplate let-openDialog="openDialog">
-            <igx-input-group #inputGroup type="box" [displayDensity]="displayDensity" (focusout)="onInputGroupFocusout()">
-                <igx-prefix #inputGroupPrefix
-                            tabindex="0"
-                            (click)="inputGroupPrefixClick($event)"
-                            (keydown)="onPrefixKeyDown($event)"
-                            [igxDropDownItemNavigation]="inputGroupConditions">
-                    <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
-                </igx-prefix>
-                <input #input
-                       igxInput
-                       tabindex="0"
-                       (click)="expression.condition.isUnary ? null : openDialog(inputGroup.element.nativeElement)"
-                       [placeholder]="placeholder"
-                       autocomplete="off"
-                       [value]="
-                            column.formatter
-                            ? (value | columnFormatter:column.formatter)
-                            : (value | date:column.pipeArgs.format:undefined:filteringService.grid.locale)
-                        "
-                       [readonly]="true"
-                       (keydown)="onInputKeyDown($event)"/>
-                <igx-suffix *ngIf="value">
-                    <igx-icon (keydown)="onCommitKeyDown($event)" (click)="onCommitClick()" tabindex="0">done</igx-icon>
-                    <igx-icon (keydown)="onClearKeyDown($event)" (click)="clearInput()" tabindex="0">clear</igx-icon>
-                </igx-suffix>
-            </igx-input-group>
-            </ng-template>
+        [displayDensity]="displayDensity"
+        type="box"
+        [readOnly]="true"
+        [placeholder]="placeholder"
+        (closed)="focusEditElement()"
+        (focusout)="onInputGroupFocusout()"
+        (keydown)="onInputKeyDown($event)"
+        (click)="expression.condition.isUnary ? null : timePicker.open()">
+        <igx-prefix #inputGroupPrefix
+        tabindex="0"
+        (click)="inputGroupPrefixClick($event)"
+        (keydown)="onPrefixKeyDown($event)"
+        [igxDropDownItemNavigation]="inputGroupConditions">
+        <igx-icon family="imx-icons" [name]="expression.condition.iconName"></igx-icon>
+    </igx-prefix>
+    <igx-suffix *ngIf="value">
+        <igx-icon tabindex="0" (keydown)="onCommitKeyDown($event)" (click)="onCommitClick($event)">done</igx-icon>
+        <igx-icon tabindex="0" (keydown)="onClearKeyDown($event)" (click)="clearInput($event)">clear</igx-icon>
+    </igx-suffix>
+    <!-- disable default icons -->
+    <igx-picker-toggle></igx-picker-toggle>
+    <igx-picker-clear></igx-picker-clear>
     </igx-time-picker>
 </ng-template>
 

@@ -17,6 +17,7 @@ import {
     Injectable,
     AfterViewInit,
     Injector,
+    PipeTransform,
     LOCALE_ID, Optional, ContentChildren, QueryList, OnChanges, SimpleChanges
 } from '@angular/core';
 import {
@@ -226,6 +227,17 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      */
     @Input()
     public spinLoop = true;
+
+    /**
+     * Gets/Sets a custom formatter function on the selected or passed date.
+     *
+     * @example
+     * ```html
+     * <igx-time-picker [value]="date" [formatter]="formatter"></igx-time-picker>
+     * ```
+     */
+    @Input()
+    public formatter: (val: Date) => string;
 
     /**
      * Sets the orientation of the picker's header.
@@ -458,6 +470,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /** @hidden @internal */
+    public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
+
     private _value: Date | string;
     private _dateValue: Date;
     private _dateMinValue: Date;

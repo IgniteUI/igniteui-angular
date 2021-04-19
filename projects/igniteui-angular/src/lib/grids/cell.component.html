@@ -116,8 +116,8 @@
             [style.width.%]="100"
             [outlet]="grid.outlet"
             mode="dropdown"
-            [format]="column.defaultTimeFormat"
-            [(ngModel)]="editValue"
+            [inputFormat]="column.defaultTimeFormat"
+            [(value)]="editValue"
             [igxFocus]="true"
             >
             <label igxLabel></label>
