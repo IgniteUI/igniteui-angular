@@ -1056,7 +1056,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker ><label igxLabel>Date</label></igx-date-picker>
+    <igx-date-picker >
+<label igxLabel>Date</label></igx-date-picker>
     `
         );
     });
@@ -1161,7 +1162,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker  mode="dialog"><label igxLabel>toRemove</label></igx-date-picker>
+    <igx-date-picker  mode="dialog">
+<label igxLabel>toRemove</label></igx-date-picker>
     `
         );
     });
@@ -1182,7 +1184,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker  mode="dialog"><label igxLabel>{{boundLabel}}</label></igx-date-picker>
+    <igx-date-picker  mode="dialog">
+<label igxLabel>{{boundLabel}}</label></igx-date-picker>
     `
         );
     });
@@ -1203,7 +1206,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker  mode="dialog"><label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-date-picker>
+    <igx-date-picker  mode="dialog">
+<label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-date-picker>
     `
         );
     });
@@ -1225,7 +1229,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker ><label igxLabel>Time</label></igx-time-picker>
+    <igx-time-picker >
+<label igxLabel>Time</label></igx-time-picker>
     `
         );
     });
@@ -1330,7 +1335,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker mode="dialog" ><label igxLabel>toRemove</label></igx-time-picker>
+    <igx-time-picker mode="dialog" >
+<label igxLabel>toRemove</label></igx-time-picker>
     `
         );
     });
@@ -1351,7 +1357,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker  mode="dialog"><label igxLabel>{{boundLabel}}</label></igx-time-picker>
+    <igx-time-picker  mode="dialog">
+<label igxLabel>{{boundLabel}}</label></igx-time-picker>
     `
         );
     });
@@ -1372,7 +1379,8 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker  mode="dialog"><label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-time-picker>
+    <igx-time-picker  mode="dialog">
+<label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-time-picker>
     `
         );
     });

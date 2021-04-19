@@ -34,11 +34,17 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const EDITOR_COMPONENTS = [{
         COMPONENT: 'igx-date-picker',
         TEMPLATE_DIRECTIVE: 'igxDatePickerTemplate',
-        TEMPLATE_WARN_MSG: `\n<!-- The following template is not used valid in the new version! -->\n`
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxDatePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker -->\n`
      }, {
         COMPONENT: 'igx-time-picker',
         TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
-        TEMPLATE_WARN_MSG: `\n<!-- The following template is not used valid in the new version! -->\n`
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxTimePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker -->\n`
      }];
     const EDITORS_MODE = ['[mode]', 'mode'];
     const EDITORS_LABEL = ['[label]', 'label'];
@@ -402,9 +408,9 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     let label;
                     const ngIF = (typeof visibilityValue === 'boolean') ? `` : ` *ngIf="${visibilityValue}"`;
                     if (name.startsWith('[')) {
-                        label = `<label igxLabel${ngIF}>{{${value}}}</label>`;
+                        label = `\n<label igxLabel${ngIF}>{{${value}}}</label>`;
                     } else {
-                        label = `<label igxLabel${ngIF}>${value}</label>`;
+                        label = `\n<label igxLabel${ngIF}>${value}</label>`;
                     }
                     addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
                     addChange(file.url, new FileChange(startTag.end, label));
@@ -419,7 +425,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             .forEach(offset => {
                 const { startTag, file } = offset;
                 addChange(file.url,
-                    new FileChange(startTag.end, `<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
+                    new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
             });
 
             applyChanges();
