@@ -55,11 +55,12 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onDisabledDate` event is removed.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 - `IgxTimePicker`
+    - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
         ```html
-            <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="HH:mm:ss">
+            <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
                 <label igxLabel>Time: </label>
                 <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
-                    calendar_view_day
+                    alarm
                 </igx-picker-toggle>
                 <igx-picker-clear igxSuffix (click)="timePicker.clear()">
                     delete
@@ -69,7 +70,6 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `format` is replaced by `inputFormat`.
     - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
-    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
     - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
