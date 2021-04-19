@@ -96,7 +96,8 @@
             "member": "isSpinLoop",
             "replaceWith": "spinLoop",
             "definedIn": [
-                "IgxDateTimeEditorDirective"
+                "IgxDateTimeEditorDirective",
+                "IgxTimePickerComponent"
             ]
         },
         {
@@ -152,7 +153,8 @@
             "member": "monthsViewNumber",
             "replaceWith": "displayMonthsCount",
             "definedIn": [
-                "IgxDatePickerComponent"
+                "IgxDatePickerComponent",
+                "IgxRangePickerComponent"
             ]
         },
         {
@@ -201,28 +203,36 @@
             "member": "onClosing",
             "replaceWith": "closing",
             "definedIn": [
-                "IgxDatePickerComponent"
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
             ]
         },
         {
             "member": "onClosed",
             "replaceWith": "closed",
             "definedIn": [
-                "IgxDatePickerComponent"
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
             ]
         },
         {
             "member": "onOpening",
             "replaceWith": "opening",
             "definedIn": [
-                "IgxDatePickerComponent"
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
             ]
         },
         {
             "member": "onOpened",
             "replaceWith": "opened",
             "definedIn": [
-                "IgxDatePickerComponent"
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
             ]
         },
         {
@@ -230,13 +240,6 @@
             "replaceWith": "validationFailed",
             "definedIn": [
                 "IgxDatePickerComponent"
-            ]
-        },
-        {
-            "member": "isSpinLoop",
-            "replaceWith": "spinLoop",
-            "definedIn": [
-                "IgxTimePickerComponent"
             ]
         },
         {
@@ -268,34 +271,6 @@
             ]
         },
         {
-            "member": "onClosing",
-            "replaceWith": "closing",
-            "definedIn": [
-                "IgxTimePickerComponent"
-            ]
-        },
-        {
-            "member": "onClosed",
-            "replaceWith": "closed",
-            "definedIn": [
-                "IgxTimePickerComponent"
-            ]
-        },
-        {
-            "member": "onOpening",
-            "replaceWith": "opening",
-            "definedIn": [
-                "IgxTimePickerComponent"
-            ]
-        },
-        {
-            "member": "onOpened",
-            "replaceWith": "opened",
-            "definedIn": [
-                "IgxTimePickerComponent"
-            ]
-        },
-        {
             "member": "onValidationFailed",
             "replaceWith": "validationFailed",
             "definedIn": [
@@ -312,41 +287,6 @@
         {
             "member": "rangeSelected",
             "replaceWith": "valueChange",
-            "definedIn": [
-                "IgxRangePickerComponent"
-            ]
-        },
-        {
-            "member": "onClosing",
-            "replaceWith": "closing",
-            "definedIn": [
-                "IgxRangePickerComponent"
-            ]
-        },
-        {
-            "member": "onClosed",
-            "replaceWith": "closed",
-            "definedIn": [
-                "IgxRangePickerComponent"
-            ]
-        },
-        {
-            "member": "onOpening",
-            "replaceWith": "opening",
-            "definedIn": [
-                "IgxRangePickerComponent"
-            ]
-        },
-        {
-            "member": "onOpened",
-            "replaceWith": "opened",
-            "definedIn": [
-                "IgxRangePickerComponent"
-            ]
-        },
-        {
-            "member": "monthsViewNumber",
-            "replaceWith": "displayMonthsCount",
             "definedIn": [
                 "IgxRangePickerComponent"
             ]
