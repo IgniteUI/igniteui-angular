@@ -490,18 +490,20 @@ export class GridFilterTemplateSampleComponent implements OnInit {
 
     public onInput(input: any, column: IgxColumnComponent) {
         let operand = null;
+        let value = input.value;
         switch (column.dataType) {
             case DataType.Number:
                 operand = IgxNumberFilteringOperand.instance().condition('equals');
                 break;
             case DataType.Date:
+                value = (value instanceof Date) ? value : new Date(value);
                 operand = IgxDateFilteringOperand.instance().condition('equals');
                 break;
             default:
                 operand = IgxStringFilteringOperand.instance().condition('contains');
                 break;
         }
-        this.grid1.filter(column.field, input.value, operand, column.filteringIgnoreCase);
+        this.grid1.filter(column.field, value, operand, column.filteringIgnoreCase);
     }
 
     public clearInput(input: any, column: any) {
