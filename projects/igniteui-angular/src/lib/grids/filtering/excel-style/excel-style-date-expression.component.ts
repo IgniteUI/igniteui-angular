@@ -23,7 +23,7 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     private input: IgxInputDirective;
 
     protected get inputValuesElement() {
-        return this.input;
+        return this.input.nativeElement;
     }
 
     public get inputDatePlaceholder(): string {

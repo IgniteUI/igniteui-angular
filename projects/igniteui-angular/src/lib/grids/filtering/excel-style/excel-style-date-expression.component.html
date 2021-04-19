@@ -31,22 +31,22 @@
      <igx-picker-clear></igx-picker-clear>
 </igx-date-picker>
 
-<igx-time-picker *ngIf="column.dataType === 'time'" [format]="column.defaultTimeFormat" #timePicker mode="dropdown" [(ngModel)]="expressionUI.expression.searchVal" [outlet]="grid.outlet">
-    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value">
-        <igx-input-group #dropDownTarget type="box" [displayDensity]="displayDensity">
-            <input #input igxInput tabindex="0" [placeholder]="inputTimePlaceholder"
-                    (click)="openDialog(dropDownTarget.element.nativeElement)"
-                    autocomplete="off"
-                    [igxFocus]="true"
-                    [value]="
-                        column.formatter
-                        ? (value | columnFormatter:column.formatter)
-                        : (value | date:column.pipeArgs.format:undefined:grid.locale)
-                    "
-                    [readonly]="true"
-                    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"/>
-        </igx-input-group>
-    </ng-template>
+<igx-time-picker #timePicker *ngIf="column.dataType === 'time'"
+    [inputFormat]="column.defaultTimeFormat"
+    [(value)]="expressionUI.expression.searchVal"
+    [locale]="grid.locale"
+    [outlet]="grid.outlet"
+    [displayDensity]="displayDensity"
+    (click)="timePicker.open()"
+    [readOnly]="true"
+    [placeholder]="inputTimePlaceholder"
+    [displayFormat]="column.pipeArgs.format"
+    [formatter]="column.formatter"
+    [disabled]="expressionUI.expression.condition && expressionUI.expression.condition.isUnary"
+    type="box">
+     <!-- disable default icons -->
+     <igx-picker-toggle></igx-picker-toggle>
+     <igx-picker-clear></igx-picker-clear>
 </igx-time-picker>
 
 <igx-input-group #dropDownTarget *ngIf="column.dataType === 'dateTime'" #inputGroup type="box" [displayDensity]="displayDensity">

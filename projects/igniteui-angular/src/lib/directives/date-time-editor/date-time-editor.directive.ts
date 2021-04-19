@@ -368,7 +368,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    let errors;
+    let errors = {};
     const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
     const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
@@ -555,7 +555,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return false;
     }
 
-    let errors;
+    let errors = {};
     const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
     if (minValueDate || maxValueDate) {
