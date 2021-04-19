@@ -31,6 +31,8 @@ All notable changes for each version of this project will be documented in this 
     - `onDataPreLoad` -> `dataPreLoad`
 
 ### New Features
+- `IgxHierarchicalGrid`
+    - Added support for exporting hierarchical data.
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
