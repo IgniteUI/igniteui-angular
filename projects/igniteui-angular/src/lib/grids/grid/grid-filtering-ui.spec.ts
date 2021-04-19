@@ -5252,7 +5252,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     Downloads: 254,
                     ID: 1,
                     ProductName: 'Ignite UI for JavaScript',
-                    ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15),
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: null,
                     Released: false,
                     AnotherField: 'BWord'
                 },
@@ -5260,7 +5262,9 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     Downloads: 127,
                     ID: 2,
                     ProductName: 'NetAdvantage',
-                    ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1),
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: null,
                     Released: true,
                     AnotherField: 'bWord'
                 },
@@ -5269,6 +5273,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ID: 3,
                     ProductName: 'Ignite UI for Angular',
                     ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: null,
                     Released: null,
                     AnotherField: 'aWord'
                 }
