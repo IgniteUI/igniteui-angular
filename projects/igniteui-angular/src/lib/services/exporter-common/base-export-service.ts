@@ -244,7 +244,7 @@ export abstract class IgxBaseExporter {
                         columnIndex: index,
                         cancel: false,
                         skipFormatter: false,
-                        owner: key === DEFAULT_OWNER ? grid : key
+                        grid: key === DEFAULT_OWNER ? grid : key
                     };
                     this.columnExporting.emit(columnExportArgs);
 
