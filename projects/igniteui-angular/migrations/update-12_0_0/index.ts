@@ -230,7 +230,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             }
         }
     }
-    
+
     // update row components imports and typings with new RowType interface
     const rowsImports = [
         'IgxGridRowComponent, ',
