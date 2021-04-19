@@ -9,14 +9,16 @@ import { getHierarchy, isHierarchyMatch } from './operations';
 import { GridType } from '../grids/common/grid.interface';
 
 const DATE_TYPE = 'date';
-
+const TIME_TYPE = 'time';
+const DATE_TIME_TYPE = 'dateTime';
 export interface ISortingStrategy {
     sort: (data: any[],
            fieldName: string,
            dir: SortingDirection,
            ignoreCase: boolean,
            valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-           isDate?: boolean) => any[];
+           isDate?: boolean,
+           isTime?: boolean) => any[];
 }
 
 export class DefaultSortingStrategy implements ISortingStrategy {
@@ -33,10 +35,11 @@ export class DefaultSortingStrategy implements ISortingStrategy {
                 dir: SortingDirection,
                 ignoreCase: boolean,
                 valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-                isDate?: boolean) {
+                isDate?: boolean,
+                isTime?: boolean) {
         const key = fieldName;
         const reverse = (dir === SortingDirection.Desc ? -1 : 1);
-        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate);
+        const cmpFunc = (obj1, obj2) => this.compareObjects(obj1, obj2, key, reverse, ignoreCase, valueResolver, isDate, isTime);
         return this.arraySort(data, cmpFunc);
     }
 
@@ -59,10 +62,11 @@ export class DefaultSortingStrategy implements ISortingStrategy {
                              key: string,
                              reverse: number,
                              ignoreCase: boolean,
-                             valueResolver: (obj: any, key: string, isDate?: boolean) => any,
-                             isDate: boolean) {
-        let a = valueResolver(obj1, key, isDate);
-        let b = valueResolver(obj2, key, isDate);
+                             valueResolver: (obj: any, key: string, isDate?: boolean, isTime?: boolean) => any,
+                             isDate: boolean,
+                             isTime: boolean) {
+        let a = valueResolver(obj1, key, isDate, isTime);
+        let b = valueResolver(obj2, key, isDate, isTime);
         if (ignoreCase) {
             a = a && a.toLowerCase ? a.toLowerCase() : a;
             b = b && b.toLowerCase ? b.toLowerCase() : b;
@@ -107,13 +111,14 @@ export class IgxSorting implements IGridSortingStrategy {
         let result = [];
         while (i < data.length) {
             const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
-            const isDate = column?.dataType === DATE_TYPE;
+            const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
+            const isTime = column?.dataType === TIME_TYPE;
             const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
             const groupRow: IGroupByRecord = {
                 expression: expressions[level],
                 level,
                 records: cloneArray(group),
-                value: this.getFieldValue(group[0], expressions[level].fieldName, isDate),
+                value: this.getFieldValue(group[0], expressions[level].fieldName, isDate, isTime),
                 groupParent: parent,
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
@@ -154,8 +159,15 @@ export class IgxSorting implements IGridSortingStrategy {
         return result;
     }
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false): any {
-        return isDate ? parseDate(resolveNestedPath(obj, key)) : resolveNestedPath(obj, key);
+    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+        let resolvedValue = resolveNestedPath(obj, key);
+        if (isDate || isTime) {
+            const date = parseDate(resolvedValue);
+            resolvedValue  = isTime ?
+                new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
+
+        }
+        return resolvedValue;
     }
 
     private groupedRecordsByExpression(data: any[],
@@ -197,9 +209,10 @@ export class IgxSorting implements IGridSortingStrategy {
         if (!expr.strategy) {
             expr.strategy = DefaultSortingStrategy.instance();
         }
-        const isDate = grid && grid.getColumnByName(expr.fieldName) ?
-            grid.getColumnByName(expr.fieldName).dataType === DATE_TYPE : false;
-        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate);
+        const column = grid?.getColumnByName(expr.fieldName);
+        const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
+        const isTime = column?.dataType === TIME_TYPE;
+        data = expr.strategy.sort(data, expr.fieldName, expr.dir, expr.ignoreCase, this.getFieldValue, isDate, isTime);
         if (expressionIndex === exprsLen - 1) {
             return data;
         }

@@ -9,7 +9,7 @@
         [value]="formatter ? (value | columnFormatter: formatter)
             : column.dataType === 'number'
             ? (value | number:column.pipeArgs.digitsInfo:grid.locale)
-            : column.dataType === 'date'
+            : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
             ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
             : column.dataType === 'currency'
             ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)
@@ -18,7 +18,7 @@
         [column]="this.column.field"
         [containerClass]="'igx-grid__td-text'"
         [metadata]="searchMetadata">{{ formatter ? (value | columnFormatter: formatter) : column.dataType === "number"
-            ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === "date"
+            ? (value | number:column.pipeArgs.digitsInfo:grid.locale) : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime')
             ? (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'
             ? (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent'
             ? (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value }}</div>
@@ -29,7 +29,7 @@
     [activeCssClass]="activeHighlightClass"
     [groupName]="gridID"
     [value]="formatter ? (value | columnFormatter:formatter) : column.dataType === 'number' ?
-        (value | number:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'date' ?
+        (value | number:column.pipeArgs.digitsInfo:grid.locale) : (column.dataType === 'date' || column.dataType === 'time' || column.dataType === 'dateTime') ?
         (value | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale) : column.dataType === 'currency'?
         (value | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale) : column.dataType === 'percent' ?
         (value | percent:column.pipeArgs.digitsInfo:grid.locale) : value"
@@ -58,6 +58,17 @@
         <igx-date-picker [style.width.%]="100" [outlet]="grid.outlet" mode="dropdown"
         [locale]="grid.locale" [(value)]="editValue" [igxFocus]="true">
     </igx-date-picker>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'time'">
+        <igx-time-picker [style.width.%]="100" [outlet]="grid.outlet"
+            mode="dropdown" [format]="column.defaultTimeFormat" [(ngModel)]="editValue" [igxFocus]="true" >
+            <label igxLabel></label>
+        </igx-time-picker>
+    </ng-container>
+    <ng-container *ngIf="column.dataType === 'dateTime'">
+        <igx-input-group>
+            <input type="text" igxInput [igxDateTimeEditor]="column.defaultDateTimeFormat" [(ngModel)]="editValue" [igxFocus]="true"/>
+        </igx-input-group>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'currency'">
         <igx-input-group displayDensity="compact">

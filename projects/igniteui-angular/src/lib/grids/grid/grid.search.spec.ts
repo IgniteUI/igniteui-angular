@@ -1097,7 +1097,7 @@ describe('IgxGrid - search API #grid - ', () => {
             (grid as any).scrollTo(9, 0);
             await wait(16);
             fix.detectChanges();
-            const row = grid.getRowByIndex(9);
+            const row = grid.gridAPI.get_row_by_index(9);
             const spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(spans.length).toBe(5);
         });
@@ -1116,7 +1116,7 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.findNext('Casey');
             await wait(30);
             fix.detectChanges();
-            let row = grid.getRowByIndex(17);
+            let row = grid.gridAPI.get_row_by_index(17);
             let spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(spans.length).toBe(1);
 
@@ -1133,7 +1133,7 @@ describe('IgxGrid - search API #grid - ', () => {
             grid.findNext('Casey');
             await wait();
             fix.detectChanges();
-            row = grid.getRowByIndex(11);
+            row = grid.gridAPI.get_row_by_index(11);
             spans = row.nativeElement.querySelectorAll(HIGHLIGHT_CSS_CLASS);
             expect(spans.length).toBe(1);
         });

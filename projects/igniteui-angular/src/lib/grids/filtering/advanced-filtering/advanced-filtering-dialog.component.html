@@ -172,7 +172,7 @@
                     </igx-select-item>
                 </igx-select>
 
-                <igx-input-group *ngIf="!selectedColumn || selectedColumn.dataType !== 'date'"
+                <igx-input-group *ngIf="!selectedColumn || (selectedColumn.dataType !== 'date' && selectedColumn.dataType !== 'time' && selectedColumn.dataType !== 'dateTime')"
                                  type="box"
                                  [displayDensity]="'compact'">
                     <input #searchValueInput
@@ -202,6 +202,38 @@
                     <igx-picker-toggle></igx-picker-toggle>
                     <igx-picker-clear></igx-picker-clear>
                 </igx-date-picker>
+
+                <igx-time-picker *ngIf="selectedColumn && selectedColumn.dataType === 'time'" [format]="selectedColumn.defaultTimeFormat"
+                                mode="dropdown" [(ngModel)]="searchValue" [outlet]="grid.outlet">
+                <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value">
+                    <igx-input-group #dropDownTarget type="box" [displayDensity]="'compact'">
+                        <input #searchValueInput
+                                igxInput
+                                tabindex="0"
+                                (keydown)="invokeClick($event)"
+                                (click)="openDialog(dropDownTarget.element.nativeElement)"
+                                [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder"
+                                autocomplete="off"
+                                [value]="
+                                    selectedColumn.formatter
+                                    ? (value | columnFormatter:selectedColumn.formatter)
+                                    : (value | date:selectedColumn.pipeArgs.format:undefined:grid.locale)
+                                "
+                                [readonly]="true"
+                                [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
+                    </igx-input-group>
+                </ng-template>
+                </igx-time-picker>
+
+                <igx-input-group #inputGroup type="box" *ngIf="selectedColumn && selectedColumn.dataType === 'dateTime'"
+                type="box" [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
+                [displayDensity]="'compact'">
+                    <input #input igxInput tabindex="0"
+                        [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
+                        [igxDateTimeEditor]="selectedColumn.defaultDateTimeFormat"
+                        [(ngModel)]="searchValue"
+                        [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"/>
+                </igx-input-group>
 
                 <div class="igx-filter-tree__inputs-actions">
                     <button igxButton="icon"

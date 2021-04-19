@@ -10,7 +10,9 @@ import {
     IgxStringFilteringOperand,
     IgxNumberFilteringOperand,
     IgxBooleanFilteringOperand,
-    IgxDateFilteringOperand
+    IgxDateFilteringOperand,
+    IgxTimeFilteringOperand,
+    IgxDateTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
@@ -358,6 +360,114 @@ describe('IgxGrid - Filtering actions #grid', () => {
         grid.filter('ReleaseDate', null, IgxDateFilteringOperand.instance().condition('yesterday'));
         fix.detectChanges();
         expect(grid.rowList.length).toEqual(1);
+    }));
+
+    it('should correctly filter by \'time\' filtering conditions', fakeAsync(() => {
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.todayFullDate;
+
+        // At, Not At, Before, After, At or Before
+        // At or After, Empty, Not Empty, Null, Not Null
+
+        // At 11:15:35
+        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', 1),
+            IgxTimeFilteringOperand.instance().condition('at'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Not At 09:15:35
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', cal.timedelta(today, 'hour', -1),
+            IgxTimeFilteringOperand.instance().condition('not_at'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+
+        // Before 10:25:35
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10),
+            IgxTimeFilteringOperand.instance().condition('before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(4);
+
+        // After 10:15:55
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20),
+            IgxTimeFilteringOperand.instance().condition('after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // At or Before 10:25:35
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', cal.timedelta(today, 'minute', +10),
+            IgxTimeFilteringOperand.instance().condition('at_before'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(5);
+
+        // At or After 10:15:55
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', cal.timedelta(today, 'second', +20),
+            IgxTimeFilteringOperand.instance().condition('at_after'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(3);
+
+        // Empty filter
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', null, IgxTimeFilteringOperand.instance().condition('empty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(2);
+
+        // NotEmpty filter
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', null, IgxTimeFilteringOperand.instance().condition('notEmpty'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(6);
+
+        // Null filter
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', null, IgxTimeFilteringOperand.instance().condition('null'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // NotNull filter
+        grid.clearFilter('ReleaseTime');
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(8);
+        grid.filter('ReleaseTime', null, IgxTimeFilteringOperand.instance().condition('notNull'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
+    }));
+
+    it('should correctly filter by \'dateTime\' filtering conditions', fakeAsync(() => {
+        const cal = SampleTestData.timeGenerator;
+        const today = SampleTestData.todayFullDate;
+
+        // Equals 11:15:35
+        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+            IgxDateTimeFilteringOperand.instance().condition('equals'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(1);
+
+        // Does not equal 11:15:35
+        grid.filter('ReleaseDate', cal.timedelta(today, 'hour', 1),
+            IgxDateTimeFilteringOperand.instance().condition('doesNotEqual'));
+        fix.detectChanges();
+        expect(grid.rowList.length).toEqual(7);
     }));
 
     it('should correctly filter with earliest/latest \'date\' values', fakeAsync(() => {
