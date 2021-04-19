@@ -33,8 +33,8 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxHierarchicalGridExportComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import { IgxHierarchicalGridModule,
          IgxHierarchicalGridComponent,
-         IgxHierarchicalRowComponent
 } from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 
 describe('Excel Exporter', () => {
     configureTestSuite();
@@ -692,8 +692,8 @@ describe('Excel Exporter', () => {
         });
 
         it('should export hierarchical grid with expanded rows.', async () => {
-            const firstRow = hGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-            const secondRow = hGrid.getRowByIndex(1) as IgxHierarchicalRowComponent;
+            const firstRow = hGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
+            const secondRow = hGrid.hgridAPI.get_row_by_index(1) as IgxHierarchicalRowComponent;
 
             UIInteractions.simulateClickAndSelectEvent(firstRow.expander);
             fix.detectChanges();
@@ -702,14 +702,14 @@ describe('Excel Exporter', () => {
             let childGrids = hGrid.hgridAPI.getChildGrids(false);
 
             const firstChildGrid = childGrids[0];
-            const firstChildRow = firstChildGrid.getRowByIndex(2) as IgxHierarchicalRowComponent;
+            const firstChildRow = firstChildGrid.hgridAPI.get_row_by_index(2) as IgxHierarchicalRowComponent;
 
             UIInteractions.simulateClickAndSelectEvent(firstChildRow.expander);
             fix.detectChanges();
             expect(firstChildRow.expanded).toBe(true);
 
             const secondChildGrid = childGrids[1];
-            const secondChildRow = secondChildGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const secondChildRow = secondChildGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
 
             UIInteractions.simulateClickAndSelectEvent(secondChildRow.expander);
             fix.detectChanges();
@@ -722,7 +722,7 @@ describe('Excel Exporter', () => {
             childGrids = hGrid.hgridAPI.getChildGrids(false);
 
             const thirdChildGrid = childGrids[3];
-            const thirdChildRow = thirdChildGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const thirdChildRow = thirdChildGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
 
             UIInteractions.simulateClickAndSelectEvent(thirdChildRow.expander);
             fix.detectChanges();

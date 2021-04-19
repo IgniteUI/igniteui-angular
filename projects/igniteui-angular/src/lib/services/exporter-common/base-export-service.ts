@@ -105,6 +105,11 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
      * Export the column's data without applying its formatter, when set to true
      */
     skipFormatter: boolean;
+
+    /**
+     * A reference to the grid owner.
+     */
+    grid?: IgxGridBaseDirective;
 }
 
 export const DEFAULT_OWNER = 'default';
@@ -177,7 +182,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.prepareData(grid);
-        this.exportGridRecordsData(this.flatRecords);
+        this.exportGridRecordsData(this.flatRecords, grid);
     }
 
     /**
@@ -208,7 +213,7 @@ export abstract class IgxBaseExporter {
         this.exportGridRecordsData(records);
     }
 
-    private exportGridRecordsData(records: IExportRecord[]) {
+    private exportGridRecordsData(records: IExportRecord[], grid?: IgxGridBaseDirective) {
         if (this._ownersMap.size === 0) {
             const recordsData = records.map(r => r.data);
             const keys = ExportUtilities.getKeysFromData(recordsData);
@@ -239,7 +244,7 @@ export abstract class IgxBaseExporter {
                         columnIndex: index,
                         cancel: false,
                         skipFormatter: false,
-                        owner: key === DEFAULT_OWNER ? undefined : key
+                        owner: key === DEFAULT_OWNER ? grid : key
                     };
                     this.columnExporting.emit(columnExportArgs);
 
@@ -406,14 +411,14 @@ export abstract class IgxBaseExporter {
                 };
 
                 const islandGrid = grid?.hgridAPI.getChildGrid([path]);
-                const keyRecordData = this.prepareIslandData(islandGrid, entry[island.key]) || [];
+                const keyRecordData = this.prepareIslandData(island, islandGrid, entry[island.key]) || [];
 
                 this.getAllChildColumnsAndData(island, keyRecordData, expansionStateVal, islandGrid);
             }
         }
     }
 
-    private prepareIslandData(islandGrid: IgxHierarchicalGridComponent, data: any[]): any[] {
+    private prepareIslandData(island: IgxRowIslandComponent, islandGrid: IgxHierarchicalGridComponent, data: any[]): any[] {
         if (islandGrid !== undefined) {
             const hasFiltering = (islandGrid.filteringExpressionsTree &&
                     islandGrid.filteringExpressionsTree.filteringOperands.length > 0) ||
@@ -446,6 +451,36 @@ export abstract class IgxBaseExporter {
                         data = DataUtil.sort(data, islandGrid.sortingExpressions, islandGrid.sortStrategy, islandGrid);
                     }
                 }
+        } else {
+            const hasFiltering = (island.filteringExpressionsTree &&
+                island.filteringExpressionsTree.filteringOperands.length > 0) ||
+            (island.advancedFilteringExpressionsTree &&
+                island.advancedFilteringExpressionsTree.filteringOperands.length > 0);
+
+            const hasSorting = island.sortingExpressions &&
+                island.sortingExpressions.length > 0;
+
+            const skipOperations =
+                (!hasFiltering || this.options.ignoreFiltering) &&
+                (!hasSorting || this.options.ignoreSorting);
+
+            if (!skipOperations) {
+                if (hasFiltering && !this.options.ignoreFiltering) {
+                    const filteringState: IFilteringState = {
+                        expressionsTree: island.filteringExpressionsTree,
+                        advancedExpressionsTree: island.advancedFilteringExpressionsTree,
+                        strategy: island.filterStrategy
+                    };
+
+                    data = DataUtil.filter(data, filteringState, island);
+                }
+
+                if (hasSorting && !this.options.ignoreSorting) {
+                    this._sort = cloneValue(island.sortingExpressions[0]);
+
+                    data = DataUtil.sort(data, island.sortingExpressions, island.sortStrategy, island);
+                }
+            }
         }
 
         return data;
@@ -493,7 +528,7 @@ export abstract class IgxBaseExporter {
                         };
 
                         const childIslandGrid = grid?.hgridAPI.getChildGrid([path]);
-                        const keyRecordData = this.prepareIslandData(childIslandGrid, rec[childIsland.key]) || [];
+                        const keyRecordData = this.prepareIslandData(island, childIslandGrid, rec[childIsland.key]) || [];
 
                         this.getAllChildColumnsAndData(childIsland, keyRecordData, islandExpansionStateVal, childIslandGrid);
                     }
