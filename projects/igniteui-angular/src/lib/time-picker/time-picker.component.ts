@@ -632,6 +632,30 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
     }
 
+     /** @hidden @internal */
+     @HostListener('keydown', ['$event'])
+     public onKeyDown(event: KeyboardEvent): void {
+         switch (event.key) {
+             case this.platform.KEYMAP.ARROW_UP:
+                 if (event.altKey && this.isDropdown) {
+                     this.close();
+                 }
+                 break;
+             case this.platform.KEYMAP.ARROW_DOWN:
+                 if (event.altKey && this.isDropdown) {
+                     this.open();
+                 }
+                 break;
+             case this.platform.KEYMAP.ESCAPE:
+                 this.cancelButtonClick();
+                 break;
+             case this.platform.KEYMAP.SPACE:
+                 this.open();
+                 event.preventDefault();
+                 break;
+         }
+     }
+
     // #region ControlValueAccessor
 
     /** @hidden @internal */
@@ -1034,30 +1058,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     /** @hidden @internal */
     public ampmInView(): string[] {
         return this._ampmView.filter((ampm) => ampm !== '');
-    }
-
-    /** @hidden @internal */
-    @HostListener('keydown', ['$event'])
-    public onKeyDown(event: KeyboardEvent): void {
-        switch (event.key) {
-            case this.platform.KEYMAP.ARROW_UP:
-                if (event.altKey && this.isDropdown) {
-                    this.close();
-                }
-                break;
-            case this.platform.KEYMAP.ARROW_DOWN:
-                if (event.altKey && this.isDropdown) {
-                    this.open();
-                }
-                break;
-            case this.platform.KEYMAP.ESCAPE:
-                this.cancelButtonClick();
-                break;
-            case this.platform.KEYMAP.SPACE:
-                this.open();
-                event.preventDefault();
-                break;
-        }
     }
 
     protected onStatusChanged() {
