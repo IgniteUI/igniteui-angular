@@ -122,7 +122,7 @@ xdescribe('IgxDatePicker', () => {
     });
 
     describe('Unit Tests', () => {
-        pending('WIP');
+        // pending('WIP');
         let ngModel;
         let element;
         let cdr;
@@ -285,26 +285,6 @@ xdescribe('IgxDatePicker', () => {
                 ngModel.statusChanges.emit();
                 expect(inputGroup.isRequired).toBeFalsy();
             });
-
-            describe('Validator', () => {
-                pending('TODO');
-            });
-        });
-    });
-
-    describe('Integration tests', () => {
-        describe('Events', () => {
-            it('should be able to cancel opening/closing', () => {
-                pending('TODO');
-            });
-        });
-
-        describe('Keyboard navigation', () => {
-            pending('TODO');
-        });
-
-        describe('Projections', () => {
-            pending('TODO');
         });
     });
 });
