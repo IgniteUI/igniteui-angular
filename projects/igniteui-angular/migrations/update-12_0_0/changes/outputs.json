@@ -18,10 +18,26 @@
             }
         },
         {
+            "name": "onChunkLoad",
+            "replaceWith": "chunkLoad",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
             "name": "onScrollbarVisibilityChanged",
             "replaceWith": "scrollbarVisibilityChanged",
             "owner": {
                 "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onScrollbarVisibilityChanged",
+            "replaceWith": "scrollbarVisibilityChanged",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
                 "type": "directive"
             }
         },
@@ -34,10 +50,26 @@
             }
         },
         {
+            "name": "onContentSizeChange",
+            "replaceWith": "contentSizeChange",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
             "name": "onDataChanged",
             "replaceWith": "dataChanged",
             "owner": {
                 "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
                 "type": "directive"
             }
         },
@@ -50,6 +82,14 @@
             }
         },
         {
+            "name": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
             "name": "onChunkPreload",
             "replaceWith": "chunkPreload",
             "owner": {
@@ -58,10 +98,18 @@
             }
         },
         {
+            "name": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
             "name": "onDataChanging",
             "replaceWith": "dataChanging",
             "owner": {
-                "selector": "[igxFor][igxForOf]",
+                "selector": "[igxGridFor][igxGridForOf]",
                 "type": "directive"
             }
         },

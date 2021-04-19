@@ -4,6 +4,7 @@ import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
 const DateType = 'date';
+const TimeType = 'time';
 
 export interface IFilteringStrategy {
     filter(data: any[], expressionsTree: IFilteringExpressionsTree, advancedExpressionsTree?: IFilteringExpressionsTree,
@@ -25,9 +26,9 @@ export class NoopFilteringStrategy implements IFilteringStrategy {
 }
 
 export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
-    public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, grid?: GridType): boolean {
+    public findMatchByExpression(rec: any, expr: IFilteringExpression, isDate?: boolean, isTime?: boolean, grid?: GridType): boolean {
         const cond = expr.condition;
-        const val = this.getFieldValue(rec, expr.fieldName, isDate, grid);
+        const val = this.getFieldValue(rec, expr.fieldName, isDate, isTime, grid);
         return cond.logic(val, expr.searchVal, expr.ignoreCase);
     }
 
@@ -59,9 +60,10 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
                 return true;
             } else {
                 const expression = expressions as IFilteringExpression;
-                const isDate = grid && grid.getColumnByName(expression.fieldName) ?
-                    grid.getColumnByName(expression.fieldName).dataType === DateType : false;
-                return this.findMatchByExpression(rec, expression, isDate, grid);
+                const column = grid && grid.getColumnByName(expression.fieldName);
+                const isDate = column ? column.dataType === DateType : false;
+                const isTime = column ? column.dataType === TimeType : false;
+                return this.findMatchByExpression(rec, expression, isDate, isTime, grid);
             }
         }
 
@@ -71,7 +73,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
     public abstract filter(data: any[], expressionsTree: IFilteringExpressionsTree,
         advancedExpressionsTree?: IFilteringExpressionsTree, grid?: GridType): any[];
 
-    protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, grid?: GridType): any;
+    protected abstract getFieldValue(rec: any, fieldName: string, isDate?: boolean, isTime?: boolean, grid?: GridType): any;
 }
 
 export class FilteringStrategy extends BaseFilteringStrategy {
@@ -104,9 +106,9 @@ export class FilteringStrategy extends BaseFilteringStrategy {
         return res;
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false): any {
         let value = resolveNestedPath(rec, fieldName);
-        value = value && isDate ? parseDate(value) : value;
+        value = value && (isDate || isTime) ? parseDate(value) : value;
         return value;
     }
 }
@@ -126,13 +128,12 @@ export class FormattedValuesFilteringStrategy extends FilteringStrategy {
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
         const column = grid.getColumnByName(fieldName);
         let value = resolveNestedPath(rec, fieldName);
 
         value = column.formatter && this.shouldApplyFormatter(fieldName) ?
-            column.formatter(value) :
-            value && isDate ? parseDate(value) : value;
+            column.formatter(value) : value && (isDate || isTime) ? parseDate(value) : value;
 
         return value;
     }

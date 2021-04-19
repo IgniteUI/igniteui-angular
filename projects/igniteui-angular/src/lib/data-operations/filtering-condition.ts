@@ -372,7 +372,179 @@ export class IgxDateFilteringOperand extends IgxFilteringOperand {
         return searchVal.has(target.toISOString());
     }
 
-    private validateInputData(target: Date) {
+    protected validateInputData(target: Date) {
+        if (!(target instanceof Date)) {
+            throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
+        }
+    }
+}
+
+export class IgxDateTimeFilteringOperand extends IgxDateFilteringOperand {
+    protected constructor() {
+        super();
+        let index = this.operations.indexOf(this.condition('equals'));
+        this.operations.splice(index, 1);
+        index = this.operations.indexOf(this.condition('doesNotEqual'));
+        this.operations.splice(index, 1);
+        this.operations = [{
+            name: 'equals',
+            isUnary: false,
+            iconName: 'equals',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+                this.validateInputData(target);
+                const targetp = IgxDateTimeFilteringOperand.getDateParts(target, 'yMdhms');
+                const searchp = IgxDateTimeFilteringOperand.getDateParts(searchVal, 'yMdhms');
+                return targetp.year === searchp.year &&
+                    targetp.month === searchp.month &&
+                    targetp.day === searchp.day &&
+                    targetp.hours === searchp.hours &&
+                    targetp.minutes === searchp.minutes &&
+                    targetp.seconds === searchp.seconds;
+            }
+        }, {
+            name: 'doesNotEqual',
+            isUnary: false,
+            iconName: 'not-equal',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return true;
+                }
+                this.validateInputData(target);
+                const targetp = IgxDateTimeFilteringOperand.getDateParts(target, 'yMdhms');
+                const searchp = IgxDateTimeFilteringOperand.getDateParts(searchVal, 'yMdhms');
+                return targetp.year !== searchp.year ||
+                    targetp.month !== searchp.month ||
+                    targetp.day !== searchp.day ||
+                    targetp.hours !== searchp.hours ||
+                    targetp.minutes !== searchp.minutes ||
+                    targetp.seconds !== searchp.seconds;
+            }
+        }].concat(this.operations);
+    }
+}
+
+export class IgxTimeFilteringOperand extends IgxFilteringOperand {
+    protected constructor() {
+        super();
+        this.operations = [{
+            name: 'at',
+            isUnary: false,
+            iconName: 'equals',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+                this.validateInputData(target);
+                const targetp = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const searchp = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+                return targetp.hours === searchp.hours &&
+                    targetp.minutes === searchp.minutes &&
+                    targetp.seconds === searchp.seconds;
+            }
+        }, {
+            name: 'not_at',
+            isUnary: false,
+            iconName: 'not-equal',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return true;
+                }
+                this.validateInputData(target);
+                const targetp = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const searchp = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+                return targetp.hours !== searchp.hours ||
+                    targetp.minutes !== searchp.minutes ||
+                    targetp.seconds !== searchp.seconds;
+            }
+        }, {
+            name: 'before',
+            isUnary: false,
+            iconName: 'is-before',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+                const targetn = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const search = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+
+                return targetn.hours < search.hours ? true : targetn.hours === search.hours && targetn.minutes < search.minutes ?
+                    true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds < search.seconds;
+            }
+        }, {
+            name: 'after',
+            isUnary: false,
+            iconName: 'is-after',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+                const targetn = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const search = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+
+                return targetn.hours > search.hours ? true : targetn.hours === search.hours && targetn.minutes > search.minutes ?
+                    true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds > search.seconds;
+            }
+        }, {
+            name: 'at_before',
+            isUnary: false,
+            iconName: 'is-before',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+                const targetn = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const search = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+                return (targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds === search.seconds) ||
+                targetn.hours < search.hours ? true : targetn.hours === search.hours && targetn.minutes < search.minutes ?
+                    true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds < search.seconds;
+            }
+        }, {
+            name: 'at_after',
+            isUnary: false,
+            iconName: 'is-after',
+            logic: (target: Date, searchVal: Date) => {
+                if (!target) {
+                    return false;
+                }
+
+                this.validateInputData(target);
+                const targetn = IgxDateFilteringOperand.getDateParts(target, 'hms');
+                const search = IgxDateFilteringOperand.getDateParts(searchVal, 'hms');
+                return (targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds === search.seconds) ||
+                    targetn.hours > search.hours ? true : targetn.hours === search.hours && targetn.minutes > search.minutes ?
+                    true : targetn.hours === search.hours && targetn.minutes === search.minutes && targetn.seconds > search.seconds;
+            }
+        }, {
+            name: 'empty',
+            isUnary: true,
+            iconName: 'is-empty',
+            logic: (target: Date) => target === null || target === undefined
+        }, {
+            name: 'notEmpty',
+            isUnary: true,
+            iconName: 'not-empty',
+            logic: (target: Date) => target !== null && target !== undefined
+        }].concat(this.operations);
+    }
+
+
+    protected findValueInSet(target: any, searchVal: Set<any>) {
+        if (!target) {
+            return false;
+        }
+        return searchVal.has(target);
+    }
+
+    protected validateInputData(target: Date) {
         if (!(target instanceof Date)) {
             throw new Error('Could not perform filtering on \'date\' column because the datasource object type is not \'Date\'.');
         }
