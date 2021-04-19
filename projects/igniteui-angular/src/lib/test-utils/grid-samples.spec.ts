@@ -1052,6 +1052,12 @@ export class CustomFilter extends IgxFilteringOperand {
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" headerClasses="header-release-date"
             [filterable]="filterable" [resizable]="resizable" dataType="date">
         </igx-column>
+        <igx-column width="100px" [field]="'ReleaseDateTime'" [header]="'ReleaseDateTime'" headerClasses="header-release-date-time"
+            [filterable]="filterable" [resizable]="resizable" dataType="dateTime">
+        </igx-column>
+        <igx-column width="100px" [field]="'ReleaseTime'" [header]="'ReleaseTime'" headerClasses="header-release-time"
+            [filterable]="filterable" [resizable]="resizable" dataType="time">
+        </igx-column>
         <igx-column width="100px" [field]="'AnotherField'" [header]="'Another Field'" [filterable]="filterable"
             dataType="string" [filters]="customFilter">
         </igx-column>

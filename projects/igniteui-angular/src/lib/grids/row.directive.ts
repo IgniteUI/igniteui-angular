@@ -28,12 +28,11 @@ import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RowType } from './common/row.interface';
 
 @Directive({
     selector: '[igxRowBaseComponent]'
 })
-export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements RowType, DoCheck, AfterViewInit, OnDestroy {
+export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implements DoCheck, AfterViewInit, OnDestroy {
     /**
      * @hidden
      */
@@ -116,6 +115,27 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public get pinned(): boolean {
         return this.grid.isRecordPinned(this.rowData);
+    }
+
+    /**
+     * Gets the expanded state of the row.
+     * ```typescript
+     * let isExpanded = row.expanded;
+     * ```
+     */
+    public get expanded(): boolean {
+        return this.gridAPI.get_row_expansion_state(this.rowData);
+    }
+
+    /**
+     * Expands/collapses the current row.
+     *
+     * ```typescript
+     * this.grid.selectedRows[2].expanded = true;
+     * ```
+     */
+    public set expanded(val: boolean) {
+        this.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
     @Input()

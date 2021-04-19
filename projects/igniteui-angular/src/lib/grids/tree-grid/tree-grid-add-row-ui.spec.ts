@@ -73,7 +73,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             fix.detectChanges();
             endTransition();
 
-            const addRow = treeGrid.getRowByIndex(2);
+            const addRow = treeGrid.gridAPI.get_row_by_index(2);
             expect(addRow.addRow).toBeTrue();
 
             treeGrid.gridAPI.crudService.endEdit(true);
@@ -81,7 +81,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
 
             expect(treeGrid.rowList.length).toBe(9);
             const addedRow = treeGrid.getRowByIndex(4);
-            expect(addedRow.rowData.Name).toBe(undefined);
+            expect(addedRow.data.Name).toBe(undefined);
 
         });
 
@@ -89,7 +89,7 @@ describe('IgxTreeGrid - Add Row UI #tGrid', () => {
             const row = treeGrid.rowList.toArray()[1] as IgxTreeGridRowComponent;
             row.beginAddChild();
             fix.detectChanges();
-            const addRow = treeGrid.getRowByIndex(2);
+            const addRow = treeGrid.gridAPI.get_row_by_index(2);
             expect(addRow.addRow).toBeTrue();
         });
 
