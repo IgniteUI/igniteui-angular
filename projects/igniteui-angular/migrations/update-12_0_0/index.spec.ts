@@ -366,7 +366,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <input igxDateTimeEditorDirective (onValueChange)="change()"/>
+    <input igxDateTimeEditorDirective (onValueChange)="change()" mode="dialog"/>
     `
         );
 
@@ -378,7 +378,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <input igxDateTimeEditorDirective (valueChange)="change()"/>
+    <input igxDateTimeEditorDirective (valueChange)="change()" mode="dialog"/>
     `
         );
     });
@@ -388,7 +388,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onSelection)="change()"></igx-date-picker>
+    <igx-date-picker (onSelection)="change()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -400,7 +400,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (valueChange)="change()"></igx-date-picker>
+    <igx-date-picker (valueChange)="change()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -409,7 +409,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onClosing)="close()"></igx-date-picker>
+    <igx-date-picker (onClosing)="close()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -421,7 +421,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (closing)="close()"></igx-date-picker>
+    <igx-date-picker (closing)="close()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -430,7 +430,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onClosed)="close()"></igx-date-picker>
+    <igx-date-picker (onClosed)="close()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -442,7 +442,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (closed)="close()"></igx-date-picker>
+    <igx-date-picker (closed)="close()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -451,7 +451,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onOpening)="open()"></igx-date-picker>
+    <igx-date-picker (onOpening)="open()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -463,7 +463,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (opening)="open()"></igx-date-picker>
+    <igx-date-picker (opening)="open()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -472,7 +472,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onOpened)="open()"></igx-date-picker>
+    <igx-date-picker (onOpened)="open()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -484,7 +484,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (opened)="open()"></igx-date-picker>
+    <igx-date-picker (opened)="open()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -493,7 +493,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onValidationFailed)="fail()"></igx-date-picker>
+    <igx-date-picker (onValidationFailed)="fail()" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -505,7 +505,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker (validationFailed)="fail()"></igx-date-picker>
+    <igx-date-picker (validationFailed)="fail()" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -526,7 +526,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker></igx-date-picker>
+    <igx-date-picker mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -535,7 +535,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [editorTabIndex]="1"></igx-date-picker>
+    <igx-date-picker [editorTabIndex]="1" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -547,28 +547,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [tabIndex]="1"></igx-date-picker>
-    `
-        );
-    });
-
-    it('should remove formatter', async () => {
-        appTree.create(
-            `/testSrc/appPrefix/component/test.component.html`,
-            `
-    <igx-date-picker [formatter]="formatter()"></igx-date-picker>
-    `
-        );
-
-        const tree = await schematicRunner
-            .runSchematicAsync(migrationName, {}, appTree)
-            .toPromise();
-
-        expect(
-            tree.readContent('/testSrc/appPrefix/component/test.component.html')
-        ).toEqual(
-            `
-    <igx-date-picker></igx-date-picker>
+    <igx-date-picker [tabIndex]="1" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -577,7 +556,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [labelVisibility]="true"></igx-date-picker>
+    <igx-date-picker [labelVisibility]="true" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -589,7 +568,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker></igx-date-picker>
+    <igx-date-picker mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -598,7 +577,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [mask]="string"></igx-date-picker>
+    <igx-date-picker [mask]="string" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -610,7 +589,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [inputFormat]="string"></igx-date-picker>
+    <igx-date-picker [inputFormat]="string" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -619,7 +598,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [format]="string"></igx-date-picker>
+    <igx-date-picker [format]="string" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -631,7 +610,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [inputFormat]="string"></igx-date-picker>
+    <igx-date-picker [inputFormat]="string" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -640,7 +619,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [displayData]="string"></igx-date-picker>
+    <igx-date-picker [displayData]="string" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -652,7 +631,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [displayFormat]="string"></igx-date-picker>
+    <igx-date-picker [displayFormat]="string" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -661,7 +640,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [monthsViewNumber]="3"></igx-date-picker>
+    <igx-date-picker [monthsViewNumber]="3" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -673,7 +652,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [displayMonthsCount]="3"></igx-date-picker>
+    <igx-date-picker [displayMonthsCount]="3" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -682,7 +661,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [vertical]="true"></igx-date-picker>
+    <igx-date-picker [vertical]="true" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -694,7 +673,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [headerOrientation]="true"></igx-date-picker>
+    <igx-date-picker [headerOrientation]="true" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -703,7 +682,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [dropDownOverlaySettings]="settings"></igx-date-picker>
+    <igx-date-picker [dropDownOverlaySettings]="settings" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -715,7 +694,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [overlaySettings]="settings"></igx-date-picker>
+    <igx-date-picker [overlaySettings]="settings" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -724,7 +703,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [modalOverlaySettings]="settings"></igx-date-picker>
+    <igx-date-picker [modalOverlaySettings]="settings" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -736,7 +715,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [overlaySettings]="settings"></igx-date-picker>
+    <igx-date-picker [overlaySettings]="settings" mode="dialog"></igx-date-picker>
     `
         );
     });
@@ -746,7 +725,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onValueChanged)="change()"></igx-time-picker>
+    <igx-time-picker (onValueChanged)="change()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -758,7 +737,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (valueChange)="change()"></igx-time-picker>
+    <igx-time-picker (valueChange)="change()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -767,7 +746,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onClosing)="close()"></igx-time-picker>
+    <igx-time-picker (onClosing)="close()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -779,7 +758,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (closing)="close()"></igx-time-picker>
+    <igx-time-picker (closing)="close()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -788,7 +767,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onClosed)="close()"></igx-time-picker>
+    <igx-time-picker (onClosed)="close()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -800,7 +779,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (closed)="close()"></igx-time-picker>
+    <igx-time-picker (closed)="close()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -809,7 +788,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onOpening)="open()"></igx-time-picker>
+    <igx-time-picker (onOpening)="open()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -821,7 +800,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (opening)="open()"></igx-time-picker>
+    <igx-time-picker (opening)="open()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -830,7 +809,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onOpened)="open()"></igx-time-picker>
+    <igx-time-picker (onOpened)="open()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -842,7 +821,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (opened)="open()"></igx-time-picker>
+    <igx-time-picker (opened)="open()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -851,7 +830,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onValidationFailed)="fail()"></igx-time-picker>
+    <igx-time-picker (onValidationFailed)="fail()" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -863,7 +842,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker (validationFailed)="fail()"></igx-time-picker>
+    <igx-time-picker (validationFailed)="fail()" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -872,7 +851,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [isSpinLoop]="true"></igx-time-picker>
+    <igx-time-picker [isSpinLoop]="true" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -884,7 +863,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker [spinLoop]="true"></igx-time-picker>
+    <igx-time-picker [spinLoop]="true" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -893,7 +872,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [vertical]="true"></igx-time-picker>
+    <igx-time-picker [vertical]="true" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -905,7 +884,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker [headerOrientation]="true"></igx-time-picker>
+    <igx-time-picker [headerOrientation]="true" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -914,7 +893,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [format]="string"></igx-time-picker>
+    <igx-time-picker [format]="string" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -926,7 +905,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker [inputFormat]="string"></igx-time-picker>
+    <igx-time-picker [inputFormat]="string" mode="dialog"></igx-time-picker>
     `
         );
     });
@@ -936,7 +915,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-range-picker (rangeSelected)="change()"></igx-date-range-picker>
+    <igx-date-range-picker (rangeSelected)="change()" mode="dialog"></igx-date-range-picker>
     `
         );
 
@@ -948,7 +927,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-range-picker (valueChange)="change()"></igx-date-range-picker>
+    <igx-date-range-picker (valueChange)="change()" mode="dialog"></igx-date-range-picker>
     `
         );
     });
@@ -957,7 +936,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-range-picker (onClosing)="close()"></igx-date-range-picker>
+    <igx-date-range-picker (onClosing)="close()" mode="dialog"></igx-date-range-picker>
     `
         );
 
@@ -969,7 +948,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-range-picker (closing)="close()"></igx-date-range-picker>
+    <igx-date-range-picker (closing)="close()" mode="dialog"></igx-date-range-picker>
     `
         );
     });
@@ -978,7 +957,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-range-picker (onClosed)="close()"></igx-date-range-picker>
+    <igx-date-range-picker (onClosed)="close()" mode="dialog"></igx-date-range-picker>
     `
         );
 
@@ -990,7 +969,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-range-picker (closed)="close()"></igx-date-range-picker>
+    <igx-date-range-picker (closed)="close()" mode="dialog"></igx-date-range-picker>
     `
         );
     });
@@ -999,7 +978,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-range-picker (onOpening)="open()"></igx-date-range-picker>
+    <igx-date-range-picker (onOpening)="open()" mode="dialog"></igx-date-range-picker>
     `
         );
 
@@ -1011,7 +990,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-range-picker (opening)="open()"></igx-date-range-picker>
+    <igx-date-range-picker (opening)="open()" mode="dialog"></igx-date-range-picker>
     `
         );
     });
@@ -1020,7 +999,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-range-picker (onOpened)="open()"></igx-date-range-picker>
+    <igx-date-range-picker (onOpened)="open()" mode="dialog"></igx-date-range-picker>
     `
         );
 
@@ -1032,7 +1011,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-range-picker (opened)="open()"></igx-date-range-picker>
+    <igx-date-range-picker (opened)="open()" mode="dialog"></igx-date-range-picker>
     `
         );
     });
@@ -1170,7 +1149,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker label="toRemove"></igx-date-picker>
+    <igx-date-picker label="toRemove" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -1182,7 +1161,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker><igx-label>toRemove</igx-label></igx-date-picker>
+    <igx-date-picker  mode="dialog"><label igxLabel>toRemove</label></igx-date-picker>
     `
         );
     });
@@ -1191,7 +1170,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [label]="boundLabel"></igx-date-picker>
+    <igx-date-picker [label]="boundLabel" mode="dialog"></igx-date-picker>
     `
         );
 
@@ -1203,7 +1182,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker><igx-label>{{boundLabel}}</igx-label></igx-date-picker>
+    <igx-date-picker  mode="dialog"><label igxLabel>{{boundLabel}}</label></igx-date-picker>
     `
         );
     });
@@ -1318,7 +1297,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker label="toRemove"></igx-time-picker>
+    <igx-time-picker mode="dialog" label="toRemove"></igx-time-picker>
     `
         );
 
@@ -1330,7 +1309,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker><igx-label>toRemove</igx-label></igx-time-picker>
+    <igx-time-picker mode="dialog" ><label igxLabel>toRemove</label></igx-time-picker>
     `
         );
     });
@@ -1339,7 +1318,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [label]="boundLabel"></igx-time-picker>
+    <igx-time-picker [label]="boundLabel" mode="dialog"></igx-time-picker>
     `
         );
 
@@ -1351,7 +1330,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker><igx-label>{{boundLabel}}</igx-label></igx-time-picker>
+    <igx-time-picker  mode="dialog"><label igxLabel>{{boundLabel}}</label></igx-time-picker>
     `
         );
     });

@@ -106,14 +106,6 @@
             }
         },
         {
-            "name": "formatter",
-            "remove": true,
-            "owner": {
-                "selector": "igx-date-picker",
-                "type": "component"
-            }
-        },
-        {
             "name": "labelVisibility",
             "remove": true,
             "owner": {
