@@ -207,6 +207,7 @@
                     [inputFormat]="selectedColumn.defaultTimeFormat"
                     [(value)]="searchValue"
                     [formatter]="selectedColumn.formatter"
+                    [locale]="grid.locale"
                     [outlet]="grid.outlet"
                     (click)="timePicker.open()"
                     (keydown)="invokeClick($event)"

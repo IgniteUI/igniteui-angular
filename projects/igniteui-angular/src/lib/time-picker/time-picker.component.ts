@@ -61,7 +61,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxPickersCommonModule, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
 
 let NEXT_ID = 0;
@@ -333,18 +333,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private toggleRef: IgxToggleDirective;
 
     /** @hidden */
-    public _hourItems = [];
-
-    /** @hidden */
-    public _minuteItems = [];
-
-    /** @hidden */
-    public _secondsItems = [];
-
-    /** @hidden */
-    public _ampmItems = [];
-
-    /** @hidden */
     public cleared = false;
 
     /** @hidden */
@@ -484,6 +472,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
     private _itemsDelta: { hour: number; minute: number; second: number } = { hour: 1, minute: 1, second: 1 };
+
+    private _hourItems = [];
+    private _minuteItems = [];
+    private _secondsItems = [];
+    private _ampmItems = [];
 
     private _hourView = [];
     private _minuteView = [];
@@ -1522,6 +1515,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         IgxTimePickerComponent,
         IgxTimePickerTemplateDirective,
         IgxTimePickerActionsDirective,
+        IgxPickersCommonModule,
         IgxInputGroupModule
     ],
     imports: [

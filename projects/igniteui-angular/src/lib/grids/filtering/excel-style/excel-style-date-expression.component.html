@@ -34,6 +34,7 @@
 <igx-time-picker #timePicker *ngIf="column.dataType === 'time'"
     [inputFormat]="column.defaultTimeFormat"
     [(value)]="expressionUI.expression.searchVal"
+    [locale]="grid.locale"
     [outlet]="grid.outlet"
     [displayDensity]="displayDensity"
     (click)="timePicker.open()"
