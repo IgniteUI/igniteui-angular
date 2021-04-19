@@ -1284,7 +1284,7 @@ describe('Multi-View Calendar - ', () => {
             fixture.detectChanges();
 
             datePicker.mode = 'dropdown';
-            datePicker.monthsViewNumber = 2;
+            datePicker.displayMonthsCount = 2;
             tick();
             fixture.detectChanges();
 
@@ -1346,7 +1346,7 @@ export class MultiViewCalendarSampleComponent {
 
 @Component({
     template: `
-        <igx-date-picker [value]="date" [monthsViewNumber]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
+        <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `
 })
 export class MultiViewDatePickerSampleComponent {

@@ -9,6 +9,90 @@
             ]
         },
         {
+	      "member": "onGridInitialized",
+	      "replaceWith": "gridInitialized",
+	      "definedIn": [
+	        "IgxRowIslandComponent"
+	      ]
+	    },
+	    {
+	      "member": "onDataPreLoad",
+	      "replaceWith": "dataPreLoad",
+	      "definedIn": [
+	        "IgxHierarchicalGridComponent"
+	      ]
+	    },
+	    {
+	      "member": "onDataPreLoad",
+	      "replaceWith": "dataPreLoad",
+	      "definedIn": [
+	        "IgxGridComponent"
+	      ]
+	    },
+	    {
+	      "member": "onColumnToggled",
+	      "replaceWith": "columnToggled",
+	      "definedIn": [
+	        "IgxColumnActionsComponent"
+	      ]
+	    },
+	    {
+	      "member": "onColumnChange",
+	      "replaceWith": "columnChange",
+	      "definedIn": [
+	        "IgxColumnComponent"
+	      ]
+	    },
+	    {
+	      "member": "onChunkLoad",
+	      "replaceWith": "chunkLoad",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onScrollbarVisibilityChanged",
+	      "replaceWith": "scrollbarVisibilityChanged",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onContentSizeChange",
+	      "replaceWith": "contentSizeChange",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onDataChanged",
+	      "replaceWith": "dataChanged",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onBeforeViewDestroyed",
+	      "replaceWith": "beforeViewDestroyed",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onChunkPreload",
+	      "replaceWith": "chunkPreload",
+	      "definedIn": [
+	        "IgxForOfDirective"
+	      ]
+	    },
+	    {
+	      "member": "onDataChanging",
+	      "replaceWith": "dataChanging",
+	      "definedIn": [
+	        "IgxGridForOfDirective"
+	      ]
+	    },
+        {
             "member": "isSpinLoop",
             "replaceWith": "spinLoop",
             "definedIn": [
