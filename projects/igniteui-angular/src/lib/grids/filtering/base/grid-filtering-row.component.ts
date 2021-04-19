@@ -86,6 +86,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
     protected defaultDateUI: TemplateRef<any>;
 
+    @ViewChild('defaultTimeUI', { read: TemplateRef, static: true })
+    protected defaultTimeUI: TemplateRef<any>;
+
+    @ViewChild('defaultDateTimeUI', { read: TemplateRef, static: true })
+    protected defaultDateTimeUI: TemplateRef<any>;
+
     @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
 
@@ -197,6 +203,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.column.dataType === DataType.Date) {
             return this.defaultDateUI;
         }
+        if (this.column.dataType === DataType.Time) {
+            return this.defaultTimeUI;
+        }
+        if (this.column.dataType === DataType.DateTime) {
+            return this.defaultDateTimeUI;
+        }
         return this.defaultFilterUI;
     }
 
@@ -288,7 +300,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
-
+        if (this.column.dataType === DataType.DateTime) {
+            this.value = eventArgs;
+            return;
+        }
         if (this.platform.isEdge && target.type !== 'number'
             || this.isKeyPressed && this.platform.isIE || target.value || target.checkValidity()) {
             this.value = target.value;

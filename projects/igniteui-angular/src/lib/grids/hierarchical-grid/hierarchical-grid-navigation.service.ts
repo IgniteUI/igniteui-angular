@@ -4,9 +4,10 @@ import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxRowDirective, IgxGridBaseDirective } from '../grid/public_api';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { IPathSegment } from './hierarchical-grid-base.directive';
+import { IgxRowDirective } from '../row.directive';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
@@ -157,7 +158,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected positionInParent(rowIndex, isNext, cb?: () => void) {
-        const rowObj = this.grid.getRowByIndex(rowIndex);
+        const rowObj = this.grid.gridAPI.get_row_by_index(rowIndex);
         if (!rowObj) {
             if (cb) {
                 cb();
