@@ -1,0 +1,123 @@
+<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+    <div igxLayout igxLayoutDir="row" class="sample-search">
+        <igx-input-group type="search">
+            <input placeholder="Search by key..." #searchCriteria igxInput id="search-b-key" type="text">
+        </igx-input-group>
+
+        <button igxButton="raised" (click)="customSearch(searchCriteria.value)">Log node</button>
+    </div>
+</div>
+<div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+
+    <div igxLayout igxLayoutDir="row" igxLayoutWrap="wrap" igxLayoutItemAlign="center" class="controls">
+        <igx-input-group type="border">
+            <label igxLabel for="ad-time">Animation Duration</label>
+            <input igxInput [(ngModel)]="animationDuration" id="ad-time" type="number">
+        </igx-input-group>
+
+        <igx-input-group type="border">
+            <label igxLabel for="load-time">Node Remote Data Load Duration (ms)</label>
+            <input igxInput [(ngModel)]="loadDuration" id="load-time" type="number">
+        </igx-input-group>
+
+        <igx-input-group type="border">
+            <label igxLabel for="addParent">Target Parent (key)</label>
+            <input igxInput #addParent id="addParent" type="string">
+        </igx-input-group>
+
+        <igx-input-group type="border">
+            <label igxLabel for="delete">Nodes To Delete (key)</label>
+            <input igxInput #deleteNodes id="delete" type="string">
+        </igx-input-group>
+
+        <igx-switch [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
+    </div>
+
+    <div igxLayout igxLayoutDir="column" class="sample-bottom-gap">
+        <div class="btn-holder" igxLayout igxLayoutDir="row" igxLayoutWrap="wrap">
+            <button igxButton (click)="selectSpecific()">Select specific</button>
+            <button igxButton (click)="selectAll()">Select all</button>
+            <button igxButton (click)="deselectSpecific()">Deselect specific</button>
+            <button igxButton (click)="deselectAll()">Deselect all</button>
+            <button igxButton (click)="changeNodeSelectionState()">Change Selection State</button>
+            <button igxButton (click)="changeNodeData()">Change Node Data</button>
+            <button igxButton (click)="addItem()">Add nodes</button>
+            <button igxButton (click)="resetData()">Reset nodes</button>
+            <button igxButton (click)="setDummy()">Dummy nodes</button>
+            <button igxButton (click)="addSeveralNodes(addParent.value)">Add Several Children</button>
+            <button igxButton (click)="deleteNodesFromParent(addParent.value, deleteNodes.value)">Delete Nodes</button>
+
+        </div>
+        <igx-buttongroup [values]="selectionModes" (selected)="toggleSelectionMode($event)"></igx-buttongroup>
+        <igx-buttongroup [values]="displayDensities" (selected)="changeDensity($event)"></igx-buttongroup>
+
+        <div igxLayout igxLayoutDir="row">
+            <div igxLayout igxLayoutDir="column" class="tree-container">
+                <p>IgxTree (templated with icon and text)</p>
+                <igx-tree #tree1
+                    [singleBranchExpand]="singleBranchExpand"
+                    [displayDensity]="density"
+                    [selection]="'Cascading'"
+                    [animationSettings]="animationSettings"
+                    (nodeSelection)="nodeSelection($event)"
+                    (nodeExpanding)="handleNodeExpanding($event)"
+                    (nodeExpanded)="handleNodeExpanded($event)"
+                    (nodeCollapsing)="handleNodeCollapsing($event)"
+                    (nodeCollapsed)="handleNodeCollapsed($event)"
+                    (activeNodeChanged)="activeNodeChanged($event)"
+                    (keydown)="keydown($event)"
+                    class="sample-scroll">
+                    <igx-tree-node [disabled]="true">Disabled node</igx-tree-node>
+                    <igx-tree-node #loadingNode [loading]="true" (expandedChange)="handleRemote(loadingNode, $event)">
+                        Load on demand
+                        <igx-tree-node *ngFor="let item of (asyncItems | async) || [{ ID: 'dummy', CompanyName: ''}]" [disabled]="loadingNode.loading">
+                            {{ item.CompanyName }}
+                        </igx-tree-node>
+                    </igx-tree-node>
+                    <igx-tree-node [disabled]="true">
+                        <a igxTreeNodeLink href="www.google.com">Disabled Link</a>
+                    </igx-tree-node>
+                    <igx-tree-node>Link children
+                        <igx-tree-node #myNode *ngFor="let node of [].constructor(7); let i = index">
+                            <ng-template *ngTemplateOutlet="nodeTemplate; context { $implicit: myNode }"></ng-template>
+                        </igx-tree-node>
+                    </igx-tree-node>
+                    <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="true"
+                        [(selected)]="node.selected">
+                        <div class="sample-template-center">
+                            <igx-icon>face</igx-icon>
+                            <span class="sample-ellipsis">{{ node.ID }}</span>
+                        </div>
+                        <igx-tree-node *ngIf="node.ID === 'FRANS'" [data]="{ ID: 'NA_FRANCO_DETETO'}">NA_FRANCO_DETETO</igx-tree-node>
+                        <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child"
+                            [selected]="true" [expanded]="true" [active]="true">
+                            {{ child.ID }}
+                            <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild"
+                                [(selected)]="leafchild.selected" [expanded]="true" [active]="true">
+                                {{ leafchild.ID }}
+                            </igx-tree-node>
+                        </igx-tree-node>
+                    </igx-tree-node>
+                    <ng-template #nodeTemplate let-node>
+                        <a [igxTreeNodeLink]="node" href="https://google.com">Link to Google</a>
+                    </ng-template>
+                </igx-tree>
+            </div>
+
+            <div igxLayout igxLayoutDir="column" class="tree-container">
+                <p>IgxTree 2: The Branchening</p>
+                <igx-tree>
+                    <igx-tree-node *ngFor="let node of data" [data]="node">
+                        {{ node.CompanyName }}
+                        <igx-tree-node *ngFor="let child of node.ChildCompanies" [data]="child">
+                            {{ child.CompanyName }}
+                            <igx-tree-node *ngFor="let leafchild of child.ChildCompanies" [data]="leafchild">
+                                {{ leafchild.CompanyName }}
+                            </igx-tree-node>
+                        </igx-tree-node>
+                    </igx-tree-node>
+                </igx-tree>
+            </div>
+        </div>
+    </div>
+</div>
