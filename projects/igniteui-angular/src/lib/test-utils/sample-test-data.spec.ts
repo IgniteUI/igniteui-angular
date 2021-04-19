@@ -6,6 +6,8 @@ export class SampleTestData {
 
     public static timeGenerator: Calendar = new Calendar();
     public static today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    // eslint-disable-next-line max-len
+    public static todayFullDate: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 10,  15, 35);
 
     public static stringArray = () => ([
         'Terrance Orta',
@@ -1528,6 +1530,8 @@ export class SampleTestData {
             ID: 1,
             ProductName: 'Ignite UI for JavaScript',
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 15),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', 1),
             Released: false,
             AnotherField: 'a'
         },
@@ -1536,6 +1540,8 @@ export class SampleTestData {
             ID: 2,
             ProductName: 'NetAdvantage',
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', -1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', -1),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'hour', -1),
             Released: true,
             AnotherField: 'a'
         },
@@ -1544,6 +1550,8 @@ export class SampleTestData {
             ID: 3,
             ProductName: 'Ignite UI for Angular',
             ReleaseDate: null,
+            ReleaseDateTime: null,
+            ReleaseTime: null,
             Released: null,
             AnotherField: 'a'
         },
@@ -1552,6 +1560,8 @@ export class SampleTestData {
             ID: 4,
             ProductName: null,
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', -1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', -10),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', -10),
             Released: true,
             AnotherField: 'a'
         },
@@ -1560,6 +1570,8 @@ export class SampleTestData {
             ID: 5,
             ProductName: '',
             ReleaseDate: undefined,
+            ReleaseDateTime: undefined,
+            ReleaseTime: undefined,
             Released: false,
             AnotherField: 'a'
         },
@@ -1568,6 +1580,8 @@ export class SampleTestData {
             ID: 6,
             ProductName: 'Some other item with Script',
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'day', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'second', 20),
             Released: null,
             AnotherField: 'Custom'
         },
@@ -1576,6 +1590,8 @@ export class SampleTestData {
             ID: 7,
             ProductName: null,
             ReleaseDate: SampleTestData.timeGenerator.timedelta(SampleTestData.today, 'month', 1),
+            ReleaseDateTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
+            ReleaseTime: SampleTestData.timeGenerator.timedelta(SampleTestData.todayFullDate, 'minute', +10),
             Released: true,
             AnotherField: 'custoM'
         },
@@ -1584,6 +1600,8 @@ export class SampleTestData {
             ID: 8,
             ProductName: null,
             ReleaseDate: SampleTestData.today,
+            ReleaseDateTime: SampleTestData.todayFullDate,
+            ReleaseTime: SampleTestData.todayFullDate,
             Released: undefined,
             AnotherField: 'custom'
         }
