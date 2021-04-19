@@ -883,18 +883,18 @@ describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
         const childGrid2 = hierarchicalGrid.hgridAPI.getChildGrids(false)[5];
 
         childGrid2.dataRowList.toArray()[0].virtDirRow.scrollTo(7);
-        await wait(DEBOUNCE_TIME);
+        await wait(100);
         fixture.detectChanges();
 
         const child2LastCell = childGrid2.getCellByColumn(0, 'childData2');
         GridFunctions.focusCell(fixture, child2LastCell);
-        await wait(DEBOUNCE_TIME);
+        await wait(100);
         fixture.detectChanges();
 
         const childGridContent =  fixture.debugElement.queryAll(By.css(GRID_CONTENT_CLASS))[2];
 
         UIInteractions.triggerEventHandlerKeyDown('arrowup', childGridContent, false, false, false);
-        await wait(DEBOUNCE_TIME);
+        await wait(100);
         fixture.detectChanges();
 
         const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];

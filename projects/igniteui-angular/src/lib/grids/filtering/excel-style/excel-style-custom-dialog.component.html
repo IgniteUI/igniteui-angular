@@ -14,7 +14,7 @@
     </header>
 
     <article #expressionsContainer class="igx-excel-filter__secondary-main">
-        <ng-container *ngIf="column.dataType === 'date'">
+        <ng-container *ngIf="column.dataType === 'date' || column.dataType === 'dateTime' || column.dataType === 'time'">
             <igx-excel-style-date-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
@@ -27,7 +27,7 @@
             </igx-excel-style-date-expression>
         </ng-container>
 
-        <ng-container *ngIf="column.dataType !== 'date'">
+        <ng-container *ngIf="column.dataType !== 'date' && column.dataType !== 'dateTime' && column.dataType !== 'time'">
             <igx-excel-style-default-expression *ngFor="let expression of expressionsList;"
                 class="igx-excel-filter__condition"
                 [expressionUI]="expression"
