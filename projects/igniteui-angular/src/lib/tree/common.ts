@@ -14,7 +14,7 @@ export interface IgxTree {
     /** @hidden @internal */
     rootNodes: IgxTreeNode<any>[];
     singleBranchExpand: boolean;
-    selection: IGX_TREE_SELECTION_TYPE;
+    selection: IgxTreeSelectionType;
     expandIndicator: TemplateRef<any>;
     animationSettings: ToggleAnimationSettings;
     /** @hidden @internal */
@@ -101,12 +101,12 @@ export interface ITreeNodeToggledEventArgs extends IBaseEventArgs {
 }
 
 // Enums
-export const IGX_TREE_SELECTION_TYPE = mkenum({
+export const IgxTreeSelectionType = mkenum({
     None: 'None',
     BiState: 'BiState',
     Cascading: 'Cascading'
 });
-export type IGX_TREE_SELECTION_TYPE = (typeof IGX_TREE_SELECTION_TYPE)[keyof typeof IGX_TREE_SELECTION_TYPE];
+export type IgxTreeSelectionType = (typeof IgxTreeSelectionType)[keyof typeof IgxTreeSelectionType];
 
 // Token
 export const IGX_TREE_COMPONENT = new InjectionToken<IgxTree>('IgxTreeToken');

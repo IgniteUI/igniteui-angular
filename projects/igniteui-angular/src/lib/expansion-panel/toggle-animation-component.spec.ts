@@ -30,7 +30,7 @@ describe('Toggle animation component', () => {
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, noop);
             player.playCloseAnimation(mockEl);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.CLOSE, mockEl, noop);
-            const mockCB = () => console.log('mock');
+            const mockCB = () => {};
             player.playOpenAnimation(mockEl, mockCB);
             expect(startPlayerSpy).toHaveBeenCalledWith(ANIMATION_TYPE.OPEN, mockEl, mockCB);
             player.playCloseAnimation(mockEl, mockCB);

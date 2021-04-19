@@ -14,7 +14,7 @@ import { takeUntil } from 'rxjs/operators';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from '../../expansion-panel/toggle-animation-component';
 import {
     IGX_TREE_COMPONENT, IgxTree, IgxTreeNode,
-    IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IGX_TREE_SELECTION_TYPE
+    IGX_TREE_NODE_COMPONENT, ITreeNodeTogglingEventArgs, IgxTreeSelectionType
 } from '../common';
 import { IgxTreeSelectionService } from '../tree-selection.service';
 import { IgxTreeNavigationService } from '../tree-navigation.service';
@@ -393,7 +393,7 @@ export class IgxTreeNodeComponent<T> extends ToggleAnimationPlayer implements Ig
      * @hidden @internal
      */
     public get showSelectors() {
-        return this.tree.selection !== IGX_TREE_SELECTION_TYPE.None;
+        return this.tree.selection !== IgxTreeSelectionType.None;
     }
 
     /**

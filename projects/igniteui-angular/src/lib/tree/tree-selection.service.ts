@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './common';
+import { IgxTree, IgxTreeNode, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
 
 /** A collection containing the nodes affected in the selection as well as their direct parents */
 interface CascadeSelectionNodeCollection {
@@ -39,7 +39,7 @@ export class IgxTreeSelectionService {
 
     /** Select the specified node and emit event. */
     public selectNode(node: IgxTreeNode<any>, event?: Event): void {
-        if (this.tree.selection === IGX_TREE_SELECTION_TYPE.None) {
+        if (this.tree.selection === IgxTreeSelectionType.None) {
             return;
         }
         this.emitNodeSelectionEvent([...this.getSelectedNodes(), node], [node], [], event);
@@ -67,7 +67,7 @@ export class IgxTreeSelectionService {
 
     /** Select specified nodes. No event is emitted. */
     public selectNodesWithNoEvent(nodes: IgxTreeNode<any>[], clearPrevSelection = false, shouldEmit = true): void {
-        if (this.tree && this.tree.selection === IGX_TREE_SELECTION_TYPE.Cascading) {
+        if (this.tree && this.tree.selection === IgxTreeSelectionType.Cascading) {
             this.cascadeSelectNodesWithNoEvent(nodes, clearPrevSelection);
             return;
         }
@@ -90,7 +90,7 @@ export class IgxTreeSelectionService {
 
         if (!nodes) {
             this.nodeSelection.clear();
-        } else if (this.tree && this.tree.selection === IGX_TREE_SELECTION_TYPE.Cascading) {
+        } else if (this.tree && this.tree.selection === IgxTreeSelectionType.Cascading) {
             this.cascadeDeselectNodesWithNoEvent(nodes);
         } else {
             nodes.forEach(node => this.nodeSelection.delete(node));
@@ -103,7 +103,7 @@ export class IgxTreeSelectionService {
 
     /** Called on `node.ngOnDestroy` to ensure state is correct after node is removed */
     public ensureStateOnNodeDelete(node: IgxTreeNode<any>): void {
-        if (this.tree?.selection !== IGX_TREE_SELECTION_TYPE.Cascading) {
+        if (this.tree?.selection !== IgxTreeSelectionType.Cascading) {
             return;
         }
         requestAnimationFrame(() => {
@@ -147,7 +147,7 @@ export class IgxTreeSelectionService {
     private emitNodeSelectionEvent(
         newSelection: IgxTreeNode<any>[], added: IgxTreeNode<any>[], removed: IgxTreeNode<any>[], event: Event
     ): boolean {
-        if (this.tree.selection === IGX_TREE_SELECTION_TYPE.Cascading) {
+        if (this.tree.selection === IgxTreeSelectionType.Cascading) {
             this.emitCascadeNodeSelectionEvent(newSelection, added, removed, event);
             return;
         }
@@ -158,7 +158,7 @@ export class IgxTreeSelectionService {
 
         const args: ITreeNodeSelectionEvent = {
             oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false
+            added, removed, event, cancel: false, owner: this.tree
         };
         this.tree.nodeSelection.emit(args);
         if (args.cancel) {
@@ -245,7 +245,7 @@ export class IgxTreeSelectionService {
 
         const args: ITreeNodeSelectionEvent = {
             oldSelection: currSelection, newSelection,
-            added, removed, event, cancel: false
+            added, removed, event, cancel: false, owner: this.tree
         };
 
         this.calculateNodesNewSelectionState(args);

@@ -9,7 +9,7 @@ import { IgxTreeSelectionService } from './tree-selection.service';
 import { TreeTestFunctions } from './tree-functions.spec';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeComponent, IgxTreeModule } from './tree.component';
-import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
+import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
 
 describe('IgxTree - Navigation #treeView', () => {
@@ -36,7 +36,7 @@ describe('IgxTree - Navigation #treeView', () => {
 
         describe('UI Interaction tests - None', () => {
             beforeEach(fakeAsync(() => {
-                tree.selection = IGX_TREE_SELECTION_TYPE.None;
+                tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
             }));
 
@@ -306,7 +306,7 @@ describe('IgxTree - Navigation #treeView', () => {
                 fix = TestBed.createComponent(IgxTreeScrollComponent);
                 fix.detectChanges();
                 tree = fix.componentInstance.tree;
-                tree.selection = IGX_TREE_SELECTION_TYPE.None;
+                tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
             }));
 
@@ -353,7 +353,7 @@ describe('IgxTree - Navigation #treeView', () => {
 
         describe('UI Interaction tests - Disabled Nodes', () => {
             beforeEach(fakeAsync(() => {
-                tree.selection = IGX_TREE_SELECTION_TYPE.None;
+                tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
                 fix.componentInstance.isDisabled = true;
                 fix.detectChanges();
@@ -466,7 +466,7 @@ describe('IgxTree - Navigation #treeView', () => {
 
         describe('UI Interaction tests - igxTreeNodeLink', () => {
             beforeEach(fakeAsync(() => {
-                tree.selection = IGX_TREE_SELECTION_TYPE.None;
+                tree.selection = IgxTreeSelectionType.None;
                 fix.detectChanges();
                 fix.componentInstance.showNodesWithDirective = true;
                 fix.detectChanges();
@@ -568,7 +568,7 @@ describe('IgxTree - Navigation #treeView', () => {
             beforeEach(() => {
                 mockEmitter = jasmine.createSpyObj('emitter', ['emit']);
                 mockTree = jasmine.createSpyObj('tree', [''],
-                    { selection: IGX_TREE_SELECTION_TYPE.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 });
+                    { selection: IgxTreeSelectionType.BiState, activeNodeChanged: mockEmitter, nodes: mockQuery1 });
                 navService.register(mockTree);
             });
 

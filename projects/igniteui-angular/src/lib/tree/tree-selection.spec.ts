@@ -5,7 +5,7 @@ import { EventEmitter, QueryList } from '@angular/core';
 import { IgxTreeComponent, IgxTreeModule } from './tree.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { TreeTestFunctions, TREE_NODE_DIV_SELECTION_CHECKBOX_CSS_CLASS } from './tree-functions.spec';
-import { IgxTree, IGX_TREE_SELECTION_TYPE, ITreeNodeSelectionEvent } from './common';
+import { IgxTree, IgxTreeSelectionType, ITreeNodeSelectionEvent } from './common';
 import { IgxTreeSelectionService } from './tree-selection.service';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeNodeComponent } from './tree-node/tree-node.component';
@@ -32,7 +32,7 @@ describe('IgxTree - Selection #treeView', () => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
-            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+            tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
         }));
 
@@ -44,7 +44,7 @@ describe('IgxTree - Selection #treeView', () => {
                 expect(checkBoxElement).not.toBeNull();
             });
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.None;
+            tree.selection = IgxTreeSelectionType.None;
             fix.detectChanges();
 
             expect(nodes.length).toBe(4);
@@ -55,28 +55,28 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should be able to change node selection to None', () => {
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.BiState);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.BiState);
             const firstNode = tree.nodes.toArray()[0];
             TreeTestFunctions.clickNodeCheckbox(firstNode);
             fix.detectChanges();
             TreeTestFunctions.verifyNodeSelected(firstNode);
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.None;
+            tree.selection = IgxTreeSelectionType.None;
             fix.detectChanges();
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.None);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.None);
             TreeTestFunctions.verifyNodeSelected(firstNode, false, false);
         });
 
         it('Should be able to change node selection to Cascading', () => {
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.BiState);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.BiState);
             const firstNode = tree.nodes.toArray()[0];
             TreeTestFunctions.clickNodeCheckbox(firstNode);
             fix.detectChanges();
             TreeTestFunctions.verifyNodeSelected(firstNode);
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.Cascading);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.Cascading);
             TreeTestFunctions.verifyNodeSelected(firstNode, false);
         });
 
@@ -180,7 +180,7 @@ describe('IgxTree - Selection #treeView', () => {
             fix = TestBed.createComponent(IgxTreeSimpleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
-            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
         }));
 
@@ -194,7 +194,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should be able to change node selection to None', () => {
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.Cascading);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.Cascading);
             TreeTestFunctions.clickNodeCheckbox(tree.nodes.toArray()[10]);
             fix.detectChanges();
 
@@ -203,10 +203,10 @@ describe('IgxTree - Selection #treeView', () => {
             }
             TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[0], false, true, true);
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.None;
+            tree.selection = IgxTreeSelectionType.None;
             fix.detectChanges();
 
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.None);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.None);
             for (let i = 10; i < 14; i++) {
                 TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false, false);
             }
@@ -214,7 +214,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should be able to change node selection to BiState', () => {
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.Cascading);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.Cascading);
             TreeTestFunctions.clickNodeCheckbox(tree.nodes.toArray()[10]);
             fix.detectChanges();
 
@@ -223,10 +223,10 @@ describe('IgxTree - Selection #treeView', () => {
             }
             TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[0], false, true, true);
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+            tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
 
-            expect(tree.selection).toEqual(IGX_TREE_SELECTION_TYPE.BiState);
+            expect(tree.selection).toEqual(IgxTreeSelectionType.BiState);
             for (let i = 10; i < 14; i++) {
                 TreeTestFunctions.verifyNodeSelected(tree.nodes.toArray()[i], false);
             }
@@ -313,7 +313,7 @@ describe('IgxTree - Selection #treeView', () => {
             fix = TestBed.createComponent(IgxTreeSelectionSampleComponent);
             fix.detectChanges();
             tree = fix.componentInstance.tree;
-            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+            tree.selection = IgxTreeSelectionType.BiState;
             fix.detectChanges();
         }));
 
@@ -428,7 +428,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should correctly represent the node`s selection state on click in Cascading mode', () => {
-            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
 
             const firstNode = tree.nodes.toArray()[0];
@@ -471,7 +471,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should correctly represent the node`s selection state when changing node`s selected property in Cascading mode', () => {
-            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
 
             const firstNode = tree.nodes.toArray()[0];
@@ -509,7 +509,7 @@ describe('IgxTree - Selection #treeView', () => {
         });
 
         it('Should correctly represent the node`s selection state when changing data selected property in Cascading mode', () => {
-            tree.selection = IGX_TREE_SELECTION_TYPE.Cascading;
+            tree.selection = IgxTreeSelectionType.Cascading;
             fix.detectChanges();
 
             const firstNode = tree.nodes.toArray()[0];
@@ -562,7 +562,7 @@ describe('IgxTree - Selection #treeView', () => {
             mockQuery.toArray.and.returnValue(mockNodes);
             mockQuery.forEach.and.callFake((cb) => mockNodes.forEach(cb));
 
-            tree.selection = IGX_TREE_SELECTION_TYPE.BiState;
+            tree.selection = IgxTreeSelectionType.BiState;
             (tree.nodes as any) = mockQuery;
         });
 
@@ -598,7 +598,7 @@ describe('IgxTree - Selection #treeView', () => {
         const navService = new IgxTreeNavigationService(treeService, selectionService);
         const mockEmitter: EventEmitter<ITreeNodeSelectionEvent> = jasmine.createSpyObj('emitter', ['emit']);;
         const mockTree: IgxTree = jasmine.createSpyObj('tree', [''],
-            { selection: IGX_TREE_SELECTION_TYPE.BiState, nodeSelection: mockEmitter, nodes: {
+            { selection: IgxTreeSelectionType.BiState, nodeSelection: mockEmitter, nodes: {
                 find: () => true
             } });
         const mockCdr = jasmine.createSpyObj('ChangeDetectorRef', ['markForCheck', 'detectChanges']);

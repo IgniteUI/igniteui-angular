@@ -15,7 +15,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IgxProgressBarModule } from '../progressbar/progressbar.component';
 import {
-    IGX_TREE_COMPONENT, IGX_TREE_SELECTION_TYPE, IgxTree, ITreeNodeToggledEventArgs,
+    IGX_TREE_COMPONENT, IgxTreeSelectionType, IgxTree, ITreeNodeToggledEventArgs,
     ITreeNodeTogglingEventArgs, ITreeNodeSelectionEvent, IgxTreeNode, IgxTreeSearchResolver
 } from './common';
 import { IgxTreeNavigationService } from './tree-navigation.service';
@@ -63,14 +63,14 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
      *
      * @remarks
      * By default the tree selection mode is 'None'
-     * @param selectionMode: IGX_TREE_SELECTION_TYPE
+     * @param selectionMode: IgxTreeSelectionType
      */
     @Input()
     public get selection() {
         return this._selection;
     }
 
-    public set selection(selectionMode: IGX_TREE_SELECTION_TYPE) {
+    public set selection(selectionMode: IgxTreeSelectionType) {
         this._selection = selectionMode;
         this.selectionService.clearNodesSelection();
     }
@@ -258,7 +258,7 @@ export class IgxTreeComponent extends DisplayDensityBase implements IgxTree, OnI
     /** @hidden @internal */
     public forceSelect = [];
 
-    private _selection: IGX_TREE_SELECTION_TYPE = IGX_TREE_SELECTION_TYPE.None;
+    private _selection: IgxTreeSelectionType = IgxTreeSelectionType.None;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
 

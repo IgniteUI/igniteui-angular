@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { IgxTree, IgxTreeNode, IGX_TREE_SELECTION_TYPE } from './common';
+import { IgxTree, IgxTreeNode, IgxTreeSelectionType } from './common';
 import { NAVIGATION_KEYS } from '../core/utils';
 import { IgxTreeService } from './tree.service';
 import { IgxTreeSelectionService } from './tree-selection.service';
@@ -227,7 +227,7 @@ export class IgxTreeNavigationService implements OnDestroy {
     }
 
     private handleSpace(shiftKey = false): void {
-        if (this.tree.selection === IGX_TREE_SELECTION_TYPE.None) {
+        if (this.tree.selection === IgxTreeSelectionType.None) {
             return;
         }
 
