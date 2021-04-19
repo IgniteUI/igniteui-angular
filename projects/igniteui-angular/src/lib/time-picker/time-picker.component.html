@@ -7,7 +7,7 @@
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon fontSet="material">access_time</igx-icon>
+        <igx-icon>access_time</igx-icon>
     </igx-prefix>
 
     <ng-container ngProjectAs="[igxLabel]">
@@ -24,7 +24,7 @@
     </ng-container>
 
     <igx-suffix *ngIf="this.showClearButton" igxRipple (click)="this.clear()">
-        <igx-icon fontSet="material">clear</igx-icon>
+        <igx-icon>clear</igx-icon>
     </igx-suffix>
 </igx-input-group>
 
