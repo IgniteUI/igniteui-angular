@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { ButtonGroupAlignment } from 'igniteui-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ButtonGroupAlignment, IgxButtonGroupComponent } from 'igniteui-angular';
 
 interface IButton {
     ripple?: string;
@@ -40,12 +40,17 @@ class Button {
 })
 
 export class ButtonGroupSampleComponent implements OnInit {
+    @ViewChild('programmatic')
+    private bg: IgxButtonGroupComponent;
+
     public multi = true;
     public alignment: ButtonGroupAlignment = ButtonGroupAlignment.vertical;
     public alignOptions: Button[];
     public fontOptions: Button[];
     public cities: Button[];
     public borders: Button[];
+    public buttons = ['One', 'Two', 'Three', 'Four'];
+    public selectedIndex = 1;
 
     constructor() { }
 
@@ -140,4 +145,18 @@ export class ButtonGroupSampleComponent implements OnInit {
             })
         ];
     }
+
+    public switchContent() {
+        if(this.selectedIndex >= this.buttons.length - 1) {
+            this.selectedIndex = 0;
+        } else {
+            this.selectedIndex++;
+        }
+    }
+
+    public selectLast() {
+        this.selectedIndex = 3;
+        this.bg.selectButton(3);
+    }
+
 }
