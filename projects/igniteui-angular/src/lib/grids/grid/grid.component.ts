@@ -25,10 +25,12 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode } from '../common/enums';
+import { FilterMode, RowPinningPosition } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
+import { RowType } from '../common/row.interface';
 
 let NEXT_ID = 0;
 
@@ -1074,6 +1076,55 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * Returns the `IgxGridRow` by index.
+     *
+     * @example
+     * ```typescript
+     * const myRow = grid.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByIndex(index: number): RowType {
+        if (index < 0 || index >= this.dataView.length) {
+            return undefined;
+        }
+        return this.createRow(index);
+    }
+
+    /**
+     * Returns `IgxGridRow` object by the specified primary key.
+     *
+     * @remarks
+     * Requires that the `primaryKey` property is set.
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey("cell5");
+     * ```
+     * @param keyValue
+     */
+    public getRowByKey(key: any): RowType {
+        const rec = this.primaryKey ?
+            this.filteredSortedData.find(record => record[this.primaryKey] === key) :
+            this.filteredSortedData.find(record => record === key);
+        const index = this.dataView.indexOf(rec);
+        if (index < 0 || index > this.dataView.length) {
+            return undefined;
+        }
+
+        return new IgxGridRow(this, index, rec);
+    }
+
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
+    }
+
+    /**
      * @hidden @internal
      */
     protected get defaultTargetBodyHeight(): number {
@@ -1131,6 +1182,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected _applyGrouping() {
         this._gridAPI.sort_multiple(this._groupingExpressions);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected createRow(index: number): RowType {
+        let row: RowType;
+
+        const rec: any = this.dataView[index];
+
+        if (this.isGroupByRecord(rec)) {
+            row = new IgxGroupByRow(this, index, rec);
+        }
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
+
+        return row;
     }
 
     private _setupNavigationService() {

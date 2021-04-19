@@ -1,61 +1,102 @@
 {
-    "$schema": "../../common/schema/members-changes.schema.json",
-    "changes": [
-        {
-            "member": "onColumnChange",
-            "replaceWith": "columnChange",
-            "definedIn": [
-                "IgxColumnComponent"
-            ]
-        },
-        {
-            "member": "onChunkLoad",
-            "replaceWith": "chunkLoad",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onScrollbarVisibilityChanged",
-            "replaceWith": "scrollbarVisibilityChanged",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onContentSizeChange",
-            "replaceWith": "contentSizeChange",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onDataChanged",
-            "replaceWith": "dataChanged",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onBeforeViewDestroyed",
-            "replaceWith": "beforeViewDestroyed",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onChunkPreload",
-            "replaceWith": "chunkPreload",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onDataChanging",
-            "replaceWith": "dataChanging",
-            "definedIn": [
-                "IgxGridForOfDirective"
-            ]
-        }
-    ]
+  "$schema": "../../common/schema/members-changes.schema.json",
+  "changes": [
+    {
+      "member": "onGridCreated",
+      "replaceWith": "gridCreated",
+      "definedIn": [
+        "IgxRowIslandComponent"
+      ]
+    },
+    {
+      "member": "onGridInitialized",
+      "replaceWith": "gridInitialized",
+      "definedIn": [
+        "IgxRowIslandComponent"
+      ]
+    },
+    {
+      "member": "onDataPreLoad",
+      "replaceWith": "dataPreLoad",
+      "definedIn": [
+        "IgxHierarchicalGridComponent"
+      ]
+    },
+    {
+      "member": "onDataPreLoad",
+      "replaceWith": "dataPreLoad",
+      "definedIn": [
+        "IgxGridComponent"
+      ]
+    },
+    {
+      "member": "onColumnToggled",
+      "replaceWith": "columnToggled",
+      "definedIn": [
+        "IgxColumnActionsComponent"
+      ]
+    },
+    {
+      "member": "onColumnChange",
+      "replaceWith": "columnChange",
+      "definedIn": [
+        "IgxColumnComponent"
+      ]
+    },
+    {
+      "member": "onChunkLoad",
+      "replaceWith": "chunkLoad",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onScrollbarVisibilityChanged",
+      "replaceWith": "scrollbarVisibilityChanged",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onContentSizeChange",
+      "replaceWith": "contentSizeChange",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onDataChanged",
+      "replaceWith": "dataChanged",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onBeforeViewDestroyed",
+      "replaceWith": "beforeViewDestroyed",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onChunkPreload",
+      "replaceWith": "chunkPreload",
+      "definedIn": [
+        "IgxForOfDirective",
+        "IgxGridForOfDirective"
+      ]
+    },
+    {
+      "member": "onDataChanging",
+      "replaceWith": "dataChanging",
+      "definedIn": [
+        "IgxGridForOfDirective"
+      ]
+    }
+  ]
 }
