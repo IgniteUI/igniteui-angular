@@ -145,6 +145,7 @@ import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
 import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-common/picker-icons.common';
+import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
 
@@ -216,6 +217,7 @@ const components = [
     GridColumnPinningSampleComponent,
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
+    GridRowAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,

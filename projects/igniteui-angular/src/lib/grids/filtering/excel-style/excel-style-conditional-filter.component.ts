@@ -168,6 +168,8 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
             case DataType.Percent:
                 return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
             case DataType.Date:
+            case DataType.DateTime:
+            case DataType.Time:
                 return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
             case DataType.Currency:
                 return this.esf.grid.resourceStrings.igx_grid_excel_currency_filter;

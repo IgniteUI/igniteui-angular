@@ -47,6 +47,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
     const sassFiles = update.sassFiles;
+    const tsFiles = update.tsFiles;
     let applyComment = false;
 
     const applyChanges = () => {
@@ -228,6 +229,112 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 host.overwrite(sassPath, newContent);
             }
         }
+    }
+    
+    // update row components imports and typings with new RowType interface
+    const rowsImports = [
+        'IgxGridRowComponent, ',
+        'IgxGridGroupByRowComponent, ',
+        'IgxTreeGridRowComponent, ',
+        'IgxHierarchicalRowComponent, '];
+
+    const rowsImportsNoSpace = [
+            'IgxGridRowComponent,',
+            'IgxGridGroupByRowComponent,',
+            'IgxTreeGridRowComponent,',
+            'IgxHierarchicalRowComponent,'];
+
+    const rowsImportsEnd = [
+        ', IgxGridRowComponent }',
+        ', IgxGridGroupByRowComponent }',
+        ', IgxTreeGridRowComponent }',
+        ', IgxHierarchicalRowComponent }'];
+
+    const rowsImportsEndNewLIne = [
+        'IgxGridRowComponent }',
+        'IgxGridGroupByRowComponent }',
+        'IgxTreeGridRowComponent }',
+        'IgxHierarchicalRowComponent }'];
+
+    const typyingsToReplace = [
+        'as IgxGridRowComponent;',
+        'as IgxGridRowComponent).',
+        ': IgxGridRowComponent',
+
+        'as IgxGridGroupByRowComponent;',
+        'as IgxGridGroupByRowComponent).',
+        ': IgxGridGroupByRowComponent',
+
+        'as IgxTreeGridRowComponent;',
+        'as IgxTreeGridRowComponent).',
+        ': IgxTreeGridRowComponent',
+
+        'as IgxHierarchicalRowComponent;',
+        'as IgxHierarchicalRowComponent).',
+        ': IgxHierarchicalRowComponent'
+    ];
+
+    const replacements = [
+        'as RowType;',
+        'as RowType).',
+        ': RowType'
+    ];
+
+
+    for (const entryPath of tsFiles) {
+        let content = host.read(entryPath).toString();
+        let importChanged = 0;
+
+        rowsImports.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType, ');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('');
+                }
+            }
+        });
+
+        rowsImportsNoSpace.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType,');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('');
+                }
+            }
+        });
+
+        rowsImportsEnd.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, ', RowType }');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join(' }');
+                }
+            }
+        });
+
+        rowsImportsEndNewLIne.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType }');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('}');
+                }
+            }
+        });
+
+        typyingsToReplace.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                content = content.split(n).join(replacements[i % 3]);
+            }
+        });
+        host.overwrite(entryPath, content);
     }
 
     for (const comp of EDITOR_COMPONENTS) {

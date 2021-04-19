@@ -4,8 +4,8 @@ import {
     Input
 } from '@angular/core';
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { DisplayDensity } from '../../../core/density';
+import { IgxInputDirective } from '../../../directives/input/input.directive';
 
 /**
  * @hidden
@@ -19,14 +19,18 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     @Input()
     public displayDensity: DisplayDensity;
 
-    @ViewChild('datePicker', { read: IgxDatePickerComponent, static: true })
-    private datePicker: IgxDatePickerComponent;
+    @ViewChild('input', { read: IgxInputDirective, static: false })
+    private input: IgxInputDirective;
 
     protected get inputValuesElement() {
-        return this.datePicker.getEditElement();
+        return this.input;
     }
 
     public get inputDatePlaceholder(): string {
         return this.grid.resourceStrings['igx_grid_filter_row_date_placeholder'];
+    }
+
+    public get inputTimePlaceholder(): string {
+        return this.grid.resourceStrings['igx_grid_filter_row_time_placeholder'];
     }
 }

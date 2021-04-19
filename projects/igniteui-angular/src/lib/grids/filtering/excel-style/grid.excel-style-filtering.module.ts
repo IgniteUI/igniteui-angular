@@ -35,6 +35,9 @@ import { IgxExcelStyleSelectingComponent } from './excel-style-selecting.compone
 import { IgxExcelStyleClearFiltersComponent } from './excel-style-clear-filters.component';
 import { IgxExcelStyleConditionalFilterComponent } from './excel-style-conditional-filter.component';
 import { IgxDatePickerModule } from '../../../date-picker/date-picker.module';
+import { IgxTimePickerModule } from '../../../time-picker/time-picker.component';
+import { IgxFocusModule } from '../../../directives/focus/focus.directive';
+import { IgxDateTimeEditorModule } from '../../../directives/date-time-editor/date-time-editor.directive';
 
 /**
  * @hidden
@@ -82,6 +85,7 @@ import { IgxDatePickerModule } from '../../../date-picker/date-picker.module';
         IgxButtonModule,
         IgxButtonGroupModule,
         IgxDatePickerModule,
+        IgxTimePickerModule,
         IgxIconModule,
         IgxRippleModule,
         IgxInputGroupModule,
@@ -93,6 +97,8 @@ import { IgxDatePickerModule } from '../../../date-picker/date-picker.module';
         IgxListModule,
         IgxProgressBarModule,
         IgxSelectModule,
+        IgxFocusModule,
+        IgxDateTimeEditorModule
     ],
     entryComponents: [
         IgxGridExcelStyleFilteringComponent

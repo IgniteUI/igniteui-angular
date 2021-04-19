@@ -22,16 +22,16 @@
             "name": "Run migration",
             "request": "launch",
             "type": "node",
-            "cwd": "<directory to apply migrations in>",
+            "cwd": "C:/Users/NAlipiev/Desktop/cli/date-picker",
             "args": [
                 "-r",
                 "ts-node/register",
                 // e.g. "${env:AppData}/npm/node_modules/@angular/cli/bin/ng"
-                "<path/to/ng>", "g",
-                "<../path/to>/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-<number>"
+                "C:\\Users\\NAlipiev\\AppData\\Roaming\\npm\\node_modules\\@angular\\cli\\bin\\ng", "g",
+                "../../../../../Work/git/igniteui-angular/projects/igniteui-angular/migrations/migration-collection.json:migration-20"
             ],
             "env": {
-                "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/migrations/tsconfig.json"
+                "TS_NODE_PROJECT": "C:/Work/git/igniteui-angular/projects/igniteui-angular/migrations/tsconfig.json"
             }
         }
     ]
