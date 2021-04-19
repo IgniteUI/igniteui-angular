@@ -20,8 +20,6 @@ export class WorksheetDataDictionary {
     private _columnWidths: number[];
     private _context: any;
 
-    private _columnTypeInfo: boolean[];
-
     constructor(columnCount: number, columnWidth: number, columnWidthsList: number[]) {
         this._dictionary = {};
         this._widthsDictionary = {};
@@ -29,7 +27,6 @@ export class WorksheetDataDictionary {
         this.dirtyKeyCollections();
 
         this._columnWidths = new Array<number>(columnCount);
-        this._columnTypeInfo = new Array<boolean>(columnCount);
 
         if (columnWidth) {
             this._columnWidths.fill(columnWidth);
@@ -44,14 +41,10 @@ export class WorksheetDataDictionary {
         return this._columnWidths;
     }
 
-    public saveValue(value: any, column: number, isHeader: boolean): number {
-        if (this._columnTypeInfo[column] === undefined && isHeader === false) {
-            this._columnTypeInfo[column] = typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value);
-        }
-
+    public saveValue(value: any, isHeader: boolean): number {
         let sanitizedValue = '';
         const isDate = value instanceof Date;
-        const isSavedAsString = (this._columnTypeInfo[column] || isHeader) && !isDate;
+        const isSavedAsString = isHeader || (typeof value !== 'number' && value !== Number(value) && !Number.isFinite(value) && !isDate);
 
         if (isSavedAsString) {
             sanitizedValue = this.sanitizeValue(value);

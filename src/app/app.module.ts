@@ -148,6 +148,7 @@ import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-c
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
+import { TreeSampleComponent } from './tree/tree.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -244,6 +245,7 @@ const components = [
     AnimationsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
+    TreeSampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
