@@ -22,6 +22,8 @@ import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxGridStateModule } from '../state.directive';
 import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
+import { IgxTimePickerModule } from '../../time-picker/time-picker.component';
+import { IgxDateTimeEditorModule } from '../../directives/date-time-editor/date-time-editor.directive';
 
 
 @NgModule({
@@ -48,7 +50,9 @@ import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
         IgxProgressBarModule,
         IgxSelectModule,
         IgxGridStateModule,
-        IgxSnackbarModule
+        IgxSnackbarModule,
+        IgxTimePickerModule,
+        IgxDateTimeEditorModule
     ],
     exports: [
         CommonModule,
@@ -73,7 +77,9 @@ import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
         IgxButtonGroupModule,
         IgxProgressBarModule,
         IgxSelectModule,
-        IgxSnackbarModule
+        IgxSnackbarModule,
+        IgxTimePickerModule,
+        IgxDateTimeEditorModule
     ]
 })
 export class IgxGridSharedModules {}

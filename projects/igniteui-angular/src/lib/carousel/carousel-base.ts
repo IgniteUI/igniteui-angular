@@ -26,7 +26,7 @@ export interface IgxSlideComponentBase {
 /** @hidden */
 export abstract class IgxCarouselComponentBase {
     /** @hidden */
-    public animationType: CarouselAnimationType = CarouselAnimationType.slide;
+    public animationType = CarouselAnimationType.slide;
 
     /** @hidden */
     protected currentItem: IgxSlideComponentBase;
@@ -36,14 +36,17 @@ export abstract class IgxCarouselComponentBase {
     protected enterAnimationPlayer?: AnimationPlayer;
     /** @hidden */
     protected leaveAnimationPlayer?: AnimationPlayer;
-
-    private animationDuration = 320;
-    private animationPosition = 0;
-    private newDuration = 0;
+    /** @hidden */
+    protected animationDuration = 320;
+    /** @hidden */
+    protected animationPosition = 0;
+    /** @hidden */
+    protected newDuration = 0;
 
     constructor(private builder: AnimationBuilder) {
     }
 
+    /** @hidden */
     protected triggerAnimations() {
         if (this.animationType !== CarouselAnimationType.none) {
             if (this.animationStarted(this.leaveAnimationPlayer) || this.animationStarted(this.enterAnimationPlayer)) {
@@ -57,11 +60,13 @@ export abstract class IgxCarouselComponentBase {
         }
     }
 
-    private animationStarted(animation: AnimationPlayer): boolean {
+    /** @hidden */
+    protected animationStarted(animation: AnimationPlayer): boolean {
         return animation && animation.hasStarted();
     }
 
-    private playAnimations() {
+    /** @hidden */
+    protected playAnimations() {
         this.playLeaveAnimation();
         this.playEnterAnimation();
     }

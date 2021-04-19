@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions, DisplayDensity } from '../../core/density';
 import { mkenum } from '../../core/utils';
+import { IBaseEventArgs } from '../../core/utils';
 
 const IgxButtonType = mkenum({
     Flat: 'flat',
@@ -53,22 +54,16 @@ export class IgxButtonDirective extends DisplayDensityBase {
     private static ngAcceptInputType_type: IgxButtonType | '';
 
     /**
-     * Gets or sets whether the button is selected.
-     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
-     *
-     * @example
-     * ```html
-     * <button igxButton="flat" [selected]="button.selected"></button>
-     * ```
-     */
-    @Input()
-    public selected = false;
-
-    /**
      * Called when the button is clicked.
      */
     @Output()
     public buttonClick = new EventEmitter<any>();
+
+    /**
+     * Called when the button is selected.
+     */
+    @Output()
+    public buttonSelected = new EventEmitter<IButtonEventArgs>();
 
     /**
      * Sets/gets the `role` attribute.
@@ -118,6 +113,38 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * @internal
      */
     private _backgroundColor: string;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    private _selected = false;
+
+    /**
+     * Gets or sets whether the button is selected.
+     * Mainly used in the IgxButtonGroup component and it will have no effect if set separately.
+     *
+     * @example
+     * ```html
+     * <button igxButton="flat" [selected]="button.selected"></button>
+     * ```
+     */
+    @Input()
+    public set selected(value: boolean) {
+        if(this._selected !== value) {
+            if(!this._selected) {
+                this.buttonSelected.emit({
+                    button: this
+                });
+            }
+
+            this._selected = value;
+        }
+    }
+
+    public get selected(): boolean {
+        return this._selected;
+    }
 
     constructor(
         public element: ElementRef,
@@ -192,7 +219,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      *
      * @example
      *  ```html
-     * <button igxButton= "flat" igxLabel="Label"></button>
+     * <button igxButton="flat" igxLabel="Label"></button>
      * ```
      */
     @Input('igxLabel')
@@ -298,6 +325,26 @@ export class IgxButtonDirective extends DisplayDensityBase {
     public get disabledAttribute() {
         return this._disabled ? this._disabled : null;
     }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public select() {
+        this.selected = true;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    public deselect() {
+        this._selected = false;
+    }
+}
+
+export interface IButtonEventArgs extends IBaseEventArgs {
+    button: IgxButtonDirective;
 }
 
 /**
