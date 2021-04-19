@@ -35,7 +35,7 @@ All notable changes for each version of this project will be documented in this 
     - Allows users to render hierarchical data in an easy-to-navigate way. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
     - Features API for handling selection (bi-state and cascading), node activation, node expansion state.
     - Features extensive and easy-to-use keyboard navigation, fully compliant with W3 standards.
-    - To create a tree from an existing data hierarchical data set:
+    - Code example for a tree contructured from a hierarchical data set:
     ```html
         <igx-tree>
             <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="isNodeExpanded(node)" [selected]="isNodeSelected(node)">
