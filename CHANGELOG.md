@@ -34,6 +34,54 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDateTimeEditor`
     - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
+    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
+    - **Breaking Change** - `onValueChange` event is renamed to `valueChange`
+- `IgxDatePicker`
+    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
+        ```html
+            <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxPrefix (click)="datePicker.toggle()">
+                    calendar_view_day
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="datePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-date-picker>
+        ```
+    - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
+    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+    - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
+    - **Breaking Change** - `displayData` is renamed to `displayFormat`.
+    - **Breaking Change** - `dropDownOverlaySettings` and `modalOverlaySettings` are replaced by the `overlaySettings`.
+    - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
+    - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+    - **Breaking Change** - `onDisabledDate` event is removed.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+- `IgxTimePicker`
+    - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
+        ```html
+            <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
+                <label igxLabel>Time: </label>
+                <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
+                    alarm
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="timePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-time-picker>
+        ```
+    - **Breaking Change** - `format` is replaced by `inputFormat`.
+    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
+    - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
+    - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+    - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+- `IgxDateRangePicker`
+    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+    - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`

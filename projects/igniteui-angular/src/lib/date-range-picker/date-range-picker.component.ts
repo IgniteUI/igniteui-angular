@@ -235,17 +235,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
-     * Enables/Disables the `IgxDateRangePickerComponent`.
-     *
-     *  @example
-     * ```html
-     * <igx-date-range-picker [disabled]="'true'"></igx-date-range-picker>
-     * ```
-     */
-    @Input()
-    public disabled = false;
-
-    /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
      *
      *   @example

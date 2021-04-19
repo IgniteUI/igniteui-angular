@@ -89,12 +89,12 @@ With projected inputs:
 
 `IgxDateRangePicker` with first day of the week set to `Monday` and handler when a range selection is made:
 ```html
-<igx-date-range-picker [weekStart]="2" (rangeSelected)="onRangeSelected($event)"></igx-date-range-picker>
+<igx-date-range-picker [weekStart]="2" (valueChange)="onRangeSelected($event)"></igx-date-range-picker>
 ```
 
 `IgxDateRangePicker` that opens a calendar with more than `2` views and also hides days that are not part of each month:
 ```html
-<igx-date-range-picker [monthsViewNumber]="5" [hideOutsideDays]="'true'"></igx-date-range-picker>
+<igx-date-range-picker [displayMonthsCount]="5" [hideOutsideDays]="'true'"></igx-date-range-picker>
 ```
 
 `IgxDateRangePicker` in a `drop-down` mode.
@@ -109,23 +109,26 @@ With projected inputs:
 | Name             | Type               | Description |
 |:-----------------|:-------------------|:------------|
 | doneButtonText   | string             | Changes the default text of the `done` button. It will show up only in `dialog` mode. Default value is `Done`. |
+| displayMonthsCount | number             | Sets the number displayed month views. Default is `2`. |
 | formatter        | function => string | Applies a custom formatter function on the selected or passed date. |
 | hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
 | locale           | string             | Gets the `locale` of the calendar. Default value is `"en"`. |
-| overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 | mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
-| monthsViewNumber | number             | Sets the number displayed month views. Default is `2`. |
+| minValue | Date \| string | The minimum value in a valid range. |
+| maxValue | Date \| string | The maximum value in a valid range. |
+| outlet | IgxOverlayOutletDirective \| ElementRef<any> | Gets/Sets the container used for the popup element.
+| overlaySettings  | OverlaySettings    | Changes the default overlay settings used by the `IgxDateRangePickerComponent`. | 
 | placeholder      | string             | Sets the `placeholder` for single-input `IgxDateRangePickerComponent`. |
 | weekStart        | number             | Sets the start day of the week. Can be assigned to a numeric value or to `WEEKDAYS` enum value. |
 
 ### Outputs
 | Name             | Type                  | Description |
 |:-----------------|:----------------------|:------------|
-| rangeSelected    | IgxDateRangePickerComponent | Emitted when a full range was selected in the `IgxDateRangePickerComponent`. |
-| onOpening        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts opening, cancelable. |
-| onOpened         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is opened.                    |
-| onClosing        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts closing, cancelable. | 
-| onClosed         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is closed.                    |
+| valueChange      | DateRange             | Emitted when the picker's value changes. Used for two-way binding. |
+| opening        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts opening, cancelable. |
+| opened         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is opened.                    |
+| closing        | IBaseCancelableBrowserEventArgs | Emitted when the calendar starts closing, cancelable. | 
+| closed         | IBaseEventArgs        | Emitted when the `IgxDateRangePickerComponent` is closed.                    |
 
 ### Methods
 | Name        | Arguments     | Return Type | Description |
@@ -133,4 +136,4 @@ With projected inputs:
 | open        | n/a           | void           | Opens the date picker's dropdown or dialog. |
 | close       | n/a           | void           | Closes the date picker's dropdown or dialog. |
 | value       | n/a           | DateRange      | Gets/sets the currently selected value / range from the calendar. |
-| selectRange | startDate, endDate | void      | Selects a range of dates, cancels previous selection. |
+| select | startDate, endDate | void      | Selects a range of dates, clears previous selection. |
