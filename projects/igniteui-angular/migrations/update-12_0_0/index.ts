@@ -40,7 +40,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
         TEMPLATE_WARN_MSG: `\n<!-- The following template is not used valid in the new version! -->\n`
      }];
-    const EDITOR_PROPS = ['[mode]', 'mode'];
+    const EDITORS_MODE = ['[mode]', 'mode'];
+    const EDITORS_LABEL = ['[label]', 'label'];
 
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
@@ -232,7 +233,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     for (const comp of EDITOR_COMPONENTS) {
         for (const path of htmlFiles) {
 
-            // Insert a comment for editors old templates
+            // DatePicker and TimePicker don't support templates anymore.
+            // That is why migrations inserts a comment to notify the developer to remove the templates.
             findElementNodes(parseFile(host, path), comp.COMPONENT)
                 .map(editor => findElementNodes([editor], 'ng-template'))
                 .reduce((prev, curr) => prev.concat(curr), [])
@@ -242,6 +244,56 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     const { startTag, file } = offset;
                     addChange(file.url, new FileChange(startTag.start, comp.TEMPLATE_WARN_MSG));
                 });
+
+            // DatePicker and TimePicker default mode is changed to dropdown.
+            // 1. That is why any occurrence of drop down mode is removed and
+            // 2. dialog mode is added for those that didn't explicitly set the mode prop.
+
+            // 1. Remove dropdown mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { file } = offset;
+                getAttribute(offset.node as Element, EDITORS_MODE).forEach(attr => {
+                    const { sourceSpan, value } = attr;
+                    if (value.replace(/'/g,'').replace(/"/g,'') === 'dropdown') {
+                        const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                        addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    }
+                });
+            });
+
+            // 2. Insert dialog mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                addChange(file.url, new FileChange(startTag.end - 1, ' mode="dialog"'));
+            });
+
+
+            // Remove label property and project it as <label igxLabel></label>
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_LABEL))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                getAttribute(offset.node as Element, EDITORS_LABEL).forEach(attr => {
+                    const { sourceSpan, name, value } = attr;
+                    const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                    let label;
+                    if (name.startsWith('[')) {
+                        label = `<label igxLabel>{{${value}}}</label>`;
+                    } else {
+                        label = `<label igxLabel>${value}</label>`;
+                    }
+                    addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    addChange(file.url, new FileChange(startTag.end, label));
+                });
+            });
+
 
             applyChanges();
             changes.clear();

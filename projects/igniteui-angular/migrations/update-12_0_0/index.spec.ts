@@ -1057,4 +1057,302 @@ igx-bottom-nav-header {
     `
         );
     });
+
+    // Custom migrations
+
+    // igxDatePicker
+    it('should remove [mode]=dropdown', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker [mode]="'dropdown'"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker ></igx-date-picker>
+    `
+        );
+    });
+
+    it('should remove mode=dropdown', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker mode="dropdown"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker ></igx-date-picker>
+    `
+        );
+    });
+
+    it('should not remove [mode]=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker [mode]="'dialog'"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker [mode]="'dialog'"></igx-date-picker>
+    `
+        );
+    });
+
+    it('should remove mode=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker mode="dialog"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker mode="dialog"></igx-date-picker>
+    `
+        );
+    });
+
+    it('should add mode=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker mode="dialog"></igx-date-picker>
+    `
+        );
+    });
+
+    it('should remove label property and add it as a child elem', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker label="toRemove"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker><igx-label>toRemove</igx-label></igx-date-picker>
+    `
+        );
+    });
+
+    it('should remove label property and add it as a child elem (interpolation)', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker [label]="boundLabel"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker><igx-label>{{boundLabel}}</igx-label></igx-date-picker>
+    `
+        );
+    });
+
+    // igxTimePicker
+    it('should remove [mode]=dropdown', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker [mode]="'dropdown'"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker ></igx-time-picker>
+    `
+        );
+    });
+
+    it('should remove mode=dropdown', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker mode="dropdown"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker ></igx-time-picker>
+    `
+        );
+    });
+
+    it('should not remove [mode]=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker [mode]="'dialog'"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker [mode]="'dialog'"></igx-time-picker>
+    `
+        );
+    });
+
+    it('should remove mode=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker mode="dialog"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker mode="dialog"></igx-time-picker>
+    `
+        );
+    });
+
+    it('should add mode=dialog', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker mode="dialog"></igx-time-picker>
+    `
+        );
+    });
+
+    it('should remove label property and add it as a child elem', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker label="toRemove"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker><igx-label>toRemove</igx-label></igx-time-picker>
+    `
+        );
+    });
+
+    it('should remove label property and add it as a child elem (interpolation)', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker [label]="boundLabel"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker><igx-label>{{boundLabel}}</igx-label></igx-time-picker>
+    `
+        );
+    });
 });
