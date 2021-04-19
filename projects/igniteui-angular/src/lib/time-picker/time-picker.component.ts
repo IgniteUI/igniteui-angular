@@ -240,6 +240,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @Input()
     public headerOrientation: PickerHeaderOrientation = PickerHeaderOrientation.Horizontal;
 
+    /** @hidden @internal */
+    @Input()
+    public readOnly = false;
+
     /**
      * Emitted after a selection has been done.
      *
