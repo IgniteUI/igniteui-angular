@@ -462,8 +462,8 @@ describe(`DateTimeUtil Unit tests`, () => {
 
     it('should parse dates correctly with parseIsoDate', () => {
         const updateDate = (dateValue: Date, stringValue: string): Date => {
-            const [datePart, timePart] = dateValue.toISOString().split('T');
-            const newDate = new Date(`${datePart}T${stringValue + timePart.substr(stringValue.length, timePart.length)}`);
+            const [datePart] = dateValue.toISOString().split('T');
+            const newDate = new Date(`${datePart}T${stringValue}`);
             newDate.setMilliseconds(0);
             return newDate;
         };

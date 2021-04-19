@@ -1278,8 +1278,7 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
+            datePicker.close();
             tick(400);
             fixture.detectChanges();
 
@@ -1311,8 +1310,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
+            datePicker.close();
             tick(400);
             fixture.detectChanges();
 
