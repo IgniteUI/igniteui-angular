@@ -106,10 +106,10 @@ export class IgxTabsComponent extends IgxTabsDirective {
 
     /** @hidden */
     public realignSelectedIndicator() {
-        // if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
-        //     const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
-        //     this.alignSelectedIndicator(header, 0);
-        // }
+        if (this.selectedIndex >=0 && this.selectedIndex < this.items.length) {
+            const header = this.items.get(this.selectedIndex).headerComponent.nativeElement;
+            this.alignSelectedIndicator(header, 0);
+        }
     }
 
     /** @hidden */
