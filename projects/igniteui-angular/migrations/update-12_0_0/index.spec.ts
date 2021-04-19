@@ -1187,6 +1187,27 @@ igx-bottom-nav-header {
         );
     });
 
+    it('should remove label and labelVisibility properties and add it as a child elem (interpolation) with ngIf', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker [label]="boundLabel" mode="dialog" [labelVisibility]="labelVisibility"></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker  mode="dialog"><label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-date-picker>
+    `
+        );
+    });
+
     // igxTimePicker
     it('should remove [mode]=dropdown', async () => {
         appTree.create(
@@ -1331,6 +1352,27 @@ igx-bottom-nav-header {
         ).toEqual(
             `
     <igx-time-picker  mode="dialog"><label igxLabel>{{boundLabel}}</label></igx-time-picker>
+    `
+        );
+    });
+
+    it('should remove label and labelVisibility properties and add it as a child elem (interpolation) with ngIf', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker [label]="boundLabel" mode="dialog" [labelVisibility]="labelVisibility"></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker  mode="dialog"><label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-time-picker>
     `
         );
     });

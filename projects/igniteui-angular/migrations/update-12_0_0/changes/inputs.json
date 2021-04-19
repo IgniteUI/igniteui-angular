@@ -242,6 +242,14 @@
             }
         },
         {
+            "name": "labelVisibility",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
             "name": "format",
             "replaceWith": "inputFormat",
             "owner": {

@@ -42,6 +42,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
      }];
     const EDITORS_MODE = ['[mode]', 'mode'];
     const EDITORS_LABEL = ['[label]', 'label'];
+    const EDITORS_LABEL_VISIBILITY = ['[labelVisibility]', 'labelVisibility'];
 
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
@@ -337,6 +338,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         host.overwrite(entryPath, content);
     }
 
+    // igxDatePicker & igxTimePicker migrations
     for (const comp of EDITOR_COMPONENTS) {
         for (const path of htmlFiles) {
 
@@ -382,25 +384,32 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
 
             // Remove label property and project it as <label igxLabel></label>
+            // Check also labelVisibility value.
             findElementNodes(parseFile(host, path), comp.COMPONENT)
             .filter(template => hasAttribute(template as Element, EDITORS_LABEL))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
                 const { startTag, file } = offset;
+                let visibilityValue: string | boolean = true;
+                if (hasAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY)) {
+                    const visibility = getAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY);
+                    visibilityValue = visibility[0].value;
+                }
+
                 getAttribute(offset.node as Element, EDITORS_LABEL).forEach(attr => {
                     const { sourceSpan, name, value } = attr;
                     const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
                     let label;
+                    const ngIF = (typeof visibilityValue === 'boolean') ? `` : ` *ngIf="${visibilityValue}"`;
                     if (name.startsWith('[')) {
-                        label = `<label igxLabel>{{${value}}}</label>`;
+                        label = `<label igxLabel${ngIF}>{{${value}}}</label>`;
                     } else {
-                        label = `<label igxLabel>${value}</label>`;
+                        label = `<label igxLabel${ngIF}>${value}</label>`;
                     }
                     addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
                     addChange(file.url, new FileChange(startTag.end, label));
                 });
             });
-
 
             applyChanges();
             changes.clear();
