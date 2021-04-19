@@ -62,14 +62,14 @@ export class TreeGridFormattedValuesFilteringStrategy extends TreeGridFilteringS
         return !this.fields || this.fields.length === 0 || this.fields.some(f => f === fieldName);
     }
 
-    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, grid?: GridType): any {
+    protected getFieldValue(rec: any, fieldName: string, isDate: boolean = false, isTime: boolean = false, grid?: GridType): any {
         const column = grid.getColumnByName(fieldName);
         const hierarchicalRecord = rec as ITreeGridRecord;
         let value = resolveNestedPath(hierarchicalRecord.data, fieldName);
 
         value = column.formatter && this.shouldApplyFormatter(fieldName) ?
             column.formatter(value) :
-            value && isDate ? parseDate(value) : value;
+            value && (isDate || isTime) ? parseDate(value) : value;
 
         return value;
     }

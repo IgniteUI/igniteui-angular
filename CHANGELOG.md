@@ -7,7 +7,12 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
-- `IgxTabs`, `IgxBottomNav`
+    - `IgxGridRowComponent`, `IgxGridGroupByRowComponent`, `IgxTreeGridRowComponent`, `IgxHierarchicalRowComponent` are no longer exposed in the public API. Automatic migration will change these imports with `RowType`.
+    - **Behavioral changes**
+    - `getRowByIndex`, `getRowByKey`, `cell.row` now return an object implemening the `RowType` interface.
+    - `dragData` emitted with `IRowDragEndEventArgs`, `IRowDragStartEventArgs` is now `RowType`
+    - `IRowDragEndEventArgs`, `IRowDragStartEventArgs` now emit `dragElement`, which holds the dragged row html element.
+    - `row` in `IPinRowEventArgs` is now `RowType`
     - **Breaking Change** - `IgxTabs` and `IgxBottomNav` components were completely refactored in order to provide more flexible and descriptive way to define tab headers and contents. Please make sure to update via `ng update` in order to migrate the existing `igx-tabs` and `igx-bottom-nav` definitions to the new ones.
 - `IgxForOfDirective`
     - **Breaking Change** - `IgxForOfDirective` events are renamed as follows:
