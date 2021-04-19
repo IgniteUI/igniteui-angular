@@ -1439,12 +1439,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToDateEditorEvents(): void {
-        fromEvent(this.dateTimeEditor.nativeElement, 'blur')
-            .pipe(takeUntil(this._destroy$))
-            .subscribe(() => {
-                this.value = this.dateTimeEditor.value;
-            });
-
         this.dateTimeEditor.valueChange.pipe(
             takeUntil(this._destroy$)).subscribe(date => {
                 this.value = isDate(this.value) ? this.parseToDate(date) : isDate(date) ? this.toISOString(date) : date;
