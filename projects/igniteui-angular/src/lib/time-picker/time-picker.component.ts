@@ -1216,7 +1216,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private initializeContainer() {
-        this.value = isDate(this.value) ? this._selectedDate : this.toISOString(this._selectedDate);
+        if (isDate(this.value)) {
+            this.value = new Date(this.value);
+            this.value.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
+        } else {
+            this.value = this.toISOString(this._selectedDate);
+        }
         this._onTouchedCallback();
 
         if (this.showHoursList) {
