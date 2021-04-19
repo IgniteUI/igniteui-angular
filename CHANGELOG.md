@@ -52,6 +52,8 @@ All notable changes for each version of this project will be documented in this 
     ```
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Tree-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)
 
+- `IgxHierarchicalGrid`
+    - Added support for exporting hierarchical data.
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
