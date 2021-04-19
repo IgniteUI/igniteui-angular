@@ -161,7 +161,7 @@ export abstract class IgxBaseExporter {
         if (options === undefined || options === null) {
             throw Error('No options provided!');
         }
-        //options.ignoreSorting = true;
+
         this.options = options;
 
         const columns = grid.columnList.toArray();
