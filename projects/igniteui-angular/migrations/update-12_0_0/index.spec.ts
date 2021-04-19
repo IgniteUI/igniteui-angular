@@ -388,7 +388,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onSelection)="change()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onSelection)="change()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
         );
 
@@ -409,7 +409,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onClosing)="close()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onClosing)="close()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
         );
 
@@ -430,7 +430,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onClosed)="close()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onClosed)="close()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
         );
 
@@ -451,7 +451,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onOpening)="open()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onOpening)="open()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
         );
 
@@ -472,7 +472,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onOpened)="open()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onOpened)="open()" mode="dialog" labelVisibility="false"></igx-date-picker>
     `
         );
 
@@ -493,7 +493,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onValidationFailed)="fail()" mode="dialog"></igx-date-picker>
+    <igx-date-picker (onValidationFailed)="fail()" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -514,7 +514,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker (onDisabledDate)="disable()"></igx-date-picker>
+    <igx-date-picker (onDisabledDate)="disable()" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -535,7 +535,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [editorTabIndex]="1" mode="dialog"></igx-date-picker>
+    <igx-date-picker [editorTabIndex]="1" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -556,7 +556,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [labelVisibility]="true" mode="dialog"></igx-date-picker>
+    <igx-date-picker [labelVisibility]="true" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -577,7 +577,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [mask]="string" mode="dialog"></igx-date-picker>
+    <igx-date-picker [mask]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -598,7 +598,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [format]="string" mode="dialog"></igx-date-picker>
+    <igx-date-picker [format]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -619,7 +619,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [displayData]="string" mode="dialog"></igx-date-picker>
+    <igx-date-picker [displayData]="string" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -640,7 +640,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [monthsViewNumber]="3" mode="dialog"></igx-date-picker>
+    <igx-date-picker [monthsViewNumber]="3" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -661,7 +661,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [vertical]="true" mode="dialog"></igx-date-picker>
+    <igx-date-picker [vertical]="true" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -682,7 +682,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [dropDownOverlaySettings]="settings" mode="dialog"></igx-date-picker>
+    <igx-date-picker [dropDownOverlaySettings]="settings" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -703,7 +703,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [modalOverlaySettings]="settings" mode="dialog"></igx-date-picker>
+    <igx-date-picker [modalOverlaySettings]="settings" mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -725,7 +725,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onValueChanged)="change()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onValueChanged)="change()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -746,7 +746,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onClosing)="close()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onClosing)="close()" mode="dialog" labelVisibility="false"></igx-time-picker>
     `
         );
 
@@ -767,7 +767,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onClosed)="close()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onClosed)="close()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -788,7 +788,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onOpening)="open()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onOpening)="open()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -809,7 +809,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onOpened)="open()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onOpened)="open()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -830,7 +830,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker (onValidationFailed)="fail()" mode="dialog"></igx-time-picker>
+    <igx-time-picker (onValidationFailed)="fail()" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -851,7 +851,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [isSpinLoop]="true" mode="dialog"></igx-time-picker>
+    <igx-time-picker [isSpinLoop]="true" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -872,7 +872,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [vertical]="true" mode="dialog"></igx-time-picker>
+    <igx-time-picker [vertical]="true" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -893,7 +893,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [format]="string" mode="dialog"></igx-time-picker>
+    <igx-time-picker [format]="string" mode="dialog" labelVisibility='false'></igx-time-picker>
     `
         );
 
@@ -1040,7 +1040,7 @@ igx-bottom-nav-header {
     // Custom migrations
 
     // igxDatePicker
-    it('should remove [mode]=dropdown', async () => {
+    it('should remove [mode]=dropdown and add default date label', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
@@ -1056,7 +1056,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker ></igx-date-picker>
+    <igx-date-picker ><label igxLabel>Date</label></igx-date-picker>
     `
         );
     });
@@ -1065,7 +1065,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker mode="dropdown"></igx-date-picker>
+    <igx-date-picker mode="dropdown" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -1077,7 +1077,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker ></igx-date-picker>
+    <igx-date-picker></igx-date-picker>
     `
         );
     });
@@ -1086,7 +1086,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker [mode]="'dialog'"></igx-date-picker>
+    <igx-date-picker [mode]="'dialog'" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -1107,7 +1107,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker mode="dialog"></igx-date-picker>
+    <igx-date-picker mode="dialog" labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -1128,7 +1128,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-date-picker></igx-date-picker>
+    <igx-date-picker labelVisibility='false'></igx-date-picker>
     `
         );
 
@@ -1209,7 +1209,7 @@ igx-bottom-nav-header {
     });
 
     // igxTimePicker
-    it('should remove [mode]=dropdown', async () => {
+    it('should remove [mode]=dropdown and add default time label', async () => {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
@@ -1225,7 +1225,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker ></igx-time-picker>
+    <igx-time-picker ><label igxLabel>Time</label></igx-time-picker>
     `
         );
     });
@@ -1234,7 +1234,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker mode="dropdown"></igx-time-picker>
+    <igx-time-picker mode="dropdown" labelVisibility="false"></igx-time-picker>
     `
         );
 
@@ -1246,7 +1246,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-time-picker ></igx-time-picker>
+    <igx-time-picker></igx-time-picker>
     `
         );
     });
@@ -1255,7 +1255,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker [mode]="'dialog'"></igx-time-picker>
+    <igx-time-picker [mode]="'dialog'" labelVisibility="false"></igx-time-picker>
     `
         );
 
@@ -1276,7 +1276,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker mode="dialog"></igx-time-picker>
+    <igx-time-picker mode="dialog" labelVisibility="false"></igx-time-picker>
     `
         );
 
@@ -1297,7 +1297,7 @@ igx-bottom-nav-header {
         appTree.create(
             `/testSrc/appPrefix/component/test.component.html`,
             `
-    <igx-time-picker></igx-time-picker>
+    <igx-time-picker labelVisibility="true"></igx-time-picker>
     `
         );
 

@@ -411,6 +411,17 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                 });
             });
 
+            // If label and labelVisibility are not set this means that we should project default labels: "Date" & "Time"
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_LABEL) &&
+                !hasAttribute(template as Element, EDITORS_LABEL_VISIBILITY))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                addChange(file.url,
+                    new FileChange(startTag.end, `<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
+            });
+
             applyChanges();
             changes.clear();
         }
