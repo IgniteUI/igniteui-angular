@@ -31,6 +31,8 @@ import { GridBaseAPIService } from '../../api.service';
 import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { getLocaleCurrencyCode } from '@angular/common';
+import { SortingDirection } from '../../../data-operations/sorting-expression.interface';
+import { IgxSorting } from '../../../data-operations/sorting-strategy';
 
 /**
  * @hidden
@@ -611,7 +613,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addItems(shouldUpdateSelection);
         }
 
-        this.listData.sort((a, b) => this.sortData(a, b));
+        const sorting = new IgxSorting();
+        const expressions = [{
+            dir: SortingDirection.Asc,
+            fieldName: 'value',
+            ignoreCase: this.column.filteringIgnoreCase,
+            strategy: this.column.sortStrategy
+        }];
+        this.listData = sorting.sort(this.listData, expressions);
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
@@ -754,22 +763,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         blanks.isSpecial = true;
         blanks.isBlanks = true;
         this.listData.unshift(blanks);
-    }
-
-    private sortData(a: FilterListItem, b: FilterListItem) {
-        let valueA = a.value;
-        let valueB = b.value;
-        if (typeof(a) === DataType.String) {
-            valueA = a.value.toUpperCase();
-            valueB = b.value.toUpperCase();
-        }
-        if (valueA < valueB) {
-            return -1;
-        } else if (valueA > valueB) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
