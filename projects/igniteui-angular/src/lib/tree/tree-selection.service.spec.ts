@@ -286,7 +286,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
             expected = {
                 oldSelection: [allNodes[0]], newSelection: [allNodes[0], allNodes[1]],
-                added: [allNodes[1]], removed: [], event: undefined, cancel: false
+                added: [allNodes[1]], removed: [], event: undefined, cancel: false, owner: mockTree
             };
 
             selectionService.selectNode(mockTree.nodes.toArray()[1]);
@@ -497,7 +497,7 @@ describe('IgxTreeSelectionService - Unit Tests #treeView', () => {
 
             expected = {
                 oldSelection: allNodes.slice(1, 4), newSelection: [allNodes[1], allNodes[2], allNodes[3], allNodes[5]],
-                added: [allNodes[5]], removed: [], event: undefined, cancel: false
+                added: [allNodes[5]], removed: [], event: undefined, cancel: false, owner: mockTree
             };
 
             selectionService.selectNode(allNodes[5]);
