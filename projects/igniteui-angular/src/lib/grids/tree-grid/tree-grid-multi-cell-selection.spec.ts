@@ -1004,14 +1004,14 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData1);
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
         fix.detectChanges();
 
         GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
         GridSelectionFunctions.verifySelectedRange(treeGrid, 1, 6, 0, 2);
         expect(treeGrid.getSelectedData()).toEqual(expectedData2);
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(0).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(0).key);
         fix.detectChanges();
 
         GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 1, 6, 0, 2);
@@ -1045,10 +1045,10 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             { Name: 'Yang Wang', Age: 61 }
         ];
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(3).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
         fix.detectChanges();
 
-        treeGrid.toggleRow(treeGrid.getRowByIndex(4).rowID);
+        treeGrid.toggleRow(treeGrid.getRowByIndex(4).key);
         fix.detectChanges();
 
         UIInteractions.simulatePointerOverElementEvent('pointerdown', startCell.nativeElement);

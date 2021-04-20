@@ -105,6 +105,11 @@ export class IgxGridAPIService extends GridBaseAPIService<IgxGridComponent> {
             grid.repositionRowEditingOverlay(grid.gridAPI.crudService.rowInEditMode);
         }
     }
+    public set_grouprow_expansion_state(groupRow: IGroupByRecord, value: boolean) {
+        if (this.grid.isExpandedGroup(groupRow) !== value) {
+            this.groupBy_toggle_group(groupRow);
+        }
+    }
 
     public groupBy_fully_expand_group(groupRow: IGroupByRecord) {
         const state: IGroupByExpandState = this.groupBy_get_expanded_for_group(groupRow);

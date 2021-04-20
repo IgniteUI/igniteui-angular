@@ -89,8 +89,8 @@ export class GridSelectionComponent implements AfterViewInit {
     }
 
     public selectThirdRow() {
-        this.grid1.getRowByIndex(2).selected = this.grid1.getRowByIndex(2).selected ?
-        false : true;
+        const row = this.grid1.getRowByIndex(2);
+        row.selected = !row.selected;
         this.grid1.cdr.detectChanges();
     }
 

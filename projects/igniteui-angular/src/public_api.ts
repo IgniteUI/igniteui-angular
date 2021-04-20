@@ -59,7 +59,7 @@ export * from './lib/banner/banner.component';
 export * from './lib/buttonGroup/buttonGroup.component';
 export * from './lib/calendar/public_api';
 export * from './lib/card/card.component';
-export * from './lib/carousel/carousel.component';
+export * from './lib/carousel/public_api';
 export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
@@ -102,6 +102,7 @@ export * from './lib/date-range-picker/public_api';
 
 export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
+export * from './lib/tree/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums
