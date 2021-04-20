@@ -830,6 +830,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToDateEditorEvents(): void {
+        this.dateTimeEditor.valueChange.pipe(
+            takeUntil(this._destroy$)).subscribe(val => {
+                this.value = val;
+            });
         this.dateTimeEditor.validationFailed.pipe(
             takeUntil(this._destroy$)).subscribe((event) => {
                 this.validationFailed.emit({

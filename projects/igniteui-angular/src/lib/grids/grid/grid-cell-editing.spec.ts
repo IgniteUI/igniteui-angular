@@ -200,7 +200,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value.getTime()).toBe(selectedDate.getTime());
         });
 
-        xit('should be able to change value form date picker input-- date', () => {
+        it('should be able to change value form date picker input-- date', () => {
             const cell = grid.getCellByColumn(0, 'birthday');
             const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
             const selectedDate = new Date('04/12/2017');
@@ -227,7 +227,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value.getTime()).toEqual(selectedDate.getTime());
         });
 
-        xit('should be able to clear value -- date', () => {
+        it('should be able to clear value -- date', () => {
             const cell = grid.getCellByColumn(0, 'birthday');
             const cellDomDate = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[3];
 

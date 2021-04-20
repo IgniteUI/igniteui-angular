@@ -610,7 +610,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeFalsy();
         }));
 
-        it('Should complete the filter when clicking the focusing out the input', fakeAsync(() => {
+        xit('Should complete the filter when focusing out of the input', fakeAsync(() => {
             const filterValue = 'an';
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
 
@@ -623,8 +623,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             grid.nativeElement.focus();
             grid.filteringRow.onInputGroupFocusout();
-            tick(100);
             fix.detectChanges();
+            tick(100);
 
             expect(filterChip.componentInstance.selected).toBeFalsy();
         }));
@@ -2754,7 +2754,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
     });
 });
 
-xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
+describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -4336,7 +4336,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(calendar).toBeNull();
         }));
 
-        xit('Should filter grid through custom date filter dialog.', fakeAsync(() => {
+        it('Should filter grid through custom date filter dialog.', fakeAsync(() => {
             const column = grid.getColumnByName('ReleaseDate');
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
@@ -4467,7 +4467,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
-        xit('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
+        it('Should filter grid through custom date filter dialog when using pipeArgs for the column', fakeAsync(() => {
             fix.componentInstance.data = SampleTestData.excelFilteringData().map(rec => {
                 const newRec = Object.assign({}, rec) as any;
                 newRec.ReleaseDate = rec.ReleaseDate ? rec.ReleaseDate.toISOString() : null;
@@ -4518,7 +4518,7 @@ xdescribe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(grid.filteredData.length).toEqual(1);
         }));
 
-        xit('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
+        it('Should filter grid through custom date filter dialog when using pipeArgs and formatter for the column', fakeAsync(() => {
             const pipe = new DatePipe('fr-FR');
             const formatOptions = {
                 timezone: 'utc',

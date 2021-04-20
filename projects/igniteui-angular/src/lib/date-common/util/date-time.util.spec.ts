@@ -460,7 +460,7 @@ describe(`DateTimeUtil Unit tests`, () => {
             new Date(2020, 3, 2, 0, 0, 0), minValue, maxValue, false, true)).toEqual({ maxValue: true });
     });
 
-    xit('should parse dates correctly with parseIsoDate', () => {
+    it('should parse dates correctly with parseIsoDate', () => {
         const updateDate = (dateValue: Date, stringValue: string): Date => {
             const [datePart] = dateValue.toISOString().split('T');
             const newDate = new Date(`${datePart}T${stringValue}`);

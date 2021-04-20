@@ -415,7 +415,7 @@ describe('igxMask', () => {
 
 describe('igxMaskDirective ControlValueAccessor Unit', () => {
     let mask: IgxMaskDirective;
-    xit('Should correctly implement interface methods', () => {
+    it('Should correctly implement interface methods', () => {
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const platformMock = {
             isIE: false,
@@ -436,7 +436,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         const format = 'CCCCCCCC';
 
         // init
-        mask = new IgxMaskDirective(null, mockParser, null, platformMock as any);
+        mask = new IgxMaskDirective({ nativeElement: {} } as any, mockParser, null, platformMock as any);
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);

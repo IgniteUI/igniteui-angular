@@ -157,7 +157,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @Input()
     @HostBinding('disabled')
     public set disabled(value: boolean) {
-        this._disabled = this.inputGroup.disabled = (value as any === '') || value;
+        this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
     }
     /**
      * Gets the `disabled` property

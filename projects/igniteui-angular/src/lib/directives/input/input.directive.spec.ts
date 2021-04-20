@@ -149,7 +149,7 @@ describe('IgxInput', () => {
         expect(igxInput.value).toBe('test');
     });
 
-    xit('should have a disabled style. Disabled API.', () => {
+    it('should have a disabled style. Disabled API.', () => {
         const fixture = TestBed.createComponent(DisabledInputComponent);
         fixture.detectChanges();
 
