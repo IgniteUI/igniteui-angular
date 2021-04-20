@@ -498,7 +498,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         for (const expression of this.uniqueValues) {
             const value = this.getExpressionValue(expression);
-            if (this.filterValues.has(this.column.dataType === DataType.DateTime? (value as any).toISOString() : value)) {
+            if (this.filterValues.has(value)) {
                 return true;
             }
         }
@@ -571,13 +571,16 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private generateUniqueValues(columnValues: any[]) {
         if (this.column.dataType === DataType.String && this.column.filteringIgnoreCase) {
             const filteredUniqueValues = columnValues.map(s => s?.toString().toLowerCase())
-                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
-                    new Map());
+                .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]), new Map());
             this.uniqueValues = Array.from(filteredUniqueValues.values());
         } else if (this.column.dataType === DataType.DateTime) {
             this.uniqueValues = Array.from(new Set(columnValues.map(v => v.toLocaleString())));
             this.uniqueValues.forEach((d, i) =>  this.uniqueValues[i] = new Date(d));
-        }else {
+        } else if (this.column.dataType === DataType.Time) {
+            this.uniqueValues = Array.from(new Set(columnValues.map(v =>
+                new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds()))));
+            this.uniqueValues.forEach((d, i) =>  this.uniqueValues[i] = new Date(d));
+        } else {
             this.uniqueValues = this.column.dataType === DataType.Date ?
                 uniqueDates(columnValues) : Array.from(new Set(columnValues));
         }
@@ -591,6 +594,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                         new Date(v).toISOString()) ];
                 }
                 return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toISOString() : e.expression.searchVal] ];
+            }, []));
+        } else if (this.column.dataType === DataType.Time) {
+            this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
+                if (e.expression.condition.name === 'in') {
+                    return [ ...arr, ...Array.from((e.expression.searchVal as Set<any>).values()).map(v =>
+                        typeof v === 'string' ? v : new Date(v).toLocaleTimeString()) ];
+                }
+                return [ ...arr, ...[e.expression.searchVal ? e.expression.searchVal.toLocaleTimeString() : e.expression.searchVal] ];
             }, []));
         } else {
             this.filterValues = new Set<any>(this.expressionsList.reduce((arr, e) => {
@@ -702,7 +713,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
                     if (shouldUpdateSelection) {
                         const value = this.getExpressionValue(element);
-                        if (this.filterValues.has(this.column.dataType === DataType.DateTime? (value as any).toISOString() : value)) {
+                        if (this.filterValues.has(value)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
                         }
@@ -816,6 +827,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         let value;
         if (this.column.dataType === DataType.Date) {
             value = element && element.value ? new Date(element.value).toISOString() : element.value;
+        } else if(this.column.dataType === DataType.DateTime) {
+            value = element ? new Date(element).toISOString() : element;
+        } else if(this.column.dataType === DataType.Time) {
+            value = element ? new Date(element).toLocaleTimeString() : element;
         } else {
             value = element;
         }
