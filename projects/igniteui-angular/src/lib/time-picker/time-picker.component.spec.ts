@@ -11,7 +11,7 @@ import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { PlatformUtil } from '../core/utils';
-import { DatePart, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
+import { DatePart } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
@@ -515,7 +515,7 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.timePicker.disabled = false;
                 fixture.detectChanges();
 
-                expect(inputGroup.classes[CSS_CLASS_INPUTGROUP_DISABLED]).toBeUndefined();
+                expect(inputGroup.classes[CSS_CLASS_INPUTGROUP_DISABLED]).toBeFalsy();
             });
 
             it('should highlight selected time', fakeAsync(() => {
