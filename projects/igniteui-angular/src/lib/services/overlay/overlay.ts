@@ -723,6 +723,7 @@ export class IgxOverlayService implements OnDestroy {
             //  is done, 0.75 if 3/4 of the animation is done. As we need to start next animation from where
             //  the previous has finished we need the amount up to 1, therefore we are subtracting what
             //  getPosition() returns from one
+            //  TODO: This assumes opening and closing animations are mirrored.
             const position = 1 - info.openAnimationInnerPlayer.getPosition();
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it her via internal field
