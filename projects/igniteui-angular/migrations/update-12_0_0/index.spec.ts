@@ -610,7 +610,7 @@ igx-bottom-nav-header {
             tree.readContent('/testSrc/appPrefix/component/test.component.html')
         ).toEqual(
             `
-    <igx-date-picker [inputFormat]="string" mode="dialog"></igx-date-picker>
+    <igx-date-picker [displayFormat]="string" mode="dialog"></igx-date-picker>
     `
         );
     });

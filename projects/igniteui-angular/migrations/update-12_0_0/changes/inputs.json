@@ -155,7 +155,7 @@
         },
         {
             "name": "format",
-            "replaceWith": "inputFormat",
+            "replaceWith": "displayFormat",
             "owner": {
                 "selector": "igx-date-picker",
                 "type": "component"

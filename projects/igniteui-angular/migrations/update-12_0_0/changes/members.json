@@ -179,7 +179,7 @@
     },
     {
         "member": "format",
-        "replaceWith": "inputFormat",
+        "replaceWith": "displayFormat",
         "definedIn": [
             "IgxDatePickerComponent"
         ]
