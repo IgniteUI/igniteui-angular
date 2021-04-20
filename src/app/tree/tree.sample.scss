@@ -1,0 +1,70 @@
+.row {
+    display: flex;
+    flex-flow: row;
+}
+
+.sample-template-center {
+    display: flex;
+    align-items: center;
+
+    > * {
+        margin-right: 8px;
+    }
+}
+
+.sample-scroll {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.sample-bottom-gap {
+    margin-bottom: 24px;
+
+    > * {
+        margin-bottom: 16px;
+    }
+}
+
+.sample-ellipsis {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    align-items: center;
+}
+
+.tree-container {
+    margin: 16px;
+    max-width: 350px;
+
+    p {
+        margin-bottom: 8px;
+        font-size: 14px
+    }
+}
+
+.controls {
+    padding: 24px;
+
+    > * {
+        margin-right: 16px;
+    }
+
+    .row {
+        border: 2px solid #d1d1d1;
+        padding: 12px;
+        margin: 12px;
+    }
+}
+
+.sample-search {
+    margin-right: 24px;
+
+    > * {
+        margin-right: 16px;
+    }
+}
+
+.meduim {
+    width: 400px
+}

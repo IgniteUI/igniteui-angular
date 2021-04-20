@@ -19,7 +19,7 @@ export class ExportUtilities {
 
         const keys = new Set(keys1.concat(keys2).concat(keys3));
 
-        return !ExportUtilities.isSpecialData(data) ? Array.from(keys) : [ 'Column 1' ];
+        return !ExportUtilities.isSpecialData(dataEntry) ? Array.from(keys) : [ 'Column 1' ];
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
@@ -49,11 +49,10 @@ export class ExportUtilities {
         return buf;
     }
 
-    public static isSpecialData(data: any[]): boolean {
-        const dataEntry = data[0];
-        return (typeof dataEntry === 'string' ||
-                typeof dataEntry === 'number' ||
-                dataEntry instanceof Date);
+    public static isSpecialData(data: any): boolean {
+        return (typeof data === 'string' ||
+                typeof data === 'number' ||
+                data instanceof Date);
     }
 
     public static hasValue(value: any): boolean {
