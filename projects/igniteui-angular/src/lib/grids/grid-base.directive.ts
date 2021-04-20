@@ -2159,7 +2159,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @internal
      */
     public get isPinningToStart() {
-        return this.pinning.columns !== ColumnPinningPosition.End;
+        return this.pinning.columns && this.pinning.columns !== ColumnPinningPosition.End;
     }
 
     /**
