@@ -19,11 +19,12 @@ export class JSZipWrapper {
     }
 
     /* Asserts the JSZip contains the files it should contain. */
-    public verifyStructure(message = '') {
+    public verifyStructure(isHGrid: boolean = false, message = '') {
         let result = ObjectComparer.AreEqual(this.templateFilesAndFolders, JSZipFiles.templatesNames);
+        const template = isHGrid ? JSZipFiles.hGridDataFilesAndFoldersNames : JSZipFiles.dataFilesAndFoldersNames;
 
         result = (this.hasValues) ?
-                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, JSZipFiles.dataFilesAndFoldersNames) :
+                    result && ObjectComparer.AreEqual(this.dataFilesAndFolders, template) :
                     result && this._filesAndFolders.length === JSZipFiles.templatesNames.length;
 
         expect(result).toBe(true, message + ' Unexpected zip structure!');
@@ -45,12 +46,12 @@ export class JSZipWrapper {
 
     /* Verifies the contents of all data files and asserts the result.
     Optionally, a message can be passed in, which, if specified, will be shown in the beginning of the comparison result. */
-    public async verifyDataFilesContent(expectedData: IFileContent[], message = '') {
+    public async verifyDataFilesContent(expectedData: IFileContent[], message = '', isHGrid = false) {
         let result;
         const msg = (message !== '') ? message + '\r\n' : '';
 
         await this.readDataFiles().then(() => {
-            result = this.compareFiles(this.dataFilesContent, expectedData);
+            result = this.compareFiles(this.dataFilesContent, expectedData, isHGrid);
             expect(result.areEqual).toBe(true, msg + result.differences);
         });
     }
@@ -142,10 +143,10 @@ export class JSZipWrapper {
     }
 
     /* Compares the content of two files based on the provided file type and expected value data. */
-    private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string) {
+    private compareFilesContent(currentContent: string, fileType: ExcelFileTypes, fileData: string, isHGrid) {
         let result = true;
         let differences = '';
-        const expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues);
+        const expectedFile = JSZipFiles.createExpectedXML(fileType, fileData, this.hasValues, isHGrid);
         const expectedContent = expectedFile.content;
         result = ObjectComparer.AreEqualXmls(currentContent, expectedContent);
         if (!result) {
@@ -155,14 +156,14 @@ export class JSZipWrapper {
         return { areEqual: result, differences };
     }
 
-    private compareContent(currentFile: IFileContent, expectedData: string) {
+    private compareContent(currentFile: IFileContent, expectedData: string, isHGrid) {
         let result = true;
         let differences = '';
 
         const fileType = this.getFileTypeByName(currentFile.fileName);
 
         if (fileType !== undefined) {
-            const comparisonResult = this.compareFilesContent(currentFile.fileContent, fileType, expectedData);
+            const comparisonResult = this.compareFilesContent(currentFile.fileContent, fileType, expectedData, isHGrid);
             result = comparisonResult.areEqual;
             if (!result) {
                 differences = comparisonResult.differences;
@@ -174,13 +175,13 @@ export class JSZipWrapper {
     }
 
     /* Compares the contents of the provided files to their expected values. */
-    private compareFiles(actualFilesContent: IFileContent[], expectedFilesData: IFileContent[]) {
+    private compareFiles(actualFilesContent: IFileContent[], expectedFilesData: IFileContent[], isHGrid: boolean = false) {
         let result = true;
         let differences = '';
         for (const current of actualFilesContent) {
             const index = (expectedFilesData !== undefined) ? expectedFilesData.findIndex((f) => f.fileName === current.fileName) : -1;
             const excelData = (index > -1 && expectedFilesData[index] !== undefined) ? expectedFilesData[index].fileContent : '';
-            const comparisonResult = this.compareContent(current, excelData);
+            const comparisonResult = this.compareContent(current, excelData, isHGrid);
             result = result && comparisonResult.areEqual;
             if (!comparisonResult.areEqual) {
                 differences = differences + comparisonResult.differences;

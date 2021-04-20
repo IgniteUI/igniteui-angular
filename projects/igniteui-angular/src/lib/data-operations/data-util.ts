@@ -25,6 +25,8 @@ export const DataType = mkenum({
     Number: 'number',
     Boolean: 'boolean',
     Date: 'date',
+    DateTime: 'dateTime',
+    Time: 'time',
     Currency: 'currency',
     Percent: 'percent'
 });

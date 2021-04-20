@@ -66,8 +66,8 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        const expansionState = this.gridAPI.get_row_expansion_state(this.row.rowData);
-        this.gridAPI.set_row_expansion_state(this.row.rowID, !expansionState, event);
+        const expansionState = this.gridAPI.get_row_expansion_state(this.intRow.rowData);
+        this.gridAPI.set_row_expansion_state(this.intRow.rowID, !expansionState, event);
     }
 
     /**
@@ -109,7 +109,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     public get showExpanderIndicator() {
-        const isGhost = this.row.pinned && this.row.disabled;
-        return !this.editMode && (!this.row.pinned || isGhost);
+        const isGhost = this.intRow.pinned && this.intRow.disabled;
+        return !this.editMode && (!this.intRow.pinned || isGhost);
     }
 }

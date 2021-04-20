@@ -17,7 +17,7 @@
                         ? (summary | summaryFormatter:column.summaries:summaryFormatter)
                         : (isNumberOperand() && summary.key !== 'count')
                         ? (summary.summaryResult | number:column.pipeArgs.digitsInfo:grid.locale)
-                        : (isDateOperand() && summary.key !== 'count')
+                        : ((isDateOperand() || isTimeOperand()) && summary.key !== 'count')
                         ? (summary.summaryResult | date:column.pipeArgs.format:column.pipeArgs.timezone:grid.locale)
                         : (isCurrencyOperand() && summary.key !== 'count')
                         ? (summary.summaryResult | currency:currencyCode:column.pipeArgs.display:column.pipeArgs.digitsInfo:grid.locale)

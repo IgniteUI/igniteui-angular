@@ -16,7 +16,13 @@ import { IgxColumnMovingService } from './moving.service';
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data;
+    }
 
     public get column(): IgxColumnComponent {
         return this.data;
@@ -30,6 +36,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
+    protected _data: any;
     private subscription$: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';

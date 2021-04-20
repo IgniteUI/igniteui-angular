@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { first } from 'rxjs/operators';
-import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IgxRowDirective, IRowDataEventArgs } from '../grid/public_api';
+import { IGridEditDoneEventArgs, IGridEditEventArgs, IgxGridBaseDirective, IRowDataEventArgs } from '../grid/public_api';
+import { IgxRowDirective } from '../row.directive';
 import { GridType } from './grid.interface';
 import { Subject } from 'rxjs';
 import { isEqual } from '../../core/utils';
