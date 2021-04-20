@@ -42,12 +42,12 @@
 </ng-template>
 
 <ng-template #defaultDateUI>
-    <igx-date-picker #datePicker
+    <igx-date-picker #picker
         [(value)]="value"
         [readOnly]="true"
         [outlet]="filteringService.grid.outlet"
         [locale]="filteringService.grid.locale"
-        (click)="expression.condition.isUnary ? null : datePicker.open()"
+        (click)="expression.condition.isUnary ? null : picker.open()"
         type="box"
         [displayFormat]="column.pipeArgs.format"
         [formatter]="column.formatter"
@@ -74,7 +74,7 @@
 </ng-template>
 
 <ng-template #defaultTimeUI>
-    <igx-time-picker #timePicker
+    <igx-time-picker #picker
         [(value)]="value"
         [inputFormat]="column.defaultTimeFormat"
         [locale]="filteringService.grid.locale"
@@ -87,7 +87,7 @@
         (closed)="focusEditElement()"
         (focusout)="onInputGroupFocusout()"
         (keydown)="onInputKeyDown($event)"
-        (click)="expression.condition.isUnary ? null : timePicker.open()">
+        (click)="expression.condition.isUnary ? null : picker.open()">
         <igx-prefix #inputGroupPrefix
         tabindex="0"
         (click)="inputGroupPrefixClick($event)"

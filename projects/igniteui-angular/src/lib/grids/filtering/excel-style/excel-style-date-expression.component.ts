@@ -6,6 +6,8 @@ import {
 import { IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
 import { DisplayDensity } from '../../../core/density';
 import { IgxInputDirective } from '../../../directives/input/input.directive';
+import { IgxDatePickerComponent } from '../../../date-picker/public_api';
+import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 
 /**
  * @hidden
@@ -22,8 +24,11 @@ export class IgxExcelStyleDateExpressionComponent extends IgxExcelStyleDefaultEx
     @ViewChild('input', { read: IgxInputDirective, static: false })
     private input: IgxInputDirective;
 
+    @ViewChild('picker')
+    private picker: IgxDatePickerComponent | IgxTimePickerComponent;
+
     protected get inputValuesElement() {
-        return this.input?.nativeElement;
+        return this.picker?.getEditElement() || this.input?.nativeElement;
     }
 
     public get inputDatePlaceholder(): string {

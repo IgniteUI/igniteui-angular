@@ -27,6 +27,7 @@ import { IgxFilteringService } from '../grid-filtering.service';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { PlatformUtil } from '../../../core/utils';
 
 /**
@@ -107,8 +108,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('inputGroup', { read: ElementRef })
     protected inputGroup: ElementRef;
 
-    @ViewChild('datePicker')
-    protected datePicker: IgxDatePickerComponent;
+    @ViewChild('picker')
+    protected picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
@@ -678,8 +679,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public focusEditElement() {
         if (this.input) {
             this.input.nativeElement.focus();
-        } else if (this.datePicker) {
-            this.datePicker.getEditElement().focus();
+        } else if (this.picker) {
+            this.picker.getEditElement().focus();
         }
     }
 
@@ -819,7 +820,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // if the first check is false and the second is undefined this will return undefined
         // make sure it always returns boolean
         return !!(this.inputGroup && this.inputGroup.nativeElement.contains(child)
-            || this.datePicker && this.datePicker.element.nativeElement.contains(child));
+            || this.picker && this.picker.element.nativeElement.contains(child));
     }
 
     private get isColumnFiltered() {

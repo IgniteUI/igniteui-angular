@@ -14,12 +14,12 @@
     </igx-select-item>
 </igx-select>
 
-<igx-date-picker #datePicker *ngIf="column.dataType === 'date'"
+<igx-date-picker #picker *ngIf="column.dataType === 'date'"
     [(value)]="expressionUI.expression.searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
     [displayDensity]="displayDensity"
-    (click)="datePicker.open()"
+    (click)="picker.open()"
     [readOnly]="true"
     [placeholder]="inputDatePlaceholder"
     [displayFormat]="column.pipeArgs.format"
@@ -31,13 +31,13 @@
      <igx-picker-clear></igx-picker-clear>
 </igx-date-picker>
 
-<igx-time-picker #timePicker *ngIf="column.dataType === 'time'"
+<igx-time-picker #picker *ngIf="column.dataType === 'time'"
     [inputFormat]="column.defaultTimeFormat"
     [(value)]="expressionUI.expression.searchVal"
     [locale]="grid.locale"
     [outlet]="grid.outlet"
     [displayDensity]="displayDensity"
-    (click)="timePicker.open()"
+    (click)="picker.open()"
     [readOnly]="true"
     [placeholder]="inputTimePlaceholder"
     [displayFormat]="column.pipeArgs.format"

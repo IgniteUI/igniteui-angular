@@ -399,7 +399,7 @@ export abstract class DateTimeUtil {
         if (regex.test(value)) {
             const dateNow = new Date().toISOString();
             // eslint-disable-next-line prefer-const
-            let [datePart, timePart] = dateNow.split(timeLiteral);
+            let [datePart, _timePart] = dateNow.split(timeLiteral);
             return new Date(`${datePart}T${value}`);
         }
 
