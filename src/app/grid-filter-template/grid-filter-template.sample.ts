@@ -491,13 +491,19 @@ export class GridFilterTemplateSampleComponent implements OnInit {
     public onInput(input: any, column: IgxColumnComponent) {
         let operand = null;
         let value = input.value;
+
+        if (value === '') {
+            this.grid1.clearFilter(column.field);
+            return;
+        }
+
         switch (column.dataType) {
             case DataType.Number:
                 value = Number.parseInt(value, 10);
                 operand = IgxNumberFilteringOperand.instance().condition('equals');
                 break;
             case DataType.Date:
-                value = value !== '' ? new Date(value) : null;
+                value = new Date(value);
                 operand = IgxDateFilteringOperand.instance().condition('equals');
                 break;
             default:
@@ -505,11 +511,7 @@ export class GridFilterTemplateSampleComponent implements OnInit {
                 break;
         }
 
-        if (value && value !== '') {
-            this.grid1.filter(column.field, value, operand, column.filteringIgnoreCase);
-        } else {
-            this.grid1.clearFilter(column.field);
-        }
+        this.grid1.filter(column.field, value, operand, column.filteringIgnoreCase);
     }
 
     public clearInput(input: any, column: any) {
