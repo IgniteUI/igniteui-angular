@@ -38,8 +38,9 @@
                         tabindex="0"
                         placeholder="Filter..."
                         autocomplete="off"
-                        (input)="onInput(input, column)"/>
-                    <igx-suffix *ngIf="input.value || input.value === '0'" (click)="clearInput(input, column)" tabindex="0">
+                        (input)="onInput(input, column)"
+                        (onKeyDown)="onKeyDown($event)"/>
+                    <igx-suffix *ngIf="input.value || input.value === 0" (click)="clearInput(input, column)" tabindex="0">
                         <igx-icon>clear</igx-icon>
                     </igx-suffix>
                 </igx-input-group>
