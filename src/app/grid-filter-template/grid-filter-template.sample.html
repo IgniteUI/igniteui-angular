@@ -40,7 +40,7 @@
                         autocomplete="off"
                         (input)="onInput(input, column)"
                         (keydown)="onKeyDown($event)"/>
-                    <igx-suffix *ngIf="input.value || input.value === 0" (click)="clearInput(input, column)" tabindex="0">
+                    <igx-suffix *ngIf="input.value" (click)="clearInput(input, column)" tabindex="0">
                         <igx-icon>clear</igx-icon>
                     </igx-suffix>
                 </igx-input-group>
