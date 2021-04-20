@@ -764,15 +764,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
-        if (this._overlayId) {
-            this._overlayService.hide(this._overlayId);
-        }
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
         this._destroy$.next();
         this._destroy$.complete();
-        this._overlayService.detach(this._overlayId);
+        if (this._overlayId) {
+            this._overlayService.detach(this._overlayId);
+        }
     }
 
     /** @hidden @internal */
