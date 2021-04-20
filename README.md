@@ -56,6 +56,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 |tabs|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tabs/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tabs)|||||
 |time picker|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/time-picker/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker)|||||
 |toast|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/toast/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/toast)|||||
+|tree|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)|||||
 |tree grid|Available|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/grids/tree-grid/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/treegrid/tree-grid)|||||
 
 #### Components available in [igniteui-angular-charts](https://www.npmjs.com/package/igniteui-angular-charts)

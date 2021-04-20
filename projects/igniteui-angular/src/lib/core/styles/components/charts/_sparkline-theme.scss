@@ -62,6 +62,7 @@
     $normal-range-fill: null,
 ) {
     $name: 'sparkline';
+    $selector: 'igx-sparkline';
     $sparkline-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -76,6 +77,7 @@
         $theme,
         (
             name: $name,
+            selector: $selector,
             brush: $brush,
             line-thickness: $line-thickness,
             marker-brush: $marker-brush,
