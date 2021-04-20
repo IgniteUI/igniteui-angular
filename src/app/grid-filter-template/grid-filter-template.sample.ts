@@ -515,4 +515,9 @@ export class GridFilterTemplateSampleComponent implements OnInit {
         input.value = null;
         this.grid1.clearFilter(column.field);
     }
+
+    public onKeyDown(event: KeyboardEvent) {
+        event.stopImmediatePropagation();
+    }
+
 }
