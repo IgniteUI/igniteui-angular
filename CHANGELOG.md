@@ -31,6 +31,27 @@ All notable changes for each version of this project will be documented in this 
     - `onDataPreLoad` -> `dataPreLoad`
 
 ### New Features
+- Added `IgxTree` component
+    - Allows users to render hierarchical data in an easy-to-navigate way. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Features API for handling selection (bi-state and cascading), node activation, node expansion state.
+    - Features extensive and easy-to-use keyboard navigation, fully compliant with W3 standards.
+    - Code example for a tree contructured from a hierarchical data set:
+    ```html
+        <igx-tree>
+            <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="isNodeExpanded(node)" [selected]="isNodeSelected(node)">
+                {{ node.text }}
+                <img [src]="node.image" alt="node.imageAlt" />
+                <igx-tree-node *ngFor="let child of node.children" [data]="child" [expanded]="isNodeExpanded(child)" [selected]="isNodeSelected(child)">
+                    {{ child.text }}
+                    <igx-tree-node *ngFor="let leafChild of child.children" [data]="leafChild" [expanded]="isNodeExpanded(leafChild)" [selected]="isNodeSelected(leafChild)">
+                        <a igxTreeNodeLink href="{{leafChild.location}}" target="_blank">{{ leafChild.text }}</a>
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree>
+    ```
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Tree-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)
+
 - `IgxHierarchicalGrid`
     - Added support for exporting hierarchical data.
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
