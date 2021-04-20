@@ -640,7 +640,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 2_:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(0, 0, 0, 2, 0, 0);
+                date = new Date(2010, 10, 10, 2, 0, 0);
                 const longTimeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
                 result = ControlsFunction.formatDate(date, longTimeOptions);
                 const offset = date.getTimezoneOffset();
@@ -973,7 +973,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
-                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: -1 }));
+                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 1 }));
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
             }));

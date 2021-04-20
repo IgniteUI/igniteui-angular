@@ -482,7 +482,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public close(): void {
         if (!this.collapsed) {
             this._overlayService.hide(this._overlayId);
-            // TODO: detach()
         }
     }
 
@@ -641,7 +640,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this._statusChanges$.unsubscribe();
         }
         if (this._overlayId) {
-            this._overlayService.hide(this._overlayId);
+            this._overlayService.detach(this._overlayId);
         }
     }
 
@@ -705,6 +704,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             const overlayEvent = eventArgs as OverlayCancelableEventArgs;
             this.opening.emit(args);
             if (args.cancel) {
+                this._overlayService.detach(this._overlayId);
                 overlayEvent.cancel = true;
                 return;
             }
@@ -724,6 +724,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
 
         this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+            this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
             this.closed.emit({ owner: this });

@@ -511,13 +511,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return null;
     }
 
-    const valueFormat = val.replace(/\d/g, '0');
-    const inputFormat = this.inputFormat.replace(/\w/g, '0');
-    if (new RegExp(valueFormat).test(inputFormat)) {
-      return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
-    }
-
-    return DateTimeUtil.parseIsoDate(val);
+    return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
 
   private getMaskedValue(): string {
