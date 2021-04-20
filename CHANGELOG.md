@@ -30,7 +30,6 @@ All notable changes for each version of this project will be documented in this 
     - `onGridInitialized` -> `gridInitialized`
     - `onDataPreLoad` -> `dataPreLoad`
 
-### New Features
 - `IgxDateTimeEditor`
     - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
@@ -83,6 +82,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 
+
+### New Features
 - Added `IgxTree` component
     - Allows users to render hierarchical data in an easy-to-navigate way. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
     - Features API for handling selection (bi-state and cascading), node activation, node expansion state.
