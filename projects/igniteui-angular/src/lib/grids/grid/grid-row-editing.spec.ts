@@ -1398,7 +1398,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toBe('AAAAAAAAAAA Don Juan De Marco');
         });
 
-        it(`Summaries: Should update summaries after row editing completes`, fakeAsync(() => {
+        xit(`Summaries: Should update summaries after row editing completes`, fakeAsync(() => {
             grid.enableSummaries('OrderDate');
             tick(16);
             fix.detectChanges();
