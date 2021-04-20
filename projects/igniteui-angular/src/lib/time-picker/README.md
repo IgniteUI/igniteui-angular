@@ -89,7 +89,7 @@ The component's action buttons can be templated using the `igxPickerActions` dir
 | `inputFormat` | `string` | The editor's input mask. |
 | `formatter` | `function` | Applied custom formatter on the selected or passed in date. |
 | `spinLoop` | boolean | Determines the spin behavior. By default `spinLoop` is set to true. |
-| `mode` | InteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dropdown picker.|
+| `mode` | PickerInteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dropdown picker.|
 | `overlaySettings` | `OverlaySettings` | Changes the default overlay settings used by the `IgxTimePickerComponent`.
 | `placeholder` | `string` | Sets the placeholder text for empty input.
 | `type` | `IgxInputGroupType` | Determines how the picker will be styled.

@@ -428,6 +428,29 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                     new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
             });
 
+            // Rename InteractionMode to PickerInteractionMode
+            const modeMatches = [{
+                old: ' InteractionMode ',
+                new: ' PickerInteractionMode'
+            },
+            {
+                old: ' InteractionMode,',
+                new: ' PickerInteractionMode,'
+            },
+            {
+                old: ' InteractionMode.',
+                new: ' PickerInteractionMode.'
+            }];
+
+            let content;
+            for (const entryPath of tsFiles) {
+                content = host.read(entryPath).toString();
+                modeMatches.forEach(match => {
+                    content = content.replace(match.old, match.new);
+                });
+                host.overwrite(entryPath, content);
+            }
+
             applyChanges();
             changes.clear();
         }

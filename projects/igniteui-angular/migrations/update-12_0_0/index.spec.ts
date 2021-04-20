@@ -1430,6 +1430,53 @@ igx-bottom-nav-header {
         );
     });
 
+    it('should rename InteractionMode to PickerInteractionMode', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+import { InteractionMode, IgxIconComponent } from 'igniteui-angular';
+import { InteractionMode } from 'igniteui-angular';
+import { IgxIconComponent, InteractionMode } from 'igniteui-angular';
+import { IgxIconComponent, InteractionMode, IgxIconComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'pickers-mode',
+    templateUrl: './test.component.html',
+    styleUrls: ['./test.component.scss']
+})
+export class PickerModeComponent {
+    public mode: InteractionMode = InteractionMode.DropDown;
+}
+`);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+import { PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
+import { PickerInteractionMode } from 'igniteui-angular';
+import { IgxIconComponent, PickerInteractionMode } from 'igniteui-angular';
+import { IgxIconComponent, PickerInteractionMode, IgxIconComponent } from 'igniteui-angular';
+
+@Component({
+    selector: 'pickers-mode',
+    templateUrl: './test.component.html',
+    styleUrls: ['./test.component.scss']
+})
+export class PickerModeComponent {
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+}
+`;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
+
     it('Should update row component types with RowType', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/rows.component.ts', `

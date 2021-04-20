@@ -113,7 +113,7 @@ With projected inputs:
 | formatter        | function => string | Applies a custom formatter function on the selected or passed date. |
 | hideOutsideDays  | boolean            | Sets whether dates that are not part of the current month will be displayed. Default value is `false`. |
 | locale           | string             | Gets the `locale` of the calendar. Default value is `"en"`. |
-| mode             | InteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
+| mode             | PickerInteractionMode    | Sets whether `IgxDateRangePickerComponent` is in dialog or dropdown mode. Default is `dialog` |
 | minValue | Date \| string | The minimum value in a valid range. |
 | maxValue | Date \| string | The maximum value in a valid range. |
 | outlet | IgxOverlayOutletDirective \| ElementRef<any> | Gets/Sets the container used for the popup element.
