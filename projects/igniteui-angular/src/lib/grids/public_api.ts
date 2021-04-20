@@ -5,6 +5,8 @@ export * from './columns/interfaces';
 export * from './common/events';
 export * from './grid-base.directive';
 export * from './grid.common';
+export * from '../grid-public-row';
+export * from '../common/row.interface';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
 export * from './column-actions/column-actions.module';
