@@ -182,7 +182,7 @@ describe('IgxTimePicker', () => {
 
     describe('Interaction tests', () => {
         let fixture: ComponentFixture<any>;
-        let timePickerElement: any;
+        let timePickerElement: DebugElement;
         let inputGroup: DebugElement;
         let input: DebugElement;
         let hourColumn: DebugElement;
@@ -210,9 +210,9 @@ describe('IgxTimePicker', () => {
                 fixture = TestBed.createComponent(IgxTimePickerTestComponent);
                 fixture.detectChanges();
                 timePicker = fixture.componentInstance.timePicker;
-                timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
+                timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER));
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
-                input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUT}`));
+                input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 hourColumn = fixture.debugElement.query(By.css(CSS_CLASS_HOURLIST));
                 toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
                 toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
@@ -237,7 +237,7 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should open the dropdown with `ArrowDown` + `Alt` key press and close it on outside click', fakeAsync(() => {
-                input.nativeElement.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true }));
+                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerElement, true);
                 tick();
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeFalsy();
@@ -281,7 +281,7 @@ describe('IgxTimePicker', () => {
             }));
 
             it('should open/close the dropdown and keep the current selection on Space/Enter key press', fakeAsync(() => {
-                UIInteractions.triggerKeyDownEvtUponElem('Space', input.nativeElement, true);
+                UIInteractions.triggerEventHandlerKeyDown(' ', timePickerElement);
                 tick();
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeFalsy();
@@ -314,7 +314,7 @@ describe('IgxTimePicker', () => {
                 hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges(); hourColumn.triggerEventHandler('wheel', event);
                 fixture.detectChanges();
-                const selectedHour = fixture.componentInstance.date.getHours() - 3;
+                const selectedHour = fixture.componentInstance.date.getHours() + 2;
                 expect((timePicker.value as Date).getHours()).toEqual(selectedHour);
 
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', input.nativeElement, true);
@@ -515,7 +515,7 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.timePicker.disabled = false;
                 fixture.detectChanges();
 
-                expect(inputGroup.classes[CSS_CLASS_INPUTGROUP_DISABLED]).toBeUndefined();
+                expect(inputGroup.classes[CSS_CLASS_INPUTGROUP_DISABLED]).toBeFalsy();
             });
 
             it('should highlight selected time', fakeAsync(() => {
@@ -646,8 +646,7 @@ describe('IgxTimePicker', () => {
     template: `
         <igx-time-picker #picker [value]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue">
         <label igxLabel>Select time</label>
-        </igx-time-picker>
-    `
+        </igx-time-picker>`
 })
 export class IgxTimePickerTestComponent {
     @ViewChild('picker', { read: IgxTimePickerComponent, static: true })

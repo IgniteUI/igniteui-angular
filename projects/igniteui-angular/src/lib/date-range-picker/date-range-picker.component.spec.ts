@@ -36,7 +36,7 @@ const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
 
-fdescribe('IgxDateRangePicker', () => {
+describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
         let mockElement: any;
         let mockElementRef: any;
