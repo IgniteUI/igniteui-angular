@@ -53,29 +53,23 @@ export class IgxRightButtonStyleDirective implements DoCheck {
             if (rightButtonStyle === TabScrollButtonStyle.Hidden
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.Hidden) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.Hidden;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
-                        this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
                 }
             if (rightButtonStyle === TabScrollButtonStyle.NotDisplayed
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.NotDisplayed) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.NotDisplayed;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
-                        this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
                 }
             if (rightButtonStyle === TabScrollButtonStyle.Visible
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.Visible) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.Visible;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
-                        this.renderer.addClass(this.element.nativeElement, this._visibleCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._visibleCss);
                 }
             });
         });
@@ -123,29 +117,23 @@ export class IgxLeftButtonStyleDirective implements DoCheck {
             if (leftButtonStyle === TabScrollButtonStyle.Hidden
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.Hidden) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.Hidden;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
-                        this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
                 }
             if (leftButtonStyle === TabScrollButtonStyle.NotDisplayed
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.NotDisplayed) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.NotDisplayed;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
-                        this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
                 }
             if (leftButtonStyle === TabScrollButtonStyle.Visible
                 && this._tabScrollButtonStyle !== TabScrollButtonStyle.Visible) {
                     this._tabScrollButtonStyle = TabScrollButtonStyle.Visible;
-                    this.ngZone.run(() => {
-                        this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
-                        this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
-                        this.renderer.addClass(this.element.nativeElement, this._visibleCss);
-                    });
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._visibleCss);
                 }
             });
         });
