@@ -17,7 +17,7 @@ import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { By } from '@angular/platform-browser';
 import { PickerInteractionMode } from '../date-common/types';
 
-describe('IgxDatePicker', () => {
+xdescribe('IgxDatePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
