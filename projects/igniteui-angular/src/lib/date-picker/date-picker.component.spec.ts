@@ -1,4 +1,4 @@
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -12,7 +12,10 @@ import { IgxCalendarContainerModule } from '../date-common/calendar-container/ca
 import { IgxDatePickerComponent, IgxDatePickerModule } from './public_api';
 import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs } from '../services/public_api';
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
-import { EventEmitter, QueryList, Renderer2 } from '@angular/core';
+import { Component, DebugElement, EventEmitter, Injectable, QueryList, Renderer2, ViewChild } from '@angular/core';
+import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { By } from '@angular/platform-browser';
+import { PickerInteractionMode } from '../date-common/types';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -225,9 +228,62 @@ describe('IgxDatePicker', () => {
 
         describe('Integration tests', () => {
             describe('Events', () => {
-                it('should be able to cancel opening/closing', () => {
-                    pending('TODO');
-                });
+                let fixture: ComponentFixture<any>;
+                let toggleDirectiveElement: DebugElement;
+                let toggleDirective: IgxToggleDirective;
+                let datePicker: IgxDatePickerComponent;
+                configureTestSuite();
+                beforeAll(waitForAsync(() => {
+                    TestBed.configureTestingModule({
+                        declarations: [
+                            IgxDatePickerTestComponent
+                        ],
+                        imports: [IgxDatePickerModule,
+                            IgxInputGroupModule,
+                            IgxIconModule,
+                            NoopAnimationsModule]
+                    }).compileComponents();
+                }));
+                beforeEach(fakeAsync(() => {
+                    fixture = TestBed.createComponent(IgxDatePickerTestComponent);
+                    fixture.detectChanges();
+                     datePicker = fixture.componentInstance.datePicker;
+                    toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
+                    toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
+                }));
+
+                it('should be able to cancel opening/closing', fakeAsync(() => {
+                    spyOn(datePicker.opening, 'emit').and.callThrough();
+                    spyOn(datePicker.opened, 'emit').and.callThrough();
+                    spyOn(datePicker.closing, 'emit').and.callThrough();
+                    spyOn(datePicker.closed, 'emit').and.callThrough();
+
+                    const openingSub = datePicker.opening.subscribe((event) => event.cancel = true);
+
+                    datePicker.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(toggleDirective.collapsed).toBeTruthy();
+                    expect(datePicker.opening.emit).toHaveBeenCalled();
+                    expect(datePicker.opened.emit).not.toHaveBeenCalled();
+
+                    openingSub.unsubscribe();
+
+                    const closingSub = datePicker.closing.subscribe((event) => event.cancel = true);
+
+                    datePicker.open();
+                    tick();
+                    fixture.detectChanges();
+
+                    datePicker.close();
+                    tick();
+                    fixture.detectChanges();
+                    expect(toggleDirective.collapsed).toBeFalsy();
+                    expect(datePicker.closing.emit).toHaveBeenCalled();
+                    expect(datePicker.closed.emit).not.toHaveBeenCalled();
+
+                    closingSub.unsubscribe();
+                }));
             });
 
             describe('Keyboard navigation', () => {
@@ -308,3 +364,10 @@ describe('IgxDatePicker', () => {
         });
     });
 });
+@Injectable() // Add this to satisfy the compiler
+export class IgxDatePickerTestComponent {
+    @ViewChild('picker', { read: IgxDatePickerComponent, static: true })
+    public datePicker: IgxDatePickerComponent;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+    public date = new Date(2021, 24, 2, 11, 45, 0);
+}
