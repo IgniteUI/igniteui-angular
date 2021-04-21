@@ -31,13 +31,15 @@ All notable changes for each version of this project will be documented in this 
     - `onDataPreLoad` -> `dataPreLoad`
 
 - `IgxDateTimeEditor`
-    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onValueChange` event is renamed to `valueChange`.
     - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
-    - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
+    - **Feature** - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
 - `IgxDatePicker`
-    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
         ```html
@@ -62,7 +64,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onDisabledDate` event is removed.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 - `IgxTimePicker`
-    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
         ```html
@@ -83,7 +86,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
 - `IgxDateRangePicker`
-    - **Breaking Change** - `value` start and end types could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Feature** - `value` start and end accept ISO 8601 string format.
+    - **Breaking Change** - `value` start and end types could be `Date` or `string`.
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
