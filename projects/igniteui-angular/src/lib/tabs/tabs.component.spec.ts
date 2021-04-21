@@ -10,7 +10,7 @@ import { IgxDropDownModule } from '../drop-down/public_api';
 import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
-import { UIInteractions } from '../test-utils/ui-interactions.spec';
+import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
@@ -21,6 +21,7 @@ import { TabsRoutingViewComponentsModule,
     TabsRoutingView4Component,
     TabsRoutingView5Component } from './tabs-routing-view-components.spec';
 import { TabRoutingTestGuard } from './tab-routing-test-guard.spec';
+import { IgxRightButtonStyleDirective } from './tabs.directives';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
 const KEY_LEFT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true });
@@ -48,7 +49,7 @@ describe('IgxTabs', () => {
             declarations: [TabsTestHtmlAttributesComponent, TabsTestComponent, TabsTest2Component, TemplatedTabsTestComponent,
                 TabsRoutingDisabledTestComponent, TabsTestSelectedTabComponent, TabsTestCustomStylesComponent, TabsTestBug4420Component,
                 TabsRoutingTestComponent, TabsTabsOnlyModeTest1Component, TabsTabsOnlyModeTest2Component, TabsDisabledTestComponent,
-                TabsRoutingGuardTestComponent],
+                TabsRoutingGuardTestComponent, TabsContactsComponent],
             imports: [IgxTabsModule, IgxButtonModule, IgxDropDownModule, IgxToggleModule, BrowserAnimationsModule,
                 TabsRoutingViewComponentsModule, RouterTestingModule.withRoutes(testRoutes)],
             providers: [TabRoutingTestGuard]
@@ -823,6 +824,21 @@ describe('IgxTabs', () => {
         });
 
     });
+    it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
+
+        const fixture = TestBed.createComponent(TabsContactsComponent);
+        fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+        fixture.detectChanges();
+
+        const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
+        expect(rightScrollButton.clientWidth).toBeTruthy();
+
+        fixture.componentInstance.contacts.splice(0, 1);
+        fixture.detectChanges();
+        await wait();
+
+        expect(rightScrollButton.clientWidth).toBeFalsy();
+    });
 
 });
 
@@ -1174,4 +1190,35 @@ class TabsDisabledTestComponent {
 })
 class TabsTestHtmlAttributesComponent {
     @ViewChild(IgxTabsComponent, { static: true }) public tabs: IgxTabsComponent;
+}
+
+@Component({
+    template: `
+    <div #wrapperDiv>
+    <igx-tabs>
+        <igx-tab-item *ngFor="let contact of contacts">
+            <igx-tab-header>
+                <span igxTabHeaderLabel>{{contact.Name}}</span>
+            </igx-tab-header>
+            <igx-tab-content>
+            </igx-tab-content>
+        </igx-tab-item>
+    </igx-tabs>
+    </div>`
+})
+export class TabsContactsComponent extends TabsTestComponent {
+    public contacts = [
+        {
+            Name: 'Person 1',
+            Avatar: 'https://randomuser.me/api/portraits/men/43.jpg'
+        },
+        {
+            Name: 'Person 2',
+            Avatar: 'https://randomuser.me/api/portraits/women/66.jpg'
+        },
+        {
+            Name: 'Person 3',
+            Avatar: 'https://randomuser.me/api/portraits/men/92.jpg'
+        }
+    ];
 }
