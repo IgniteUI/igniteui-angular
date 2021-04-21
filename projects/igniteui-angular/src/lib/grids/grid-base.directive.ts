@@ -1480,13 +1480,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set perPage(val: number) {
-        if (val < 0) {
+        if (val < 0 || val === this._perPage) {
             return;
         }
         this.selectionService.clear(true);
         this._perPage = val;
         this.perPageChange.emit(this._perPage);
-        this.page = 0;
+        this.paginate(0);
         this.crudService.endEdit(false);
         this.notifyChanges();
     }
@@ -4130,9 +4130,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginate(this._page + 1);
     }
 
     /**
@@ -4144,9 +4142,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginate(this._page - 1);
     }
 
     /**
@@ -4289,7 +4285,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param val
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
+        if (val < 0 || val > this.totalPages - 1 || val === this._page) {
             return;
         }
 

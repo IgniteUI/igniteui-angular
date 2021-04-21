@@ -123,7 +123,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     protected _page = 0;
     protected _totalRecords: number;
-    protected _selectOptions;
+    protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
     private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
@@ -164,6 +164,9 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set page(value: number) {
+        if (value < 0 || value > this.totalPages - 1 || value === this._page) {
+            return;
+        }
         this._page = value;
         this.pageChange.emit(this._page);
     }
@@ -183,12 +186,15 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set perPage(value: number) {
+        if (value < 0 || value === this._perPage) {
+            return;
+        }
         this._perPage = Number(value);
         this.perPageChange.emit(this._perPage);
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
         this.totalPages = Math.ceil(this.totalRecords / this._perPage);
         if (this.totalPages !== 0 && this.page >= this.totalPages) {
-            this.page = this.totalPages - 1;
+            this.paginate(this.totalPages - 1);
         }
     }
 
@@ -318,9 +324,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginate(this._page + 1);
     }
     /**
      * Goes to the previous page of the `IgxPaginatorComponent`, if the paginator is not already at the first page.
@@ -331,9 +335,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginate(this._page - 1);
     }
     /**
      * Goes to the desired page index.
@@ -345,7 +347,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * @memberof IgxPaginatorComponent
      */
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
+        if (val < 0 || val > this.totalPages - 1 || val === this._page) {
             return;
         }
         this.page = val;
