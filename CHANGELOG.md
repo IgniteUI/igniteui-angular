@@ -31,11 +31,14 @@ All notable changes for each version of this project will be documented in this 
     - `onDataPreLoad` -> `dataPreLoad`
 
 - `IgxDateTimeEditor`
+    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Breaking Change** - `onValueChange` event is renamed to `valueChange`.
+    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
     - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
-    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
-    - **Breaking Change** - `onValueChange` event is renamed to `valueChange`
 - `IgxDatePicker`
+    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
         ```html
             <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
@@ -49,16 +52,18 @@ All notable changes for each version of this project will be documented in this 
             </igx-date-picker>
         ```
     - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `placeholder` defaults to the `inputFormat`
     - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
     - **Breaking Change** - `displayData` is renamed to `displayFormat`.
     - **Breaking Change** - `dropDownOverlaySettings` and `modalOverlaySettings` are replaced by the `overlaySettings`.
-    - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
     - **Breaking Change** - `onDisabledDate` event is removed.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
 - `IgxTimePicker`
+    - **Breaking Change** - `value` type could be `Date` or `string`. It can also accept ISO 8601 string format.
+    - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
         ```html
             <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
@@ -72,15 +77,16 @@ All notable changes for each version of this project will be documented in this 
             </igx-time-picker>
         ```
     - **Breaking Change** - `format` is replaced by `inputFormat`.
+    - **Breaking Change** - `placeholder` defaults to the `inputFormat`
     - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
-    - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
 - `IgxDateRangePicker`
-    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+    - **Breaking Change** - `value` start and end types could be `Date` or `string`. It can also accept ISO 8601 string format.
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
 
 
 ### New Features
