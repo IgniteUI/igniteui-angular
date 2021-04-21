@@ -1,7 +1,8 @@
 /* eslint-disable @angular-eslint/no-conflicting-lifecycle */
 import {
   Directive, Input, ElementRef,
-  Renderer2, NgModule, Output, EventEmitter, Inject, LOCALE_ID, OnChanges, SimpleChanges, DoCheck
+  Renderer2, NgModule, Output, EventEmitter, Inject,
+  LOCALE_ID, OnChanges, SimpleChanges, DoCheck, HostListener
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -11,11 +12,10 @@ import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
 import { PlatformUtil } from '../../core/utils';
-import {
-  DatePickerUtil
-} from '../../date-picker/date-picker.utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
+import { DatePartDeltas } from './date-time-editor.common';
+import { DateTimeUtil } from '../../date-common/util/date-time.util';
 
 /**
  * Date Time Editor provides a functionality to input, edit and format date and time.
@@ -118,11 +118,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    *
    * @example
    * ```html
-   * <input igxDateTimeEditor [isSpinLoop]="false">
+   * <input igxDateTimeEditor [spinLoop]="false">
    * ```
    */
   @Input()
-  public isSpinLoop = true;
+  public spinLoop = true;
 
   /**
    * Set both pre-defined format options such as `shortDate` and `longDate`,
@@ -149,13 +149,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     if (value) {
       this._format = value;
     }
-    const mask = (this.inputFormat || DatePickerUtil.DEFAULT_INPUT_FORMAT)
+    const mask = (this.inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
       .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
     this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
   }
 
   public get inputFormat(): string {
-    return this._format;
+    return this._format || this._inputFormat;
   }
 
   /**
@@ -167,15 +167,28 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * ```
    */
   @Input()
-  public set value(value: Date) {
+  public set value(value: Date | string) {
     this._value = value;
+    this.setDateValue(value);
     this.onChangeCallback(value);
     this.updateMask();
   }
 
-  public get value(): Date {
+  public get value(): Date | string {
     return this._value;
   }
+
+  /**
+   * Delta values used to increment or decrement each editor date part on spin actions.
+   * All values default to `1`.
+   *
+   * @example
+   * ```html
+   * <input igxDateTimeEditor [spinDelta]="{date: 5, minute: 30}">
+   * ```
+   */
+  @Input()
+  public spinDelta: DatePartDeltas;
 
   /**
    * Emitted when the editor's value has changed.
@@ -186,7 +199,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    * ```
    */
   @Output()
-  public valueChange = new EventEmitter<Date>();
+  public valueChange = new EventEmitter<Date | string>();
 
   /**
    * Emitted when the editor is not within a specified range or when the editor's value is in an invalid state.
@@ -199,18 +212,32 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Output()
   public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
-  private _value: Date;
   private _format: string;
+  private _oldValue: Date;
+  private _dateValue: Date;
+  private _onClear: boolean;
   private document: Document;
   private _isFocused: boolean;
   private _inputFormat: string;
-  private _minValue: string | Date;
-  private _maxValue: string | Date;
-  private _oldValue: Date | string;
+  private _value: Date | string;
+  private _minValue: Date | string;
+  private _maxValue: Date | string;
   private _inputDateParts: DatePartInfo[];
+  private _datePartDeltas: DatePartDeltas = {
+    date: 1,
+    month: 1,
+    year: 1,
+    hour: 1,
+    minute: 1,
+    second: 1
+  };
   private onTouchCallback: (...args: any[]) => void = noop;
   private onChangeCallback: (...args: any[]) => void = noop;
   private onValidatorChange: (...args: any[]) => void = noop;
+
+  private get datePartDeltas(): DatePartDeltas {
+    return Object.assign({}, this._datePartDeltas, this.spinDelta);
+  }
 
   private get emptyMask(): string {
     return this.maskParser.applyMask(null, this.maskOptions);
@@ -243,6 +270,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
         || p.type === DatePart.Seconds);
   }
 
+  private get dateValue() {
+    return this._dateValue;
+  }
+
   constructor(
     protected renderer: Renderer2,
     protected elementRef: ElementRef,
@@ -255,9 +286,26 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.locale = this.locale || this._locale;
   }
 
+  @HostListener('wheel', ['$event'])
+  public onWheel(event: WheelEvent) {
+    if (!this._isFocused) {
+      return;
+    }
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.deltaY > 0) {
+      this.decrement();
+    } else {
+      this.increment();
+    }
+  }
+
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
-    if (changes['inputFormat'] || changes['locale']) {
+    if (changes['locale'] && !this._format) {
+      this._inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    }
+    if (changes['inputFormat']) {
       this.updateInputFormat();
     }
   }
@@ -271,44 +319,46 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** Clear the input element value. */
   public clear(): void {
+    this._onClear = true;
     this.updateValue(null);
+    this.setSelectionRange(0, this.inputValue.length);
+    this._onClear = false;
   }
 
   /**
    * Increment specified DatePart.
    *
-   * @param datePart The optional DatePart to increment. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param datePart The optional DatePart to increment. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param delta The optional delta to increment by. Overrides `spinDelta`.
    */
-  public increment(datePart?: DatePart): void {
-    const targetDatePart = this.targetDatePart;
-    if (!targetDatePart) {
-        return;
+  public increment(datePart?: DatePart, delta?: number): void {
+    const targetPart = datePart || this.targetDatePart;
+    if (!targetPart) {
+      return;
     }
-    const newValue = datePart
-      ? this.spinValue(datePart, 1)
-      : this.spinValue(targetDatePart, 1);
-    this.updateValue(newValue ? newValue : new Date());
+    const newValue = this.trySpinValue(targetPart, delta);
+    this.updateValue(newValue);
   }
 
   /**
    * Decrement specified DatePart.
    *
-   * @param datePart The optional DatePart to decrement. Defaults to Date or Hours(when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param datePart The optional DatePart to decrement. Defaults to Date or Hours (when Date is absent from the inputFormat - ex:'HH:mm').
+   * @param delta The optional delta to decrement by. Overrides `spinDelta`.
    */
-  public decrement(datePart?: DatePart): void {
-    const targetDatePart = this.targetDatePart;
-    if (!targetDatePart) {
-        return;
+  public decrement(datePart?: DatePart, delta?: number): void {
+    const targetPart = datePart || this.targetDatePart;
+    if (!targetPart) {
+      return;
     }
-    const newValue = datePart
-      ? this.spinValue(datePart, -1)
-      : this.spinValue(targetDatePart, -1);
-    this.updateValue(newValue ? newValue : new Date());
+    const newValue = this.trySpinValue(targetPart, delta, true);
+    this.updateValue(newValue);
   }
 
   /** @hidden @internal */
   public writeValue(value: any): void {
     this._value = value;
+    this.setDateValue(value);
     this.updateMask();
   }
 
@@ -318,36 +368,33 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       return { value: true };
     }
 
-    const maxValueAsDate = this.isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
-    const minValueAsDate = this.isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
-    if (minValueAsDate
-      && DatePickerUtil.lessThanMinValue(
-        control.value, minValueAsDate, this.hasTimeParts, this.hasDateParts)) {
-      return { minValue: true };
-    }
-    if (maxValueAsDate
-      && DatePickerUtil.greaterThanMaxValue(
-        control.value, maxValueAsDate, this.hasTimeParts, this.hasDateParts)) {
-      return { maxValue: true };
+    let errors = {};
+    const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(valueDate,
+        minValueDate, maxValueDate,
+        this.hasTimeParts, this.hasDateParts);
     }
 
-    return null;
+    return Object.keys(errors).length > 0 ? errors : null;
   }
 
   /** @hidden @internal */
   public registerOnValidatorChange?(fn: () => void): void {
     this.onValidatorChange = fn;
-    }
+  }
 
   /** @hidden @internal */
   public registerOnChange(fn: any): void {
- this.onChangeCallback = fn;
-}
+    this.onChangeCallback = fn;
+  }
 
   /** @hidden @internal */
   public registerOnTouched(fn: any): void {
- this.onTouchCallback = fn;
-}
+    this.onTouchCallback = fn;
+  }
 
   /** @hidden @internal */
   public setDisabledState?(_isDisabled: boolean): void { }
@@ -357,13 +404,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     super.onInputChanged(isComposing);
     if (this.inputIsComplete()) {
       const parsedDate = this.parseDate(this.inputValue);
-      if (this.isValidDate(parsedDate)) {
+      if (DateTimeUtil.isValidDate(parsedDate)) {
         this.updateValue(parsedDate);
       } else {
-        const oldValue = this.value && new Date(this.value.getTime());
-        const args = { oldValue, newValue: parsedDate, userInput: this.inputValue };
+        const oldValue = this.value && new Date(this.dateValue.getTime());
+        const args: IgxDateTimeEditorEventArgs = { oldValue, newValue: parsedDate, userInput: this.inputValue };
         this.validationFailed.emit(args);
-        if (args.newValue?.getTime && args.newValue.getTime() !== oldValue.getTime()) {
+        if (DateTimeUtil.isValidDate(args.newValue)) {
           this.updateValue(args.newValue);
         } else {
           this.updateValue(null);
@@ -376,11 +423,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onKeyDown(event: KeyboardEvent): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     super.onKeyDown(event);
     const key = event.key;
 
     if (event.altKey) {
-        return;
+      return;
     }
 
     if (key === this.platform.KEYMAP.ARROW_DOWN || key === this.platform.KEYMAP.ARROW_UP) {
@@ -397,6 +447,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public onFocus(): void {
+    if (this.nativeElement.readOnly) {
+      return;
+    }
     this._isFocused = true;
     this.onTouchCallback();
     this.updateMask();
@@ -412,58 +465,76 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
       this.updateMask();
     }
 
+    // TODO: think of a better way to set displayValuePipe in mask directive
+    if (this.displayValuePipe) {
+      return;
+    }
+
     super.onBlur(value);
   }
 
   /** @hidden @internal */
   public updateMask(): void {
+    if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
+      if (!this._isFocused) {
+        this.inputValue = '';
+      }
+      return;
+    }
+
     if (this._isFocused) {
-      if (!this.value) {
-            return;
-        }
       // store the cursor position as it will be moved during masking
       const cursor = this.selectionEnd;
       this.inputValue = this.getMaskedValue();
       this.setSelectionRange(cursor);
     } else {
-      if (!this.value || !this.isValidDate(this.value)) {
+      if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
         this.inputValue = '';
+        return;
+      }
+      if (this.displayValuePipe) {
+        // TODO: remove when formatter func has been deleted
+        this.inputValue = this.displayValuePipe.transform(this.value);
         return;
       }
       const format = this.displayFormat || this.inputFormat;
       if (format) {
-        this.inputValue = DatePickerUtil.formatDate(this.value, format.replace('tt', 'aa'), this.locale);
+        this.inputValue = DateTimeUtil.formatDate(this.dateValue, format.replace('tt', 'aa'), this.locale);
       } else {
-        // TODO: formatter function?
-        this.inputValue = this.value.toLocaleString();
+        this.inputValue = this.dateValue.toLocaleString();
       }
     }
   }
 
-  // TODO: move parseDate to utils
-  public parseDate(val: string): Date | null {
+  private parseDate(val: string): Date | null {
     if (!val) {
-        return null;
+      return null;
     }
-    return DatePickerUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
+
+    return DateTimeUtil.parseValueFromMask(val, this._inputDateParts, this.promptChar);
   }
 
   private getMaskedValue(): string {
     let mask = this.emptyMask;
-    for (const part of this._inputDateParts) {
+    if (DateTimeUtil.isValidDate(this.value)) {
+      for (const part of this._inputDateParts) {
         if (part.type === DatePart.Literal) {
-            continue;
+          continue;
         }
-      const targetValue = this.getPartValue(part, part.format.length);
-      mask = this.maskParser.replaceInMask(mask, targetValue, this.maskOptions, part.start, part.end).value;
+        const targetValue = this.getPartValue(part, part.format.length);
+        mask = this.maskParser.replaceInMask(mask, targetValue, this.maskOptions, part.start, part.end).value;
+      }
+      return mask;
     }
-
+    if (!this.inputIsComplete() || !this._onClear) {
+      return this.inputValue;
+    }
     return mask;
   }
 
   private updateInputFormat(): void {
-    const defPlaceholder = this.inputFormat || DatePickerUtil.getDefaultInputFormat(this.locale);
-    this._inputDateParts = DatePickerUtil.parseDateTimeFormat(this.inputFormat);
+    const defPlaceholder = this.inputFormat || DateTimeUtil.getDefaultInputFormat(this.locale);
+    this._inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
     this.inputFormat = this._inputDateParts.map(p => p.format).join('');
     if (!this.nativeElement.placeholder || this._inputFormat !== this.inputFormat) {
       this.renderer.setAttribute(this.nativeElement, 'placeholder', defPlaceholder);
@@ -473,73 +544,81 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this._inputFormat = this.inputFormat;
   }
 
-  // TODO: move isDate to utils
-  private isDate(value: any): value is Date {
-    return value instanceof Date && typeof value === 'object';
-  }
-
   private valueInRange(value: Date): boolean {
     if (!value) {
-        return false;
-    }
-    const maxValueAsDate = this.isDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
-    const minValueAsDate = this.isDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
-    if (minValueAsDate
-      && DatePickerUtil.lessThanMinValue(
-        value, minValueAsDate, this.hasTimeParts, this.hasDateParts)) {
-      return false;
-    }
-    if (maxValueAsDate
-      && DatePickerUtil.greaterThanMaxValue(
-        value, maxValueAsDate, this.hasTimeParts, this.hasDateParts)) {
       return false;
     }
 
-    return true;
+    let errors = {};
+    const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
+    const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
+    if (minValueDate || maxValueDate) {
+      errors = DateTimeUtil.validateMinMax(value,
+        this.minValue, this.maxValue,
+        this.hasTimeParts, this.hasDateParts);
+    }
+
+    return Object.keys(errors).length === 0;
   }
 
   private spinValue(datePart: DatePart, delta: number): Date {
-    if (!this.value || !this.isValidDate(this.value)) {
-        return null;
+    if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
+      return null;
     }
-    const newDate = new Date(this.value.getTime());
+    const newDate = new Date(this.dateValue.getTime());
     switch (datePart) {
       case DatePart.Date:
-        DatePickerUtil.spinDate(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinDate(delta, newDate, this.spinLoop);
         break;
       case DatePart.Month:
-        DatePickerUtil.spinMonth(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinMonth(delta, newDate, this.spinLoop);
         break;
       case DatePart.Year:
-        DatePickerUtil.spinYear(delta, newDate);
+        DateTimeUtil.spinYear(delta, newDate);
         break;
       case DatePart.Hours:
-        DatePickerUtil.spinHours(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinHours(delta, newDate, this.spinLoop);
         break;
       case DatePart.Minutes:
-        DatePickerUtil.spinMinutes(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinMinutes(delta, newDate, this.spinLoop);
         break;
       case DatePart.Seconds:
-        DatePickerUtil.spinSeconds(delta, newDate, this.isSpinLoop);
+        DateTimeUtil.spinSeconds(delta, newDate, this.spinLoop);
         break;
       case DatePart.AmPm:
         const formatPart = this._inputDateParts.find(dp => dp.type === DatePart.AmPm);
         const amPmFromMask = this.inputValue.substring(formatPart.start, formatPart.end);
-        return DatePickerUtil.spinAmPm(newDate, this.value, amPmFromMask);
+        return DateTimeUtil.spinAmPm(newDate, this.dateValue, amPmFromMask);
     }
 
     return newDate;
   }
 
+  private trySpinValue(datePart: DatePart, delta?: number, negative = false) {
+    if (!delta) {
+      // default to 1 if a delta is set to 0 or any other falsy value
+      delta = this.datePartDeltas[datePart] || 1;
+    }
+    const spinValue = negative ? -Math.abs(delta) : Math.abs(delta);
+    return this.spinValue(datePart, spinValue) || new Date();
+  }
+
+  private setDateValue(value: Date | string) {
+    this._dateValue = DateTimeUtil.isValidDate(value)
+      ? value
+      : this.parseDate(value);
+  }
+
   private updateValue(newDate: Date): void {
-    this._oldValue = this.value;
+    this._oldValue = this.dateValue;
     this.value = newDate;
 
-    if (this.value && !this.valueInRange(this.value)) {
-      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.value, userInput: this.inputValue });
+    // TODO: should we emit events here?
+    if (this.dateValue && !this.valueInRange(this.dateValue)) {
+      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
     }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
-      this.valueChange.emit(this.value);
+      this.valueChange.emit(this.dateValue);
     }
   }
 
@@ -559,36 +638,36 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     const datePart = datePartInfo.type;
     switch (datePart) {
       case DatePart.Date:
-        maskedValue = this.value.getDate();
+        maskedValue = this.dateValue.getDate();
         break;
       case DatePart.Month:
         // months are zero based
-        maskedValue = this.value.getMonth() + 1;
+        maskedValue = this.dateValue.getMonth() + 1;
         break;
       case DatePart.Year:
         if (partLength === 2) {
           maskedValue = this.prependValue(
-            parseInt(this.value.getFullYear().toString().slice(-2), 10), partLength, '0');
+            parseInt(this.dateValue.getFullYear().toString().slice(-2), 10), partLength, '0');
         } else {
-          maskedValue = this.value.getFullYear();
+          maskedValue = this.dateValue.getFullYear();
         }
         break;
       case DatePart.Hours:
         if (datePartInfo.format.indexOf('h') !== -1) {
           maskedValue = this.prependValue(
-            this.toTwelveHourFormat(this.value.getHours().toString()), partLength, '0');
+            this.toTwelveHourFormat(this.dateValue.getHours().toString()), partLength, '0');
         } else {
-          maskedValue = this.value.getHours();
+          maskedValue = this.dateValue.getHours();
         }
         break;
       case DatePart.Minutes:
-        maskedValue = this.value.getMinutes();
+        maskedValue = this.dateValue.getMinutes();
         break;
       case DatePart.Seconds:
-        maskedValue = this.value.getSeconds();
+        maskedValue = this.dateValue.getSeconds();
         break;
       case DatePart.AmPm:
-        maskedValue = this.value.getHours() >= 12 ? 'PM' : 'AM';
+        maskedValue = this.dateValue.getHours() >= 12 ? 'PM' : 'AM';
         break;
     }
 
@@ -617,10 +696,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private inputIsComplete(): boolean {
     return this.inputValue.indexOf(this.promptChar) === -1;
-  }
-
-  private isValidDate(date: Date): boolean {
-    return date && date.getTime && !isNaN(date.getTime());
   }
 
   private moveCursor(event: KeyboardEvent): void {
