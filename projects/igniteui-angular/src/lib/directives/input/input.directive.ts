@@ -158,6 +158,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     @HostBinding('disabled')
     public set disabled(value: boolean) {
         this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
+        if (this.focused && this._disabled) {
+            // Browser focus may not fire in good time and mess with change detection, adjust here in advance:
+            this.inputGroup.isFocused = false;
+        }
     }
     /**
      * Gets the `disabled` property
