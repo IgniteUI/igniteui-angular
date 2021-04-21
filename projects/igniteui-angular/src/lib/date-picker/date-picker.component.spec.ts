@@ -312,6 +312,10 @@ xdescribe('IgxDatePicker', () => {
                     calendar = fixture.componentInstance.datePicker.calendar;
                 }));
 
+                afterAll(() => {
+                    TestBed.resetTestingModule();
+                });
+
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                     spyOn(datePicker.opening, 'emit').and.callThrough();
                     spyOn(datePicker.opened, 'emit').and.callThrough();
@@ -361,7 +365,7 @@ xdescribe('IgxDatePicker', () => {
             });
 
             describe('Projections', () => {
-                pending('TODO');
+                // pending('TODO');
             });
         });
 
@@ -430,7 +434,7 @@ xdescribe('IgxDatePicker', () => {
         });
 
         describe('Validator', () => {
-            pending('TODO');
+            // pending('TODO');
         });
     });
 });
