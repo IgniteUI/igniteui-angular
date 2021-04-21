@@ -1196,13 +1196,8 @@ class TabsTestHtmlAttributesComponent {
     template: `
     <div #wrapperDiv>
     <igx-tabs>
-        <igx-tab-item *ngFor="let contact of contacts">
-            <igx-tab-header>
-                <span igxTabHeaderLabel>{{contact.Name}}</span>
-            </igx-tab-header>
-            <igx-tab-content>
-            </igx-tab-content>
-        </igx-tab-item>
+        <igx-tabs-group *ngFor="let contact of contacts" [label]=contact.Name>
+        </igx-tabs-group>
     </igx-tabs>
     </div>`
 })
