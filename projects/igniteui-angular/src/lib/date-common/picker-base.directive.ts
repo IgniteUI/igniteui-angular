@@ -135,7 +135,7 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         this._type = val;
     }
     public get type(): IgxInputGroupType {
-        return this._type || this._inputGroupType || 'box';
+        return this._type || this._inputGroupType;
     }
 
     /**
