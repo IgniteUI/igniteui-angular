@@ -2,7 +2,7 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupModule } from '../input-group/public_api';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
@@ -11,8 +11,7 @@ import { IgxIconModule } from '../icon/public_api';
 import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './public_api';
 import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs } from '../services/public_api';
-import { Component, DebugElement, EventEmitter, QueryList, Renderer2, ViewChild } from '@angular/core';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { Component, EventEmitter, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { PickerInteractionMode } from '../date-common/types';
 
@@ -26,6 +25,9 @@ describe('IgxDatePicker', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
+                    IgxDatePickerTestKbrdComponent,
+                    IgxDatePickerTestComponent,
+                    IgxDatePickerNgModelComponent
                 ],
                 imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
                     NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
@@ -37,27 +39,12 @@ describe('IgxDatePicker', () => {
 
         describe('Events', () => {
             let fixture: ComponentFixture<any>;
-            let toggleDirectiveElement: DebugElement;
-            let toggleDirective: IgxToggleDirective;
             let datePicker: IgxDatePickerComponent;
-            configureTestSuite();
-            beforeAll(waitForAsync(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDatePickerTestComponent
-                    ],
-                    imports: [IgxDatePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        NoopAnimationsModule]
-                }).compileComponents();
-            }));
+
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerTestComponent);
                 fixture.detectChanges();
                 datePicker = fixture.componentInstance.datePicker;
-                toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
-                toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
             }));
 
             it('should be able to cancel opening/closing', fakeAsync(() => {
@@ -69,9 +56,10 @@ describe('IgxDatePicker', () => {
                 const openingSub = datePicker.opening.subscribe((event) => event.cancel = true);
 
                 datePicker.open();
-                tick();
+                // wait for calendar animation.done timeout
+                tick(350);
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.opening.emit).toHaveBeenCalled();
                 expect(datePicker.opened.emit).not.toHaveBeenCalled();
 
@@ -80,13 +68,14 @@ describe('IgxDatePicker', () => {
                 const closingSub = datePicker.closing.subscribe((event) => event.cancel = true);
 
                 datePicker.open();
-                tick();
+                // wait for calendar animation.done timeout
+                tick(350);
                 fixture.detectChanges();
 
                 datePicker.close();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(datePicker.collapsed).toBeFalsy();
                 expect(datePicker.closing.emit).toHaveBeenCalled();
                 expect(datePicker.closed.emit).not.toHaveBeenCalled();
 
@@ -98,17 +87,7 @@ describe('IgxDatePicker', () => {
             let fixture: ComponentFixture<any>;
             let datePicker: IgxDatePickerComponent;
             let calendar;
-            beforeAll(waitForAsync(() => {
-                TestBed.configureTestingModule({
-                    declarations: [
-                        IgxDatePickerTestKbrdComponent
-                    ],
-                    imports: [IgxDatePickerModule,
-                        IgxInputGroupModule,
-                        IgxIconModule,
-                        NoopAnimationsModule]
-                }).compileComponents();
-            }));
+
             beforeEach(fakeAsync(() => {
                 fixture = TestBed.createComponent(IgxDatePickerTestKbrdComponent);
                 fixture.detectChanges();
@@ -168,17 +147,47 @@ describe('IgxDatePicker', () => {
             }));
         });
 
-        describe('Projections', () => {
-            // pending('TODO');
+        describe('NgControl integration', () => {
+            let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+            let datePicker: IgxDatePickerComponent;
+
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerNgModelComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+            }));
+
+            it('should initialize date picker with required correctly', () => {
+                const inputGroup = (datePicker as any).inputGroup;
+
+                expect(datePicker).toBeDefined();
+                expect(inputGroup.isRequired).toBeTruthy();
+            });
+
+            it('should update inputGroup isRequired correctly', () => {
+                const inputGroup = (datePicker as any).inputGroup;
+
+                expect(datePicker).toBeDefined();
+                expect(inputGroup.isRequired).toBeTruthy();
+
+                fixture.componentInstance.isRequired = false;
+                fixture.detectChanges();
+
+                expect(inputGroup.isRequired).toBeFalsy();
+            });
+        });
+
+        describe('Templating', () => {
+            // TODO
         });
     });
 
     describe('Unit Tests', () => {
-        let mockPlatformUtil: any;
         let overlay: IgxOverlayService | any;
         let mockInjector;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
+
         const today = new Date();
         const elementRef = {
             nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
@@ -188,6 +197,7 @@ describe('IgxDatePicker', () => {
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
         beforeEach(() => {
+            renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
@@ -228,7 +238,7 @@ describe('IgxDatePicker', () => {
                 valueChange: new EventEmitter<any>(),
                 validationFailed: new EventEmitter<any>()
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, null, mockInjector, null, null);
+            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, null, mockInjector, renderer2, null);
             (datePicker as any).inputDirective = {
                 nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur',
                     'addEventListener', 'removeEventListener', 'click', 'focus']),
@@ -241,14 +251,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
             datePicker?.ngOnDestroy();
         });
-        let ngModel;
-        let element;
-        let cdr;
-        let moduleRef;
-        let injector;
-        let inputGroup: IgxInputGroupComponent;
         let renderer2: Renderer2;
-        const platform = {} as any;
         describe('API tests', () => {
             //#region API Methods
             it('should properly update the collapsed state with open/close/toggle methods', () => {
@@ -366,71 +369,7 @@ describe('IgxDatePicker', () => {
         });
 
         describe('Control Value Accessor', () => {
-            beforeEach(() => {
-                ngModel = {
-                    control: { touched: false, dirty: false, validator: null },
-                    valid: false,
-                    statusChanges: new EventEmitter(),
-                };
-                overlay = {
-                    onOpening: new EventEmitter<OverlayCancelableEventArgs>(),
-                    onOpened: new EventEmitter<OverlayEventArgs>(),
-                    onClosed: new EventEmitter<OverlayEventArgs>(),
-                    onClosing: new EventEmitter<OverlayClosingEventArgs>()
-                };
-                element = {}; // eslint-disable-line
-                cdr = { // eslint-disable-line
-                    markForCheck: () => { },
-                    detectChanges: () => { },
-                    detach: () => { },
-                    reattach: () => { }
-                };
-                moduleRef = {}; // eslint-disable-line
-                injector = { get: () => ngModel }; // eslint-disable-line
-                inputGroup = new IgxInputGroupComponent(null, null, null, document, renderer2, mockPlatformUtil); // eslint-disable-line
-                renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
-                spyOn(renderer2, 'setAttribute').and.callFake(() => {
-                });
-            });
-
-            it('should initialize date picker with required correctly', () => {
-                datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2, platform);
-                datePicker['_inputGroup'] = inputGroup;
-                datePicker['_inputDirectiveUserTemplates'] = new QueryList();
-                spyOnProperty(datePicker as any, 'inputGroup').and.returnValue(null);
-                ngModel.control.validator = () => ({ required: true });
-                datePicker.ngOnInit();
-                datePicker.ngAfterViewInit();
-                datePicker.ngAfterViewChecked();
-
-                expect(datePicker).toBeDefined();
-                expect(inputGroup.isRequired).toBeTruthy();
-            });
-
-            it('should update inputGroup isRequired correctly', () => {
-                datePicker = new IgxDatePickerComponent(overlay, element, cdr, moduleRef, injector, renderer2, platform);
-                datePicker['_inputGroup'] = inputGroup;
-                datePicker['_inputDirectiveUserTemplates'] = new QueryList();
-                spyOnProperty(datePicker as any, 'inputGroup').and.returnValue(null);
-                datePicker.ngOnInit();
-                datePicker.ngAfterViewInit();
-                datePicker.ngAfterViewChecked();
-
-                expect(datePicker).toBeDefined();
-                expect(inputGroup.isRequired).toBeFalsy();
-
-                ngModel.control.validator = () => ({ required: true });
-                ngModel.statusChanges.emit();
-                expect(inputGroup.isRequired).toBeTruthy();
-
-                ngModel.control.validator = () => ({ required: false });
-                ngModel.statusChanges.emit();
-                expect(inputGroup.isRequired).toBeFalsy();
-            });
-        });
-
-        describe('Validator', () => {
-            // pending('TODO');
+            // TODO
         });
     });
 });
@@ -446,6 +385,21 @@ export class IgxDatePickerTestComponent {
     public date = new Date(2021, 24, 2, 11, 45, 0);
     public minValue;
     public maxValue;
+}
+
+@Component({
+    template: `
+        <igx-date-picker #picker [(ngModel)]="date" [mode]="mode" [minValue]="minValue" [maxValue]="maxValue" [required]="isRequired">
+        </igx-date-picker>`
+})
+export class IgxDatePickerNgModelComponent {
+    @ViewChild('picker', { read: IgxDatePickerComponent, static: true })
+    public datePicker: IgxDatePickerComponent;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+    public date = new Date(2021, 24, 2, 11, 45, 0);
+    public minValue;
+    public maxValue;
+    public isRequired = true;
 }
 
 @Component({
