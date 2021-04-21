@@ -209,16 +209,16 @@ describe('IgxDatePicker', () => {
                 onOpened: new EventEmitter<OverlayEventArgs>(),
                 onClosed: new EventEmitter<OverlayEventArgs>(),
                 onClosing: new EventEmitter<OverlayClosingEventArgs>(),
-                show(...args) {
+                show(..._args) {
                     this.onOpening.emit(mockOverlayEventArgs);
                     this.onOpened.emit(mockOverlayEventArgs);
                 },
-                hide(...args) {
+                hide(..._args) {
                     this.onClosing.emit(mockOverlayEventArgs);
                     this.onClosed.emit(mockOverlayEventArgs);
                 },
-                detach: (...args) => { },
-                attach: (...args) => '1'
+                detach: (..._args) => { },
+                attach: (..._args) => '1'
             } as any;
             mockDateEditor = {
                 value: new Date(),

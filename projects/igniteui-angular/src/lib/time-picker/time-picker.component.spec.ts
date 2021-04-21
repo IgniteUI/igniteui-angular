@@ -705,7 +705,7 @@ describe('IgxTimePicker', () => {
                 expect(selectedMinute.attributes['aria-valuenow']).toEqual('28');
                 expect(selectedMinute.attributes['aria-valuemin']).toEqual('00');
                 expect(selectedMinute.attributes['aria-valuemax']).toEqual('28');
-               
+
                 timePicker.close();
                 tick();
                 fixture.detectChanges();

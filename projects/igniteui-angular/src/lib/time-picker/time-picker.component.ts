@@ -1399,15 +1399,25 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
-            this._selectedDate.setHours(this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour, 0, 0);
+            this._selectedDate.setHours(
+                this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour,
+                0,
+                0
+            );
         }
 
         if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
-            this._selectedDate.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute, 0);
+            this._selectedDate.setHours(
+                this._selectedDate.getHours(),
+                this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute,
+                0
+            );
         }
 
         if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
-            this._selectedDate.setSeconds(this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second);
+            this._selectedDate.setSeconds(
+                this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second
+            );
         }
     }
 
