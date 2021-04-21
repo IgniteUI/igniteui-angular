@@ -1,6 +1,9 @@
 import {
     Directive,
-    HostBinding,
+    DoCheck,
+    ElementRef,
+    NgZone,
+    Renderer2,
     TemplateRef
 } from '@angular/core';
 import { IgxTabsBase } from './tabs.common';
@@ -15,23 +18,44 @@ enum TabScrollButtonStyle {
     selector: '[igxRightButtonStyle]'
 })
 
-export class IgxRightButtonStyleDirective {
-    constructor(public tabs: IgxTabsBase) {
+export class IgxRightButtonStyleDirective implements DoCheck {
+
+    private _visibleCss = 'igx-tabs__header-button';
+    private _hiddenCss = 'igx-tabs__header-button--hidden';
+    private _notDisplayedCss = 'igx-tabs__header-button--none';
+    private _tabScrollButtonStyle: string;
+
+    constructor(public tabs: IgxTabsBase, private element: ElementRef, public renderer: Renderer2, private ngZone: NgZone) {
     }
 
-    @HostBinding('class.igx-tabs__header-button')
-    public get visibleCSS(): boolean {
-        return (this.getRightButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
-    }
+    public ngDoCheck(): void {
+        this.ngZone.runOutsideAngular(() => {
+            Promise.resolve().then(() => {
+            const rightButtonStyle = this.getRightButtonStyle();
 
-    @HostBinding('class.igx-tabs__header-button--hidden')
-    public get hiddenCSS(): boolean {
-        return (this.getRightButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
-    }
-
-    @HostBinding('class.igx-tabs__header-button--none')
-    public get notDisplayedCSS(): boolean {
-        return (this.getRightButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
+            if (rightButtonStyle === TabScrollButtonStyle.Hidden
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.Hidden) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.Hidden;
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
+                }
+            if (rightButtonStyle === TabScrollButtonStyle.NotDisplayed
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.NotDisplayed) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.NotDisplayed;
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
+                }
+            if (rightButtonStyle === TabScrollButtonStyle.Visible
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.Visible) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.Visible;
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._visibleCss);
+                }
+            });
+        });
     }
 
     private getRightButtonStyle(): string {
@@ -66,23 +90,44 @@ export class IgxRightButtonStyleDirective {
     selector: '[igxLeftButtonStyle]'
 })
 
-export class IgxLeftButtonStyleDirective {
-    constructor(public tabs: IgxTabsBase) {
+export class IgxLeftButtonStyleDirective implements DoCheck {
+
+    private _visibleCss = 'igx-tabs__header-button';
+    private _hiddenCss = 'igx-tabs__header-button--hidden';
+    private _notDisplayedCss = 'igx-tabs__header-button--none';
+    private _tabScrollButtonStyle: string;
+
+    constructor(public tabs: IgxTabsBase, private element: ElementRef, public renderer: Renderer2, private ngZone: NgZone) {
     }
 
-    @HostBinding('class.igx-tabs__header-button')
-    public get visibleCSS(): boolean {
-        return (this.getLeftButtonStyle() === TabScrollButtonStyle.Visible) ? true : false;
-    }
+    public ngDoCheck(): void {
+        this.ngZone.runOutsideAngular(() => {
+            Promise.resolve().then(() => {
+            const leftButtonStyle = this.getLeftButtonStyle();
 
-    @HostBinding('class.igx-tabs__header-button--hidden')
-    public get hiddenCSS(): boolean {
-        return (this.getLeftButtonStyle() === TabScrollButtonStyle.Hidden) ? true : false;
-    }
-
-    @HostBinding('class.igx-tabs__header-button--none')
-    public get notDisplayedCSS(): boolean {
-        return (this.getLeftButtonStyle() === TabScrollButtonStyle.NotDisplayed) ? true : false;
+            if (leftButtonStyle === TabScrollButtonStyle.Hidden
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.Hidden) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.Hidden;
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.addClass(this.element.nativeElement, this._hiddenCss);
+                }
+            if (leftButtonStyle === TabScrollButtonStyle.NotDisplayed
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.NotDisplayed) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.NotDisplayed;
+                    this.renderer.removeClass(this.element.nativeElement, this._visibleCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._notDisplayedCss);
+                }
+            if (leftButtonStyle === TabScrollButtonStyle.Visible
+                && this._tabScrollButtonStyle !== TabScrollButtonStyle.Visible) {
+                    this._tabScrollButtonStyle = TabScrollButtonStyle.Visible;
+                    this.renderer.removeClass(this.element.nativeElement, this._notDisplayedCss);
+                    this.renderer.removeClass(this.element.nativeElement, this._hiddenCss);
+                    this.renderer.addClass(this.element.nativeElement, this._visibleCss);
+                }
+            });
+        });
     }
 
     private getLeftButtonStyle(): string {
