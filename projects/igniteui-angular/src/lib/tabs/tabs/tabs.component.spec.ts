@@ -1246,20 +1246,21 @@ describe('IgxTabs', () => {
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
 
+            await wait(200);
             const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
             expect(rightScrollButton.clientWidth).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
-            await wait(200);
             fixture.detectChanges();
 
+            await wait(200);
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
     });
 
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
-        pending('Known issue - postponed!');
+
         const fixture = TestBed.createComponent(TabsContactsComponent);
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
         fixture.detectChanges();
