@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -16,6 +16,9 @@ import { Component, DebugElement, EventEmitter, Injectable, QueryList, Renderer2
 import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
 import { By } from '@angular/platform-browser';
 import { PickerInteractionMode } from '../date-common/types';
+
+const CSS_CLASS_CALENDAR = 'igx-calendar';
+const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
 
 describe('IgxDatePicker', () => {
     configureTestSuite();
@@ -287,7 +290,74 @@ describe('IgxDatePicker', () => {
             });
 
             describe('Keyboard navigation', () => {
-                pending('TODO');
+                let fixture: ComponentFixture<any>;
+                let datePicker: IgxDatePickerComponent;
+                let calendar;
+                configureTestSuite();
+                beforeAll(waitForAsync(() => {
+                    TestBed.configureTestingModule({
+                        declarations: [
+                            IgxDatePickerTestKbrdComponent
+                        ],
+                        imports: [IgxDatePickerModule,
+                            IgxInputGroupModule,
+                            IgxIconModule,
+                            NoopAnimationsModule]
+                    }).compileComponents();
+                }));
+                beforeEach(fakeAsync(() => {
+                    fixture = TestBed.createComponent(IgxDatePickerTestKbrdComponent);
+                    fixture.detectChanges();
+                    datePicker = fixture.componentInstance.datePicker;
+                    calendar = fixture.componentInstance.datePicker.calendar;
+                }));
+
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+                    spyOn(datePicker.opening, 'emit').and.callThrough();
+                    spyOn(datePicker.opened, 'emit').and.callThrough();
+                    spyOn(datePicker.closing, 'emit').and.callThrough();
+                    spyOn(datePicker.closed, 'emit').and.callThrough();
+                    expect(datePicker.collapsed).toBeTruthy();
+
+                    const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
+                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', picker, true);
+
+                    tick();
+                    fixture.detectChanges();
+
+                    expect(datePicker.collapsed).toBeFalsy();
+                    expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
+                    tick();
+                    fixture.detectChanges();
+                    expect(datePicker.collapsed).toBeTruthy();
+                    expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+                    flush();
+                }));
+
+                it('should close the calendar with ESC', fakeAsync(() => {
+                    spyOn(datePicker.closing, 'emit').and.callThrough();
+                    spyOn(datePicker.closed, 'emit').and.callThrough();
+
+                    expect(datePicker.collapsed).toBeTruthy();
+                    datePicker.open();
+                    tick();
+                    fixture.detectChanges();
+                    expect(datePicker.collapsed).toBeFalsy();
+
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
+                    tick();
+                    fixture.detectChanges();
+                    expect(datePicker.collapsed).toBeTruthy();
+                    expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+                    flush();
+                }));
             });
 
             describe('Projections', () => {
@@ -367,6 +437,20 @@ describe('IgxDatePicker', () => {
 @Injectable() // Add this to satisfy the compiler
 export class IgxDatePickerTestComponent {
     @ViewChild('picker', { read: IgxDatePickerComponent, static: true })
+    public datePicker: IgxDatePickerComponent;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+    public date = new Date(2021, 24, 2, 11, 45, 0);
+}
+
+@Component({
+    template: `
+        <igx-date-picker #kbrdPicker [value]="date" mode="dropdown" inputFormat="dd/MM/yyyy">
+            <label igxLabel>Select a Date</label>
+        </igx-date-picker>
+    `
+})
+export class IgxDatePickerTestKbrdComponent {
+    @ViewChild('kbrdPicker', { read: IgxDatePickerComponent, static: true })
     public datePicker: IgxDatePickerComponent;
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public date = new Date(2021, 24, 2, 11, 45, 0);
