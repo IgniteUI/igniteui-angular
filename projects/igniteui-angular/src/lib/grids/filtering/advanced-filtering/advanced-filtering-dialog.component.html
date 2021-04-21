@@ -184,11 +184,11 @@
                            [(ngModel)]="searchValue"/>
                 </igx-input-group>
 
-                <igx-date-picker #datePicker *ngIf="selectedColumn && selectedColumn.dataType === 'date'"
+                <igx-date-picker #picker *ngIf="selectedColumn && selectedColumn.dataType === 'date'"
                     [(value)]="searchValue"
                     [formatter]="selectedColumn.formatter"
                     [displayFormat]="selectedColumn.pipeArgs.format"
-                    (click)="datePicker.open()"
+                    (click)="picker.open()"
                     type="box"
                     [readOnly]="true"
                     [displayDensity]="'compact'"
@@ -203,13 +203,13 @@
                     <igx-picker-clear></igx-picker-clear>
                 </igx-date-picker>
 
-                <igx-time-picker #timePicker *ngIf="selectedColumn && selectedColumn.dataType === 'time'"
+                <igx-time-picker #picker *ngIf="selectedColumn && selectedColumn.dataType === 'time'"
                     [inputFormat]="selectedColumn.defaultTimeFormat"
                     [(value)]="searchValue"
                     [formatter]="selectedColumn.formatter"
                     [locale]="grid.locale"
                     [outlet]="grid.outlet"
-                    (click)="timePicker.open()"
+                    (click)="picker.open()"
                     (keydown)="invokeClick($event)"
                     [displayDensity]="'compact'"
                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder"
