@@ -1,6 +1,10 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { IgxGridComponent } from '../grid/grid.component';
+import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
 import { IgxSummaryResult } from '../summaries/grid-summary';
+import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
+
 export interface RowType {
     index: number;
     viewIndex?: number;
@@ -23,6 +27,7 @@ export interface RowType {
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
     hasChildren?: boolean;
+    grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
