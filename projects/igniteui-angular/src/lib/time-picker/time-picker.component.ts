@@ -632,29 +632,29 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super(element, _localeId, _displayDensityOptions, _inputGroupType);
     }
 
-     /** @hidden @internal */
-     @HostListener('keydown', ['$event'])
-     public onKeyDown(event: KeyboardEvent): void {
-         switch (event.key) {
-             case this.platform.KEYMAP.ARROW_UP:
-                 if (event.altKey && this.isDropdown) {
-                     this.close();
-                 }
-                 break;
-             case this.platform.KEYMAP.ARROW_DOWN:
-                 if (event.altKey && this.isDropdown) {
-                     this.open();
-                 }
-                 break;
-             case this.platform.KEYMAP.ESCAPE:
-                 this.cancelButtonClick();
-                 break;
-             case this.platform.KEYMAP.SPACE:
-                 this.open();
-                 event.preventDefault();
-                 break;
-         }
-     }
+    /** @hidden @internal */
+    @HostListener('keydown', ['$event'])
+    public onKeyDown(event: KeyboardEvent): void {
+        switch (event.key) {
+            case this.platform.KEYMAP.ARROW_UP:
+                if (event.altKey && this.isDropdown) {
+                    this.close();
+                }
+                break;
+            case this.platform.KEYMAP.ARROW_DOWN:
+                if (event.altKey && this.isDropdown) {
+                    this.open();
+                }
+                break;
+            case this.platform.KEYMAP.ESCAPE:
+                this.cancelButtonClick();
+                break;
+            case this.platform.KEYMAP.SPACE:
+                this.open();
+                event.preventDefault();
+                break;
+        }
+    }
 
     // #region ControlValueAccessor
 
@@ -669,9 +669,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this.dateTimeEditor) {
             this.dateTimeEditor.value = this.parseToDate(value);
         }
-        if (this._dateValue && this._dateValue.getTime() !== this._selectedDate?.getTime()) {
-            this._selectedDate.setHours(this._dateValue.getHours(), this._dateValue.getMinutes(), this._dateValue.getSeconds());
-        }
+        this.setSelectedValue();
     }
 
     /** @hidden @internal */
@@ -696,7 +694,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (!value) {
             Object.assign(errors, { value: true });
         }
-        Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, false));
+        Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, true, false));
         return Object.keys(errors).length > 0 ? errors : null;
     }
 
@@ -805,7 +803,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this.close();
         }
 
-        if (isDate(this.value)) {
+        if (DateTimeUtil.isValidDate(this.value)) {
             const oldValue = new Date(this.value);
             this.value.setHours(0, 0, 0);
             if (this.value.getTime() !== oldValue.getTime()) {
@@ -816,6 +814,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             }
         } else {
             this.value = null;
+            this.setSelectedValue();
         }
     }
 
@@ -1386,12 +1385,29 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private setSelectedValue() {
         this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this._minDropdownValue);
-        if (!this._selectedDate || this._selectedDate < this._minDropdownValue ||
-            this._selectedDate > this._maxDropdownValue ||
-            this._selectedDate.getHours() % this.itemsDelta.hour > 0 ||
-            this._selectedDate.getMinutes() % this.itemsDelta.minute > 0 ||
-            this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
+        if (!DateTimeUtil.isValidDate(this._selectedDate)) {
             this._selectedDate = new Date(this._minDropdownValue);
+            return;
+        }
+        if (DateTimeUtil.lessThanMinValue(this._selectedDate, this._minDropdownValue, true, false)) {
+            this._selectedDate = new Date(this._minDropdownValue);
+            return;
+        }
+        if (DateTimeUtil.greaterThanMaxValue(this._selectedDate, this._maxDropdownValue, true, false)) {
+            this._selectedDate = new Date(this._maxDropdownValue);
+            return;
+        }
+
+        if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
+            this._selectedDate.setHours(this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour, 0, 0);
+        }
+
+        if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
+            this._selectedDate.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute, 0);
+        }
+
+        if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
+            this._selectedDate.setSeconds(this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second);
         }
     }
 
