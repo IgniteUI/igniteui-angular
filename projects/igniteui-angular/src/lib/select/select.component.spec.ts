@@ -284,7 +284,7 @@ describe('igxSelect', () => {
             expect(select.collapsed).toBeTruthy();
             expect(selectListWrapper.nativeElement.classList.contains('igx-toggle--hidden')).toBeTruthy();
         }));
-        xit('should properly emit opening/closing events on input click', fakeAsync(() => {
+        it('should properly emit opening/closing events on input click', fakeAsync(() => {
             const inputGroup = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT_GROUP));
             expect(select).toBeTruthy();
 

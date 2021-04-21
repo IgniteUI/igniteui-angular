@@ -14,7 +14,7 @@ import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs,
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { EventEmitter, QueryList, Renderer2 } from '@angular/core';
 
-xdescribe('IgxDatePicker', () => {
+describe('IgxDatePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -223,6 +223,22 @@ xdescribe('IgxDatePicker', () => {
             //#endregion
         });
 
+        describe('Integration tests', () => {
+            describe('Events', () => {
+                it('should be able to cancel opening/closing', () => {
+                    pending('TODO');
+                });
+            });
+
+            describe('Keyboard navigation', () => {
+                pending('TODO');
+            });
+
+            describe('Projections', () => {
+                pending('TODO');
+            });
+        });
+
         describe('Control Value Accessor', () => {
             beforeEach(() => {
                 ngModel = {
@@ -285,6 +301,10 @@ xdescribe('IgxDatePicker', () => {
                 ngModel.statusChanges.emit();
                 expect(inputGroup.isRequired).toBeFalsy();
             });
+        });
+
+        describe('Validator', () => {
+            pending('TODO');
         });
     });
 });

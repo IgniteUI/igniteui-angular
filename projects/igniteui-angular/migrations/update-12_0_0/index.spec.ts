@@ -1257,6 +1257,27 @@ igx-bottom-nav-header {
         );
     });
 
+    it('should not add default label if there is already such', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-date-picker mode="dialog"><label igxLabel>text</label></igx-date-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-date-picker mode="dialog"><label igxLabel>text</label></igx-date-picker>
+    `
+        );
+    });
+
     // igxTimePicker
     it('should remove [mode]=dropdown and add default time label', async () => {
         appTree.create(
@@ -1426,6 +1447,27 @@ igx-bottom-nav-header {
             `
     <igx-time-picker  mode="dialog">
 <label igxLabel *ngIf="labelVisibility">{{boundLabel}}</label></igx-time-picker>
+    `
+        );
+    });
+
+    it('should not add default label if there is already such', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-time-picker mode="dialog"><label igxLabel>text</label></igx-time-picker>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-time-picker mode="dialog"><label igxLabel>text</label></igx-time-picker>
     `
         );
     });

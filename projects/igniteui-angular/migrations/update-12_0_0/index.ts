@@ -423,15 +423,17 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                 !hasAttribute(template as Element, EDITORS_LABEL_VISIBILITY))
             .map(node => getSourceOffset(node as Element))
             .forEach(offset => {
+                if (findElementNodes([offset.node], 'label').length === 0) {
                 const { startTag, file } = offset;
                 addChange(file.url,
                     new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
+                }
             });
 
             // Rename InteractionMode to PickerInteractionMode
             const modeMatches = [{
                 old: ' InteractionMode ',
-                new: ' PickerInteractionMode'
+                new: ' PickerInteractionMode '
             },
             {
                 old: ' InteractionMode,',
