@@ -37,6 +37,34 @@
       ]
     },
     {
+        "member": "onValueChange",
+        "replaceWith": "valueChange",
+        "definedIn": [
+            "IgxSliderComponent"
+        ]
+    },
+    {
+        "member": "onValueChanged",
+        "replaceWith": "dragFinished",
+        "definedIn": [
+            "IgxSliderComponent"
+        ]
+    },
+    {
+        "member": "onProgressChanged",
+        "replaceWith": "progressChanged",
+        "definedIn": [
+            "IgxLinearProgressBarComponent"
+        ]
+    },
+    {
+        "member": "onProgressChanged",
+        "replaceWith": "progressChanged",
+        "definedIn": [
+            "IgxCircularProgressBarComponent"
+        ]
+    },
+    {
       "member": "onColumnChange",
       "replaceWith": "columnChange",
       "definedIn": [
