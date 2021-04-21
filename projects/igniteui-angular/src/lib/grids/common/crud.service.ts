@@ -463,7 +463,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 this.grid.tbody.nativeElement.focus();
             }
         } else {
-            if (cell?.row.addRow) {
+            if (cell?.intRow.addRow) {
                 this.beginAddRow(cell, event);
                 return;
             }

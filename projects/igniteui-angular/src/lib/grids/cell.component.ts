@@ -988,7 +988,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 }
 
                 // TODO: remove cellEditingBlocked after refactoring @update_add_cell
-                if (this.grid.crudService.cellEditingBlocked || editableArgs.cancel) {
+                if (this.grid.crudService.cellEditingBlocked || (editableArgs && editableArgs.cancel)) {
                     return true;
                 }
 
