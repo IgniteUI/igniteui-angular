@@ -984,6 +984,38 @@
                 "selector": "igx-row-island",
                 "type": "component"
             }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChanged",
+            "replaceWith": "dragFinished",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "owner": {
+                "selector": "igx-linear-bar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "owner": {
+                "selector": "igx-circular-bar",
+                "type": "component"
+            }
         }
     ]
 }
