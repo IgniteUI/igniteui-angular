@@ -4544,25 +4544,25 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const datePicker = fix.debugElement.query(By.directive(IgxDatePickerComponent));
             datePicker.triggerEventHandler('click', null);
             fix.detectChanges();
+            tick(350); // calendar animationDone timeout
 
             // Click today item.
             const calendar = document.querySelector('igx-calendar');
             const todayItem = calendar.querySelector('.igx-calendar__date--current');
             (todayItem as HTMLElement).click();
-            tick(100);
+            tick();
             fix.detectChanges();
-            flush();
 
             // Verify the results are with 'today' date.
             const filteredDate = SampleTestData.today;
-            const inputText = grid.datePipe.transform(filteredDate, column.pipeArgs.format, undefined, grid.locale);
+            const inputText = column.formatter(filteredDate);
             const datePickerInput = fix.debugElement.query(By.css('.igx-date-picker__input-date'));
             expect(datePickerInput.nativeElement.value).toMatch(inputText);
 
             // Click 'apply' button to apply filter.
             GridFunctions.clickApplyExcelStyleCustomFiltering(fix);
 
-            const cellText = pipe.transform(filteredDate, column.pipeArgs.format);
+            const cellText = column.formatter(filteredDate);
             const cell = GridFunctions.getColumnCells(fix, 'ReleaseDate')[0].nativeElement;
             expect(cell.innerText).toMatch(cellText);
             expect(grid.filteredData.length).toEqual(1);
