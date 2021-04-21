@@ -172,8 +172,9 @@
 
     @return (
         palette: $palette,
+        name: $name,
         variant: $variant,
-        themes: $themes
+        themes: $themes,
     );
 }
 
@@ -194,6 +195,12 @@
     $raised-theme: map-get(map-get($theme, 'themes'), 'raised');
     $fab-theme: map-get(map-get($theme, 'themes'), 'fab');
     $icon-theme: map-get(map-get($theme, 'themes'), 'icon');
+
+    @include igx-css-vars($flat-theme);
+    @include igx-css-vars($outlined-theme);
+    @include igx-css-vars($raised-theme);
+    @include igx-css-vars($fab-theme);
+    @include igx-css-vars($icon-theme);
 
     $time: map-get((
         material: .1s,
@@ -293,9 +300,9 @@
     ), $variant);
 
     $button-floating-padding: (
-        comfortable: rem(8px) rem(16px),
-        cosy: rem(4px) rem(12px),
-        compact: 0 rem(8px)
+        comfortable: rem(8px) rem(14px),
+        cosy: rem(4px) rem(10px),
+        compact: 0 rem(6px)
     );
 
     $button-floating-size: (
@@ -411,8 +418,6 @@
     }
 
     %igx-button--flat {
-        @include igx-css-vars($flat-theme, '');
-
         background: --var($flat-theme, 'background');
         color: --var($flat-theme, 'foreground');
         border-radius: --var($flat-theme, 'border-radius');
@@ -431,8 +436,6 @@
     }
 
     %igx-button--outlined {
-        @include igx-css-vars($outlined-theme, '');
-
         background: --var($outlined-theme, 'background');
         color: --var($outlined-theme, 'foreground');
         border-radius: --var($outlined-theme, 'border-radius');
@@ -481,8 +484,6 @@
     }
 
     %igx-button--raised {
-        @include igx-css-vars($raised-theme, '');
-
         color: --var($raised-theme, 'foreground');
         background: --var($raised-theme, 'background');
         box-shadow: $raised-shadow;
@@ -525,8 +526,6 @@
     }
 
     %igx-button--fab {
-        @include igx-css-vars($fab-theme, '');
-
         padding: map-get($button-floating-padding, 'comfortable');
         min-width: map-get($button-floating-size, 'comfortable');
         min-height: map-get($button-floating-size, 'comfortable');
@@ -584,8 +583,6 @@
     }
 
     %igx-button--icon {
-        @include igx-css-vars($icon-theme, '');
-
         width: $button-icon-width;
         height: $button-icon-width;
         min-width: unset;
