@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions, wait } from '../test-utils/ui-interactions.spec';
 import { IgxCalendarComponent, IgxCalendarModule } from './public_api';
-import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/date-picker.component';
+import { IgxDatePickerComponent, IgxDatePickerModule } from '../date-picker/public_api';
 import { DateRangeType } from '../core/dates';
 import { HelperTestFunctions } from './calendar-helper-utils';
 
@@ -1278,13 +1278,12 @@ describe('Multi-View Calendar - ', () => {
             HelperTestFunctions.verifyCalendarSubHeaders(overlay, [new Date('2019-09-16'), new Date('2019-10-16'), new Date('2019-11-16')]);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
+            datePicker.close();
             tick(400);
             fixture.detectChanges();
 
             datePicker.mode = 'dropdown';
-            datePicker.monthsViewNumber = 2;
+            datePicker.displayMonthsCount = 2;
             tick();
             fixture.detectChanges();
 
@@ -1311,8 +1310,7 @@ describe('Multi-View Calendar - ', () => {
             expect(HelperTestFunctions.getHiddenDays(overlay, 2).length).toBe(HelperTestFunctions.getInactiveDays(overlay, 2).length);
 
             // close the datePicker
-            const overlayDiv = document.getElementsByClassName(HelperTestFunctions.MODAL_OVERLAY_CSSCLASS)[0];
-            UIInteractions.simulateClickAndSelectEvent(overlayDiv);
+            datePicker.close();
             tick(400);
             fixture.detectChanges();
 
@@ -1346,7 +1344,7 @@ export class MultiViewCalendarSampleComponent {
 
 @Component({
     template: `
-        <igx-date-picker [value]="date" [monthsViewNumber]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
+        <igx-date-picker [value]="date" [displayMonthsCount]="monthViews" [hideOutsideDays]="true"></igx-date-picker>
     `
 })
 export class MultiViewDatePickerSampleComponent {
