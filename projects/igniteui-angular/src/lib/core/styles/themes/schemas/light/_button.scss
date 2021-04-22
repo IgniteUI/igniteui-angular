@@ -51,6 +51,8 @@ $_material-flat-button: extend(
     $_flat-elevation-button,
     $_material-shape-button,
     (
+        selector: '[igxButton="flat"]',
+
         background: transparent,
 
         foreground: (
@@ -86,6 +88,8 @@ $_material-flat-button: extend(
 $_material-outlined-button: extend(
     $_material-flat-button,
     (
+        selector: '[igxButton="outlined"]',
+
         border-color: (
             igx-color: ('grays', 300)
         ),
@@ -120,6 +124,8 @@ $_material-raised-button: extend(
     $_material-raised-elevation,
     $_material-shape-button,
     (
+        selector: '[igxButton="raised"]',
+
         background: (
             igx-color: ('secondary', 500)
         ),
@@ -158,7 +164,10 @@ $_material-raised-button: extend(
 $_material-fab-button: extend(
     $_material-raised-button,
     $_material-fab-elevation,
-    $_round-shape-button
+    $_round-shape-button,
+    (
+        selector: '[igxButton="fab"]',
+    )
 );
 
 /// @type {Map}
@@ -181,6 +190,8 @@ $_material-icon-button: extend(
     $_material-ib-elevation,
     $_round-shape-button,
     (
+        selector: '[igxButton="icon"]',
+
         background: transparent,
 
         foreground: (
@@ -363,8 +374,11 @@ $_fluent-raised-button: extend(
 /// @requires {function} extend
 $_fluent-fab-button: extend(
     $_fluent-base-button,
-    $_fluent-raised-button,
     $_round-shape-button,
+    $_fluent-raised-button,
+    (
+        selector: '[igxButton="fab"]',
+    )
 );
 
 /// @type {Map}
@@ -552,13 +566,35 @@ $_bootstrap-raised-button: extend(
 
 /// @type {Map}
 /// @requires {function} extend
+/// @prop {Map} background [igx-color: ('primary', 500)] - The background color of a raised button.
+/// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an raised button.
+/// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an raised button.
 /// @requires {Map} $_material-fab-button
 /// @requires {Map} $_bootstrap-base-button
 /// @requires {Map} $_bootstrap-raised-button
 $_bootstrap-fab-button: extend(
     $_material-fab-button,
     $_bootstrap-base-button,
-    $_bootstrap-raised-button
+    $_bootstrap-raised-button,
+    (
+        selector: '[igxButton="fab"]',
+
+        hover-foreground:  #fff,
+
+        focus-foreground: #fff,
+
+        background: (
+            igx-color: ('primary', 500)
+        ),
+
+        hover-background: (
+            igx-color: ('primary', 600)
+        ),
+
+        focus-background: (
+            igx-color: ('primary', 600)
+        ),
+    )
 );
 
 /// @type {Map}
@@ -573,8 +609,8 @@ $_bootstrap-fab-button: extend(
 /// @requires {Map} $_bootstrap-shape-button
 /// @requires {function} extend
 $_bootstrap-icon-button: extend(
-    $_material-icon-button,
     $_bootstrap-base-button,
+    $_material-icon-button,
     $_bootstrap-shape-button,
     (
         hover-background: (
@@ -755,7 +791,10 @@ $_indigo-raised-button: extend(
 $_indigo-fab-button: extend(
     $_material-fab-button,
     $_indigo-base-button,
-    $_indigo-raised-button
+    $_indigo-raised-button,
+    (
+        selector: '[igxButton="fab"]',
+    )
 );
 
 /// @type {Map}
