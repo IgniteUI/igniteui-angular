@@ -1,25 +1,7 @@
-<div #toggle="toggle" igxToggle class="igx-date-picker" [class.igx-date-picker--dropdown]="mode === 'dropdown'"
-    (onOpening)="handleOpening($event)" (onOpened)="handleOpened()"
-    (onClosing)="handleClosing($event)" (onClosed)="handleClosed()"
-    [style.flex-basis]="monthsViewNumber * 320 + 'px'"
-    [style.width]="monthsViewNumber * 320 + 'px'"
-    [style.max-width]="'90vw'"
->
-    <!-- TODO: use IgxCalendarContainerComponent instead -->
-    <igx-calendar #calendar (keydown)="onKeyDown($event)" selection="range" [weekStart]="weekStart"
-        [hideOutsideDays]="hideOutsideDays" [monthsViewNumber]="monthsViewNumber" [locale]="locale"
-        (selected)="handleSelection($event)"></igx-calendar>
-    <div class="igx-date-range-picker-buttons">
-        <ng-container *ngIf="mode === 'dialog'">
-            <button igxButton type="button" (click)="close()">{{ doneButtonText }}</button>
-        </ng-container>
-    </div>
-</div>
-
 <ng-container *ngTemplateOutlet="this.hasProjectedInputs ? startEndTemplate : defTemplate"></ng-container>
 
 <ng-template #singleTemplate>
-    <div (click)="open()" class="content-wrap">
+    <div (click)="this.open()" class="content-wrap">
         <ng-content select="igx-date-single"></ng-content>
     </div>
 </ng-template>
@@ -27,7 +9,8 @@
 <ng-template #startEndTemplate>
     <ng-content select="igx-date-range-start"></ng-content>
     <div [className]="separatorClass">
-        <ng-container *ngTemplateOutlet="dateSeparatorTemplate ? dateSeparatorTemplate : defDateSeparatorTemplate;"></ng-container>
+        <ng-container *ngTemplateOutlet="dateSeparatorTemplate || defDateSeparatorTemplate;">
+        </ng-container>
     </div>
     <ng-content select="igx-date-range-end"></ng-content>
 </ng-template>
@@ -41,15 +24,12 @@
 <ng-template #defDateSeparatorTemplate>{{ dateSeparator }}</ng-template>
 
 <ng-template #defTemplate>
-    <igx-input-group (click)="open()">
-        <input #singleInput igxInput type="text" readonly
-            [placeholder]="this.value ? '' : singleInputFormat"
-            role="combobox"
-            aria-haspopup="grid"
-            [attr.aria-expanded]="!toggle.collapsed"
+    <igx-input-group (click)="this.open()">
+        <!-- only set mask placeholder when empty, otherwise input group might use it as label if none is set -->
+        <input #singleInput igxInput type="text" readonly [placeholder]="this.value ? '' : singleInputFormat"
+            role="combobox" aria-haspopup="grid" [attr.aria-expanded]="!this.collapsed"
             [attr.aria-labelledby]="this.label?.id"
-            [value]="this.value | dateRange: this.appliedFormat : this.locale : this.formatter"
-        />
+            [value]="this.value | dateRange: this.appliedFormat : this.locale : this.formatter" />
 
         <igx-prefix *ngIf="!this.toggleComponents.length">
             <ng-container *ngTemplateOutlet="defIcon"></ng-container>
