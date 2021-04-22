@@ -227,9 +227,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     date: 1,
     month: 1,
     year: 1,
-    hour: 1,
-    minute: 1,
-    second: 1
+    hours: 1,
+    minutes: 1,
+    seconds: 1
   };
   private onTouchCallback: (...args: any[]) => void = noop;
   private onChangeCallback: (...args: any[]) => void = noop;
