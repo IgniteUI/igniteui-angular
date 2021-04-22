@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
-import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
+import { Component, OnInit, ViewChild, DebugElement, QueryList } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,7 +20,9 @@ import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api'
 import { AnimationMetadata, AnimationOptions } from '@angular/animations';
 import { IgxPickersCommonModule } from '../date-common/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
-import { IgxCalendarComponent } from '../calendar/public_api';
+import { IgxCalendarComponent, IgxDaysViewComponent } from '../calendar/public_api';
+import { IgxDaysViewNavigationService } from '../calendar/days-view/daysview-navigation.service';
+import { IgxDayItemComponent } from '../calendar/days-view/day-item.component';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -242,6 +244,10 @@ describe('IgxDateRangePicker', () => {
 
         xit('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, overlay);
+            const daysViewNavService = new IgxDaysViewNavigationService();
+            calendar.daysView = new IgxDaysViewComponent(daysViewNavService, platform);
+
+            //calendar.daysView.dates =
             dateRange.ngOnInit();
 
             spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
@@ -488,7 +494,7 @@ describe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
 
-                xit('should close the calendar with the "Done" button', fakeAsync(() => {
+                it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
@@ -500,7 +506,7 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() - 1;
+                    const startDateDayElIndex = startDate.getDate() + 3;
                     const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
                     tick();
