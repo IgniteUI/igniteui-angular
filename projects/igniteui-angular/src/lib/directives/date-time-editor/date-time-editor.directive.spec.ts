@@ -115,7 +115,7 @@ describe('IgxDateTimeEditor', () => {
 
                 const date = new Date(2015, 11, 12, 14, 35, 12);
                 dateTimeEditor.value = date;
-                dateTimeEditor.spinDelta = { date: 2, month: 2, year: 2, hour: 2, minute: 2, second: 2 };
+                dateTimeEditor.spinDelta = { date: 2, month: 2, year: 2, hours: 2, minutes: 2, seconds: 2 };
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
                 dateTimeEditor.increment();
