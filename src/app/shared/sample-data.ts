@@ -12,7 +12,7 @@ export const SAMPLE_DATA = [
         Phone: '030-0074321',
         Fax: '030-0076545',
         Employees: 68,
-        DateCreated: new Date(2015, 10, 1, 11, 37, 22),
+        DateCreated: undefined,
         Contract: null
     },
     {
