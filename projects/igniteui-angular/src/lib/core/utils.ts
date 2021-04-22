@@ -156,7 +156,7 @@ export const isObject = (value: any): boolean => value && value.toString() === '
  * @returns true if provided variable is Date
  * @hidden
  */
-export const isDate = (value: any): boolean => value instanceof Date;
+export const isDate = (value: any): value is Date => value instanceof Date;
 
 /**
  * Checks if the two passed arguments are equal

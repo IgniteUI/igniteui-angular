@@ -159,22 +159,31 @@
             <br />
 
             <!-- date field -->
-            <igx-date-picker [value]="date">
-                <ng-template igxDatePickerTemplate let-openDialog="openDialog" let-value="value" let-displayData="displayData">
-                    <igx-input-group [displayDensity]="density" [type]="inputType">
-                        <label igxLabel>Date: </label>
-                        <input
-                            [required]="isRequired"
-                            name="date"
-                            [value]="displayData"
-                            igxInput
-                            [disabled]="isDisabled"
-                        />
-                        <igx-suffix>
-                            <igx-icon (click)="openDialog()">date_range</igx-icon>
-                        </igx-suffix>
-                    </igx-input-group>
-                </ng-template>
+            <igx-date-picker *ngIf="!isRequired" #datePicker
+                [(value)]="date"
+                [displayDensity]="density"
+                [type]="inputType"
+                [disabled]="isDisabled">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxSuffix>
+                    <igx-icon (click)="datePicker.open()">date_range</igx-icon>
+                </igx-picker-toggle>
+                <igx-picker-clear></igx-picker-clear>
+            </igx-date-picker>
+
+            <!-- required date field -->
+            <igx-date-picker *ngIf="isRequired" #requiredDatePicker
+                required
+                name="requiredDatePicker"
+                [(ngModel)]="date"
+                [displayDensity]="density"
+                [type]="inputType"
+                [disabled]="isDisabled">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxSuffix>
+                    <igx-icon (click)="requiredDatePicker.open()">date_range</igx-icon>
+                </igx-picker-toggle>
+                <igx-picker-clear></igx-picker-clear>
             </igx-date-picker>
             <br />
 
