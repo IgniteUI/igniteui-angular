@@ -1,9 +1,7 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { IgxGridComponent } from '../grid/grid.component';
-import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
 import { IgxSummaryResult } from '../summaries/grid-summary';
-import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
+import { GridType } from './grid.interface';
 
 export interface RowType {
     index: number;
@@ -27,7 +25,7 @@ export interface RowType {
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
     hasChildren?: boolean;
-    grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+    grid: GridType;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
