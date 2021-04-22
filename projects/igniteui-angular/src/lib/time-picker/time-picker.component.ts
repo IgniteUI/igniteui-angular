@@ -316,10 +316,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     @ContentChild(IgxTimePickerActionsDirective)
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
 
-    /** @hidden @internal */
-    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
-
     @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private inputDirective: IgxInputDirective;
 
@@ -483,7 +479,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _secondsView = [];
     private _ampmView = [];
 
-    private _destroy$ = new Subject();
     private _statusChanges$: Subscription;
     private _ngControl: NgControl = null;
     private _onChangeCallback: (_: Date | string) => void = noop;
@@ -712,6 +707,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngAfterViewInit(): void {
+        super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
         if (this._ngControl) {
@@ -728,8 +724,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngOnDestroy(): void {
-        this._destroy$.next();
-        this._destroy$.complete();
+        super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }

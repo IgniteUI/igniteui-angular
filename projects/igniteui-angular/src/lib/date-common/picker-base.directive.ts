@@ -1,16 +1,22 @@
-import { ElementRef, EventEmitter, Inject, LOCALE_ID, Optional, Input, Directive, Output } from '@angular/core';
+import {
+    AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
+    Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList
+} from '@angular/core';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
-import { PickerInteractionMode } from './types';
 import { IToggleView } from '../core/navigation';
 import { IBaseCancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 import { DateRange } from '../date-range-picker/public_api';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxPickerToggleComponent } from './picker-icons.common';
+import { PickerInteractionMode } from './types';
 
 @Directive()
-export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider {
+export abstract class PickerBaseDirective extends DisplayDensityBase implements IToggleView, EditorProvider, AfterViewInit, OnDestroy {
     /**
      * The editor's input mask.
      *
@@ -193,6 +199,10 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     @Output()
     public closed = new EventEmitter<IBaseEventArgs>();
 
+    /** @hidden @internal */
+    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
+    public toggleComponents: QueryList<IgxPickerToggleComponent>;
+
     protected _collapsed = true;
     protected _type: IgxInputGroupType;
     protected _minValue: Date | string;
@@ -215,6 +225,9 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         return this.mode === PickerInteractionMode.DropDown;
     }
 
+    protected _destroy$ = new Subject();
+    private _toggleClickNotifier$ = new Subject();
+
     public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
 
     constructor(public element: ElementRef,
@@ -223,6 +236,26 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) protected _inputGroupType?: IgxInputGroupType) {
         super(_displayDensityOptions || { displayDensity: 'comfortable' });
         this.locale = this.locale || this._localeId;
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit(): void {
+        const subsToClicked = () => {
+            this._toggleClickNotifier$.next();
+            this.toggleComponents.forEach(toggle => {
+                toggle.clicked.pipe(takeUntil(this._toggleClickNotifier$)).subscribe(() => this.open());
+            });
+        };
+        this.toggleComponents.changes.pipe(takeUntil(this._destroy$)).subscribe(() => subsToClicked());
+        subsToClicked();
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy(): void {
+        this._destroy$.next();
+        this._destroy$.complete();
+        this._toggleClickNotifier$.next();
+        this._toggleClickNotifier$.complete();
     }
 
     public abstract select(value: Date | DateRange | string): void;

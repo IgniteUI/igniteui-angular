@@ -16,7 +16,7 @@ import {
     IgxInputDirective, IgxInputGroupComponent,
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState
 } from '../input-group/public_api';
-import { Subject, fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
+import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -37,7 +37,7 @@ import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directi
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
-import { IgxPickerToggleComponent, IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
+import { IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
 
 let NEXT_ID = 0;
 
@@ -401,10 +401,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
 
     /** @hidden @internal */
-    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
-
-    /** @hidden @internal */
     @ContentChildren(IgxPickerClearComponent)
     public clearComponents: QueryList<IgxPickerClearComponent>;
 
@@ -457,7 +453,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _overlayId: string;
     private _value: Date | string;
     private _targetViewDate: Date;
-    private _destroy$ = new Subject();
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
@@ -754,6 +749,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public ngAfterViewInit() {
+        super.ngAfterViewInit();
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
@@ -782,11 +778,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
-        this._destroy$.next();
-        this._destroy$.complete();
         if (this._overlayId) {
             this._overlayService.detach(this._overlayId);
         }
