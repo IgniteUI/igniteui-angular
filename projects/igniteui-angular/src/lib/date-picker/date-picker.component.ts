@@ -25,6 +25,8 @@ import {
     OverlayCancelableEventArgs,
     OverlayEventArgs
 } from '../services/public_api';
+import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
 import { isEqual, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
@@ -353,6 +355,22 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this._maxValue;
     }
 
+    /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+    @Input()
+    public set resourceStrings(value: IDatePickerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
+
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): IDatePickerResourceStrings {
+        return this._resourceStrings;
+    }
+
     /** @hidden @internal */
     @Input()
     public readOnly = false;
@@ -434,6 +452,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
+    private _resourceStrings = CurrentResourceStrings.DatePickerResourceStrings;
     private _dateValue: Date;
     private _overlayId: string;
     private _value: Date | string;
