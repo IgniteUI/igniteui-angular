@@ -32,7 +32,6 @@ import { fadeIn, fadeOut } from '../animations/fade';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directives/date-time-editor/public_api';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
@@ -843,9 +842,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            const args = eventArgs as IBaseCancelableBrowserEventArgs;
+        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.opening.emit(args);
+            eventArgs.cancel = args.cancel;
             if (args.cancel) {
                 this._overlayService.detach(this._overlayId);
                 return;
@@ -855,8 +855,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._collapsed = false;
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            this.opened.emit(eventArgs as IBaseEventArgs);
+        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
+            const args: IBaseEventArgs = { owner: this };
+            this.opened.emit(args);
             if (this._calendar?.daysView?.selectedDates) {
                 this._calendar?.daysView?.focusActiveDate();
                 return;
@@ -868,9 +869,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            const args = eventArgs as IBaseCancelableBrowserEventArgs;
+        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.closing.emit(args);
+            eventArgs.cancel = args.cancel;
             if (args.cancel) {
                 return;
             }
@@ -880,8 +882,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe((event) => {
-            this.closed.emit(event as IBaseEventArgs);
+        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe((_event) => {
+            const args: IBaseEventArgs = { owner: this };
+            this.closed.emit(args);
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
