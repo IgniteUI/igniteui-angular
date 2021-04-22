@@ -2,18 +2,26 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/public_api';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxCalendarModule } from '../calendar/public_api';
+import { IFormattingViews, IgxCalendarModule } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
-import { IgxDatePickerComponent, IgxDatePickerModule } from './public_api';
-import { IgxOverlayService, OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs } from '../services/public_api';
-import { Component, EventEmitter, Renderer2, ViewChild } from '@angular/core';
+import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IgxDatePickerComponent } from './date-picker.component';
+import { IgxDatePickerModule } from './date-picker.module';
+import {
+    IgxOverlayService,
+    OverlayCancelableEventArgs, OverlayClosingEventArgs, OverlayEventArgs, OverlaySettings
+} from '../services/public_api';
+import { Component, ElementRef, EventEmitter, Renderer2, ViewChild } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { PickerInteractionMode } from '../date-common/types';
+import { PickerHeaderOrientation, PickerInteractionMode } from '../date-common/types';
+import { DatePart } from '../directives/date-time-editor/date-time-editor.common';
+import { DisplayDensity } from '../core/displayDensity';
+import { DateRangeDescriptor, DateRangeType } from '../core/dates';
+import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
@@ -183,11 +191,14 @@ describe('IgxDatePicker', () => {
     });
 
     describe('Unit Tests', () => {
-        let overlay: IgxOverlayService | any;
+        let overlay: IgxOverlayService;
+        let mockOverlayEventArgs: OverlayEventArgs;
         let mockInjector;
+        let mockInputGroup: Partial<IgxInputGroupComponent>;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
-
+        const mockModuleRef = {} as any;
+        const mockOverlayId = '1';
         const today = new Date();
         const elementRef = {
             nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
@@ -195,7 +206,9 @@ describe('IgxDatePicker', () => {
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
-                'registerOnValidatorChangeCb']);
+                'registerOnValidatorChangeCb'], {
+            statusChanges: new EventEmitter()
+        });
         beforeEach(() => {
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             mockInjector = jasmine.createSpyObj('Injector', {
@@ -208,11 +221,12 @@ describe('IgxDatePicker', () => {
                 todaySelection: new EventEmitter<any>(),
                 calendarClose: new EventEmitter<any>()
             };
-            const mockOverlayEventArgs = {
-                id: '1',
-                componentRef: {
-                    instance: mockComponentInstance
-                }
+            const mockComponentRef = {
+                instance: mockComponentInstance
+            } as any;
+            mockOverlayEventArgs = {
+                id: mockOverlayId,
+                componentRef: mockComponentRef
             };
             overlay = {
                 onOpening: new EventEmitter<OverlayCancelableEventArgs>(),
@@ -228,7 +242,7 @@ describe('IgxDatePicker', () => {
                     this.onClosed.emit(mockOverlayEventArgs);
                 },
                 detach: (..._args) => { },
-                attach: (..._args) => '1'
+                attach: (..._args) => mockOverlayId
             } as any;
             mockDateEditor = {
                 value: new Date(),
@@ -238,7 +252,28 @@ describe('IgxDatePicker', () => {
                 valueChange: new EventEmitter<any>(),
                 validationFailed: new EventEmitter<any>()
             };
-            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, null, mockInjector, renderer2, null);
+            mockInputGroup = {
+                _isFocused: false,
+                get isFocused() {
+                    return this._isFocused;
+                },
+                set isFocused(val: boolean) {
+                    this._isFocused = val;
+                },
+                _isRequired: false,
+                get isRequired() {
+                    return this._isRequired;
+                },
+                set isRequired(val: boolean) {
+                    this._isRequired = val;
+                },
+                element: {
+                    nativeElement: jasmine.createSpyObj('mockElement',
+                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener'])
+                }
+            } as any;
+            datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null);
+            (datePicker as any).inputGroup = mockInputGroup;
             (datePicker as any).inputDirective = {
                 nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur',
                     'addEventListener', 'removeEventListener', 'click', 'focus']),
@@ -253,6 +288,334 @@ describe('IgxDatePicker', () => {
         });
         let renderer2: Renderer2;
         describe('API tests', () => {
+            it('Should initialize and update all inputs propery', () => {
+                datePicker.ngOnInit();
+                datePicker.ngAfterViewInit();
+                expect(datePicker.collapsed).toBeTruthy();
+                expect(datePicker.disabled).toBeFalsy();
+                expect(datePicker.disabledDates).toEqual(null);
+                expect(datePicker.displayDensity).toEqual(DisplayDensity.comfortable);
+                expect(datePicker.displayFormat).toEqual(undefined);
+                expect(datePicker.displayMonthsCount).toEqual(1);
+                expect(datePicker.calendarFormat).toEqual({
+                    day: 'numeric',
+                    month: 'short',
+                    weekday: 'short',
+                    year: 'numeric'
+                });
+                expect(datePicker.formatViews).toEqual({
+                    day: false,
+                    month: true,
+                    year: false
+                });
+                expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Horizontal);
+                expect(datePicker.hideOutsideDays).toEqual(undefined);
+                expect(datePicker.inputFormat).toEqual(undefined);
+                expect(datePicker.mode).toEqual(PickerInteractionMode.DropDown);
+                expect(datePicker.isDropdown).toEqual(true);
+                expect(datePicker.minValue).toEqual(undefined);
+                expect(datePicker.maxValue).toEqual(undefined);
+                expect(datePicker.outlet).toEqual(undefined);
+                expect(datePicker.specialDates).toEqual(null);
+                expect(datePicker.spinDelta).toEqual(undefined);
+                expect(datePicker.spinLoop).toEqual(true);
+                expect(datePicker.tabIndex).toEqual(undefined);
+                expect(datePicker.overlaySettings).toEqual(undefined);
+                expect(datePicker.locale).toEqual(null);
+                expect(datePicker.placeholder).toEqual('');
+                expect(datePicker.readOnly).toEqual(false);
+                expect(datePicker.value).toEqual(undefined);
+                expect(datePicker.formatter).toEqual(undefined);
+                expect(() => datePicker.displayValue.transform(today)).toThrow();
+                // set
+                datePicker.open();
+                overlay.onOpened.emit(mockOverlayEventArgs);
+                expect(datePicker.collapsed).toBeFalsy();
+                datePicker.disabled = true;
+                expect(datePicker.disabled).toBeTruthy();
+                datePicker.disabled = false;
+                const mockDisabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
+                { type: DateRangeType.Before, dateRange: [today] }];
+                datePicker.disabledDates = mockDisabledDates;
+                expect(datePicker.disabledDates).toEqual(mockDisabledDates);
+                spyOn(datePicker.onDensityChanged, 'emit').and.callThrough();
+                datePicker.displayDensity = DisplayDensity.cosy;
+                expect(datePicker.displayDensity).toEqual(DisplayDensity.cosy);
+                // if no base token is provided, _displayDensity is undefined
+                // first emit of below event will always be w/ oldDensity === undefined
+                expect(datePicker.onDensityChanged.emit)
+                    .toHaveBeenCalledWith({
+                        oldDensity: undefined,
+                        newDensity: DisplayDensity.cosy
+                    });
+                datePicker.displayFormat = 'MM/yy/DD';
+                expect(datePicker.displayFormat).toEqual('MM/yy/DD');
+                datePicker.displayMonthsCount = Infinity;
+                expect(datePicker.displayMonthsCount).toEqual(Infinity);
+                datePicker.displayMonthsCount = 0;
+                expect(datePicker.displayMonthsCount).toEqual(0);
+                datePicker.displayMonthsCount = 12;
+                expect(datePicker.displayMonthsCount).toEqual(12);
+                let newFormat: any = { day: 'short' };
+                datePicker.calendarFormat = newFormat;
+                // this SHOULD NOT mutate the underlying base settings
+                expect(datePicker.calendarFormat).toEqual({
+                    day: 'short',
+                    month: 'short',
+                    weekday: 'short',
+                    year: 'numeric'
+                });
+                newFormat = { month: 'numeric' };
+                datePicker.calendarFormat = newFormat;
+                expect(datePicker.calendarFormat).toEqual({
+                    day: 'short',
+                    month: 'numeric',
+                    weekday: 'short',
+                    year: 'numeric'
+                });
+                datePicker.formatViews = null;
+                expect(datePicker.formatViews).toEqual({ day: false, month: true, year: false });
+                const formatViewVal: IFormattingViews = {};
+                datePicker.formatViews = formatViewVal;
+                expect(datePicker.formatViews).toEqual({ day: false, month: true, year: false });
+                formatViewVal.day = true;
+                datePicker.formatViews = formatViewVal;
+                expect(datePicker.formatViews).toEqual({ day: true, month: true, year: false });
+                formatViewVal.year = true;
+                datePicker.formatViews = formatViewVal;
+                expect(datePicker.formatViews).toEqual({ day: true, month: true, year: true });
+                formatViewVal.month = false;
+                datePicker.formatViews = formatViewVal;
+                expect(datePicker.formatViews).toEqual({ day: true, month: false, year: true });
+                datePicker.headerOrientation = PickerHeaderOrientation.Vertical;
+                expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Vertical);
+                datePicker.hideOutsideDays = false;
+                expect(datePicker.hideOutsideDays).toEqual(false);
+                datePicker.hideOutsideDays = true;
+                expect(datePicker.hideOutsideDays).toEqual(true);
+                datePicker.inputFormat = 'dd/MM/YY';
+                expect(datePicker.inputFormat).toEqual('dd/MM/YY');
+                datePicker.mode = PickerInteractionMode.Dialog;
+                expect(datePicker.mode).toEqual(PickerInteractionMode.Dialog);
+                expect(datePicker.isDropdown).toEqual(false);
+                datePicker.minValue = 'Test';
+                expect(datePicker.minValue).toEqual('Test');
+                datePicker.minValue = today;
+                expect(datePicker.minValue).toEqual(today);
+                datePicker.minValue = '12/12/1998';
+                expect(datePicker.minValue).toEqual('12/12/1998');
+                datePicker.maxValue = 'Test';
+                expect(datePicker.maxValue).toEqual('Test');
+                datePicker.maxValue = today;
+                expect(datePicker.maxValue).toEqual(today);
+                datePicker.maxValue = '12/12/1998';
+                expect(datePicker.maxValue).toEqual('12/12/1998');
+                datePicker.outlet = null;
+                expect(datePicker.outlet).toEqual(null);
+                const mockEl: ElementRef = jasmine.createSpyObj<ElementRef>('mockEl', ['nativeElement']);
+                datePicker.outlet = mockEl;
+                expect(datePicker.outlet).toEqual(mockEl);
+                const mockOverlayDirective: IgxOverlayOutletDirective =
+                    jasmine.createSpyObj<IgxOverlayOutletDirective>('mockEl', ['nativeElement']);
+                datePicker.outlet = mockOverlayDirective;
+                expect(datePicker.outlet).toEqual(mockOverlayDirective);
+                const specialDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
+                { type: DateRangeType.Before, dateRange: [today] }];
+                datePicker.specialDates = specialDates;
+                expect(datePicker.specialDates).toEqual(specialDates);
+                const spinDeltaSettings = { date: Infinity, month: Infinity };
+                datePicker.spinDelta = spinDeltaSettings;
+                expect(datePicker.spinDelta).toEqual(spinDeltaSettings);
+                datePicker.spinLoop = false;
+                expect(datePicker.spinLoop).toEqual(false);
+                datePicker.tabIndex = 0;
+                expect(datePicker.tabIndex).toEqual(0);
+                datePicker.tabIndex = -1;
+                expect(datePicker.tabIndex).toEqual(-1);
+                const customSettings: OverlaySettings = {
+                    modal: true,
+                    closeOnEscape: true
+                };
+                datePicker.overlaySettings = customSettings;
+                expect(datePicker.overlaySettings).toEqual(customSettings);
+                datePicker.locale = 'ES';
+                expect(datePicker.locale).toEqual('ES');
+                datePicker.placeholder = 'Buenos dias, muchachos';
+                expect(datePicker.placeholder).toEqual('Buenos dias, muchachos');
+                datePicker.readOnly = true;
+                expect(datePicker.readOnly).toEqual(true);
+                spyOn(datePicker.valueChange, 'emit').and.callThrough();
+                datePicker.value = today;
+                expect(datePicker.value).toEqual(today);
+                expect(mockDateEditor.value).toEqual(today);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledWith(today);
+                const newDate = new Date('02/02/2002');
+                const boundObject = {
+                    date: newDate
+                };
+                datePicker.value = boundObject.date;
+                expect(datePicker.value).toEqual(newDate);
+                expect(mockDateEditor.value).toEqual(newDate);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledWith(newDate);
+                expect(boundObject.date).toEqual(newDate);
+                datePicker.value = '03/03/2003';
+                expect(datePicker.value).toEqual('03/03/2003');
+                expect(mockDateEditor.value).toEqual('03/03/2003');
+                expect(datePicker.valueChange.emit).not.toHaveBeenCalledWith('03/03/2003' as any);
+                const customFormatter: (val: Date) => string = (val: Date) => val.getFullYear().toString();
+                datePicker.formatter = customFormatter;
+                expect(datePicker.formatter).toEqual(customFormatter);
+                expect(datePicker.displayValue.transform(today)).toEqual(today.getFullYear().toString());
+            });
+
+            it('Should properly set date w/ `selectToday` methods', () => {
+                spyOn(datePicker, 'select');
+                spyOn(datePicker, 'close');
+                const now = new Date();
+                now.setHours(0);
+                now.setMinutes(0);
+                now.setSeconds(0);
+                now.setMilliseconds(0);
+                datePicker.selectToday();
+                expect(datePicker.select).toHaveBeenCalledWith(now);
+                expect(datePicker.close).toHaveBeenCalled();
+            });
+
+            it('Should call underlying dateEditor decrement and increment methods', () => {
+                mockDateEditor.decrement = jasmine.createSpy();
+                mockDateEditor.increment = jasmine.createSpy();
+                datePicker.decrement();
+                expect(mockDateEditor.decrement).toHaveBeenCalledWith(undefined, undefined);
+                const mockDatePart = {} as DatePart;
+                datePicker.decrement(mockDatePart);
+                expect(mockDateEditor.decrement).toHaveBeenCalledWith(mockDatePart, undefined);
+                datePicker.decrement(mockDatePart, 0);
+                expect(mockDateEditor.decrement).toHaveBeenCalledWith(mockDatePart, 0);
+                datePicker.decrement(mockDatePart, Infinity);
+                expect(mockDateEditor.decrement).toHaveBeenCalledWith(mockDatePart, Infinity);
+                datePicker.increment();
+                expect(mockDateEditor.increment).toHaveBeenCalledWith(undefined, undefined);
+                datePicker.increment(mockDatePart);
+                expect(mockDateEditor.increment).toHaveBeenCalledWith(mockDatePart, undefined);
+                datePicker.increment(mockDatePart, 0);
+                expect(mockDateEditor.increment).toHaveBeenCalledWith(mockDatePart, 0);
+                datePicker.increment(mockDatePart, Infinity);
+                expect(mockDateEditor.increment).toHaveBeenCalledWith(mockDatePart, Infinity);
+            });
+
+            it('Should call underlying overlay `open` and `attach` methods with proper settings', () => {
+                spyOn(overlay, 'attach').and.returnValue(mockOverlayId);
+                spyOn(overlay, 'detach');
+                spyOn(overlay, 'show');
+                spyOn(overlay, 'hide');
+
+                const baseDialogSettings: OverlaySettings = Object.assign(
+                    {},
+                    (datePicker as any)._dialogOverlaySettings
+                );
+                const baseDropdownSettings: OverlaySettings = Object.assign(
+                    {},
+                    (datePicker as any)._dropDownOverlaySettings,
+                    {
+                        target: mockInputGroup.element.nativeElement
+                    }
+                );
+
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                datePicker.disabled = false;
+                datePicker.open();
+                expect(overlay.attach).not.toHaveBeenCalled();
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                datePicker.disabled = true;
+                datePicker.open();
+                expect(overlay.attach).not.toHaveBeenCalled();
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                datePicker.open();
+                expect(overlay.attach).not.toHaveBeenCalled();
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                datePicker.disabled = false;
+                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                datePicker.open();
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDialogSettings, mockModuleRef);
+                expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
+                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(true);
+                datePicker.open();
+                expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDropdownSettings, mockModuleRef);
+                expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
+                const mockOutlet = {} as any;
+                datePicker.outlet = mockOutlet;
+                datePicker.open();
+                expect(overlay.attach).toHaveBeenCalledWith(
+                    IgxCalendarContainerComponent,
+                    Object.assign({}, baseDropdownSettings, { outlet: mockOutlet }),
+                    mockModuleRef
+                );
+                expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
+                let mockSettings: OverlaySettings = {
+                    closeOnEscape: true,
+                    closeOnOutsideClick: true,
+                    modal: false
+                };
+                datePicker.outlet = null;
+                datePicker.open(mockSettings);
+                expect(overlay.attach).toHaveBeenCalledWith(
+                    IgxCalendarContainerComponent,
+                    Object.assign({}, baseDropdownSettings, mockSettings),
+                    mockModuleRef
+                );
+                expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
+                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                mockSettings = {
+                    closeOnEscape: false,
+                    closeOnOutsideClick: false,
+                    modal: false
+                };
+                datePicker.open(mockSettings);
+                expect(overlay.attach).toHaveBeenCalledWith(
+                    IgxCalendarContainerComponent,
+                    Object.assign({}, baseDialogSettings, mockSettings),
+                    mockModuleRef
+                );
+                expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
+                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(true);
+                datePicker.overlaySettings = {
+                    modal: false
+                };
+                mockSettings = {
+                    modal: true
+                };
+                datePicker.open(mockSettings);
+                expect(overlay.attach).toHaveBeenCalledWith(
+                    IgxCalendarContainerComponent,
+                    Object.assign({}, baseDropdownSettings, { modal: true }),
+                    mockModuleRef
+                );
+            });
+
+            it('Should call underlying overlay `close` and `detach` methods with proper settings', () => {
+                spyOn(overlay, 'attach').and.returnValue(mockOverlayId);
+                spyOn(overlay, 'detach');
+                spyOn(overlay, 'show');
+                spyOn(overlay, 'hide');
+
+                // init subscriptions
+                datePicker.ngAfterViewInit();
+
+                // assign overlayId
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                datePicker.open();
+                datePicker.close();
+                expect(overlay.hide).not.toHaveBeenCalled();
+                expect(overlay.detach).not.toHaveBeenCalled();
+                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                datePicker.close();
+                expect(overlay.hide).toHaveBeenCalled();
+                expect(overlay.hide).toHaveBeenCalledWith(mockOverlayId);
+                expect(overlay.detach).not.toHaveBeenCalled();
+                overlay.onClosed.emit(mockOverlayEventArgs);
+                expect(overlay.detach).toHaveBeenCalledWith(mockOverlayId);
+            });
+
             //#region API Methods
             it('should properly update the collapsed state with open/close/toggle methods', () => {
                 datePicker.ngAfterViewInit();
