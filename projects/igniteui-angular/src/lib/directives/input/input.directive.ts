@@ -100,6 +100,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
     private _valid = IgxInputState.INITIAL;
     private _statusChanges$: Subscription;
     private _fileNames: string;
+    private _disabled = false;
 
     constructor(
         public inputGroup: IgxInputGroupBase,
@@ -110,7 +111,7 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
         protected formControl: FormControlName,
         protected element: ElementRef<HTMLInputElement>,
         protected cdr: ChangeDetectorRef
-    ) {}
+    ) { }
 
     private get ngControl(): NgControl {
         return this.ngModel ? this.ngModel : this.formControl;
@@ -154,8 +155,13 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     @Input()
+    @HostBinding('disabled')
     public set disabled(value: boolean) {
-        this.nativeElement.disabled = this.inputGroup.disabled = (value as any === '') || value;
+        this._disabled = this.inputGroup.disabled = !!((value as any === '') || value);
+        if (this.focused && this._disabled) {
+            // Browser focus may not fire in good time and mess with change detection, adjust here in advance:
+            this.inputGroup.isFocused = false;
+        }
     }
     /**
      * Gets the `disabled` property
@@ -168,7 +174,10 @@ export class IgxInputDirective implements AfterViewInit, OnDestroy {
      * ```
      */
     public get disabled() {
-        return this.nativeElement.hasAttribute('disabled');
+        if (this.ngControl && this.ngControl.disabled !== null) {
+            return this.ngControl.disabled;
+        }
+        return this._disabled;
     }
 
     /**
