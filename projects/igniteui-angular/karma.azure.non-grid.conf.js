@@ -23,7 +23,7 @@ module.exports = function (config) {
         random: false
       },
       tagPrefix: '#',
-      skipTags: 'hGrid,tGrid,grid,perf'
+      skipTags: 'hGrid,tGrid,grid,perf,treeView'
     },
     port: 9876,
     colors: true,

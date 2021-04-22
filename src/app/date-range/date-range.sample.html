@@ -4,20 +4,20 @@
             <div class="range-sample-column">
                 <h5>Without forms</h5>
                 <p>Default range picker</p>
-                <igx-date-range-picker></igx-date-range-picker>
+                <igx-date-range-picker mode="dialog"></igx-date-range-picker>
 
                 <p>Drop down single input with custom suffix</p>
-                <igx-date-range-picker mode="dropdown">
+                <igx-date-range-picker>
                     <igx-picker-toggle igxSuffix>
                         <igx-icon>calendar_view_day</igx-icon>
                     </igx-picker-toggle>
                 </igx-date-range-picker>
 
-                <p>Drop down two inputs with prefix</p>
-                <igx-date-range-picker [mode]="'dropdown'"
+                <p>Dialog two inputs with prefix</p>
+                <igx-date-range-picker
                     [value]="range"
-                    [minValue]="'2000/10/1'"
-                    [maxValue]="'some invalid value'"
+                    minValue="2000/10/01"
+                    maxValue="some invalid value"
                 >
                     <igx-date-range-start>
                         <input igxInput igxDateTimeEditor type="text">
@@ -35,17 +35,17 @@
                 <h5>Template-driven form</h5>
                 <form>
                     <p>Single template with initial value</p>
-                    <igx-date-range-picker name="dp1" [(ngModel)]="range1" required>
+                    <igx-date-range-picker name="dp1" [(ngModel)]="range1" required mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template without initial value</p>
-                    <igx-date-range-picker name="dp2" [(ngModel)]="range2" required>
+                    <igx-date-range-picker name="dp2" [(ngModel)]="range2" required mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template with initial value on the picker</p>
-                    <igx-date-range-picker name="dp3" [mode]="'dropdown'" [(ngModel)]="range3" [minValue]="minDate"
+                    <igx-date-range-picker name="dp3" [(ngModel)]="range3" [minValue]="minDate"
                         [maxValue]="maxDate" required>
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
@@ -61,7 +61,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template without initial value on the picker</p>
-                    <igx-date-range-picker name="dp4" [mode]="'dropdown'" [(ngModel)]="range4" [minValue]="minDate"
+                    <igx-date-range-picker name="dp4" [(ngModel)]="range4" [minValue]="minDate"
                         [maxValue]="maxDate" required>
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
@@ -77,7 +77,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template with initial value on inputs</p>
-                    <igx-date-range-picker [mode]="'dropdown'">
+                    <igx-date-range-picker>
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
@@ -94,7 +94,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template without initial value on inputs</p>
-                    <igx-date-range-picker [mode]="'dropdown'">
+                    <igx-date-range-picker>
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
@@ -121,17 +121,17 @@
                 </div>
                 <form [formGroup]="reactiveForm">
                     <p>Single template with initial value</p>
-                    <igx-date-range-picker formControlName="dp1">
+                    <igx-date-range-picker formControlName="dp1" mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template without initial value</p>
-                    <igx-date-range-picker formControlName="dp2">
+                    <igx-date-range-picker formControlName="dp2" mode="dialog">
                         <label igxLabel>Select dates</label>
                     </igx-date-range-picker>
 
                     <p>Single template with initial value on the picker</p>
-                    <igx-date-range-picker formControlName="dp3" [mode]="'dropdown'">
+                    <igx-date-range-picker formControlName="dp3">
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
@@ -146,7 +146,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template without initial value on the picker</p>
-                    <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
+                    <igx-date-range-picker formControlName="dp4">
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
@@ -161,7 +161,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template with initial value on the input</p>
-                    <igx-date-range-picker [mode]="'dropdown'">
+                    <igx-date-range-picker>
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>
@@ -176,7 +176,7 @@
                     </igx-date-range-picker>
 
                     <p>Single template without initial value on the input</p>
-                    <igx-date-range-picker formControlName="dp4" [mode]="'dropdown'">
+                    <igx-date-range-picker formControlName="dp4">
                         <igx-date-range-start>
                             <igx-picker-toggle igxPrefix>
                                 <igx-icon>calendar_view_day</igx-icon>

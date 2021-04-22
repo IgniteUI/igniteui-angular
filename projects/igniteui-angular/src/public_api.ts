@@ -63,7 +63,7 @@ export * from './lib/carousel/public_api';
 export * from './lib/checkbox/checkbox.component';
 export * from './lib/chips/public_api';
 export * from './lib/combo/public_api';
-export * from './lib/date-picker/date-picker.component';
+export * from './lib/date-picker/public_api';
 export * from './lib/dialog/dialog.component';
 export * from './lib/drop-down/public_api';
 export * from './lib/grids/common/enums';
@@ -99,9 +99,11 @@ export * from './lib/splitter/splitter-pane/splitter-pane.component';
 export * from './lib/splitter/splitter.component';
 export * from './lib/splitter/splitter.module';
 export * from './lib/date-range-picker/public_api';
+export * from './lib/date-common/public_api';
 
 export * from './lib/grids/column-actions/column-actions-base.directive';
 export * from './lib/grids/column-actions/column-actions.component';
+export * from './lib/tree/public_api';
 
 /**
  * Exporter services, classes, interfaces and enums
@@ -118,5 +120,5 @@ export { ICalendarResourceStrings } from './lib/core/i18n/calendar-resources';
 export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resources';
 export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { IListResourceStrings } from './lib/core/i18n/list-resources';
-export { InteractionMode } from './lib/core/enums';
+export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';

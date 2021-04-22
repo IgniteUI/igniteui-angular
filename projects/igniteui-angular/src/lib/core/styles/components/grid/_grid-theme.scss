@@ -227,7 +227,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid, igx-advanced-filtering-dialog';
     $grid-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -1422,7 +1422,9 @@
 
         // Have a more stable visual editing experience
         igx-input-group,
-        igx-select {
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
             width: 100%;
             height: 100%;
         }
@@ -1432,10 +1434,12 @@
             padding-top: 0 !important;
         }
 
-        igx-date-picker,
-        igx-time-picker,
         igx-date-range-picker {
             height: 100%;
+        }
+
+        igx-time-picker [igxLabel] {
+            display: none;
         }
 
         %form-group-bundle {
