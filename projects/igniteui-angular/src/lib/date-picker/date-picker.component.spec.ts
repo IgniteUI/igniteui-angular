@@ -220,11 +220,11 @@ describe('IgxDatePicker', () => {
                 onClosed: new EventEmitter<OverlayEventArgs>(),
                 onClosing: new EventEmitter<OverlayClosingEventArgs>(),
                 show(..._args) {
-                    this.onOpening.emit(mockOverlayEventArgs);
+                    this.onOpening.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
                     this.onOpened.emit(mockOverlayEventArgs);
                 },
                 hide(..._args) {
-                    this.onClosing.emit(mockOverlayEventArgs);
+                    this.onClosing.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
                     this.onClosed.emit(mockOverlayEventArgs);
                 },
                 detach: (..._args) => { },
@@ -297,7 +297,7 @@ describe('IgxDatePicker', () => {
             //#endregion
 
             //#region Events
-            xit('should properly emit open/close events', () => {
+            it('should properly emit open/close events', () => {
                 spyOn(datePicker.opened, 'emit');
                 spyOn(datePicker.closed, 'emit');
 
@@ -310,17 +310,17 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.closed.emit).toHaveBeenCalledWith({ owner: datePicker });
             });
 
-            xit('should properly emit opening/closing events', () => {
+            it('should properly emit opening/closing events', () => {
                 spyOn(datePicker.opening, 'emit');
                 spyOn(datePicker.closing, 'emit');
 
                 datePicker.ngAfterViewInit();
 
                 datePicker.open();
-                expect(datePicker.opening.emit).toHaveBeenCalledWith({ owner: datePicker, cancel: false });
+                expect(datePicker.opening.emit).toHaveBeenCalledWith({ owner: datePicker, event: undefined, cancel: false });
 
                 datePicker.close();
-                expect(datePicker.closing.emit).toHaveBeenCalledWith({ owner: datePicker, cancel: false });
+                expect(datePicker.closing.emit).toHaveBeenCalledWith({ owner: datePicker, event: undefined, cancel: false });
             });
 
             it('should emit valueChange when the value changes', () => {
