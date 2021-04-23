@@ -367,11 +367,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public ngOnInit() {
         super.ngOnInit();
 
-        this.onRowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+        this.rowToggle.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.onRowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
@@ -393,7 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.onRowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (args.data) {
                     const rec = this._gridAPI.get_rec_by_id(
@@ -416,7 +416,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.onFilteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.filteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 const leafRowsDirectParents = new Set<any>();
                 this.records.forEach(record => {
@@ -548,7 +548,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public addRow(data: any, parentRowID?: any) {
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
-        this.onRowAdded.emit({ data });
+        this.rowAdded.emit({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }

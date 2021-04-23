@@ -51,7 +51,7 @@ $_material-flat-button: extend(
     $_flat-elevation-button,
     $_material-shape-button,
     (
-        selector: '[igxButton="flat"]',
+        selector: '[igxButton="flat"], .igx-button--flat',
 
         background: transparent,
 
@@ -88,7 +88,7 @@ $_material-flat-button: extend(
 $_material-outlined-button: extend(
     $_material-flat-button,
     (
-        selector: '[igxButton="outlined"]',
+        selector: '[igxButton="outlined"], .igx-button--outlined',
 
         border-color: (
             igx-color: ('grays', 300)
@@ -124,7 +124,7 @@ $_material-raised-button: extend(
     $_material-raised-elevation,
     $_material-shape-button,
     (
-        selector: '[igxButton="raised"]',
+        selector: '[igxButton="raised"], .igx-button--raised',
 
         background: (
             igx-color: ('secondary', 500)
@@ -166,7 +166,7 @@ $_material-fab-button: extend(
     $_material-fab-elevation,
     $_round-shape-button,
     (
-        selector: '[igxButton="fab"]',
+        selector: '[igxButton="fab"], .igx-button--fab',
     )
 );
 
@@ -190,7 +190,7 @@ $_material-icon-button: extend(
     $_material-ib-elevation,
     $_round-shape-button,
     (
-        selector: '[igxButton="icon"]',
+        selector: '[igxButton="icon"], .igx-button--icon',
 
         background: transparent,
 
@@ -377,7 +377,7 @@ $_fluent-fab-button: extend(
     $_round-shape-button,
     $_fluent-raised-button,
     (
-        selector: '[igxButton="fab"]',
+        selector: '[igxButton="fab"], .igx-button--fab',
     )
 );
 
@@ -577,7 +577,7 @@ $_bootstrap-fab-button: extend(
     $_bootstrap-base-button,
     $_bootstrap-raised-button,
     (
-        selector: '[igxButton="fab"]',
+        selector: '[igxButton="fab"], .igx-button--fab',
 
         hover-foreground:  #fff,
 
@@ -793,7 +793,7 @@ $_indigo-fab-button: extend(
     $_indigo-base-button,
     $_indigo-raised-button,
     (
-        selector: '[igxButton="fab"]',
+        selector: '[igxButton="fab"], .igx-button--fab',
     )
 );
 

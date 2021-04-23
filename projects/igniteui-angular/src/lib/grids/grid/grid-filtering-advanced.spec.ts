@@ -665,8 +665,8 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             flush();
         }));
 
-        it('Should emit the onFilteringDone event when applying filters.', fakeAsync(() => {
-            spyOn(grid.onFilteringDone, 'emit');
+        it('Should emit the filteringDone event when applying filters.', fakeAsync(() => {
+            spyOn(grid.filteringDone, 'emit');
 
             // Open Advanced Filtering dialog.
             grid.openAdvancedFilteringDialog();
@@ -692,7 +692,7 @@ describe('IgxGrid - Advanced Filtering #grid - ', () => {
             tick(100);
             fix.detectChanges();
 
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(grid.advancedFilteringExpressionsTree);
         }));
 
         it('Applying/Clearing filter through the API should correctly update the UI.', fakeAsync(() => {

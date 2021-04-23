@@ -55,7 +55,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to none', () => {
-            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const rangeChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             const startCell = treeGrid.getCellByColumn(0, 'ID');
             const endCell = treeGrid.getCellByColumn(2, 'ID');
 
@@ -85,7 +85,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
-            const rangeChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const rangeChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             const startCell = treeGrid.getCellByColumn(0, 'ID');
             const middleCell = treeGrid.getCellByColumn(1, 'ID');
             const endCell = treeGrid.getCellByColumn(2, 'ID');
@@ -166,7 +166,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }));
 
         it('Should be able to select a range with holding Shift key', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             const firstCell = treeGrid.getCellByColumn(6, 'Age');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
@@ -211,7 +211,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }));
 
         it('Should be able to select a range with keyboard', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             let cell = treeGrid.getCellByColumn(9, 'Age');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
@@ -268,7 +268,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }));
 
         it('Summaries: should select correct data when summaries are enabled', () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             const range = { rowStart: 0, rowEnd: 10, columnStart: 0, columnEnd: 2 };
             const expectedData = [
                 { ID: 147, Name: 'John Winchester', Age: 55 },
@@ -322,7 +322,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Summaries: verify selected data when change summaries position', () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             const range = { rowStart: 0, rowEnd: 10, columnStart: 0, columnEnd: 2 };
             const expectedData1 = [
                 { ID: 147, Name: 'John Winchester', Age: 55 },
@@ -366,7 +366,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         });
 
         it('Summaries: should select range with keyboard', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
@@ -411,7 +411,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         }));
 
         it('Summaries: should clear selected range when navigate from summary cell without pressed shift', (async () => {
-            const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+            const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
@@ -920,7 +920,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     });
 
     const verifySelectingRegion = (fix, treeGrid) => {
-        const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+        const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
         const range1 = { rowStart: 0, rowEnd: 6, columnStart: 'ID', columnEnd: 'Age' };
         const range2 = { rowStart: 11, rowEnd: 16, columnStart: 'ID', columnEnd: 'OnPTO' };
         const expectedData1 = [
@@ -1034,7 +1034,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
     };
 
     const verifySelectingRangeWithMouseDrag = (fix, treeGrid, detect) => {
-        const selectionChangeSpy = spyOn<any>(treeGrid.onRangeSelection, 'emit').and.callThrough();
+        const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
         const startCell = treeGrid.getCellByColumn(4, 'Name');
         const endCell = treeGrid.getCellByColumn(7, 'Age');
         const range = { rowStart: 4, rowEnd: 7, columnStart: 1, columnEnd: 2 };

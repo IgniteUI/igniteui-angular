@@ -628,14 +628,14 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
             }
         });
 
-        it('should have fire event onRowSelectionChange', () => {
+        it('should have fire event rowSelected', () => {
             hierarchicalGrid.expandChildren = true;
             fix.detectChanges();
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const secondChildGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[1];
-            const parentSpy = spyOn<any>(hierarchicalGrid.onRowSelectionChange, 'emit').and.callThrough();
-            const childSpy = spyOn<any>(childGrid.onRowSelectionChange, 'emit').and.callThrough();
-            const secondChildSpy = spyOn<any>(secondChildGrid.onRowSelectionChange, 'emit').and.callThrough();
+            const parentSpy = spyOn<any>(hierarchicalGrid.rowSelected, 'emit').and.callThrough();
+            const childSpy = spyOn<any>(childGrid.rowSelected, 'emit').and.callThrough();
+            const secondChildSpy = spyOn<any>(secondChildGrid.rowSelected, 'emit').and.callThrough();
             const mockEvent = new MouseEvent('click');
 
             // Click on a row in child grid
