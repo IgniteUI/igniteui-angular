@@ -9,7 +9,7 @@
       "@types/hammerjs",
       "hammerjs",
       "jszip",
-      "resize-observer-polyfill",
+      "@juggle/resize-observer",
       "igniteui-trial-watermark",
       "lodash.mergewith",
       "uuid",

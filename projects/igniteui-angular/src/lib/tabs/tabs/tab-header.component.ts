@@ -3,7 +3,7 @@ import { IgxTabItemDirective } from '../tab-item.directive';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
-import ResizeObserver from 'resize-observer-polyfill';
+import {ResizeObserver} from '@juggle/resize-observer';
 import { PlatformUtil } from '../../core/utils';
 
 @Component({
