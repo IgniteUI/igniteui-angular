@@ -2088,7 +2088,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
     describe('Custom overlay', () => {
 
-        it('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
+        xit('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
             fix.detectChanges();
             const gridContent = GridFunctions.getGridContent(fix);
