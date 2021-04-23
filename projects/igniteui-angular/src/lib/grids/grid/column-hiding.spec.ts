@@ -159,7 +159,7 @@ describe('Column Hiding UI #grid', () => {
 
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(1);
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+                { column: grid.getColumnByName('ReleaseDate'), checked: false });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
 
@@ -167,7 +167,7 @@ describe('Column Hiding UI #grid', () => {
 
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(2);
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('ReleaseDate'), checked: undefined });
+                { column: grid.getColumnByName('ReleaseDate'), checked: true });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(2);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(2);
 
@@ -175,7 +175,7 @@ describe('Column Hiding UI #grid', () => {
 
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(3);
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), checked: undefined });
+                { column: grid.getColumnByName('Downloads'), checked: true });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(3);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(3);
 
@@ -183,7 +183,7 @@ describe('Column Hiding UI #grid', () => {
 
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledTimes(4);
             expect(columnChooser.onColumnToggled.emit).toHaveBeenCalledWith(
-                { column: grid.getColumnByName('Downloads'), checked: undefined });
+                { column: grid.getColumnByName('Downloads'), checked: false });
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(4);
             expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(4);
         });
