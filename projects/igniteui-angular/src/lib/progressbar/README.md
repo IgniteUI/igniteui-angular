@@ -24,9 +24,9 @@ export class AppModule {}
 ### Basic configuration
 
 ```html
-<igx-circular-bar [value]="currentValue" [max]="100" [animate]="true" [textVisibility]="false" (onProgressChanged)="progresChanged($event)"></igx-circular-bar>
+<igx-circular-bar [value]="currentValue" [max]="100" [animate]="true" [textVisibility]="false" (progressChanged)="progresChange($event)"></igx-circular-bar>
 
-<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [textTop]="true" [striped]="true" [textVisibility]="true" (onProgressChanged)="progresChanged($event)"></igx-linear-bar>>
+<igx-linear-bar type="warning" [text]="'Custom text'" [textAlign]="positionCenter" [textTop]="true" [striped]="true" [textVisibility]="true" (progressChanged)="progresChange($event)"></igx-linear-bar>>
 ```
 
 # API Summary
@@ -58,4 +58,4 @@ export class AppModule {}
 |:----------|:------|
 | `getValue()` | Return passed value to progress bar to be in range between min(0) and max. |
 | `getPercentValue()` | Calculate the percentage based on passed value. |
-| `onProgressChanged` | Exposed event, that could be handled to track progress changing |
+| `progressChanged` | Exposed event, that could be handled to track progress changing |

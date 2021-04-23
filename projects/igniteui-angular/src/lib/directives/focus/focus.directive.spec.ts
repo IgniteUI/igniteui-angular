@@ -6,7 +6,7 @@ import { IgxFocusDirective, IgxFocusModule } from './focus.directive';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { EditorProvider } from '../../core/edit-provider';
 import { IgxCheckboxModule, IgxCheckboxComponent } from '../../checkbox/checkbox.component';
-import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/date-picker.component';
+import { IgxDatePickerModule, IgxDatePickerComponent } from '../../date-picker/public_api';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('igxFocus', () => {

@@ -1,6 +1,7 @@
 # igx-time-picker Component
 
-The **igx-time-picker** component allows you to select time which is presented into input field.
+The **igx-time-picker** component allows you to select time from dropdown/dialog which is presented into input field.
+A walk through of how to get started can be found [here](https://www.infragistics.com/products/ignite-ui-angular/angular/components/time_picker.html)
 
 # Usage
 ```typescript
@@ -11,83 +12,47 @@ Basic initialization
 ```html
 <igx-time-picker></igx-time-picker>
 ```
-Custom format with passed initial value.
+
+Custom formats for the input field.
 ```html
-<igx-time-picker format="h:mm tt" [value]="dateValue" >
+<igx-time-picker
+    [inputFormat]="hh:mm:ss tt"
+    [displayFormat]="'shortTime'"
+    [value]="date" >
+</igx-time-picker>
+```
+If the `inputFormat` is not set, it will default to `hh:mm tt`. The `displayFormat` accepts all supported formats by Angular's `DatePipe`.
+
+The time picker also supports binding through `ngModel` in case two-way date-binding is needed.
+```html
+<igx-time-picker #model="ngModel"
+    [(ngModel)]="date" [minValue]="minDate" [maxValue]="maxDate">
+    <igx-hint *ngIf="model.errors?.minValue || model.errors?.maxValue">
+        Time is not in range.
+    </igx-hint>
 </igx-time-picker>
 ```
 
-You have also ability to disable the time picker
+Additionally the time picker spin options can be set by the `spinLoop` property. Its default value is `true`, in which case the spinning is wrapped around the min and max values.
 ```html
-<igx-time-picker [disabled]="true">
+<igx-time-picker [spinLoop]="false">
 </igx-time-picker>
 ```
 
-TimePicker with min and max values and onInvalidValueSelected event handler in order to decide what to do if an ivalid value is selected.
+In dialog mode the dialog's header orientation can be set to `vertical` or `horizontal`
 ```html
-<igx-time-picker [minValue]="minValue" [maxValue]="maxValue" (onInvalidValueSelected)="okClicked($event)">
+<igx-time-picker [headerOrientation]="'vertical'">
 </igx-time-picker>
 ```
 
-The TimePicker also supports binding through `ngModel` if two-way date-bind is needed.
-```html
-<igx-time-picker [(ngModel)]="myValue">
-</igx-time-picker>
-```
-
-The TimePicker also has to spin options. Spin loop and limited scroll modes are available. By default `isSpinLoop` is set to true.
-```html
-<igx-time-picker [isSpinLoop]="false">
-</igx-time-picker>
-```
-
-The TimePicker has vertical and horizontal layout. By default the `vertical` is set to false
-```html
-<igx-time-picker [vertical]="true">
-</igx-time-picker>
-```
-The TimePicker supports custom label. It can be set in the following way:
+A label can be added to the time picker in the following way:
 ````html
 <igx-time-picker>
-    <label igxLabel> Custom label</label>
+    <label igxLabel>Time</label>
 </igx-time-picker>
 ````
 
-The TimePicker input group could be retemplated.
-```html
-<igx-time-picker>
-    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
-        <igx-input-group (click)="openDialog()">
-            <label igxLabel>Time</label>
-            <input igxInput [value]="displayTime"/>
-        </igx-input-group>
-    </ng-template>
-</igx-time-picker>
-```
-The TimePicker supports another interaction mode - an editable masked input and a dropdown. The user can enter or edit the time value inside the text input or select a vlaue from a dropdown, that will be applied on the text input.
-```typescript
-mode = InteractionMode.DropDown;
-```
-
-```html
-<igx-time-picker [mode]="mode">
-</igx-time-picker>
-```
-
-In order to re-template the TimePicker in `dropdown` mode, you should pass the drop down target element to the `openDialog` method in order to position the drop down container accordingly:
-
-```html
-<igx-time-picker [mode]="'dropdown'">
-    <ng-template igxTimePickerTemplate let-openDialog="openDialog" let-value="value" let-displayTime="displayTime">
-        <igx-input-group (click)="openDialog(dropDownTarget)" #dropDownTarget> 
-            <label igxLabel>Time</label>
-            <input igxInput [value]="displayTime"/>
-        </igx-input-group>
-    </ng-template>
-</igx-time-picker>
-```
-
-The TimePicker action buttons could be retemplated.
+The component's action buttons can be templated using the `igxPickerActions` directive:
 ```html
 <igx-time-picker #picker>
     <ng-template igxTimePickerActions>
@@ -109,47 +74,43 @@ The TimePicker action buttons could be retemplated.
 ###### Inputs
 | Name   |      Type      |  Description |
 |:----------|:-------------:|:------|
-| `okButtonLabel` | string | Renders OK button with custom name, which commits the selected time, and fill the timePicker input. By default `okButtonLabel` is set to 'OK'. |
-| `cancelButtonLabel` | string | Renders cancel button with custom name, which closes the dialog. By default `cancelButtonLabel` is set to 'Cancel'. |
-| `value` | Date | Value of the timePicker. |
+| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
+| `okButtonLabel` | string | Renders OK button with custom content, which closes the dropdown/dialog. By default `okButtonLabel` is set to 'OK'. |
+| `cancelButtonLabel` | string | Renders cancel button with custom content, which closes the dropdown/dialog and reverts picker's value to the value at the moment of opening. By default `cancelButtonLabel` is set to 'Cancel'. |
+| `value` | `Date | string` | Value of the time picker. |
 |`resourceStrings`| ITimePickerResourceStrings | Resource strings of the time-picker. |
-| `disabled` | boolean | Disable the timePicker. |
-| `itemsDelta`| object | Sets the delta for hour and minute items. By default `itemsDelta` is set ti {hours:1, minutes:1} |
-| `minValue` | string | Sets minimum value. It should follow the `format` of the timePicker. |
-| `maxValue` | string | Sets maximum value. It should follow the `format` of the timePicker. |
-| `vertical` | boolean | Sets the orientation of the timePicker. By default `vertical` is set to true. |
-| `format` | string | Gets/Sets format of time while timePicker has no focus. By default `format` is set to `hh:mm tt`.
-List of time-flags:
-"h": hours field in 12-hours format without leading zero
-"hh": hours field in 12-hours format with leading zero
-"H": hours field in 24-hours format without leading zero
-"HH": hours field in 24-hours format with leading zero
-"m": minutes field without leading zero
-"mm": minutes field with leading zero
-"s": seconds field without leading zero
-"ss": seconds field with leading zero
-"tt": 2 characters of string which represents AM/PM field |
-| `isSpinLoop` | boolean | Determines the spin behavior. By default `isSpinLoop` is set to true. |
-| `mode` | InteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dialog picker.|
-| `promptChar` | string | Sets the character used to prompt the user for input. The default is a dash. Only applicable for dropdown mode.
+| `disabled` | boolean | Disable the time picker. |
+| `itemsDelta`| object | Sets the delta for hour, minute and second items. By default `itemsDelta` is set to {hour:1, minute:1, second:1} |
+| `minValue` | `Date | string` | The minimum value required for the picker to remain valid. |
+| `maxValue` | `Date | string` | The maximum value required for the editor to remain valid. |
+| `headerOrientation` | `'horizontal' | 'vertical'` | Determines whether the dialog's header renders in vertical or horizontal state. Applies only in dialog mode. |
+| `locale` | `string` | Sets the locale used for formatting and displaying time in the dropdown/dialog. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
+| `displayFormat` | `string` | The format used to display the picker's value when it's not being edited. |
+| `inputFormat` | `string` | The editor's input mask. |
+| `formatter` | `function` | Applied custom formatter on the selected or passed in date. |
+| `spinLoop` | boolean | Determines the spin behavior. By default `spinLoop` is set to true. |
+| `mode` | PickerInteractionMode | Determines the interaction mode - a dialog picker or a dropdown with editable masked input. Default is dropdown picker.|
+| `overlaySettings` | `OverlaySettings` | Changes the default overlay settings used by the `IgxTimePickerComponent`.
+| `placeholder` | `string` | Sets the placeholder text for empty input.
+| `type` | `IgxInputGroupType` | Determines how the picker will be styled.
 
 ### Outputs
 | Name | Description |
 |:--:|:---|
-| `onValueChanged` | Fired when selection is made. The event contains the selected value. |
-| `onInvalidValueSelected ` | Emitted when the user try to commit invalid value. The event contains the timePicker |
-| `onOpened` | Emitted when a timePicker is being opened. |
-| `onClosed` | Emitted when a timePicker is being closed. |
+| `opening`  | `IBaseCancelableBrowserEventArgs` | Fired when the dropdown/dialog has started opening, cancelable. |
+| `opened`  | `IBaseEventArgs` | Fired after the dropdown/dialog has opened. |
+| `closing`  | `IBaseCancelableBrowserEventArgs` | Fired when the dropdown/dialog has started closing, cancelable. |
+| `closed`  | `IBaseEventArgs` | Fired after the dropdown/dialog has closed. |
+| `validationFailed`  | `ITimePickerValidationFailedEventArgs` | Emitted when an invalid time string is entered or when the value is outside the min/max range. |
+| `valueChange` | `Date | string` | Emitted when the picker's value changes. Allows two-way binding of `value`. |
 
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|
-| `okButtonClick` | | `void` | If current value is valid selects it and closes the dialog. |
-| `cancelButtonClick` | | `void` | Closes the dialog without selecting the current value. |
-| `hoursInView` | | `string[]` | Returns an array of the hours currently in view. |
-| `minutesInView` | | `string[]` | Returns an array of the minutes currently in view. |
-| `ampmInView` | | `string[]` | Returns an array of the ampm currently in view. |
-| `scrollHourIntoView` | `(item: string)` | `void` | Scrolls a hour item into view. |
-| `scrollMinuteIntoView` | `(item: string)` | `void` | Scrolls a minute item into view. |
-| `scrollAmPmIntoView` | `(item: string)` | `void` | Scrolls a period item into view. |
-| `openDialog` | `target?: HTMLElement` | `void` | Opens the dialog or drop down, depending on the mode. |
+| `select` | `Date | string` | `void` | Accepts a Date object or string and selects the corresponding time from the dropdown/dialog. |
+| `clear` | n/a | `void` | Clears the picker's value in case it is a string and resets it to `00:00:00` when it is a Date object |
+| `open` | `OverlaySettings` | `void` | Opens the dropdown/dialog. |
+| `close` | n/a | `void` | Closes the dropdown/dialog. |
+| `toggle` | `OverlaySettings` | `void` | Toggles the dropdown/dialog between opened and closed states. |
+| `increment` | `DatePart?, number?` | | `void` | Accepts a `DatePart` and increments it by one. If no value is provided, it defaults to the part at the position of the cursor.
+| `decrement` | `DatePart?, number?` | `void` | Accepts a `DatePart` and decrements it by one. If no value is provided, it defaults to the part at the position of the cursor.

@@ -30,6 +30,26 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             labelDirective: 'igxTabHeaderLabel'
         }
     ];
+
+    const EDITOR_COMPONENTS = [{
+        COMPONENT: 'igx-date-picker',
+        TEMPLATE_DIRECTIVE: 'igxDatePickerTemplate',
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxDatePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker -->\n`
+     }, {
+        COMPONENT: 'igx-time-picker',
+        TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxTimePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker -->\n`
+     }];
+    const EDITORS_MODE = ['[mode]', 'mode'];
+    const EDITORS_LABEL = ['[label]', 'label'];
+    const EDITORS_LABEL_VISIBILITY = ['[labelVisibility]', 'labelVisibility'];
+
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
@@ -324,5 +344,120 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         host.overwrite(entryPath, content);
     }
 
+    // igxDatePicker & igxTimePicker migrations
+    for (const comp of EDITOR_COMPONENTS) {
+        for (const path of htmlFiles) {
+
+            // DatePicker and TimePicker don't support templates anymore.
+            // That is why migrations inserts a comment to notify the developer to remove the templates.
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+                .map(editor => findElementNodes([editor], 'ng-template'))
+                .reduce((prev, curr) => prev.concat(curr), [])
+                .filter(template => hasAttribute(template as Element, comp.TEMPLATE_DIRECTIVE))
+                .map(node => getSourceOffset(node as Element))
+                .forEach(offset => {
+                    const { startTag, file } = offset;
+                    addChange(file.url, new FileChange(startTag.start, comp.TEMPLATE_WARN_MSG));
+                });
+
+            // DatePicker and TimePicker default mode is changed to dropdown.
+            // 1. That is why any occurrence of drop down mode is removed and
+            // 2. dialog mode is added for those that didn't explicitly set the mode prop.
+
+            // 1. Remove dropdown mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { file } = offset;
+                getAttribute(offset.node as Element, EDITORS_MODE).forEach(attr => {
+                    const { sourceSpan, value } = attr;
+                    if (value.replace(/'/g,'').replace(/"/g,'') === 'dropdown') {
+                        const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                        addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    }
+                });
+            });
+
+            // 2. Insert dialog mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                addChange(file.url, new FileChange(startTag.end - 1, ' mode="dialog"'));
+            });
+
+
+            // Remove label property and project it as <label igxLabel></label>
+            // Check also labelVisibility value.
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_LABEL))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                let visibilityValue: string | boolean = true;
+                if (hasAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY)) {
+                    const visibility = getAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY);
+                    visibilityValue = visibility[0].value;
+                }
+
+                getAttribute(offset.node as Element, EDITORS_LABEL).forEach(attr => {
+                    const { sourceSpan, name, value } = attr;
+                    const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                    let label;
+                    const ngIF = (typeof visibilityValue === 'boolean') ? `` : ` *ngIf="${visibilityValue}"`;
+                    if (name.startsWith('[')) {
+                        label = `\n<label igxLabel${ngIF}>{{${value}}}</label>`;
+                    } else {
+                        label = `\n<label igxLabel${ngIF}>${value}</label>`;
+                    }
+                    addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    addChange(file.url, new FileChange(startTag.end, label));
+                });
+            });
+
+            // If label and labelVisibility are not set this means that we should project default labels: "Date" & "Time"
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_LABEL) &&
+                !hasAttribute(template as Element, EDITORS_LABEL_VISIBILITY))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                if (findElementNodes([offset.node], 'label').length === 0) {
+                const { startTag, file } = offset;
+                addChange(file.url,
+                    new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
+                }
+            });
+
+            // Rename InteractionMode to PickerInteractionMode
+            const modeMatches = [{
+                old: ' InteractionMode ',
+                new: ' PickerInteractionMode '
+            },
+            {
+                old: ' InteractionMode,',
+                new: ' PickerInteractionMode,'
+            },
+            {
+                old: ' InteractionMode.',
+                new: ' PickerInteractionMode.'
+            }];
+
+            let content;
+            for (const entryPath of tsFiles) {
+                content = host.read(entryPath).toString();
+                modeMatches.forEach(match => {
+                    content = content.replace(match.old, match.new);
+                });
+                host.overwrite(entryPath, content);
+            }
+
+            applyChanges();
+            changes.clear();
+        }
+    }
+
+    // Apply all selector and input changes
     update.applyChanges();
 };

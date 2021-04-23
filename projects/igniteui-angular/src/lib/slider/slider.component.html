@@ -53,8 +53,8 @@
         [step]="step"
         [templateRef]="thumbFromTemplateRef"
         [context]="context"
-        (onChange)="onThumbChange()"
-        (onHoverChange)="onHoverChange($event)"
+        (thumbChange)="onThumbChange()"
+        (hoverChange)="onHoverChange($event)"
         [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 
@@ -78,8 +78,8 @@
         [step]="step"
         [templateRef]="thumbToTemplateRef"
         [context]="context"
-        (onChange)="onThumbChange()"
-        (onHoverChange)="onHoverChange($event)"
+        (thumbChange)="onThumbChange()"
+        (hoverChange)="onHoverChange($event)"
         [deactiveState]="deactivateThumbLabel"
         [thumbLabelVisibilityDuration]="thumbLabelVisibilityDuration"></igx-thumb>
 </div>

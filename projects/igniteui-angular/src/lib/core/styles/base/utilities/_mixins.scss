@@ -256,6 +256,7 @@
     $ignore: ('name', 'palette', 'variant', 'selector');
     $webc-prefix: 'igc';
     $webc: nth(str-split($name, '-'), 1) == $webc-prefix;
+    $themes: map-get($theme, 'themes');
 
     @if not($prefix) and $webc {
         $prefix: $webc-prefix;
@@ -263,6 +264,12 @@
 
     @if not($name) or str-length($name) == 0 {
         @error 'Theme should have a non-null or empty name property. Example: my-theme: (name: my-theme)';
+    }
+
+    @if $themes and type-of($themes) == 'map' {
+        @each $theme in $themes {
+            @include igx-css-vars(nth($theme, 2));
+        }
     }
 
     @each $key, $value in $theme {
