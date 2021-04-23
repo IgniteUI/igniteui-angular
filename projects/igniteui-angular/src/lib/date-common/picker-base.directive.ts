@@ -2,7 +2,7 @@ import {
     AfterViewInit, ContentChildren, Directive, ElementRef, EventEmitter,
     Inject, Input, LOCALE_ID, OnDestroy, Optional, Output, QueryList
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { merge, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityBase, DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
@@ -226,7 +226,6 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
     }
 
     protected _destroy$ = new Subject();
-    private _toggleClickNotifier$ = new Subject();
 
     public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
 
@@ -240,23 +239,25 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
-        const subsToClicked = () => {
-            this._toggleClickNotifier$.next();
-            this.toggleComponents.forEach(toggle => {
-                toggle.clicked.pipe(takeUntil(this._toggleClickNotifier$)).subscribe(() => this.open());
-            });
-        };
-        this.toggleComponents.changes.pipe(takeUntil(this._destroy$)).subscribe(() => subsToClicked());
-        subsToClicked();
+        this.subToIconsClicked(this.toggleComponents, () => this.open());
+        this.toggleComponents.changes.pipe(takeUntil(this._destroy$))
+            .subscribe(() => this.subToIconsClicked(this.toggleComponents, () => this.open()));
     }
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
         this._destroy$.next();
         this._destroy$.complete();
-        this._toggleClickNotifier$.next();
-        this._toggleClickNotifier$.complete();
     }
+
+    /** Subscribes to the click events of toggle/clear icons in a query */
+    protected subToIconsClicked(components: QueryList<IgxPickerToggleComponent>, next: () => any) {
+        components.forEach(toggle => {
+            toggle.clicked
+                .pipe(takeUntil(merge(components.changes, this._destroy$)))
+                .subscribe(next);
+        });
+    };
 
     public abstract select(value: Date | DateRange | string): void;
     public abstract open(settings?: OverlaySettings): void;

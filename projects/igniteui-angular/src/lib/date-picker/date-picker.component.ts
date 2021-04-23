@@ -754,6 +754,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
 
+        this.subToIconsClicked(this.clearComponents, () => this.clear());
+        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
+            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
