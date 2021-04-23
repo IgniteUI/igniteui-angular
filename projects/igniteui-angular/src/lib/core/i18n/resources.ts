@@ -1,3 +1,4 @@
+import { DatePickerResourceStringsEN, IDatePickerResourceStrings } from './date-picker-resources';
 import { DateRangePickerResourceStringsEN, IDateRangePickerResourceStrings } from './date-range-picker-resources';
 import { IGridResourceStrings, GridResourceStringsEN } from './grid-resources';
 import { ITimePickerResourceStrings, TimePickerResourceStringsEN } from './time-picker-resources';
@@ -11,8 +12,8 @@ import { IInputResourceStrings, InputResourceStringsEN } from './input-resources
 import { ITreeResourceStrings, TreeResourceStringsEN } from './tree-resources';
 
 export interface IResourceStrings extends IGridResourceStrings, ITimePickerResourceStrings, ICalendarResourceStrings,
-    ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDateRangePickerResourceStrings, IListResourceStrings,
-    IPaginatorResourceStrings, ITreeResourceStrings { }
+    ICarouselResourceStrings, IChipResourceStrings, IInputResourceStrings, IDatePickerResourceStrings, IDateRangePickerResourceStrings,
+    IListResourceStrings, IPaginatorResourceStrings, ITreeResourceStrings { }
 
 /**
  * @hidden
@@ -23,6 +24,7 @@ export const CurrentResourceStrings = {
     TimePickerResStrings: cloneValue(TimePickerResourceStringsEN),
     CalendarResStrings: cloneValue(CalendarResourceStringsEN),
     ChipResStrings: cloneValue(ChipResourceStringsEN),
+    DatePickerResourceStrings: cloneValue(DatePickerResourceStringsEN),
     DateRangePickerResStrings: cloneValue(DateRangePickerResourceStringsEN),
     CarouselResStrings: cloneValue(CarouselResourceStringsEN),
     ListResStrings: cloneValue(ListResourceStringsEN),
@@ -56,6 +58,7 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.CalendarResStrings,
     ...CurrentResourceStrings.CarouselResStrings,
     ...CurrentResourceStrings.ChipResStrings,
+    ...CurrentResourceStrings.DatePickerResourceStrings,
     ...CurrentResourceStrings.DateRangePickerResStrings,
     ...CurrentResourceStrings.GridResStrings,
     ...CurrentResourceStrings.InputResStrings,

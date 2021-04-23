@@ -1,18 +1,20 @@
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
-import { FlatGridType, GridType, HierarchicalGridType, TreeGridType } from './common/grid.interface';
 import { RowType } from './common/row.interface';
-import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridAPIService } from './grid/grid-api.service';
+import { IgxGridComponent } from './grid/grid.component';
+import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IgxSummaryResult } from './summaries/grid-summary';
+import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 
 abstract class BaseRow implements RowType {
     public index: number;
-    protected grid: IgxGridBaseDirective & FlatGridType |
-                    IgxGridBaseDirective & TreeGridType |
-                    IgxGridBaseDirective & HierarchicalGridType;
+    /**
+     * The grid that contains the row.
+     */
+    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
     protected _data?: any;
 
     /**
@@ -253,7 +255,7 @@ export class IgxGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(protected grid: IgxGridBaseDirective & FlatGridType,
+    constructor(public grid: IgxGridComponent,
         public index: number, protected _data?: any) {
         super();
     }
@@ -273,7 +275,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(protected grid: IgxGridBaseDirective & TreeGridType,
+    constructor(public grid: IgxTreeGridComponent,
         public index: number, protected _data?: any, private _treeRow?: ITreeGridRecord) {
         super();
     }
@@ -390,7 +392,7 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(protected grid: IgxGridBaseDirective & HierarchicalGridType,
+    constructor(public grid: IgxHierarchicalGridComponent,
         public index: number, protected _data?: any) {
         super();
     }
@@ -410,6 +412,11 @@ export class IgxGroupByRow implements RowType {
     public index: number;
 
     /**
+     * The grid that contains the row.
+     */
+    public grid: IgxGridComponent;
+
+    /**
      * Returns always true, because this is in instance of an IgxGroupByRow.
      */
     public isGroupByRow: boolean;
@@ -424,7 +431,8 @@ export class IgxGroupByRow implements RowType {
     /**
      * @hidden
      */
-     constructor(private _grid: IgxGridBaseDirective & FlatGridType, index: number, private _groupRow?: IGroupByRecord) {
+     constructor(grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
+        this.grid = grid;
         this.index = index;
         this.isGroupByRow = true;
     }
@@ -457,13 +465,6 @@ export class IgxGroupByRow implements RowType {
         this.grid.toggleGroup(this.groupRow);
     }
 
-    /**
-     * Get a reference to the grid that contains the GroupBy row.
-     */
-    protected get grid(): IgxGridBaseDirective & FlatGridType {
-        return this._grid;
-    }
-
     private get gridAPI(): IgxGridAPIService {
         return this.grid.gridAPI as IgxGridAPIService;
     }
@@ -474,6 +475,11 @@ export class IgxSummaryRow implements RowType {
      * Returns the row index.
      */
     public index: number;
+
+    /**
+     * The grid that contains the row.
+     */
+    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
 
     /**
      * Returns always true, because this is in instance of an IgxGroupByRow.
@@ -490,15 +496,10 @@ export class IgxSummaryRow implements RowType {
     /**
      * @hidden
      */
-    constructor(protected _grid: IgxGridBaseDirective & GridType, index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
+    constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+        index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
+        this.grid = grid;
         this.index = index;
         this.isSummaryRow = true;
-    }
-
-    /**
-     * Get a reference to the grid that contains the selected row.
-     */
-    protected get grid(): IgxGridBaseDirective & GridType {
-        return this._grid;
     }
 }

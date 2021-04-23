@@ -189,7 +189,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
             expect(datePicker).toBeDefined();
 
-            datePicker.selectDate(selectedDate);
+            datePicker.select(selectedDate);
             fixture.detectChanges();
 
             expect(datePicker.value).toBe(selectedDate);

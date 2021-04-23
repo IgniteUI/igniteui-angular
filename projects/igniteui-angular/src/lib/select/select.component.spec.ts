@@ -307,6 +307,8 @@ describe('igxSelect', () => {
             verifyOpenCloseEvents(1, 1, 2);
 
             select.disabled = true;
+            tick();
+            fixture.detectChanges();
             inputGroup.nativeElement.click();
             tick();
             fixture.detectChanges();
