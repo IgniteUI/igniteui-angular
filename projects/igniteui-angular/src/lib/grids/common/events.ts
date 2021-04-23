@@ -63,7 +63,7 @@ export interface IPinColumnEventArgs extends IBaseEventArgs {
 /**
  * The event arguments before a column's pin state is changed.
  * `insertAtIndex`specifies at which index in the pinned/unpinned area the column is inserted.
- * Can be changed in the `onColumnPinning` event.
+ * Can be changed in the `columnPin` event.
  * `isPinned` returns the actual pin state of the column. When pinning/unpinning is succesfull,
  * the value of `isPinned` will change accordingly when read in the "-ing" and "-ed" event.
  */
