@@ -4349,7 +4349,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row.animateAdd = false;
             const cell = row.cells.find(c => c.editable);
             if (cell) {
-                this.gridAPI.submit_value();
+                this.gridAPI.update_cell(this.crudService.cell);
                 this.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
@@ -4416,24 +4416,33 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const col = this.columnList.toArray().find(c => c.field === column);
             if (col) {
                 // Simplify
-                const rowData = this.gridAPI.getRowData(rowSelector);
+                // const rowData = this.gridAPI.getRowData(rowSelector);
                 const index = this.gridAPI.get_row_index_in_data(rowSelector);
                 // If row passed is invalid
                 if (index < 0) {
                     return;
                 }
-                const id = {
-                    rowID: rowSelector,
-                    columnID: col.index,
-                    rowIndex: index
-                };
+                // const id = {
+                //     rowID: rowSelector,
+                //     columnID: col.index,
+                //     rowIndex: index
+                // };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
-                this.gridAPI.update_cell(value, cell);
+                // const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                // this.gridAPI.update_cell(cell);
 
-                if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                    this.crudService.endCellEdit();
-                }
+                // let cell = this.grid.crudService.cell;
+                // if (!cell) {
+                //     cell = this.grid.crudService.createCell(this);
+                // }
+                // cell.editValue = val;
+                // this.gridAPI.update_cell(cell);
+                // this.grid.crudService.endCellEdit();
+
+                // if (this.crudService.cell && this.crudService.sameCell(cell)) {
+                //     this.crudService.endCellEdit();
+                // }
+                this.gridAPI.get_cell_by_index(index, col.index).update(value);
                 this.cdr.detectChanges();
             }
         }

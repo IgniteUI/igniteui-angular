@@ -777,7 +777,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (this.editable && value) {
             if (this.grid.crudService.cellInEditMode) {
-                this.gridAPI.update_cell();
+                this.gridAPI.update_cell(this.grid.crudService.cell);
                 this.grid.crudService.endCellEdit();
             }
             this.grid.crudService.enterEditMode(this);
@@ -800,11 +800,14 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.intRow.deleted) {
             return;
         }
-        const cell = new IgxCell(this.cellID, this.rowIndex, this.column, this.value, this.value, this.row.rowData, this.grid);
-        this.gridAPI.update_cell(val, cell);
-        if (this.grid.crudService.cell && this.grid.crudService.sameCell(cell)) {
-            this.grid.crudService.endCellEdit();
+
+        let cell = this.grid.crudService.cell;
+        if (!cell) {
+            cell = this.grid.crudService.createCell(this);
         }
+        cell.editValue = val;
+        const args = this.gridAPI.update_cell(cell);
+        this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
 
@@ -971,7 +974,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this.editable && editMode && !this.intRow.deleted) {
             if (editableCell) {
                 if (this.intRow.addRow) {
-                    this.gridAPI.update_add_cell(editableCell, editableCell.editValue, event);
+                    editableArgs = this.grid.crudService.updateAddCell(false, event);
                     this.intRow.rowData = editableCell.rowData;
                 } else {
                     editableArgs = this.grid.crudService.updateCell(false, event);
@@ -987,8 +990,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                // TODO: remove cellEditingBlocked after refactoring @update_add_cell
-                if (this.grid.crudService.cellEditingBlocked || (editableArgs && editableArgs.cancel)) {
+                if (editableArgs.cancel) {
                     return true;
                 }
 
@@ -1002,7 +1004,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
             if (this.intRow.addRow) {
-                this.gridAPI.submit_add_value(event);
+                const args = this.grid.crudService.updateAddCell(false, event);
+                if (args.cancel) {
+                    this.grid.crudService.endAddRow();
+                } else {
+                    this.grid.crudService.exitCellEdit(event);
+                }
                 this.intRow.rowData = editableCell.rowData;
             } else {
                 this.grid.crudService.updateCell(true, event);

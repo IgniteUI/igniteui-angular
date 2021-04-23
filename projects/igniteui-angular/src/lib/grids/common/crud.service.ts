@@ -112,22 +112,12 @@ export class IgxCellCrudState {
     public isInCompositionMode = false;
     public cancelAddMode = false;
 
-    private _cellEditingBlocked = false;
-
-    public get cellEditingBlocked() {
-        return this._cellEditingBlocked;
-    }
-
-    public set cellEditingBlocked(val) {
-        this._cellEditingBlocked = val;
-    }
-
-    public createCell(cell) {
-        this.cell = new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.row.rowData, cell.grid);
+    public createCell(cell): IgxCell {
+        return this.cell = new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.intRow.rowData, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxRow {
-        return new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData, cell.grid);
+        return this.row = new IgxRow(cell.id.rowID, cell.rowIndex, cell.rowData, cell.grid);
     }
 
     public sameRow(rowID): boolean {
@@ -147,7 +137,6 @@ export class IgxCellCrudState {
         const args = this.cell.createEditEventArgs(false, event);
         this.grid.cellEditEnter.emit(args);
 
-        this._cellEditingBlocked = args.cancel;
         if (args.cancel) {
             this.endCellEdit();
         }
@@ -156,13 +145,7 @@ export class IgxCellCrudState {
 
     public cellEdit(event?: Event) {
         const args = this.cell.createEditEventArgs(true, event);
-
-        if (isEqual(args.oldValue, args.newValue)) {
-            return args;
-        }
-
         this.grid.cellEdit.emit(args);
-        this.cellEditingBlocked = args.cancel;
         return args;
     }
 
@@ -171,14 +154,20 @@ export class IgxCellCrudState {
             return;
         }
 
+        let doneArgs;
+        if (isEqual(this.cell.value, this.cell.editValue)) {
+            doneArgs = this.exitCellEdit(event);
+            return doneArgs;
+        }
+
         const args = this.cellEdit(event);
         if (args.cancel) {
             return args;
         }
 
-        this.grid.gridAPI.update_cell();
+        this.grid.gridAPI.update_cell(this.cell);
 
-        let doneArgs = this.cellEditDone(event);
+        doneArgs = this.cellEditDone(event, false);
         if (exit) {
             doneArgs = this.exitCellEdit(event);
         }
@@ -186,10 +175,37 @@ export class IgxCellCrudState {
         return {...args, ...doneArgs};
     }
 
-    public cellEditDone(event): IGridEditDoneEventArgs {
+    public updateAddCell(exit: boolean, event?: Event) {
+        if (!this.cell) {
+            return;
+        }
+
+        if (isEqual(this.cell.value, this.cell.editValue)) {
+            return {} as IGridEditEventArgs;
+        }
+
+        const args = this.cellEdit(event);
+        if (args.cancel) {
+            return args;
+        }
+
+        this.grid.gridAPI.update_add_cell(this.cell);
+
+        let doneArgs = this.cellEditDone(event, true);
+        if (exit) {
+            doneArgs = this.exitCellEdit(event);
+        }
+
+        return {...args, ...doneArgs};
+    }
+
+    public cellEditDone(event, addRow: boolean): IGridEditDoneEventArgs {
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const doneArgs = this.cell.createDoneEditEventArgs(newValue, event);
         this.grid.cellEditDone.emit(doneArgs);
+        if (addRow) {
+            doneArgs.rowData = this.row.data;
+        }
         return doneArgs;
     }
 
@@ -216,7 +232,6 @@ export class IgxCellCrudState {
     /** Clears cell editing state */
     public endCellEdit() {
         this.cell = null;
-        this.cellEditingBlocked = false;
     }
 
     /** Returns whether the targeted cell is in edit mode */
@@ -262,7 +277,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
         }
 
         if (!this.row) {
-            this.row = this.createRow(this.cell);
+            this.createRow(this.cell);
             const rowArgs = this.row.createEditEventArgs(false, event);
 
             this.grid.rowEditEnter.emit(rowArgs);
@@ -308,7 +323,7 @@ export class IgxRowCrudState extends IgxCellCrudState {
             return false;
         }
 
-        if (this.rowEditingBlocked && this.cellEditingBlocked) {
+        if (this.rowEditingBlocked) {
             return true;
         }
 
@@ -348,7 +363,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         this.cell.primaryKey = this.primaryKey;
         cell.enterAddMode = true;
         if (!this.sameRow(this.cell.id.rowID)) {
-            this.row = this.createRow(this.cell);
+            this.createRow(this.cell);
             this.row.isAddRow = true;
             const rowArgs = this.row.createEditEventArgs(false, event);
             this.grid.rowEditEnter.emit(rowArgs);
@@ -371,7 +386,6 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         const row = this.row;
         const cell = this.cell;
         const cachedRowData = { ...row.data };
-        let cancelable = false;
         if (!row && !cell) {
             return;
         }
@@ -386,8 +400,13 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
                 const showIndex = isInView ? -1 : dataIndex;
                 this.grid.showSnackbarFor(showIndex);
             });
-            cancelable = this.grid.gridAPI.submit_add_value(event);
-            if (!cancelable) {
+            const cancelable = this.updateAddCell(false, event);
+            if (cancelable.cancel) {
+                this.endAddRow();
+            } else {
+                this.exitCellEdit(event);
+            }
+            if (!cancelable.cancel) {
                 const args = row.createEditEventArgs(true, event);
                 this.grid.rowEdit.emit(args);
                 if (args.cancel) {
@@ -403,7 +422,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
                 }
             }
             this.addRowParent = null;
-            this.cancelAddMode = cancelable;
+            this.cancelAddMode = cancelable.cancel;
         } else {
             this.exitCellEdit(event);
             this.cancelAddMode = true;
@@ -518,7 +537,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
 
         if (commit) {
             const args = this.updateCell(true, event);
-            if (args.cancel) {
+            if (args && args.cancel) {
                 return args.cancel;
             }
         } else {

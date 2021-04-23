@@ -114,40 +114,12 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public submit_value() {
-        const cell = this.crudService.cell;
-        if (cell) {
-            this.update_cell(cell.editValue);
-        }
-    }
-
-    public submit_add_value(event?: Event) {
-        const cell = this.crudService.cell;
-        if (cell) {
-            const args = this.update_add_cell(cell, cell.editValue, event);
-            if (args.cancel) {
-                this.crudService.endAddRow();
-                return args.cancel;
-            }
-            this.crudService.exitCellEdit(event);
-            return args.cancel;
-        }
-    }
-
-    public update_add_cell(cell: IgxCell, value: any, event?: Event): IGridEditEventArgs  {
-        cell.editValue = value;
-
-        const args = cell.createEditEventArgs(true, event);
-
-        if (isEqual(args.oldValue, args.newValue)) {
-            return args;
+    public update_add_cell(cell: IgxCell): IGridEditEventArgs  {
+        if (!cell) {
+            return;
         }
 
-        this.grid.cellEdit.emit(args);
-        this.crudService.cellEditingBlocked = args.cancel;
-        if (args.cancel) {
-            return args;
-        }
+        const args = cell.createEditEventArgs(true);
 
         const data = cell.rowData;
         if (cell.column.hasNestedPath) {
@@ -156,23 +128,14 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             data[cell.column.field] = args.newValue;
         }
         this.crudService.row.data = data;
-        const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
-        doneArgs.rowData = data;
-        this.grid.cellEditDone.emit(doneArgs);
         return args;
     }
 
-    public update_cell(value?, cellObj?: IgxCell, event?: Event) {
-        const cell = cellObj || this.crudService.cell;
+    public update_cell(cell: IgxCell): IGridEditEventArgs {
         if (!cell) {
             return;
         }
-
-        if (value !== null && value !== undefined) {
-            cell.editValue = value;
-        }
-        const args = cell.createEditEventArgs(true, event);
-
+        const args = cell.createEditEventArgs(true);
 
         this.grid.summaryService.clearSummaryCache(args);
         const data = this.getRowData(cell.id.rowID);
@@ -191,8 +154,11 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.grid.summaryService.clearSummaryCache(args);
             this.grid.pipeTrigger++;
         }
+
+        return args;
     }
 
+    // TODO: CRUD refactor to not emit editing evts. 
     public update_row(row: IgxRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);

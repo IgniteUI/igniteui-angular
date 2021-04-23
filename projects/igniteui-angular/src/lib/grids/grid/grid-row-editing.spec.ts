@@ -1074,40 +1074,16 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(otherEditableCell.editMode).toBeTruthy();
         });
 
-        it(`Should exit row editing AND COMMIT on ENTER KEYDOWN`, () => {
-            const gridAPI = grid.gridAPI as IgxGridAPIService;
-
-            grid.tbody.nativeElement.focus();
-            fix.detectChanges();
-
-            const targetCell = grid.getCellByColumn(0, 'ProductName');
-            UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
-            fix.detectChanges();
-
-            spyOn(gridAPI, 'update_cell').and.callThrough();
-            spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
-
-            UIInteractions.triggerKeyDownEvtUponElem('enter', grid.tbody.nativeElement, true);
-
-            expect(gridAPI.update_cell).toHaveBeenCalled();
-            expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
-            expect(cell.editMode).toBeFalsy();
-        });
-
         it(`Should exit row editing AND DISCARD on ESC KEYDOWN`, () => {
-            const gridAPI = grid.gridAPI as IgxGridAPIService;
-
             const targetCell = grid.getCellByColumn(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
             fix.detectChanges();
 
-            spyOn(gridAPI, 'submit_value').and.callThrough();
             spyOn(grid.gridAPI.crudService, 'exitCellEdit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('escape', grid.tbody.nativeElement, true);
             fix.detectChanges();
 
-            expect(gridAPI.submit_value).not.toHaveBeenCalled();
             expect(grid.gridAPI.crudService.exitCellEdit).toHaveBeenCalled();
             expect(cell.editMode).toBeFalsy();
         });
