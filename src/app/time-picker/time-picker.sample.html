@@ -13,7 +13,7 @@
         <h4 class="sample-title">Time Picker with string value binding</h4>
         <p class="sample-description">{{showDate(val)}}</p>
         <div class="preview">
-            <igx-time-picker #tp1 [value]="val" [spinLoop]="false" [itemsDelta]="{ hour: 1, minute: 30, second: 20 }"
+            <igx-time-picker #tp1 [value]="val" [spinLoop]="false" [itemsDelta]="{ hours: 1, minutes: 30, seconds: 20 }"
                 [inputFormat]="'hh:mm tt'" (valueChange)="updateValue($event)"
                 (validationFailed)="validationFailed($event)">
             </igx-time-picker>

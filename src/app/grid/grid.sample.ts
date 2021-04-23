@@ -264,7 +264,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public onColumnInit(column: IgxColumnComponent) {
+    public columnInit(column: IgxColumnComponent) {
         column.editable = true;
     }
 

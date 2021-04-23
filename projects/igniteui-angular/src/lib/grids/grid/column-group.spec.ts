@@ -888,12 +888,12 @@ describe('IgxGrid - multi-column headers #grid', () => {
             const ci = fixture.componentInstance;
             grid = ci.grid;
 
-            spyOn(grid.onColumnInit, 'emit').and.callThrough();
+            spyOn(grid.columnInit, 'emit').and.callThrough();
             fixture.detectChanges();
             const colsCount = 4;
             const colGroupsCount = 3;
 
-            expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount + colGroupsCount);
+            expect(grid.columnInit.emit).toHaveBeenCalledTimes(colsCount + colGroupsCount);
         });
 
         it('Should fire "columnInit" event when adding a multi-column header.', () => {
@@ -902,11 +902,11 @@ describe('IgxGrid - multi-column headers #grid', () => {
             grid = componentInstance.grid;
             fixture.detectChanges();
 
-            spyOn(grid.onColumnInit, 'emit').and.callThrough();
+            spyOn(grid.columnInit, 'emit').and.callThrough();
             componentInstance.mchCount.push({});
             fixture.detectChanges();
             const colsCount = 2; // 1 col group and 1 col
-            expect(grid.onColumnInit.emit).toHaveBeenCalledTimes(colsCount);
+            expect(grid.columnInit.emit).toHaveBeenCalledTimes(colsCount);
         });
     });
 

@@ -116,18 +116,18 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('ID');
         });
 
-        it('Should fire onColumnMovingEnd with correct values of event arguments.', () => {
+        it('Should fire columnMovingEnd with correct values of event arguments.', () => {
             let columnsList = grid.columnList.toArray();
             const column = columnsList[0] as IgxColumnComponent;
 
-            spyOn(grid.onColumnMovingEnd, 'emit').and.callThrough();
+            spyOn(grid.columnMovingEnd, 'emit').and.callThrough();
 
             column.move(2);
 
             columnsList = grid.columnList.toArray();
             const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1] };
-            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnMovingEnd.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
         });
 
         it('Should exit edit mode and commit the new value when column moving programmatically', () => {
@@ -429,7 +429,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(grid.columnList.toArray()[2].cells[3].value).toBeTruthy('BRown');
         }));
 
-        it('Should fire onColumnMovingStart, onColumnMoving and onColumnMovingEnd with correct values of event arguments.', (async () => {
+        it('Should fire columnMovingStart, columnMoving and columnMovingEnd with correct values of event arguments.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - start moving a column
@@ -437,7 +437,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
 
-            // step 2 - verify onColumnMovingStart is fired correctly
+            // step 2 - verify columnMovingStart is fired correctly
             expect(fixture.componentInstance.countStart).toEqual(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[0]);
             UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
@@ -445,7 +445,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
 
-            // step 3 - verify onColumnMoving is fired correctly
+            // step 3 - verify columnMoving is fired correctly
             expect(fixture.componentInstance.count).toBeGreaterThan(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[0]);
 
@@ -453,13 +453,13 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait();
             fixture.detectChanges();
 
-            // step 4 - verify onColumnMovingEnd is fired correctly
+            // step 4 - verify columnMovingEnd is fired correctly
             expect(fixture.componentInstance.countEnd).toEqual(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[1]);
             expect(fixture.componentInstance.target).toEqual(grid.columnList.toArray()[0]);
         }));
 
-        it('Should be able to cancel onColumnMoving event.', (async () => {
+        it('Should be able to cancel columnMoving event.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - try moving a column
