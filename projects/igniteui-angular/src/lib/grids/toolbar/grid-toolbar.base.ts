@@ -108,7 +108,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         if (actions){
             if (!this.$sub || this.$sub.closed){
                 this.$sub = actions.columnToggled.subscribe((event) => this.columnToggle.emit(event));
-            }else {
+            } else {
                 this.$sub.unsubscribe();
             }
         }
