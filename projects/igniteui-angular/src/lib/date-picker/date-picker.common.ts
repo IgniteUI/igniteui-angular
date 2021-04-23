@@ -1,12 +1,9 @@
-/** @hidden */
-export const IGX_DATE_PICKER_COMPONENT = 'IgxDatePickerComponentToken';
+import { IBaseEventArgs } from '../core/utils';
 
-/** @hidden */
-export interface IDatePicker {
-    value: Date;
-    mask: string;
-    inputMask: string;
-    rawDateString: string;
-    dateFormatParts: any[];
-    invalidDate: string;
+/**
+ * Provides information about date picker reference and its previously valid value
+ * when onValidationFailed event is fired.
+ */
+export interface IDatePickerValidationFailedEventArgs extends IBaseEventArgs {
+    prevValue: Date;
 }

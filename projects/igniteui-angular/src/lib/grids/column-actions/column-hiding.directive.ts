@@ -19,20 +19,20 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public get checkAllLabel(): string {
-        return this.columnActions.grid?.resourceStrings.igx_grid_hiding_check_all_label ?? 'Hide All';
+        return this.columnActions.grid?.resourceStrings.igx_grid_hiding_check_all_label ?? 'Show All';
     }
 
     /**
      * @hidden @internal
      */
     public get uncheckAllLabel(): string {
-        return this.columnActions.grid?.resourceStrings.igx_grid_hiding_uncheck_all_label ?? 'Show All';
+        return this.columnActions.grid?.resourceStrings.igx_grid_hiding_uncheck_all_label ?? 'Hide All';
     }
     /**
      * @hidden @internal
      */
     public checkAll() {
-        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(true));
+        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(false));
 
     }
 
@@ -40,7 +40,7 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
      * @hidden @internal
      */
     public uncheckAll() {
-        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(false));
+        this.columnActions.filteredColumns.forEach(c => c.toggleVisibility(true));
     }
 
     /**
@@ -63,10 +63,10 @@ export class IgxColumnHidingDirective extends IgxColumnActionsBaseDirective {
     }
 
     public get allChecked() {
-        return this.columnActions.filteredColumns.every(col => this.columnChecked(col));
+        return this.columnActions.filteredColumns.every(col => !this.columnChecked(col));
     }
 
     public get allUnchecked() {
-        return this.columnActions.filteredColumns.every(col => !this.columnChecked(col));
+        return this.columnActions.filteredColumns.every(col => this.columnChecked(col));
     }
 }
