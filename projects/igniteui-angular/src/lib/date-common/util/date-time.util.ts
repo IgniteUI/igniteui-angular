@@ -2,7 +2,6 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
-import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
 const enum FormatDesc {
@@ -372,6 +371,9 @@ export abstract class DateTimeUtil {
      */
     public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
         includeTime = true, includeDate = true): ValidationErrors {
+        if (!value) {
+            return null;
+        }
         const errors = {};
         const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
         const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
