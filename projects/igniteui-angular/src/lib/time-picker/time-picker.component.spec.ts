@@ -464,31 +464,31 @@ describe('IgxTimePicker', () => {
                 timePicker.value = new Date(date);
                 timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
                 timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
-                timePicker.itemsDelta = { hour: 2, minute: 20, second: 15 };
+                timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 fixture.detectChanges();
                 spyOn(timePicker.valueChange, 'emit').and.callThrough();
 
                 timePicker.increment(DatePart.Hours);
-                date.setHours(date.getHours() + timePicker.itemsDelta.hour);
+                date.setHours(date.getHours() + timePicker.itemsDelta.hours);
                 expect(timePicker.value).toEqual(date);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
 
                 timePicker.increment(DatePart.Minutes);
-                date.setMinutes(date.getMinutes() + timePicker.itemsDelta.minute);
+                date.setMinutes(date.getMinutes() + timePicker.itemsDelta.minutes);
                 expect(timePicker.value).toEqual(date);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(2);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
 
                 timePicker.decrement(DatePart.Seconds);
-                date.setSeconds(date.getSeconds() - timePicker.itemsDelta.second);
+                date.setSeconds(date.getSeconds() - timePicker.itemsDelta.seconds);
                 expect(timePicker.value).toEqual(date);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(3);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
             });
 
             xit('should open/close the dropdown and keep the current selection on Space/Enter key press', fakeAsync(() => {
-                timePicker.itemsDelta = {hour: 4, minute: 7, second: 1};
+                timePicker.itemsDelta = {hours: 4, minutes: 7, seconds: 1};
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -539,9 +539,9 @@ describe('IgxTimePicker', () => {
             it('should initialize all input properties with their default values', () => {
                 expect(timePicker.mode).toEqual(PickerInteractionMode.DropDown);
                 expect(timePicker.inputFormat).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
-                expect(timePicker.itemsDelta.hour).toEqual(1);
-                expect(timePicker.itemsDelta.minute).toEqual(1);
-                expect(timePicker.itemsDelta.second).toEqual(1);
+                expect(timePicker.itemsDelta.hours).toEqual(1);
+                expect(timePicker.itemsDelta.minutes).toEqual(1);
+                expect(timePicker.itemsDelta.seconds).toEqual(1);
                 expect(timePicker.disabled).toEqual(false);
             });
 
@@ -668,7 +668,7 @@ describe('IgxTimePicker', () => {
                 timePicker.value = new Date(2021, 24, 2, 6, 42, 0);
                 fixture.componentInstance.minValue = '06:30:00';
                 fixture.componentInstance.maxValue = '18:30:00';
-                timePicker.itemsDelta = {hour: 3, minute: 7, second: 1};
+                timePicker.itemsDelta = {hours: 3, minutes: 7, seconds: 1};
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -714,7 +714,7 @@ describe('IgxTimePicker', () => {
             it('should select closest value when value does not match dropdown values', fakeAsync(() => {
                 fixture.componentInstance.minValue = new Date(2021, 24, 2, 9, 0, 0);
                 fixture.componentInstance.maxValue = new Date(2021, 24, 2, 16, 0, 0);
-                timePicker.itemsDelta = { hour: 2, minute: 15, second: 30 };
+                timePicker.itemsDelta = { hours: 2, minutes: 15, seconds: 30 };
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -734,7 +734,7 @@ describe('IgxTimePicker', () => {
             it('should select minValue when value is outside the min/max range', fakeAsync(() => {
                 fixture.componentInstance.minValue = new Date(2021, 24, 2, 13, 0, 0);
                 fixture.componentInstance.maxValue = new Date(2021, 24, 2, 19, 0, 0);
-                timePicker.itemsDelta = { hour: 2, minute: 15, second: 30 };
+                timePicker.itemsDelta = { hours: 2, minutes: 15, seconds: 30 };
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -755,7 +755,7 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.date = null;
                 fixture.componentInstance.minValue = new Date(2021, 24, 2, 13, 0, 0);
                 fixture.componentInstance.maxValue = new Date(2021, 24, 2, 19, 0, 0);
-                timePicker.itemsDelta = { hour: 2, minute: 15, second: 30 };
+                timePicker.itemsDelta = { hours: 2, minutes: 15, seconds: 30 };
                 fixture.detectChanges();
 
                 timePicker.open();
