@@ -765,7 +765,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(orderDateColumn.cells[5].nativeElement.innerText).toEqual('Oct 30, 2019, 4:17:27 PM');
             expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('Aug 3, 2021, 3:15:00 PM');
 
-            orderDateColumn.pipeArgs = { format: 'long' };
+            orderDateColumn.pipeArgs = { format: 'short' };
             fix.detectChanges();
 
             grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
@@ -775,9 +775,9 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             orderDateColumn = grid.getColumnByName('OrderDate');
-            expect(orderDateColumn.cells[0].nativeElement.innerText).toEqual('October 1, 2015 at 11:37:22 AM GMT+3');
-            expect(orderDateColumn.cells[5].nativeElement.innerText).toEqual('October 30, 2019 at 4:17:27 PM GMT+2');
-            expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('August 3, 2021 at 3:15:00 PM GMT+3');
+            expect(orderDateColumn.cells[0].nativeElement.innerText).toEqual('10/1/15, 11:37 AM');
+            expect(orderDateColumn.cells[5].nativeElement.innerText).toEqual('10/30/19, 4:17 PM');
+            expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('8/3/21, 3:15 PM');
         });
 
         it('should display correctly the data when column dataType is time', () => {
@@ -891,14 +891,14 @@ describe('IgxGrid - Column properties #grid', () => {
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40:18 AM', '8:20:24 PM']);
 
-            column.pipeArgs = { format: 'long' };
+            column.pipeArgs = { format: 'short' };
             receiveTimeColumn.pipeArgs = { format: 'shortTime' };
             grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
-                ['Count', 'Earliest', 'Latest'], ['10', 'March 12, 2015 at 9:31:22 PM GMT+2', 'August 3, 2021 at 3:15:00 PM GMT+3']);
+                ['Count', 'Earliest', 'Latest'], ['10', '3/12/15, 9:31 PM', '8/3/21, 3:15 PM']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
@@ -1039,25 +1039,26 @@ describe('IgxGrid - Column properties #grid', () => {
 
             const grid = fix.componentInstance.grid;
 
-            const currentColumn = 'OrderDate';
-            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+            const currColumn = 'OrderDate';
+            grid.sort({ fieldName: currColumn, dir: SortingDirection.Asc, ignoreCase: false });
             fix.detectChanges();
 
-            const sortedValues = ['2015-03-12T19:31:22.000Z', '2015-10-01T08:37:22.000Z', '2016-08-18T08:17:22.000Z',
-            '2018-07-14T14:27:23.000Z', '2019-04-17T02:05:15.000Z', '2019-10-30T14:17:27.000Z',
-            '2021-05-11T04:47:01.000Z', '2021-05-11T15:37:02.000Z', '2021-08-03T12:15:00.000Z', '2021-08-03T12:15:00.000Z'];
+            const sortedValues = [new Date(2015, 2, 12, 21, 31, 22), new Date(2015, 9, 1, 11, 37, 22), new Date(2016, 7, 18, 11, 17, 22),
+                new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
+                new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
+                new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
 
             expect(grid.rowList.length).toEqual(sortedValues.length);
             sortedValues.forEach((value, index) => {
-                expect(grid.getCellByColumn(index, currentColumn).value.toISOString()).toEqual(value);
+                expect(grid.getCellByColumn(index, currColumn).value.toISOString()).toEqual(value.toISOString());
             });
 
-            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false });
+            grid.sort({ fieldName: currColumn, dir: SortingDirection.Desc, ignoreCase: false });
             fix.detectChanges();
 
             expect(grid.rowList.length).toEqual(sortedValues.length);
             sortedValues.forEach((value, index) => {
-                expect(grid.getCellByColumn(sortedValues.length - 1 - index, currentColumn).value.toISOString()).toEqual(value);
+                expect(grid.getCellByColumn(sortedValues.length - 1 - index, currColumn).value.toISOString()).toEqual(value.toISOString());
             });
         });
 
