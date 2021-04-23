@@ -190,6 +190,10 @@
         margin: 0 rem(8px);
         align-items: center;
 
+        [igxButton] {
+            transition: none;
+        }
+
         [igxButton] + [igxButton] {
             margin-#{$left}: rem(8px);
         }
