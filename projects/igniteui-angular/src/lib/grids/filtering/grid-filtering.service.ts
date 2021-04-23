@@ -138,7 +138,7 @@ export class IgxFilteringService implements OnDestroy {
         if (!this.areEventsSubscribed) {
             this.areEventsSubscribed = true;
 
-            this.grid.onColumnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
+            this.grid.columnResized.pipe(takeUntil(this.destroy$)).subscribe((eventArgs: IColumnResizeEventArgs) => {
                 this.updateFilteringCell(eventArgs.column);
             });
 
@@ -151,7 +151,7 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
-            this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.grid.columnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.grid.filterCellList.forEach((filterCell) => {
                     filterCell.updateFilterCellArea();
                 });
@@ -237,7 +237,7 @@ export class IgxFilteringService implements OnDestroy {
         }
         const doneEventArgs = this.grid.filteringExpressionsTree.find(field) as FilteringExpressionsTree;
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(doneEventArgs));
+        requestAnimationFrame(() => this.grid.filteringDone.emit(doneEventArgs));
     }
 
     public filter_global(term, condition, ignoreCase) {
@@ -287,7 +287,7 @@ export class IgxFilteringService implements OnDestroy {
         this.clear_filter(field);
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(null));
+        requestAnimationFrame(() => this.grid.filteringDone.emit(null));
 
         if (field) {
             const expressions = this.getExpressions(field);
@@ -347,7 +347,7 @@ export class IgxFilteringService implements OnDestroy {
         grid.filteringExpressionsTree = newFilteringTree;
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.grid.onFilteringDone.emit(this.grid.filteringExpressionsTree));
+        requestAnimationFrame(() => this.grid.filteringDone.emit(this.grid.filteringExpressionsTree));
     }
 
     /**

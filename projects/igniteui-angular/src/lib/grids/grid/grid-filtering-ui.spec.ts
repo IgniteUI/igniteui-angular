@@ -463,9 +463,9 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             verifyFilterRowUI(input, close, reset, false);
         }));
 
-        it('Should emit onFilteringDone when we clicked reset', fakeAsync(() => {
+        it('Should emit filteringDone when we clicked reset', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
-            spyOn(grid.onFilteringDone, 'emit');
+            spyOn(grid.filteringDone, 'emit');
 
             const filterVal = 'search';
             const columnName = 'ProductName';
@@ -478,25 +478,25 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
 
             GridFunctions.clickFilterCellChip(fix, columnName);
             GridFunctions.resetFilterRow(fix);
 
             expect(grid.filtering.emit).toHaveBeenCalledWith({ owner: grid, cancel: false, filteringExpressions: null });
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
 
             const filterUiRow = fix.debugElement.query(By.css(FILTER_UI_ROW));
             const reset = filterUiRow.queryAll(By.css('button'))[0];
             expect(reset.nativeElement.classList.contains('igx-button--disabled')).toEqual(true);
         }));
 
-        it('Should emit onFilteringDone when clear the input of filteringUI', fakeAsync(() => {
+        it('Should emit filteringDone when clear the input of filteringUI', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
-            spyOn(grid.onFilteringDone, 'emit');
+            spyOn(grid.filteringDone, 'emit');
             const columnName = 'ProductName';
             const filterValue = 'search';
             grid.filter(columnName, filterValue, IgxStringFilteringOperand.instance().condition('contains'));
@@ -505,7 +505,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             GridFunctions.clickFilterCellChip(fix, columnName);
 
-            spyOn(grid.onFilteringDone, 'emit');
+            spyOn(grid.filteringDone, 'emit');
 
             grid.filteringRow.onClearClick();
             tick(100);
@@ -513,7 +513,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const args = { owner: grid, cancel: false, filteringExpressions: null };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
         }));
 
         it('Removing second condition removes the And/Or button', fakeAsync(() => {
@@ -823,7 +823,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
         it('should update UI when chip is removed from header cell.', fakeAsync(() => {
             spyOn(grid.filtering, 'emit');
-            spyOn(grid.onFilteringDone, 'emit');
+            spyOn(grid.filteringDone, 'emit');
 
             grid.filter('ProductName', 'I', IgxStringFilteringOperand.instance().condition('startsWith'));
             tick(30);
@@ -835,8 +835,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const args = { owner: grid, cancel: false, filteringExpressions };
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(filteringExpressions);
+            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(1);
 
             const filteringCells = GridFunctions.getFilteringCells(fix);
             const stringCellChip = filteringCells[1].query(By.css('igx-chip'));
@@ -851,8 +851,8 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             args.filteringExpressions = null;
             expect(grid.filtering.emit).toHaveBeenCalledWith(args);
             expect(grid.filtering.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledWith(null);
-            expect(grid.onFilteringDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.filteringDone.emit).toHaveBeenCalledWith(null);
+            expect(grid.filteringDone.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('should update UI when chip is removed from filter row.', fakeAsync(() => {
@@ -2975,7 +2975,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
         it('Should hide column when click on button.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
 
-            spyOn(grid.onColumnVisibilityChanged, 'emit');
+            spyOn(grid.columnVisibilityChanged, 'emit');
             spyOn(grid.columnVisibilityChanging, 'emit');
             GridFunctions.getExcelFilteringHideContainer(fix).click();
             fix.detectChanges();
@@ -2983,8 +2983,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const args = { column: grid.getColumnByName('Downloads'), newValue: true };
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledWith({ ...args, cancel: false });
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledWith(args);
 
             GridFunctions.verifyColumnIsHidden(grid.columns[2], true, 7);
         }));
@@ -3354,7 +3354,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
             fix.detectChanges();
             spyOn(grid.columnVisibilityChanging, 'emit');
-            spyOn(grid.onColumnVisibilityChanged, 'emit');
+            spyOn(grid.columnVisibilityChanged, 'emit');
 
             const column = grid.columns.find((col) => col.field === 'ProductName');
             GridFunctions.verifyColumnIsHidden(column, false, 8);
@@ -3370,8 +3370,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const args = { column, newValue: true };
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnVisibilityChanging.emit).toHaveBeenCalledWith({ ...args, cancel: false });
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onColumnVisibilityChanged.emit).toHaveBeenCalledWith(args);
+            expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnVisibilityChanged.emit).toHaveBeenCalledWith(args);
         }));
 
         it('Should move pinned column correctly by using move buttons', fakeAsync(() => {
@@ -5358,7 +5358,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.onColumnSelectionChange, 'emit');
+            spyOn(grid.columnSelected, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
@@ -5366,13 +5366,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
 
             // Test in single selection mode
@@ -5388,7 +5388,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 
@@ -5863,7 +5863,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            spyOn(grid.onColumnSelectionChange, 'emit');
+            spyOn(grid.columnSelected, 'emit');
             const column = grid.getColumnByName('Downloads');
             fix.componentInstance.esf.column = column;
             fix.detectChanges();
@@ -5871,13 +5871,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(1);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
 
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(2);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(2);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, false);
 
             // Test in single selection mode
@@ -5893,7 +5893,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             GridFunctions.clickColumnSelectionInExcelStyleFiltering(fix);
             fix.detectChanges();
 
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
             GridSelectionFunctions.verifyColumnAndCellsSelected(column, true);
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnId, false);
 

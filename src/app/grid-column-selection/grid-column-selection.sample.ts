@@ -102,7 +102,7 @@ export class GridColumnSelectionSampleComponent implements OnInit {
         this.density = this.displayDensities[event.index].label;
     }
 
-    public onSelection(event) {
+    public selected(event) {
         const selection = event.newSelection.element.nativeElement.textContent.trim();
         this.grid.columnSelection = selection;
         this.grid1.columnSelection = selection;
