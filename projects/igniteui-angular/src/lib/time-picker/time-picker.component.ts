@@ -1215,12 +1215,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private initializeContainer() {
-        if (isDate(this.value)) {
-            this.value = new Date(this.value);
-            this.value.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
-        } else {
-            this.value = this.toISOString(this._selectedDate);
-        }
+        this.updateValue();
         this._onTouchedCallback();
 
         if (this.showHoursList) {
@@ -1454,7 +1449,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     private updateValue(): void {
-        if (isDate(this.value)) {
+        if (!this.value) {
+            this.value = new Date(this._selectedDate);
+        } else if (isDate(this.value)) {
             const date = new Date(this.value);
             date.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
             this.value = date;
