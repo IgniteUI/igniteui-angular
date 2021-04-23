@@ -4,7 +4,7 @@ import { DebugElement } from '@angular/core';
 
 export const wait = (ms = 0) => new Promise(resolve => setTimeout(resolve, ms));
 
-export const waitForGridScroll = grid => new Promise<void>(resolve => grid.onScroll.pipe(first()).subscribe(() => {
+export const waitForGridScroll = grid => new Promise<void>(resolve => grid.gridScroll.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
     resolve();
 }));
@@ -14,7 +14,7 @@ export const waitForActiveNodeChange = grid => new Promise<void>(resolve => grid
     resolve();
 }));
 
-export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.onSelection.pipe(first()).subscribe(() => {
+export const waitForSelectionChange = grid => new Promise<void>(resolve => grid.selected.pipe(first()).subscribe(() => {
     grid.cdr.detectChanges();
     resolve();
 }));

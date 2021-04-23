@@ -35,7 +35,7 @@ const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
 const TIME_PICKER_TOGGLE_ICON = 'access_time';
 const TIME_PICKER_CLEAR_ICON = 'clear';
 
-fdescribe('IgxTimePicker', () => {
+describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
 
     describe('Unit tests', () => {
