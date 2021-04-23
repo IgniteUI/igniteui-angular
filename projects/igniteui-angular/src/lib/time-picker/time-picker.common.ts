@@ -4,12 +4,14 @@ export const IGX_TIME_PICKER_COMPONENT = 'IgxTimePickerComponentToken';
 
 /** @hidden */
 export interface IgxTimePickerBase {
+    value: Date | string;
     hourList: ElementRef;
     locale: string;
     minuteList: ElementRef;
     secondsList: ElementRef;
     ampmList: ElementRef;
     inputFormat: string;
+    spinLoop: boolean;
     itemsDelta: { hour: number; minute: number; second: number };
     selectedDate: Date;
     maxDropdownValue: Date;
@@ -21,4 +23,15 @@ export interface IgxTimePickerBase {
     close(): void;
     cancelButtonClick(): void;
     onItemClick(item: string, dateType: string): void;
+
+    setSelectedValue(): void;
+    getPartValue(value: Date, type: string): string;
+    toISOString(value: Date): string;
+    isTwelveHourFormat: boolean;
+    showHoursList: boolean;
+    showMinutesList: boolean;
+    showSecondsList: boolean;
+    showAmPmList: boolean;
+    minDateValue: Date;
+    maxDateValue: Date;
 }
