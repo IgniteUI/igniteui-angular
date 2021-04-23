@@ -970,6 +970,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(checkBoxes.length).toEqual(10);
 
             GridFunctions.clickCancelExcelStyleFiltering(fix);
+            tick(100);
             fix.detectChanges();
 
             timeColumn.pipeArgs = { format: 'shortTime' };
