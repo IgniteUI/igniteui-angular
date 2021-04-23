@@ -108,7 +108,6 @@
             [locale]="grid.locale"
             [(value)]="editValue"
             [igxFocus]="true"
-            [labelVisibility]="false"
         >
         </igx-date-picker>
     </ng-container>
@@ -117,11 +116,11 @@
             [style.width.%]="100"
             [outlet]="grid.outlet"
             mode="dropdown"
-            [format]="column.defaultTimeFormat"
-            [(ngModel)]="editValue"
+            [locale]="grid.locale"
+            [inputFormat]="column.defaultTimeFormat"
+            [(value)]="editValue"
             [igxFocus]="true"
             >
-            <label igxLabel></label>
         </igx-time-picker>
     </ng-container>
     <ng-container *ngIf="column.dataType === 'dateTime'">

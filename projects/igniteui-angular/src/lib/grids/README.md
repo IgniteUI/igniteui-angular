@@ -5,7 +5,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Usage
 ```html
 <igx-grid #grid1 [data]="localData" [autoGenerate]="true"
-    (onColumnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
+    (columnInit)="initColumns($event)" (onCellSelection)="selectCell($event)">
 </igx-grid>
 ```
 
@@ -229,37 +229,42 @@ A list of the events emitted by the **igx-grid**:
 |`rowEdit`|Emitted just before a row in edit mode's value is committed (e.g. by clicking the Done button on the Row Editing Overlay).|
 |`rowEditDone`|Emitted after exiting edit mode for a row and editing has been committed.|
 |`rowEditExit`|Emitted when a row exits edit mode without committing its values (e.g. by clicking the Cancel button on the Row Editing Overlay).|
-|`onCellClick`|Emitted when a cell is clicked. Returns the cell object.|
-|`onColumnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
-|`onColumnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
-|`onFocusChange`| Emitted when changing the focus while navigating with the keyboard. Return the focused cell or focused group row. This event is cancelable. |
-|`onColumnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
-|`onSelection`|Emitted when a cell is selected. Returns the cell object.|
-|`onRowSelectionChange`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
-|`onColumnSelectionChange`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
-|`onColumnInit`|Emitted when the grid columns are initialized. Returns the column object.|
-|`onSortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
-|`onFilteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
-|`onPagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
-|`onRowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
-|`onRowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
+|`cellClick`|Emitted when a cell is clicked. Returns the cell object.|
+|`columnMoving`|Emitted when a column is moved. Returns the source and target columns objects. This event is cancelable.|
+|`columnMovingEnd`|Emitted when a column moving ends. Returns the source and target columns objects. This event is cancelable.|
+|`columnMovingStart`|Emitted when a column moving starts. Returns the moved column object.|
+|`selected`|Emitted when a cell is selected. Returns the cell object.|
+|`rowSelected`|Emitted when a row selection has changed. Returns array with old and new selected rows' IDs and the target row, if available.|
+|`columnSelected`|Emitted when a column selection has changed. Returns array with old and new selected column' fields|
+|`columnInit`|Emitted when the grid columns are initialized. Returns the column object.|
+|`sortingDone`|Emitted when sorting is performed through the UI. Returns the sorting expression.|
+|`filteringDone`|Emitted when filtering is performed through the UI. Returns the filtering expressions tree of the column for which the filtering was performed.|
+|`pagingDone`|Emitted when paging is performed. Returns an object consisting of the previous and the new page.|
+|`rowAdded`|Emitted when a row is being added to the grid through the API. Returns the data for the new row object.|
+|`rowDeleted`|Emitted when a row is deleted through the grid API. Returns the row object being removed.|
 |`dataPreLoad`| Emitted when a new chunk of data is loaded from virtualization. |
-|`onColumnPinning`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
-|`onColumnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
-|`onContextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
-|`onDoubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
-|`onColumnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
+|`columnPin`|Emitted when a column is pinned or unpinned through the grid API. The index that the column is inserted at may be changed through the `insertAtIndex` property. Use `isPinned` to check whether the column is pinned or unpinned.|
+|`columnResized`|Emitted when a column is resized. Returns the column object, previous and new column width.|
+|`contextMenu`|Emitted when a cell is right clicked. Returns the cell object.|
+|`doubleClick`|Emitted when a cell is double clicked. Returns the cell object.|
+|`columnVisibilityChanged`| Emitted when `IgxColumnComponent` visibility is changed. Args: { column: any, newValue: boolean } |
 |`onGroupingDone`|Emitted when the grouping state changes as a result of grouping columns, ungrouping columns or a combination of both. Provides an array of `ISortingExpression`, an array of the **newly** grouped columns as `IgxColumnComponent` references and an array of the **newly** ungrouped columns as `IgxColumnComponent` references.|
-|`onToolbarExporting`| Emitted when an export process is initiated by the user.|
-| `onRowDragStart` | Emitted when the user starts dragging a row. |
-| `onRowDragEnd` | Emitted when the user drops a row or cancel the drag. |
+|`toolbarExporting`| Emitted when an export process is initiated by the user.|
+| `rowDragStart` | Emitted when the user starts dragging a row. |
+| `rowDragEnd` | Emitted when the user drops a row or cancel the drag. |
+| `gridScroll` | Emitted when grid is scrolled horizontally/vertically. |
+| `gridKeydown` | Emitted when keydown is triggered over element inside grid's body. |
+| `gridCopy` | Emitted when a copy operation is executed. |
+| `rowToggle` | Emitted when the expanded state of a row gets changed. |
+| `rowPinning` | Emitted when the pinned state of a row is changed. |
+| `rangeSelected` |  Emitted when making a range selection. |
 
 
 Defining handlers for these event emitters is done using declarative event binding:
 
 ```html
 <igx-grid #grid1 [data]="data | async" [autoGenerate]="false"
-    (onColumnInit)="initColumns($event)" (onSelection)="selectCell($event)"></igx-grid>
+    (columnInit)="initColumns($event)" (selected)="selectCell($event)"></igx-grid>
 ```
 
 ### Methods

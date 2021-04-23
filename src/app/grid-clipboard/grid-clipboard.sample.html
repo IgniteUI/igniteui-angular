@@ -23,7 +23,7 @@
             <div style="width: 50wh; height: 50vh">
                 <igx-grid #grid [data]="data" primaryKey="ID"
                     [rowEditable]="true"
-                    (onColumnInit)="initColumn($event)"
+                    (columnInit)="initColumn($event)"
                     [clipboardOptions]="options"
                     [autoGenerate]="true">
                 </igx-grid>

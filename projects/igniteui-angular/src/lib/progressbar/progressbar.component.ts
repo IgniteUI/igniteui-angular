@@ -58,12 +58,12 @@ export abstract class BaseProgressDirective {
      *  //...
      * ```
      * ```html
-     * <igx-circular-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-circular-bar>
-     * <igx-linear-bar [value]="currentValue" (onProgressChanged)="progressChange($event)"></igx-linear-bar>
+     * <igx-circular-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-circular-bar>
+     * <igx-linear-bar [value]="currentValue" (progressChanged)="progressChange($event)"></igx-linear-bar>
      * ```
      */
     @Output()
-    public onProgressChanged = new EventEmitter<IChangeProgressEventArgs>();
+    public progressChanged = new EventEmitter<IChangeProgressEventArgs>();
 
     protected _initValue = 0;
     protected _contentInit = false;
@@ -88,7 +88,7 @@ export abstract class BaseProgressDirective {
      * ```
      */
     @Input()
-    get step(): number {
+    public get step(): number {
         if (this._step) {
             return this._step;
         }
@@ -103,7 +103,7 @@ export abstract class BaseProgressDirective {
      * <igx-circular-bar [max]="200" [value]="0" [step]="1"></igx-circular-bar>
      * ```
      */
-    set step(val: number) {
+    public set step(val: number) {
         this._step = Number(val);
     }
 
@@ -143,7 +143,7 @@ export abstract class BaseProgressDirective {
      */
     @HostBinding('attr.aria-valuemax')
     @Input()
-    set max(maxNum: number) {
+    public set max(maxNum: number) {
         this._max = maxNum;
     }
 
@@ -158,7 +158,7 @@ export abstract class BaseProgressDirective {
      * }
      * ```
      */
-    get max() {
+    public get max() {
         return this._max;
     }
 
@@ -208,7 +208,7 @@ export abstract class BaseProgressDirective {
             this.updateProgressDirectly(newVal);
         }
 
-        this.onProgressChanged.emit(changedValues);
+        this.progressChanged.emit(changedValues);
     }
 
     /**
@@ -416,7 +416,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
     */
     @HostBinding('attr.aria-valuenow')
     @Input()
-    get value(): number {
+    public get value(): number {
         return this._value;
     }
 
@@ -426,7 +426,7 @@ export class IgxLinearProgressBarComponent extends BaseProgressDirective impleme
      * <igx-linear-bar [striped]="false" [max]="200" [value]="50"></igx-linear-bar>
      * ```
      */
-    set value(val) {
+    public set value(val) {
         const valInRange = valueInRange(val, this.max);
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
@@ -567,7 +567,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
      * ```
      */
     @Input()
-    get value(): number {
+    public get value(): number {
         return this._value;
     }
 
@@ -577,7 +577,7 @@ export class IgxCircularProgressBarComponent extends BaseProgressDirective imple
      * <igx-circular-bar [value]="50"></igx-circular-bar>
      * ```
      */
-    set value(val: number) {
+    public set value(val: number) {
         const valInRange = valueInRange(val, this.max);
         if (isNaN(valInRange) || this._value === val || this.indeterminate) {
             return;
