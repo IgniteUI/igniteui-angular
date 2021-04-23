@@ -227,7 +227,7 @@
     $cell-selected-within-text-color: null,
 ) {
     $name: 'igx-grid';
-    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid, igx-advanced-filtering-dialog';
+    $selector: 'igx-grid, igx-hierarchical-grid, igx-tree-grid, igx-advanced-filtering-dialog, igx-grid-excel-style-filtering, .igx-excel-filter__secondary';
     $grid-schema: ();
 
     @if map-has-key($schema, $name) {
