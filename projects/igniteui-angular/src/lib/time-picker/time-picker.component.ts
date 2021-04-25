@@ -641,7 +641,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this.dateTimeEditor) {
             this.dateTimeEditor.value = this.parseToDate(value);
         }
-        this.setSelectedValue();
     }
 
     /** @hidden @internal */
@@ -850,7 +849,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         let date = new Date(this._selectedDate);
         switch (dateType) {
             case 'hourList':
-                const previousDate = new Date(date);
                 let ampm: string;
                 const selectedHour = parseInt(item, 10);
                 let hours = selectedHour;
@@ -869,22 +867,21 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 date = this.validateDropdownValue(date);
 
                 if (this.valueInRange(date, this.minDropdownValue, this.maxDropdownValue)) {
-                    hours = date.getHours();
-                    this._selectedDate = date;
+                    this._selectedDate = new Date(date);
                 }
                 break;
             case 'minuteList': {
                 const minutes = parseInt(item, 10);
                 date.setMinutes(minutes);
                 date = this.validateDropdownValue(date);
-                this._selectedDate = date;
+                this._selectedDate = new Date(date);
                 break;
             }
             case 'secondsList': {
                 const seconds = parseInt(item, 10);
                 date.setSeconds(seconds);
                 if (this.valueInRange(date, this.minDropdownValue, this.maxDropdownValue)) {
-                    this._selectedDate = date;
+                    this._selectedDate = new Date(date);
                 }
                 break;
             }
@@ -893,10 +890,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 hour = item === 'AM' ? hour - 12 : hour + 12;
                 date.setHours(hour);
                 date = this.validateDropdownValue(date, true);
-                this._selectedDate = date;
+                this._selectedDate = new Date(date);
                 break;
             }
         }
+        this.updateValue();
     }
 
     /** @hidden @internal */
@@ -914,17 +912,23 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate.setHours(hours);
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
+        this.updateValue();
     }
 
     /** @hidden @internal */
     public nextMinute(delta: number) {
         delta = delta > 0 ? 1 : -1;
-        const minMax = this.findArrayMinMax(this.minuteItems);
-        const min = minMax.min;
-        const max = minMax.max;
+        const minHours = this.minDropdownValue.getHours();
+        const maxHours = this.maxDropdownValue.getHours();
+        const hours = this._selectedDate.getHours();
         let minutes = this._selectedDate.getMinutes();
-        if ((delta < 0 && minutes === min) || (delta > 0 && minutes === max)) {
-            minutes = this.spinLoop && minutes === min ? max : this.spinLoop && minutes === max ? min : minutes;
+        const minMinutes = hours === minHours ? this.minDropdownValue.getMinutes() : 0;
+        const maxMinutes = hours === maxHours ? this.maxDropdownValue.getMinutes() :
+            minutes % this.itemsDelta.minute > 0 ? 60 - (minutes % this.itemsDelta.minute) :
+                60 - this.itemsDelta.minute;
+
+        if ((delta < 0 && minutes === minMinutes) || (delta > 0 && minutes === maxMinutes)) {
+            minutes = this.spinLoop && minutes === minMinutes ? maxMinutes : this.spinLoop && minutes === maxMinutes ? minMinutes : minutes;
         } else {
             minutes = minutes + delta * this.itemsDelta.minute;
         }
@@ -932,17 +936,26 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate.setMinutes(minutes);
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
+        this.updateValue();
     }
 
     /** @hidden @internal */
     public nextSeconds(delta: number) {
         delta = delta > 0 ? 1 : -1;
-        const minMax = this.findArrayMinMax(this.secondsItems);
-        const min = minMax.min;
-        const max = minMax.max;
+        const minHours = this.minDropdownValue.getHours();
+        const maxHours = this.maxDropdownValue.getHours();
+        const hours = this._selectedDate.getHours();
+        const minutes = this._selectedDate.getMinutes();
+        const minMinutes = this.minDropdownValue.getMinutes();
+        const maxMinutes = this.maxDropdownValue.getMinutes();
         let seconds = this._selectedDate.getSeconds();
-        if ((delta < 0 && seconds === min) || (delta > 0 && seconds === max)) {
-            seconds = this.spinLoop && seconds === min ? max : this.spinLoop && seconds === max ? min : seconds;
+        const minSeconds = (hours === minHours && minutes === minMinutes) ? this.minDropdownValue.getSeconds() : 0;
+        const maxSeconds = (hours === maxHours && minutes === maxMinutes) ? this.maxDropdownValue.getSeconds() :
+            seconds % this.itemsDelta.second > 0 ? 60 - (seconds % this.itemsDelta.second) :
+                60 - this.itemsDelta.second;
+
+        if ((delta < 0 && seconds === minSeconds) || (delta > 0 && seconds === maxSeconds)) {
+            seconds = this.spinLoop && seconds === minSeconds ? maxSeconds : this.spinLoop && seconds === maxSeconds ? minSeconds : seconds;
         } else {
             seconds = seconds + delta * this.itemsDelta.second;
         }
@@ -950,6 +963,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate.setSeconds(seconds);
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
+        this.updateValue();
     }
 
     /** @hidden @internal */
@@ -961,6 +975,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             hours = hours + sign * 12;
             this._selectedDate.setHours(hours);
             this._selectedDate = this.validateDropdownValue(this._selectedDate, true);
+            this._selectedDate = new Date(this._selectedDate);
+            this.updateValue();
         }
     }
 
@@ -997,14 +1013,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
         const part = inputDateParts.find(element => element.type === type);
         return DateTimeUtil.getPartValue(value, part, part.format.length);
-    }
-
-    private findArrayMinMax(array: any[]): any {
-        const filteredArray = array.filter(val => val !== null);
-        return {
-            min: Math.min(...filteredArray),
-            max: Math.max(...filteredArray)
-        };
     }
 
     private validateDropdownValue(date: Date, isAmPm = false): Date {
@@ -1060,41 +1068,41 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     public setSelectedValue() {
-        this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this.minDropdownValue);
-        if (!DateTimeUtil.isValidDate(this._selectedDate)) {
-            this._selectedDate = new Date(this.minDropdownValue);
-            return;
-        }
-        if (DateTimeUtil.lessThanMinValue(this._selectedDate, this.minDropdownValue, true, false)) {
-            this._selectedDate = new Date(this.minDropdownValue);
-            return;
-        }
-        if (DateTimeUtil.greaterThanMaxValue(this._selectedDate, this.maxDropdownValue, true, false)) {
-            this._selectedDate = new Date(this.maxDropdownValue);
-            return;
-        }
+            this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this.minDropdownValue);
+            if (!DateTimeUtil.isValidDate(this._selectedDate)) {
+                this._selectedDate = new Date(this.minDropdownValue);
+                return;
+            }
+            if (DateTimeUtil.lessThanMinValue(this._selectedDate, this.minDropdownValue, true, false)) {
+                this._selectedDate = new Date(this.minDropdownValue);
+                return;
+            }
+            if (DateTimeUtil.greaterThanMaxValue(this._selectedDate, this.maxDropdownValue, true, false)) {
+                this._selectedDate = new Date(this.maxDropdownValue);
+                return;
+            }
 
-        if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
-            this._selectedDate.setHours(
-                this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour,
-                0,
-                0
-            );
-        }
+            if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
+                this._selectedDate.setHours(
+                    this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour,
+                    0,
+                    0
+                );
+            }
 
-        if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
-            this._selectedDate.setHours(
-                this._selectedDate.getHours(),
-                this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute,
-                0
-            );
-        }
+            if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
+                this._selectedDate.setHours(
+                    this._selectedDate.getHours(),
+                    this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute,
+                    0
+                );
+            }
 
-        if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
-            this._selectedDate.setSeconds(
-                this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second
-            );
-        }
+            if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
+                this._selectedDate.setSeconds(
+                    this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second
+                );
+            }
     }
 
     private parseToDate(value: any): Date {
@@ -1119,15 +1127,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return hour;
     }
 
-    // private updateValue(): void {
-    //     if (isDate(this.value)) {
-    //         const date = new Date(this.value);
-    //         date.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
-    //         this.value = date;
-    //     } else {
-    //         this.value = this.toISOString(this._selectedDate);
-    //     }
-    // }
+    private updateValue(): void {
+        if (isDate(this.value)) {
+            const date = new Date(this.value);
+            date.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
+            this.value = date;
+        } else {
+            this.value = this.toISOString(this._selectedDate);
+        }
+    }
 
     private subscribeToDateEditorEvents(): void {
         this.dateTimeEditor.valueChange.pipe(

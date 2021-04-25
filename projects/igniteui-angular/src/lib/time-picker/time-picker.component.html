@@ -56,7 +56,7 @@
                     [attr.aria-valuenow]="timeItem.isSelectedTime ? timeItem.hourValue : null"
                     [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
                     [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let hour of (hourItems|timeItemPipe:'hour': this.selectedDate)">{{ hour }}</span>
+                    *ngFor="let hour of (hourItems|timeItemPipe:'hour': this.selectedDate: this.minValue: this.maxValue)">{{ hour }}</span>
             </div>
             <div *ngIf="this.showMinutesList" #minuteList [igxItemList]="'minuteList'">
                 <span [igxTimeItem]="minute" #timeItem="timeItem" aria-label="minutes"
@@ -64,7 +64,7 @@
                     [attr.aria-valuenow]="timeItem.isSelectedTime ? minute : null"
                     [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
                     [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let minute of (minuteItems|timeItemPipe:'minutes':this.selectedDate)">{{ minute }}</span>
+                    *ngFor="let minute of (minuteItems|timeItemPipe:'minutes': this.selectedDate: this.minValue: this.maxValue)">{{ minute }}</span>
             </div>
             <div *ngIf="this.showSecondsList" #secondsList [igxItemList]="'secondsList'">
                 <span [igxTimeItem]="seconds" #timeItem="timeItem" aria-label="seconds"
@@ -72,7 +72,7 @@
                     [attr.aria-valuenow]="timeItem.isSelectedTime ? seconds : null"
                     [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
                     [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let seconds of (secondsItems|timeItemPipe:'seconds': this.selectedDate)">{{ seconds }}</span>
+                    *ngFor="let seconds of (secondsItems|timeItemPipe:'seconds': this.selectedDate: this.minValue: this.maxValue)">{{ seconds }}</span>
             </div>
             <div *ngIf="this.showAmPmList" #ampmList [igxItemList]="'ampmList'">
                 <span [igxTimeItem]="ampm" #timeItem="timeItem" aria-label="ampm"
@@ -80,7 +80,7 @@
                     [attr.aria-valuenow]="timeItem.isSelectedTime ? ampm : null"
                     [attr.aria-valuemin]="timeItem.isSelectedTime ? timeItem.minValue : null"
                     [attr.aria-valuemax]="timeItem.isSelectedTime ? timeItem.maxValue : null"
-                    *ngFor="let ampm of (ampmItems|timeItemPipe:'ampm': this.selectedDate)">{{ ampm }}</span>
+                    *ngFor="let ampm of (ampmItems|timeItemPipe:'ampm': this.selectedDate: this.minValue: this.maxValue)">{{ ampm }}</span>
             </div>
         </div>
         <ng-container
