@@ -1,6 +1,6 @@
 <igx-input-group [displayDensity]="this.displayDensity" [type]="this.type" [suppressInputAutofocus]="true">
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon [title]="this.value ? 'Change Date' : 'Choose Date'">today</igx-icon>
+        <igx-icon [title]="this.value ? resourceStrings.igx_date_picker_change_date : resourceStrings.igx_date_picker_choose_date">today</igx-icon>
     </igx-prefix>
 
     <input class="igx-date-picker__input-date" [displayValuePipe]="this.formatter ? displayValue : null" igxInput

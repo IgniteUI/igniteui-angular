@@ -30,6 +30,7 @@
     $active-color: null,
 ) {
     $name: 'igx-highlight';
+    $selector: '.igx-highlight';
     $highlight-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -50,6 +51,7 @@
 
     @return extend($theme, (
         name: $name,
+        selector: $selector,
         palette: $palette,
         resting-background: $resting-background,
         resting-color: $resting-color,

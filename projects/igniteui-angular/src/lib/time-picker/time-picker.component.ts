@@ -59,7 +59,7 @@ import { IgxTextSelectionModule } from '../directives/text-selection/text-select
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { DatePart } from '../directives/date-time-editor/public_api';
+import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickersCommonModule, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
@@ -453,7 +453,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
-    private _itemsDelta: { hour: number; minute: number; second: number } = { hour: 1, minute: 1, second: 1 };
+    private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> = { hours: 1, minutes: 1, seconds: 1 };
 
     private _destroy$ = new Subject();
     private _statusChanges$: Subscription;
@@ -586,11 +586,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public set itemsDelta(value) {
-        this._itemsDelta = { hour: 1, minute: 1, second: 1, ...value };
+    public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'>) {
+        Object.assign(this._itemsDelta, value);
     }
 
-    public get itemsDelta(): { hour: number; minute: number; second: number } {
+    public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> {
         return this._itemsDelta;
     }
 
@@ -732,7 +732,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             , settings);
 
         this.toggleRef.open(overlaySettings);
-        this.initializeContainer();
     }
 
     /**
@@ -904,7 +903,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const minHours = this.minDropdownValue?.getHours();
         const maxHours = this.maxDropdownValue?.getHours();
         const previousHours = previousDate.getHours();
-        let hours = previousHours + delta * this.itemsDelta.hour;
+        let hours = previousHours + delta * this.itemsDelta.hours;
         if ((previousHours === maxHours && delta > 0) || (previousHours === minHours && delta < 0)) {
             hours = !this.spinLoop ? previousHours : delta > 0 ? minHours : maxHours;
         }
@@ -930,7 +929,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if ((delta < 0 && minutes === minMinutes) || (delta > 0 && minutes === maxMinutes)) {
             minutes = this.spinLoop && minutes === minMinutes ? maxMinutes : this.spinLoop && minutes === maxMinutes ? minMinutes : minutes;
         } else {
-            minutes = minutes + delta * this.itemsDelta.minute;
+            minutes = minutes + delta * this.itemsDelta.minutes;
         }
 
         this._selectedDate.setMinutes(minutes);
@@ -957,7 +956,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if ((delta < 0 && seconds === minSeconds) || (delta > 0 && seconds === maxSeconds)) {
             seconds = this.spinLoop && seconds === minSeconds ? maxSeconds : this.spinLoop && seconds === maxSeconds ? minSeconds : seconds;
         } else {
-            seconds = seconds + delta * this.itemsDelta.second;
+            seconds = seconds + delta * this.itemsDelta.seconds;
         }
 
         this._selectedDate.setSeconds(seconds);
@@ -1165,6 +1164,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 if (event.cancel) {
                     return;
                 }
+                this.initializeContainer();
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {

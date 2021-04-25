@@ -488,7 +488,7 @@ describe('IgxDateRangePicker', () => {
                     expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
                 });
 
-                xit('should close the calendar with the "Done" button', fakeAsync(() => {
+                it('should close the calendar with the "Done" button', fakeAsync(() => {
                     fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
@@ -500,7 +500,7 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() - 1;
+                    const startDateDayElIndex = startDate.getDate() + 3;
                     const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
                     tick();

@@ -177,7 +177,7 @@
                                  [displayDensity]="'compact'">
                     <input #searchValueInput
                            igxInput
-                           [disabled]="!selectedColumn || !selectedCondition 
+                           [disabled]="!selectedColumn || !selectedCondition
                             || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                            [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
                            [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder"
@@ -370,11 +370,27 @@
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick($event)">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
-
-        <div>
-            <button igxButton [displayDensity]="displayDensity" (click)="cancelChanges()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick($event)">
+        <div class="igx-excel-filter__clear">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="onClearButtonClick($event)">
+                    {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__cancel">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="cancelChanges()">
+                    {{ grid.resourceStrings.igx_grid_excel_cancel }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__apply">
+            <button
+                igxButton="raised"
+                [displayDensity]="displayDensity"
+                (click)="onApplyButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>
         </div>

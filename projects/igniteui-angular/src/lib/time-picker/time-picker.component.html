@@ -8,7 +8,7 @@
         [attr.aria-expanded]="!this.toggleDirective.collapsed" [attr.aria-labelledby]="this.label?.id" />
 
     <igx-prefix *ngIf="!this.toggleComponents.length" (click)="this.toggle()">
-        <igx-icon>access_time</igx-icon>
+        <igx-icon [title]="this.value ? resourceStrings.igx_time_picker_change_time : resourceStrings.igx_time_picker_choose_time">access_time</igx-icon>
     </igx-prefix>
 
     <ng-container ngProjectAs="[igxLabel]">

@@ -11,9 +11,9 @@ export enum DatePart {
     Date = 'date',
     Month = 'month',
     Year = 'year',
-    Hours = 'hour',
-    Minutes = 'minute',
-    Seconds = 'second',
+    Hours = 'hours',
+    Minutes = 'minutes',
+    Seconds = 'seconds',
     AmPm = 'ampm',
     Literal = 'literal'
 }
@@ -31,7 +31,7 @@ export interface DatePartDeltas {
     date?: number;
     month?: number;
     year?: number;
-    hour?: number;
-    minute?: number;
-    second?: number;
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
 }
