@@ -923,8 +923,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         let minutes = this._selectedDate.getMinutes();
         const minMinutes = hours === minHours ? this.minDropdownValue.getMinutes() : 0;
         const maxMinutes = hours === maxHours ? this.maxDropdownValue.getMinutes() :
-            minutes % this.itemsDelta.minute > 0 ? 60 - (minutes % this.itemsDelta.minute) :
-                60 - this.itemsDelta.minute;
+            minutes % this.itemsDelta.minutes > 0 ? 60 - (minutes % this.itemsDelta.minutes) :
+                60 - this.itemsDelta.minutes;
 
         if ((delta < 0 && minutes === minMinutes) || (delta > 0 && minutes === maxMinutes)) {
             minutes = this.spinLoop && minutes === minMinutes ? maxMinutes : this.spinLoop && minutes === maxMinutes ? minMinutes : minutes;
@@ -950,8 +950,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         let seconds = this._selectedDate.getSeconds();
         const minSeconds = (hours === minHours && minutes === minMinutes) ? this.minDropdownValue.getSeconds() : 0;
         const maxSeconds = (hours === maxHours && minutes === maxMinutes) ? this.maxDropdownValue.getSeconds() :
-            seconds % this.itemsDelta.second > 0 ? 60 - (seconds % this.itemsDelta.second) :
-                60 - this.itemsDelta.second;
+            seconds % this.itemsDelta.seconds > 0 ? 60 - (seconds % this.itemsDelta.seconds) :
+                60 - this.itemsDelta.seconds;
 
         if ((delta < 0 && seconds === minSeconds) || (delta > 0 && seconds === maxSeconds)) {
             seconds = this.spinLoop && seconds === minSeconds ? maxSeconds : this.spinLoop && seconds === maxSeconds ? minSeconds : seconds;
@@ -1081,25 +1081,25 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 return;
             }
 
-            if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
+            if (this._selectedDate.getHours() % this.itemsDelta.hours > 0) {
                 this._selectedDate.setHours(
-                    this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour,
+                    this._selectedDate.getHours() + this.itemsDelta.hours - this._selectedDate.getHours() % this.itemsDelta.hours,
                     0,
                     0
                 );
             }
 
-            if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
+            if (this._selectedDate.getMinutes() % this.itemsDelta.minutes > 0) {
                 this._selectedDate.setHours(
                     this._selectedDate.getHours(),
-                    this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute,
+                    this._selectedDate.getMinutes() + this.itemsDelta.minutes - this._selectedDate.getMinutes() % this.itemsDelta.minutes,
                     0
                 );
             }
 
-            if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
+            if (this._selectedDate.getSeconds() % this.itemsDelta.seconds > 0) {
                 this._selectedDate.setSeconds(
-                    this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second
+                    this._selectedDate.getSeconds() + this.itemsDelta.seconds - this._selectedDate.getSeconds() % this.itemsDelta.seconds
                 );
             }
     }

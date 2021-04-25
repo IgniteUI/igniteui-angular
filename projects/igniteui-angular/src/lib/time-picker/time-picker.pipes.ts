@@ -69,26 +69,26 @@ export class TimeItemPipe implements PipeTransform {
         let minutes = time.getMinutes();
         let seconds = time.getSeconds();
 
-        if (this.timePicker.showHoursList && hours % this.timePicker.itemsDelta.hour > 0) {
-            delta = value === 'min' ? this.timePicker.itemsDelta.hour - hours % this.timePicker.itemsDelta.hour
-                : hours % this.timePicker.itemsDelta.hour;
+        if (this.timePicker.showHoursList && hours % this.timePicker.itemsDelta.hours > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.hours - hours % this.timePicker.itemsDelta.hours
+                : hours % this.timePicker.itemsDelta.hours;
             minutes = value === 'min' ? 0
-                : 60 % this.timePicker.itemsDelta.minute > 0 ? 60 - 60 % this.timePicker.itemsDelta.minute
-                    : 60 - this.timePicker.itemsDelta.minute;
+                : 60 % this.timePicker.itemsDelta.minutes > 0 ? 60 - 60 % this.timePicker.itemsDelta.minutes
+                    : 60 - this.timePicker.itemsDelta.minutes;
             seconds = value === 'min' ? 0
-                : 60 % this.timePicker.itemsDelta.second > 0 ? 60 - 60 % this.timePicker.itemsDelta.second
-                    : 60 - this.timePicker.itemsDelta.second;
+                : 60 % this.timePicker.itemsDelta.seconds > 0 ? 60 - 60 % this.timePicker.itemsDelta.seconds
+                    : 60 - this.timePicker.itemsDelta.seconds;
             time.setHours(hours + sign * delta, minutes, seconds);
-        } else if (this.timePicker.showMinutesList && minutes % this.timePicker.itemsDelta.minute > 0) {
-            delta = value === 'min' ? this.timePicker.itemsDelta.minute - minutes % this.timePicker.itemsDelta.minute
-                : minutes % this.timePicker.itemsDelta.minute;
+        } else if (this.timePicker.showMinutesList && minutes % this.timePicker.itemsDelta.minutes > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.minutes - minutes % this.timePicker.itemsDelta.minutes
+                : minutes % this.timePicker.itemsDelta.minutes;
             seconds = value === 'min' ? 0
-                : 60 % this.timePicker.itemsDelta.second > 0 ? 60 - 60 % this.timePicker.itemsDelta.second
-                    : 60 - this.timePicker.itemsDelta.second;
+                : 60 % this.timePicker.itemsDelta.seconds > 0 ? 60 - 60 % this.timePicker.itemsDelta.seconds
+                    : 60 - this.timePicker.itemsDelta.seconds;
             time.setHours(hours, minutes + sign * delta, seconds);
-        } else if (this.timePicker.showSecondsList && seconds % this.timePicker.itemsDelta.second > 0) {
-            delta = value === 'min' ? this.timePicker.itemsDelta.second - seconds % this.timePicker.itemsDelta.second
-                : seconds % this.timePicker.itemsDelta.second;
+        } else if (this.timePicker.showSecondsList && seconds % this.timePicker.itemsDelta.seconds > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.seconds - seconds % this.timePicker.itemsDelta.seconds
+                : seconds % this.timePicker.itemsDelta.seconds;
             time.setHours(hours, minutes, seconds + sign * delta);
         }
 
@@ -111,9 +111,9 @@ export class TimeItemPipe implements PipeTransform {
             const leadZeroSeconds = (item < 10 && this.timePicker.inputFormat.indexOf('ss') !== -1);
 
             const leadZero = {
-                hour: leadZeroHour,
-                minute: leadZeroMinute,
-                second: leadZeroSeconds
+                hours: leadZeroHour,
+                minutes: leadZeroMinute,
+                seconds: leadZeroSeconds
             }[dateType];
 
             item = (leadZero) ? '0' + item : `${item}`;
@@ -142,13 +142,13 @@ export class TimeItemPipe implements PipeTransform {
     private generateHours(): any[] {
         const hourItems = [];
         let hoursCount = this.timePicker.isTwelveHourFormat ? 13 : 24;
-        hoursCount /= this.timePicker.itemsDelta.hour;
+        hoursCount /= this.timePicker.itemsDelta.hours;
         const minHours = this.timePicker.minDropdownValue.getHours();
         const maxHours = this.timePicker.maxDropdownValue.getHours();
 
         if (hoursCount > 1) {
             for (let hourIndex = 0; hourIndex < 24; hourIndex++) {
-                let hours = hourIndex * this.timePicker.itemsDelta.hour;
+                let hours = hourIndex * this.timePicker.itemsDelta.hours;
                 if (hours >= minHours && hours <= maxHours) {
                     hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(hours) : hours;
                     if (!hourItems.find((element => element === hours))) {
@@ -172,14 +172,14 @@ export class TimeItemPipe implements PipeTransform {
 
     private generateMinutes(): any[] {
         const minuteItems = [];
-        const minuteItemsCount = 60 / this.timePicker.itemsDelta.minute;
+        const minuteItemsCount = 60 / this.timePicker.itemsDelta.minutes;
         const time = new Date(this.timePicker.selectedDate);
 
         for (let i = 0; i < minuteItemsCount; i++) {
-            const minutes = i * this.timePicker.itemsDelta.minute;
+            const minutes = i * this.timePicker.itemsDelta.minutes;
             time.setMinutes(minutes);
             if (time.getTime() >= this.timePicker.minDropdownValue.getTime() && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
-                minuteItems.push(i * this.timePicker.itemsDelta.minute);
+                minuteItems.push(i * this.timePicker.itemsDelta.minutes);
             }
         }
 
@@ -195,14 +195,14 @@ export class TimeItemPipe implements PipeTransform {
 
     private generateSeconds(): any[] {
         const secondsItems = [];
-        const secondsItemsCount = 60 / this.timePicker.itemsDelta.second;
+        const secondsItemsCount = 60 / this.timePicker.itemsDelta.seconds;
         const time = new Date(this.timePicker.selectedDate);
 
         for (let i = 0; i < secondsItemsCount; i++) {
-            const seconds = i * this.timePicker.itemsDelta.second;
+            const seconds = i * this.timePicker.itemsDelta.seconds;
             time.setSeconds(seconds);
             if (time.getTime() >= this.timePicker.minDropdownValue.getTime() && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
-                secondsItems.push(i * this.timePicker.itemsDelta.second);
+                secondsItems.push(i * this.timePicker.itemsDelta.seconds);
             }
         }
 
