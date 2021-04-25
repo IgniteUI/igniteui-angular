@@ -18,7 +18,7 @@ import {
     AfterViewInit,
     Injector,
     PipeTransform,
-    LOCALE_ID, Optional, ContentChildren, QueryList, OnChanges, SimpleChanges, HostListener
+    LOCALE_ID, Optional, ContentChildren, QueryList, HostListener
 } from '@angular/core';
 import {
     ControlValueAccessor,
@@ -112,7 +112,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     IgxTimePickerBase,
     ControlValueAccessor,
     OnInit,
-    OnChanges,
     OnDestroy,
     AfterViewInit,
     Validator {
@@ -628,6 +627,22 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
     }
 
+    /** @hidden @internal */
+    public getPartValue(value: Date, type: string): string {
+        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
+        const part = inputDateParts.find(element => element.type === type);
+        return DateTimeUtil.getPartValue(value, part, part.format.length);
+    }
+
+    /** @hidden @internal */
+    public toISOString(value: Date): string {
+        return value.toLocaleTimeString('en-GB', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+        });
+    }
+
     // #region ControlValueAccessor
 
     /** @hidden @internal */
@@ -687,13 +702,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.subscribeToToggleDirectiveEvents();
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
-        }
-    }
-
-    /** @hidden @internal */
-    public ngOnChanges(changes: SimpleChanges): void {
-        if (changes['minValue'] || changes['maxValue']) {
-            // this.setContainer();
         }
     }
 
@@ -1008,12 +1016,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         });
     }
 
-    public getPartValue(value: Date, type: string): string {
-        const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
-        const part = inputDateParts.find(element => element.type === type);
-        return DateTimeUtil.getPartValue(value, part, part.format.length);
-    }
-
     private validateDropdownValue(date: Date, isAmPm = false): Date {
         if (date > this.maxDropdownValue) {
             if (isAmPm && date.getHours() !== this.maxDropdownValue.getHours()) {
@@ -1106,14 +1108,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private parseToDate(value: any): Date {
         return DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
-    }
-
-    public toISOString(value: Date): string {
-        return value.toLocaleTimeString('en-GB', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-        });
     }
 
     private toTwentyFourHourFormat(hour: number, ampm: string): number {
