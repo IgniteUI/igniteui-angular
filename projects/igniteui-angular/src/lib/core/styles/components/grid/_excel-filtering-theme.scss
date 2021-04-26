@@ -114,13 +114,22 @@
         justify-content: space-between;
         padding: rem(8px) rem(16px);
 
-        [igxButton] {
+        %grid-excel-filter__apply,
+        %grid-excel-filter__cancel {
             flex-grow: 1;
 
-            + [igxButton] {
-                margin-#{$left}: rem(16px);
+            [igxButton] {
+                width: 100%;
             }
         }
+    }
+
+    %grid-excel-filter__clear {
+        flex-grow: 1;
+    }
+
+    %grid-excel-filter__cancel + %grid-excel-filter__apply {
+        margin-#{$left}: rem(16px);
     }
 
     %grid-excel-sort {
@@ -371,7 +380,8 @@
     %grid-excel-menu__secondary-footer {
         border-top: 1px dashed igx-color($palette, 'grays', 300);
 
-        [igxButton] {
+        %grid-excel-filter__apply,
+        %grid-excel-filter__cancel {
             flex-grow: 0;
         }
     }

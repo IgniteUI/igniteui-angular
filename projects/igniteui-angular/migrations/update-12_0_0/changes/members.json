@@ -9,52 +9,581 @@
             ]
         },
         {
+            "member": "onScroll",
+            "replaceWith": "gridScroll",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "selected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnInit",
+            "replaceWith": "columnInit",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnResized",
+            "replaceWith": "columnResized",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onGridCreated",
+            "replaceWith": "gridCreated",
+            "definedIn": [
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onGridInitialized",
+            "replaceWith": "gridInitialized",
+            "definedIn": [
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
+            "member": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "definedIn": [
+                "IgxHierarchicalGridComponent"
+            ]
+        },
+        {
+            "member": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "definedIn": [
+                "IgxGridComponent"
+            ]
+        },
+        {
+            "member": "onColumnToggled",
+            "replaceWith": "columnToggled",
+            "definedIn": [
+                "IgxColumnActionsComponent"
+            ]
+        },
+        {
             "member": "onChunkLoad",
             "replaceWith": "chunkLoad",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onScrollbarVisibilityChanged",
             "replaceWith": "scrollbarVisibilityChanged",
             "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onContentSizeChange",
             "replaceWith": "contentSizeChange",
             "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onDataChanged",
-            "replaceWith": "dataChanged",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onBeforeViewDestroyed",
-            "replaceWith": "beforeViewDestroyed",
-            "definedIn": [
-                "IgxForOfDirective"
-            ]
-        },
-        {
-            "member": "onChunkPreload",
-            "replaceWith": "chunkPreload",
-            "definedIn": [
-                "IgxForOfDirective"
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
             ]
         },
         {
             "member": "onDataChanging",
             "replaceWith": "dataChanging",
             "definedIn": [
+                "IgxForOfDirective",
                 "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "definedIn": [
+                "IgxForOfDirective",
+                "IgxGridForOfDirective"
+            ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxSliderComponent"
+            ]
+        },
+        {
+            "member": "onValueChanged",
+            "replaceWith": "dragFinished",
+            "definedIn": [
+                "IgxSliderComponent"
+            ]
+        },
+        {
+            "member": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "definedIn": [
+                "IgxLinearProgressBarComponent"
+            ]
+        },
+        {
+            "member": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "definedIn": [
+                "IgxCircularProgressBarComponent"
+            ]
+        },
+        {
+            "member": "isSpinLoop",
+            "replaceWith": "spinLoop",
+            "definedIn": [
+                "IgxDateTimeEditorDirective",
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxDateTimeEditorDirective"
+            ]
+        },
+        {
+            "member": "selectDate",
+            "replaceWith": "select",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "triggerTodaySelection",
+            "replaceWith": "selectToday",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "deselectDate",
+            "replaceWith": "clear",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "openDialog",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "editorTabIndex",
+            "replaceWith": "tabIndex",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "mask",
+            "replaceWith": "inputFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "monthsViewNumber",
+            "replaceWith": "displayMonthsCount",
+            "definedIn": [
+                "IgxDatePickerComponent",
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "vertical",
+            "replaceWith": "headerOrientation",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "displayData",
+            "replaceWith": "displayFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "format",
+            "replaceWith": "displayFormat",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "dropDownOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "modalOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onSelection",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxDatePickerComponent",
+                "IgxTimePickerComponent",
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "definedIn": [
+                "IgxDatePickerComponent"
+            ]
+        },
+        {
+            "member": "okButtonClicked",
+            "replaceWith": "close",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "openDialog",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "format",
+            "replaceWith": "inputFormat",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onValueChanged",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "definedIn": [
+                "IgxTimePickerComponent"
+            ]
+        },
+        {
+            "member": "selectRange",
+            "replaceWith": "select",
+            "definedIn": [
+                "IgxRangePickerComponent"
+            ]
+        },
+        {
+            "member": "rangeSelected",
+            "replaceWith": "valueChange",
+            "definedIn": [
+                "IgxRangePickerComponent"
             ]
         }
     ]

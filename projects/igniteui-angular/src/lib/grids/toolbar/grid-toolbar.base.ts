@@ -1,5 +1,5 @@
 import { Directive, Host, Input, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxToggleDirective, ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../../directives/toggle/toggle.directive';
 import {
@@ -72,6 +72,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public columnToggle = new EventEmitter<IColumnToggledEventArgs>();
 
     private $destroyer = new Subject<boolean>();
+    private $sub: Subscription;
 
     /**
      * Returns the grid containing this component.
@@ -104,7 +105,14 @@ export abstract class BaseToolbarDirective implements OnDestroy {
         columnActions.querySelector('input')?.focus();
     }
 
-    private _setupListeners(toggleRef: IgxToggleDirective) {
+    private _setupListeners(toggleRef: IgxToggleDirective, actions? : IgxColumnActionsComponent) {
+        if (actions){
+            if (!this.$sub || this.$sub.closed){
+                this.$sub = actions.columnToggled.subscribe((event) => this.columnToggle.emit(event));
+            } else {
+                this.$sub.unsubscribe();
+            }
+        }
         /** The if statement prevents emitting open and close events twice  */
         if (toggleRef.collapsed) {
             toggleRef.onOpening.pipe(first(), takeUntil(this.$destroyer)).subscribe((event) => this.opening.emit(event));

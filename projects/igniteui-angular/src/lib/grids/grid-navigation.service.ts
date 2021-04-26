@@ -409,7 +409,7 @@ export class IgxGridNavigationService {
             case ' ':
             case 'spacebar':
             case 'space':
-                const rowObj = this.grid.getRowByIndex(this.activeNode.row);
+                const rowObj = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
                 if (this.grid.isRowSelectable && rowObj) {
                     if (this.isDataRow(rowIndex)) {
                         if (rowObj.selected) {
@@ -494,7 +494,8 @@ export class IgxGridNavigationService {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
-        const row = this.grid.getRowByIndex(this.activeNode.row) as any;
+        // todo TODO ROW
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row) as any;
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
             return;
@@ -586,7 +587,7 @@ export class IgxGridNavigationService {
             type === 'dataCell' ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
                 row.summaryCells?.find(c => c.visibleColumnIndex === this.activeNode.column);
         const keydownArgs = { targetType: type, event, cancel: false, target };
-        this.grid.onGridKeydown.emit(keydownArgs);
+        this.grid.gridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel && type === 'dataCell') {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;

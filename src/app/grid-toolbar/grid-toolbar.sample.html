@@ -2,7 +2,7 @@
     <article class="grid-sample">
         <h4 class="sample-title">Toolbar</h4>
 
-        <igx-grid #grid1 displayDensity="compact" [data]="data" [allowAdvancedFiltering]="true" [autoGenerate]="true" height="500px" width="900px" (onColumnInit)="initColumns($event)" [allowFiltering]="true">
+        <igx-grid #grid1 displayDensity="compact" [data]="data" [allowAdvancedFiltering]="true" [autoGenerate]="true" height="500px" width="900px" (columnInit)="initColumns($event)" [allowFiltering]="true">
             <igx-grid-toolbar *ngIf="showToolbar" [showProgress]="showProgress" [displayDensity]="grid1.displayDensity">
                 <img *ngIf="customContent" src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQjLxyJgjnweUFqmVzds_myRIKFmNBxLs-E0A&usqp=CAU" alt="">
                 <igx-grid-toolbar-title>{{ title }}</igx-grid-toolbar-title>

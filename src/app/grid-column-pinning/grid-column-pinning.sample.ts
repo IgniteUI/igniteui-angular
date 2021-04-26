@@ -3,8 +3,8 @@ import { IgxGridComponent,
     ColumnPinningPosition,
     RowPinningPosition,
     GridSelectionMode,
-    IgxGridRowComponent,
-    IPinningConfig } from 'igniteui-angular';
+    IPinningConfig,
+    RowType } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -122,7 +122,7 @@ export class GridColumnPinningSampleComponent implements OnInit {
         this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
     }
 
-    public doSomeAction(row?: IgxGridRowComponent) {
+    public doSomeAction(row?: RowType) {
         if (this.grid1.isRecordPinned(row.rowData)) {
             this.grid1.unpinRow(row.rowData);
         } else {

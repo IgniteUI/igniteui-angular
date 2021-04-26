@@ -36,6 +36,8 @@ import { GridType } from '../common/grid.interface';
 import { IgxRowIslandAPIService } from './row-island-api.service';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { RowType } from '../common/row.interface';
+import { IgxHierarchicalGridRow } from '../grid-public-row';
 
 let NEXT_ID = 0;
 
@@ -400,6 +402,45 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Returns the `RowType` by index.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByIndex(1);
+     * ```
+     * @param index
+     */
+    public getRowByIndex(index: number): RowType {
+        if (index < 0 || index >= this.dataView.length) {
+            return undefined;
+        }
+        return this.createRow(index);
+    }
+
+    public getRowByKey(key: any): RowType {
+        const data = this.dataView;
+        const rec = this.primaryKey ?
+            data.find(record => record[this.primaryKey] === key) :
+            data.find(record => record === key);
+        const index = data.indexOf[rec];
+        if (index < 0 || index > data.length) {
+            return undefined;
+        }
+
+        return new IgxHierarchicalGridRow(this, index, rec);
+    }
+
+    public pinRow(rowID: any, index?: number): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.pinRow(rowID, index, row);
+    }
+
+    public unpinRow(rowID: any): boolean {
+        const row = this.getRowByKey(rowID);
+        return super.unpinRow(rowID, row);
+    }
+
+    /**
      * @hidden @internal
      */
     public dataLoading(event) {
@@ -711,6 +752,21 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             return true;
         }
         return super._shouldAutoSize(renderedHeight);
+    }
+
+
+    /**
+     * @hidden
+     */
+    protected createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (!row && rec) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
     }
 
     private updateSizes() {

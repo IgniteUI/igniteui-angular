@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IgxButtonModule } from '../../directives/button/button.directive';
-import { IgxDatePickerModule } from '../../date-picker/date-picker.component';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../../input-group/public_api';
@@ -22,6 +21,9 @@ import { IgxSelectModule } from '../../select/select.module';
 import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxGridStateModule } from '../state.directive';
 import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
+import { IgxDatePickerModule } from '../../date-picker/date-picker.module';
+import { IgxTimePickerModule } from '../../time-picker/time-picker.component';
+import { IgxDateTimeEditorModule } from '../../directives/date-time-editor/date-time-editor.directive';
 
 
 @NgModule({
@@ -48,7 +50,9 @@ import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
         IgxProgressBarModule,
         IgxSelectModule,
         IgxGridStateModule,
-        IgxSnackbarModule
+        IgxSnackbarModule,
+        IgxTimePickerModule,
+        IgxDateTimeEditorModule
     ],
     exports: [
         CommonModule,
@@ -73,7 +77,9 @@ import { IgxSnackbarModule } from '../../snackbar/snackbar.component';
         IgxButtonGroupModule,
         IgxProgressBarModule,
         IgxSelectModule,
-        IgxSnackbarModule
+        IgxSnackbarModule,
+        IgxTimePickerModule,
+        IgxDateTimeEditorModule
     ]
 })
 export class IgxGridSharedModules {}

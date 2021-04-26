@@ -372,7 +372,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
 
         //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        grid.onRowDeleted.emit({ data: data[index] });
+        grid.rowDeleted.emit({ data: data[index] });
 
         this.deleteRowFromData(rowId, index);
 
@@ -440,7 +440,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             cancel: false
         };
 
-        grid.onRowToggle.emit(args);
+        grid.rowToggle.emit(args);
 
         if (args.cancel) {
             return;

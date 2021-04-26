@@ -497,9 +497,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').pinned).toBeTruthy();
         });
 
-        it('should emit onColumnPinning event with correct parameters', () => {
+        it('should emit columnPin event with correct parameters', () => {
             let allArgs = [];
-            grid.onColumnPinning.subscribe((args) => {
+            grid.columnPin.subscribe((args) => {
                 allArgs.push(args);
             });
 

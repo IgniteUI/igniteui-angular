@@ -1,0 +1,237 @@
+////
+/// @group schemas
+/// @access public
+/// @author <a href="https://github.com/desig9stein" target="_blank">Marin Popov</a>
+////
+
+/// Generates a light tree schema.
+/// @type {Map}
+/// @prop {Map} background [ igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} background-selected [igx-color: ('secondary', 200)] - The background color used for the selected tree node.
+/// @prop {Map} background-active [igx-color: ('grays', 200)] - The background color used for the active tree node.
+/// @prop {Map} background-active-selected [igx-color: ('grays', 200)] - The background color used for the active selected tree node.
+/// @prop {Map} background-disabled [igx-color: ('secondary', 300)] - The background color used for the tree node in disabled state.
+/// @prop {Map} foreground [igx-contrast-color: ('surface')] - The color used for the tree node content.
+/// @prop {Map} foreground-selected [igx-contrast-color: ('secondary', 200)] - The color used for the content of the selected tree node.
+/// @prop {Map} foreground-active [igx-contrast-color: ('grays', 200)] - The color used for the content in active state of the tree node.
+/// @prop {Map} foreground-active-selected [igx-contrast-color: ('grays', 200)] - The color used for the content of the active selected tree node.
+/// @prop {Map} foreground-disabled [igx-contrast-color: ('secondary', 300)] - The color used for the content of the disabled tree node.
+/// @prop {Map} drop-area-color [igx-color: ('secondary'] - The background color used for the tree node drop aria.
+/// @prop {Map} border-color [igx-color: ('secondary')] - The outline shadow color used for tree node in focus state.
+/// @requires {function} extend
+/// @see $default-palette
+$_light-tree: extend(
+    (
+        variant: 'material',
+
+        background: (
+            igx-color: ('surface')
+        ),
+
+        foreground: (
+            igx-contrast-color: ('surface')
+        ),
+
+        background-selected: (
+            igx-color: ('secondary', 200)
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('secondary', 200)
+        ),
+
+        background-active: (
+            igx-color: ('grays', 200),
+        ),
+
+        foreground-active: (
+            igx-contrast-color: ('grays', 200),
+        ),
+
+        background-active-selected: (
+            igx-color: ('secondary', 300)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('secondary', 300),
+        ),
+
+        border-color: (
+            igx-color: ('secondary')
+        ),
+
+        // Same for all themes
+
+        background-disabled: (
+            igx-color: ('surface')
+        ),
+
+        foreground-disabled: (
+            igx-color: ('grays', 500)
+        ),
+
+        drop-area-color: (
+            igx-color: ('secondary')
+        ),
+
+        hover-color: (
+            igx-color: ('grays', 200)
+        )
+    )
+);
+
+/// Generates a light fluent tree schema.
+/// @type {Map}
+/// @prop {Map} background [ igx-color: ('surface')] - The background color used for the tree node.
+/// @prop {Map} foreground [igx-contrast-color: ('surface')] - The color used for the tree node content.
+/// @prop {Map} background-selected [igx-color: ('grays', 100)] - The background color used for the selected tree node.
+/// @prop {Map} foreground-selected [igx-contrast-color: ('grays', 100)] - The color used for the content of the selected tree node.
+/// @prop {Map} background-active [igx-color: ('surface')] - The background color used for the active tree node.
+/// @prop {Map} foreground-active [igx-contrast-color: ('surface')] - The color used for the content in active state of the tree node.
+/// @prop {Map} background-active-selected [igx-color: ('grays', 200)] - The background color used for the active selected tree node.
+/// @prop {Map} foreground-active-selected [igx-contrast-color: ('grays', 200)] - The color used for the content of the active selected tree node.
+/// @prop {Map} border-color [igx-color: ('grays', 800)] - The outline shadow color used for tree node in focus state.
+/// @requires {function} extend
+/// @requires {Map} $_light-tree
+$_fluent-tree: extend(
+    $_light-tree,
+    (
+        variant: 'fluent',
+
+        background: (
+            igx-color: ('surface')
+        ),
+
+        foreground: (
+            igx-contrast-color: ('surface')
+        ),
+
+        background-selected: (
+            igx-color: ('grays', 100)
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('grays', 100)
+        ),
+
+        background-active: (
+            igx-color: ('surface')
+        ),
+
+        foreground-active: (
+            igx-contrast-color: ('surface'),
+        ),
+
+        background-active-selected: (
+            igx-color: ('grays', 200)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('grays', 200),
+        ),
+
+        border-color: (
+            igx-color: ('grays', 800)
+        ),
+    )
+);
+
+/// Generates a bootstrap tree schema.
+/// @type {Map}
+/// @prop {Map} background-active [igx-color: ('surface')] - The background color used for the active tree node.
+/// @prop {Map} foreground-active [igx-contrast-color: ('primary')] - The color used for the content in active state of the tree node.
+/// @prop {Map} background-selected [igx-color: ('primary')] - The background color used for the selected tree node.
+/// @prop {Map} foreground-selected [igx-contrast-color: ('primary', 600)] - The color used for the content of the selected tree node.
+/// @prop {Map} background-active-selected [igx-color: ('primary', 600)] - The background color used for the active selected tree node.
+/// @prop {Map} foreground-active-selected [igx-contrast-color: ('primary', 600)] - The color used for the content of the active selected tree node.
+/// @prop {Map} border-color [igx-color: ('primary', 200)] - The outline shadow color used for tree node in focus state.
+/// @requires {function} extend
+/// @requires $_light-tree
+$_bootstrap-tree: extend(
+    $_light-tree,
+    (
+        variant: 'bootstrap',
+
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
+        ),
+
+        background-selected: (
+            igx-color: ('primary')
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('primary', 600)
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 600)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 600),
+        ),
+
+        border-color: (
+            igx-color: ('primary' 200)
+        ),
+
+        hover-color: (
+            igx-color: ('grays', 100)
+        )
+    )
+);
+
+/// Generates an indigo tree schema.
+/// @type {Map}
+/// @prop {Map} background-active [igx-color: ('surface')] - The background color used for the active tree node.
+/// @prop {Map} foreground-active [igx-contrast-color: ('primary')] - The color used for the content in active state of the tree node.
+/// @prop {Map} background-selected [igx-color: ('primary')] - The background color used for the selected tree node.
+/// @prop {Map} foreground-selected [igx-contrast-color: ('primary')] - The color used for the content of the selected tree node.
+/// @prop {Map} background-active-selected [igx-color: ('primary', 400)] - The background color used for the active selected tree node.
+/// @prop {Map} foreground-active-selected [igx-contrast-color: ('primary', 400)] - The color used for the content of the active selected tree node.
+/// @prop {Map} border-color [igx-color: ('primary', 300)] - The outline shadow color used for tree node in focus state.
+/// @requires {function} extend
+/// @requires {Map} $_light-tree
+$_indigo-tree: extend(
+    $_light-tree,
+    (
+        variant: 'indigo-design',
+
+        background-active: (
+            igx-color: ('surface'),
+        ),
+
+        foreground-active: (
+            igx-color: ('primary'),
+        ),
+
+        background-selected: (
+            igx-color: ('primary')
+        ),
+
+        foreground-selected: (
+            igx-contrast-color: ('primary')
+        ),
+
+        background-active-selected: (
+            igx-color: ('primary', 400)
+        ),
+
+        foreground-active-selected: (
+            igx-contrast-color: ('primary', 400),
+        ),
+
+        border-color: (
+            igx-color: ('primary', 300)
+        ),
+
+        hover-color: (
+            igx-color: ('primary', 100)
+        )
+    )
+);

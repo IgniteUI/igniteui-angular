@@ -62,7 +62,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
             { label: 'compact', selected: this.density === 'compact', togglable: true }
         ];
 
-        this.data = SAMPLE_DATA.slice(0);
+        this.data = SAMPLE_DATA.slice(22);
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
@@ -87,8 +87,8 @@ export class GridColumnMovingSampleComponent implements OnInit {
                 summary: true, type: 'string' },
             { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: false, type: 'number' },
-            { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: false, type: 'date' },
+            { field: 'DateCreated', width: 150, resizable: true, pinned: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'time' },
             { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'boolean' }
         ];
@@ -113,17 +113,17 @@ export class GridColumnMovingSampleComponent implements OnInit {
         col.pinned = !col.pinned;
     }
 
-    public onColumnMovingStart() {
+    public columnMovingStart() {
 
     }
 
-    public onColumnMoving() {
+    public columnMoving() {
         // if (event.target.field === 'ID') {
         //     event.cancel = true;
         // }
     }
 
-    public onColumnMovingEnd() {
+    public columnMovingEnd() {
         // if (event.target.field === 'Fax') {
         //     event.cancel = true;
         // }

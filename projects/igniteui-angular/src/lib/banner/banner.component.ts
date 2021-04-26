@@ -1,7 +1,6 @@
 import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef,
     ContentChild, HostBinding } from '@angular/core';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
-import { AnimationSettings } from '../expansion-panel/expansion-panel.component';
 import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
 import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
 import { IToggleView } from '../core/navigation';
@@ -10,6 +9,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxBannerActionsDirective } from './banner.directives';
 import { CommonModule } from '@angular/common';
 import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
+import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
 export interface BannerEventArgs extends IBaseEventArgs {
     banner: IgxBannerComponent;
@@ -111,11 +111,11 @@ export class IgxBannerComponent implements IToggleView {
     /**
      * Get the animation settings used by the banner open/close methods
      * ```typescript
-     * let currentAnimations: AnimationSettings = banner.animationSettings
+     * let currentAnimations: ToggleAnimationSettings = banner.animationSettings
      * ```
      */
     @Input()
-    public get animationSettings(): AnimationSettings {
+    public get animationSettings(): ToggleAnimationSettings {
         return this._animationSettings ? this._animationSettings : this._expansionPanel.animationSettings;
     }
 
@@ -124,10 +124,10 @@ export class IgxBannerComponent implements IToggleView {
      * ```typescript
      * import { slideInLeft, slideOutRight } from 'igniteui-angular';
      * ...
-     * banner.animationSettings: AnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
+     * banner.animationSettings: ToggleAnimationSettings = { openAnimation: slideInLeft, closeAnimation: slideOutRight };
      * ```
      */
-    public set animationSettings(settings: AnimationSettings) {
+    public set animationSettings(settings: ToggleAnimationSettings) {
         this._animationSettings = settings;
     }
     /**
@@ -166,7 +166,7 @@ export class IgxBannerComponent implements IToggleView {
     private _bannerActionTemplate: IgxBannerActionsDirective;
 
     private _bannerEvent: BannerEventArgs;
-    private _animationSettings: AnimationSettings;
+    private _animationSettings: ToggleAnimationSettings;
 
     constructor(public elementRef: ElementRef) { }
 

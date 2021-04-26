@@ -21,7 +21,9 @@ import {
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
-    IgxStringFilteringOperand
+    IgxStringFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../data-operations/filtering-condition';
 import { ISortingStrategy, DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { DisplayDensity } from '../../core/displayDensity';
@@ -36,7 +38,7 @@ import { IgxGridFilteringCellComponent } from '../filtering/base/grid-filtering-
 import { IgxGridHeaderGroupComponent } from '../headers/grid-header-group.component';
 import {
     IgxSummaryOperand, IgxNumberSummaryOperand, IgxDateSummaryOperand,
-    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult
+    IgxCurrencySummaryOperand, IgxPercentSummaryOperand, IgxSummaryResult, IgxTimeSummaryOperand
 } from '../summaries/grid-summary';
 import {
     IgxCellTemplateDirective,
@@ -52,6 +54,8 @@ import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPi
 import { PlatformUtil } from '../../core/utils';
 
 const DEFAULT_DATE_FORMAT = 'mediumDate';
+const DEFAULT_TIME_FORMAT = 'mediumTime';
+const DEFAULT_DATE_TIME_FORMAT = 'medium';
 const DEFAULT_DIGITS_INFO = '1.0-3';
 
 /**
@@ -577,7 +581,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * to format the value into a currency string.
      *
      * ```typescript
-     * onColumnInit(column: IgxColumnComponent) {
+     * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "Salary") {
      *     column.formatter = (salary => this.format(salary));
      *   }
@@ -602,7 +606,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
      *
      * ```typescript
-     * onColumnInit(column: IgxColumnComponent) {
+     * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "OrderDate") {
      *     column.summaryFormatter = this.summaryFormat;
      *   }
@@ -1415,6 +1419,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public hasNestedPath: boolean;
 
     /**
+     * @hidden
+     * @internal
+     */
+    public defaultTimeFormat = 'hh:mm:ss tt';
+
+    /**
+     * @hidden
+     * @internal
+     */
+     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
+
+
+    /**
      * Returns the filteringExpressionsTree of the column.
      * ```typescript
      * let tree =  this.column.filteringExpressionsTree;
@@ -1549,7 +1566,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     private _field: string;
     private _calcWidth = null;
-    private _columnPipeArgs: IColumnPipeArgs = { format: DEFAULT_DATE_FORMAT, digitsInfo: DEFAULT_DIGITS_INFO };
+    private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
@@ -1591,6 +1608,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (this.filterCellTemplateDirective) {
             this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
+        if (!this._columnPipeArgs.format) {
+            this._columnPipeArgs.format = this.dataType === DataType.Time ? DEFAULT_TIME_FORMAT : this.dataType === DataType.DateTime?
+                DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
+        }
         if (!this.summaries) {
             switch (this.dataType) {
                 case DataType.String:
@@ -1601,7 +1622,11 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     this.summaries = IgxNumberSummaryOperand;
                     break;
                 case DataType.Date:
+                case DataType.DateTime:
                     this.summaries = IgxDateSummaryOperand;
+                    break;
+                case DataType.Time:
+                    this.summaries = IgxTimeSummaryOperand;
                     break;
                 case DataType.Currency:
                     this.summaries = IgxCurrencySummaryOperand;
@@ -1626,6 +1651,12 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
                     break;
                 case DataType.Date:
                     this.filters = IgxDateFilteringOperand.instance();
+                    break;
+                case DataType.Time:
+                    this.filters = IgxTimeFilteringOperand.instance();
+                    break;
+                case DataType.DateTime:
+                    this.filters = IgxDateTimeFilteringOperand.instance();
                     break;
                 case DataType.String:
                 default:
@@ -1841,7 +1872,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
         index = hasIndex ? index : rootPinnedCols.length;
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
-        this.grid.onColumnPinning.emit(args);
+        this.grid.columnPin.emit(args);
 
         if (args.cancel) {
             return;
@@ -1932,7 +1963,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
-        this.grid.onColumnPinning.emit(args);
+        this.grid.columnPin.emit(args);
 
         if (args.cancel) {
             return;
@@ -2048,7 +2079,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
         this.hidden = newValue;
-        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue });
+        this.grid.columnVisibilityChanged.emit({ column: this, newValue });
     }
 
     /**

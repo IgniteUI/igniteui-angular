@@ -229,7 +229,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.primaryKey = 'ID';
             fixture.detectChanges();
 
-            const rowData = hierarchicalGrid.getRowByKey('2').rowData;
+            const rowData = hierarchicalGrid.getRowByKey('2').data;
             expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
 
             hierarchicalGrid.sort({ fieldName: 'ChildLevels', dir: SortingDirection.Desc, ignoreCase: true });
@@ -259,7 +259,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             const firstChildCell = childGrid.dataRowList.first.cells.first;
-            expect(hierarchicalGrid.getRowByIndex(3) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(3) instanceof IgxChildGridRowComponent).toBeTruthy();
             expect(childGrid.data).toBe(fixture.componentInstance.data[0]['childData']);
             expect(firstChildCell.value).toBe('00');
         }));
@@ -319,8 +319,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             // apply some filter
             hierarchicalGrid.filter('ID', '0', IgxStringFilteringOperand.instance().condition('contains'), true);
 
-            expect((hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent).expanded).toBe(true);
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.getRowByIndex(0).expanded).toBe(true);
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
             firstChildCell = childGrid.dataRowList.first.cells.first;
@@ -532,13 +532,13 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             fixture.detectChanges();
 
             expect(hierarchicalGrid.hasVerticalScroll()).toBeFalsy();
-            expect(hierarchicalGrid.getRowByIndex(1) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(1) instanceof IgxChildGridRowComponent).toBeTruthy();
 
             // expand 3rd row
             hierarchicalGrid.expandRow(dataRows[3].rowID);
             tick(DEBOUNCE_TIME);
             fixture.detectChanges();
-            expect(hierarchicalGrid.getRowByIndex(4) instanceof IgxChildGridRowComponent).toBeTruthy();
+            expect(hierarchicalGrid.hgridAPI.get_row_by_index(4) instanceof IgxChildGridRowComponent).toBeTruthy();
         }));
 
         it('should correctly hide/show vertical scrollbar after page is changed.', (async () => {
@@ -787,7 +787,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(childGrid.pinnedColumns.length).toBe(3);
             expect(childGrid.unpinnedColumns.length).toBe(1);
             // check cells
-            expect(childGrid.getRowByIndex(0).cells.length).toBe(3);
+            expect(childGrid.gridAPI.get_row_by_index(0).cells.length).toBe(3);
             let cell = childGrid.getCellByColumn(0, 'ChildLevels');
             expect(cell.visibleColumnIndex).toEqual(0);
             expect(GridFunctions.isCellPinned(cell)).toBeTruthy();
@@ -840,9 +840,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_BOTTOM)).toBeFalsy();
 
             expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(3).key).toBe('2');
 
             hierarchicalGrid.pinRow('2');
             fixture.detectChanges();
@@ -852,9 +852,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
             expect(pinRowContainer[0].children[0].context.rowID).toBe('0');
             expect(pinRowContainer[0].children[1].context.rowID).toBe('2');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(3).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(4).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(3).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(4).key).toBe('2');
 
             fixture.detectChanges();
             expect(hierarchicalGrid.pinnedRowHeight).toBe(2 * hierarchicalGrid.renderedRowHeight + 2);
@@ -881,11 +881,11 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
             expect(pinRowContainer[0].children[0].context.index).toBe(fixture.componentInstance.data.length);
             expect(pinRowContainer[0].children[0].nativeElement)
-                .toBe(hierarchicalGrid.getRowByIndex(fixture.componentInstance.data.length).nativeElement);
+                .toBe(hierarchicalGrid.gridAPI.get_row_by_index(fixture.componentInstance.data.length).nativeElement);
 
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('2');
 
             // Pin 1st row
             hierarchicalGrid.pinRow('0');
@@ -895,9 +895,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(pinRowContainer[0].children.length).toBe(2);
             expect(pinRowContainer[0].children[0].context.rowID).toBe('1');
             expect(pinRowContainer[0].children[1].context.rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('0');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('2');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('0');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('2');
 
             fixture.detectChanges();
             // Check last pinned is fully in view
@@ -987,19 +987,19 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.pinRow('3');
             fixture.detectChanges();
 
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('1');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('3');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('3');
 
             hierarchicalGrid.sort({ fieldName: 'ID', dir: SortingDirection.Desc, ignoreCase: false });
             fixture.detectChanges();
 
             // check pinned rows data is sorted
-            expect(hierarchicalGrid.getRowByIndex(0).rowID).toBe('3');
-            expect(hierarchicalGrid.getRowByIndex(1).rowID).toBe('1');
+            expect(hierarchicalGrid.getRowByIndex(0).key).toBe('3');
+            expect(hierarchicalGrid.getRowByIndex(1).key).toBe('1');
 
             // check unpinned rows data is sorted
             // Expect 9 since it is a string.
-            expect(hierarchicalGrid.getRowByIndex(2).rowID).toBe('9');
+            expect(hierarchicalGrid.getRowByIndex(2).key).toBe('9');
         });
 
         it('should return pinned rows as well on multiple cell selection in both pinned and unpinned areas', async () => {

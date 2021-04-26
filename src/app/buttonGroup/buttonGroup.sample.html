@@ -1,39 +1,76 @@
 <section class="sample-content">
     <article class="sample-column">
-        <h4 class="sample-title">Exclusive Selection <i class="light">Horizontal</i></h4>
-        <igx-buttongroup [multiSelection]="!multi" [values]="alignOptions" displayDensity="compact"></igx-buttongroup>
-        <br>
-        <span class="igx-typography__body-2"><b>First button is selected: </b>{{alignOptions[0].selected}}</span>
+        <h4 class="sample-title">
+            Exclusive Selection <i class="light">Horizontal</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="!multi"
+            [values]="alignOptions"
+            displayDensity="compact"
+        ></igx-buttongroup>
+        <br />
+        <span class="igx-typography__body-2"
+            ><b>First button is selected: </b
+            >{{ alignOptions[0].selected }}</span
+        >
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Multiple Selection <i class="light">Horizontal</i></h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false">
+        <h4 class="sample-title">
+            Multiple Selection <i class="light">Horizontal</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="multi"
+            [values]="fontOptions"
+            [disabled]="false"
+        >
         </igx-buttongroup>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Multiple Selection <i class="light">Horizontal Disabled</i></h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="true">
+        <h4 class="sample-title">
+            Multiple Selection <i class="light">Horizontal Disabled</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="multi"
+            [values]="fontOptions"
+            [disabled]="true"
+        >
         </igx-buttongroup>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Exclusive Selection <i class="light">Vertical</i></h4>
-        <igx-buttongroup [multiSelection]="false" [values]="cities" alignment="vertical">
+        <h4 class="sample-title">
+            Exclusive Selection <i class="light">Vertical</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="false"
+            [values]="cities"
+            alignment="vertical"
+        >
         </igx-buttongroup>
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Multiple Selection <i class="light">Vertical</i></h4>
-        <igx-buttongroup [multiSelection]="true" [values]="borders" [alignment]="alignment">
+        <h4 class="sample-title">
+            Multiple Selection <i class="light">Vertical</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="true"
+            [values]="borders"
+            [alignment]="alignment"
+        >
         </igx-buttongroup>
     </article>
-
 
     <article class="sample-column">
         <h4 class="sample-title">Custom class to style the content</h4>
-        <igx-buttongroup [multiSelection]="multi" [values]="fontOptions" [disabled]="false" itemContentCssClass="customContentStyle">
+        <igx-buttongroup
+            [multiSelection]="multi"
+            [values]="fontOptions"
+            [disabled]="false"
+            itemContentCssClass="customContentStyle"
+        >
         </igx-buttongroup>
     </article>
 
@@ -52,8 +89,14 @@
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Templated buttons. <i class="light">Vertical</i></h4>
-        <igx-buttongroup [multiSelection]="false" [alignment]="alignment" displayDensity="compact">
+        <h4 class="sample-title">
+            Templated buttons. <i class="light">Vertical</i>
+        </h4>
+        <igx-buttongroup
+            [multiSelection]="false"
+            [alignment]="alignment"
+            displayDensity="compact"
+        >
             <button igxButton displayDensity="comfortable">
                 <igx-icon>alarm_on</igx-icon>
                 <span>Button 1 text</span>
@@ -66,7 +109,9 @@
     </article>
 
     <article class="sample-column">
-        <h4 class="sample-title">Templated buttons. <i class="light">Multiple selection</i></h4>
+        <h4 class="sample-title">
+            Templated buttons. <i class="light">Multiple selection</i>
+        </h4>
         <igx-buttongroup [multiSelection]="true" [alignment]="alignment">
             <button igxButton [selected]="true">
                 <igx-icon>alarm_on</igx-icon>
@@ -77,5 +122,35 @@
                 <span>Button 2 text</span>
             </button>
         </igx-buttongroup>
+    </article>
+
+    <article class="sample-column">
+        <h4 class="sample-title">Programmatic Selection</h4>
+        <igx-buttongroup #programmatic>
+            <button
+                igxButton
+                *ngFor="let button of buttons; let i = index"
+                [selected]="i === selectedIndex"
+                (click)="selectedIndex = i"
+            >
+                {{ button }}
+            </button>
+        </igx-buttongroup>
+        <div igxLayout igxLayoutJustify="flex-end">
+            <button
+                igxButton="raised"
+                (click)="switchContent()"
+                style="margin: 16px 8px 0 0"
+            >
+                Move Selection
+            </button>
+            <button
+                igxButton="raised"
+                (click)="selectLast()"
+                style="margin: 16px 0 0 8px"
+            >
+                Select Last
+            </button>
+        </div>
     </article>
 </section>

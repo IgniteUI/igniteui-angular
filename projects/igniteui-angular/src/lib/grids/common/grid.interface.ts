@@ -8,6 +8,7 @@ import { IGroupingExpression } from '../../data-operations/grouping-expression.i
 import { TransactionService, Transaction, State } from '../../services/public_api';
 import { ITreeGridRecord } from '../tree-grid/public_api';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
+import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
 export interface IGridDataBindable {
     data: any[];
@@ -100,6 +101,7 @@ export interface FlatGridType extends GridType {
     groupingExpressionsChange: EventEmitter<IGroupingExpression[]>;
 
     clearGrouping(field: string): void;
+    toggleGroup(groupRow: IGroupByRecord): void;
 }
 
 /**
@@ -107,6 +109,14 @@ export interface FlatGridType extends GridType {
  */
 export interface TreeGridType extends GridType {
     records: Map<any, ITreeGridRecord>;
+    isTreeRow(rec: any): boolean;
+}
+
+/**
+ * An interface describing a Hierarchical Grid type
+ */
+ export interface HierarchicalGridType extends GridType {
+    childLayoutKeys: any[];
 }
 
 export interface GridSVGIcon {

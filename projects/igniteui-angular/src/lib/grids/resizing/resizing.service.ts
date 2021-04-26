@@ -84,7 +84,7 @@ export class IgxColumnResizingService {
 
         this.zone.run(() => {});
 
-        this.column.grid.onColumnResized.emit({
+        this.column.grid.columnResized.emit({
             column: this.column,
             prevWidth: currentColWidth.toString(),
             newWidth: this.column.width
@@ -116,7 +116,7 @@ export class IgxColumnResizingService {
         this.zone.run(() => {});
 
         if (currentColWidth !== parseFloat(this.column.width)) {
-            this.column.grid.onColumnResized.emit({
+            this.column.grid.columnResized.emit({
                 column: this.column,
                 prevWidth: isPercentageWidth ? currentColWidth + '%' : currentColWidth + 'px',
                 newWidth: this.column.width
