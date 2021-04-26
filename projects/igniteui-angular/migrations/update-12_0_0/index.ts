@@ -10,6 +10,9 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         `Applying migration for Ignite UI for Angular to version ${version}`
     );
 
+    // eslint-disable-next-line max-len
+    const UPDATE_NOTE = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+
     const COMPONENTS = [
         {
             component: 'igx-bottom-nav',
@@ -129,7 +132,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                     let labelText = '';
                     if (hasAttribute(node, 'label')) {
                         const labelAttr = getAttribute(node, 'label')[0];
-                        labelText = `\n<span ${comp.labelDirective}>${labelAttr.value}</span>\n`;
+                        labelText = `\n<span ${comp.labelDirective}>${labelAttr.value}</span>`;
                     }
                     // Icon content
                     let iconText = '';
@@ -151,9 +154,17 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                     }
 
                     if (iconText || labelText || routerLinkText) {
-                        // eslint-disable-next-line max-len
-                        const tabHeader = `\n<${comp.headerItem}${routerLinkText}${classText}>${iconText}${labelText}</${comp.headerItem}>`;
-                        addChange(file.url, new FileChange(startTag.end, tabHeader));
+                        // Get igx-tab-header if it's present
+                        const headerNode = findElementNodes([offset.node], comp.headerItem)
+                            .map(hNode => getSourceOffset(hNode as Element));
+
+                        if (headerNode && headerNode.length > 0) {
+                            addChange(file.url, new FileChange(headerNode[0].startTag.end - 1, `${routerLinkText}${classText}`));
+                        } else {
+                            // eslint-disable-next-line max-len
+                            const tabHeader = `\n<${comp.headerItem}${routerLinkText}${classText}>${iconText}${labelText}\n</${comp.headerItem}>`;
+                            addChange(file.url, new FileChange(startTag.end, tabHeader));
+                        }
                     }
                 });
 
@@ -179,7 +190,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                         const tabContentTag = new RegExp(String.raw`${comp.panelItem}`);
                         const hasTabContent = content.match(tabContentTag);
 
-                        if ((!hasTabContent || hasTabContent.length === 0) && !isEmptyOrSpaces(content)) {
+                        if (!hasTabContent && !isEmptyOrSpaces(content)) {
                             const tabPanel = `\n<${comp.panelItem}${classAttrText}>${content}</${comp.panelItem}>\n`;
                             addChange(offset.file.url, new FileChange(tabHeader.sourceSpan.end.offset, tabPanel, content, 'replace'));
                         }
@@ -195,8 +206,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                     map(node => getSourceOffset(node as Element)).
                     forEach(offset => {
                         const { startTag, file } = offset;
-                        // eslint-disable-next-line max-len
-                        const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+                        const commentText = UPDATE_NOTE;
                         addChange(file.url, new FileChange(startTag.start, commentText));
                     });
 
