@@ -382,7 +382,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
 
-        spyOn(ri.onScroll, 'emit').and.callThrough();
+        spyOn(ri.gridScroll, 'emit').and.callThrough();
         spyOn(ri.dataPreLoad, 'emit').and.callThrough();
 
 
@@ -393,7 +393,7 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait();
         fixture.detectChanges();
 
-        expect(ri.onScroll.emit).toHaveBeenCalled();
+        expect(ri.gridScroll.emit).toHaveBeenCalled();
         expect(ri.dataPreLoad.emit).toHaveBeenCalled();
     });
 });

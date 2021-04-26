@@ -2223,7 +2223,7 @@ export class GridSelectionFunctions {
         expect(cell.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS)).toBe(active);
     }
 
-    // Check the grid selected cell and cell in in the onSelection function
+    // Check the grid selected cell and cell in in the selected function
     public static verifyGridCellSelected(fix, cell: IgxGridCellComponent) {
         const selectedCellFromGrid = cell.grid.selectedCells[0];
         const selectedCell = fix.componentInstance.selectedCell;

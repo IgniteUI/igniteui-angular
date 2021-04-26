@@ -49,11 +49,28 @@
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick()">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
-
-        <div>
-            <button igxButton [displayDensity]="displayDensity" (click)="closeDialog()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick()" (keydown)="onApplyButtonKeyDown($event)">
+        <div class="igx-excel-filter__clear">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="onClearButtonClick()">
+                    {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__cancel">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="closeDialog()">
+                    {{ grid.resourceStrings.igx_grid_excel_cancel }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__apply">
+            <button
+                igxButton="raised"
+                [displayDensity]="displayDensity"
+                (click)="onApplyButtonClick()"
+                (keydown)="onApplyButtonKeyDown($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>
         </div>

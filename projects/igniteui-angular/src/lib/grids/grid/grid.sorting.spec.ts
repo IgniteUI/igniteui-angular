@@ -40,7 +40,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
         it('Should sort grid ascending by column name', fakeAsync (() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.onSortingDone, 'emit').and.callThrough();
+            spyOn(grid.sortingDone, 'emit').and.callThrough();
             const currentColumn = 'Name';
             const lastNameColumn = 'LastName';
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
@@ -71,7 +71,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('Should sort grid descending by column name', () => {
@@ -363,7 +363,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
         it('Should sort grid ascending by clicking once on first header cell UI', fakeAsync(() => {
             spyOn(grid.sorting, 'emit');
-            spyOn(grid.onSortingDone, 'emit');
+            spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
@@ -387,12 +387,12 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Rick');
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(1);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(1);
         }));
 
         it('Should sort grid descending by clicking twice on sort icon UI', fakeAsync(() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.onSortingDone, 'emit').and.callThrough();
+            spyOn(grid.sortingDone, 'emit').and.callThrough();
 
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
@@ -427,12 +427,12 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(GridFunctions.getValueFromCellElement(lastRowSecondCell)).toEqual('Brad');
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
 
         it('Should sort grid none when we click three time on header sort icon UI', fakeAsync(() => {
             spyOn(grid.sorting, 'emit');
-            spyOn(grid.onSortingDone, 'emit');
+            spyOn(grid.sortingDone, 'emit');
             const firstHeaderCell = GridFunctions.getColumnHeader('ID', fixture);
 
             GridFunctions.clickHeaderSortIcon(firstHeaderCell);
@@ -460,7 +460,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(GridFunctions.getColumnSortingIndex(GridFunctions.getColumnHeader('ID', fixture))).toBeNull();
             expect(grid.sorting.emit).toHaveBeenCalledTimes(3);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(3);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(3);
         }));
 
         it('Should have a valid sorting icon when sorting using the API.', () => {
@@ -510,7 +510,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
         it('Should disable sorting feature when using NoopSortingStrategy.', fakeAsync(() => {
             spyOn(grid.sorting, 'emit');
-            spyOn(grid.onSortingDone, 'emit');
+            spyOn(grid.sortingDone, 'emit');
             grid.sortStrategy = NoopSortingStrategy.instance();
             fixture.detectChanges();
 
@@ -550,7 +550,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
 
             expect(GridFunctions.getColumnSortingIndex(firstHeaderCell)).toEqual(1);
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(2);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);
         }));
     });
 });

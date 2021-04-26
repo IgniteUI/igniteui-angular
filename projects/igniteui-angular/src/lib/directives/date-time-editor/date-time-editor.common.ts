@@ -11,9 +11,9 @@ export enum DatePart {
     Date = 'date',
     Month = 'month',
     Year = 'year',
-    Hours = 'hour',
-    Minutes = 'minute',
-    Seconds = 'second',
+    Hours = 'hours',
+    Minutes = 'minutes',
+    Seconds = 'seconds',
     AmPm = 'ampm',
     Literal = 'literal'
 }
@@ -24,4 +24,14 @@ export interface DatePartInfo {
     start: number;
     end: number;
     format: string;
+}
+
+/** Delta values used for spin actions. */
+export interface DatePartDeltas {
+    date?: number;
+    month?: number;
+    year?: number;
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
 }
