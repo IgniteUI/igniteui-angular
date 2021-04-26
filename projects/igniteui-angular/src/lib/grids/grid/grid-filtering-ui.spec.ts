@@ -611,9 +611,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeFalsy();
         }));
 
-        xit('Should complete the filter when focusing out of the input', fakeAsync(() => {
+        it('Should complete the filter when focusing out of the input', fakeAsync(() => {
             const filterValue = 'an';
             GridFunctions.clickFilterCellChip(fix, 'ProductName');
+            tick(16); // onConditionsChanged rAF
 
             GridFunctions.typeValueInFilterRowInput(filterValue, fix);
 
@@ -623,7 +624,6 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterChip.componentInstance.selected).toBeTruthy();
 
             grid.nativeElement.focus();
-            grid.filteringRow.onInputGroupFocusout();
             fix.detectChanges();
             tick(100);
 
@@ -4323,7 +4323,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(operatorsDropdownToggle).not.toBeNull();
         }));
 
-        xit('Should open calendar when clicking date-picker of custom expression.', fakeAsync(() => {
+        it('Should open calendar when clicking date-picker of custom expression.', fakeAsync(() => {
             // Open excel style custom filtering dialog.
             GridFunctions.clickExcelFilterIcon(fix, 'ReleaseDate');
             tick(100);
@@ -4334,19 +4334,19 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(200);
 
             const expr = GridFunctions.getExcelCustomFilteringDateExpressions(fix)[0];
-            const datePicker = fix.debugElement.query(By.directive(IgxDatePickerComponent));
-            expect(datePicker).not.toBeNull();
+            const datePicker = expr.querySelector('igx-date-picker');
 
             // Verify calendar is not opened.
-            let calendar = fix.debugElement.query(By.directive(IgxCalendarComponent));
+            let calendar = expr.querySelector('igx-calendar');
             expect(calendar).toBeNull();
 
-            // Click date picker input to open calendar.
-            datePicker.triggerEventHandler('click', null);
+            const input = datePicker.querySelector('input');
+            UIInteractions.simulateClickEvent(input);
             fix.detectChanges();
+            expect(datePicker).not.toBeNull();
 
             // Verify calendar is opened.
-            calendar = fix.debugElement.query(By.directive(IgxCalendarComponent));
+            calendar = grid.nativeElement.querySelector('igx-calendar');
             expect(calendar).not.toBeNull();
 
             // Click-off to close calendar.
