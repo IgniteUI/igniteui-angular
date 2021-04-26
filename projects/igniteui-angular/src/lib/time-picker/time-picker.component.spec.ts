@@ -910,11 +910,10 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeFalsy();
 
-                const expectedHour = 12;
-                const expectedMinute= 46;
-                const expectedSecond = 1;
+                const expectedHour = '12';
+                const expectedMinute= '46';
+                const expectedSecond = '01';
                 const expectedAmPm = 'PM';
-                const expectedPrependZero = '0';
 
                 let item; let selectedItems;
                 item = ampmColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
@@ -931,7 +930,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
                 const selectedHour = selectedItems[0].nativeElement.innerText;
-                expect(selectedHour).toEqual(expectedHour.toString());
+                expect(selectedHour).toEqual(expectedHour);
 
                 item = minutesColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
                 item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -939,7 +938,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
                 const selectedMinute = selectedItems[1].nativeElement.innerText;
-                expect(selectedMinute).toEqual(expectedMinute.toString());
+                expect(selectedMinute).toEqual(expectedMinute);
 
                 item = secondsColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
                 item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
@@ -947,7 +946,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
                 const selectedSecond = selectedItems[2].nativeElement.innerText;
-                expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
+                expect(selectedSecond).toEqual(expectedSecond);
             }));
         });
 
