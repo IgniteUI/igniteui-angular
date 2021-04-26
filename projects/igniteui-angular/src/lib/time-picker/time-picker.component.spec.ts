@@ -883,6 +883,55 @@ describe('IgxTimePicker', () => {
                 expect(selectedMinutes).toEqual('00');
                 expect(selectedAMPM).toEqual('PM');
             }));
+            it('should select hour/minute/second/AMPM via the drop down list (throw onItemClick event)', fakeAsync(() => {
+                timePicker.inputFormat = 'hh:mm:ss tt';
+                fixture.detectChanges();
+
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+                expect(toggleDirective.collapsed).toBeFalsy();
+
+                const expectedHour = 12;
+                const expectedMinute= 46;
+                const expectedSecond = 1;
+                const expectedAmPm = 'PM';
+                const expectedPrependZero = '0';
+
+                let item; let selectedItems;
+                item = ampmColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedAMPM = selectedItems[3].nativeElement.innerText;
+                expect(selectedAMPM).toEqual(expectedAmPm);
+
+                item = hourColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedHour = selectedItems[0].nativeElement.innerText;
+                expect(selectedHour).toEqual(expectedHour.toString());
+
+                item = minutesColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedMinute = selectedItems[1].nativeElement.innerText;
+                expect(selectedMinute).toEqual(expectedMinute.toString());
+
+                item = secondsColumn.queryAll(By.directive(IgxTimeItemDirective))[4];
+                item.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedSecond = selectedItems[2].nativeElement.innerText;
+                expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
+            }));
         });
     });
 });
