@@ -64,4 +64,5 @@
     <div>Current Display Density: {{displayDensityOptions.displayDensity}}</div>
 
     <button igxButton="raised" (click)="hideGroupableRow()">Show/Hide groupable row</button>
+    <button (click)="this.grid1.selectionService.selectRowsWithNoEvent([this.data.slice(1, 5)], false)">Click</button>
 </div>

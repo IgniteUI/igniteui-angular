@@ -177,7 +177,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * const groupRowElement = this.nativeElement;
      * ```
      */
-     public get nativeElement(): any {
+    public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -205,7 +205,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-     public getRowID(rowData): IgxGridRowComponent {
+    public getRowID(rowData): IgxGridRowComponent {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
@@ -259,14 +259,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * this.grid1.rowList.first.grid;
      * ```
      */
-     public get grid(): IgxGridComponent {
+    public get grid(): IgxGridComponent {
         return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**
      * @hidden
      */
-     public get dataType(): any {
+    public get dataType(): any {
         const column = this.groupRow.column;
         return (column && column.dataType) || DataType.String;
     }
@@ -275,7 +275,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get areAllRowsInTheGroupSelected(): boolean {
-        return this.groupRow.records.every(x => this.gridSelection.isRowSelected(this.getRowID(x)));
+        return this.gridSelection.selectedGroupByRows.has(this.groupRow);
     }
 
     /**
@@ -289,10 +289,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get groupByRowCheckboxIndeterminateState(): boolean {
-        if (this.selectedRowsInTheGroup.length > 0) {
-            return !this.areAllRowsInTheGroupSelected;
-        }
-        return false;
+        return this.gridSelection.indeterminateGroupByRows.has(this.groupRow);
     }
 
     /**
@@ -307,7 +304,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-     public get showRowSelectors(): boolean {
+    public get showRowSelectors(): boolean {
         return this.grid.rowSelection !== GridSelectionMode.none && !this.hideGroupRowSelectors;
     }
 
