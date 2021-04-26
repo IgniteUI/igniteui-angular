@@ -903,7 +903,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
 
-        xit('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
@@ -957,7 +957,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, timeColumn.field);
-            tick(100);
+            tick(200);
             fix.detectChanges();
 
             let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
@@ -977,7 +977,7 @@ describe('IgxGrid - Column properties #grid', () => {
             fix.detectChanges();
 
             GridFunctions.clickExcelFilterIcon(fix, timeColumn.field);
-            tick(100);
+            tick(200);
             fix.detectChanges();
 
             excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
