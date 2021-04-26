@@ -83,7 +83,8 @@ describe('IgxTimePicker', () => {
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
-            timePicker.ngOnInit();
+            timePicker.minDropdownValue = timePicker.minDateValue;
+            timePicker.maxDropdownValue = timePicker.maxDateValue;
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
             timePicker.value = new Date(date);
@@ -139,8 +140,8 @@ describe('IgxTimePicker', () => {
 
             const date = new Date(2020, 12, 12, 10, 30, 30);
             timePicker.value = new Date(date);
-
-            timePicker.ngOnInit();
+            timePicker.minDropdownValue = timePicker.minDateValue;
+            timePicker.maxDropdownValue = timePicker.maxDateValue;
 
             const selectedDate = new Date(2020, 12, 12, 6, 45, 0);
             spyOn(timePicker.valueChange, 'emit').and.callThrough();
@@ -159,7 +160,8 @@ describe('IgxTimePicker', () => {
             timePicker.value = new Date(date);
             timePicker.minValue = new Date(2020, 12, 12, 6, 0, 0);
             timePicker.maxValue = new Date(2020, 12, 12, 16, 0, 0);
-            timePicker.ngOnInit();
+            timePicker.minDropdownValue = timePicker.minDateValue;
+            timePicker.maxDropdownValue = timePicker.maxDateValue;
 
             const selectedDate = new Date(2020, 12, 12, 3, 45, 0);
             const args: IgxTimePickerValidationFailedEventArgs = {
@@ -181,13 +183,16 @@ describe('IgxTimePicker', () => {
             timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
+            timePicker.minDropdownValue = timePicker.minDateValue;
+            timePicker.maxDropdownValue = timePicker.maxDateValue;
             timePicker.ngOnInit();
             timePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             timePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
-             expect(timePicker.value).toBeUndefined();
+            expect(timePicker.value).toBeUndefined();
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             timePicker.writeValue(date);
+            timePicker.setSelectedValue();
             expect(timePicker.value).toBe(date);
 
             timePicker.nextHour(100);
