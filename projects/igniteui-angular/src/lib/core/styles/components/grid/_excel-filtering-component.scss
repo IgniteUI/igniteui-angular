@@ -141,6 +141,18 @@
             @extend %grid-excel-menu__add-filter !optional;
         }
 
+        @include e(clear) {
+            @extend %grid-excel-filter__clear !optional;
+        }
+
+        @include e(cancel) {
+            @extend %grid-excel-filter__cancel !optional;
+        }
+
+        @include e(apply) {
+            @extend %grid-excel-filter__apply !optional;
+        }
+
         @include m(inline) {
             @extend %grid-excel-filter--inline !optional;
         }

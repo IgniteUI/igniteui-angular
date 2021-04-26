@@ -282,7 +282,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('should emit an event when expanding rows (API)', (done) => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
@@ -296,7 +296,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const aRow = treeGrid.gridAPI.get_row_by_index(0);
             aRow.expanded = true;
             fix.detectChanges();
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
@@ -308,7 +308,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         it('should emit an event when expanding rows (UI)', (done) => {
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
@@ -325,7 +325,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             const indicatorDivDOM = TreeGridFunctions.getExpansionIndicatorDiv(rowsDOM[0]);
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
@@ -731,7 +731,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('should emit an event when expanding rows (API)', (done) => {
             const aRow = treeGrid.getRowByIndex(0);
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(true);
@@ -746,7 +746,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             aRow.expanded = true;
             fix.detectChanges();
 
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeUndefined();
                 expect(args.expanded).toBe(false);
@@ -757,7 +757,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
         });
 
         it('should emit an event when expanding rows (UI)', (done) => {
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(true);
@@ -775,7 +775,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
             indicatorDivDOM.triggerEventHandler('click', new Event('click'));
             fix.detectChanges();
 
-            treeGrid.onRowToggle.pipe(first()).subscribe((args) => {
+            treeGrid.rowToggle.pipe(first()).subscribe((args) => {
                 expect(args.cancel).toBe(false);
                 expect(args.event).toBeDefined();
                 expect(args.expanded).toBe(false);
