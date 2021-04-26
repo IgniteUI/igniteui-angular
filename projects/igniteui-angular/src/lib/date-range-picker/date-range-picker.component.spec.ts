@@ -761,7 +761,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-                dateRange.value = { start: new Date("2/2/2020"), end: new Date("3/3/2020")};
+                dateRange.value = { start: new Date('2/2/2020'), end: new Date('3/3/2020')};
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
@@ -1162,7 +1162,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
-                expect(range.children[1].nativeElement.innerText).toBe("-");
+                expect(range.children[1].nativeElement.innerText).toBe('-');
             });
 
             it('should render default toggle icon', () => {
