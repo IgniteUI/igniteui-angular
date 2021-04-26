@@ -132,6 +132,26 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+
+                flush();
+            }));
+
+            xit('should open the calendar with SPACE key', fakeAsync(() => {
+                spyOn(datePicker.opening, 'emit').and.callThrough();
+                spyOn(datePicker.opened, 'emit').and.callThrough();
+                expect(datePicker.collapsed).toBeTruthy();
+
+                const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
+                UIInteractions.triggerEventHandlerKeyDown(' ', picker);
+               // UIInteractions.triggerEventHandlerKeyDown('Space', picker);
+
+                tick();
+                fixture.detectChanges();
+
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
+
                 flush();
             }));
 
@@ -152,6 +172,7 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
+
                 flush();
             }));
         });
