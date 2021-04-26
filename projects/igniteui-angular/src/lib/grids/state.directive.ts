@@ -447,14 +447,14 @@ export class IgxGridStateDirective {
     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
+        const columns = "columns";
         this.grid.columnList.changes.pipe(delay(0), first()).subscribe(() => {
-            this.featureKeys = this.featureKeys.filter(f => f !== "columns");
+            this.featureKeys = this.featureKeys.filter(f => f !== columns);
             this.restoreFeatures(this.state);
         });
         this.applyFeatures(features);
-        const columns = "columns";
         if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
-            this.getFeature("columns").restoreFeatureState(this, state[columns]);
+            this.getFeature(columns).restoreFeatureState(this, state[columns]);
         }
     }
 
