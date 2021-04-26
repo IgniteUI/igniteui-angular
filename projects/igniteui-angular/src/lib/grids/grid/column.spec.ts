@@ -903,7 +903,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
         });
 
-        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+        xit('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
