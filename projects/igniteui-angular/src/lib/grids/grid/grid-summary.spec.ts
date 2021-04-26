@@ -672,7 +672,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['Count', 'Earliest', 'Latest'], ['10', 'May 17, 1990', 'Dec 25, 2025']);
             }));
 
-            it('CRUD: should recalculate summary functions onRowAdded', () => {
+            it('CRUD: should recalculate summary functions rowAdded', () => {
                 grid.addRow({
                     ProductID: 11, ProductName: 'Belgian Chocolate', InStock: true, UnitsInStock: 99000, OrderDate: new Date('2018-03-01')
                 });
@@ -688,7 +688,7 @@ describe('IgxGrid - Summaries #grid', () => {
                     ['Count', 'Earliest', 'Latest'], ['11', 'May 17, 1990', 'Dec 25, 2025']);
             });
 
-            it('CRUD: should recalculate summary functions onRowDeleted', () => {
+            it('CRUD: should recalculate summary functions rowDeleted', () => {
                 grid.deleteRow(9);
                 fix.detectChanges();
 
@@ -1019,7 +1019,7 @@ describe('IgxGrid - Summaries #grid', () => {
             expect(cell.selected).toBe(false);
         });
 
-        xit('should navigate with tab to filter row if the grid is empty', () => {
+        it('should navigate with tab to filter row if the grid is empty', () => {
             pending('this test need to be written again when the header are ready');
             grid.allowFiltering = true;
             grid.filter('ID', 0, IgxNumberFilteringOperand.instance().condition('lessThanOrEqualTo'));

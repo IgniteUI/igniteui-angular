@@ -57,13 +57,13 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     public deactiveState: boolean;
 
     @Output()
-    public onThumbValueChange = new EventEmitter<number>();
+    public thumbValueChange = new EventEmitter<number>();
 
     @Output()
-    public onChange = new EventEmitter<any>();
+    public thumbChange = new EventEmitter<any>();
 
     @Output()
-    public onHoverChange = new EventEmitter<boolean>();
+    public hoverChange = new EventEmitter<boolean>();
 
     @HostBinding('attr.tabindex')
     public tabindex = 0;
@@ -142,12 +142,12 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
 
     @HostListener('pointerenter')
     public onPinterEnter() {
-        this.onHoverChange.emit(true);
+        this.hoverChange.emit(true);
     }
 
     @HostListener('pointerleave')
     public onPointerLeave() {
-        this.onHoverChange.emit(false);
+        this.hoverChange.emit(false);
     }
 
     @HostListener('keydown', ['$event'])
@@ -165,8 +165,8 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
             return;
         }
 
-        this.onChange.emit();
-        this.onThumbValueChange.emit(increment);
+        this.thumbChange.emit();
+        this.thumbValueChange.emit(increment);
     }
 
     @HostListener('blur')
@@ -217,7 +217,7 @@ export class IgxSliderThumbComponent implements OnInit, OnDestroy {
     private updateThumbValue(mouseX: number) {
         const updateValue = this.calculateTrackUpdate(mouseX);
         if (this.isActive && updateValue !== 0) {
-            this.onThumbValueChange.emit(updateValue);
+            this.thumbValueChange.emit(updateValue);
         }
     }
 

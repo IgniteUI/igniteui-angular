@@ -59,6 +59,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './tree';
 @import './watermark';
 
 /// The default schema. Used to create Material Design themes.
@@ -121,6 +122,7 @@
 /// @property {Map} igx-time-picker [$_light-time-picker]
 /// @property {Map} igx-toast [$_light-toast]
 /// @property {Map} igx-tooltip [$_light-tooltip]
+/// @property {Map} igx-tree [$_light-tree]
 $light-schema: (
     igx-avatar: $_light-avatar,
     igx-action-strip: $_light-action-strip,
@@ -179,6 +181,7 @@ $light-schema: (
     igx-time-picker: $_light-time-picker,
     igx-toast: $_light-toast,
     igx-tooltip: $_light-tooltip,
+    igx-tree: $_light-tree,
     igx-watermark: $_light-watermark
 );
 
@@ -248,6 +251,7 @@ $light-fluent-schema: (
     igx-time-picker: $_fluent-time-picker,
     igx-toast: $_fluent-toast,
     igx-tooltip: $_fluent-tooltip,
+    igx-tree: $_fluent-tree,
     igx-watermark: $_fluent-watermark
 );
 
@@ -312,6 +316,7 @@ $light-bootstrap-schema: (
     igx-time-picker: $_bootstrap-time-picker,
     igx-toast: $_bootstrap-toast,
     igx-tooltip: $_bootstrap-tooltip,
+    igx-tree: $_bootstrap-tree,
     igx-watermark: $_bootstrap-watermark
 );
 
@@ -376,6 +381,7 @@ $light-indigo-schema: (
     igx-time-picker: $_indigo-time-picker,
     igx-toast: $_indigo-toast,
     igx-tooltip: $_indigo-tooltip,
+    igx-tree: $_indigo-tree,
     igx-watermark: $_indigo-watermark
 );
 

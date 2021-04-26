@@ -694,11 +694,11 @@ export class IgxSliderComponent implements
      * }
      * ```
      * ```html
-     * <igx-slider (onValueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * <igx-slider (valueChange)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
      */
     @Output()
-    public onValueChange = new EventEmitter<ISliderValueChangeEventArgs>();
+    public valueChange = new EventEmitter<ISliderValueChangeEventArgs>();
 
     /**
      * This event is emitted at the end of every slide interaction.
@@ -708,11 +708,11 @@ export class IgxSliderComponent implements
      * }
      * ```
      * ```html
-     * <igx-slider (onValueChanged)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
+     * <igx-slider (dragFinished)="change($event)" #slider [(ngModel)]="task.percentCompleted" [step]="5">
      * ```
      */
     @Output()
-    public onValueChanged = new EventEmitter<number | IRangeSliderValue>();
+    public dragFinished = new EventEmitter<number | IRangeSliderValue>();
 
     /**
      * @hidden
@@ -814,7 +814,7 @@ export class IgxSliderComponent implements
         activeThumb.nativeElement.releasePointerCapture($event.pointerId);
 
         this.hideSliderIndicators();
-        this.onValueChanged.emit(this.value);
+        this.dragFinished.emit(this.value);
     }
 
     /**
@@ -1122,7 +1122,7 @@ export class IgxSliderComponent implements
         }
 
         if (this.hasValueChanged(oldValue)) {
-            this.emitValueChanged(oldValue);
+            this.emitValueChange(oldValue);
         }
     }
 
@@ -1416,7 +1416,7 @@ export class IgxSliderComponent implements
             return;
         }
 
-        thumb.onThumbValueChange
+        thumb.thumbValueChange
             .pipe(takeUntil(this.unsubscriber(thumb)))
             .subscribe(value => callback(value, thumb.type));
     }
@@ -1434,8 +1434,8 @@ export class IgxSliderComponent implements
         return isSliderWithDifferentValue || isRangeWithOneDifferentValue;
     }
 
-    private emitValueChanged(oldValue: number | IRangeSliderValue) {
-        this.onValueChange.emit({ oldValue, value: this.value });
+    private emitValueChange(oldValue: number | IRangeSliderValue) {
+        this.valueChange.emit({ oldValue, value: this.value });
     }
 }
 
