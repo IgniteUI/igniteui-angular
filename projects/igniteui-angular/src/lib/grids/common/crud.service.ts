@@ -386,7 +386,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
             return;
         }
         if (commit) {
-            this.grid.onRowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
+            this.grid.rowAdded.pipe(first()).subscribe((args: IRowDataEventArgs) => {
                 const rowData = args.data;
                 const pinnedIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowData[this.primaryKey]);
                 // A check whether the row is in the current view
@@ -428,7 +428,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         this.grid.pipeTriggerNotifier.next();
         if (!this.cancelAddMode) {
             this.grid.cdr.detectChanges();
-            this.grid.onRowAdded.emit({ data: row.data });
+            this.grid.rowAdded.emit({ data: row.data });
         }
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData, event);
         this.grid.rowEditExit.emit(nonCancelableArgs);

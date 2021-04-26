@@ -113,17 +113,17 @@ export class GridColumnMovingSampleComponent implements OnInit {
         col.pinned = !col.pinned;
     }
 
-    public onColumnMovingStart() {
+    public columnMovingStart() {
 
     }
 
-    public onColumnMoving() {
+    public columnMoving() {
         // if (event.target.field === 'ID') {
         //     event.cancel = true;
         // }
     }
 
-    public onColumnMovingEnd() {
+    public columnMovingEnd() {
         // if (event.target.field === 'Fax') {
         //     event.cancel = true;
         // }
