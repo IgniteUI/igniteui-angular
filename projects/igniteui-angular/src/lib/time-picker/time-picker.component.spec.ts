@@ -5,7 +5,9 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupModule } from '../input-group/public_api';
+import {
+    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+} from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
 import { IgxIconModule } from '../icon/public_api';
@@ -14,6 +16,7 @@ import { PlatformUtil } from '../core/utils';
 import { DatePart } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimeItemDirective } from './time-picker.directives';
+import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -28,6 +31,9 @@ const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
 const CSS_CLASS_OVERLAY = 'igx-overlay';
 const CSS_CLASS_OVERLAY_WRAPPER = 'igx-overlay__wrapper';
+
+const TIME_PICKER_TOGGLE_ICON = 'access_time';
+const TIME_PICKER_CLEAR_ICON = 'clear';
 
 describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
@@ -229,7 +235,6 @@ describe('IgxTimePicker', () => {
     });
 
     describe('Interaction tests', () => {
-        let fixture: ComponentFixture<any>;
         let timePickerElement: DebugElement;
         let inputGroup: DebugElement;
         let input: DebugElement;
@@ -240,6 +245,7 @@ describe('IgxTimePicker', () => {
         let toggleDirective: IgxToggleDirective;
 
         describe('Dropdown/dialog mode', () => {
+            let fixture: ComponentFixture<IgxTimePickerTestComponent>;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -515,7 +521,8 @@ describe('IgxTimePicker', () => {
             }));
         });
 
-        describe('Renedering tests', () => {
+        describe('Rendering tests', () => {
+            let fixture: ComponentFixture<IgxTimePickerTestComponent>;
             configureTestSuite();
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
@@ -540,6 +547,18 @@ describe('IgxTimePicker', () => {
                 toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
                 toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
             }));
+
+            it('Should render default toggle and clear icons', () => {
+                fixture = TestBed.createComponent(IgxTimePickerTestComponent);
+                fixture.detectChanges();
+                inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+                const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
+                expect(prefix).toHaveSize(1);
+                expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
+                const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
+                expect(suffix).toHaveSize(1);
+                expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
+            });
 
             it('should initialize all input properties with their default values', () => {
                 expect(timePicker.mode).toEqual(PickerInteractionMode.DropDown);
@@ -623,7 +642,7 @@ describe('IgxTimePicker', () => {
                 const selectedTime = hourHeader.children[0].nativeElement.innerText;
 
 
-                const hours = fixture.componentInstance.date.getHours().toString();
+                const hours = fixture.componentInstance.date.getHours();
                 const minutes = fixture.componentInstance.date.getMinutes().toString();
                 const ampm = hours >= 12 ? 'PM' : 'AM';
 
@@ -777,6 +796,112 @@ describe('IgxTimePicker', () => {
                 expect(selectedAMPM).toEqual('PM');
             }));
         });
+
+        describe('Projected elements', () => {
+            let fixture: ComponentFixture<IgxTimePickerWithProjectionsComponent>;
+            configureTestSuite();
+            beforeAll(waitForAsync(() => {
+                TestBed.configureTestingModule({
+                    declarations: [
+                        IgxTimePickerWithProjectionsComponent
+                    ],
+                    imports: [IgxTimePickerModule,
+                        IgxInputGroupModule,
+                        IgxIconModule,
+                        NoopAnimationsModule]
+                }).compileComponents();
+            }));
+            beforeEach(fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxTimePickerWithProjectionsComponent);
+                fixture.detectChanges();
+            }));
+
+            it('Should project label/hint and additional prefix/suffix in the correct location', () => {
+                fixture.componentInstance.timePicker.value = new Date();
+                fixture.detectChanges();
+                inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+
+                const label = inputGroup.queryAll(By.directive(IgxLabelDirective));
+                expect(label).toHaveSize(1);
+                expect(label[0].nativeElement.innerText).toEqual('Label');
+                const hint = inputGroup.queryAll(By.directive(IgxHintDirective));
+                expect(hint).toHaveSize(1);
+                expect(hint[0].nativeElement.innerText).toEqual('Hint');
+
+                const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
+                expect(prefix).toHaveSize(2);
+                expect(prefix[0].nativeElement.innerText).toEqual(TIME_PICKER_TOGGLE_ICON);
+                expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
+                const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
+                expect(suffix).toHaveSize(2);
+                expect(suffix[0].nativeElement.innerText).toEqual(TIME_PICKER_CLEAR_ICON);
+                expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
+            });
+
+            it('Should project custom toggle/clear and hide defaults', () => {
+                fixture.componentInstance.timePicker.value = new Date();
+                fixture.componentInstance.showCustomClear = true;
+                fixture.componentInstance.showCustomToggle = true;
+                fixture.detectChanges();
+                inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+
+                const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
+                expect(prefix).toHaveSize(2);
+                expect(prefix[0].nativeElement.innerText).toEqual('CustomToggle');
+                expect(prefix[1].nativeElement.innerText).toEqual('Prefix');
+                const suffix = inputGroup.queryAll(By.directive(IgxSuffixDirective));
+                expect(suffix).toHaveSize(2);
+                expect(suffix[0].nativeElement.innerText).toEqual('CustomClear');
+                expect(suffix[1].nativeElement.innerText).toEqual('Suffix');
+            });
+
+            it('Should correctly sub/unsub to custom toggle and clear', () => {
+                timePicker = fixture.componentInstance.timePicker;
+                timePicker.value = new Date();
+                fixture.componentInstance.showCustomClear = true;
+                fixture.componentInstance.showCustomToggle = true;
+                fixture.detectChanges();
+                spyOn(timePicker, 'open');
+                spyOn(timePicker, 'clear');
+
+                inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
+                const toggleElem = inputGroup.query(By.directive(IgxPickerToggleComponent));
+                const clearElem = inputGroup.query(By.directive(IgxPickerClearComponent));
+                let toggle = fixture.componentInstance.customToggle;
+                let clear = fixture.componentInstance.customClear;
+
+                expect(toggle.clicked.observers).toHaveSize(1);
+                expect(clear.clicked.observers).toHaveSize(1);
+                const event = jasmine.createSpyObj('event', ['stopPropagation']);
+                toggleElem.triggerEventHandler('click', event);
+                expect(timePicker.open).toHaveBeenCalledTimes(1);
+                clearElem.triggerEventHandler('click', event);
+                expect(timePicker.clear).toHaveBeenCalledTimes(1);
+
+                // hide
+                fixture.componentInstance.showCustomToggle = false;
+                fixture.detectChanges();
+                expect(toggle.clicked.observers).toHaveSize(0);
+                expect(clear.clicked.observers).toHaveSize(1);
+                fixture.componentInstance.showCustomClear = false;
+                fixture.detectChanges();
+                expect(toggle.clicked.observers).toHaveSize(0);
+                expect(clear.clicked.observers).toHaveSize(0);
+
+                // show again
+                fixture.componentInstance.showCustomClear = true;
+                fixture.componentInstance.showCustomToggle = true;
+                fixture.detectChanges();
+                toggle = fixture.componentInstance.customToggle;
+                clear = fixture.componentInstance.customClear;
+                expect(toggle.clicked.observers).toHaveSize(1);
+                expect(clear.clicked.observers).toHaveSize(1);
+
+                timePicker.ngOnDestroy();
+                expect(toggle.clicked.observers).toHaveSize(0);
+                expect(clear.clicked.observers).toHaveSize(0);
+            });
+        });
     });
 });
 
@@ -793,4 +918,25 @@ export class IgxTimePickerTestComponent {
     public date = new Date(2021, 24, 2, 11, 45, 0);
     public minValue;
     public maxValue;
+}
+
+@Component({
+    template:`
+        <igx-time-picker [mode]="mode">
+            <label igxLabel>Label</label>
+            <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
+            <igx-prefix>Prefix</igx-prefix>
+            <igx-picker-clear igxSuffix *ngIf="showCustomClear">CustomClear</igx-picker-clear>
+            <igx-suffix>Suffix</igx-suffix>
+            <igx-hint>Hint</igx-hint>
+        </igx-time-picker>
+`
+})
+export class IgxTimePickerWithProjectionsComponent {
+    @ViewChild(IgxTimePickerComponent) public timePicker: IgxTimePickerComponent;
+    @ViewChild(IgxPickerToggleComponent) public customToggle: IgxPickerToggleComponent;
+    @ViewChild(IgxPickerClearComponent) public customClear: IgxPickerClearComponent;
+    public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
+    public showCustomToggle = false;
+    public showCustomClear = false;
 }
