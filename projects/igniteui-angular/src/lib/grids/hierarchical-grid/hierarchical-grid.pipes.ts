@@ -22,7 +22,7 @@ export class IgxGridHierarchicalPipe implements PipeTransform {
         id: string,
         primaryKey: any,
         childKeys: string[],
-        pipeTrigger: number
+        _pipeTrigger: number
         ): any[] {
         if (childKeys.length === 0) {
             return collection;
@@ -65,7 +65,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
 
     constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
 
-    public transform(collection: any[], page = 0, perPage = 15, id: string, pipeTrigger: number): any[] {
+    public transform(collection: any[], page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
 
         if (!this.gridAPI.grid.paging || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
             return collection;

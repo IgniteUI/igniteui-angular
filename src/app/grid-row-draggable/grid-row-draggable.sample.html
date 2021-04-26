@@ -4,7 +4,7 @@
 <igx-switch [(ngModel)]="dragdrop">Toggle Row Drag/Drop</igx-switch>
 <div class="sample-container">
     <igx-grid #grid1 [data]="remote | async" [primaryKey]="'ProductID'" [displayDensity]="density" [width]="'500px'" [height]="'600px'"
-        [rowDraggable]="dragdrop" (onRowDragStart)="handleRowDrag()" (onRowDragEnd)="handleRowDrop()">
+        [rowDraggable]="dragdrop" (rowDragStart)="handleRowDrag()" (rowDragEnd)="handleRowDrop()">
         <igx-column [field]="'ProductName'" [width]="'200px'"></igx-column>
         <igx-column [field]="'UnitsInStock'"></igx-column>
         <igx-column [field]="'ProductID'" [editable]="true"></igx-column>

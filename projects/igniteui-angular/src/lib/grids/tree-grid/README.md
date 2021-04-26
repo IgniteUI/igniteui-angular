@@ -6,7 +6,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ```html
 <igx-tree-grid #treegrid1 [data]="localData" [autoGenerate]="true"
                 primaryKey="ID" foreignKey="ParentID"
-                (onColumnInit)="initColumns($event)"
+                (columnInit)="initColumns($event)"
                 (onCellSelection)="selectCell($event)">
 </igx-tree-grid>
 ```
