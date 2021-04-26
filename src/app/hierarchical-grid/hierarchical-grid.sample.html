@@ -5,10 +5,25 @@
             style="display: block; width: 500px"></igx-buttongroup>
     </div>
     <button igxButton="raised" (click)="getState()">Get state</button>
-    <igx-hierarchical-grid #grid1 [data]="localData" [showExpandAll]='true' [hasChildrenKey]='"hasChild"' class="hgrid"
+    <igx-hierarchical-grid #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" [hasChildrenKey]='"hasChild"' class="hgrid"
         [displayDensity]="density" [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
         [paging]="true" [rowDraggable]="true" [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded"
         #hGrid>
+
+        <igx-grid-toolbar>
+            <app-grid-search-box [grid]="grid1" [style.width]="'400px'"></app-grid-search-box>
+            <igx-grid-toolbar-actions>
+               <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+               <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar>
+        <igx-column width="150px" [filterable]="false">
+            <ng-template igxCell let-cell="cell" let-val>
+                <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)"
+                family="imx-icons" name="{{cell.row.pinned ? 'unpin-left' : 'pin-left'}}">
+                </igx-icon>
+            </ng-template>
+        </igx-column>
         <igx-column field="ID" [resizable]="true" [pinned]="true" [filterable]='true'></igx-column>
         <igx-column-group header="Information">
             <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>

@@ -292,7 +292,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
             expect(expectedColumnListLength).toEqual(columnLength);
         });
 
-        xit('There shouldn\'t be any errors when dynamically removing or adding a column in column group', () => {
+        it('There shouldn\'t be any errors when dynamically removing or adding a column in column group', () => {
             fixture = TestBed.createComponent(DynamicColGroupsGridComponent);
             fixture.detectChanges();
 
