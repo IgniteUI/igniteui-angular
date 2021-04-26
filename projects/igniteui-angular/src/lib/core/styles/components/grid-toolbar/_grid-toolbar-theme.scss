@@ -87,10 +87,8 @@
         selector: $selector,
         palette: $palette,
         elevations: $elevations,
-
         background-color: $background-color,
         title-text-color: $title-text-color,
-
         item-text-color: $item-text-color,
         dropdown-background: $dropdown-background,
         item-hover-background: $item-hover-background,
@@ -155,36 +153,36 @@
         min-height: map-get($grid-toolbar-height, 'comfortable');
         position: relative;
 
-        @include if-ltr(){
+        @include if-ltr() {
             padding: map-get($grid-toolbar-padding, 'comfortable');
         }
 
-        @include if-rtl(){
+        @include if-rtl() {
             padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
         }
 
         [igxButton] {
             margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
 
-			&:first-of-type {
-				margin-#{$left}: 0;
-			}
+            &:first-of-type {
+                margin-#{$left}: 0;
+            }
 
-			&:last-of-type {
-				margin-#{$right}: 0;
-			}
+            &:last-of-type {
+                margin-#{$right}: 0;
+            }
         }
 
         &[dir='rtl'] {
             text-align: #{$right};
 
             [igxButton] {
-				margin-#{$left}: 0;
-				margin-#{$right}: rem(8);
+                margin-#{$left}: 0;
+                margin-#{$right}: rem(8);
 
-				&:last-child {
-					margin-#{$right}: 0;
-				}
+                &:last-child {
+                    margin-#{$right}: 0;
+                }
             }
         }
     }
@@ -224,47 +222,47 @@
         flex: 1 1 auto;
         @include ellipsis();
         max-width: 40ch;
-		margin-#{$right}: map-get($grid-toolbar-spacer, 'comfortable')
+        margin-#{$right}: map-get($grid-toolbar-spacer, 'comfortable')
     }
 
     %igx-grid-toolbar__custom-content {
         display: flex;
         flex-wrap: wrap;
-		flex-grow: 1;
-		justify-content: flex-end;
+        flex-grow: 1;
+        justify-content: flex-end;
     }
 
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
         flex-flow: row wrap;
-		margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
+        margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
 
-		> * {
-			display: flex;
-			margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
+        > * {
+            display: flex;
+            margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
 
-			&:first-child {
-				margin-#{$left}: 0;
-			}
-		}
+            &:first-child {
+                margin-#{$left}: 0;
+            }
+        }
     }
 
-	%igx-grid-toolbar__actions,
-	%igx-grid-toolbar__title,
-	%igx-grid-toolbar__custom-content {
-		&:empty {
-			display: none;
-		}
-	}
+    %igx-grid-toolbar__actions,
+    %igx-grid-toolbar__title,
+    %igx-grid-toolbar__custom-content {
+        &:empty {
+            display: none;
+        }
+    }
 
-	%igx-grid-toolbar__title:empty + %igx-grid-toolbar__custom-content:empty {
-		+ %igx-grid-toolbar__actions {
-			width: 100%;
-			margin-left: 0;
-			justify-content: flex-end;
-		}
-	}
+    %igx-grid-toolbar__title:empty + %igx-grid-toolbar__custom-content:empty {
+        + %igx-grid-toolbar__actions {
+            width: 100%;
+            margin-left: 0;
+            justify-content: flex-end;
+        }
+    }
 
     %igx-grid-toolbar__progress-bar {
         position: absolute;
