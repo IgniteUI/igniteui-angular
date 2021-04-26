@@ -483,7 +483,8 @@ describe('IgxDatePicker', () => {
                     blur() {
                         this.dispatchEvent('blur');
                     }
-                }
+                },
+                focus: () => {}
             };
             datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null);
             (datePicker as any).inputGroup = mockInputGroup;
@@ -495,8 +496,8 @@ describe('IgxDatePicker', () => {
         });
 
         afterEach(() => {
-            UIInteractions.clearOverlay();
             datePicker?.ngOnDestroy();
+            UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
             it('Should initialize and update all inputs propery', () => {
@@ -737,24 +738,26 @@ describe('IgxDatePicker', () => {
                     }
                 );
 
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
+                collapsedSpy.and.returnValue(false);
                 datePicker.disabled = false;
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                collapsedSpy.and.returnValue(true);
                 datePicker.disabled = true;
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                collapsedSpy.and.returnValue(false);
                 datePicker.open();
                 expect(overlay.attach).not.toHaveBeenCalled();
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                collapsedSpy.and.returnValue(true);
                 datePicker.disabled = false;
-                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                const isDropdownSpy = spyOnProperty(datePicker, 'isDropdown', 'get');
+                isDropdownSpy.and.returnValue(false);
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDialogSettings, mockModuleRef);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(true);
+                isDropdownSpy.and.returnValue(true);
                 datePicker.open();
                 expect(overlay.attach).toHaveBeenCalledWith(IgxCalendarContainerComponent, baseDropdownSettings, mockModuleRef);
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
@@ -780,7 +783,7 @@ describe('IgxDatePicker', () => {
                     mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                isDropdownSpy.and.returnValue(false);
                 mockSettings = {
                     closeOnEscape: false,
                     closeOnOutsideClick: false,
@@ -793,7 +796,7 @@ describe('IgxDatePicker', () => {
                     mockModuleRef
                 );
                 expect(overlay.show).toHaveBeenCalledWith(mockOverlayId);
-                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(true);
+                isDropdownSpy.and.returnValue(true);
                 datePicker.overlaySettings = {
                     modal: false
                 };
@@ -818,12 +821,13 @@ describe('IgxDatePicker', () => {
                 datePicker.ngAfterViewInit();
 
                 // assign overlayId
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(true);
+                const collapsedSpy = spyOnProperty(datePicker, 'collapsed', 'get');
+                collapsedSpy.and.returnValue(true);
                 datePicker.open();
                 datePicker.close();
                 expect(overlay.hide).not.toHaveBeenCalled();
                 expect(overlay.detach).not.toHaveBeenCalled();
-                spyOnProperty(datePicker, 'collapsed', 'get').and.returnValue(false);
+                collapsedSpy.and.returnValue(false);
                 datePicker.close();
                 expect(overlay.hide).toHaveBeenCalled();
                 expect(overlay.hide).toHaveBeenCalledWith(mockOverlayId);
@@ -1011,12 +1015,13 @@ describe('IgxDatePicker', () => {
                     'date',
                     ['getHours', 'getMinutes', 'getSeconds', 'getMilliseconds', 'getTime']
                 );
-                spyOn(mockDate2, 'getHours').and.returnValue(999);
-                spyOn(mockDate2, 'getMinutes').and.returnValue(999);
-                spyOn(mockDate2, 'getSeconds').and.returnValue(999);
-                spyOn(mockDate2, 'getMilliseconds').and.returnValue(999);
-                spyOn(mockDate2, 'getTime').and.returnValue(999);
-                spyOn(DateTimeUtil, 'parseIsoDate').and.callFake((val: string) => {
+                mockDate2.getHours.and.returnValue(999);
+                mockDate2.getMinutes.and.returnValue(999);
+                mockDate2.getSeconds.and.returnValue(999);
+                mockDate2.getMilliseconds.and.returnValue(999);
+                mockDate2.getTime.and.returnValue(999);
+                const parseIsoDate = spyOn(DateTimeUtil, 'parseIsoDate');
+                parseIsoDate.and.callFake((val: string) => {
                     if (val === undefined || mockDate1) {
                         return mockDate2;
                     } else {
@@ -1045,7 +1050,7 @@ describe('IgxDatePicker', () => {
                 expect(mockDate1.setMilliseconds).toHaveBeenCalledWith(999);
                 expect(datePicker.close).toHaveBeenCalled();
 
-                spyOn(DateTimeUtil, 'parseIsoDate').and.callFake(init);
+                parseIsoDate.and.callFake(init);
 
                 const mockMinValue = new Date('02/02/2002');
                 const mockMaxValue = new Date('03/03/2003');
@@ -1104,7 +1109,7 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ]);
-                (mockDate2.getTime as jasmine.Spy<any>).and.returnValue(Infinity);
+                mockDate2.getTime.and.returnValue(Infinity);
                 mockCalendar.disabledDates = [];
                 datePicker.minValue = mockMinValue;
                 datePicker.maxValue = mockMaxValue;
