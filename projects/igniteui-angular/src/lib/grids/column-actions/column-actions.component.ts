@@ -406,12 +406,9 @@ export class IgxColumnActionsComponent implements DoCheck {
     /**
      * @hidden @internal
      */
-    public toggleColumn(event: IChangeCheckboxEventArgs, column: IgxColumnComponent) {
+    public toggleColumn(column: IgxColumnComponent) {
         this.actionsDirective.toggleColumn(column);
 
-        this.columnToggled.emit({
-            column,
-            checked: event.checked
-        });
+        this.columnToggled.emit({column, checked: this.actionsDirective.columnChecked(column)});
     }
 }
