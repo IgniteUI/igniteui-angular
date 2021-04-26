@@ -575,7 +575,7 @@ describe('IgxSlider', () => {
 
         it('labels should show/hide on pointer up/down', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
-            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: () => {}});
             await wait(50);
             fixture.detectChanges();
 
@@ -583,7 +583,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-to--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: () => {}});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -594,7 +594,7 @@ describe('IgxSlider', () => {
         it('should be able to change thumbLabelVisibilityDuration', async () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             slider.thumbLabelVisibilityDuration = 1000;
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, preventDefault: () => {}});
             await wait(50);
             fixture.detectChanges();
 
@@ -602,7 +602,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-to--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: () => {}});
             await wait(750);
             fixture.detectChanges();
 
@@ -755,7 +755,7 @@ describe('IgxSlider', () => {
 
             expect(slider).toBeDefined();
             expect(slider.upperLabel).toEqual('Winter');
-            const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowLeft', thumb.nativeElement, true);
             fixture.detectChanges();
@@ -848,7 +848,7 @@ describe('IgxSlider', () => {
             const sliderEl = fixture.debugElement.query(By.css(SLIDER_CLASS));
             fixture.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerdown', { pointerId: 1, preventDefault: () => {}});
             await wait(100);
             fixture.detectChanges();
 
@@ -856,7 +856,7 @@ describe('IgxSlider', () => {
             let activeLabel = fixture.debugElement.query(By.css('.igx-slider-thumb-label-from--active'));
             expect(activeLabel).not.toBeNull();
 
-            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: (e: any) => {}});
+            sliderEl.triggerEventHandler('pointerup', { pointerId: 1, preventDefault: () => {}});
             await wait(slider.thumbLabelVisibilityDuration + 10);
             fixture.detectChanges();
 
@@ -1055,7 +1055,7 @@ describe('IgxSlider', () => {
             expect(fromThumb).toBeDefined();
             expect(slider.upperLabel).toEqual('Sunday');
             expect(slider.lowerLabel).toEqual('Monday');
-            const valueChangeSpy = spyOn<any>(slider.onValueChange, 'emit').and.callThrough();
+            const valueChangeSpy = spyOn<any>(slider.valueChange, 'emit').and.callThrough();
 
             UIInteractions.triggerKeyDownEvtUponElem('ArrowRight', fromThumb.nativeElement, true);
             fixture.detectChanges();
@@ -1342,32 +1342,32 @@ describe('IgxSlider', () => {
             expect(slider.upperBound).toEqual(expectedMaxVal);
         });
 
-        it('Should emit onValueChanged only when stop interacting with the slider', () => {
+        it('Should emit dragFinished only when stop interacting with the slider', () => {
             const fix = TestBed.createComponent(SliderTestComponent);
             fix.detectChanges();
 
             const instance = fix.componentInstance;
-            const spyOnValueChanged = spyOn<any>(instance.slider.onValueChanged, 'emit').and.callThrough();
+            const spyOnDragFinished = spyOn<any>(instance.slider.dragFinished, 'emit').and.callThrough();
             const sliderEl = fix.debugElement.query(By.css(SLIDER_CLASS));
             const thumbTo = fix.debugElement.query(By.css(THUMB_TO_CLASS));
             thumbTo.triggerEventHandler('focus', null);
             fix.detectChanges();
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: ( e: any ) => {  }});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 150, preventDefault: () => {  }});
             fix.detectChanges();
             let currentValue = instance.slider.value;
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(0);
             expect(currentValue).toBeGreaterThan(0);
 
-            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: ( e: any ) => {  }});
+            sliderEl.triggerEventHandler('pointerdown', {pointerId: 1, clientX: 350, preventDefault: () => {  }});
             fix.detectChanges();
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(0);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(0);
             expect(instance.slider.value).toBeGreaterThan(currentValue as number);
 
             currentValue = instance.slider.value;
-            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: ( e: any ) => {  }});
+            sliderEl.triggerEventHandler('pointerup', {pointerId: 1, preventDefault: () => {  }});
             fix.detectChanges();
-            expect(spyOnValueChanged).toHaveBeenCalledTimes(1);
+            expect(spyOnDragFinished).toHaveBeenCalledTimes(1);
             expect(instance.slider.value).toEqual(currentValue);
         });
     });
@@ -1760,15 +1760,15 @@ export class SliderMinMaxComponent {
 class SliderTestComponent {
     @ViewChild(IgxSliderComponent, { read: IgxSliderComponent, static: true }) public slider: IgxSliderComponent;
 
-    minValue = 0;
-    maxValue = 10;
-    type = IgxSliderType.SLIDER;
+    public minValue = 0;
+    public maxValue = 10;
+    public type = IgxSliderType.SLIDER;
 
-    changeMinValue(val: number) {
+    public changeMinValue(val: number) {
         this.minValue = val;
     }
 
-    changeMaxValue(val: number) {
+    public changeMaxValue(val: number) {
         this.maxValue = val;
     }
 }

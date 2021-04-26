@@ -51,7 +51,7 @@ export class ControllerComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.volumeChanged$ = this.volumeSlider.onValueChange.pipe(debounce(() => timer(200)));
+        this.volumeChanged$ = this.volumeSlider.valueChange.pipe(debounce(() => timer(200)));
         this.volumeChanged$.subscribe(() => this.volumeChanged.emit(this.volumeSlider.value));
     }
 

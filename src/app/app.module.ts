@@ -144,9 +144,11 @@ import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { IgxPickersCommonModule } from 'projects/igniteui-angular/src/lib/date-common/picker-icons.common';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TestInterceptorClass } from './interceptor.service';
+import { TreeSampleComponent } from './tree/tree.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -243,6 +245,7 @@ const components = [
     AnimationsSampleComponent,
     ShadowsSampleComponent,
     TypographySampleComponent,
+    TreeSampleComponent,
     RadioSampleComponent,
     TooltipSampleComponent,
     HierarchicalGridSampleComponent,
@@ -297,6 +300,7 @@ const components = [
         IgxHierarchicalGridModule,
         IgxDragDropModule,
         IgxDateRangePickerModule,
+        IgxPickersCommonModule,
         IgxDividerModule,
         IgxButtonGroupModule,
         IgxListModule,

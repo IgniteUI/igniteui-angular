@@ -76,6 +76,7 @@
     @include igx-time-picker-typography($type-scale);
     @include igx-toast-typography($type-scale);
     @include igx-tooltip-typography($type-scale);
+    @include igx-tree-typography($type-scale);
 
     // Add theme type-scale specific quirks
     @if ($_variant == 'material' or $_variant == 'fluent') {

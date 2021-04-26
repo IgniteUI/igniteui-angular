@@ -1,181 +1,250 @@
 import { Pipe, PipeTransform, Inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
+import { DatePart } from '../directives/date-time-editor/public_api';
 
+const ITEMS_COUNT = 7;
 
-/**
- * Formats `IgxTimePickerComponent` display value according to the `format` property,
- * when the input element loses focus.
- */
-@Pipe({ name: 'displayFormat' })
-export class TimeDisplayFormatPipe implements PipeTransform {
+@Pipe({
+    name: 'timeFormatPipe'
+})
+export class TimeFormatPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
-    public transform(value: any): string {
-        let hour; let minutes; let seconds; let amPM;
-
-        const maskAmPM = this.timePicker.parseMask();
-        const mask = this.timePicker.parseMask(false);
-        if (!value || value === mask || value === maskAmPM) {
-            return '';
-        }
-
-        const sections = value.split(/[\s:]+/);
-
-        if (this.timePicker.showHoursList) {
-            hour = sections[0];
-        }
-
-        if (this.timePicker.showMinutesList) {
-            minutes = this.timePicker.showHoursList ? sections[1] : sections[0];
-        }
-
-        if (this.timePicker.showSecondsList) {
-            seconds = sections[sections.length - (this.timePicker.showAmPmList ? 2 : 1)];
-        }
-
-        if (this.timePicker.showAmPmList) {
-            amPM = sections[sections.length - 1];
-        }
-
-        const format = this.timePicker.format;
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(this.timePicker.promptChar, 'g');
-
-        if (format.indexOf('hh') !== -1 || format.indexOf('HH') !== -1 && hour.indexOf(prompt) !== -1) {
-            hour = hour === prompt + prompt ? '00' : hour.replace(regExp, '0');
-        }
-
-        if (format.indexOf('mm') !== -1 && minutes.indexOf(prompt) !== -1) {
-            minutes = minutes === prompt + prompt ? '00' : minutes.replace(regExp, '0');
-        }
-
-        if (format.indexOf('ss') !== -1 && seconds.indexOf(prompt) !== -1) {
-            seconds = seconds === prompt + prompt ? '00' : seconds.replace(regExp, '0');
-        }
-
-        if (format.indexOf('hh') === -1 && format.indexOf('HH') === -1 && hour !== undefined) {
-            hour = hour.indexOf(prompt) !== -1 ? hour.replace(regExp, '') : hour;
-            const hourVal = parseInt(hour, 10);
-            hour = !hourVal ? '0' : hourVal < 10 && hourVal !== 0 ? hour.replace('0', '') : hour;
-        }
-
-        if (format.indexOf('mm') === -1 && minutes !== undefined) {
-            minutes = minutes.indexOf(prompt) !== -1 ? minutes.replace(regExp, '') : minutes;
-            const minutesVal = parseInt(minutes, 10);
-            minutes = !minutesVal ? '0' : minutesVal < 10 && minutesVal !== 0 ? minutes.replace('0', '') : minutes;
-        }
-
-        if (format.indexOf('ss') === -1 && seconds !== undefined) {
-            seconds = seconds.indexOf(prompt) !== -1 ? seconds.replace(regExp, '') : seconds;
-            const secondsVal = parseInt(seconds, 10);
-            seconds = !secondsVal ? '0' : secondsVal < 10 && secondsVal !== 0 ? seconds.replace('0', '') : seconds;
-        }
-
-        if (format.indexOf('tt') !== -1 && (amPM !== 'AM' || amPM !== 'PM')) {
-            amPM = amPM.indexOf('p') !== -1 || amPM.indexOf('P') !== -1 ? 'PM' : 'AM';
-        }
-
-        let result = `${hour}:${minutes}:${seconds}`;
-        if (!hour) {
-            // remove the hours
-            result = result.slice(result.indexOf(':') + 1);
-        }
-        if (!minutes) {
-            if (hour) {
-                // get the hours and seconds and concat them
-                result = result.slice(0, result.indexOf(':')) +
-                    result.slice(result.lastIndexOf(':'), result.length);
-            } else {
-                // remove the minutes
-                result = result.slice(result.indexOf(':') + 1);
-            }
-        }
-        if (!seconds) {
-            // remove the seconds
-            result = result.slice(0, result.lastIndexOf(':'));
-        }
-
-        return amPM ? `${result} ${amPM}` : result;
+    public transform(value: Date): string {
+        const format = this.timePicker.inputFormat.replace('tt', 'aa');
+        const datePipe = new DatePipe(this.timePicker.locale);
+        return datePipe.transform(value, format);
     }
 }
 
-/**
- * Formats `IgxTimePickerComponent` display value according to the `format` property,
- * when the input element gets focus.
- */
-@Pipe({ name: 'inputFormat' })
-export class TimeInputFormatPipe implements PipeTransform {
+@Pipe({
+    name: 'timeItemPipe'
+})
+export class TimeItemPipe implements PipeTransform {
     constructor(@Inject(IGX_TIME_PICKER_COMPONENT) private timePicker: IgxTimePickerBase) { }
 
-    public transform(value: any): string {
-        const prompt = this.timePicker.promptChar;
-        const regExp = new RegExp(prompt, 'g');
+    public transform(collection: any[], timePart: string, selectedDate: Date, min: Date | string, max: Date | string) {
+        this.timePicker.minDropdownValue = this.setMinMaxDropdownValue('min');
+        this.timePicker.maxDropdownValue = this.setMinMaxDropdownValue('max');
+        this.timePicker.setSelectedValue();
+        let list;
+        let part;
+        switch (timePart) {
+            case 'hour':
+                list = this.generateHours();
+                const hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(this.timePicker.selectedDate.getHours())
+                    : this.timePicker.selectedDate.getHours();
+                list = this.scrollListItem(hours, list);
+                part = DatePart.Hours;
+                break;
+            case 'minutes':
+                list = this.generateMinutes();
+                list = this.scrollListItem(this.timePicker.selectedDate.getMinutes(), list);
+                part = DatePart.Minutes;
+                break;
+            case 'seconds':
+                list = this.generateSeconds();
+                list = this.scrollListItem(this.timePicker.selectedDate.getSeconds(), list);
+                part = DatePart.Seconds;
+                break;
+            case 'ampm':
+                list = this.generateAmPm();
+                const selectedAmPm = this.timePicker.getPartValue(this.timePicker.selectedDate, 'ampm');
+                list = this.scrollListItem(selectedAmPm, list);
+                part = DatePart.AmPm;
+                break;
+        }
+        return this.getListView(list, part);
+    }
 
-        let mask; let hour; let minutes; let seconds; let amPM;
+    private setMinMaxDropdownValue(value: string): Date {
+        let delta: number;
 
-        if (this.timePicker.cleared) {
-            this.timePicker.cleared = false;
-            mask = this.timePicker.parseMask(false);
-        } else {
-            mask = this.timePicker.parseMask();
+        const sign = value === 'min' ? 1 : -1;
+        const time = value === 'min' ? new Date(this.timePicker.minDateValue) : new Date(this.timePicker.maxDateValue);
+
+        const hours = time.getHours();
+        let minutes = time.getMinutes();
+        let seconds = time.getSeconds();
+
+        if (this.timePicker.showHoursList && hours % this.timePicker.itemsDelta.hours > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.hours - hours % this.timePicker.itemsDelta.hours
+                : hours % this.timePicker.itemsDelta.hours;
+            minutes = value === 'min' ? 0
+                : 60 % this.timePicker.itemsDelta.minutes > 0 ? 60 - 60 % this.timePicker.itemsDelta.minutes
+                    : 60 - this.timePicker.itemsDelta.minutes;
+            seconds = value === 'min' ? 0
+                : 60 % this.timePicker.itemsDelta.seconds > 0 ? 60 - 60 % this.timePicker.itemsDelta.seconds
+                    : 60 - this.timePicker.itemsDelta.seconds;
+            time.setHours(hours + sign * delta, minutes, seconds);
+        } else if (this.timePicker.showMinutesList && minutes % this.timePicker.itemsDelta.minutes > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.minutes - minutes % this.timePicker.itemsDelta.minutes
+                : minutes % this.timePicker.itemsDelta.minutes;
+            seconds = value === 'min' ? 0
+                : 60 % this.timePicker.itemsDelta.seconds > 0 ? 60 - 60 % this.timePicker.itemsDelta.seconds
+                    : 60 - this.timePicker.itemsDelta.seconds;
+            time.setHours(hours, minutes + sign * delta, seconds);
+        } else if (this.timePicker.showSecondsList && seconds % this.timePicker.itemsDelta.seconds > 0) {
+            delta = value === 'min' ? this.timePicker.itemsDelta.seconds - seconds % this.timePicker.itemsDelta.seconds
+                : seconds % this.timePicker.itemsDelta.seconds;
+            time.setHours(hours, minutes, seconds + sign * delta);
         }
 
-        // TODO: Pending refactoring.
-        value = (this.timePicker as any).displayValue;
-        if (!value || value === mask) {
-            return mask;
+        return time;
+    }
+
+    private getListView(view: any, dateType: DatePart): any {
+        for (let i = 0; i < view.length; i++) {
+            view[i] = this.getItemView(view[i], dateType);
         }
+        return view;
+    }
 
-        const sections = value.split(/[\s:]+/);
+    private getItemView(item: any, dateType: DatePart): string {
+        if (item === null) {
+            item = '';
+        } else if (dateType && typeof (item) !== 'string') {
+            const leadZeroHour = (item < 10 && (this.timePicker.inputFormat.indexOf('hh') !== -1
+                || this.timePicker.inputFormat.indexOf('HH') !== -1));
+            const leadZeroMinute = (item < 10 && this.timePicker.inputFormat.indexOf('mm') !== -1);
+            const leadZeroSeconds = (item < 10 && this.timePicker.inputFormat.indexOf('ss') !== -1);
 
-        if (this.timePicker.showHoursList) {
-            hour = sections[0];
-            hour = hour.replace(regExp, '');
+            const leadZero = {
+                hours: leadZeroHour,
+                minutes: leadZeroMinute,
+                seconds: leadZeroSeconds
+            }[dateType];
 
-            const leadZeroHour = (parseInt(hour, 10) < 10 && !hour.startsWith('0')) || hour === '0';
-            hour = leadZeroHour ? '0' + hour : hour;
+            item = (leadZero) ? '0' + item : `${item}`;
         }
+        return item;
+    }
 
-        if (this.timePicker.showMinutesList) {
-            minutes = this.timePicker.showHoursList ? sections[1] : sections[0];
-            minutes = minutes.replace(regExp, '');
-
-            const leadZeroMinutes = (parseInt(minutes, 10) < 10 && !minutes.startsWith('0')) || minutes === '0';
-            minutes = leadZeroMinutes ? '0' + minutes : minutes;
-        }
-
-        if (this.timePicker.showSecondsList) {
-            seconds = sections[sections.length - (this.timePicker.showAmPmList ? 2 : 1)];
-            seconds = seconds.replace(regExp, '');
-
-            const leadZeroSeconds = (parseInt(seconds, 10) < 10 && !seconds.startsWith('0')) || seconds === '0';
-            seconds = leadZeroSeconds ? '0' + seconds : seconds;
-        }
-
-        if (this.timePicker.showAmPmList) {
-            amPM = sections[sections.length - 1];
-        }
-
-        let result = `${hour}:${minutes}:${seconds}`;
-        if (!hour) {
-            // remove the hours
-            result = result.slice(result.indexOf(':') + 1);
-        }
-        if (!minutes) {
-            if (hour) {
-                // get the hours and seconds and concat them
-                result = result.slice(0, result.indexOf(':')) +
-                    result.slice(result.lastIndexOf(':'), result.length);
+    private scrollListItem(item: number | string, items: any[]): any[] {
+        const itemsCount = items.length;
+        let view;
+        if (items) {
+            const index = items.indexOf(item);
+            if (index < 3) {
+                view = items.slice(itemsCount - (3 - index), itemsCount);
+                view = view.concat(items.slice(0, index + 4));
+            } else if (index + 4 > itemsCount) {
+                view = items.slice(index - 3, itemsCount);
+                view = view.concat(items.slice(0, index + 4 - itemsCount));
             } else {
-                // remove the minutes
-                result = result.slice(result.indexOf(':') + 1);
+                view = items.slice(index - 3, index + 4);
             }
         }
-        if (!seconds) {
-            // remove the seconds
-            result = result.slice(0, result.lastIndexOf(':'));
+        return view;
+    }
+
+    private generateHours(): any[] {
+        const hourItems = [];
+        let hoursCount = this.timePicker.isTwelveHourFormat ? 13 : 24;
+        hoursCount /= this.timePicker.itemsDelta.hours;
+        const minHours = this.timePicker.minDropdownValue.getHours();
+        const maxHours = this.timePicker.maxDropdownValue.getHours();
+
+        if (hoursCount > 1) {
+            for (let hourIndex = 0; hourIndex < 24; hourIndex++) {
+                let hours = hourIndex * this.timePicker.itemsDelta.hours;
+                if (hours >= minHours && hours <= maxHours) {
+                    hours = this.timePicker.isTwelveHourFormat ? this.toTwelveHourFormat(hours) : hours;
+                    if (!hourItems.find((element => element === hours))) {
+                        hourItems.push(hours);
+                    }
+                }
+            }
+        } else {
+            hourItems.push(0);
         }
 
-        return amPM ? `${result} ${amPM}` : result;
+        if (hourItems.length < ITEMS_COUNT || hoursCount < ITEMS_COUNT || !this.timePicker.spinLoop) {
+            const index = !this.timePicker.spinLoop || (hourItems.length < ITEMS_COUNT && hoursCount < ITEMS_COUNT) ? 6 : 3;
+            for (let i = 0; i < index; i++) {
+                hourItems.push(null);
+            }
+        }
+
+        return hourItems;
+    }
+
+    private generateMinutes(): any[] {
+        const minuteItems = [];
+        const minuteItemsCount = 60 / this.timePicker.itemsDelta.minutes;
+        const time = new Date(this.timePicker.selectedDate);
+
+        for (let i = 0; i < minuteItemsCount; i++) {
+            const minutes = i * this.timePicker.itemsDelta.minutes;
+            time.setMinutes(minutes);
+            if (time.getTime() >= this.timePicker.minDropdownValue.getTime()
+                && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
+                minuteItems.push(i * this.timePicker.itemsDelta.minutes);
+            }
+        }
+
+        if (minuteItems.length < ITEMS_COUNT || minuteItemsCount < ITEMS_COUNT || !this.timePicker.spinLoop) {
+            const index = !this.timePicker.spinLoop || (minuteItems.length < ITEMS_COUNT && minuteItemsCount < ITEMS_COUNT) ? 6 : 3;
+            for (let i = 0; i < index; i++) {
+                minuteItems.push(null);
+            }
+        }
+
+        return minuteItems;
+    }
+
+    private generateSeconds(): any[] {
+        const secondsItems = [];
+        const secondsItemsCount = 60 / this.timePicker.itemsDelta.seconds;
+        const time = new Date(this.timePicker.selectedDate);
+
+        for (let i = 0; i < secondsItemsCount; i++) {
+            const seconds = i * this.timePicker.itemsDelta.seconds;
+            time.setSeconds(seconds);
+            if (time.getTime() >= this.timePicker.minDropdownValue.getTime()
+                && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
+                secondsItems.push(i * this.timePicker.itemsDelta.seconds);
+            }
+        }
+
+        if (secondsItems.length < ITEMS_COUNT || secondsItemsCount < ITEMS_COUNT || !this.timePicker.spinLoop) {
+            const index = !this.timePicker.spinLoop || (secondsItems.length < ITEMS_COUNT && secondsItemsCount < ITEMS_COUNT) ? 6 : 3;
+            for (let i = 0; i < index; i++) {
+                secondsItems.push(null);
+            }
+        }
+
+        return secondsItems;
+    }
+
+    private generateAmPm(): any[] {
+        const ampmItems = [];
+        const minHour = this.timePicker.minDropdownValue?.getHours();
+        const maxHour = this.timePicker.maxDropdownValue?.getHours();
+
+        if (minHour < 12) {
+            ampmItems.push('AM');
+        }
+
+        if (minHour >= 12 || maxHour >= 12) {
+            ampmItems.push('PM');
+        }
+
+        for (let i = 0; i < 5; i++) {
+            ampmItems.push(null);
+        }
+
+        return ampmItems;
+    }
+
+    private toTwelveHourFormat(hour: number): number {
+        if (hour > 12) {
+            hour -= 12;
+        } else if (hour === 0) {
+            hour = 12;
+        }
+
+        return hour;
     }
 }
