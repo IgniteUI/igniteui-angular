@@ -186,6 +186,7 @@
 
                 <igx-date-picker #picker *ngIf="selectedColumn && selectedColumn.dataType === 'date'"
                     [(value)]="searchValue"
+                    (keydown)="openPicker($event)"
                     [formatter]="selectedColumn.formatter"
                     [displayFormat]="selectedColumn.pipeArgs.format"
                     (click)="picker.open()"
@@ -210,7 +211,7 @@
                     [locale]="grid.locale"
                     [outlet]="grid.outlet"
                     (click)="picker.open()"
-                    (keydown)="invokeClick($event)"
+                    (keydown)="openPicker($event)"
                     [displayDensity]="'compact'"
                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder"
                     type="box"

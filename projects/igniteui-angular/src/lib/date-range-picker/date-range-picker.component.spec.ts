@@ -49,9 +49,10 @@ describe('IgxDateRangePicker', () => {
         let overlay: IgxOverlayService;
         let mockInjector;
         let ngModuleRef: any;
+        let mockCalendar: IgxCalendarComponent;
+        let mockDaysView: any;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
-        const calendar = new IgxCalendarComponent(platform);
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
@@ -134,6 +135,11 @@ describe('IgxDateRangePicker', () => {
 
             overlay = new IgxOverlayService(
                 mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
+            mockCalendar = new IgxCalendarComponent(platform);
+            mockDaysView = {
+                focusActiveDate: jasmine.createSpy()
+            } as any;
+            mockCalendar.daysView = mockDaysView;
         });
         /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
@@ -240,11 +246,11 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
+        it('should disable calendar dates when min and/or max values as dates are provided', () => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, overlay);
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
@@ -257,20 +263,20 @@ describe('IgxDateRangePicker', () => {
                     closeAnimation: null
                 })
             });
-            tick();
             (dateRange as any).updateCalendar();
-            expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
-            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-            expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
-            expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-            expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
-        }));
+            expect(mockCalendar.disabledDates.length).toEqual(2);
+            expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
+            expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
+            expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
+        });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
             const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            spyOnProperty((dateRange as any), 'calendar').and.returnValue(calendar);
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 

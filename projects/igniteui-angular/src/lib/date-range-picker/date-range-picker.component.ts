@@ -9,7 +9,7 @@ import {
     AbstractControl, ControlValueAccessor, NgControl,
     NG_VALIDATORS, NG_VALUE_ACCESSOR, ValidationErrors, Validator
 } from '@angular/forms';
-import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subject, Subscription } from 'rxjs';
+import { fromEvent, merge, MonoTypeOperatorFunction, noop, Subscription } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/public_api';
@@ -20,7 +20,7 @@ import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
-import { IgxPickerActionsDirective, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxPickerActionsDirective } from '../date-common/picker-icons.common';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -311,10 +311,6 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public inputDirective: IgxInputDirective;
 
     /** @hidden @internal */
-    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
-
-    /** @hidden @internal */
     @ContentChildren(IgxDateRangeInputsBaseComponent)
     public projectedInputs: QueryList<IgxDateRangeInputsBaseComponent>;
 
@@ -423,10 +419,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     private _value: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;
-    private _destroy$ = new Subject();
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
-    private _toggleClickNotifier$ = new Subject();
     private _positionSettings: PositionSettings;
     private _focusedInput: IgxDateRangeInputsBaseComponent;
     private _overlaySubFilter:
@@ -620,20 +614,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngAfterViewInit(): void {
+        super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.configPositionStrategy();
         this.configOverlaySettings();
         this.cacheFocusedInput();
         this.attachOnTouched();
-
-        const subsToClicked = () => {
-            this._toggleClickNotifier$.next();
-            this.toggleComponents.forEach(toggle => {
-                toggle.clicked.pipe(takeUntil(this._toggleClickNotifier$)).subscribe(() => this.open());
-            });
-        };
-        this.toggleComponents.changes.pipe(takeUntil(this._destroy$)).subscribe(() => subsToClicked());
-        subsToClicked();
 
         this.setRequiredToInputs();
 
@@ -666,10 +652,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
-        this._destroy$.next();
-        this._destroy$.complete();
-        this._toggleClickNotifier$.next();
-        this._toggleClickNotifier$.complete();
+        super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
