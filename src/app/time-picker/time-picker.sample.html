@@ -64,8 +64,11 @@
         <div class="preview">
             <igx-time-picker #tempPicker [value]="'10:00:00'" [inputFormat]="'hh tt'">
                 <igx-picker-toggle igxPrefix>
-                    <igx-icon (click)="tempPicker.toggle()">alarm</igx-icon>
+                    <igx-icon>alarm</igx-icon>
                  </igx-picker-toggle>
+                 <igx-picker-clear igxSuffix>
+                    <igx-icon>delete</igx-icon>
+                </igx-picker-clear>
                 <igx-icon (click)="tempPicker.increment(datePart, 2)" igxSuffix>expand_less</igx-icon>
                 <igx-icon (click)="tempPicker.decrement(datePart, 2)" igxSuffix>expand_more</igx-icon>
                 <igx-hint position="start">Press spin buttons to loop through time</igx-hint>
