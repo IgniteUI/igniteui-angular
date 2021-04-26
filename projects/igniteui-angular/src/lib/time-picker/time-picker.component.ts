@@ -41,7 +41,7 @@ import {
     IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
-import { Subject, fromEvent, Subscription, noop } from 'rxjs';
+import { Subscription, noop } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
@@ -61,7 +61,7 @@ import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
-import { IgxPickersCommonModule, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
+import { IgxPickerClearComponent, IgxPickersCommonModule } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
 
 let NEXT_ID = 0;
@@ -309,16 +309,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     public ampmList: ElementRef;
 
     /** @hidden @internal */
+    @ContentChildren(IgxPickerClearComponent)
+    public clearComponents: QueryList<IgxPickerClearComponent>;
+
+    /** @hidden @internal */
     @ContentChild(IgxLabelDirective)
     public label: IgxLabelDirective;
 
     /** @hidden @internal */
     @ContentChild(IgxTimePickerActionsDirective)
     public timePickerActionsDirective: IgxTimePickerActionsDirective;
-
-    /** @hidden @internal */
-    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
 
     @ViewChild(IgxInputDirective, { read: IgxInputDirective })
     private inputDirective: IgxInputDirective;
@@ -366,7 +366,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public get showClearButton(): boolean {
-        return (this.isDropdown && this.dateTimeEditor.value !== null);
+        if (this.clearComponents.length) {
+            return false;
+        }
+        if (DateTimeUtil.isValidDate(this.value)) {
+            // TODO: Update w/ clear behavior
+            return this.value.getTime() !== 0 && this.value.getHours() !== 0 && this.value.getMinutes() !== 0;
+        }
+        return !!this.dateTimeEditor.value;
     }
 
     /** @hidden */
@@ -483,7 +490,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _secondsView = [];
     private _ampmView = [];
 
-    private _destroy$ = new Subject();
     private _statusChanges$: Subscription;
     private _ngControl: NgControl = null;
     private _onChangeCallback: (_: Date | string) => void = noop;
@@ -712,8 +718,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngAfterViewInit(): void {
+        super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
+
+        this.subToIconsClicked(this.clearComponents, () => this.clear());
+        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
+            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
+
         if (this._ngControl) {
             this._statusChanges$ = this._ngControl.statusChanges.subscribe(this.onStatusChanged.bind(this));
         }
@@ -728,8 +740,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden */
     public ngOnDestroy(): void {
-        this._destroy$.next();
-        this._destroy$.complete();
+        super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
