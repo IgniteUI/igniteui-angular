@@ -2,7 +2,6 @@ import { Pipe, PipeTransform, Inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { IGX_TIME_PICKER_COMPONENT, IgxTimePickerBase } from './time-picker.common';
 import { DatePart } from '../directives/date-time-editor/public_api';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const ITEMS_COUNT = 7;
 
@@ -106,7 +105,8 @@ export class TimeItemPipe implements PipeTransform {
         if (item === null) {
             item = '';
         } else if (dateType && typeof (item) !== 'string') {
-            const leadZeroHour = (item < 10 && (this.timePicker.inputFormat.indexOf('hh') !== -1 || this.timePicker.inputFormat.indexOf('HH') !== -1));
+            const leadZeroHour = (item < 10 && (this.timePicker.inputFormat.indexOf('hh') !== -1
+                || this.timePicker.inputFormat.indexOf('HH') !== -1));
             const leadZeroMinute = (item < 10 && this.timePicker.inputFormat.indexOf('mm') !== -1);
             const leadZeroSeconds = (item < 10 && this.timePicker.inputFormat.indexOf('ss') !== -1);
 
@@ -178,7 +178,8 @@ export class TimeItemPipe implements PipeTransform {
         for (let i = 0; i < minuteItemsCount; i++) {
             const minutes = i * this.timePicker.itemsDelta.minutes;
             time.setMinutes(minutes);
-            if (time.getTime() >= this.timePicker.minDropdownValue.getTime() && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
+            if (time.getTime() >= this.timePicker.minDropdownValue.getTime()
+                && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
                 minuteItems.push(i * this.timePicker.itemsDelta.minutes);
             }
         }
@@ -201,7 +202,8 @@ export class TimeItemPipe implements PipeTransform {
         for (let i = 0; i < secondsItemsCount; i++) {
             const seconds = i * this.timePicker.itemsDelta.seconds;
             time.setSeconds(seconds);
-            if (time.getTime() >= this.timePicker.minDropdownValue.getTime() && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
+            if (time.getTime() >= this.timePicker.minDropdownValue.getTime()
+                && time.getTime() <= this.timePicker.maxDropdownValue.getTime()) {
                 secondsItems.push(i * this.timePicker.itemsDelta.seconds);
             }
         }

@@ -975,7 +975,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public nextAmPm(delta?: number) {
-        let ampm = this.getPartValue(this._selectedDate, 'ampm');
+        const ampm = this.getPartValue(this._selectedDate, 'ampm');
         if (!delta || (ampm === 'AM' && delta > 0) || (ampm === 'PM' && delta < 0)) {
             let hours = this._selectedDate.getHours();
             const sign = hours < 12 ? 1 : -1;
@@ -986,6 +986,47 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             this.updateValue();
         }
     }
+
+    /** @hidden @internal */
+    public setSelectedValue() {
+        this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this.minDropdownValue);
+        if (!DateTimeUtil.isValidDate(this._selectedDate)) {
+            this._selectedDate = new Date(this.minDropdownValue);
+            return;
+        }
+        if (DateTimeUtil.lessThanMinValue(this._selectedDate, this.minDropdownValue, true, false)) {
+            this._selectedDate = new Date(this.minDropdownValue);
+            return;
+        }
+        if (DateTimeUtil.greaterThanMaxValue(this._selectedDate, this.maxDropdownValue, true, false)) {
+            this._selectedDate = new Date(this.maxDropdownValue);
+            return;
+        }
+
+        if (this._selectedDate.getHours() % this.itemsDelta.hours > 0) {
+            this._selectedDate.setHours(
+                this._selectedDate.getHours() + this.itemsDelta.hours - this._selectedDate.getHours() % this.itemsDelta.hours,
+                0,
+                0
+            );
+        }
+
+        if (this._selectedDate.getMinutes() % this.itemsDelta.minutes > 0) {
+            this._selectedDate.setHours(
+                this._selectedDate.getHours(),
+                this._selectedDate.getMinutes() + this.itemsDelta.minutes - this._selectedDate.getMinutes() % this.itemsDelta.minutes,
+                0
+            );
+        }
+
+        if (this._selectedDate.getSeconds() % this.itemsDelta.seconds > 0) {
+            this._selectedDate.setSeconds(
+                this._selectedDate.getSeconds() + this.itemsDelta.seconds - this._selectedDate.getSeconds() % this.itemsDelta.seconds
+            );
+        }
+}
+
+
 
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
@@ -1066,44 +1107,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         return true;
-    }
-
-    public setSelectedValue() {
-            this._selectedDate = this._dateValue ? new Date(this._dateValue) : new Date(this.minDropdownValue);
-            if (!DateTimeUtil.isValidDate(this._selectedDate)) {
-                this._selectedDate = new Date(this.minDropdownValue);
-                return;
-            }
-            if (DateTimeUtil.lessThanMinValue(this._selectedDate, this.minDropdownValue, true, false)) {
-                this._selectedDate = new Date(this.minDropdownValue);
-                return;
-            }
-            if (DateTimeUtil.greaterThanMaxValue(this._selectedDate, this.maxDropdownValue, true, false)) {
-                this._selectedDate = new Date(this.maxDropdownValue);
-                return;
-            }
-
-            if (this._selectedDate.getHours() % this.itemsDelta.hours > 0) {
-                this._selectedDate.setHours(
-                    this._selectedDate.getHours() + this.itemsDelta.hours - this._selectedDate.getHours() % this.itemsDelta.hours,
-                    0,
-                    0
-                );
-            }
-
-            if (this._selectedDate.getMinutes() % this.itemsDelta.minutes > 0) {
-                this._selectedDate.setHours(
-                    this._selectedDate.getHours(),
-                    this._selectedDate.getMinutes() + this.itemsDelta.minutes - this._selectedDate.getMinutes() % this.itemsDelta.minutes,
-                    0
-                );
-            }
-
-            if (this._selectedDate.getSeconds() % this.itemsDelta.seconds > 0) {
-                this._selectedDate.setSeconds(
-                    this._selectedDate.getSeconds() + this.itemsDelta.seconds - this._selectedDate.getSeconds() % this.itemsDelta.seconds
-                );
-            }
     }
 
     private parseToDate(value: any): Date {
