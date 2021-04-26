@@ -447,7 +447,7 @@ export class IgxGridStateDirective {
     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
-        const columns = "columns";
+        const columns = 'columns';
         this.grid.columnList.changes.pipe(delay(0), first()).subscribe(() => {
             this.featureKeys = this.featureKeys.filter(f => f !== columns);
             this.restoreFeatures(this.state);
