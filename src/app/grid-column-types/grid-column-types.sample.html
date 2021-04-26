@@ -1,0 +1,38 @@
+<div class="wrapper">
+    <div class="sample-content">
+        <igx-grid #grid1
+            [columnSelection]="'single'"
+            [data]="data"
+            [displayDensity]="density"
+            [allowFiltering]="true"
+            [rowSelection] ="'multiple'"
+            [filterMode]="'excelStyleFilter'"
+            [rowEditable]="false"
+            [width]="'900px'"
+            [primaryKey]="'ID'"
+            >
+            <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                <igx-grid-toolbar-actions>
+                    <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                    <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                    <igx-grid-toolbar-advanced-filtering>
+                    </igx-grid-toolbar-advanced-filtering>
+                </igx-grid-toolbar-actions>
+                </igx-grid-toolbar>
+            <igx-column *ngFor="let c of columns" [field]="c.field"
+                                                [header]="c.field"
+                                                [movable]="c.movable"
+                                                [groupable]="c.groupable"
+                                                [resizable]="c.resizable"
+                                                [width]="c.width"
+                                                [sortable]="c.sortable"
+                                                [filterable]="c.filterable"
+                                                [editable]="true"
+                                                [hidden]="c.hidden"
+                                                [pinned]="c.pinned"
+                                                [hasSummary]="c.summary"
+                                                [dataType]="c.type">
+            </igx-column>
+        </igx-grid>
+    </div>
+</div>
