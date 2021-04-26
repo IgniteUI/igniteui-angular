@@ -1,9 +1,9 @@
 <div #headerContainer class="igx-tabs__header">
     <button
+        #leftButton
         igxButton="icon"
         igxRipple
-        igxLeftButtonStyle
-        class="igx-tabs__header-button"
+        [ngClass]="resolveTabLeftButtonClasses()"
         (click)="scrollLeft()"
     >
         <igx-icon>navigate_before</igx-icon>
@@ -26,10 +26,10 @@
         </div>
     </div>
     <button
+        #rightButton
         igxButton="icon"
         igxRipple
-        igxRightButtonStyle
-        class="igx-tabs__header-button"
+        [ngClass]="resolveTabRightButtonClasses()"
         (click)="scrollRight()"
     >
         <igx-icon>navigate_next</igx-icon>
