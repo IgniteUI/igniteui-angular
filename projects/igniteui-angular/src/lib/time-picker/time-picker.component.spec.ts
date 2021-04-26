@@ -502,10 +502,7 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
             });
 
-            // This test should stop failing when
-            // 1) When wheel on AMPM updates hourColumn from 12 --> 0
-            xit('should scroll trough hours/minutes/seconds/AM PM based on default or set itemsDelta', fakeAsync(() => {
-                // picker's date --> new Date(2021, 24, 2, 11, 45, 0);
+            it('should scroll trough hours/minutes/seconds/AM PM based on default or set itemsDelta', fakeAsync(() => {
                 timePicker.inputFormat = 'hh:mm:ss tt';
                 fixture.detectChanges();
 
@@ -523,7 +520,8 @@ describe('IgxTimePicker', () => {
                 ampmColumn.triggerEventHandler('wheel', eventScrollUp);
                 fixture.detectChanges();
 
-                const expectedHour = 0; // Setting PM to AM should update selectedHour from 12 --> 0
+                const expectedValuedHour = 0;
+                const expectedDisplayHour = 12;
                 const expectedMinute= 46;
                 const expectedSecond = 1;
                 const expectedAmPm = 'AM';
@@ -536,7 +534,7 @@ describe('IgxTimePicker', () => {
                 const selectedSecond = selectedItems[2].nativeElement.innerText;
                 const selectedAMPM = selectedItems[3].nativeElement.innerText;
 
-                expect(selectedHour).toEqual(expectedHour.toString());
+                expect(selectedHour).toEqual(expectedDisplayHour.toString());
                 expect(selectedMinute).toEqual(expectedMinute.toString());
                 expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
                 expect(selectedAMPM).toEqual(expectedAmPm);
@@ -548,18 +546,13 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTrue();
 
-                expect((timePicker.value as Date).getHours()).toEqual(expectedHour);
+                expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
                 expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
             }));
 
-            // This test should stop failing when
-            // 1) component value can be dynamically updated after initialization,
-            // as currently setting new date updates the value, but the list items remain with the old
-            // value and input format
-            // 2) When wheel on AMPM updates hourColumn from 12 --> 0
-            xit('should scroll trough hours/minutes/seconds/AM PM based on custom itemsDelta', fakeAsync(() => {
-                // pickers date --> new Date(2021, 24, 2, 11, 45, 0);
+            it('should scroll trough hours/minutes/seconds/AM PM based on custom itemsDelta', fakeAsync(() => {
+
                 const newDate = new Date(2021, 24, 2, 10, 20, 0);
                 fixture.componentInstance.date = newDate;
                 timePicker.inputFormat = 'hh:mm:ss tt';
@@ -580,11 +573,11 @@ describe('IgxTimePicker', () => {
                 ampmColumn.triggerEventHandler('wheel', eventScrollUp);
                 fixture.detectChanges();
 
-                const expectedHour = 0; // Setting PM to AM should update selectedHour from 12 --> 0
+                const expectedValuedHour = 0;
+                const expectedDisplayHour = 12;
                 const expectedMinute= 40;
                 const expectedSecond = 20;
                 const expectedAmPm = 'AM';
-                const expectedPrependZero = '0';
 
                 // test rendered display value
                 const selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
@@ -593,9 +586,9 @@ describe('IgxTimePicker', () => {
                 const selectedSecond = selectedItems[2].nativeElement.innerText;
                 const selectedAMPM = selectedItems[3].nativeElement.innerText;
 
-                expect(selectedHour).toEqual(expectedHour.toString());
+                expect(selectedHour).toEqual(expectedDisplayHour.toString());
                 expect(selectedMinute).toEqual(expectedMinute.toString());
-                expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
+                expect(selectedSecond).toEqual(expectedSecond.toString());
                 expect(selectedAMPM).toEqual(expectedAmPm);
 
                 // apply selected value on toggle btn click
@@ -605,7 +598,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTrue();
 
-                expect((timePicker.value as Date).getHours()).toEqual(expectedHour);
+                expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
                 expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
             }));
