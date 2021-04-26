@@ -16,6 +16,7 @@ import { CalendarSelection, IgxCalendarComponent, WEEKDAYS } from '../calendar/p
 import { DateRangeType } from '../core/dates';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { CurrentResourceStrings } from '../core/i18n/resources';
+import { IDateRangePickerResourceStrings } from '../core/i18n/date-range-picker-resources';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IBaseCancelableBrowserEventArgs, isDate, parseDate, PlatformUtil } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
@@ -152,6 +153,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      *
      * @remarks
      * Default value is `Done`.
+     * An @Input property that renders Done button with custom text. By default `doneButtonText` is set to Done.
      * The button will only show up in `dialog` mode.
      *
      * @example
@@ -160,8 +162,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public doneButtonText = 'Done';
+    public set doneButtonText(value: string) {
+        this._doneButtonText = value;
+    }
 
+    public get doneButtonText(): string {
+        if (this._doneButtonText === null) {
+            return this.resourceStrings.igx_date_range_picker_done_button;
+        }
+        return this._doneButtonText;
+    }
     /**
      * Custom overlay settings that should be used to display the calendar.
      *
@@ -235,6 +245,22 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     /**
+     * An accessor that sets the resource strings.
+     * By default it uses EN resources.
+     */
+     @Input()
+     public set resourceStrings(value: IDateRangePickerResourceStrings) {
+         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+     }
+
+     /**
+      * An accessor that returns the resource strings.
+      */
+     public get resourceStrings(): IDateRangePickerResourceStrings {
+         return this._resourceStrings;
+     }
+
+    /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
      *
      *   @example
@@ -303,7 +329,12 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     public dateSeparatorTemplate: TemplateRef<any>;
 
     /** @hidden @internal */
-    public dateSeparator = CurrentResourceStrings.DateRangePickerResStrings.igx_date_range_picker_date_separator;
+    public get dateSeparator(): string {
+        if (this._dateSeparator === null) {
+            return this.resourceStrings.igx_date_range_picker_date_separator;
+        }
+        return this._dateSeparator;
+    }
 
     /** @hidden @internal */
     public get appliedFormat(): string {
@@ -386,6 +417,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         return false;
     }
 
+    private _resourceStrings = CurrentResourceStrings.DateRangePickerResStrings;
+    private _doneButtonText = null;
+    private _dateSeparator = null;
     private _value: DateRange | null;
     private _overlayId: string;
     private _ngControl: NgControl;

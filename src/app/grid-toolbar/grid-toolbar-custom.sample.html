@@ -3,7 +3,7 @@
         <article class="grid-sample">
             <h4 class="sample-title">Toolbar</h4>
 
-            <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="1100px" [allowFiltering]="true" (onColumnInit)="initColumns($event)">
+            <igx-grid #grid1 [data]="data" [autoGenerate]="true" height="400px" width="1100px" [allowFiltering]="true" (columnInit)="initColumns($event)">
                 <igx-grid-toolbar *ngIf="showToolbar" [displayDensity]="grid1.displayDensity">
                     <igx-grid-toolbar-title>{{ toolbarTitle }}</igx-grid-toolbar-title>
                     <button igxButton="flat" igxRipple [igxRippleCentered]="true" (click)="grid1.clearFilter()">

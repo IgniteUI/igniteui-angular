@@ -587,7 +587,7 @@ export class IgxGridNavigationService {
             type === 'dataCell' ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
                 row.summaryCells?.find(c => c.visibleColumnIndex === this.activeNode.column);
         const keydownArgs = { targetType: type, event, cancel: false, target };
-        this.grid.onGridKeydown.emit(keydownArgs);
+        this.grid.gridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel && type === 'dataCell') {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;

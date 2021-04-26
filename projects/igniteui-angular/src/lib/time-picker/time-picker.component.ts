@@ -59,7 +59,7 @@ import { IgxTextSelectionModule } from '../directives/text-selection/text-select
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
-import { DatePart } from '../directives/date-time-editor/public_api';
+import { DatePart, DatePartDeltas } from '../directives/date-time-editor/public_api';
 import { PickerHeaderOrientation } from '../date-common/types';
 import { IgxPickersCommonModule, IgxPickerToggleComponent } from '../date-common/picker-icons.common';
 import { TimeFormatPipe } from './time-picker.pipes';
@@ -471,7 +471,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private _resourceStrings = CurrentResourceStrings.TimePickerResStrings;
     private _okButtonLabel = null;
     private _cancelButtonLabel = null;
-    private _itemsDelta: { hour: number; minute: number; second: number } = { hour: 1, minute: 1, second: 1 };
+    private _itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> = { hours: 1, minutes: 1, seconds: 1 };
 
     private _hourItems = [];
     private _minuteItems = [];
@@ -614,11 +614,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * ```
      */
     @Input()
-    public set itemsDelta(value) {
-        this._itemsDelta = { hour: 1, minute: 1, second: 1, ...value };
+    public set itemsDelta(value: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'>) {
+        Object.assign(this._itemsDelta, value);
     }
 
-    public get itemsDelta(): { hour: number; minute: number; second: number } {
+    public get itemsDelta(): Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> {
         return this._itemsDelta;
     }
 
@@ -761,7 +761,6 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             , settings);
 
         this.toggleRef.open(overlaySettings);
-        this.initializeContainer();
     }
 
     /**
@@ -949,7 +948,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const minHours = this._minDropdownValue?.getHours() || 0;
         const maxHours = this._maxDropdownValue?.getHours() || 24;
         const previousHours = previousDate.getHours();
-        let hours = previousHours + delta * this.itemsDelta.hour;
+        let hours = previousHours + delta * this.itemsDelta.hours;
         if ((previousHours === maxHours && delta > 0) || (previousHours === minHours && delta < 0)) {
             hours = !this.spinLoop ? previousHours : delta > 0 ? minHours : maxHours;
         }
@@ -981,7 +980,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if ((delta < 0 && minutes === min) || (delta > 0 && minutes === max)) {
             minutes = this.spinLoop && minutes === min ? max : this.spinLoop && minutes === max ? min : minutes;
         } else {
-            minutes = minutes + delta * this.itemsDelta.minute;
+            minutes = minutes + delta * this.itemsDelta.minutes;
         }
 
         this._selectedDate.setMinutes(minutes);
@@ -1004,7 +1003,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if ((delta < 0 && seconds === min) || (delta > 0 && seconds === max)) {
             seconds = this.spinLoop && seconds === min ? max : this.spinLoop && seconds === max ? min : seconds;
         } else {
-            seconds = seconds + delta * this.itemsDelta.second;
+            seconds = seconds + delta * this.itemsDelta.seconds;
         }
 
         this._selectedDate.setSeconds(seconds);
@@ -1108,10 +1107,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             const leadZeroMinute = (item < 10 && this.inputFormat.indexOf('mm') !== -1);
             const leadZeroSeconds = (item < 10 && this.inputFormat.indexOf('ss') !== -1);
 
-            const leadZero = {
-                hour: leadZeroHour,
-                minute: leadZeroMinute,
-                second: leadZeroSeconds
+            const leadZero: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'> = {
+                hours: leadZeroHour,
+                minutes: leadZeroMinute,
+                seconds: leadZeroSeconds
             }[dateType];
 
             item = (leadZero) ? '0' + item : `${item}`;
@@ -1122,13 +1121,13 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private generateHours(): void {
         this._hourItems = [];
         let hoursCount = this.isTwelveHourFormat ? 13 : 24;
-        hoursCount /= this.itemsDelta.hour;
+        hoursCount /= this.itemsDelta.hours;
         const minHours = this._minDropdownValue.getHours() || 0;
         const maxHours = this._maxDropdownValue.getHours() || 24;
 
         if (hoursCount > 1) {
             for (let hourIndex = 0; hourIndex < 24; hourIndex++) {
-                let hours = hourIndex * this.itemsDelta.hour;
+                let hours = hourIndex * this.itemsDelta.hours;
                 if (hours >= minHours && hours <= maxHours) {
                     hours = this.isTwelveHourFormat ? this.toTwelveHourFormat(hours) : hours;
                     if (!this._hourItems.find((element => element === hours))) {
@@ -1150,7 +1149,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private generateMinutes(): void {
         this._minuteItems = [];
-        const minuteItemsCount = 60 / this.itemsDelta.minute;
+        const minuteItemsCount = 60 / this.itemsDelta.minutes;
         const min = new Date(this._minDropdownValue);
         const max = new Date(this._maxDropdownValue);
         const time = new Date(this._selectedDate);
@@ -1161,7 +1160,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
 
         for (let i = 0; i < minuteItemsCount; i++) {
-            const minutes = i * this.itemsDelta.minute;
+            const minutes = i * this.itemsDelta.minutes;
             time.setMinutes(minutes);
             if (time >= min && time <= max) {
                 this._minuteItems.push(minutes);
@@ -1178,14 +1177,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private generateSeconds(): void {
         this._secondsItems = [];
-        const secondsItemsCount = 60 / this.itemsDelta.second;
+        const secondsItemsCount = 60 / this.itemsDelta.seconds;
         const time = new Date(this._selectedDate);
 
         for (let i = 0; i < secondsItemsCount; i++) {
-            const seconds = i * this.itemsDelta.second;
+            const seconds = i * this.itemsDelta.seconds;
             time.setSeconds(seconds);
             if (time.getTime() >= this._minDropdownValue.getTime() && time.getTime() <= this._maxDropdownValue.getTime()) {
-                this._secondsItems.push(i * this.itemsDelta.second);
+                this._secondsItems.push(i * this.itemsDelta.seconds);
             }
         }
 
@@ -1364,14 +1363,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         const minutes = time.getMinutes();
         const seconds = time.getSeconds();
 
-        if (this.showHoursList && hours % this.itemsDelta.hour > 0) {
-            delta = value === 'min' ? this.itemsDelta.hour - hours % this.itemsDelta.hour : hours % this.itemsDelta.hour;
+        if (this.showHoursList && hours % this.itemsDelta.hours > 0) {
+            delta = value === 'min' ? this.itemsDelta.hours - hours % this.itemsDelta.hours : hours % this.itemsDelta.hours;
             time.setHours(hours + sign * delta, 0, 0);
-        } else if (this.showMinutesList && minutes % this.itemsDelta.minute > 0) {
-            delta = value === 'min' ? this.itemsDelta.minute - minutes % this.itemsDelta.minute : minutes % this.itemsDelta.minute;
+        } else if (this.showMinutesList && minutes % this.itemsDelta.minutes > 0) {
+            delta = value === 'min' ? this.itemsDelta.minutes - minutes % this.itemsDelta.minutes: minutes % this.itemsDelta.minutes;
             time.setHours(hours, minutes + sign * delta, 0);
-        } else if (this.showSecondsList && seconds % this.itemsDelta.second > 0) {
-            delta = value === 'min' ? this.itemsDelta.second - seconds % this.itemsDelta.second : seconds % this.itemsDelta.second;
+        } else if (this.showSecondsList && seconds % this.itemsDelta.seconds > 0) {
+            delta = value === 'min' ? this.itemsDelta.seconds - seconds % this.itemsDelta.seconds : seconds % this.itemsDelta.seconds;
             time.setHours(hours, minutes, seconds + sign * delta);
         }
 
@@ -1393,25 +1392,25 @@ export class IgxTimePickerComponent extends PickerBaseDirective
             return;
         }
 
-        if (this._selectedDate.getHours() % this.itemsDelta.hour > 0) {
+        if (this._selectedDate.getHours() % this.itemsDelta.hours > 0) {
             this._selectedDate.setHours(
-                this._selectedDate.getHours() + this.itemsDelta.hour - this._selectedDate.getHours() % this.itemsDelta.hour,
+                this._selectedDate.getHours() + this.itemsDelta.hours - this._selectedDate.getHours() % this.itemsDelta.hours,
                 0,
                 0
             );
         }
 
-        if (this._selectedDate.getMinutes() % this.itemsDelta.minute > 0) {
+        if (this._selectedDate.getMinutes() % this.itemsDelta.minutes > 0) {
             this._selectedDate.setHours(
                 this._selectedDate.getHours(),
-                this._selectedDate.getMinutes() + this.itemsDelta.minute - this._selectedDate.getMinutes() % this.itemsDelta.minute,
+                this._selectedDate.getMinutes() + this.itemsDelta.minutes - this._selectedDate.getMinutes() % this.itemsDelta.minutes,
                 0
             );
         }
 
-        if (this._selectedDate.getSeconds() % this.itemsDelta.second > 0) {
+        if (this._selectedDate.getSeconds() % this.itemsDelta.seconds > 0) {
             this._selectedDate.setSeconds(
-                this._selectedDate.getSeconds() + this.itemsDelta.second - this._selectedDate.getSeconds() % this.itemsDelta.second
+                this._selectedDate.getSeconds() + this.itemsDelta.seconds - this._selectedDate.getSeconds() % this.itemsDelta.seconds
             );
         }
     }
@@ -1488,6 +1487,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 if (event.cancel) {
                     return;
                 }
+                this.initializeContainer();
             });
 
             this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
