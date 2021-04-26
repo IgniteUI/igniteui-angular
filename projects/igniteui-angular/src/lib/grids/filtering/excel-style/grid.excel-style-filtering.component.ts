@@ -186,14 +186,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.init();
             this.sortingChanged.emit();
 
-            this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnPinning = this.grid.columnPin.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 requestAnimationFrame(() => {
                     if (!(this.cdr as ViewRef).destroyed) {
                         this.cdr.detectChanges();
                     }
                 });
             });
-            this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnVisibilityChanged = this.grid.columnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
             this._sortingChanged =  this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -205,7 +205,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this._densityChanged = this.grid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
-            this._columnMoved = this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnMoved = this.grid.columnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
         }
@@ -368,7 +368,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         this.initialized.emit();
-        this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.grid.columnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
         });
     }

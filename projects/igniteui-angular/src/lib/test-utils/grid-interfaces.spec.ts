@@ -1,5 +1,5 @@
 
-/* Add to template: (onSelection)="cellSelected($event)" */
+/* Add to template: (selected)="cellSelected($event)" */
 export interface IGridSelection {
     cellSelected(event);
 }
@@ -9,29 +9,29 @@ export interface IGridCellClick {
     cellClick(evt): void;
 }
 
-/* Add to template: (onDoubleClick)="doubleClick($event)" */
+/* Add to template: (doubleClick)="doubleClick($event)" */
 export interface IGridCellDoubleClick {
     doubleClick(evt): void;
 }
 
-/* Add to template: (onContextMenu)="cellRightClick($event)" */
+/* Add to template: (contextMenu)="cellRightClick($event)" */
 export interface IGridContextMenu {
     cellRightClick(evt): void;
 }
 
-/* Add to template: ` (onColumnInit)="columnInit($event)"` */
+/* Add to template: ` (columnInit)="columnInit($event)"` */
 export interface IGridColumnInit {
     columnInit(column): void;
 }
 
-/* Add to template: `(onRowAdded)="rowAdded($event)"
-                    (onRowDeleted)="rowDeleted($event)"` */
+/* Add to template: `(rowAdded)="rowAdded($event)"
+                    (rowDeleted)="rowDeleted($event)"` */
 export interface IGridRowEvents {
     rowAdded(event): void;
     rowDeleted(event): void;
 }
 
-/* Add to template: `(onColumnPinning)="columnPinning($event)"` */
+/* Add to template: `(columnPin)="columnPinning($event)"` */
 export interface IGridColumnPinning {
     columnPinning(event): void;
 }
@@ -41,12 +41,12 @@ export interface IEditDone {
     editDone(event): void;
 }
 
-/* Add to template: ` (onRowSelectionChange)="rowSelectionChange($event)"` */
+/* Add to template: ` (rowSelected)="rowSelectionChange($event)"` */
 export interface IGridRowSelectionChange {
-    rowSelectionChange(event): void;
+    rowSelected(event): void;
 }
 
-/* Add to template: ` (onColumnResized)="columnResized($event)"` */
+/* Add to template: ` (columnResized)="columnResized($event)"` */
 export interface IColumnResized {
     columnResized(event): void;
 }

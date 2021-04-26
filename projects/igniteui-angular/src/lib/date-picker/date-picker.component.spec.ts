@@ -2,11 +2,11 @@ import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxInputGroupComponent, IgxInputGroupModule } from '../input-group/public_api';
+import { IgxInputGroupComponent, IgxInputGroupModule, IgxInputState } from '../input-group/public_api';
 import { IgxTextSelectionModule } from '../directives/text-selection/text-selection.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { IgxButtonModule } from '../directives/button/button.directive';
-import { IFormattingViews, IgxCalendarModule } from '../calendar/public_api';
+import { IFormattingViews, IgxCalendarComponent, IgxCalendarModule } from '../calendar/public_api';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
 import { IgxDatePickerComponent } from './date-picker.component';
@@ -22,6 +22,7 @@ import { DatePart } from '../directives/date-time-editor/date-time-editor.common
 import { DisplayDensity } from '../core/displayDensity';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 const CSS_CLASS_CALENDAR = 'igx-calendar';
 const CSS_CLASS_DATE_PICKER = 'igx-date-picker';
@@ -192,30 +193,73 @@ describe('IgxDatePicker', () => {
 
     describe('Unit Tests', () => {
         let overlay: IgxOverlayService;
-        let mockOverlayEventArgs: OverlayEventArgs;
+        let mockOverlayEventArgs: OverlayEventArgs & OverlayCancelableEventArgs;
         let mockInjector;
         let mockInputGroup: Partial<IgxInputGroupComponent>;
         let datePicker: IgxDatePickerComponent;
         let mockDateEditor: any;
+        let mockCalendar: Partial<IgxCalendarComponent>;
+        let mockInputDirective: any;
         const mockModuleRef = {} as any;
         const mockOverlayId = '1';
         const today = new Date();
         const elementRef = {
             nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
         };
-        const mockNgControl = jasmine.createSpyObj('NgControl',
-            ['registerOnChangeCb',
-                'registerOnTouchedCb',
-                'registerOnValidatorChangeCb'], {
-            statusChanges: new EventEmitter()
-        });
+        let mockNgControl: any;
+        let mockControlInstance: any;
+        let renderer2: Renderer2;
         beforeEach(() => {
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
+            mockControlInstance = {
+                _touched: false,
+                get touched() {
+                    return this._touched;
+                },
+                set touched(val: boolean) {
+                    this._touched = val;
+                },
+                _dirty: false,
+                get dirty() {
+                    return this._dirty;
+                },
+                set dirty(val: boolean) {
+                    this._dirty = val;
+                },
+                _asyncValidator: () => { },
+                get asyncValidator() {
+                    return this._asyncValidator;
+                },
+                set asyncValidator(val: () => boolean) {
+                    this._asyncValidator = val;
+                },
+                _validator: () => { },
+                get validator() {
+                    return this._validator;
+                },
+                set validator(val: () => boolean) {
+                    this._validator = val;
+                }
+            };
+            mockNgControl = {
+                registerOnChangeCb: () => { },
+                registerOnTouchedCb: () => { },
+                registerOnValidatorChangeCb: () => { },
+                statusChanges: new EventEmitter(),
+                _control: mockControlInstance,
+                get control() {
+                    return this._control;
+                },
+                set control(val: any) {
+                    this._control = val;
+                },
+                valid: true
+            };
             mockInjector = jasmine.createSpyObj('Injector', {
                 get: mockNgControl
             });
 
-            const mockCalendar = { selected: new EventEmitter<any>() };
+            mockCalendar = { selected: new EventEmitter<any>() };
             const mockComponentInstance = {
                 calendar: mockCalendar,
                 todaySelection: new EventEmitter<any>(),
@@ -226,7 +270,8 @@ describe('IgxDatePicker', () => {
             } as any;
             mockOverlayEventArgs = {
                 id: mockOverlayId,
-                componentRef: mockComponentRef
+                componentRef: mockComponentRef,
+                cancel: false
             };
             overlay = {
                 onOpening: new EventEmitter<OverlayCancelableEventArgs>(),
@@ -245,9 +290,15 @@ describe('IgxDatePicker', () => {
                 attach: (..._args) => mockOverlayId
             } as any;
             mockDateEditor = {
-                value: new Date(),
+                _value: null,
+                get value() {
+                    return this._value;
+                },
                 clear() {
                     this.valueChange.emit(null);
+                },
+                set value(val: any) {
+                    this._value = val;
                 },
                 valueChange: new EventEmitter<any>(),
                 validationFailed: new EventEmitter<any>()
@@ -272,13 +323,53 @@ describe('IgxDatePicker', () => {
                         ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener'])
                 }
             } as any;
+            mockInputDirective = {
+                valid: 'mock',
+                nativeElement: {
+                    _listeners: {
+                        none: []
+                    },
+                    addEventListener(event: string, cb: () => void) {
+                        let target = this._listeners[event];
+                        if (!target) {
+                            this._listeners[event] = [];
+                            target = this._listeners[event];
+                        }
+                        target.push(cb);
+                    },
+                    removeEventListener(event: string, cb: () => void) {
+                        const target = this._listeners[event];
+                        if (!target) {
+                            return;
+                        }
+                        const index = target.indexOf(cb);
+                        if (index !== -1) {
+                            target.splice(index, 1);
+                        }
+                    },
+                    dispatchEvent(event: string) {
+                        const target = this._listeners[event];
+                        if (!target) {
+                            return;
+                        }
+                        target.forEach(e => {
+                            e();
+                        });
+                    },
+                    focus() {
+                        this.dispatchEvent('focus');
+                    },
+                    click() {
+                        this.dispatchEvent('click');
+                    },
+                    blur() {
+                        this.dispatchEvent('blur');
+                    }
+                }
+            };
             datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null);
             (datePicker as any).inputGroup = mockInputGroup;
-            (datePicker as any).inputDirective = {
-                nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur',
-                    'addEventListener', 'removeEventListener', 'click', 'focus']),
-                focus: () => { }
-            };
+            (datePicker as any).inputDirective = mockInputDirective;
             (datePicker as any).dateTimeEditor = mockDateEditor;
         });
 
@@ -286,9 +377,10 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
             datePicker?.ngOnDestroy();
         });
-        let renderer2: Renderer2;
         describe('API tests', () => {
             it('Should initialize and update all inputs propery', () => {
+                // no ngControl initialized
+                expect(datePicker.required).toEqual(false);
                 datePicker.ngOnInit();
                 datePicker.ngAfterViewInit();
                 expect(datePicker.collapsed).toBeTruthy();
@@ -332,6 +424,9 @@ describe('IgxDatePicker', () => {
                 overlay.onOpened.emit(mockOverlayEventArgs);
                 expect(datePicker.collapsed).toBeFalsy();
                 datePicker.disabled = true;
+                expect(datePicker.disabled).toBeTruthy();
+                datePicker.disabled = false;
+                datePicker.setDisabledState(true);
                 expect(datePicker.disabled).toBeTruthy();
                 datePicker.disabled = false;
                 const mockDisabledDates: DateRangeDescriptor[] = [{ type: DateRangeType.Weekdays },
@@ -616,6 +711,31 @@ describe('IgxDatePicker', () => {
                 expect(overlay.detach).toHaveBeenCalledWith(mockOverlayId);
             });
 
+            it('Should try to set input label depending on label directive', () => {
+                expect(renderer2.setAttribute).not.toHaveBeenCalled();
+                datePicker.ngAfterViewChecked();
+                expect(renderer2.setAttribute).not.toHaveBeenCalled();
+                (datePicker as any).labelDirective = jasmine.createSpyObj('mockLabel', ['any'], {
+                    id: 'mock-id'
+                });
+                datePicker.ngAfterViewChecked();
+                expect(renderer2.setAttribute).toHaveBeenCalledWith(mockInputDirective.nativeElement, 'aria-labelledby', 'mock-id');
+            });
+
+            it('Should properly handle click on editor provider', () => {
+                datePicker.ngAfterViewInit();
+                spyOn(datePicker, 'open');
+                expect(datePicker.open).not.toHaveBeenCalled();
+                expect(datePicker.getEditElement()).toEqual(mockInputDirective.nativeElement);
+                expect(datePicker.isDropdown).toBeTruthy();
+                datePicker.getEditElement().dispatchEvent('click' as any);
+                // does not call open when in DD mode
+                expect(datePicker.open).toHaveBeenCalledTimes(0);
+                spyOnProperty(datePicker, 'isDropdown', 'get').and.returnValue(false);
+                datePicker.getEditElement().dispatchEvent('click' as any);
+                expect(datePicker.open).toHaveBeenCalledTimes(1);
+            });
+
             //#region API Methods
             it('should properly update the collapsed state with open/close/toggle methods', () => {
                 datePicker.ngAfterViewInit();
@@ -701,23 +821,14 @@ describe('IgxDatePicker', () => {
                 spyOn(datePicker.validationFailed, 'emit');
                 const validDate = new Date(2012, 5, 7);
                 const invalidDate = new Date(2012, 6, 1);
-                (datePicker as any).dateTimeEditor = {
-                    _value: null,
-                    get value() {
-                        return this._value;
-                    },
-                    set value(val: any) {
-                        if (val === invalidDate) {
-                            this.validationFailed.emit({ oldValue: validDate });
-                            return;
-                        }
-                        this._value = val;
-                        this.valueChange.emit(val);
-                    },
-                    clear: () => { },
-                    valueChange: new EventEmitter<any>(),
-                    validationFailed: new EventEmitter<any>()
-                };
+                spyOnProperty(mockDateEditor, 'value', 'set').and.callFake((val: Date) => {
+                    if (val === invalidDate) {
+                        mockDateEditor.validationFailed.emit({ oldValue: validDate });
+                        return;
+                    }
+                    mockDateEditor._value = val;
+                    mockDateEditor.valueChange.emit(val);
+                });
 
                 datePicker.ngAfterViewInit();
 
@@ -728,11 +839,195 @@ describe('IgxDatePicker', () => {
                 datePicker.value = invalidDate;
                 expect(datePicker.validationFailed.emit).toHaveBeenCalledWith({ owner: datePicker, prevValue: validDate });
             });
+
+            it('Should change own value if value of underlying dateEditor changes', () => {
+                const validDate = new Date(2012, 5, 7);
+                spyOn(datePicker.valueChange, 'emit');
+
+                datePicker.ngAfterViewInit();
+                expect(datePicker.value).not.toEqual(validDate);
+                mockDateEditor.valueChange.emit(validDate);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledWith(validDate);
+                mockDateEditor.valueChange.emit(validDate);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
+
+                const secondDate = new Date();
+                mockDateEditor.valueChange.emit(secondDate);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(2);
+                expect(datePicker.valueChange.emit).toHaveBeenCalledWith(secondDate);
+            });
+
+            it(`Should initialize and subscribe to underlying calendar's selected event and call proper methods`, () => {
+                datePicker.mode = PickerInteractionMode.Dialog;
+                spyOn(overlay, 'show');
+                // assign overlay id
+                datePicker.open();
+                datePicker.ngAfterViewInit();
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                spyOn(datePicker, 'close');
+                expect(datePicker.close).not.toHaveBeenCalled();
+                // calendar instance is initialized properly
+                expect(mockCalendar.hasHeader).toEqual(!datePicker.isDropdown);
+                expect(mockCalendar.formatOptions).toEqual(datePicker.calendarFormat);
+                expect(mockCalendar.formatViews).toEqual(datePicker.formatViews);
+                expect(mockCalendar.locale).toEqual(datePicker.locale);
+                expect(mockCalendar.vertical).toEqual(datePicker.headerOrientation === PickerHeaderOrientation.Vertical);
+                expect(mockCalendar.weekStart).toEqual(datePicker.weekStart);
+                expect(mockCalendar.specialDates).toEqual(datePicker.specialDates);
+                expect(mockCalendar.hideOutsideDays).toEqual(datePicker.hideOutsideDays);
+                expect(mockCalendar.monthsViewNumber).toEqual(datePicker.displayMonthsCount);
+                expect(mockCalendar.showWeekNumbers).toEqual(datePicker.showWeekNumbers);
+                expect(mockCalendar.disabledDates).toEqual([]);
+
+                // check how calendar.selected is handler
+                const init = DateTimeUtil.parseIsoDate;
+                const mockDate1 = jasmine.createSpyObj<Date>(
+                    'date',
+                    ['setHours', 'setMinutes', 'setSeconds', 'setMilliseconds']
+                );
+                const mockDate2 = jasmine.createSpyObj<Date>(
+                    'date',
+                    ['getHours', 'getMinutes', 'getSeconds', 'getMilliseconds', 'getTime']
+                );
+                spyOn(mockDate2, 'getHours').and.returnValue(999);
+                spyOn(mockDate2, 'getMinutes').and.returnValue(999);
+                spyOn(mockDate2, 'getSeconds').and.returnValue(999);
+                spyOn(mockDate2, 'getMilliseconds').and.returnValue(999);
+                spyOn(mockDate2, 'getTime').and.returnValue(999);
+                spyOn(DateTimeUtil, 'parseIsoDate').and.callFake((val: string) => {
+                    if (val === undefined || mockDate1) {
+                        return mockDate2;
+                    } else {
+                        return init(val);
+                    }
+                });
+                datePicker.value = undefined;
+                expect(datePicker.close).not.toHaveBeenCalled();
+                // this will call DateTimeUtil.parseIsoDate and set the value to mockDate2
+                expect(mockDate2.getHours).not.toHaveBeenCalled();
+                expect(mockDate2.getMinutes).not.toHaveBeenCalled();
+                expect(mockDate2.getSeconds).not.toHaveBeenCalled();
+                expect(mockDate2.getMilliseconds).not.toHaveBeenCalled();
+                expect(mockDate1.setHours).not.toHaveBeenCalled();
+                expect(mockDate1.setMinutes).not.toHaveBeenCalled();
+                expect(mockDate1.setSeconds).not.toHaveBeenCalled();
+                expect(mockDate1.setMilliseconds).not.toHaveBeenCalled();
+                mockCalendar.selected.emit(mockDate1);
+                expect(mockDate2.getHours).toHaveBeenCalled();
+                expect(mockDate2.getMinutes).toHaveBeenCalled();
+                expect(mockDate2.getSeconds).toHaveBeenCalled();
+                expect(mockDate2.getMilliseconds).toHaveBeenCalled();
+                expect(mockDate1.setHours).toHaveBeenCalledWith(999);
+                expect(mockDate1.setMinutes).toHaveBeenCalledWith(999);
+                expect(mockDate1.setSeconds).toHaveBeenCalledWith(999);
+                expect(mockDate1.setMilliseconds).toHaveBeenCalledWith(999);
+                expect(datePicker.close).toHaveBeenCalled();
+
+                spyOn(DateTimeUtil, 'parseIsoDate').and.callFake(init);
+
+                const mockMinValue = new Date('02/02/2002');
+                const mockMaxValue = new Date('03/03/2003');
+                const defaultCheck = DateTimeUtil.isValidDate;
+                const mockCheck = (value: Date): value is Date => {
+                    if (value === mockMinValue || value === mockMaxValue) {
+                        return true;
+                    } else {
+                        return defaultCheck(value);
+                    }
+                };
+                spyOn(DateTimeUtil, 'isValidDate').and.callFake(mockCheck);
+                expect(datePicker.disabledDates).toEqual(null);
+                expect(datePicker.minValue).toBeUndefined();
+                expect(datePicker.maxValue).toBeUndefined();
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([]);
+                datePicker.maxValue = mockMaxValue;
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([{ type: DateRangeType.After, dateRange: [mockMaxValue] }]);
+                mockCalendar.disabledDates = [];
+                datePicker.maxValue = undefined;
+                datePicker.minValue = mockMinValue;
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([{ type: DateRangeType.Before, dateRange: [mockMinValue] }]);
+                mockCalendar.disabledDates = [];
+                datePicker.maxValue = mockMaxValue;
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ]);
+                mockCalendar.disabledDates = [];
+                datePicker.minValue = undefined;
+                datePicker.maxValue = undefined;
+                datePicker.disabledDates = [
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ];
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ]);
+                mockCalendar.disabledDates = [];
+                datePicker.minValue = mockMinValue;
+                datePicker.maxValue = mockMaxValue;
+                datePicker.disabledDates = [
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ];
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                expect(mockCalendar.disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] },
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ]);
+                (mockDate2.getTime as jasmine.Spy<any>).and.returnValue(Infinity);
+                mockCalendar.disabledDates = [];
+                datePicker.minValue = mockMinValue;
+                datePicker.maxValue = mockMaxValue;
+                overlay.onOpening.emit(mockOverlayEventArgs);
+                // if _calendar already has disabled dates, min + max are added anyway
+                expect(mockCalendar.disabledDates).toEqual([
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] },
+                    { type: DateRangeType.Before, dateRange: [mockMinValue] },
+                    { type: DateRangeType.After, dateRange: [mockMaxValue] }
+                ]);
+            });
             //#endregion
         });
 
         describe('Control Value Accessor', () => {
-            // TODO
+            it('Should properly handle `statusChanged` event when bound to ngModel', () => {
+                datePicker.ngOnInit();
+                datePicker.ngAfterViewInit();
+                mockControlInstance.touched = false;
+                mockControlInstance.dirty = false;
+                mockControlInstance.validator = null;
+                mockControlInstance.asyncValidator = null;
+                // initial value
+                expect(mockInputDirective.valid).toEqual('mock');
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual('mock');
+                mockControlInstance.touched = true;
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual('mock');
+                mockControlInstance.validator = () => { };
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INITIAL);
+                mockNgControl.valid = false;
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
+                mockInputGroup.isFocused = true;
+                mockNgControl.valid = true;
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual(IgxInputState.VALID);
+                mockNgControl.valid = false;
+                mockNgControl.statusChanges.emit();
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INVALID);
+            });
         });
     });
 });

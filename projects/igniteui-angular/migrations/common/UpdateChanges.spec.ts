@@ -856,4 +856,51 @@ export class AppModule { }`);
             }
         });
     });
+
+    describe('Language Service migrations', () => {
+
+        it('Should be able to replace property of an event', () => {
+            pending('set up tests for migrations through lang service');
+            const membersConfig = {
+                member: 'onGridKeydown',
+                replaceWith: 'gridKeydown',
+                definedIn: [
+                    'IgxGridComponent',
+                    'IgxTreeGridComponent',
+                    'IgxHierarchicalGridComponent',
+                    'IgxRowIslandComponent'
+                ]
+            };
+            const fileContent =
+`import { Component } from '@angular/core';
+import { IGridCreatedEventArgs } from 'igniteui-angular';
+@Component({
+  selector: 'app-custom-grid',
+  template: ''
+})
+export class CustomGridComponent {
+  public childGridCreated(event: IGridCreatedEventArgs) {
+      event.grid.onGridKeydown.subscribe(() => {});
+  }
+}
+`;
+            appTree.create('test.component.ts', fileContent);
+            const expectedFileContent =
+`import { Component } from '@angular/core';
+import { IGridCreatedEventArgs } from 'igniteui-angular';
+@Component({
+  selector: 'app-custom-grid',
+  template: ''
+})
+export class CustomGridComponent {
+  public childGridCreated(event: IGridCreatedEventArgs) {
+      event.grid.gridKeydown.subscribe(() => {});
+  }
+}
+`;
+            const update = new UnitUpdateChanges(__dirname, appTree);
+            update.applyChanges();
+            expect(appTree.readContent('test.component.ts')).toEqual(expectedFileContent);
+        });
+    });
 });
