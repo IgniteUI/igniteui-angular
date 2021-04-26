@@ -48,6 +48,8 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -2179,6 +2181,28 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             // const cells = GridFunctions.getColumnCells(fix, 'Downloads');
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(2);
+        }));
+
+        it('Should remove pending chip via its close button #9333', fakeAsync(() => {
+            GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('3', fix);
+            tick(DEBOUNCETIME);
+            const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
+            const filterRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const pendingChip = filterRow.queryAll(By.directive(IgxChipComponent))[0];
+            const chipCloseButton = pendingChip.query(By.css('div.igx-chip__remove')).nativeElement;
+
+            chipCloseButton.dispatchEvent(new Event('mousedown'));
+            inputGroup.nativeElement.dispatchEvent(new Event('focusout'));
+            chipCloseButton.dispatchEvent(new Event('mouseup'));
+            chipCloseButton.dispatchEvent(new Event('click'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const chips = filterRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toEqual(0, 'No chips should be present');
         }));
     });
 
