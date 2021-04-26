@@ -573,11 +573,11 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.displayMonthsCount).toEqual(0);
                 datePicker.displayMonthsCount = 12;
                 expect(datePicker.displayMonthsCount).toEqual(12);
-                let newFormat: any = { day: 'short' };
+                let newFormat: any = { day: '2-digit' };
                 datePicker.calendarFormat = newFormat;
                 // this SHOULD NOT mutate the underlying base settings
                 expect(datePicker.calendarFormat).toEqual({
-                    day: 'short',
+                    day: '2-digit',
                     month: 'short',
                     weekday: 'short',
                     year: 'numeric'
@@ -585,7 +585,7 @@ describe('IgxDatePicker', () => {
                 newFormat = { month: 'numeric' };
                 datePicker.calendarFormat = newFormat;
                 expect(datePicker.calendarFormat).toEqual({
-                    day: 'short',
+                    day: '2-digit',
                     month: 'numeric',
                     weekday: 'short',
                     year: 'numeric'
