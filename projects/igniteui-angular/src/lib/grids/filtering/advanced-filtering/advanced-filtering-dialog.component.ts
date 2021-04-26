@@ -784,6 +784,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         }
     }
 
+    /** @hidden @internal */
+    public openPicker(args: KeyboardEvent) {
+        if (this.platform.isActivationKey(args)) {
+            args.preventDefault();
+            this.picker.open();
+        }
+    }
+
     /**
      * @hidden @internal
      */
