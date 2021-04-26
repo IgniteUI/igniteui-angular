@@ -22,7 +22,7 @@ const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_DROPDOWN = '.igx-time-picker--dropdown';
 const CSS_CLASS_HOURLIST = '.igx-time-picker__hourList';
 const CSS_CLASS_MINUTELIST = '.igx-time-picker__minuteList';
-// const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
+const CSS_CLASS_SECONDSLIST = '.igx-time-picker__secondsList';
 const CSS_CLASS_AMPMLIST = '.igx-time-picker__ampmList';
 const CSS_CLASS_SELECTED_ITEM = '.igx-time-picker__item--selected';
 const CSS_CLASS_HEADER_HOUR = '.igx-time-picker__header-hour';
@@ -230,6 +230,7 @@ describe('IgxTimePicker', () => {
         let input: DebugElement;
         let hourColumn: DebugElement;
         let minutesColumn: DebugElement;
+        let secondsColumn: DebugElement;
         let ampmColumn: DebugElement;
         let toggleDirectiveElement: DebugElement;
         let toggleDirective: IgxToggleDirective;
@@ -257,6 +258,9 @@ describe('IgxTimePicker', () => {
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
                 input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 hourColumn = fixture.debugElement.query(By.css(CSS_CLASS_HOURLIST));
+                minutesColumn = fixture.debugElement.query(By.css(CSS_CLASS_MINUTELIST));
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                ampmColumn = fixture.debugElement.query(By.css(CSS_CLASS_AMPMLIST));
                 toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
                 toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
             }));
@@ -486,6 +490,114 @@ describe('IgxTimePicker', () => {
                 expect(timePicker.valueChange.emit).toHaveBeenCalledTimes(3);
                 expect(timePicker.valueChange.emit).toHaveBeenCalledWith(date);
             });
+
+            // This test should stop failing when
+            // 1) When wheel on AMPM updates hourColumn from 12 --> 0
+            xit('should scroll trough hours/minutes/seconds/AM PM based on default or set itemsDelta', fakeAsync(() => {
+                // picker's date --> new Date(2021, 24, 2, 11, 45, 0);
+                timePicker.inputFormat = 'hh:mm:ss tt';
+                fixture.detectChanges();
+
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                timePicker.open();
+                fixture.detectChanges();
+                expect(toggleDirective.collapsed).toBeFalsy();
+
+                // spin all columns with default delta
+                const eventScrollDown = new WheelEvent('wheel', { deltaX: 0, deltaY: 100 });
+                const eventScrollUp = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
+                hourColumn.triggerEventHandler('wheel', eventScrollDown);
+                minutesColumn.triggerEventHandler('wheel', eventScrollDown);
+                secondsColumn.triggerEventHandler('wheel', eventScrollDown);
+                ampmColumn.triggerEventHandler('wheel', eventScrollUp);
+                fixture.detectChanges();
+
+                const expectedHour = 0; // Setting PM to AM should update selectedHour from 12 --> 0
+                const expectedMinute= 46;
+                const expectedSecond = 1;
+                const expectedAmPm = 'AM';
+                const expectedPrependZero = '0';
+
+                // test rendered display value
+                const selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedHour = selectedItems[0].nativeElement.innerText;
+                const selectedMinute = selectedItems[1].nativeElement.innerText;
+                const selectedSecond = selectedItems[2].nativeElement.innerText;
+                const selectedAMPM = selectedItems[3].nativeElement.innerText;
+
+                expect(selectedHour).toEqual(expectedHour.toString());
+                expect(selectedMinute).toEqual(expectedMinute.toString());
+                expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
+                expect(selectedAMPM).toEqual(expectedAmPm);
+
+                // apply selected value on toggle btn click
+                const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
+                toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(toggleDirective.collapsed).toBeTrue();
+
+                expect((timePicker.value as Date).getHours()).toEqual(expectedHour);
+                expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
+                expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
+            }));
+
+            // This test should stop failing when
+            // 1) component value can be dynamically updated after initialization,
+            // as currently setting new date updates the value, but the list items remain with the old
+            // value and input format
+            // 2) When wheel on AMPM updates hourColumn from 12 --> 0
+            xit('should scroll trough hours/minutes/seconds/AM PM based on custom itemsDelta', fakeAsync(() => {
+                // pickers date --> new Date(2021, 24, 2, 11, 45, 0);
+                const newDate = new Date(2021, 24, 2, 10, 20, 0);
+                fixture.componentInstance.date = newDate;
+                timePicker.inputFormat = 'hh:mm:ss tt';
+                timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 20 };
+                fixture.detectChanges();
+
+                timePicker.open();
+                fixture.detectChanges();
+                secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
+                expect(toggleDirective.collapsed).toBeFalsy();
+
+                // spin all columns with the custom itemsDelta
+                const eventScrollDown = new WheelEvent('wheel', { deltaX: 0, deltaY: 100 });
+                const eventScrollUp = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
+                hourColumn.triggerEventHandler('wheel', eventScrollDown);
+                minutesColumn.triggerEventHandler('wheel', eventScrollDown);
+                secondsColumn.triggerEventHandler('wheel', eventScrollDown);
+                ampmColumn.triggerEventHandler('wheel', eventScrollUp);
+                fixture.detectChanges();
+
+                const expectedHour = 0; // Setting PM to AM should update selectedHour from 12 --> 0
+                const expectedMinute= 40;
+                const expectedSecond = 20;
+                const expectedAmPm = 'AM';
+                const expectedPrependZero = '0';
+
+                // test rendered display value
+                const selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedHour = selectedItems[0].nativeElement.innerText;
+                const selectedMinute = selectedItems[1].nativeElement.innerText;
+                const selectedSecond = selectedItems[2].nativeElement.innerText;
+                const selectedAMPM = selectedItems[3].nativeElement.innerText;
+
+                expect(selectedHour).toEqual(expectedHour.toString());
+                expect(selectedMinute).toEqual(expectedMinute.toString());
+                expect(selectedSecond).toEqual(expectedPrependZero + expectedSecond.toString());
+                expect(selectedAMPM).toEqual(expectedAmPm);
+
+                // apply selected value on toggle btn click
+                const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
+                toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                tick();
+                fixture.detectChanges();
+                expect(toggleDirective.collapsed).toBeTrue();
+
+                expect((timePicker.value as Date).getHours()).toEqual(expectedHour);
+                expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
+                expect((timePicker.value as Date).getSeconds()).toEqual(expectedSecond);
+            }));
 
             xit('should open/close the dropdown and keep the current selection on Space/Enter key press', fakeAsync(() => {
                 timePicker.itemsDelta = {hours: 4, minutes: 7, seconds: 1};
