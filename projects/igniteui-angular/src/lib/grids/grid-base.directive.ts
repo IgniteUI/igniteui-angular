@@ -4416,33 +4416,21 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const col = this.columnList.toArray().find(c => c.field === column);
             if (col) {
                 // Simplify
-                // const rowData = this.gridAPI.getRowData(rowSelector);
+                const rowData = this.gridAPI.getRowData(rowSelector);
                 const index = this.gridAPI.get_row_index_in_data(rowSelector);
                 // If row passed is invalid
                 if (index < 0) {
                     return;
                 }
-                // const id = {
-                //     rowID: rowSelector,
-                //     columnID: col.index,
-                //     rowIndex: index
-                // };
+                
+                const id = {
+                    rowID: rowSelector,
+                    columnID: col.index,
+                    rowIndex: index
+                };
 
-                // const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
-                // this.gridAPI.update_cell(cell);
-
-                // let cell = this.grid.crudService.cell;
-                // if (!cell) {
-                //     cell = this.grid.crudService.createCell(this);
-                // }
-                // cell.editValue = val;
-                // this.gridAPI.update_cell(cell);
-                // this.grid.crudService.endCellEdit();
-
-                // if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                //     this.crudService.endCellEdit();
-                // }
-                this.gridAPI.get_cell_by_index(index, col.index).update(value);
+                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
         }

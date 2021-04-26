@@ -323,10 +323,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
             return false;
         }
 
-        if (this.rowEditingBlocked) {
-            return true;
-        }
-
         const canceled = this.endRowTransaction(commit, this.row, event);
         if (canceled) {
             return true;

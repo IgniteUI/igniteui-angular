@@ -708,31 +708,13 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 treeGrid.moveColumn(sourceColumn, targetColumn, DropPosition.BeforeDropTarget);
                 fix.detectChanges();
 
-                spyOn(treeGrid.cellEdit, 'emit').and.callThrough();
-
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
 
-                const cellComponent = treeGrid.getCellByKey(7, 'Name');
-
-                // Update cell on level 3
-                const oldCellValue = treeGrid.getCellByKey(7, 'Name').value;
                 const newCellValue = 'Michael Myers';
                 treeGrid.updateCell(newCellValue, 7, 'Name');
                 fix.detectChanges();
 
-                // TODO: cellEdit should emit updated rowData - issue #7304
-                expect(treeGrid.cellEdit.emit).toHaveBeenCalledWith({
-                    rowID: cellComponent.cellID.rowID,
-                    cellID: cellComponent.cellID,
-                    rowData: cellComponent.rowData,
-                    oldValue: oldCellValue,
-                    newValue: newCellValue,
-                    cancel: false,
-                    column: cellComponent.column,
-                    owner: treeGrid,
-                    event: undefined
-                });
                 verifyCellValue(fix, 3, 'Name', 'Michael Myers');
                 verifyRowsCount(fix, 8, 8);
             });
