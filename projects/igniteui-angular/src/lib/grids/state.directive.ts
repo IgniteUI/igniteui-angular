@@ -455,6 +455,8 @@ export class IgxGridStateDirective {
         this.applyFeatures(features);
         if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
             this.getFeature(columns).restoreFeatureState(this, state[columns]);
+        } else {
+            this.restoreFeatures(this.state);
         }
     }
 
