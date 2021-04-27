@@ -577,8 +577,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.uniqueValues = Array.from(new Set(columnValues.map(v => v?.toLocaleString())));
             this.uniqueValues.forEach((d, i) =>  this.uniqueValues[i] = d ? new Date(d) : d);
         } else if (this.column.dataType === DataType.Time) {
-            this.uniqueValues = Array.from(new Set(columnValues.map(v =>
-                v ? new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds()) : v)));
+            this.uniqueValues = Array.from(new Set(columnValues.map(v => {
+                if (v) {
+                    v = new Date(v);
+                    return new Date().setHours(v.getHours(), v.getMinutes(), v.getSeconds());
+                } else {
+                    return v;
+                }
+            })));
             this.uniqueValues.forEach((d, i) =>  this.uniqueValues[i] = d ? new Date(d) : d);
         } else {
             this.uniqueValues = this.column.dataType === DataType.Date ?

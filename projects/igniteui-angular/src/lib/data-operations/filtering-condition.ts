@@ -168,7 +168,7 @@ class IgxBaseDateTimeFilteringOperand extends IgxFilteringOperand {
         if (!target) {
             return false;
         }
-        return searchVal.has(target.toISOString());
+        return searchVal.has((target instanceof Date) ? target.toISOString() : target);
     }
 
     protected validateInputData(target: Date) {
