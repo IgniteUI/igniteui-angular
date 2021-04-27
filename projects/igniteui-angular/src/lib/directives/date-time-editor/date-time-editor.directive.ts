@@ -2,7 +2,7 @@
 import {
   Directive, Input, ElementRef,
   Renderer2, NgModule, Output, EventEmitter, Inject,
-  LOCALE_ID, OnChanges, SimpleChanges, DoCheck, HostListener
+  LOCALE_ID, OnChanges, SimpleChanges, HostListener, OnInit
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -53,7 +53,7 @@ import { DateTimeUtil } from '../../date-common/util/date-time.util';
     { provide: NG_VALIDATORS, useExisting: IgxDateTimeEditorDirective, multi: true }
   ]
 })
-export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, DoCheck, Validator, ControlValueAccessor {
+export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnChanges, OnInit, Validator, ControlValueAccessor {
   /**
    * Locale settings used for value formatting.
    *
@@ -147,15 +147,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Input(`igxDateTimeEditor`)
   public set inputFormat(value: string) {
     if (value) {
-      this._format = value;
+      this.setMask(value);
+      this._inputFormat = value;
     }
-    const mask = (this.inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
-      .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
-    this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
   }
 
   public get inputFormat(): string {
-    return this._format || this._inputFormat;
+    return this._inputFormat || this._defaultInputFormat;
   }
 
   /**
@@ -212,13 +210,13 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   @Output()
   public validationFailed = new EventEmitter<IgxDateTimeEditorEventArgs>();
 
-  private _format: string;
+  private _inputFormat: string;
   private _oldValue: Date;
   private _dateValue: Date;
   private _onClear: boolean;
   private document: Document;
   private _isFocused: boolean;
-  private _inputFormat: string;
+  private _defaultInputFormat: string;
   private _value: Date | string;
   private _minValue: Date | string;
   private _maxValue: Date | string;
@@ -300,22 +298,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  /** @hidden @internal */
-  public ngOnChanges(changes: SimpleChanges) {
-    if (changes['locale'] && !this._format) {
-      this._inputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
-    }
-    if (changes['inputFormat']) {
-      this.updateInputFormat();
-    }
+  public ngOnInit(): void {
+    this.updateDefaultFormat();
   }
 
   /** @hidden @internal */
-  public ngDoCheck(): void {
-    if (this._inputFormat !== this.inputFormat) {
-      this.updateInputFormat();
+  public ngOnChanges(changes: SimpleChanges) {
+    if (changes['locale'] && !changes['locale'].firstChange) {
+      this.updateDefaultFormat();
+    }
+    if (changes['inputFormat'] && !changes['inputFormat'].firstChange) {
+      this.updateMask();
     }
   }
+
 
   /** Clear the input element value. */
   public clear(): void {
@@ -473,8 +469,15 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     super.onBlur(value);
   }
 
-  /** @hidden @internal */
-  public updateMask(): void {
+  private updateDefaultFormat(): void {
+    this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
+    if (!this._inputFormat) {
+      this.setMask(this.inputFormat);
+      this.updateMask();
+    }
+  }
+
+  private updateMask(): void {
     if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
       if (!this._isFocused) {
         this.inputValue = '';
@@ -506,6 +509,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
+  private setMask(inputFormat: string) {
+    const oldFormat = this._inputDateParts?.map(p => p.format).join('');
+    this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
+    inputFormat = this._inputDateParts.map(p => p.format).join('');
+    const mask = (inputFormat || DateTimeUtil.DEFAULT_INPUT_FORMAT)
+      .replace(new RegExp(/(?=[^t])[\w]/, 'g'), '0');
+    this.mask = mask.indexOf('tt') !== -1 ? mask.replace(new RegExp('tt', 'g'), 'LL') : mask;
+
+    const placeholder = this.nativeElement.placeholder;
+    if (!placeholder || oldFormat === placeholder) {
+      this.renderer.setAttribute(this.nativeElement, 'placeholder', inputFormat);
+    }
+  }
+
   private parseDate(val: string): Date | null {
     if (!val) {
       return null;
@@ -532,17 +549,6 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return mask;
   }
 
-  private updateInputFormat(): void {
-    const defPlaceholder = this.inputFormat || DateTimeUtil.getDefaultInputFormat(this.locale);
-    this._inputDateParts = DateTimeUtil.parseDateTimeFormat(this.inputFormat);
-    this.inputFormat = this._inputDateParts.map(p => p.format).join('');
-    if (!this.nativeElement.placeholder || this._inputFormat !== this.inputFormat) {
-      this.renderer.setAttribute(this.nativeElement, 'placeholder', defPlaceholder);
-    }
-    // TODO: fill in partial dates?
-    this.updateMask();
-    this._inputFormat = this.inputFormat;
-  }
 
   private valueInRange(value: Date): boolean {
     if (!value) {
