@@ -177,7 +177,7 @@
                                  [displayDensity]="'compact'">
                     <input #searchValueInput
                            igxInput
-                           [disabled]="!selectedColumn || !selectedCondition 
+                           [disabled]="!selectedColumn || !selectedCondition
                             || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
                            [type]="selectedColumn && selectedColumn.dataType === 'number' ? 'number' : 'text'"
                            [placeholder]="grid.resourceStrings.igx_grid_advanced_filter_value_placeholder"
@@ -186,6 +186,7 @@
 
                 <igx-date-picker #picker *ngIf="selectedColumn && selectedColumn.dataType === 'date'"
                     [(value)]="searchValue"
+                    (keydown)="openPicker($event)"
                     [formatter]="selectedColumn.formatter"
                     [displayFormat]="selectedColumn.pipeArgs.format"
                     (click)="picker.open()"
@@ -210,7 +211,7 @@
                     [locale]="grid.locale"
                     [outlet]="grid.outlet"
                     (click)="picker.open()"
-                    (keydown)="invokeClick($event)"
+                    (keydown)="openPicker($event)"
                     [displayDensity]="'compact'"
                     [placeholder]="grid.resourceStrings.igx_grid_filter_row_time_placeholder"
                     type="box"
@@ -370,11 +371,27 @@
     </article>
 
     <footer class="igx-excel-filter__secondary-footer">
-        <button igxButton [displayDensity]="displayDensity" (click)="onClearButtonClick($event)">{{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}</button>
-
-        <div>
-            <button igxButton [displayDensity]="displayDensity" (click)="cancelChanges()">{{ grid.resourceStrings.igx_grid_excel_cancel }}</button>
-            <button igxButton="raised" [displayDensity]="displayDensity" (click)="onApplyButtonClick($event)">
+        <div class="igx-excel-filter__clear">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="onClearButtonClick($event)">
+                    {{ grid.resourceStrings.igx_grid_excel_custom_dialog_clear }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__cancel">
+            <button
+                igxButton="flat"
+                [displayDensity]="displayDensity"
+                (click)="cancelChanges()">
+                    {{ grid.resourceStrings.igx_grid_excel_cancel }}
+            </button>
+        </div>
+        <div class="igx-excel-filter__apply">
+            <button
+                igxButton="raised"
+                [displayDensity]="displayDensity"
+                (click)="onApplyButtonClick($event)">
                 {{ grid.resourceStrings.igx_grid_excel_apply }}
             </button>
         </div>

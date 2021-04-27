@@ -636,8 +636,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[5].width).toEqual('89px');
         }));
 
-        it('should fire onColumnResized with correct event args.', fakeAsync(() => {
-            const resizingSpy = spyOn<any>(grid.onColumnResized, 'emit').and.callThrough();
+        it('should fire columnResized with correct event args.', fakeAsync(() => {
+            const resizingSpy = spyOn<any>(grid.columnResized, 'emit').and.callThrough();
             const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
 
             expect(grid.columns[0].width).toEqual('150px');

@@ -1900,7 +1900,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.width = '300px';
             fix.detectChanges();
 
-            spyOn(grid.onScroll, 'emit').and.callThrough();
+            spyOn(grid.gridScroll, 'emit').and.callThrough();
             let verticalScrollEvent;
             let horizontalScrollEvent;
             grid.verticalScrollContainer.getScroll().addEventListener('scroll', (evt) => verticalScrollEvent = evt);
@@ -1911,8 +1911,8 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            expect(grid.onScroll.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+            expect(grid.gridScroll.emit).toHaveBeenCalledTimes(1);
+            expect(grid.gridScroll.emit).toHaveBeenCalledWith({
                 direction: 'vertical',
                 scrollPosition: grid.verticalScrollContainer.getScrollForIndex(20, true),
                 event: verticalScrollEvent
@@ -1923,8 +1923,8 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            expect(grid.onScroll.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+            expect(grid.gridScroll.emit).toHaveBeenCalledTimes(2);
+            expect(grid.gridScroll.emit).toHaveBeenCalledWith({
                 direction: 'horizontal',
                 scrollPosition: grid.headerContainer.getScrollForIndex(6, true),
                 event: horizontalScrollEvent
@@ -2470,7 +2470,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (columnInit)="columnCreated($event)">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -2541,7 +2541,7 @@ export class IgxGridTestComponent {
 }
 
 @Component({
-    template: `<igx-grid #grid [data]="data" (onColumnInit)="initColumns($event)">
+    template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`
@@ -2603,7 +2603,7 @@ export class IgxGridDefaultRenderingComponent {
 }
 
 @Component({
-    template: `<igx-grid #grid [data]="data" [width]="'500px'" (onColumnInit)="initColumns($event)">
+    template: `<igx-grid #grid [data]="data" [width]="'500px'" (columnInit)="initColumns($event)">
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`
@@ -2702,7 +2702,7 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
 
 @Component({
     template: `
-        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+        <igx-grid [data]="data" (columnInit)="columnCreated($event)">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name"></igx-column>
         </igx-grid>
@@ -2720,7 +2720,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
 
 @Component({
     template: `<div>
-        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+        <igx-grid [data]="data" (columnInit)="columnCreated($event)">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name"></igx-column>
         </igx-grid>

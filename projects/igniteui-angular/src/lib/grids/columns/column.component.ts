@@ -581,7 +581,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * to format the value into a currency string.
      *
      * ```typescript
-     * onColumnInit(column: IgxColumnComponent) {
+     * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "Salary") {
      *     column.formatter = (salary => this.format(salary));
      *   }
@@ -606,7 +606,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * to change the locale for the dates to 'fr-FR'. The summaries with the count key are skipped so they are displayed as numbers.
      *
      * ```typescript
-     * onColumnInit(column: IgxColumnComponent) {
+     * columnInit(column: IgxColumnComponent) {
      *   if (column.field == "OrderDate") {
      *     column.summaryFormatter = this.summaryFormat;
      *   }
@@ -1872,7 +1872,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const rootPinnedCols = grid._pinnedColumns.filter((c) => c.level === 0);
         index = hasIndex ? index : rootPinnedCols.length;
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: false, cancel: false };
-        this.grid.onColumnPinning.emit(args);
+        this.grid.columnPin.emit(args);
 
         if (args.cancel) {
             return;
@@ -1963,7 +1963,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
 
         const args: IPinColumnCancellableEventArgs = { column: this, insertAtIndex: index, isPinned: true, cancel: false };
-        this.grid.onColumnPinning.emit(args);
+        this.grid.columnPin.emit(args);
 
         if (args.cancel) {
             return;
@@ -2079,7 +2079,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             return;
         }
         this.hidden = newValue;
-        this.grid.onColumnVisibilityChanged.emit({ column: this, newValue });
+        this.grid.columnVisibilityChanged.emit({ column: this, newValue });
     }
 
     /**

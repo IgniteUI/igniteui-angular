@@ -34,10 +34,10 @@
         <div class="preview">
             <igx-date-picker #dp4 [value]="date4">
                 <label igxLabel>Select a Date</label>
-                <igx-picker-toggle (click)="dp4.open()" igxPrefix>
+                <igx-picker-toggle igxPrefix>
                     <igx-icon>calendar_view_day</igx-icon>
                 </igx-picker-toggle>
-                <igx-picker-clear (click)="dp4.clear()" igxSuffix>
+                <igx-picker-clear igxSuffix>
                     <igx-icon>delete</igx-icon>
                 </igx-picker-clear>
             </igx-date-picker>
@@ -52,9 +52,11 @@
                 <igx-suffix (click)="dp5.open()">
                     <igx-icon>alarm</igx-icon>
                 </igx-suffix>
-                <ng-template igxPickerActions>
+                <ng-template igxPickerActions let-calendar>
                     <div class="action-buttons">
-                        <button igxButton="flat" (click)="dp5.selectToday()">Today</button>
+                        <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+                        <button igxButton="flat" (click)="calendar.viewDate = nextYear">Next Year</button>
+                        <button igxButton="flat" (click)="dp5.selectToday()">Select Today</button>
                     </div>
                 </ng-template>
             </igx-date-picker>
