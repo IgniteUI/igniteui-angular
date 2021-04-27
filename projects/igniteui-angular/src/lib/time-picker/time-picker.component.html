@@ -1,7 +1,7 @@
 <igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown"
     (click)="!this.isDropdown && this.open()">
     <input [displayValuePipe]="this.formatter ? displayValue : null" igxInput [igxDateTimeEditor]="this.inputFormat"
-        type="text" [readonly]="!this.isDropdown || this.readOnly" 
+        type="text" [readonly]="!this.isDropdown || this.readOnly"
         [locale]="this.locale" [spinDelta]="this.itemsDelta" [spinLoop]="this.spinLoop" [placeholder]="this.placeholder"
         [disabled]="this.disabled" [displayFormat]="this.displayFormat"
         [igxTextSelection]="this.isDropdown && !this.readOnly" role="combobox" aria-haspopup="dialog"

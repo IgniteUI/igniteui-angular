@@ -55,8 +55,6 @@ export class TimeItemPipe implements PipeTransform {
         return this.getListView(list, part);
     }
 
-    
-
     private getListView(view: any, dateType: DatePart): any {
         for (let i = 0; i < view.length; i++) {
             view[i] = this.getItemView(view[i], dateType);
