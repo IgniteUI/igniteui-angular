@@ -986,7 +986,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12 PM');
         }));
 
-        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc.' ,fakeAsync(()=> {
+        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy' ,fakeAsync(()=> {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             tick();
             fix.detectChanges();
