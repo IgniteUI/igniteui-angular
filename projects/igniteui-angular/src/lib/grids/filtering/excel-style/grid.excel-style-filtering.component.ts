@@ -613,14 +613,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addItems(shouldUpdateSelection);
         }
 
-        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase, (obj, key) => {
-            let resolvedValue = obj[key];
-            if (this.column.dataType === DataType.Time) {
-                resolvedValue = new Date().setHours(resolvedValue.getHours(), resolvedValue.getMinutes(), resolvedValue.getSeconds(), resolvedValue.getMilliseconds());
-            }
+        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => {
+                let resolvedValue = obj[key];
+                if (this.column.dataType === DataType.Time) {
+                    resolvedValue = new Date().setHours(
+                        resolvedValue.getHours(),
+                        resolvedValue.getMinutes(),
+                        resolvedValue.getSeconds(),
+                        resolvedValue.getMilliseconds());
+                }
 
-            return resolvedValue;
-        });
+                return resolvedValue;
+            });
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
