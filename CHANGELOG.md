@@ -67,6 +67,14 @@ All notable changes for each version of this project will be documented in this 
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
 - `IgxDatePicker`
     - **Feature** - `value` accepts ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-picker>
+      ```
     - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`.
@@ -115,6 +123,14 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
 - `IgxDateRangePicker`
     - **Feature** - `value` start and end accept ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-range-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-range-picker>
+      ```
     - **Breaking Change** - `value` start and end types could be `Date` or `string`.
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
