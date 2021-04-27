@@ -450,13 +450,13 @@ export class IgxGridStateDirective {
         const columns = 'columns';
         this.grid.columnList.changes.pipe(delay(0), first()).subscribe(() => {
             this.featureKeys = this.featureKeys.filter(f => f !== columns);
-            this.restoreFeatures(this.state);
+            this.restoreFeatures(state);
         });
         this.applyFeatures(features);
         if (this.featureKeys.includes(columns) && this.options[columns] && state[columns]) {
             this.getFeature(columns).restoreFeatureState(this, state[columns]);
         } else {
-            this.restoreFeatures(this.state);
+            this.restoreFeatures(state);
         }
     }
 
