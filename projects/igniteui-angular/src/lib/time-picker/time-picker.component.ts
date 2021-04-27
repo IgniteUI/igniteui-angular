@@ -421,7 +421,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         if (this._ngControl && this._ngControl.control && this._ngControl.control.validator) {
             // Run the validation with empty object to check if required is enabled.
             const error = this._ngControl.control.validator({} as AbstractControl);
-            return error && error.required;
+            return !!(error && error.required);
         }
 
         return false;
