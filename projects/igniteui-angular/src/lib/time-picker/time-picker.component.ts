@@ -192,6 +192,17 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     /**
+     * Gets if the dropdown/dialog is collapsed
+     *
+     * ```typescript
+     * let isCollapsed = this.timePicker.collapsed;
+     * ```
+     */
+    public get collapsed(): boolean {
+        return this.toggleRef?.collapsed;
+    }
+
+    /**
      * The maximum value the picker will accept.
      *
      * @remarks
