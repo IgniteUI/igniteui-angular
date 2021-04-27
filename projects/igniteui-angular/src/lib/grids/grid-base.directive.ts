@@ -4350,7 +4350,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public markForCheck() {
-        this.pipeTrigger++;
+        this._pipeTrigger++;
         this.cdr.detectChanges();
     }
 
