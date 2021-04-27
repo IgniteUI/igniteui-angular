@@ -10,10 +10,10 @@ import { IgxActionStripModule } from '../action-strip.module';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { IgxHierarchicalGridActionStripComponent } from '../../test-utils/hierarchical-grid-components.spec';
 import {
-    IgxHierarchicalRowComponent,
     IgxHierarchicalGridComponent,
     IgxHierarchicalGridModule
 } from '../../grids/hierarchical-grid/public_api';
+import { IgxHierarchicalRowComponent } from '../../grids/hierarchical-grid/hierarchical-row.component';
 
 describe('igxGridEditingActions #grid ', () => {
     let fixture;
@@ -159,7 +159,7 @@ describe('igxGridEditingActions #grid ', () => {
             grid = fixture.componentInstance.grid;
         }));
         it('should auto-show on mouse enter of row.', () => {
-            const row = grid.getRowByIndex(0);
+            const row = grid.gridAPI.get_row_by_index(0);
             const rowElem = row.nativeElement;
             UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
@@ -191,7 +191,7 @@ describe('igxGridEditingActions #grid ', () => {
         }));
 
         it('should auto-show root actionStrip on mouse enter of root row.', () => {
-            const row = hierarchicalGrid.getRowByIndex(0);
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0);
             const rowElem = row.nativeElement;
             UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
@@ -202,13 +202,13 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should auto-show row island actionStrip on mouse enter of child row.', () => {
-            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
+            const row = hierarchicalGrid.gridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
             row.toggle();
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[1];
 
-            const childRow = childGrid.getRowByIndex(0);
+            const childRow = childGrid.gridAPI.get_row_by_index(0);
             const rowElem = childRow.nativeElement;
             UIInteractions.simulateMouseEvent('mouseenter', rowElem, 0, 0);
             fixture.detectChanges();
@@ -220,12 +220,12 @@ describe('igxGridEditingActions #grid ', () => {
         });
 
         it('should auto-hide all actionStrip on mouse leave of root grid.', () => {
-            const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
-            row.toggle();
+            const row = hierarchicalGrid.getRowByIndex(0);
+            row.expanded = !row.expanded;
             fixture.detectChanges();
 
             const childGrid = hierarchicalGrid.hgridAPI.getChildGrids(false)[0];
-            const childRow = childGrid.getRowByIndex(0);
+            const childRow = childGrid.gridAPI.get_row_by_index(0);
 
             actionStripRoot.show(row);
             actionStripChild.show(childRow);

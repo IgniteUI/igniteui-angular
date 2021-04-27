@@ -76,4 +76,5 @@ import { IgxSliderComponent } from "../../../src/main";
 
 | Name | Description |
 | :--- | :--- | 
-| onValueChange  | This event is emitted when user has stopped interacting the thumb and value is changed.  |
+| valueChange  | This event is emitted when user has stopped interacting the thumb and value is changed.  |
+| valueChanged | This event is emitted at the end of every slide interaction.

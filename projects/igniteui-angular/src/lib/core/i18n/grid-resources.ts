@@ -10,6 +10,7 @@ export interface IGridResourceStrings {
     igx_grid_filter_row_placeholder?: string;
     igx_grid_filter_row_boolean_placeholder?: string;
     igx_grid_filter_row_date_placeholder?: string;
+    igx_grid_filter_row_time_placeholder?: string;
     igx_grid_filter_operator_and?: string;
     igx_grid_complex_filter?: string;
     igx_grid_filter_operator_or?: string;
@@ -25,6 +26,10 @@ export interface IGridResourceStrings {
     igx_grid_filter_notNull?: string;
     igx_grid_filter_before?: string;
     igx_grid_filter_after?: string;
+    igx_grid_filter_at?: string;
+    igx_grid_filter_not_at?: string;
+    igx_grid_filter_at_before?: string;
+    igx_grid_filter_at_after?: string;
     igx_grid_filter_today?: string;
     igx_grid_filter_yesterday?: string;
     igx_grid_filter_thisMonth?: string;
@@ -136,6 +141,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_row_placeholder: 'Add filter value',
     igx_grid_filter_row_boolean_placeholder: 'All',
     igx_grid_filter_row_date_placeholder: 'Pick up date',
+    igx_grid_filter_row_time_placeholder: 'Pick up time',
     igx_grid_filter_operator_and: 'And',
     igx_grid_filter_operator_or: 'Or',
     igx_grid_complex_filter: 'Complex Filter',
@@ -151,6 +157,10 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_filter_notNull: 'Not Null',
     igx_grid_filter_before: 'Before',
     igx_grid_filter_after: 'After',
+    igx_grid_filter_at: 'At',
+    igx_grid_filter_not_at: 'Not At',
+    igx_grid_filter_at_before: 'At or Before',
+    igx_grid_filter_at_after: 'At or After',
     igx_grid_filter_today: 'Today',
     igx_grid_filter_yesterday: 'Yesterday',
     igx_grid_filter_thisMonth: 'This Month',
@@ -222,8 +232,8 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_advanced_filter_column_placeholder: 'Select column',
     igx_grid_advanced_filter_value_placeholder: 'Value',
     igx_grid_pinned_row_indicator: 'Pinned',
-    igx_grid_hiding_check_all_label: 'Hide All',
-    igx_grid_hiding_uncheck_all_label: 'Show All',
+    igx_grid_hiding_check_all_label: 'Show All',
+    igx_grid_hiding_uncheck_all_label: 'Hide All',
     igx_grid_pinning_check_all_label: 'Pin All',
     igx_grid_pinning_uncheck_all_label: 'Unpin All',
     igx_grid_toolbar_actions_filter_prompt: 'Filter columns list ...',

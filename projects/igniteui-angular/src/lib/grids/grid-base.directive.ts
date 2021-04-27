@@ -74,7 +74,6 @@ import {
 } from './grid.rowEdit.directive';
 import { IgxGridNavigationService, IActiveNode } from './grid-navigation.service';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
-import { IgxGridRowComponent } from './grid/public_api';
 import { IgxFilteringService } from './filtering/grid-filtering.service';
 import { IgxGridFilteringCellComponent } from './filtering/base/grid-filtering-cell.component';
 import { WatchChanges } from './watch-changes';
@@ -158,6 +157,8 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { RowType } from './common/row.interface';
+import { IgxGridRowComponent } from './grid/grid-row.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -287,11 +288,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true"
-     *              (onScroll)="onScroll($event)"></igx-grid>
+     *              (gridScroll)="onScroll($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onScroll = new EventEmitter<IGridScrollEventArgs>();
+    public gridScroll = new EventEmitter<IGridScrollEventArgs>();
 
     /**
      * Emitted after the current page is changed.
@@ -412,11 +413,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the `IgxGridCellComponent`.
      * @example
      * ```html
-     * <igx-grid #grid (onCellClick)="onCellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (cellClick)="cellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onCellClick = new EventEmitter<IGridCellEventArgs>();
+    public cellClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
      * Emitted when `IgxGridCellComponent` is selected.
@@ -425,33 +426,33 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *  Returns the `IgxGridCellComponent`.
      * @example
      * ```html
-     * <igx-grid #grid (onSelection)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (selected)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onSelection = new EventEmitter<IGridCellEventArgs>();
+    public selected = new EventEmitter<IGridCellEventArgs>();
 
     /**
      *  Emitted when `IgxGridRowComponent` is selected.
      *
      * @example
      * ```html
-     * <igx-grid #grid (onRowSelectionChange)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (rowSelected)="onCellClickChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onRowSelectionChange = new EventEmitter<IRowSelectionEventArgs>();
+    public rowSelected = new EventEmitter<IRowSelectionEventArgs>();
 
     /**
      *  Emitted when `IgxColumnComponent` is selected.
      *
      * @example
      * ```html
-     * <igx-grid #grid (onColumnSelectionChange)="onColumnSelectionChange($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid (columnSelected)="columnSelected($event)" [data]="localData" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnSelectionChange = new EventEmitter<IColumnSelectionEventArgs>();
+    public columnSelected = new EventEmitter<IColumnSelectionEventArgs>();
 
     /**
      * Emitted before `IgxColumnComponent` is pinned.
@@ -468,7 +469,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onColumnPinning = new EventEmitter<IPinColumnCancellableEventArgs>();
+    public columnPin = new EventEmitter<IPinColumnCancellableEventArgs>();
 
     /**
      * Emitted after `IgxColumnComponent` is pinned.
@@ -613,11 +614,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the column object.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [onColumnInit]="initColumns($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (columnInit)="initColumns($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnInit = new EventEmitter<IgxColumnComponent>();
+    public columnInit = new EventEmitter<IgxColumnComponent>();
 
     /**
      * Emitted before sorting expressions are applied.
@@ -626,7 +627,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns an `ISortingEventArgs` object. `sortingExpressions` key holds the sorting expressions.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (onSorting)="sorting($event)"></igx-grid>
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sorting)="sorting($event)"></igx-grid>
      * ```
      */
     @Output()
@@ -639,11 +640,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the sorting expression.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (onSortingDone)="sortingDone($event)"></igx-grid>
+     * <igx-grid #grid [data]="localData" [autoGenerate]="true" (sortingDone)="sortingDone($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onSortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
+    public sortingDone = new EventEmitter<ISortingExpression | Array<ISortingExpression>>();
 
     /**
      * Emitted before filtering expressions are applied.
@@ -665,11 +666,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the filtering expressions tree of the column for which filtering was performed.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onFilteringDone)="filteringDone($event)"></igx-grid>
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (filteringDone)="filteringDone($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onFilteringDone = new EventEmitter<IFilteringExpressionsTree>();
+    public filteringDone = new EventEmitter<IFilteringExpressionsTree>();
 
     /**
      * Emitted after paging is performed.
@@ -678,11 +679,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns an object consisting of the previous and next pages.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (onPagingDone)="pagingDone($event)"></igx-grid>
+     * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (pagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onPagingDone = new EventEmitter<IPageEventArgs>();
+    public pagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
      * Emitted when a row added through the API.
@@ -691,11 +692,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the data for the new `IgxGridRowComponent` object.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" (onRowAdded)="rowAdded($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (rowAdded)="rowAdded($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onRowAdded = new EventEmitter<IRowDataEventArgs>();
+    public rowAdded = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * Emitted when a row is deleted through API.
@@ -704,11 +705,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns an `IRowDataEventArgs` object.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" (onRowDeleted)="rowDeleted($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (rowDeleted)="rowDeleted($event)" [height]="'305px'" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onRowDeleted = new EventEmitter<IRowDataEventArgs>();
+    public rowDeleted = new EventEmitter<IRowDataEventArgs>();
 
     /**
      * Emitted after column is resized.
@@ -717,11 +718,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the `IgxColumnComponent` object's old and new width.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" (onColumnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (columnResized)="resizing($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnResized = new EventEmitter<IColumnResizeEventArgs>();
+    public columnResized = new EventEmitter<IColumnResizeEventArgs>();
 
     /**
      * Emitted when a cell is right clicked.
@@ -729,11 +730,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @remarks
      * Returns the `IgxGridCellComponent` object.
      * ```html
-     * <igx-grid #grid [data]="localData" (onContextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onContextMenu = new EventEmitter<IGridCellEventArgs>();
+    public contextMenu = new EventEmitter<IGridCellEventArgs>();
 
     /**
      * Emitted when a cell is double clicked.
@@ -742,11 +743,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the `IgxGridCellComponent` object.
      * @example
      * ```html
-     * <igx-grid #grid [data]="localData" (onDoubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="localData" (doubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onDoubleClick = new EventEmitter<IGridCellEventArgs>();
+    public doubleClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
      * Emitted before column visibility is changed.
@@ -768,11 +769,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Args: { column: IgxColumnComponent, newValue: boolean }
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnVisibilityChanged)="visibilityChanged($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
+    public columnVisibilityChanged = new EventEmitter<IColumnVisibilityChangedEventArgs>();
 
     /**
      * Emitted when column moving starts.
@@ -781,11 +782,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the moved `IgxColumnComponent` object.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingStart)="movingStart($event)"></igx-grid>
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMovingStart)="movingStart($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
+    public columnMovingStart = new EventEmitter<IColumnMovingStartEventArgs>();
 
     /**
      * Emitted during the column moving operation.
@@ -794,11 +795,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the source and target `IgxColumnComponent` objects. This event is cancelable.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMoving)="moving($event)"></igx-grid>
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMoving)="moving($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnMoving = new EventEmitter<IColumnMovingEventArgs>();
+    public columnMoving = new EventEmitter<IColumnMovingEventArgs>();
 
     /**
      * Emitted when column moving ends.
@@ -807,11 +808,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Returns the source and target `IgxColumnComponent` objects.
      * @example
      * ```html
-     * <igx-grid [columnHiding]="true" [showToolbar]="true" (onColumnMovingEnd)="movingEnds($event)"></igx-grid>
+     * <igx-grid [columnHiding]="true" [showToolbar]="true" (columnMovingEnd)="movingEnds($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onColumnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
+    public columnMovingEnd = new EventEmitter<IColumnMovingEndEventArgs>();
 
     /**
      * Emitted when keydown is triggered over element inside grid's body.
@@ -821,11 +822,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Return the target type, target object and the original event. This event is cancelable.
      * @example
      * ```html
-     *  <igx-grid (onGridKeydown)="customKeydown($event)"></igx-grid>
+     *  <igx-grid (gridKeydown)="customKeydown($event)"></igx-grid>
      * ```
      */
     @Output()
-    public onGridKeydown = new EventEmitter<IGridKeydownEventArgs>();
+    public gridKeydown = new EventEmitter<IGridKeydownEventArgs>();
 
     /**
      * Emitted when start dragging a row.
@@ -834,7 +835,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Return the dragged row.
      */
     @Output()
-    public onRowDragStart = new EventEmitter<IRowDragStartEventArgs>();
+    public rowDragStart = new EventEmitter<IRowDragStartEventArgs>();
 
     /**
      * Emitted when dropping a row.
@@ -843,7 +844,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Return the dropped row.
      */
     @Output()
-    public onRowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
+    public rowDragEnd = new EventEmitter<IRowDragEndEventArgs>();
 
     /**
      * Emitted when a copy operation is executed.
@@ -852,7 +853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Fired only if copy behavior is enabled through the [`clipboardOptions`]{@link IgxGridBaseDirective#clipboardOptions}.
      */
     @Output()
-    public onGridCopy = new EventEmitter<IGridClipboardEvent>();
+    public gridCopy = new EventEmitter<IGridClipboardEvent>();
 
     /**
      * @hidden @internal
@@ -865,22 +866,22 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *
      * @example
      * ```html
-     * <igx-grid [data]="employeeData" (onRowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid [data]="employeeData" (rowToggle)="rowToggle($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onRowToggle = new EventEmitter<IRowToggleEventArgs>();
+    public rowToggle = new EventEmitter<IRowToggleEventArgs>();
 
     /**
      * Emitted when the pinned state of a row is changed.
      *
      * @example
      * ```html
-     * <igx-grid [data]="employeeData" (onRowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
+     * <igx-grid [data]="employeeData" (rowPinning)="rowPin($event)" [autoGenerate]="true"></igx-grid>
      * ```
      */
     @Output()
-    public onRowPinning = new EventEmitter<IPinRowEventArgs>();
+    public rowPinning = new EventEmitter<IPinRowEventArgs>();
 
     /**
      * Emmited when the active node is changed.
@@ -918,7 +919,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     @Output()
-    public onToolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
+    public toolbarExporting = new EventEmitter<IGridToolbarExportEventArgs>();
 
     /* End of toolbar related definitions */
 
@@ -929,7 +930,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Range selection can be made either through drag selection or through keyboard selection.
      */
     @Output()
-    public onRangeSelection = new EventEmitter<GridSelectionRange>();
+    public rangeSelected = new EventEmitter<GridSelectionRange>();
 
     /** Emitted after the ngAfterViewInit hook. At this point the grid exists in the DOM */
     @Output()
@@ -1381,7 +1382,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
 
         // Wait for the change detection to update filtered data through the pipes and then emit the event.
-        requestAnimationFrame(() => this.onFilteringDone.emit(this._advancedFilteringExpressionsTree));
+        requestAnimationFrame(() => this.filteringDone.emit(this._advancedFilteringExpressionsTree));
     }
 
     /**
@@ -1456,7 +1457,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             return;
         }
         this.selectionService.clear(true);
-        this.onPagingDone.emit({ previous: this._page, current: val });
+        this.pagingDone.emit({ previous: this._page, current: val });
         this._page = val;
         this.pageChange.emit(this._page);
         this.navigateTo(0);
@@ -3089,7 +3090,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public isDetailRecord(rec) {
+    public isDetailRecord(_rec) {
         return false;
     }
 
@@ -3097,7 +3098,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public isGroupByRecord(rec) {
+    public isGroupByRecord(_rec) {
         return false;
     }
 
@@ -3162,7 +3163,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            this.overlayService.detach(overlayID);
+            if (this.overlayService.getOverlayById(overlayID)?.visible) {
+                this.overlayService.hide(overlayID);
+            }
             this.nativeElement.focus();
         });
     }
@@ -3206,6 +3209,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public getInitialPinnedIndex(rec) {
         const id = this.gridAPI.get_row_id(rec);
         return this._pinnedRecordIDs.indexOf(id);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isSummaryRecord(record: any): boolean {
+        return record.summaries && record.summaries.size;
     }
 
     /**
@@ -3260,8 +3270,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.notifyChanges();
             }
         });
-        this.onRowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
-        this.onRowDeleted.pipe(destructor).subscribe(args => {
+        this.rowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
+        this.rowDeleted.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
@@ -3295,12 +3305,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
 
-        this.onPagingDone.pipe(destructor).subscribe(() => {
+        this.pagingDone.pipe(destructor).subscribe(() => {
             this.crudService.endEdit(false);
             this.selectionService.clear(true);
         });
 
-        this.onColumnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
+        this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
 
         this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
@@ -3635,6 +3645,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.overlayService.detach(this._advancedFilteringOverlayId);
         }
 
+        this.overlayIDs.forEach(overlayID => {
+            if (this.overlayService.getOverlayById(overlayID) && !this.overlayService.getOverlayById(overlayID).detached) {
+                this.overlayService.detach(overlayID);
+            }
+            this.nativeElement.focus();
+        });
+
         this.zone.runOutsideAngular(() => {
             this.observer.disconnect();
             this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
@@ -3768,7 +3785,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      * @internal
      */
-    public getDefaultExpandState(rec: any) {
+    public getDefaultExpandState(_rec: any) {
         return this._defaultExpandState;
     }
 
@@ -4024,34 +4041,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxRowDirective` by index.
-     *
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByIndex(1);
-     * ```
-     * @param index
-     */
-    public getRowByIndex(index: number): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.gridAPI.get_row_by_index(index);
-    }
-
-    /**
-     * Returns `IgxGridRowComponent` object by the specified primary key .
-     *
-     * @remarks
-     * Requires that the `primaryKey` property is set.
-     * @example
-     * ```typescript
-     * const myRow = this.grid1.getRowByKey("cell5");
-     * ```
-     * @param keyValue
-     */
-    public getRowByKey(keyValue: any): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.gridAPI.get_row_by_key(keyValue);
-    }
-
-    /**
      * Returns an array of visible `IgxColumnComponent`s.
      *
      * @example
@@ -4287,7 +4276,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this._moveColumns(column, target, pos);
         this._columnsReordered(column);
 
-        this.onColumnMovingEnd.emit({ source: column, target });
+        this.columnMovingEnd.emit({ source: column, target });
     }
 
     /**
@@ -4355,7 +4344,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (shouldScroll) {
             this.navigateTo(newRowIndex, -1);
         }
-        const row = this.getRowByIndex(index + 1);
+        const row = this.gridAPI.get_row_by_index(index + 1);
         row.animateAdd = true;
         row.onAnimationEnd.pipe(first()).subscribe(() => {
             row.animateAdd = false;
@@ -4382,7 +4371,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.onRowAdded.emit({ data });
+        this.rowAdded.emit({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -4548,7 +4537,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.gridAPI.sort(expression);
         }
-        requestAnimationFrame(() => this.onSortingDone.emit(expression));
+        requestAnimationFrame(() => this.sortingDone.emit(expression));
     }
 
     /**
@@ -4671,7 +4660,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public refreshGridState(args?) {
+    public refreshGridState(_args?) {
         this.crudService.endEdit(true);
         this.selectionService.clearHeaderCBState();
         this.summaryService.clearSummaryCache();
@@ -4724,19 +4713,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param rowID The row id - primaryKey value or the data record instance.
      * @param index The index at which to insert the row in the pinned collection.
      */
-    public pinRow(rowID: any, index?: number): boolean {
+    public pinRow(rowID: any, index?: number, row?: RowType): boolean {
         if (this._pinnedRecordIDs.indexOf(rowID) !== -1) {
             return false;
         }
-        const row = this.gridAPI.get_row_by_key(rowID);
-
         const eventArgs: IPinRowEventArgs = {
             insertAtIndex: index,
             isPinned: true,
             rowID,
             row
         };
-        this.onRowPinning.emit(eventArgs);
+        this.rowPinning.emit(eventArgs);
 
         this.crudService.endEdit(false);
 
@@ -4746,6 +4733,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.gridAPI.grid) {
             this.notifyChanges();
         }
+        return true;
     }
 
     /**
@@ -4759,18 +4747,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowID The row id - primaryKey value or the data record instance.
      */
-    public unpinRow(rowID: any) {
+    public unpinRow(rowID: any, row?: RowType): boolean {
         const index = this._pinnedRecordIDs.indexOf(rowID);
         if (index === -1) {
             return false;
         }
-        const row = this.gridAPI.get_row_by_key(rowID);
         const eventArgs: IPinRowEventArgs = {
             isPinned: false,
             rowID,
             row
         };
-        this.onRowPinning.emit(eventArgs);
+        this.rowPinning.emit(eventArgs);
         this.crudService.endEdit(false);
         this._pinnedRecordIDs.splice(index, 1);
         this.pipeTrigger++;
@@ -5166,7 +5153,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        if (this.pinning.columns === ColumnPinningPosition.Start) {
+        if (this.isPinningToStart) {
             sum += this.featureColumnsWidth();
         }
 
@@ -5183,7 +5170,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public isColumnGrouped(fieldName: string): boolean {
+    public isColumnGrouped(_fieldName: string): boolean {
         return false;
     }
 
@@ -5648,7 +5635,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public prepareCopyData(event, data, keys?) {
         const ev = { data, cancel: false } as IGridClipboardEvent;
-        this.onGridCopy.emit(ev);
+        this.gridCopy.emit(ev);
 
         if (ev.cancel) {
             return;
@@ -5866,7 +5853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const index = args.context.index;
             args.view.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
-                const row = tmplId === 'dataRow' ? this.getRowByIndex(index) : null;
+                const row = tmplId === 'dataRow' ? this.gridAPI.get_row_by_index(index) : null;
                 const summaryRow = tmplId === 'summaryRow' ? this.summariesRowList.find((sr) => sr.dataRowIndex === index) : null;
                 if (row && row instanceof IgxRowDirective) {
                     this._restoreVirtState(row);
@@ -6194,7 +6181,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.autogenerateColumns();
         }
 
-        this.initColumns(this.columnList, (col: IgxColumnComponent) => this.onColumnInit.emit(col));
+        this.initColumns(this.columnList, (col: IgxColumnComponent) => this.columnInit.emit(col));
         this.columnListDiffer.diff(this.columnList);
 
         this.columnList.changes
@@ -6258,7 +6245,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             let added = false;
             let removed = false;
             diff.forEachAddedItem((record: IterableChangeRecord<IgxColumnComponent>) => {
-                this.onColumnInit.emit(record.item);
+                this.columnInit.emit(record.item);
                 added = true;
                 if (record.item.pinned) {
                     this._pinnedColumns.push(record.item);
@@ -6525,7 +6512,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasVerticalScroll() && !this.isPercentWidth) {
             width -= this.scrollSize;
         }
-        if (this.pinning.columns === ColumnPinningPosition.End) {
+        if (!this.isPinningToStart) {
             width -= this.featureColumnsWidth();
         }
 
@@ -6943,7 +6930,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             event,
             scrollPosition: this.verticalScrollContainer.scrollPosition
         };
-        this.onScroll.emit(args);
+        this.gridScroll.emit(args);
     }
 
     private horizontalScrollHandler(event) {
@@ -6960,7 +6947,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.hideOverlays();
         const args: IGridScrollEventArgs = { direction: 'horizontal', event, scrollPosition: this.headerContainer.scrollPosition };
-        this.onScroll.emit(args);
+        this.gridScroll.emit(args);
     }
 
     private executeCallback(rowIndex, visibleColIndex = -1, cb: (args: any) => void = null) {

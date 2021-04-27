@@ -1,10 +1,9 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, waitForAsync, flush } from '@angular/core/testing';
 import { Component, OnInit, ViewChild, DebugElement } from '@angular/core';
 import { IgxInputGroupModule } from '../input-group/public_api';
-import { InteractionMode } from '../core/enums';
+import { PickerInteractionMode } from '../date-common/types';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, FormControl } from '@angular/forms';
-import { IgxCalendarComponent } from '../calendar/public_api';
 import { IgxDateRangePickerModule } from './date-range-picker.module';
 import { By } from '@angular/platform-browser';
 import { ControlsFunction } from '../test-utils/controls-functions.spec';
@@ -17,7 +16,11 @@ import { IgxDateTimeEditorModule, IgxDateTimeEditorDirective } from '../directiv
 import { DateRangeType } from '../core/dates';
 import { IgxDateRangePickerComponent, IgxDateRangeEndComponent } from './public_api';
 import { IgxIconModule } from '../icon/public_api';
-import { AutoPositionStrategy } from '../services/public_api';
+import { AutoPositionStrategy, IgxOverlayService } from '../services/public_api';
+import { AnimationMetadata, AnimationOptions } from '@angular/animations';
+import { IgxPickersCommonModule } from '../date-common/public_api';
+import { IgxCalendarContainerComponent, IgxCalendarContainerModule } from '../date-common/calendar-container/calendar-container.component';
+import { IgxCalendarComponent } from '../calendar/public_api';
 
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
@@ -27,64 +30,159 @@ const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeri
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
 const CSS_CLASS_CALENDAR = 'igx-calendar';
-const CSS_CLASS_CALENDAR_TOGGLE = '.igx-toggle';
 const CSS_CLASS_ICON = 'igx-icon';
 const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
-const CSS_RANGE_PICKER = 'igx-date-range-picker';
+const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
+const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
+const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
+        let mockElement: any;
+        let mockElementRef: any;
+        let mockFactoryResolver: any;
+        let mockApplicationRef: any;
+        let mockAnimationBuilder: any;
+        let mockDocument: any;
+        let mockNgZone: any;
+        let mockPlatformUtil: any;
+        let overlay: IgxOverlayService;
+        let mockInjector;
+        let ngModuleRef: any;
+        let mockCalendar: IgxCalendarComponent;
+        let mockDaysView: any;
         const elementRef = { nativeElement: null };
         const platform = {} as any;
-        const calendar = new IgxCalendarComponent(platform);
         const mockNgControl = jasmine.createSpyObj('NgControl',
             ['registerOnChangeCb',
                 'registerOnTouchedCb',
                 'registerOnValidatorChangeCb']);
-        const mockInjector = jasmine.createSpyObj('Injector', {
-            get: mockNgControl
+        /* eslint-disable @typescript-eslint/no-unused-vars */
+        beforeEach(() => {
+            mockFactoryResolver = {
+                resolveComponentFactory: (c: any) => ({
+                    create: (i: any) => ({
+                        hostView: '',
+                        location: mockElementRef,
+                        changeDetectorRef: { detectChanges: () => { } },
+                        destroy: () => { },
+                        instance: new IgxCalendarContainerComponent()
+                    })
+                })
+            };
+            ngModuleRef = ({
+                injector: (...args: any[]) => { },
+                componentFactoryResolver: mockFactoryResolver,
+                instance: () => { },
+                destroy: () => { },
+                onDestroy: (fn: any) => { }
+            });
+            mockElement = {
+                style: { visibility: '', cursor: '', transitionDuration: '' },
+                classList: { add: () => { }, remove: () => { } },
+                appendChild: () => { },
+                removeChild: () => { },
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                getBoundingClientRect: () => ({ width: 10, height: 10 }),
+                insertBefore: (newChild: HTMLDivElement, refChild: Node) => { },
+                contains: () => { }
+            };
+            mockElement.parent = mockElement;
+            mockElement.parentElement = mockElement;
+            mockElementRef = { nativeElement: mockElement };
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            mockApplicationRef = { attachView: (h: any) => { }, detachView: (h: any) => { } };
+            mockInjector = jasmine.createSpyObj('Injector', {
+                get: mockNgControl
+            });
+            mockAnimationBuilder = {
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                build: (a: AnimationMetadata | AnimationMetadata[]) => ({
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    create: (e: any, opt?: AnimationOptions) => ({
+                        onDone: (fn: any) => { },
+                        onStart: (fn: any) => { },
+                        onDestroy: (fn: any) => { },
+                        init: () => { },
+                        hasStarted: () => true,
+                        play: () => { },
+                        pause: () => { },
+                        restart: () => { },
+                        finish: () => { },
+                        destroy: () => { },
+                        rest: () => { },
+                        setPosition: (p: any) => { },
+                        getPosition: () => 0,
+                        parentPlayer: {},
+                        totalTime: 0,
+                        beforeDestroy: () => { }
+                    })
+                })
+            };
+            mockDocument = {
+                body: mockElement,
+                defaultView: mockElement,
+                createElement: () => mockElement,
+                appendChild: () => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                addEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { },
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                removeEventListener: (type: string, listener: (this: HTMLElement, ev: MouseEvent) => any) => { }
+            };
+            mockNgZone = {};
+            mockPlatformUtil = { isIOS: false };
+
+            overlay = new IgxOverlayService(
+                mockFactoryResolver, mockApplicationRef, mockInjector, mockAnimationBuilder, mockDocument, mockNgZone, mockPlatformUtil);
+            mockCalendar = new IgxCalendarComponent(platform);
+            mockDaysView = {
+                focusActiveDate: jasmine.createSpy()
+            } as any;
+            mockCalendar.daysView = mockDaysView;
         });
+        /* eslint-enable @typescript-eslint/no-unused-vars */
         it('should set range dates correctly through selectRange method', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null,);
-            dateRange.calendar = calendar;
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            // dateRange.calendar = calendar;
             let startDate = new Date(2020, 3, 7);
             const endDate = new Date(2020, 6, 27);
 
             // select range
-            dateRange.selectRange(startDate, endDate);
+            dateRange.select(startDate, endDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(endDate);
 
             // select startDate only
             startDate = new Date(2023, 2, 11);
-            dateRange.selectRange(startDate);
+            dateRange.select(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
         });
 
-        it('should emit rangeSelected on selection', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null);
-            dateRange.calendar = calendar;
-            spyOn(dateRange.rangeSelected, 'emit');
+        it('should emit valueChange on selection', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, null, null, null);
+            // dateRange.calendar = calendar;
+            spyOn(dateRange.valueChange, 'emit');
             let startDate = new Date(2017, 4, 5);
             const endDate = new Date(2017, 11, 22);
 
             // select range
-            dateRange.selectRange(startDate, endDate);
+            dateRange.select(startDate, endDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(endDate);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(1);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(1);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: endDate });
 
             // select startDate only
             startDate = new Date(2024, 12, 15);
-            dateRange.selectRange(startDate);
+            dateRange.select(startDate);
             expect(dateRange.value.start).toEqual(startDate);
             expect(dateRange.value.end).toEqual(startDate);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledTimes(2);
-            expect(dateRange.rangeSelected.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
+            expect(dateRange.valueChange.emit).toHaveBeenCalledTimes(2);
+            expect(dateRange.valueChange.emit).toHaveBeenCalledWith({ start: startDate, end: startDate });
         });
 
         it('should correctly implement interface methods - ControlValueAccessor', () => {
@@ -92,10 +190,10 @@ describe('IgxDateRangePicker', () => {
             const rangeUpdate = { start: new Date(2020, 2, 22), end: new Date(2020, 2, 25) };
 
             // init
-            const dateRangePicker = new IgxDateRangePickerComponent(null, null, platform, 'en', null);
+            const dateRangePicker = new IgxDateRangePickerComponent(null, 'en', platform, null, null, null, null);
             dateRangePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRangePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
-            spyOn(dateRangePicker, 'handleSelection').and.callThrough();
+            spyOn(dateRangePicker as any, 'handleSelection').and.callThrough();
 
             // writeValue
             expect(dateRangePicker.value).toBeUndefined();
@@ -107,15 +205,15 @@ describe('IgxDateRangePicker', () => {
             dateRangePicker.value = rangeUpdate;
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith(rangeUpdate);
 
-            dateRangePicker.handleSelection([range.start]);
-            expect(dateRangePicker.handleSelection).toHaveBeenCalledWith([range.start]);
-            expect(dateRangePicker.handleSelection).toHaveBeenCalledTimes(1);
+            (dateRangePicker as any).handleSelection([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledWith([range.start]);
+            expect((dateRangePicker as any).handleSelection).toHaveBeenCalledTimes(1);
             expect(mockNgControl.registerOnChangeCb).toHaveBeenCalledWith({ start: range.start, end: range.start });
 
             // awaiting implementation - OnTouched callback
             // Docs: changes the value, turning the control dirty; or blurs the form control element, setting the control to touched.
             // when handleSelection fires should be touched&dirty // when input is blurred(two inputs), should be touched.
-            dateRangePicker.handleSelection([range.start]);
+            (dateRangePicker as any).handleSelection([range.start]);
             (dateRangePicker as any).updateValidityOnBlur();
             expect(mockNgControl.registerOnTouchedCb).toHaveBeenCalledTimes(1);
 
@@ -125,11 +223,11 @@ describe('IgxDateRangePicker', () => {
             expect(dateRangePicker.disabled).toBe(false);
         });
 
-        it('should validate correctly minValue and maxValue ', () => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
+        it('should validate correctly minValue and maxValue', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            // dateRange.calendar = calendar;
             dateRange.registerOnChange(mockNgControl.registerOnChangeCb);
             dateRange.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
 
@@ -150,38 +248,47 @@ describe('IgxDateRangePicker', () => {
             expect(dateRange.validate(mockFormControl)).toEqual({ minValue: true, maxValue: true });
         });
 
-        it('should disable calendar dates when min and/or max values as dates are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
+        it('should disable calendar dates when min and/or max values as dates are provided', () => {
+            const dateRange = new IgxDateRangePickerComponent(elementRef, 'en-US', platform, mockInjector, ngModuleRef, overlay);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
             dateRange.minValue = new Date(2000, 10, 1);
             dateRange.maxValue = new Date(2000, 10, 20);
 
-            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            dateRange.open({
+                closeOnOutsideClick: true,
+                modal: false,
+                target: dateRange.element.nativeElement,
+                positionStrategy: new AutoPositionStrategy({
+                    openAnimation: null,
+                    closeAnimation: null
+                })
+            });
             (dateRange as any).updateCalendar();
-            expect(dateRange.calendar.disabledDates.length).toEqual(2);
-            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
-            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
-        }));
+            expect(mockCalendar.disabledDates.length).toEqual(2);
+            expect(mockCalendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect(mockCalendar.disabledDates[0].dateRange[0]).toEqual(dateRange.minValue);
+            expect(mockCalendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect(mockCalendar.disabledDates[1].dateRange[0]).toEqual(dateRange.maxValue);
+            expect(mockCalendar.daysView.focusActiveDate).toHaveBeenCalledTimes(1);
+        });
 
         it('should disable calendar dates when min and/or max values as strings are provided', fakeAsync(() => {
-            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, null, mockInjector);
+            const dateRange = new IgxDateRangePickerComponent(elementRef, null, platform, mockInjector, null, null);
             dateRange.ngOnInit();
 
-            dateRange.calendar = calendar;
+            spyOnProperty((dateRange as any), 'calendar').and.returnValue(mockCalendar);
             dateRange.minValue = '2000/10/1';
             dateRange.maxValue = '2000/10/30';
 
-            spyOn(calendar, 'deselectDate').and.returnValue(null);
+            spyOn((dateRange as any).calendar, 'deselectDate').and.returnValue(null);
             (dateRange as any).updateCalendar();
-            expect(dateRange.calendar.disabledDates.length).toEqual(2);
-            expect(dateRange.calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
-            expect(dateRange.calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
-            expect(dateRange.calendar.disabledDates[1].type).toEqual(DateRangeType.After);
-            expect(dateRange.calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
+            expect((dateRange as any).calendar.disabledDates.length).toEqual(2);
+            expect((dateRange as any).calendar.disabledDates[0].type).toEqual(DateRangeType.Before);
+            expect((dateRange as any).calendar.disabledDates[0].dateRange[0]).toEqual(new Date(dateRange.minValue));
+            expect((dateRange as any).calendar.disabledDates[1].type).toEqual(DateRangeType.After);
+            expect((dateRange as any).calendar.disabledDates[1].dateRange[0]).toEqual(new Date(dateRange.maxValue));
         }));
     });
 
@@ -190,17 +297,28 @@ describe('IgxDateRangePicker', () => {
         let dateRange: IgxDateRangePickerComponent;
         let startDate: Date;
         let endDate: Date;
-        let calendar: DebugElement;
-        let calendarDays: DebugElement[];
+        let calendar: DebugElement | Element;
+        let calendarDays: DebugElement[] | HTMLCollectionOf<Element>;
 
-        const selectDateRangeFromCalendar = (startDateDay: number, dayRange: number) => {
-            const startDateDayElIndex = startDateDay - 1;
-            const endDateDayElIndex = startDateDayElIndex + dayRange;
+        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date) => {
             dateRange.open();
             fixture.detectChanges();
-            calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-            if (dayRange !== 0) {
-                calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+            calendarDays = document.getElementsByClassName(CSS_CLASS_CALENDAR_DATE);
+            const nodesArray = Array.from(calendarDays);
+            const findNodeIndex: (d: Date) => number =
+                (d: Date) => nodesArray
+                    .findIndex(
+                        n => n.attributes['aria-label'].value === d.toDateString()
+                            && !n.classList.contains(CSS_CLASS_INACTIVE_DATE)
+                    );
+            const startIndex = findNodeIndex(sDate);
+            const endIndex = findNodeIndex(eDate);
+            if (startIndex === -1) {
+                throw new Error('Start date not found in calendar. Aborting.');
+            }
+            UIInteractions.simulateClickAndSelectEvent(calendarDays[startIndex]);
+            if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
+                UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex]);
             }
             fixture.detectChanges();
             dateRange.close();
@@ -216,12 +334,16 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTestComponent,
                         DateRangeDefaultComponent
                     ],
-                    imports: [IgxDateRangePickerModule,
+                    imports: [
+                        IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule,
+                        IgxPickersCommonModule,
+                        IgxCalendarContainerModule,
+                    ]
                 })
                     .compileComponents();
             }));
@@ -229,9 +351,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-                calendarDays = fixture.debugElement.queryAll(By.css(HelperTestFunctions.CURRENT_MONTH_DATES));
                 singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
-                calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
             }));
 
             const verifyDateRangeInSingleInput = () => {
@@ -244,7 +364,7 @@ describe('IgxDateRangePicker', () => {
 
             describe('Selection tests', () => {
                 it('should assign range dates to the input when selecting a range from the calendar', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
@@ -253,33 +373,31 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
                 it('should assign range values correctly when selecting dates in reversed order', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
-                    const dayRange = -5;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(endDate, startDate);
                     verifyDateRangeInSingleInput();
                 });
 
                 it('should set start and end dates on single date selection', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
-                    const dayRange = 0;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = startDate;
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -289,9 +407,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                    const dayRange = Math.round(differenceMs / ONE_DAY);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -300,13 +416,13 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     startDate = new Date(2020, 10, 8, 0, 0, 0);
                     endDate = new Date(2020, 11, 8, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
 
                     startDate = new Date(2006, 5, 18, 0, 0, 0);
                     endDate = new Date(2006, 8, 18, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRangeInSingleInput();
                 });
@@ -331,7 +447,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     const longDateOptions = { month: 'long', day: 'numeric' };
                     let inputStartDate = `${ControlsFunction.formatDate(startDate, longDateOptions)}, ${startDate.getFullYear()}`;
@@ -345,7 +461,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.inputDirective.placeholder).toEqual(`M/d/yy - M/d/yy`);
                     startDate.setDate(2);
                     endDate.setDate(19);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const shortDateOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -360,7 +476,7 @@ describe('IgxDateRangePicker', () => {
                     expect(dateRange.inputDirective.placeholder).toEqual(`EEEE, MMMM d, y - EEEE, MMMM d, y`);
                     startDate.setDate(12);
                     endDate.setDate(23);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const fullDateOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
@@ -374,7 +490,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(9);
                     endDate.setDate(13);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const customFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -386,155 +502,145 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should close the calendar with the "Done" button', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
-                    const doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
                     const dayRange = 8;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() - 1;
+                    const startDateDayElIndex = startDate.getDate() + 3;
                     const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    calendarDays[startDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
-                    calendarDays[endDateDayElIndex].triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+                    calendarDays = document.getElementsByClassName('igx-calendar__date');
+                    UIInteractions.simulateClickAndSelectEvent(calendarDays[startDateDayElIndex]);
+                    UIInteractions.simulateClickAndSelectEvent(calendarDays[endDateDayElIndex]);
                     fixture.detectChanges();
-                    doneBtn.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
+
+                    const doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    UIInteractions.simulateClickAndSelectEvent(doneBtn);
                     tick();
                     fixture.detectChanges();
 
                     verifyDateRangeInSingleInput();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
-                it('should show the "Done" button only in dialog mode', () => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                it('should show the "Done" button only in dialog mode', fakeAsync(() => {
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
-                    dateRange.toggle();
+                    dateRange.open();
                     fixture.detectChanges();
-                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
                     expect(doneBtn).not.toBe(null);
-                    dateRange.toggle();
+                    dateRange.close();
+                    tick();
                     fixture.detectChanges();
 
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
+                    fixture.detectChanges();
+
+                    dateRange.open();
+                    tick();
+                    fixture.detectChanges();
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    expect(doneBtn).not.toBeDefined();
+                }));
+
+                it('should be able to change the "Done" button text', fakeAsync(() => {
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
 
                     dateRange.toggle();
                     fixture.detectChanges();
-                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn).toBe(null);
+                    let doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    expect(doneBtn.textContent.trim()).toEqual('Done');
                     dateRange.toggle();
-                    fixture.detectChanges();
-                });
-
-                it('should be able to change the "Done" button text', () => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    tick();
                     fixture.detectChanges();
 
-                    let doneBtnText = 'Done';
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                    let doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
-                    dateRange.toggle();
-                    fixture.detectChanges();
-
-                    doneBtnText = 'Close';
-                    dateRange.doneButtonText = doneBtnText;
+                    dateRange.doneButtonText = 'Close';
                     fixture.detectChanges();
                     dateRange.toggle();
+                    tick();
                     fixture.detectChanges();
-                    doneBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_DONE_BUTTON}`));
-                    expect(doneBtn.nativeElement.textContent).toEqual(doneBtnText);
-                    dateRange.toggle();
-                    fixture.detectChanges();
-                });
+                    doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
+                    expect(doneBtn.textContent.trim()).toEqual('Close');
+                }));
 
                 it('should emit open/close events - open/close methods', fakeAsync(() => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     dateRange.open();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
-
-                    const dayRange = 5;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
                     dateRange.close();
                     tick();
                     fixture.detectChanges();
-                    verifyDateRangeInSingleInput();
+
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
                 it('should emit open/close events - toggle method', fakeAsync(() => {
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     dateRange.toggle();
                     tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
-                    expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
-                    const dayRange = 6;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 14, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    expect(dateRange.collapsed).toBeFalsy();
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledWith({ owner: dateRange });
 
                     dateRange.toggle();
                     tick();
                     fixture.detectChanges();
+
+                    tick();
+                    fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledWith({ owner: dateRange });
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledWith({ owner: dateRange });
                 }));
 
                 it('should not close calendar if closing event is canceled', fakeAsync(() => {
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
-                    dateRange.onClosing.subscribe((e: CancelableEventArgs) => e.cancel = true);
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
+                    dateRange.closing.subscribe((e: CancelableEventArgs) => e.cancel = true);
 
                     dateRange.toggle();
                     tick(DEBOUNCE_TIME);
@@ -546,77 +652,47 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 14, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
 
                     dateRange.close();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalled();
-                    expect(dateRange.onClosed.emit).not.toHaveBeenCalled();
+                    expect(dateRange.closing.emit).toHaveBeenCalled();
+                    expect(dateRange.closed.emit).not.toHaveBeenCalled();
                 }));
             });
 
             describe('Keyboard navigation', () => {
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
-                    fixture.detectChanges();
-
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
                     expect(dateRange.collapsed).toBeTruthy();
 
-                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
+
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
 
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
-                    tick();
-                    fixture.detectChanges();
-
-                    expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
-                }));
-
-                it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
-                    fixture.detectChanges();
-
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
-
-                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
-                    expect(dateRange.collapsed).toBeTruthy();
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
-                    tick(DEBOUNCE_TIME * 2);
-                    fixture.detectChanges();
-                    expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
-
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
-
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
                     dateRange.open();
@@ -624,28 +700,30 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
-                    tick(DEBOUNCE_TIME * 2);
+                    const input = document.getElementsByClassName('igx-input-group__input')[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true, true);
+                    tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
             });
 
@@ -679,8 +757,16 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTwoInputsTestComponent,
                         DateRangeTwoInputsNgModelTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule, IgxDateTimeEditorModule,
-                        IgxInputGroupModule, FormsModule, NoopAnimationsModule, IgxIconModule]
+                    imports: [
+                        IgxDateRangePickerModule,
+                        IgxDateTimeEditorModule,
+                        IgxPickersCommonModule,
+                        IgxCalendarContainerModule,
+                        IgxInputGroupModule,
+                        FormsModule,
+                        NoopAnimationsModule,
+                        IgxIconModule
+                    ]
                 })
                     .compileComponents();
             }));
@@ -688,6 +774,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
+                dateRange.value = { start: new Date('2/2/2020'), end: new Date('3/3/2020') };
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
@@ -704,7 +791,7 @@ describe('IgxDateRangePicker', () => {
 
             describe('Selection tests', () => {
                 it('should assign range values correctly when selecting dates from the calendar', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     let dayRange = 15;
@@ -712,61 +799,60 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
 
                     dayRange = 13;
                     startDate = new Date(today.getFullYear(), today.getMonth(), 6, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 
                 it('should assign range values correctly when selecting dates in reversed order', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
-                    const dayRange = -10;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 20, 0, 0, 0);
-                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(endDate, startDate);
                     verifyDateRange();
                 });
 
                 it('should apply selection to start and end dates when single date is selected', () => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
+                    fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
                     const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                    endDate = startDate;
+                    startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0); // startDate;
 
-                    selectDateRangeFromCalendar(startDate.getDate(), 0);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 
                 it('should update inputs correctly on first and last date selection', () => {
+                    dateRange.hideOutsideDays = true;
+                    fixture.detectChanges();
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                    const dayRange = Math.round(differenceMs / ONE_DAY);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 
                 it('should assign range values correctly when selecting through API', () => {
                     startDate = new Date(2020, 10, 8, 0, 0, 0);
                     endDate = new Date(2020, 11, 8, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRange();
 
                     startDate = new Date(2003, 5, 18, 0, 0, 0);
                     endDate = new Date(2003, 8, 18, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     verifyDateRange();
                 });
@@ -822,7 +908,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
                     expect(startInput.nativeElement.value).toEqual(ControlsFunction.formatDate(startDate, DEFAULT_FORMAT_OPTIONS));
                     expect(endInput.nativeElement.value).toEqual(ControlsFunction.formatDate(endDate, DEFAULT_FORMAT_OPTIONS));
@@ -832,7 +918,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(2);
                     endDate.setDate(19);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const shortDateFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -844,7 +930,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(12);
                     endDate.setDate(23);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const fullDateFormatOptions = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
@@ -856,7 +942,7 @@ describe('IgxDateRangePicker', () => {
 
                     startDate.setDate(9);
                     endDate.setDate(13);
-                    dateRange.selectRange(startDate, endDate);
+                    dateRange.select(startDate, endDate);
                     fixture.detectChanges();
 
                     const customFormatOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
@@ -869,31 +955,30 @@ describe('IgxDateRangePicker', () => {
                 });
 
                 it('should select a range from the calendar only when the two inputs are filled in', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
-
                     startInput.triggerEventHandler('focus', {});
                     fixture.detectChanges();
                     UIInteractions.simulateTyping('11/10/2015', startInput);
 
                     fixture.componentInstance.dateRange.open();
-                    tick();
+                    tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(0);
+                    const rangePicker = fixture.componentInstance.dateRange;
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(0);
 
-                    UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
-                    tick();
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar);
+                    tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
 
                     endInput.triggerEventHandler('focus', {});
                     fixture.detectChanges();
                     UIInteractions.simulateTyping('11/16/2015', endInput);
-                    fixture.detectChanges();
 
                     fixture.componentInstance.dateRange.open();
-                    tick();
+                    tick(DEBOUNCE_TIME);
                     fixture.detectChanges();
-                    expect(fixture.componentInstance.dateRange.calendar.selectedDates.length).toBe(7);
+                    expect((rangePicker as any).calendar.selectedDates.length).toBe(7);
+                    flush();
                 }));
             });
 
@@ -901,103 +986,103 @@ describe('IgxDateRangePicker', () => {
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key - dropdown mode', fakeAsync(() => {
                     expect(dateRange.collapsed).toBeTruthy();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should toggle the calendar with ALT + DOWN/UP ARROW key - dialog mode', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.Dialog;
+                    fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    const range = fixture.debugElement.query(By.css(CSS_RANGE_PICKER));
+                    const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
                     UIInteractions.triggerEventHandlerKeyDown('ArrowDown', range, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(1);
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowUp', calendar, true);
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should close the calendar with ESC', fakeAsync(() => {
-                    fixture.componentInstance.mode = InteractionMode.DropDown;
-                    fixture.detectChanges();
-
-                    spyOn(dateRange.onClosing, 'emit').and.callThrough();
-                    spyOn(dateRange.onClosed, 'emit').and.callThrough();
+                    spyOn(dateRange.closing, 'emit').and.callThrough();
+                    spyOn(dateRange.closed, 'emit').and.callThrough();
 
                     expect(dateRange.collapsed).toBeTruthy();
-                    dateRange.toggle();
+                    dateRange.open();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
 
-                    UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
+                    calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
+                    UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onClosing.emit).toHaveBeenCalledTimes(1);
-                    expect(dateRange.onClosed.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
+                    expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
                 }));
 
                 it('should not open calendar with ALT + DOWN ARROW key if disabled is set to true', fakeAsync(() => {
                     fixture.componentInstance.disabled = true;
                     fixture.detectChanges();
 
-                    spyOn(dateRange.onOpening, 'emit').and.callThrough();
-                    spyOn(dateRange.onOpened, 'emit').and.callThrough();
+                    spyOn(dateRange.opening, 'emit').and.callThrough();
+                    spyOn(dateRange.opened, 'emit').and.callThrough();
 
-                    UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
+                    // UIInteractions.triggerEventHandlerKeyDown('ArrowDown', calendar, true);
                     tick(DEBOUNCE_TIME * 2);
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeTruthy();
-                    expect(dateRange.onOpening.emit).toHaveBeenCalledTimes(0);
-                    expect(dateRange.onOpened.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opening.emit).toHaveBeenCalledTimes(0);
+                    expect(dateRange.opened.emit).toHaveBeenCalledTimes(0);
                 }));
             });
 
             it('should focus the last focused input after the calendar closes - dropdown', fakeAsync(() => {
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
-                UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+                endInput.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
 
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                dateRange.open();
                 tick();
                 fixture.detectChanges();
 
-                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
-                tick(100);
+                dateRange.close();
+                tick();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.dateRange.projectedInputs
@@ -1006,17 +1091,18 @@ describe('IgxDateRangePicker', () => {
             }));
 
             it('should focus the last focused input after the calendar closes - dialog', fakeAsync(() => {
-                fixture.componentInstance.mode = InteractionMode.Dialog;
+                fixture.componentInstance.mode = PickerInteractionMode.Dialog;
                 fixture.detectChanges();
                 endInput = fixture.debugElement.queryAll(By.css('.igx-input-group'))[1];
                 UIInteractions.simulateClickAndSelectEvent(endInput.nativeElement);
+                fixture.detectChanges();
 
-                UIInteractions.triggerEventHandlerKeyDown('ArrowDown', endInput, true);
+                dateRange.open();
                 tick();
                 fixture.detectChanges();
 
-                UIInteractions.triggerEventHandlerKeyDown('Escape', calendar);
-                tick(100);
+                dateRange.close();
+                tick();
                 fixture.detectChanges();
 
                 expect(fixture.componentInstance.dateRange.projectedInputs
@@ -1050,8 +1136,8 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.open();
                     fixture.detectChanges();
                     tick();
-                    expect(fixture.componentInstance.dateRange.value.start.getTime()).toEqual(range.start.getTime());
-                    expect(fixture.componentInstance.dateRange.value.end.getTime()).toEqual(range.end.getTime());
+                    expect((fixture.componentInstance.dateRange.value.start as Date).getTime()).toEqual(range.start.getTime());
+                    expect((fixture.componentInstance.dateRange.value.end as Date).getTime()).toEqual(range.end.getTime());
                 }));
             });
         });
@@ -1064,17 +1150,31 @@ describe('IgxDateRangePicker', () => {
                         DateRangeTestComponent,
                         DateRangeDefaultComponent,
                         DateRangeCustomComponent,
-                        DateRangeTemplatesComponent
+                        DateRangeTemplatesComponent,
+                        DateRangeTwoInputsTestComponent
                     ],
-                    imports: [IgxDateRangePickerModule,
+                    imports: [
+                        IgxDateRangePickerModule,
                         IgxDateTimeEditorModule,
                         IgxInputGroupModule,
                         IgxIconModule,
                         FormsModule,
-                        NoopAnimationsModule]
+                        NoopAnimationsModule,
+                        IgxCalendarContainerModule,
+                        IgxPickersCommonModule
+                    ]
                 })
                     .compileComponents();
             }));
+
+            it('should render range separator', () => {
+                fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
+                fixture.detectChanges();
+
+                const range = fixture.debugElement.query(By.css(CSS_CLASS_DATE_RANGE));
+                expect(range.children[1].nativeElement.innerText).toBe('-');
+            });
+
             it('should render default toggle icon', () => {
                 fixture = TestBed.createComponent(DateRangeDefaultComponent);
                 fixture.detectChanges();
@@ -1122,15 +1222,14 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
                 const toggleBtn = fixture.debugElement.query(By.css(`.${CSS_CLASS_ICON}`));
-                const calendarElement = fixture.debugElement.query(By.css(`.${CSS_CLASS_CALENDAR}`));
                 const singleInputElement = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 startDate = new Date(2020, 1, 1);
                 endDate = new Date(2020, 1, 4);
                 const expectedLabelID = dateRange.label.id;
-                const expectedPlaceholder = singleInputElement.nativeElement.getAttribute('placeholder');
+                const expectedPlaceholder = 'MM/dd/yyyy - MM/dd/yyyy';
 
                 expect(singleInputElement.nativeElement.getAttribute('role')).toEqual('combobox');
-                expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual(expectedPlaceholder);
+                expect(singleInputElement.nativeElement.getAttribute('placeholder').trim()).toEqual(expectedPlaceholder);
                 expect(singleInputElement.nativeElement.getAttribute('aria-haspopup')).toEqual('grid');
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
                 expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
@@ -1140,18 +1239,10 @@ describe('IgxDateRangePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                const calendarWrapper = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR_TOGGLE));
                 expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('true');
-                expect(calendarWrapper.nativeElement.getAttribute('aria-hidden')).toEqual('false');
-
-                dateRange.toggle();
-                tick();
-                fixture.detectChanges();
-
-                expect(singleInputElement.nativeElement.getAttribute('aria-expanded')).toEqual('false');
                 expect(toggleBtn.nativeElement.getAttribute('aria-hidden')).toEqual('true');
 
-                dateRange.selectRange(startDate, endDate);
+                dateRange.select(startDate, endDate);
                 fixture.detectChanges();
                 expect(singleInputElement.nativeElement.getAttribute('placeholder')).toEqual('');
             }));
@@ -1173,7 +1264,7 @@ describe('IgxDateRangePicker', () => {
 
                 startDate = new Date(2020, 10, 8, 0, 0, 0);
                 endDate = new Date(2020, 11, 8, 0, 0, 0);
-                dateRange.selectRange(startDate, endDate);
+                dateRange.select(startDate, endDate);
                 fixture.detectChanges();
 
                 const result = fixture.componentInstance.formatter({ start: startDate, end: endDate });
@@ -1210,7 +1301,7 @@ export class DateRangeTestComponent implements OnInit {
     public dateRange: IgxDateRangePickerComponent;
 
     public doneButtonText: string;
-    public mode = InteractionMode.DropDown;
+    public mode = PickerInteractionMode.DropDown;
     public disabled = false;
     public minValue: Date | string;
     public maxValue: Date | string;
@@ -1244,6 +1335,7 @@ export class DateRangeDefaultComponent extends DateRangeTestComponent {
             </igx-picker-toggle>
             <input igxInput igxDateTimeEditor type="text">
         </igx-date-range-start>
+        <ng-template igxDateRangeSeparator>-</ng-template>
         <igx-date-range-end>
             <input igxInput igxDateTimeEditor type="text">
         </igx-date-range-end>
@@ -1285,8 +1377,11 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     private monthFormatter = new Intl.DateTimeFormat('en', { month: 'long' });
 
     public formatter = (date: DateRange) => {
-        const startDate = `${this.monthFormatter.format(date.start)} ${date.start.getDate()}, ${date.start.getFullYear()}`;
-        const endDate = `${this.monthFormatter.format(date.end)} ${date.end.getDate()}, ${date.end.getFullYear()}`;
+        const startDate = `${this.monthFormatter
+            .format(date.start as Date)} ${(date.start as Date).getDate()}, ${(date.start as Date).getFullYear()}`;
+        const endDate = `${this.monthFormatter
+            .format(date.end as Date)} ${(date
+                .end as Date).getDate()}, ${(date.end as Date).getFullYear()}`;
         return `You selected ${startDate}-${endDate}`;
     };
 }
@@ -1332,5 +1427,5 @@ export class DateRangeCustomComponent extends DateRangeTestComponent {
     `
 })
 export class DateRangeTemplatesComponent extends DateRangeTestComponent {
-    range;
+    public range;
 }

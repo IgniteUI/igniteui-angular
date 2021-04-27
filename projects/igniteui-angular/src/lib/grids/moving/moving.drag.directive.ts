@@ -16,7 +16,13 @@ import { IgxColumnMovingService } from './moving.service';
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data;
+    }
 
     public get column(): IgxColumnComponent {
         return this.data;
@@ -30,6 +36,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
+    protected _data: any;
     private subscription$: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
@@ -77,7 +84,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         const args = {
             source: this.column
         };
-        this.column.grid.onColumnMovingStart.emit(args);
+        this.column.grid.columnMovingStart.emit(args);
 
         this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
             if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
@@ -100,7 +107,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
                 source: this.column,
                 cancel: false
             };
-            this.column.grid.onColumnMoving.emit(args);
+            this.column.grid.columnMoving.emit(args);
 
             if (args.cancel) {
                 this.onEscape(event);

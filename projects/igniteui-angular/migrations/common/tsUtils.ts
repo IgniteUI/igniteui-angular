@@ -18,28 +18,29 @@ export const CUSTOM_TS_PLUGIN_NAME = 'igx-ts-plugin';
 //     return ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
 // }
 
-export const getIdentifierPositions = (sourceText: string, name: string): Array<{ start: number; end: number }> => {
-    const source = ts.createSourceFile('', sourceText, ts.ScriptTarget.Latest, true);
+export const getIdentifierPositions = (source: string | ts.SourceFile, name: string): Array<{ start: number; end: number }> => {
+    if (typeof source === 'string') {
+        source = ts.createSourceFile('', source, ts.ScriptTarget.Latest, true);
+    }
     const positions = [];
 
     const checkIdentifier = (node: ts.Node): boolean => {
-        if (node.kind !== ts.SyntaxKind.Identifier || !node.parent) {
+        if (!ts.isIdentifier(node) || !node.parent) {
             return false;
         }
         if (node.parent.kind === ts.SyntaxKind.PropertyDeclaration) {
+            // `const identifier = ...`
             return false;
         }
-        if (node.parent.kind === ts.SyntaxKind.PropertyAssignment ||
-            node.parent.kind === ts.SyntaxKind.PropertySignature) {
+        if (ts.isPropertyAssignment(node.parent) || ts.isPropertySignature(node.parent)) {
             // make sure it's not prop assign  `= { IgxClass: "fake"}`
             //                  definition `prop: { IgxClass: string; }`
             //                                     name: initializer
-            const propAssign: ts.PropertyAssignment | ts.PropertySignature = node.parent as ts.PropertyAssignment | ts.PropertySignature;
-            if (propAssign.name.getText() === name) {
+            if (node.parent.name.getText() === name) {
                 return false;
             }
         }
-        return (node as ts.Identifier).text === name;
+        return node.text === name;
     };
 
     const findIdentifiers = (node: ts.Node) => {
@@ -243,7 +244,7 @@ const getTypeDefinitions = (langServ: tss.LanguageService, entryPath: string, po
  * @param position Index of identifier
  */
 export const getTypeDefinitionAtPosition =
-    (langServ: tss.LanguageService, entryPath: string, position: number): tss.DefinitionInfo | null => {
+    (langServ: tss.LanguageService, entryPath: string, position: number): Pick<tss.DefinitionInfo, 'name' | 'fileName'> | null => {
         const definition = langServ.getDefinitionAndBoundSpan(entryPath, position)?.definitions[0];
         if (!definition) {
             return null;
@@ -253,7 +254,20 @@ export const getTypeDefinitionAtPosition =
         if (definition.kind.toString() === 'reference') {
             return langServ.getDefinitionAndBoundSpan(entryPath, definition.textSpan.start).definitions[0];
         }
-        let typeDefs = getTypeDefinitions(langServ, entryPath, definition.textSpan.start);
+        if (definition.kind.toString() === 'method') {
+            // TODO:
+            // const typeChecker = langServ.getProgram().getTypeChecker();
+            // typeChecker.getSymbolAtLocation() // need getTokenAtPosition / adapted getTokenAtPositionWorker from ts
+            // typeChecker.getReturnTypeOfSignature()
+
+            const maybeReturnType = langServ.getQuickInfoAtPosition(entryPath, position).displayParts?.pop();
+
+            // quick info (and getImplementationAtPosition) have the return type as last of the displayParts
+            // check if it's a className (potentially Ignite comp) and use for definition name:
+            definition.name = maybeReturnType.kind === 'className' ? maybeReturnType.text : '';
+            return definition;
+        }
+        let typeDefs = getTypeDefinitions(langServ, definition.fileName || entryPath, definition.textSpan.start);
         // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
         // or is a reference in a decorator
         if (!typeDefs) {
@@ -301,6 +315,12 @@ export const getTypeDefinitionAtPosition =
 
 export const isMemberIgniteUI =
     (change: MemberChange, langServ: tss.LanguageService, entryPath: string, matchPosition: number): boolean => {
+        const prevChar = langServ.getProgram().getSourceFile(entryPath).getText().substr(matchPosition - 2, 1);
+        if (prevChar === ')') {
+            // methodCall().identifier
+            matchPosition = langServ.getBraceMatchingAtPosition(entryPath, matchPosition - 2)[0]?.start ?? matchPosition;
+
+        }
         const typeDef = getTypeDefinitionAtPosition(langServ, entryPath, matchPosition - 1);
         return !typeDef ? false : typeDef.fileName.includes(IG_PACKAGE_NAME) && change.definedIn.indexOf(typeDef.name) !== -1;
     };

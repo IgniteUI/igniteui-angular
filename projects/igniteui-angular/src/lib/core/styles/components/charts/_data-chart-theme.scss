@@ -45,6 +45,7 @@
     $subtitle-horizontal-alignment: null,
 ) {
     $name: 'data-chart';
+    $selector: 'igx-data-chart';
     $chart-schema: ();
 
     @if map-has-key($schema, $name) {
@@ -83,6 +84,7 @@
         $subtitle-margin,
         (
             name: $name,
+            selector: $selector,
             title-text-color: $title-text-color,
             subtitle-text-color: null,
             brushes: $brushes,

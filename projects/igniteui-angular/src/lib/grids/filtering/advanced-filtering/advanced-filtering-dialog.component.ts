@@ -20,6 +20,8 @@ import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
 import { IgxGridBaseDirective } from '../../public_api';
 import { PlatformUtil } from '../../../core/utils';
+import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 
 /**
  * @hidden
@@ -93,6 +95,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     @ViewChild('searchValueInput', { read: ElementRef })
     public searchValueInput: ElementRef;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('picker')
+    public picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     /**
      * @hidden @internal
@@ -609,7 +617,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
             this.conditionSelect.input.nativeElement.focus();
         } else {
-            this.searchValueInput.nativeElement.focus();
+            const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
+            input.focus();
         }
     }
 
@@ -772,6 +781,14 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
+        }
+    }
+
+    /** @hidden @internal */
+    public openPicker(args: KeyboardEvent) {
+        if (this.platform.isActivationKey(args)) {
+            args.preventDefault();
+            this.picker.open();
         }
     }
 

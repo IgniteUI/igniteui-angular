@@ -186,14 +186,14 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.init();
             this.sortingChanged.emit();
 
-            this._columnPinning = this.grid.onColumnPinning.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnPinning = this.grid.columnPin.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 requestAnimationFrame(() => {
                     if (!(this.cdr as ViewRef).destroyed) {
                         this.cdr.detectChanges();
                     }
                 });
             });
-            this._columnVisibilityChanged = this.grid.onColumnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnVisibilityChanged = this.grid.columnVisibilityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
             this._sortingChanged =  this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe(() => {
@@ -205,7 +205,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this._densityChanged = this.grid.onDensityChanged.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
-            this._columnMoved = this.grid.onColumnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this._columnMoved = this.grid.columnMovingEnd.pipe(takeUntil(this.destroy$)).subscribe(() => {
                 this.cdr.detectChanges();
             });
         }
@@ -368,7 +368,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         }
 
         this.initialized.emit();
-        this.grid.onColumnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
+        this.grid.columnMoving.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.closeDropdown();
         });
     }
@@ -463,6 +463,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     private areExpressionsSelectable() {
         if (this.expressionsList.length === 1 &&
             (this.expressionsList[0].expression.condition.name === 'equals' ||
+                this.expressionsList[0].expression.condition.name === 'at' ||
                 this.expressionsList[0].expression.condition.name === 'true' ||
                 this.expressionsList[0].expression.condition.name === 'false' ||
                 this.expressionsList[0].expression.condition.name === 'empty' ||
@@ -473,6 +474,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         const selectableExpressionsCount = this.expressionsList.filter(exp =>
             (exp.beforeOperator === 1 || exp.afterOperator === 1) &&
             (exp.expression.condition.name === 'equals' ||
+                exp.expression.condition.name === 'at' ||
                 exp.expression.condition.name === 'true' ||
                 exp.expression.condition.name === 'false' ||
                 exp.expression.condition.name === 'empty' ||
@@ -496,7 +498,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
         for (const expression of this.uniqueValues) {
             const value = this.getExpressionValue(expression);
-            if (this.filterValues.has(value)) {
+            if (this.filterValues.has(this.column.dataType === DataType.DateTime? (value as any).toISOString() : value)) {
                 return true;
             }
         }
@@ -562,7 +564,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private renderValues(columnValues: any[]) {
         this.generateUniqueValues(columnValues);
-        this.generateFilterValues(this.column.dataType === DataType.Date);
+        this.generateFilterValues(this.column.dataType === DataType.Date || this.column.dataType === DataType.DateTime);
         this.generateListData();
     }
 
@@ -572,8 +574,12 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                 .reduce((map, val, i) => map.get(val) ? map : map.set(val, columnValues[i]),
                     new Map());
             this.uniqueValues = Array.from(filteredUniqueValues.values());
-        } else {
-            this.uniqueValues = this.column.dataType === DataType.Date ? uniqueDates(columnValues) : Array.from(new Set(columnValues));
+        } else if (this.column.dataType === DataType.DateTime) {
+            this.uniqueValues = Array.from(new Set(columnValues.map(v => v.toLocaleString())));
+            this.uniqueValues.forEach((d, i) =>  this.uniqueValues[i] = new Date(d));
+        }else {
+            this.uniqueValues = this.column.dataType === DataType.Date ?
+                uniqueDates(columnValues) : Array.from(new Set(columnValues));
         }
     }
 
@@ -598,7 +604,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
     private generateListData() {
         this.listData = new Array<FilterListItem>();
-
         const shouldUpdateSelection = this.areExpressionsSelectable() && this.areExpressionsValuesInTheList();
 
         if (this.column.dataType === DataType.Boolean) {
@@ -680,7 +685,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.selectAllSelected = true;
         this.containsNullOrEmpty = false;
         this.selectAllIndeterminate = false;
-
         const applyFormatter = !this.shouldFormatValues();
 
         this.uniqueValues.forEach(element => {
@@ -698,7 +702,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
 
                     if (shouldUpdateSelection) {
                         const value = this.getExpressionValue(element);
-                        if (this.filterValues.has(value)) {
+                        if (this.filterValues.has(this.column.dataType === DataType.DateTime? (value as any).toISOString() : value)) {
                             filterListItem.isSelected = true;
                             filterListItem.isFiltered = true;
                         }
@@ -707,7 +711,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
                         this.selectAllSelected = false;
                     }
                 }
-
                 filterListItem.value = this.getFilterItemValue(element);
                 filterListItem.label = this.getFilterItemLabel(element, applyFormatter);
                 filterListItem.indeterminate = false;
@@ -759,6 +762,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             valueA = a.value.toUpperCase();
             valueB = b.value.toUpperCase();
         }
+        if (this.column.dataType === DataType.Time) {
+            valueA = new Date().setHours(valueA.getHours(), valueA.getMinutes(), valueA.getSeconds(), valueA.getMilliseconds());
+            valueB = new Date().setHours(valueB.getHours(), valueB.getMinutes(), valueB.getSeconds(), valueB.getMilliseconds());
+        }
         if (valueA < valueB) {
             return -1;
         } else if (valueA > valueB) {
@@ -769,7 +776,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
-        if (this.column.dataType === DataType.Date) {
+        if (this.column.dataType === DataType.Date || this.column.dataType === DataType.Time ||
+                this.column.dataType === DataType.DateTime) {
             return element && element.label ? element.label : this.column.formatter ?
                 applyFormatter ? this.column.formatter(element) : element :
                 this.grid.datePipe.transform(element, this.column.pipeArgs.format, this.column.pipeArgs.timezone,

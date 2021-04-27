@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule } from './public_api';
+import { IgxGridModule, IgxGridRow, IgxGroupByRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { DataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -23,6 +23,8 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
+import { GridFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxGridRowComponent } from './grid-row.component';
 
 
 describe('IgxGrid Component Tests #grid', () => {
@@ -1618,7 +1620,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(false);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(350);
             expect(virtDir.getSizeAt(1)).toEqual(136);
             expect(virtDir.getSizeAt(2)).toEqual(136);
@@ -1649,7 +1651,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(hScroll.nativeElement.hidden).toBe(true);
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(700);
             expect(virtDir.getSizeAt(1)).toEqual(150);
             expect(virtDir.getSizeAt(2)).toEqual(150);
@@ -1680,7 +1682,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(false);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(expectedWidth);
             expect(virtDir.getSizeAt(1)).toEqual(136);
             expect(virtDir.getSizeAt(2)).toEqual(136);
@@ -1706,7 +1708,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(hScroll.nativeElement.hidden).toBe(true);
 
             // check virtualization cache is valid
-            const virtDir = grid.getRowByIndex(0).virtDirRow;
+            const virtDir = grid.gridAPI.get_row_by_index(0).virtDirRow;
             expect(virtDir.getSizeAt(0)).toEqual(250);
             expect(virtDir.getSizeAt(1)).toEqual(100);
             expect(virtDir.getSizeAt(2)).toEqual(150);
@@ -1724,7 +1726,7 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(16);
 
             // grid should render all columns and all should be visible.
-            const cells = grid.getRowByIndex(0).cells;
+            const cells = grid.gridAPI.get_row_by_index(0).cells;
             expect(cells.length).toBe(30);
             expect(parseInt(grid.hostWidth, 10)).toBe(30 * 136);
         });
@@ -1759,7 +1761,8 @@ describe('IgxGrid Component Tests #grid', () => {
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
                 declarations: [
-                    IgxGridDefaultRenderingComponent
+                    IgxGridDefaultRenderingComponent,
+                    IgxGridWrappedInContComponent
                 ],
                 imports: [
                     NoopAnimationsModule, IgxGridModule]
@@ -1897,7 +1900,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.width = '300px';
             fix.detectChanges();
 
-            spyOn(grid.onScroll, 'emit').and.callThrough();
+            spyOn(grid.gridScroll, 'emit').and.callThrough();
             let verticalScrollEvent;
             let horizontalScrollEvent;
             grid.verticalScrollContainer.getScroll().addEventListener('scroll', (evt) => verticalScrollEvent = evt);
@@ -1908,8 +1911,8 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            expect(grid.onScroll.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+            expect(grid.gridScroll.emit).toHaveBeenCalledTimes(1);
+            expect(grid.gridScroll.emit).toHaveBeenCalledWith({
                 direction: 'vertical',
                 scrollPosition: grid.verticalScrollContainer.getScrollForIndex(20, true),
                 event: verticalScrollEvent
@@ -1920,8 +1923,8 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             fix.detectChanges();
 
-            expect(grid.onScroll.emit).toHaveBeenCalledTimes(2);
-            expect(grid.onScroll.emit).toHaveBeenCalledWith({
+            expect(grid.gridScroll.emit).toHaveBeenCalledTimes(2);
+            expect(grid.gridScroll.emit).toHaveBeenCalledWith({
                 direction: 'horizontal',
                 scrollPosition: grid.headerContainer.getScrollForIndex(6, true),
                 event: horizontalScrollEvent
@@ -1960,6 +1963,97 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(1)).toEqual(secondRow);
             expect(grid.getRowData(7)).toEqual({});
         });
+
+        it(`Verify that getRowByIndex returns correct data`, () => {
+            const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
+            fix.componentInstance.initColumnsRows(35, 5);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const virtRowsLength = grid.dataRowList.length;
+            const indexToCompare = 32;
+
+            expect(indexToCompare > virtRowsLength).toBe(true);
+            // Check if the comparable row is within the virt container
+            expect(grid.gridAPI.get_row_by_index(virtRowsLength - 1) instanceof IgxGridRowComponent).toBe(true);
+
+            // Check if the comparable row is outside the virt container
+            expect(grid.gridAPI.get_row_by_index(virtRowsLength + 1)).toEqual(undefined);
+
+            // Get row with the new getRowByIndex method
+            expect(grid.getRowByIndex(32) instanceof IgxGridRow).toBe(true);
+
+            // GroupBy column and get the collapsed grouped row
+            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+
+            fix.detectChanges();
+            grid.groupBy({ fieldName: 'col1', dir: SortingDirection.Asc });
+            fix.detectChanges();
+
+            // First row is IgxGroupByRow second row is igxGridRow
+            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(1) instanceof IgxGridRow).toBe(true);
+
+            // expand/collapse first group row
+            grid.getRowByIndex(0).expanded = true;
+            fix.detectChanges();
+            expect(grid.getRowByIndex(0).expanded).toBe(true);
+
+            grid.getRowByIndex(0).expanded = false;
+            fix.detectChanges();
+            expect(grid.getRowByIndex(0).expanded).toBe(false);
+
+            // First row is still IgxGroupByRow and now the second row is as well IgxGroupByRow
+            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(1) instanceof IgxGroupByRow).toBe(true);
+
+            // Check hasChildren and other API members for igxGrid
+            expect(grid.getRowByIndex(2).hasChildren).toBe(false);
+            expect(grid.getRowByIndex(2).index).toEqual(2);
+            expect(grid.getRowByIndex(1).isSummaryRow).toBeUndefined();
+
+            // GroupByRow check
+            expect(grid.getRowByIndex(2).isGroupByRow).toBeUndefined();
+            expect(grid.getRowByIndex(1).isGroupByRow).toBe(true);
+            expect(grid.getRowByIndex(2).groupRow).toBeUndefined();
+            expect(grid.getRowByIndex(1).groupRow).toBeTruthy();
+
+            // key and rowData check - first with group row (index 1) and then with IgxGridRow (index 2)
+            expect(grid.getRowByIndex(1).key).toBeUndefined();
+            expect(grid.getRowByIndex(1).data).toBeUndefined();
+            expect(grid.getRowByIndex(1).pinned).toBeUndefined();
+            expect(grid.getRowByIndex(1).selected).toBeUndefined();
+            expect(grid.getRowByIndex(2).key).toBeTruthy();
+            expect(grid.getRowByIndex(2).data).toBeTruthy();
+            expect(grid.getRowByIndex(2).pinned).toBe(false);
+            expect(grid.getRowByIndex(2).selected).toBe(false);
+
+            // Toggle selection
+            grid.getRowByIndex(2).selected = true;
+            expect(grid.getRowByIndex(2).selected).toBe(true);
+        });
+
+        it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            const grid = fix.componentInstance.grid;
+            fix.componentInstance.data = fix.componentInstance.fullData;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
+            tick(16);
+
+            // Compare the result returned by both get_row_by_index and getRowByIndex
+            expect(grid.gridAPI.get_row_by_index(fix.componentInstance.pageSize + 1)).toBeUndefined();
+            expect(grid.getRowByIndex(fix.componentInstance.pageSize - 1) instanceof IgxGridRow).toBe(true);
+            expect(grid.getRowByIndex(fix.componentInstance.pageSize) instanceof IgxGridRow).toBe(false);
+
+            // Change page and check getRowByIndex
+            grid.page = 1;
+            fix.detectChanges();
+            tick();
+
+            // Return the first row after page change
+            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+        }));
     });
 
     describe('IgxGrid - Integration with other Igx Controls', () => {
@@ -2376,7 +2470,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
 @Component({
     template: `<div style="width: 800px; height: 600px;">
-        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (onColumnInit)="columnCreated($event)">
+        <igx-grid #grid [data]="data" [autoGenerate]="autoGenerate" (columnInit)="columnCreated($event)">
             <igx-column *ngFor="let column of columns;" [field]="column.field" [hasSummary]="column.hasSummary"
                 [header]="column.field" [width]="column.width">
             </igx-column>
@@ -2447,7 +2541,7 @@ export class IgxGridTestComponent {
 }
 
 @Component({
-    template: `<igx-grid #grid [data]="data" (onColumnInit)="initColumns($event)">
+    template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`
@@ -2509,7 +2603,7 @@ export class IgxGridDefaultRenderingComponent {
 }
 
 @Component({
-    template: `<igx-grid #grid [data]="data" [width]="'500px'" (onColumnInit)="initColumns($event)">
+    template: `<igx-grid #grid [data]="data" [width]="'500px'" (columnInit)="initColumns($event)">
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
     </igx-grid>`
@@ -2608,7 +2702,7 @@ export class IgxGridFixedContainerHeightComponent extends IgxGridWrappedInContCo
 
 @Component({
     template: `
-        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+        <igx-grid [data]="data" (columnInit)="columnCreated($event)">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name"></igx-column>
         </igx-grid>
@@ -2626,7 +2720,7 @@ export class IgxGridMarkupDeclarationComponent extends IgxGridTestComponent {
 
 @Component({
     template: `<div>
-        <igx-grid [data]="data" (onColumnInit)="columnCreated($event)">
+        <igx-grid [data]="data" (columnInit)="columnCreated($event)">
             <igx-column field="ID"></igx-column>
             <igx-column field="Name"></igx-column>
         </igx-grid>

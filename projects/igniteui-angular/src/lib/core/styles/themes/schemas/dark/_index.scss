@@ -59,6 +59,7 @@
 @import './time-picker';
 @import './toast';
 @import './tooltip';
+@import './tree';
 @import './watermark';
 
 /// Used to create Material Design themes.
@@ -84,7 +85,7 @@
 /// @property {Map} doughnut-chart [$_dark-doughnut-chart]
 /// @property {Map} igx-date-range-picker [$_dark-date-range-picker]
 /// @property {Map} igx-divider [$_dark-divider]
-/// @property {Map} igc-dock-manager [$_dark-dock-manager]
+/// @property {Map} igc-dockmanager [$_dark-dock-manager]
 /// @property {Map} igx-drop-down [$_dark-drop-down]
 /// @property {Map} igx-expansion-panel [$_dark-expansion-panel]
 /// @property {Map} linear-gauge [$_dark-linear-gauge]
@@ -121,6 +122,7 @@
 /// @property {Map} igx-time-picker [$_dark-time-picker]
 /// @property {Map} igx-toast [$_dark-toast]
 /// @property {Map} igx-tooltip [$_dark-tooltip]
+/// @property {Map} igx-tree [$_dark-tree]
 $dark-schema: (
     igx-avatar: $_dark-avatar,
     igx-action-strip: $_dark-action-strip,
@@ -142,7 +144,7 @@ $dark-schema: (
     doughnut-chart: $_dark-doughnut-chart,
     igx-date-range: $_dark-date-range-picker,
     igx-divider: $_dark-divider,
-    igc-dock-manager: $_dark-dock-manager,
+    igc-dockmanager: $_dark-dock-manager,
     igx-drop-down: $_dark-drop-down,
     igx-expansion-panel: $_dark-expansion-panel,
     linear-gauge: $_dark-linear-gauge,
@@ -179,6 +181,7 @@ $dark-schema: (
     igx-time-picker: $_dark-time-picker,
     igx-toast: $_dark-toast,
     igx-tooltip: $_dark-tooltip,
+    igx-tree: $_dark-tree,
     igx-watermark: $_dark-watermark,
 );
 
@@ -210,7 +213,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} doughnut-chart [$_dark-fluent-doughnut-chart]
 /// @property {Map} igx-date-range-picker [$_dark-fluent-date-range-picker],
 /// @property {Map} igx-divider [$_dark-fluent-divider],
-/// @property {Map} igc-dock-manager [$_dark-fluent-dock-manager],
+/// @property {Map} igc-dockmanager [$_dark-fluent-dock-manager],
 /// @property {Map} igx-drop-down [$_dark-fluent-drop-down],
 /// @property {Map} igx-expansion-panel [$_dark-fluent-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-fluent-linear-gauge]
@@ -247,6 +250,7 @@ $dark-material-schema: $dark-schema;
 /// @property {Map} igx-time-picker [$_dark-fluent-time-picker],
 /// @property {Map} igx-toast [$_dark-fluent-toast],
 /// @property {Map} igx-tooltip [$_dark-fluent-tooltip]
+/// @property {Map} igx-tree [$_dark-fluent-tree]
 $dark-fluent-schema: (
     igx-avatar: $_dark-fluent-avatar,
     igx-action-strip: $_dark-fluent-action-strip,
@@ -268,7 +272,7 @@ $dark-fluent-schema: (
     doughnut-chart: $_dark-fluent-doughnut-chart,
     igx-date-range: $_dark-fluent-date-range-picker,
     igx-divider: $_dark-fluent-divider,
-    igc-dock-manager: $_dark-fluent-dock-manager,
+    igc-dockmanager: $_dark-fluent-dock-manager,
     igx-drop-down: $_dark-fluent-drop-down,
     igx-expansion-panel: $_dark-fluent-expansion-panel,
     linear-gauge: $_dark-fluent-linear-gauge,
@@ -305,6 +309,7 @@ $dark-fluent-schema: (
     igx-time-picker: $_dark-fluent-time-picker,
     igx-toast: $_dark-fluent-toast,
     igx-tooltip: $_dark-fluent-tooltip,
+    igx-tree: $_dark-fluent-tree,
     igx-watermark: $_dark-fluent-watermark,
 );
 
@@ -331,7 +336,7 @@ $dark-fluent-schema: (
 /// @property {Map} doughnut-chart [$_dark-bootstrap-doughnut-chart]
 /// @property {Map} igx-date-range-picker [$_dark-bootstrap-date-range-picker],
 /// @property {Map} igx-divider [$_dark-bootstrap-divider],
-/// @property {Map} igc-dock-manager [$_dark-bootstrap-dock-manager],
+/// @property {Map} igc-dockmanager [$_dark-bootstrap-dock-manager],
 /// @property {Map} igx-drop-down [$_dark-bootstrap-drop-down],
 /// @property {Map} igx-expansion-panel [$_dark-bootstrap-expansion-panel],
 /// @property {Map} linear-gauge [$_dark-bootstrap-linear-gauge]
@@ -368,6 +373,7 @@ $dark-fluent-schema: (
 /// @property {Map} igx-time-picker [$_dark-bootstrap-time-picker],
 /// @property {Map} igx-toast [$_dark-bootstrap-toast],
 /// @property {Map} igx-tooltip [$_dark-bootstrap-tooltip]
+/// @property {Map} igx-tree [$_dark-bootstrap-tree]
 $dark-bootstrap-schema: (
     igx-avatar: $_dark-bootstrap-avatar,
     igx-action-strip: $_dark-bootstrap-action-strip,
@@ -389,7 +395,7 @@ $dark-bootstrap-schema: (
     doughnut-chart: $_dark-bootstrap-doughnut-chart,
     igx-date-range: $_dark-bootstrap-date-range-picker,
     igx-divider: $_dark-bootstrap-divider,
-    igc-dock-manager: $_dark-bootstrap-dock-manager,
+    igc-dockmanager: $_dark-bootstrap-dock-manager,
     igx-drop-down: $_dark-bootstrap-drop-down,
     igx-expansion-panel: $_dark-bootstrap-expansion-panel,
     linear-gauge: $_dark-bootstrap-linear-gauge,
@@ -426,6 +432,7 @@ $dark-bootstrap-schema: (
     igx-time-picker: $_dark-bootstrap-time-picker,
     igx-toast: $_dark-bootstrap-toast,
     igx-tooltip: $_dark-bootstrap-tooltip,
+    igx-tree: $_dark-bootstrap-tree,
     igx-watermark: $_dark-bootstrap-watermark,
 );
 
@@ -453,7 +460,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-date-range-picker [$_dark-indigo-date-range-picker]
 /// @property {Map} igx-drop-down [$_dark-indigo-drop-down]
 /// @property {Map} igx-divider [$_dark-indigo-divider]
-/// @property {Map} igc-dock-manager [$_dark-indigo-dock-manager]
+/// @property {Map} igc-dockmanager [$_dark-indigo-dock-manager]
 /// @property {Map} igx-expansion-panel [$_dark-indigo-expansion-panel]
 /// @property {Map} linear-gauge [$_dark-indigo-linear-gauge]
 /// @property {Map} radial-gauge [$_dark-indigo-radial-gauge]
@@ -489,6 +496,7 @@ $dark-bootstrap-schema: (
 /// @property {Map} igx-time-picker [$_dark-indigo-time-picker]
 /// @property {Map} igx-toast [$_dark-indigo-toast]
 /// @property {Map} igx-tooltip [$_dark-indigo-tooltip]
+/// @property {Map} igx-tree [$_dark-indigo-tree]
 $dark-indigo-schema: (
     igx-avatar: $_dark-indigo-avatar,
     igx-action-strip: $_dark-indigo-action-strip,
@@ -511,7 +519,7 @@ $dark-indigo-schema: (
     igx-date-range: $_dark-indigo-date-range-picker,
     igx-drop-down: $_dark-indigo-drop-down,
     igx-divider: $_dark-indigo-divider,
-    igc-dock-manager: $_dark-indigo-dock-manager,
+    igc-dockmanager: $_dark-indigo-dock-manager,
     igx-expansion-panel: $_dark-indigo-expansion-panel,
     linear-gauge: $_dark-indigo-linear-gauge,
     radial-gauge: $_dark-indigo-radial-gauge,
@@ -547,6 +555,7 @@ $dark-indigo-schema: (
     igx-time-picker: $_dark-indigo-time-picker,
     igx-toast: $_dark-indigo-toast,
     igx-tooltip: $_dark-indigo-tooltip,
+    igx-tree: $_dark-indigo-tree,
     igx-watermark: $_dark-indigo-watermark,
 );
 

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, Input, HostBinding, Output, EventEmitter, ElementRef, AfterContentChecked } from '@angular/core';
 import { Subject } from 'rxjs';
-
-export enum Direction { NONE, NEXT, PREV }
+import { Direction, IgxSlideComponentBase } from './carousel-base';
 
 /**
  * A slide component that usually holds an image and/or a caption text.
@@ -20,7 +19,7 @@ export enum Direction { NONE, NEXT, PREV }
     templateUrl: 'slide.component.html'
 })
 
-export class IgxSlideComponent implements AfterContentChecked, OnDestroy {
+export class IgxSlideComponent implements AfterContentChecked, OnDestroy, IgxSlideComponentBase {
     /**
      * Gets/sets the `index` of the slide inside the carousel.
      * ```html

@@ -10,6 +10,9 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         `Applying migration for Ignite UI for Angular to version ${version}`
     );
 
+    // eslint-disable-next-line max-len
+    const UPDATE_NOTE = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+
     const COMPONENTS = [
         {
             component: 'igx-bottom-nav',
@@ -30,10 +33,31 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             labelDirective: 'igxTabHeaderLabel'
         }
     ];
+
+    const EDITOR_COMPONENTS = [{
+        COMPONENT: 'igx-date-picker',
+        TEMPLATE_DIRECTIVE: 'igxDatePickerTemplate',
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxDatePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker -->\n`
+     }, {
+        COMPONENT: 'igx-time-picker',
+        TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
+        TEMPLATE_WARN_MSG:
+`\n<!-- igxTimePickerTemplate has been removed.
+Label, prefix, suffix and hint can now be projected directly.
+See https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker -->\n`
+     }];
+    const EDITORS_MODE = ['[mode]', 'mode'];
+    const EDITORS_LABEL = ['[label]', 'label'];
+    const EDITORS_LABEL_VISIBILITY = ['[labelVisibility]', 'labelVisibility'];
+
     const update = new UpdateChanges(__dirname, host, context);
     const changes = new Map<string, FileChange[]>();
     const htmlFiles = update.templateFiles;
     const sassFiles = update.sassFiles;
+    const tsFiles = update.tsFiles;
     let applyComment = false;
 
     const applyChanges = () => {
@@ -108,7 +132,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     let labelText = '';
                     if (hasAttribute(node, 'label')) {
                         const labelAttr = getAttribute(node, 'label')[0];
-                        labelText = `\n<span ${comp.labelDirective}>${labelAttr.value}</span>\n`;
+                        labelText = `\n<span ${comp.labelDirective}>${labelAttr.value}</span>`;
                     }
                     // Icon content
                     let iconText = '';
@@ -130,9 +154,17 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     }
 
                     if (iconText || labelText || routerLinkText) {
-                        // eslint-disable-next-line max-len
-                        const tabHeader = `\n<${comp.headerItem}${routerLinkText}${classText}>${iconText}${labelText}</${comp.headerItem}>`;
-                        addChange(file.url, new FileChange(startTag.end, tabHeader));
+                        // Get igx-tab-header if it's present
+                        const headerNode = findElementNodes([offset.node], comp.headerItem)
+                            .map(hNode => getSourceOffset(hNode as Element));
+
+                        if (headerNode && headerNode.length > 0) {
+                            addChange(file.url, new FileChange(headerNode[0].startTag.end - 1, `${routerLinkText}${classText}`));
+                        } else {
+                            // eslint-disable-next-line max-len
+                            const tabHeader = `\n<${comp.headerItem}${routerLinkText}${classText}>${iconText}${labelText}\n</${comp.headerItem}>`;
+                            addChange(file.url, new FileChange(startTag.end, tabHeader));
+                        }
                     }
                 });
 
@@ -158,7 +190,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                         const tabContentTag = new RegExp(String.raw`${comp.panelItem}`);
                         const hasTabContent = content.match(tabContentTag);
 
-                        if ((!hasTabContent || hasTabContent.length === 0) && !isEmptyOrSpaces(content)) {
+                        if (!hasTabContent && !isEmptyOrSpaces(content)) {
                             const tabPanel = `\n<${comp.panelItem}${classAttrText}>${content}</${comp.panelItem}>\n`;
                             addChange(offset.file.url, new FileChange(tabHeader.sourceSpan.end.offset, tabPanel, content, 'replace'));
                         }
@@ -174,8 +206,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
                     map(node => getSourceOffset(node as Element)).
                     forEach(offset => {
                         const { startTag, file } = offset;
-                        // eslint-disable-next-line max-len
-                        const commentText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->\n`;
+                        const commentText = UPDATE_NOTE;
                         addChange(file.url, new FileChange(startTag.start, commentText));
                     });
 
@@ -214,6 +245,226 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
             if (changed) {
                 host.overwrite(sassPath, newContent);
             }
+        }
+    }
+
+    // update row components imports and typings with new RowType interface
+    const rowsImports = [
+        'IgxGridRowComponent, ',
+        'IgxGridGroupByRowComponent, ',
+        'IgxTreeGridRowComponent, ',
+        'IgxHierarchicalRowComponent, '];
+
+    const rowsImportsNoSpace = [
+            'IgxGridRowComponent,',
+            'IgxGridGroupByRowComponent,',
+            'IgxTreeGridRowComponent,',
+            'IgxHierarchicalRowComponent,'];
+
+    const rowsImportsEnd = [
+        ', IgxGridRowComponent }',
+        ', IgxGridGroupByRowComponent }',
+        ', IgxTreeGridRowComponent }',
+        ', IgxHierarchicalRowComponent }'];
+
+    const rowsImportsEndNewLIne = [
+        'IgxGridRowComponent }',
+        'IgxGridGroupByRowComponent }',
+        'IgxTreeGridRowComponent }',
+        'IgxHierarchicalRowComponent }'];
+
+    const typyingsToReplace = [
+        'as IgxGridRowComponent;',
+        'as IgxGridRowComponent).',
+        ': IgxGridRowComponent',
+
+        'as IgxGridGroupByRowComponent;',
+        'as IgxGridGroupByRowComponent).',
+        ': IgxGridGroupByRowComponent',
+
+        'as IgxTreeGridRowComponent;',
+        'as IgxTreeGridRowComponent).',
+        ': IgxTreeGridRowComponent',
+
+        'as IgxHierarchicalRowComponent;',
+        'as IgxHierarchicalRowComponent).',
+        ': IgxHierarchicalRowComponent'
+    ];
+
+    const replacements = [
+        'as RowType;',
+        'as RowType).',
+        ': RowType'
+    ];
+
+
+    for (const entryPath of tsFiles) {
+        let content = host.read(entryPath).toString();
+        let importChanged = 0;
+
+        rowsImports.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType, ');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('');
+                }
+            }
+        });
+
+        rowsImportsNoSpace.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType,');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('');
+                }
+            }
+        });
+
+        rowsImportsEnd.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, ', RowType }');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join(' }');
+                }
+            }
+        });
+
+        rowsImportsEndNewLIne.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                if (importChanged === 0) {
+                    content = content.replace(n, 'RowType }');
+                    importChanged++;
+                } else {
+                    content = content.split(n).join('}');
+                }
+            }
+        });
+
+        typyingsToReplace.forEach((n, i) => {
+            if (content.indexOf(n) !== -1) {
+                content = content.split(n).join(replacements[i % 3]);
+            }
+        });
+        host.overwrite(entryPath, content);
+    }
+
+    // igxDatePicker & igxTimePicker migrations
+    for (const comp of EDITOR_COMPONENTS) {
+        for (const path of htmlFiles) {
+
+            // DatePicker and TimePicker don't support templates anymore.
+            // That is why migrations inserts a comment to notify the developer to remove the templates.
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+                .map(editor => findElementNodes([editor], 'ng-template'))
+                .reduce((prev, curr) => prev.concat(curr), [])
+                .filter(template => hasAttribute(template as Element, comp.TEMPLATE_DIRECTIVE))
+                .map(node => getSourceOffset(node as Element))
+                .forEach(offset => {
+                    const { startTag, file } = offset;
+                    addChange(file.url, new FileChange(startTag.start, comp.TEMPLATE_WARN_MSG));
+                });
+
+            // DatePicker and TimePicker default mode is changed to dropdown.
+            // 1. That is why any occurrence of drop down mode is removed and
+            // 2. dialog mode is added for those that didn't explicitly set the mode prop.
+
+            // 1. Remove dropdown mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { file } = offset;
+                getAttribute(offset.node as Element, EDITORS_MODE).forEach(attr => {
+                    const { sourceSpan, value } = attr;
+                    if (value.replace(/'/g,'').replace(/"/g,'') === 'dropdown') {
+                        const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                        addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    }
+                });
+            });
+
+            // 2. Insert dialog mode
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_MODE))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                addChange(file.url, new FileChange(startTag.end - 1, ' mode="dialog"'));
+            });
+
+
+            // Remove label property and project it as <label igxLabel></label>
+            // Check also labelVisibility value.
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => hasAttribute(template as Element, EDITORS_LABEL))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                const { startTag, file } = offset;
+                let visibilityValue: string | boolean = true;
+                if (hasAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY)) {
+                    const visibility = getAttribute(offset.node as Element, EDITORS_LABEL_VISIBILITY);
+                    visibilityValue = visibility[0].value;
+                }
+
+                getAttribute(offset.node as Element, EDITORS_LABEL).forEach(attr => {
+                    const { sourceSpan, name, value } = attr;
+                    const attrKeyValue = file.content.substring(sourceSpan.start.offset, sourceSpan.end.offset);
+                    let label;
+                    const ngIF = (typeof visibilityValue === 'boolean') ? `` : ` *ngIf="${visibilityValue}"`;
+                    if (name.startsWith('[')) {
+                        label = `\n<label igxLabel${ngIF}>{{${value}}}</label>`;
+                    } else {
+                        label = `\n<label igxLabel${ngIF}>${value}</label>`;
+                    }
+                    addChange(file.url, new FileChange(sourceSpan.start.offset, '', attrKeyValue, 'replace'));
+                    addChange(file.url, new FileChange(startTag.end, label));
+                });
+            });
+
+            // If label and labelVisibility are not set this means that we should project default labels: "Date" & "Time"
+            findElementNodes(parseFile(host, path), comp.COMPONENT)
+            .filter(template => !hasAttribute(template as Element, EDITORS_LABEL) &&
+                !hasAttribute(template as Element, EDITORS_LABEL_VISIBILITY))
+            .map(node => getSourceOffset(node as Element))
+            .forEach(offset => {
+                if (findElementNodes([offset.node], 'label').length === 0) {
+                const { startTag, file } = offset;
+                addChange(file.url,
+                    new FileChange(startTag.end, `\n<label igxLabel>${comp.COMPONENT === 'igx-date-picker' ? 'Date' : 'Time' }</label>`));
+                }
+            });
+
+            // Rename InteractionMode to PickerInteractionMode
+            const modeMatches = [{
+                old: ' InteractionMode ',
+                new: ' PickerInteractionMode '
+            },
+            {
+                old: ' InteractionMode,',
+                new: ' PickerInteractionMode,'
+            },
+            {
+                old: ' InteractionMode.',
+                new: ' PickerInteractionMode.'
+            }];
+
+            let content;
+            for (const entryPath of tsFiles) {
+                content = host.read(entryPath).toString();
+                modeMatches.forEach(match => {
+                    content = content.replace(match.old, match.new);
+                });
+                host.overwrite(entryPath, content);
+            }
+
+            applyChanges();
+            changes.clear();
         }
     }
 

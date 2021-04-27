@@ -26,6 +26,8 @@ import { IgxDropDownItemComponent } from '../../../drop-down/drop-down-item.comp
 import { IgxFilteringService } from '../grid-filtering.service';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 import { DisplayDensity } from '../../../core/displayDensity';
+import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { PlatformUtil } from '../../../core/utils';
 
 /**
@@ -85,6 +87,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     @ViewChild('defaultDateUI', { read: TemplateRef, static: true })
     protected defaultDateUI: TemplateRef<any>;
 
+    @ViewChild('defaultTimeUI', { read: TemplateRef, static: true })
+    protected defaultTimeUI: TemplateRef<any>;
+
+    @ViewChild('defaultDateTimeUI', { read: TemplateRef, static: true })
+    protected defaultDateTimeUI: TemplateRef<any>;
+
     @ViewChild('input', { read: ElementRef })
     protected input: ElementRef;
 
@@ -99,6 +107,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     @ViewChild('inputGroup', { read: ElementRef })
     protected inputGroup: ElementRef;
+
+    @ViewChild('picker')
+    protected picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
     protected inputGroupPrefix: ElementRef;
@@ -182,7 +193,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.expression = selectedItem.expression;
         }
 
-        this.input.nativeElement.focus();
+        this.focusEditElement();
     }
 
     public get disabled(): boolean {
@@ -192,6 +203,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public get template(): TemplateRef<any> {
         if (this.column.dataType === DataType.Date) {
             return this.defaultDateUI;
+        }
+        if (this.column.dataType === DataType.Time) {
+            return this.defaultTimeUI;
+        }
+        if (this.column.dataType === DataType.DateTime) {
+            return this.defaultDateTimeUI;
         }
         return this.defaultFilterUI;
     }
@@ -284,7 +301,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
-
+        if (this.column.dataType === DataType.DateTime) {
+            this.value = eventArgs;
+            return;
+        }
         if (this.platform.isEdge && target.type !== 'number'
             || this.isKeyPressed && this.platform.isIE || target.value || target.checkValidity()) {
             this.value = target.value;
@@ -313,13 +333,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
-    }
-
-    /**
-     * Event handler for datepicker's close.
-     */
-    public datePickerClose() {
-        this.input.nativeElement.focus();
     }
 
     /**
@@ -397,7 +410,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     /**
      * Clears the value of the input.
      */
-    public clearInput() {
+    public clearInput(event?: MouseEvent) {
+        event?.stopPropagation();
         this.value = null;
     }
 
@@ -408,7 +422,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             this.clearInput();
-            this.input.nativeElement.focus();
+            this.focusEditElement();
         }
     }
 
@@ -417,7 +431,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      */
     public onClearClick() {
         this.clearInput();
-        this.input.nativeElement.focus();
+        this.focusEditElement();
     }
 
     /**
@@ -427,16 +441,17 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             this.commitInput();
-            this.input.nativeElement.focus();
+            this.focusEditElement();
         }
     }
 
     /**
      * Event handler for click on commit button.
      */
-    public onCommitClick() {
+    public onCommitClick(event?: MouseEvent) {
+        event?.stopPropagation();
         this.commitInput();
-        this.input.nativeElement.focus();
+        this.focusEditElement();
     }
 
     /**
@@ -450,11 +465,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
 
-            if (focusedElement.className === 'igx-chip__remove' || focusedElement.tagName === 'IGX-DAY-ITEM') {
+            if (focusedElement.classList.contains('igx-chip__remove') || focusedElement.tagName === 'IGX-DAY-ITEM') {
                 return;
             }
 
-            if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
+            if (!(focusedElement && this.editorsContain(focusedElement))
                 && this.dropDownConditions.collapsed) {
                 this.commitInput();
             }
@@ -535,18 +550,16 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             requestAnimationFrame(() => this.conditionChangedCallback());
         }
 
-        if (this.input) {
-            // Add requestAnimationFrame becasue of an issue in IE, where you are still able to write in the input,
-            // if it has been focused and then set to readonly.
-            requestAnimationFrame(() => this.input.nativeElement.focus());
-        }
+        // Add requestAnimationFrame because of an issue in IE, where you are still able to write in the input,
+        // if it has been focused and then set to readonly.
+        requestAnimationFrame(() => this.focusEditElement());
     }
 
 
     public onChipPointerdown(args, chip: IgxChipComponent) {
         const activeElement = document.activeElement;
-        this._cancelChipClick = chip.selected && activeElement &&
-            this.inputGroup.nativeElement.contains(activeElement);
+        this._cancelChipClick = chip.selected
+            && activeElement && this.editorsContain(activeElement);
     }
 
     public onChipClick(args, item: ExpressionUI) {
@@ -565,9 +578,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (item.isSelected) {
             this.expression = item.expression;
 
-            if (this.input) {
-                this.input.nativeElement.focus();
-            }
+            this.focusEditElement();
         }
     }
 
@@ -662,6 +673,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);
         this.showHideArrowButtons();
+    }
+
+    /** @hidden @internal */
+    public focusEditElement() {
+        if (this.input) {
+            this.input.nativeElement.focus();
+        } else if (this.picker) {
+            this.picker.getEditElement().focus();
+        }
     }
 
     private showHideArrowButtons() {
@@ -794,6 +814,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     private filter() {
         this.filteringService.filterInternal(this.column.field);
+    }
+
+    private editorsContain(child: Element): boolean {
+        // if the first check is false and the second is undefined this will return undefined
+        // make sure it always returns boolean
+        return !!(this.inputGroup && this.inputGroup.nativeElement.contains(child)
+            || this.picker && this.picker.element.nativeElement.contains(child));
     }
 
     private get isColumnFiltered() {
