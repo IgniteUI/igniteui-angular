@@ -21,7 +21,7 @@ You can find source files under the [`src`](https://github.com/IgniteUI/igniteui
 #### Current List of Components Include:
 
 |Components|Status|||Directives|Status|||
-|:--|:--|:--|:--|:--|:--|:--|:--|
+|:--|:--:|:--|:--|:--|:--:|:--|:--|
 |avatar|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/avatar/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/avatar)|autocomplete|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/autocomplete/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/autocomplete)|
 |badge|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/badge/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/badge)|button|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/directives/button/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/button)|
 |banner|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/banner/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/banner)|date time editor|:white_check_mark:|[Readme](https://github.com/IgniteUI/igniteui-angular/tree/master/projects/igniteui-angular/src/lib/directives/date-time-editor/README.md)|[Docs](https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-time-editor)|
