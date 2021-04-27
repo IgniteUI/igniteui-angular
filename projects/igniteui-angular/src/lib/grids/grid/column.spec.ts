@@ -754,7 +754,7 @@ describe('IgxGrid - Column properties #grid', () => {
     });
 
     describe('DateTime and Time column tests', () => {
-        it('should display correctly the data when column dataType is dateTime', () => {
+        it('should display correctly the data when column dataType is dateTime #ivy', () => {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             fix.detectChanges();
 
@@ -780,7 +780,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('8/3/21, 3:15 PM');
         });
 
-        it('should display correctly the data when column dataType is time', () => {
+        it('should display correctly the data when column dataType is time #ivy', () => {
             const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
             fix.detectChanges();
 
