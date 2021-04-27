@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
     - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
+        - `onCellClick` -> `cellClick`
         - `onScroll` -> `gridScroll`
         - `onSelection` -> `selected`
         - `onRowSelectionChange` -> `rowSelected`
