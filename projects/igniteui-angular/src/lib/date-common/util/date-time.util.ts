@@ -377,12 +377,10 @@ export abstract class DateTimeUtil {
         const errors = {};
         const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
         const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
-        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))
-            || (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
+        if (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate)) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
-            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
+        if (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate)) {
             Object.assign(errors, { maxValue: true });
         }
 
