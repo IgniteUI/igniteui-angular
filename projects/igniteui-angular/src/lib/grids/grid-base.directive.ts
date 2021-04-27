@@ -4298,11 +4298,24 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Triggers change detection for the `IgxGridComponent`.
-     * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed. May degrade performance.
+     * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed.
+     * May degrade performance if used when not needed, or if misused:
+     * ```typescript
+     * // not needed to use, because the grid updates itself succesfully when a primitive has changed:
+     * grid.data.forEach(rec => {
+     *  rec = newValue;
+     *  grid.markForCheck();
+     * });
+     * // if updating a nested property, Angular will not update the view, need to call markForCheck after the loop:
+     * grid.data.forEach(rec => {
+     *  rec.nestedProp1.nestedProp2 = newValue;
+     * });
+     * grid.markForCheck();
+     * ```
      *
      * @example
      * ```typescript
-     * this.grid1.markForCheck();
+     * grid.markForCheck();
      * ```
      */
     public markForCheck() {
