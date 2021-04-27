@@ -152,7 +152,7 @@ describe('IgxTimePicker', () => {
             expect(timePicker.valueChange.emit).toHaveBeenCalledWith(selectedDate);
         });
 
-        it('should fire vallidationFailed on selecting time outside min/max range', () => {
+        xit('should fire vallidationFailed on selecting time outside min/max range', () => {
             timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
 
@@ -163,14 +163,15 @@ describe('IgxTimePicker', () => {
             timePicker.minDropdownValue = timePicker.minDateValue;
             timePicker.maxDropdownValue = timePicker.maxDateValue;
 
-            const selectedDate = new Date(2020, 12, 12, 3, 45, 0);
+            const selectedDate = new Date(2020, 12, 12, 17, 0, 0);
             const args: IgxTimePickerValidationFailedEventArgs = {
                 owner: timePicker,
-                previousValue: date
+                previousValue: date,
+                currentValue: selectedDate
             };
             spyOn(timePicker.validationFailed, 'emit').and.callThrough();
 
-            timePicker.select(selectedDate);
+            timePicker.increment(DatePart.Hours, 7);
             expect(timePicker.value).toEqual(selectedDate);
             expect(timePicker.validationFailed.emit).toHaveBeenCalled();
             expect(timePicker.validationFailed.emit).toHaveBeenCalledWith(args);
@@ -273,7 +274,7 @@ describe('IgxTimePicker', () => {
                 toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
                 toggleDirective = toggleDirectiveElement.injector.get(IgxToggleDirective) as IgxToggleDirective;
             }));
-            it('should open/close the dropdown and keep the initial selection on toggle icon click', fakeAsync(() => {
+            it('should open/close the dropdown and keep the current selection on toggle icon click', fakeAsync(() => {
                 const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
@@ -288,6 +289,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
+                pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
             }));
 
@@ -307,6 +309,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
+                pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
             }));
 
@@ -330,6 +333,7 @@ describe('IgxTimePicker', () => {
                 fixture.detectChanges();
                 expect(toggleDirective.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
+                pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
             }));
 

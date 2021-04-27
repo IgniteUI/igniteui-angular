@@ -76,6 +76,7 @@ export class TimePickerHammerConfig extends HammerGestureConfig {
 
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     previousValue: Date | string;
+    currentValue: Date | string;
 }
 
 @Component({
@@ -842,11 +843,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
      * @param date Date object containing the time to be selected.
      */
     public select(date: Date | string): void {
-        const oldValue = this.value;
         this.value = date;
-        if (DateTimeUtil.validateMinMax(this._dateValue, this.minValue, this.maxValue, true)) {
-            this.emitValidationFailedEvent(oldValue);
-        }
     }
 
     /**
@@ -1153,7 +1150,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     private emitValidationFailedEvent(previousValue: Date | string) {
         const args: IgxTimePickerValidationFailedEventArgs = {
             owner: this,
-            previousValue
+            previousValue,
+            currentValue: this.value
         };
         this.validationFailed.emit(args);
     }
@@ -1253,6 +1251,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 if (event.cancel) {
                     return;
                 }
+                this.updateValue();
                 // Do not focus the input if clicking outside in dropdown mode
                 const input = this.getEditElement();
                 if (input && !(event.event && this.isDropdown)) {
