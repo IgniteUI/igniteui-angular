@@ -2088,6 +2088,8 @@ describe('IgxGrid - Row Editing #grid', () => {
 
     describe('Custom overlay', () => {
 
+        // TODO: this is an issue in angular logged here https://github.com/angular/angular/issues/41836
+        // somehow the spy miss the called methods
         xit('Custom overlay', fakeAsync(/** height/width setter rAF */() => {
             const fix = TestBed.createComponent(IgxGridCustomOverlayComponent);
             fix.detectChanges();
