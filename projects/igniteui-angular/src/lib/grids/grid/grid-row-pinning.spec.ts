@@ -1360,7 +1360,7 @@ export class GridRowPinningWithTransactionsComponent extends GridRowPinningCompo
         </igx-grid>
     `
 })
-export class GridRowPinningWithInitialPinning implements OnInit {
+export class GridRowPinningWithInitialPinningComponent implements OnInit {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
     public grid1: IgxGridComponent;
 
