@@ -135,7 +135,7 @@ export class IgxItemListDirective {
     @HostListener('keydown.enter', ['$event'])
     public onKeydownEnter(event: KeyboardEvent) {
         event.preventDefault();
-        this.timePicker.close();
+        this.timePicker.okButtonClick();
     }
 
     /**
