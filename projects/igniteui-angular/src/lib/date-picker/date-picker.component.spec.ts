@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -132,10 +132,6 @@ describe('IgxDatePicker', () => {
                 calendar = fixture.componentInstance.datePicker.calendar;
             }));
 
-            afterAll(() => {
-                TestBed.resetTestingModule();
-            });
-
             it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                 spyOn(datePicker.opening, 'emit').and.callThrough();
                 spyOn(datePicker.opened, 'emit').and.callThrough();
@@ -155,12 +151,27 @@ describe('IgxDatePicker', () => {
 
                 calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                flush();
+            }));
+
+            it('should open the calendar with SPACE key', fakeAsync(() => {
+                spyOn(datePicker.opening, 'emit').and.callThrough();
+                spyOn(datePicker.opened, 'emit').and.callThrough();
+                expect(datePicker.collapsed).toBeTruthy();
+
+                const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
+                UIInteractions.triggerEventHandlerKeyDown(' ', picker);
+
+                tick(350);
+                fixture.detectChanges();
+
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
             }));
 
             it('should close the calendar with ESC', fakeAsync(() => {
@@ -175,12 +186,11 @@ describe('IgxDatePicker', () => {
 
                 calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                flush();
             }));
         });
 
