@@ -197,7 +197,7 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
         expect(gridState).toBe(filteringState);
     }));
 
-    it('setState should correctly restore grid filtering state from object', fakeAsync)() => {
+    it('setState should correctly restore grid filtering state from object', fakeAsync(() => {
         const state = fix.componentInstance.state;
 
         const emptyFiltering = '{"filteringOperands":[],"operator":0}';
