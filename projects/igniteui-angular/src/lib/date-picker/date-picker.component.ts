@@ -28,7 +28,7 @@ import {
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { isEqual, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, isDate } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, isDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -294,13 +294,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this._value;
     }
     public set value(date: Date | string) {
-        const oldValue = this.dateValue;
         this._value = date;
         this.setDateValue(date);
         if (this.dateTimeEditor.value !== date) {
             this.dateTimeEditor.value = this._dateValue;
         }
-        this.emitValueChange(oldValue, this.dateValue);
+        this.valueChange.emit(this.dateValue);
         this._onChangeCallback(this.dateValue);
     }
 
@@ -893,12 +892,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._collapsed = true;
             this._overlayId = null;
         });
-    }
-
-    private emitValueChange(oldValue: Date, newValue: Date) {
-        if (!isEqual(oldValue, newValue)) {
-            this.valueChange.emit(newValue);
-        }
     }
 
     private getMinMaxDates() {

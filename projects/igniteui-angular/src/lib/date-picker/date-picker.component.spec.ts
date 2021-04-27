@@ -500,7 +500,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
-            it('Should initialize and update all inputs property', () => {
+            it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
                 datePicker.ngOnInit();
@@ -965,8 +965,6 @@ describe('IgxDatePicker', () => {
                 mockDateEditor.valueChange.emit(validDate);
                 expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.valueChange.emit).toHaveBeenCalledWith(validDate);
-                mockDateEditor.valueChange.emit(validDate);
-                expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
 
                 const secondDate = new Date();
                 mockDateEditor.valueChange.emit(secondDate);
@@ -985,8 +983,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.close).not.toHaveBeenCalled();
                 // calendar instance is initialized properly
                 expect(mockCalendar.hasHeader).toEqual(!datePicker.isDropdown);
-                expect(mockCalendar.formatOptions).toEqual(datePicker.calendarFormat);
-                expect(mockCalendar.formatViews).toEqual(datePicker.formatViews);
+                expect(mockCalendar.formatOptions).toEqual((datePicker as any).pickerCalendarFormat);
+                expect(mockCalendar.formatViews).toEqual((datePicker as any).pickerFormatViews);
                 expect(mockCalendar.locale).toEqual(datePicker.locale);
                 expect(mockCalendar.vertical).toEqual(datePicker.headerOrientation === PickerHeaderOrientation.Vertical);
                 expect(mockCalendar.weekStart).toEqual(datePicker.weekStart);
