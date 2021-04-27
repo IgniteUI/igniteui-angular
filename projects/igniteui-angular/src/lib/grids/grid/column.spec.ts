@@ -953,6 +953,7 @@ describe('IgxGrid - Column properties #grid', () => {
             const grid = fix.componentInstance.grid;
             const timeColumn = grid.getColumnByName('ReceiveTime');
             grid.allowFiltering = true;
+            fix.detectChanges();
             grid.filterMode = 'excelStyleFilter';
             fix.detectChanges();
 
@@ -966,11 +967,8 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40:18 AM');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12:02 PM');
-            expect((checkBoxes[9].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('8:20:24 PM');
-            expect(checkBoxes.length).toEqual(10);
-
             GridFunctions.clickCancelExcelStyleFiltering(fix);
-            tick(100);
+            tick(200);
             fix.detectChanges();
 
             timeColumn.pipeArgs = { format: 'shortTime' };
@@ -986,8 +984,6 @@ describe('IgxGrid - Column properties #grid', () => {
 
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40 AM');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12 PM');
-            expect((checkBoxes[9].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('8:20 PM');
-            expect(checkBoxes.length).toEqual(10);
         }));
 
         it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc.' ,fakeAsync(()=> {
@@ -1005,33 +1001,14 @@ describe('IgxGrid - Column properties #grid', () => {
             tick(100);
             fix.detectChanges();
             GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
             fix.detectChanges();
             GridFunctions.clickOperatorFromCascadeMenu(fix, 4);
             tick(200);
             fix.detectChanges();
 
-            let inputElement = fix.debugElement.query(By.css('igx-input-group.igx-input-group--disabled'));
+            const inputElement = fix.debugElement.query(By.css('igx-input-group.igx-input-group--disabled'));
             expect(inputElement).not.toBeNull();
-
-            GridFunctions.clickCancelExcelStyleFiltering(fix);
-            tick();
-            fix.detectChanges();
-
-            GridFunctions.clickExcelFilterIcon(fix, orderDateColumn.field);
-            tick(100);
-            fix.detectChanges();
-            GridFunctions.clickExcelFilterCascadeButton(fix);
-            fix.detectChanges();
-            GridFunctions.clickOperatorFromCascadeMenu(fix, 6);
-            tick(200);
-            fix.detectChanges();
-
-            inputElement = fix.debugElement.query(By.css('igx-input-group.igx-input-group--disabled'));
-            expect(inputElement).not.toBeNull();
-
-            GridFunctions.clickCancelExcelStyleFiltering(fix);
-            tick();
-            fix.detectChanges();
         }));
 
         it('Sorting dateTime column', () => {
