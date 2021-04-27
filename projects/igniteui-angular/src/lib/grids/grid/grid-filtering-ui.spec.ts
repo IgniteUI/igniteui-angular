@@ -4862,7 +4862,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', 'Custom', 'a', 'custoM', 'custom'],
+                ['Select All', 'a', 'Custom', 'custoM', 'custom'],
                 [true, true, true, true, true]);
         }));
 
