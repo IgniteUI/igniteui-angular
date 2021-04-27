@@ -4297,7 +4297,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Manually marks the `IgxGridComponent` for change detection.
+     * Triggers change detection for the `IgxGridComponent`.
+     * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed. May degrade performance.
      *
      * @example
      * ```typescript
@@ -4305,6 +4306,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public markForCheck() {
+        this.pipeTrigger++;
         this.cdr.detectChanges();
     }
 
