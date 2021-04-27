@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { Component, ViewChild } from '@angular/core';
 import { IgxGridStateDirective, IGridState, IColumnState } from './state.directive';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
