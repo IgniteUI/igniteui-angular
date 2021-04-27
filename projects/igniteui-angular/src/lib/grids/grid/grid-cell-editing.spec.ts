@@ -189,7 +189,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const datePicker = cellDomDate.query(By.css('igx-date-picker')).componentInstance;
             expect(datePicker).toBeDefined();
 
-            datePicker.selectDate(selectedDate);
+            datePicker.select(selectedDate);
             fixture.detectChanges();
 
             expect(datePicker.value).toBe(selectedDate);
@@ -249,7 +249,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBeNull();
         });
 
-        it('Should not revert cell\' value when onDoubleClick while in editMode',  fakeAsync(() => {
+        it('Should not revert cell\' value when doubleClick while in editMode',  fakeAsync(() => {
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS));
             const firstCell = grid.getCellByColumn(0, 'fullName');
 

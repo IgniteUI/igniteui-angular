@@ -267,7 +267,7 @@ export const getTypeDefinitionAtPosition =
             definition.name = maybeReturnType.kind === 'className' ? maybeReturnType.text : '';
             return definition;
         }
-        let typeDefs = getTypeDefinitions(langServ, entryPath, definition.textSpan.start);
+        let typeDefs = getTypeDefinitions(langServ, definition.fileName || entryPath, definition.textSpan.start);
         // if there are no type definitions found, the identifier is a ts property, referred in an internal/external template
         // or is a reference in a decorator
         if (!typeDefs) {

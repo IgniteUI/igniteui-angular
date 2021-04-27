@@ -1,6 +1,8 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
+import { GridType } from './grid.interface';
+
 export interface RowType {
     index: number;
     viewIndex?: number;
@@ -23,6 +25,7 @@ export interface RowType {
     children?: ITreeGridRecord[];
     parent?: ITreeGridRecord;
     hasChildren?: boolean;
+    grid: GridType;
     update?: (value: any) => void;
     delete?: () => any;
     pin?: () => void;
