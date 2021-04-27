@@ -29,6 +29,7 @@ export interface IgxTimePickerBase {
     nextAmPm(delta: number);
     close(): void;
     cancelButtonClick(): void;
+    okButtonClick(): void;
     onItemClick(item: string, dateType: string): void;
     setSelectedValue(): void;
     getPartValue(value: Date, type: string): string;
