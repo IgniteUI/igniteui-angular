@@ -468,7 +468,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         requestAnimationFrame(() => {
             const focusedElement = document.activeElement;
 
-            if (focusedElement.className === 'igx-chip__remove' || focusedElement.tagName === 'IGX-DAY-ITEM') {
+            if (focusedElement.classList.contains('igx-chip__remove') || focusedElement.tagName === 'IGX-DAY-ITEM') {
                 return;
             }
 

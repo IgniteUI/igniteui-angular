@@ -166,7 +166,13 @@ ${noteText}
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-tabs type="fixed">
-<igx-tab-item label="Tab1" icon="folder" routerLink="view1" [isSelected]="true" class="tabitem">
+<igx-tab-item routerLink="view1" [isSelected]="true" label="Tab1" icon="home" class="tabitem">
+<ng-template igxTab>
+<div class="horizontal-center">
+<igx-icon>playlist_add_check</igx-icon>
+<div class="igx-tabs__item-label" i18n>Strategies</div>
+</div>
+</ng-template>
 </igx-tab-item>
 </igx-tabs>`);
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
@@ -178,8 +184,10 @@ ${noteText}
 <igx-tabs tabAlignment="justify">
 <igx-tab-item [selected]="true">
 <igx-tab-header routerLink="view1" class="tabitem">
-<igx-icon igxTabHeaderIcon>folder</igx-icon>
-<span igxTabHeaderLabel>Tab1</span>
+<div class="horizontal-center">
+<igx-icon>playlist_add_check</igx-icon>
+<div class="igx-tabs__item-label" i18n>Strategies</div>
+</div>
 </igx-tab-header>
 </igx-tab-item>
 </igx-tabs>`);
@@ -302,7 +310,10 @@ Some Content
         appTree.create(
             '/testSrc/appPrefix/component/custom.component.html', `
 <igx-bottom-nav>
-<igx-tab label="Tab1" icon="folder" routerLink="view1" class="igxtab">
+<igx-tab label="Tab1" icon="folder" routerLink="view1" class="igxtab" label="Tab1" icon="home">
+<ng-template igxTab>
+<div>Tab1</div>
+</ng-template>
 </igx-tab>
 </igx-bottom-nav>`);
         const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
@@ -314,8 +325,7 @@ ${noteText}
 <igx-bottom-nav>
 <igx-bottom-nav-item>
 <igx-bottom-nav-header routerLink="view1" class="igxtab">
-<igx-icon igxBottomNavHeaderIcon>folder</igx-icon>
-<span igxBottomNavHeaderLabel>Tab1</span>
+<div>Tab1</div>
 </igx-bottom-nav-header>
 </igx-bottom-nav-item>
 </igx-bottom-nav>`);
