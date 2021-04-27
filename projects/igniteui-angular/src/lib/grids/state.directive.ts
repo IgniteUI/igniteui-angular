@@ -15,7 +15,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridComponent } from './grid/grid.component';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/hierarchical-grid.component';
 import { IPinningConfig } from './grid.common';
-import { delay, first } from 'rxjs/operators';
+import { delay, take } from 'rxjs/operators';
 
 export interface IGridState {
     columns?: IColumnState[];
@@ -448,7 +448,7 @@ export class IgxGridStateDirective {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
         const columns = 'columns';
-        this.grid.columnList.changes.pipe(delay(0), first()).subscribe(() => {
+        this.grid.columnList.changes.pipe(delay(0), take(1)).subscribe(() => {
             this.featureKeys = this.featureKeys.filter(f => f !== columns);
             this.restoreFeatures(state);
         });
