@@ -132,10 +132,6 @@ describe('IgxDatePicker', () => {
                 calendar = fixture.componentInstance.datePicker.calendar;
             }));
 
-            afterAll(() => {
-                TestBed.resetTestingModule();
-            });
-
             it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                 spyOn(datePicker.opening, 'emit').and.callThrough();
                 spyOn(datePicker.opened, 'emit').and.callThrough();
@@ -169,7 +165,6 @@ describe('IgxDatePicker', () => {
 
                 const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
                 UIInteractions.triggerEventHandlerKeyDown(' ', picker);
-               // UIInteractions.triggerEventHandlerKeyDown('Space', picker);
 
                 tick(350);
                 fixture.detectChanges();
