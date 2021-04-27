@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
     - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
+        - `onCellClick` -> `cellClick`
         - `onScroll` -> `gridScroll`
         - `onSelection` -> `selected`
         - `onRowSelectionChange` -> `rowSelected`
@@ -67,6 +68,14 @@ All notable changes for each version of this project will be documented in this 
     - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
 - `IgxDatePicker`
     - **Feature** - `value` accepts ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-picker>
+      ```
     - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
@@ -115,10 +124,28 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
 - `IgxDateRangePicker`
     - **Feature** - `value` start and end accept ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-range-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-range-picker>
+      ```
     - **Breaking Change** - `value` start and end types could be `Date` or `string`.
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `dragFinished`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
 
 
 ### New Features
@@ -211,18 +238,6 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
-
-### General:
-- `IgxSliderComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onValueChange` to `valueChange`
-        - `onValueChanged` to `dragFinished`
-- `IgxCircularProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
-- `IgxLinearProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
 
 ## 11.1.1
 

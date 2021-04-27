@@ -41,7 +41,7 @@ import {
     IgxTimePickerTemplateDirective,
     IgxTimePickerActionsDirective
 } from './time-picker.directives';
-import { Subscription, noop } from 'rxjs';
+import { Subscription, noop, fromEvent } from 'rxjs';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll';
 import { AutoPositionStrategy } from '../services/overlay/position';
@@ -691,11 +691,16 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public validate(control: AbstractControl): ValidationErrors | null {
-        const value = control.value;
-        const errors = {};
-        if (!value) {
-            Object.assign(errors, { value: true });
+        if (!control.value) {
+            return null;
         }
+        // InvalidDate handling
+        if (isDate(control.value) && !DateTimeUtil.isValidDate(control.value)) {
+            return { value: true };
+        }
+
+        const errors = {};
+        const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
         Object.assign(errors, DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, true, false));
         return Object.keys(errors).length > 0 ? errors : null;
     }
@@ -719,6 +724,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         super.ngAfterViewInit();
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
+
+        fromEvent(this.inputDirective.nativeElement, 'blur')
+            .pipe(takeUntil(this._destroy$))
+            .subscribe(() => {
+                if (this.collapsed) {
+                    this._onTouchedCallback();
+                    this.updateValidityOnBlur();
+                }
+            });
 
         this.subToIconsClicked(this.clearComponents, () => this.clear());
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))
