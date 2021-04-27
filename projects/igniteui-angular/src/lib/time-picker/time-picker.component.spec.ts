@@ -281,7 +281,7 @@ describe('IgxTimePicker', () => {
                 const toggleIcon = fixture.debugElement.query(By.css('igx-prefix'));
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 hourColumn.triggerEventHandler('wheel', event);
@@ -290,7 +290,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
                 pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
@@ -300,7 +300,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowDown', timePickerDebElement, true);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 hourColumn.triggerEventHandler('wheel', event);
@@ -310,7 +310,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.simulateClickEvent(overlay);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
                 pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
@@ -323,7 +323,7 @@ describe('IgxTimePicker', () => {
                 inputGroup.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 hourColumn.triggerEventHandler('wheel', event);
@@ -334,7 +334,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.simulateClickEvent(overlayWrapper);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
                 pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
@@ -344,7 +344,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.triggerEventHandlerKeyDown(' ', timePickerDebElement);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 hourColumn.triggerEventHandler('wheel', event);
@@ -353,7 +353,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.triggerKeyDownEvtUponElem('Enter', hourColumn.nativeElement);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
                 pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
@@ -366,7 +366,7 @@ describe('IgxTimePicker', () => {
 
                 timePicker.open();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 hourColumn.triggerEventHandler('wheel', event);
@@ -380,7 +380,7 @@ describe('IgxTimePicker', () => {
                 UIInteractions.triggerEventHandlerKeyDown('Escape', timePickerDebElement);
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.value).toEqual(fixture.componentInstance.date);
             }));
 
@@ -398,7 +398,7 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 const pickerValue = new Date(fixture.componentInstance.date);
                 pickerValue.setHours(pickerValue.getHours() - 1);
                 expect(timePicker.value).toEqual(pickerValue);
@@ -418,7 +418,7 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.value).toEqual(fixture.componentInstance.date);
             }));
 
@@ -431,14 +431,14 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalled();
                 expect(timePicker.opened.emit).toHaveBeenCalled();
 
                 timePicker.close();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalled();
                 expect(timePicker.closed.emit).toHaveBeenCalled();
             }));
@@ -454,7 +454,7 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.opening.emit).toHaveBeenCalled();
                 expect(timePicker.opened.emit).not.toHaveBeenCalled();
 
@@ -469,7 +469,7 @@ describe('IgxTimePicker', () => {
                 timePicker.close();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.closing.emit).toHaveBeenCalled();
                 expect(timePicker.closed.emit).not.toHaveBeenCalled();
 
@@ -511,7 +511,7 @@ describe('IgxTimePicker', () => {
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
                 timePicker.open();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 // spin all columns with default delta
                 const eventScrollDown = new WheelEvent('wheel', { deltaX: 0, deltaY: 100 });
@@ -546,7 +546,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBeTrue();
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -564,7 +564,7 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 fixture.detectChanges();
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 // spin all columns with the custom itemsDelta
                 const eventScrollDown = new WheelEvent('wheel', { deltaX: 0, deltaY: 100 });
@@ -598,7 +598,7 @@ describe('IgxTimePicker', () => {
                 toggleIcon.triggerEventHandler('click', UIInteractions.getMouseEvent('click'));
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeTrue();
+                expect(timePicker.collapsed).toBeTrue();
 
                 expect((timePicker.value as Date).getHours()).toEqual(expectedValuedHour);
                 expect((timePicker.value as Date).getMinutes()).toEqual(expectedMinute);
@@ -612,7 +612,7 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                // expect(toggleDirective.collapsed).toBeFalsy();
+                // expect(timePicker.collapsed).toBeFalsy();
 
                 // const event = new WheelEvent('wheel', { deltaX: 0, deltaY: -100 });
                 // hourColumn.triggerEventHandler('wheel', event);
@@ -621,7 +621,7 @@ describe('IgxTimePicker', () => {
                 // UIInteractions.triggerKeyDownEvtUponElem('Enter', hourColumn.nativeElement);
                 // tick();
                 // fixture.detectChanges();
-                // expect(toggleDirective.collapsed).toBeTruthy();
+                // expect(timePicker.collapsed).toBeTruthy();
                 // const pickerValue = new Date(fixture.componentInstance.date);
                 // pickerValue.setHours(pickerValue.getHours() - 1);
                 // expect(timePicker.value).toEqual(pickerValue);
@@ -910,7 +910,7 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 const expectedHour = '12';
                 const expectedMinute= '46';
@@ -992,16 +992,14 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(timePicker.collapsed).toBeFalsy();  // Uncomment when getter returns correct value
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
 
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', timePickerElement, true, true);
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeTruthy();  // Uncomment when getter returns correct value
-                expect(toggleDirective.collapsed).toBeTruthy();
+                expect(timePicker.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
             }));
@@ -1015,8 +1013,7 @@ describe('IgxTimePicker', () => {
                 tick();
                 fixture.detectChanges();
 
-                expect(timePicker.collapsed).toBeFalsy(); // Uncomment when getter returns correct value
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
                 expect(timePicker.opening.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.opened.emit).toHaveBeenCalledTimes(1);
             }));
@@ -1029,14 +1026,12 @@ describe('IgxTimePicker', () => {
                 timePicker.open();
                 tick();
                 fixture.detectChanges();
-                expect(timePicker.collapsed).toBeFalsy();  // Uncomment when getter returns correct value
-                expect(toggleDirective.collapsed).toBeFalsy();
+                expect(timePicker.collapsed).toBeFalsy();
 
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', timePickerElement, true);
                 tick();
                 fixture.detectChanges();
                 expect(timePicker.collapsed).toBeTruthy();
-                expect(toggleDirective.collapsed).toBeTruthy();
                 expect(timePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(timePicker.closed.emit).toHaveBeenCalledTimes(1);
             }));
