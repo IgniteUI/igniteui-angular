@@ -33,7 +33,7 @@ describe('Row Pinning #grid', () => {
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
                 GridRowPinningWithTransactionsComponent,
-                GridRowPinningWithInitialPinning
+                GridRowPinningWithInitialPinningComponent
             ],
             imports: [
                 NoopAnimationsModule,
@@ -1247,7 +1247,7 @@ describe('Row Pinning #grid', () => {
         let gridContent: DebugElement;
 
         beforeEach(fakeAsync(() => {
-            fix = TestBed.createComponent(GridRowPinningWithInitialPinning);
+            fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
             fix.detectChanges();
             grid = fix.componentInstance.grid1;
             setupGridScrollDetection(fix, grid);
