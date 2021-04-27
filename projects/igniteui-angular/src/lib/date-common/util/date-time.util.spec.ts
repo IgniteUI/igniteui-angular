@@ -36,12 +36,21 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
             expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
 
+            // M/d/yy should be 00/00/00
             result = DateTimeUtil.parseDateTimeFormat('M/d/yy');
             resDict = reduceToDictionary(result);
             expect(result.length).toEqual(5);
             expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
             expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
             expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 8 }));
+
+            // H:m:s should be 00:00:00
+            result = DateTimeUtil.parseDateTimeFormat('H:m:s');
+            resDict = reduceToDictionary(result);
+            expect(result.length).toEqual(5);
+            expect(resDict[DatePart.Hours]).toEqual(jasmine.objectContaining({start: 0, end: 2 }));
+            expect(resDict[DatePart.Minutes]).toEqual(jasmine.objectContaining({start: 3, end: 5 }));
+            expect(resDict[DatePart.Seconds]).toEqual(jasmine.objectContaining({start: 6, end: 8 }));
 
             result = DateTimeUtil.parseDateTimeFormat('dd.MM.yyyy г.');
             resDict = reduceToDictionary(result);

@@ -2,7 +2,6 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
-import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
 const enum FormatDesc {
@@ -89,10 +88,8 @@ export abstract class DateTimeUtil {
                     }
                 }
 
-                DateTimeUtil.ensureLeadingZero(currentPart);
-                currentPart.end = currentPart.start + currentPart.format.length;
+                DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
                 position = currentPart.end;
-                dateTimeParts.push(currentPart);
             }
 
             currentPart = {
@@ -101,6 +98,11 @@ export abstract class DateTimeUtil {
                 type,
                 format: formatArray[i]
             };
+        }
+
+        // make sure the last member of a format like H:m:s is not omitted
+        if (!dateTimeParts.filter(p => p.format.includes(currentPart.format)).length) {
+            DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
         }
 
         return dateTimeParts;
@@ -418,6 +420,12 @@ export abstract class DateTimeUtil {
         }
 
         return false;
+    }
+
+    private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {
+        DateTimeUtil.ensureLeadingZero(currentPart);
+        currentPart.end = currentPart.start + currentPart.format.length;
+        dateTimeParts.push(currentPart);
     }
 
     private static daysInMonth(fullYear: number, month: number): number {
