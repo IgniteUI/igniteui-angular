@@ -135,6 +135,16 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `dragFinished`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
 
 
 ### New Features
@@ -227,18 +237,6 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
-
-### General:
-- `IgxSliderComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onValueChange` to `valueChange`
-        - `onValueChanged` to `dragFinished`
-- `IgxCircularProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
-- `IgxLinearProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
 
 ## 11.1.1
 
