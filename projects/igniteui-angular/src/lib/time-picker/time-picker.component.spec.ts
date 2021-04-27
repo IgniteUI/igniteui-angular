@@ -194,7 +194,6 @@ describe('IgxTimePicker', () => {
             expect(timePicker.value).toBeUndefined();
             expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
             timePicker.writeValue(date);
-            timePicker.setSelectedValue();
             expect(timePicker.value).toBe(date);
 
             timePicker.nextHour(100);
