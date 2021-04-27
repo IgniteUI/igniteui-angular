@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { PlatformUtil } from '../../core/utils';
+import { isDate, PlatformUtil } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -360,16 +360,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public validate(control: AbstractControl): ValidationErrors | null {
-    if (!this.inputIsComplete() || !control.value) {
+    if (!control.value) {
+      return null;
+    }
+    // InvalidDate handling
+    if (isDate(control.value) && !DateTimeUtil.isValidDate(control.value)) {
       return { value: true };
     }
 
     let errors = {};
-    const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
+    const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
     const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
     if (minValueDate || maxValueDate) {
-      errors = DateTimeUtil.validateMinMax(valueDate,
+      errors = DateTimeUtil.validateMinMax(value,
         minValueDate, maxValueDate,
         this.hasTimeParts, this.hasDateParts);
     }

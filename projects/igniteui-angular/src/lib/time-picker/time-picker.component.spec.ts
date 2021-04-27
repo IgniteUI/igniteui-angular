@@ -1,4 +1,4 @@
-import { Component, ViewChild, DebugElement } from '@angular/core';
+import { Component, ViewChild, DebugElement, EventEmitter, QueryList } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { FormControl, FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -6,7 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxTimePickerComponent, IgxTimePickerModule, IgxTimePickerValidationFailedEventArgs } from './time-picker.component';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
-    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
+    IgxHintDirective, IgxInputGroupComponent, IgxInputGroupModule, IgxInputState, IgxLabelDirective, IgxPrefixDirective, IgxSuffixDirective
 } from '../input-group/public_api';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { PickerInteractionMode } from '../date-common/types';
@@ -17,6 +17,7 @@ import { DatePart } from '../directives/date-time-editor/public_api';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimeItemDirective } from './time-picker.directives';
 import { IgxPickerClearComponent, IgxPickerToggleComponent } from '../date-common/public_api';
+import { Subscription } from 'rxjs';
 
 const CSS_CLASS_TIMEPICKER = 'igx-time-picker';
 const CSS_CLASS_INPUTGROUP = 'igx-input-group';
@@ -39,18 +40,238 @@ describe('IgxTimePicker', () => {
     let timePicker: IgxTimePickerComponent;
 
     describe('Unit tests', () => {
-        const elementRef = { nativeElement: null };
-        const mockNgControl = jasmine.createSpyObj('NgControl',
-            ['registerOnChangeCb',
-                'registerOnTouchedCb',
-                'registerOnValidatorChangeCb']);
-        const mockInjector = jasmine.createSpyObj('Injector', { get: mockNgControl });
-        const mockDateTimeEditorDirective = jasmine.createSpyObj('IgxDateTimeEditorDirective', ['increment', 'decrement'], { value: null });
-        const mockInputDirective = jasmine.createSpyObj('IgxInputDirective', { value: null });
+        let mockControlInstance: any;
+        let elementRef;
+        let mockNgControl;
+        let mockInjector;
+        let mockDateTimeEditorDirective;
+        let mockInputGroup: Partial<IgxInputGroupComponent>;
+        let mockInputDirective;
 
-        it('should open/close the dropdown with open()/close() method', () => {
+        beforeEach(() => {
+            mockDateTimeEditorDirective = {
+                _value: null,
+                get value() {
+                    return this._value;
+                },
+                clear() {
+                    this.valueChange.emit(null);
+                },
+                increment: () => {},
+                decrement: () => {},
+                set value(val: any) {
+                    this._value = val;
+                },
+                valueChange: new EventEmitter<any>(),
+                validationFailed: new EventEmitter<any>()
+            };
+            spyOn(mockDateTimeEditorDirective, 'increment');
+            spyOn(mockDateTimeEditorDirective, 'decrement');
+
+            mockInputGroup = {
+                _isFocused: false,
+                get isFocused() {
+                    return this._isFocused;
+                },
+                set isFocused(val: boolean) {
+                    this._isFocused = val;
+                },
+                _isRequired: false,
+                get isRequired() {
+                    return this._isRequired;
+                },
+                set isRequired(val: boolean) {
+                    this._isRequired = val;
+                },
+                element: {
+                    nativeElement: jasmine.createSpyObj('mockElement',
+                        ['focus', 'blur', 'click', 'addEventListener', 'removeEventListener'])
+                }
+            } as any;
+
+            elementRef = {
+                nativeElement: jasmine.createSpyObj<HTMLElement>('mockElement', ['blur', 'click', 'focus'])
+            };
+            mockControlInstance = {
+                _touched: false,
+                get touched() {
+                    return this._touched;
+                },
+                set touched(val: boolean) {
+                    this._touched = val;
+                },
+                _dirty: false,
+                get dirty() {
+                    return this._dirty;
+                },
+                set dirty(val: boolean) {
+                    this._dirty = val;
+                },
+                _asyncValidator: () => { },
+                get asyncValidator() {
+                    return this._asyncValidator;
+                },
+                set asyncValidator(val: () => boolean) {
+                    this._asyncValidator = val;
+                },
+                _validator: () => { },
+                get validator() {
+                    return this._validator;
+                },
+                set validator(val: () => boolean) {
+                    this._validator = val;
+                }
+            };
+            mockNgControl = {
+                registerOnChangeCb: () => { },
+                registerOnTouchedCb: () => { },
+                registerOnValidatorChangeCb: () => { },
+                statusChanges: new EventEmitter(),
+                _control: mockControlInstance,
+                get control() {
+                    return this._control;
+                },
+                set control(val: any) {
+                    this._control = val;
+                },
+                valid: true
+            };
+            mockInputDirective = {
+                valid: 'mock',
+                nativeElement: {
+                    _listeners: {
+                        none: []
+                    },
+                    addEventListener(event: string, cb: () => void) {
+                        let target = this._listeners[event];
+                        if (!target) {
+                            this._listeners[event] = [];
+                            target = this._listeners[event];
+                        }
+                        target.push(cb);
+                    },
+                    removeEventListener(event: string, cb: () => void) {
+                        const target = this._listeners[event];
+                        if (!target) {
+                            return;
+                        }
+                        const index = target.indexOf(cb);
+                        if (index !== -1) {
+                            target.splice(index, 1);
+                        }
+                    },
+                    dispatchEvent(event: string) {
+                        const target = this._listeners[event];
+                        if (!target) {
+                            return;
+                        }
+                        target.forEach(e => {
+                            e();
+                        });
+                    },
+                    focus() {
+                        this.dispatchEvent('focus');
+                    },
+                    click() {
+                        this.dispatchEvent('click');
+                    },
+                    blur() {
+                        this.dispatchEvent('blur');
+                    }
+                },
+                focus: () => {}
+            };
+            mockInjector = jasmine.createSpyObj('Injector', {
+                get: mockNgControl
+            });
             timePicker = new IgxTimePickerComponent(elementRef, null, null, null, mockInjector, null);
             (timePicker as any).dateTimeEditor = mockDateTimeEditorDirective;
+            (timePicker as any)._inputGroup = mockInputGroup;
+            (timePicker as any).inputDirective = mockInputDirective;
+            timePicker.toggleComponents = new QueryList<any>();
+            timePicker.clearComponents = new QueryList<any>();
+        });
+
+        it('should properly initialize w/ ngControl', () => {
+            const mockSub = jasmine.createSpyObj<Subscription>('mockSub', ['unsubscribe']);
+            spyOn(mockNgControl.statusChanges, 'subscribe').and.returnValue(mockSub);
+            timePicker.ngOnInit();
+            timePicker.ngAfterViewInit();
+            expect(mockNgControl.statusChanges.subscribe).toHaveBeenCalledTimes(1);
+            timePicker.ngOnDestroy();
+            expect(mockSub.unsubscribe).toHaveBeenCalledTimes(1);
+        });
+
+        it('should properly subscribe to ngControl status changes', () => {
+            timePicker.ngOnInit();
+            timePicker.ngAfterViewInit();
+            const touchedSpy = spyOnProperty(mockControlInstance, 'touched', 'get');
+            const dirtySpy = spyOnProperty(mockControlInstance, 'dirty', 'get');
+            const validatorSpy = spyOnProperty(mockControlInstance, 'validator');
+            const asyncValidatorSpy = spyOnProperty(mockControlInstance, 'asyncValidator');
+            const inputGroupFocusedSpy = spyOnProperty(mockInputGroup, 'isFocused', 'get');
+            const inputGroupRequiredGet = spyOnProperty(mockInputGroup, 'isRequired', 'get');
+            const inputGroupRequiredSet = spyOnProperty(mockInputGroup, 'isRequired', 'set');
+            inputGroupRequiredGet.and.returnValue(false);
+            inputGroupFocusedSpy.and.returnValue(false);
+            expect(touchedSpy).not.toHaveBeenCalled();
+            expect(dirtySpy).not.toHaveBeenCalled();
+            expect(validatorSpy).not.toHaveBeenCalled();
+            expect(asyncValidatorSpy).not.toHaveBeenCalled();
+
+            touchedSpy.and.returnValue(false);
+            dirtySpy.and.returnValue(false);
+            mockNgControl.statusChanges.emit();
+            expect(touchedSpy).toHaveBeenCalledTimes(1);
+            expect(dirtySpy).toHaveBeenCalledTimes(1);
+            // required getter
+            expect(validatorSpy).toHaveBeenCalledTimes(1);
+
+            touchedSpy.and.returnValue(true);
+            dirtySpy.and.returnValue(true);
+            validatorSpy.and.returnValue(false);
+            asyncValidatorSpy.and.returnValue(false);
+            mockNgControl.statusChanges.emit();
+            expect(validatorSpy).toHaveBeenCalledTimes(3);
+            expect(asyncValidatorSpy).toHaveBeenCalledTimes(1);
+            expect(inputGroupFocusedSpy).not.toHaveBeenCalled();
+
+            validatorSpy.and.returnValue(() => {});
+            asyncValidatorSpy.and.returnValue(() => {});
+
+            mockNgControl.statusChanges.emit();
+            expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(1);
+            expect(inputGroupRequiredSet).not.toHaveBeenCalled();
+
+            inputGroupRequiredGet.and.returnValue(false);
+            validatorSpy.and.returnValue(() => ({ required: true }));
+            mockNgControl.statusChanges.emit();
+            expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(2);
+            expect(inputGroupRequiredSet).toHaveBeenCalledTimes(1);
+            expect(inputGroupRequiredSet).toHaveBeenCalledWith(true);
+            console.log(inputGroupRequiredSet.calls);
+            inputGroupRequiredGet.and.returnValue(true);
+
+            mockNgControl.statusChanges.emit();
+            expect(inputGroupFocusedSpy).toHaveBeenCalledTimes(3);
+
+            expect(mockInputDirective.valid).toBe(IgxInputState.INITIAL);
+            mockNgControl.valid = false;
+
+            mockNgControl.statusChanges.emit();
+            expect(mockInputDirective.valid).toBe(IgxInputState.INVALID);
+
+            inputGroupFocusedSpy.and.returnValue(true);
+            mockNgControl.statusChanges.emit();
+            expect(mockInputDirective.valid).toBe(IgxInputState.INVALID);
+
+            mockNgControl.valid = true;
+            mockNgControl.statusChanges.emit();
+            expect(mockInputDirective.valid).toBe(IgxInputState.VALID);
+            timePicker.ngOnDestroy();
+        });
+
+        it('should open/close the dropdown with open()/close() method', () => {
             const mockToggleDirective = jasmine.createSpyObj('IgxToggleDirective', ['open', 'close'], { collapsed: true });
             (timePicker as any).toggleRef = mockToggleDirective;
             timePicker.ngOnInit();
@@ -186,6 +407,8 @@ describe('IgxTimePicker', () => {
             timePicker.minDropdownValue = timePicker.minDateValue;
             timePicker.maxDropdownValue = timePicker.maxDateValue;
             timePicker.ngOnInit();
+            spyOn(mockNgControl, 'registerOnChangeCb');
+            spyOn(mockNgControl, 'registerOnTouchedCb');
             timePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             timePicker.registerOnTouched(mockNgControl.registerOnTouchedCb);
 
@@ -212,6 +435,9 @@ describe('IgxTimePicker', () => {
             timePicker['dateTimeEditor'] = mockDateTimeEditorDirective;
             timePicker['inputDirective'] = mockInputDirective;
             timePicker.ngOnInit();
+
+            spyOn(mockNgControl, 'registerOnChangeCb');
+            spyOn(mockNgControl, 'registerOnValidatorChangeCb');
 
             timePicker.registerOnChange(mockNgControl.registerOnChangeCb);
             timePicker.registerOnValidatorChange(mockNgControl.registerOnValidatorChangeCb);
@@ -606,7 +832,7 @@ describe('IgxTimePicker', () => {
             }));
 
             xit('should open/close the dropdown and keep the current selection on Space/Enter key press', fakeAsync(() => {
-                timePicker.itemsDelta = {hours: 4, minutes: 7, seconds: 1};
+                timePicker.itemsDelta = { hours: 4, minutes: 7, seconds: 1 };
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -799,7 +1025,7 @@ describe('IgxTimePicker', () => {
                 timePicker.value = new Date(2021, 24, 2, 6, 42, 0);
                 fixture.componentInstance.minValue = '06:30:00';
                 fixture.componentInstance.maxValue = '18:30:00';
-                timePicker.itemsDelta = {hours: 3, minutes: 7, seconds: 1};
+                timePicker.itemsDelta = { hours: 3, minutes: 7, seconds: 1 };
                 fixture.detectChanges();
 
                 timePicker.open();
@@ -1161,7 +1387,7 @@ export class IgxTimePickerTestComponent {
 }
 
 @Component({
-    template:`
+    template: `
         <igx-time-picker [mode]="mode">
             <label igxLabel>Label</label>
             <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
