@@ -222,6 +222,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
                 this.gridSelection.deselectRow(this.getRowID(row), event);
             });
         } else {
+            // this.gridSelection.selectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)), false);
             this.groupRow.records.forEach(row => {
                 this.gridSelection.selectRowById(this.getRowID(row), false, event);
             });
