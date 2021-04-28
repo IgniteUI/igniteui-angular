@@ -16,7 +16,7 @@ import {
     IgxInputDirective, IgxInputGroupComponent,
     IgxLabelDirective, IGX_INPUT_GROUP_TYPE, IgxInputGroupType, IgxInputState
 } from '../input-group/public_api';
-import { Subject, fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
+import { fromEvent, Subscription, noop, MonoTypeOperatorFunction } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 import { IgxOverlayOutletDirective } from '../directives/toggle/toggle.directive';
 import {
@@ -28,7 +28,7 @@ import {
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { isEqual, IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, isDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
@@ -37,7 +37,7 @@ import { DatePart, DatePartDeltas, IgxDateTimeEditorDirective } from '../directi
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { PickerHeaderOrientation as PickerHeaderOrientation } from '../date-common/types';
 import { IDatePickerValidationFailedEventArgs } from './date-picker.common';
-import { IgxPickerToggleComponent, IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
+import { IgxPickerClearComponent, IgxPickerActionsDirective } from '../date-common/public_api';
 
 let NEXT_ID = 0;
 
@@ -230,13 +230,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * ```
      */
     @Input()
-    public get formatViews(): IFormattingViews {
-        return this._formatViews;
-    }
-
-    public set formatViews(formatViews: IFormattingViews) {
-        this._formatViews = Object.assign(this._formatViews, formatViews);
-    }
+    public formatViews: IFormattingViews;
 
     /**
      * Gets/Sets the disabled dates descriptors.
@@ -273,30 +267,17 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._specialDates = value;
     }
 
-    /**
-     * Gets the format options of the `IgxDatePickerComponent`.
-     *
-     * @example
-     * ```typescript
-     * let calendarFormat = this.datePicker.calendarFormat;
-     * ```
-     */
-    @Input()
-    public get calendarFormat(): IFormattingOptions {
-        return this._calendarFormat;
-    }
 
     /**
-     * Sets the format options of the `IgxDatePickerComponent`.
+     * Gets/Sets the format options of the `IgxDatePickerComponent`.
      *
      * @example
      * ```typescript
      * this.datePicker.calendarFormat = {day: "numeric",  month: "long", weekday: "long", year: "numeric"};
      * ```
      */
-    public set calendarFormat(options: IFormattingOptions) {
-        this._calendarFormat = Object.assign(this._calendarFormat, options);
-    }
+    @Input()
+    public calendarFormat: IFormattingOptions;
 
     //#endregion
 
@@ -313,13 +294,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this._value;
     }
     public set value(date: Date | string) {
-        const oldValue = this.dateValue;
         this._value = date;
         this.setDateValue(date);
         if (this.dateTimeEditor.value !== date) {
-            this.dateTimeEditor.value = date;
+            this.dateTimeEditor.value = this._dateValue;
         }
-        this.emitValueChange(oldValue, this.dateValue);
+        this.valueChange.emit(this.dateValue);
         this._onChangeCallback(this.dateValue);
     }
 
@@ -356,20 +336,11 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     /**
-     * An accessor that sets the resource strings.
+     * Gets/Sets the resource strings for the picker's default toggle icon.
      * By default it uses EN resources.
      */
     @Input()
-    public set resourceStrings(value: IDatePickerResourceStrings) {
-        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-    }
-
-    /**
-     * An accessor that returns the resource strings.
-     */
-    public get resourceStrings(): IDatePickerResourceStrings {
-        return this._resourceStrings;
-    }
+    public resourceStrings: IDatePickerResourceStrings;
 
     /** @hidden @internal */
     @Input()
@@ -399,10 +370,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      */
     @Output()
     public validationFailed = new EventEmitter<IDatePickerValidationFailedEventArgs>();
-
-    /** @hidden @internal */
-    @ContentChildren(IgxPickerToggleComponent, { descendants: true })
-    public toggleComponents: QueryList<IgxPickerToggleComponent>;
 
     /** @hidden @internal */
     @ContentChildren(IgxPickerClearComponent)
@@ -449,6 +416,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this._dateValue;
     }
 
+    private get pickerFormatViews(): IFormattingViews {
+        return Object.assign({}, this._defFormatViews, this.formatViews);
+    }
+
+    private get pickerCalendarFormat(): IFormattingOptions {
+        return Object.assign({}, this._calendarFormat, this.calendarFormat);
+    }
+
     /** @hidden @internal */
     public displayValue: PipeTransform = { transform: (date: Date) => this.formatter(date) };
 
@@ -457,7 +432,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     private _overlayId: string;
     private _value: Date | string;
     private _targetViewDate: Date;
-    private _destroy$ = new Subject();
     private _ngControl: NgControl = null;
     private _statusChanges$: Subscription;
     private _calendar: IgxCalendarComponent;
@@ -491,7 +465,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         weekday: 'short',
         year: 'numeric'
     };
-    private _formatViews: IFormattingViews = {
+    private _defFormatViews: IFormattingViews = {
         day: false,
         month: true,
         year: false
@@ -524,11 +498,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     /** @hidden @internal */
-    @HostListener('keydown.spacebar', ['$event'])
-    @HostListener('keydown.space', ['$event'])
-    public onSpaceClick(event: KeyboardEvent) {
-        event.preventDefault();
-        this.open();
+    public get pickerResourceStrings(): IDatePickerResourceStrings {
+        return Object.assign({}, this._resourceStrings, this.resourceStrings);
     }
 
     /** @hidden @internal */
@@ -544,6 +515,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                 if (event.altKey) {
                     this.open();
                 }
+                break;
+            case this.platform.KEYMAP.SPACE:
+                event.preventDefault();
+                this.open();
                 break;
         }
     }
@@ -705,7 +680,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._value = value;
         this.setDateValue(value);
         if (this.dateTimeEditor.value !== value) {
-            this.dateTimeEditor.value = this.value;
+            this.dateTimeEditor.value = this._dateValue;
         }
     }
 
@@ -733,11 +708,16 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public validate(control: AbstractControl): ValidationErrors | null {
-        const value = control.value;
-        const errors = {};
-        if (!value) {
-            Object.assign(errors, { value: true });
+        if (!control.value) {
+            return null;
         }
+        // InvalidDate handling
+        if (isDate(control.value) && !DateTimeUtil.isValidDate(control.value)) {
+            return { value: true };
+        }
+
+        const errors = {};
+        const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
         if (value && this.disabledDates && isDateInRanges(value, this.disabledDates)) {
             Object.assign(errors, { dateIsDisabled: true });
         }
@@ -754,9 +734,14 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public ngAfterViewInit() {
+        super.ngAfterViewInit();
         this.subscribeToClick();
         this.subscribeToOverlayEvents();
         this.subscribeToDateEditorEvents();
+
+        this.subToIconsClicked(this.clearComponents, () => this.clear());
+        this.clearComponents.changes.pipe(takeUntil(this._destroy$))
+            .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
@@ -782,11 +767,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
         if (this._statusChanges$) {
             this._statusChanges$.unsubscribe();
         }
-        this._destroy$.next();
-        this._destroy$.complete();
         if (this._overlayId) {
             this._overlayService.detach(this._overlayId);
         }
@@ -910,12 +894,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         });
     }
 
-    private emitValueChange(oldValue: Date, newValue: Date) {
-        if (!isEqual(oldValue, newValue)) {
-            this.valueChange.emit(newValue);
-        }
-    }
-
     private getMinMaxDates() {
         const minValue = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : DateTimeUtil.parseIsoDate(this.minValue);
         const maxValue = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : DateTimeUtil.parseIsoDate(this.maxValue);
@@ -937,8 +915,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this._calendar = componentInstance.calendar;
         const isVertical = this.headerOrientation === PickerHeaderOrientation.Vertical;
         this._calendar.hasHeader = !this.isDropdown;
-        this._calendar.formatOptions = this.calendarFormat;
-        this._calendar.formatViews = this.formatViews;
+        this._calendar.formatOptions = this.pickerCalendarFormat;
+        this._calendar.formatViews = this.pickerFormatViews;
         this._calendar.locale = this.locale;
         this._calendar.vertical = isVertical;
         this._calendar.weekStart = this.weekStart;
@@ -969,6 +947,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
 
     private setCalendarViewDate() {
         const { minValue, maxValue } = this.getMinMaxDates();
+        this._dateValue = this.dateValue || new Date();
         if (minValue && DateTimeUtil.lessThanMinValue(this.dateValue, minValue)) {
             this._calendar.viewDate = this._targetViewDate = minValue;
             return;
@@ -977,6 +956,6 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._calendar.viewDate = this._targetViewDate = maxValue;
             return;
         }
-        this._calendar.viewDate = this._targetViewDate = this.dateValue || new Date();
+        this._calendar.viewDate = this._targetViewDate = this.dateValue;
     }
 }

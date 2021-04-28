@@ -17,7 +17,7 @@ export class TimePickerSampleComponent {
     @ViewChild('target')
     public target: IgxInputDirective;
 
-    public itemsDelta = { hour: 1, minute: 15, second: 20 };
+    public itemsDelta = { hours: 1, minutes: 15, seconds: 20 };
     public format = 'hh:mm:ss tt';
     public spinLoop = true;
     public datePart = DatePart.Hours;

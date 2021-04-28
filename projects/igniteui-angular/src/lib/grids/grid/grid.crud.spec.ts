@@ -499,8 +499,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         <igx-grid
             [data]="data"
             [height]="null"
-            (onRowAdded)="rowAdded()"
-            (onRowDeleted)="rowDeleted()"
+            (rowAdded)="rowAdded()"
+            (rowDeleted)="rowDeleted()"
             (cellEdit)="editDone($event)"
             (rowEdit)="editDone($event)"
             [autoGenerate]="true"

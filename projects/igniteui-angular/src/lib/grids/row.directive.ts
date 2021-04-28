@@ -347,7 +347,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      *
      * ```typescript
      * handleRowSelection(event) {
-     *  // the grid on which the onRowSelectionChange event was triggered
+     *  // the grid on which the rowSelected event was triggered
      *  const grid = event.row.grid;
      * }
      * ```
@@ -355,7 +355,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      * ```html
      *  <igx-grid
      *    [data]="data"
-     *    (onRowSelectionChange)="handleRowSelection($event)">
+     *    (rowSelected)="handleRowSelection($event)">
      *  </igx-grid>
      * ```
      */
@@ -493,7 +493,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Removes the specified row from the grid's data source.
-     * This method emits `onRowDeleted` event.
+     * This method emits `rowDeleted` event.
      *
      * ```typescript
      * // delete the third selected row from the grid
@@ -511,7 +511,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Pins the specified row.
-     * This method emits `onRowPinning` event.
+     * This method emits `rowPinning` event.
      *
      * ```typescript
      * // pin the selected row from the grid
@@ -524,7 +524,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Unpins the specified row.
-     * This method emits `onRowPinning` event.
+     * This method emits `rowPinning` event.
      *
      * ```typescript
      * // unpin the selected row from the grid

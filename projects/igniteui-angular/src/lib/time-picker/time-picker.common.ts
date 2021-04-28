@@ -12,14 +12,25 @@ export interface IgxTimePickerBase {
     ampmList: ElementRef;
     inputFormat: string;
     itemsDelta: Pick<DatePartDeltas, 'hours' | 'minutes' | 'seconds'>;
+	spinLoop: boolean;
     selectedDate: Date;
     maxDropdownValue: Date;
     minDropdownValue: Date;
+    isTwelveHourFormat: boolean;
+    showHoursList: boolean;
+    showMinutesList: boolean;
+    showSecondsList: boolean;
+    showAmPmList: boolean;
+    minDateValue: Date;
+    maxDateValue: Date;
     nextHour(delta: number);
     nextMinute(delta: number);
     nextSeconds(delta: number);
     nextAmPm(delta: number);
     close(): void;
     cancelButtonClick(): void;
+    okButtonClick(): void;
     onItemClick(item: string, dateType: string): void;
+    getPartValue(value: Date, type: string): string;
+    toISOString(value: Date): string;
 }

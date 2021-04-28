@@ -12,7 +12,5 @@
 </ng-template>
 
 <igx-calendar></igx-calendar>
-<ng-container *ngTemplateOutlet="this.pickerActions 
-    ? this.pickerActions.template 
-    : defaultPickerActions">
+<ng-container *ngTemplateOutlet="this.pickerActions?.template || defaultPickerActions; context: { $implicit: this.calendar }">
 </ng-container>
