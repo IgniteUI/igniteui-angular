@@ -624,11 +624,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.value = newDate;
 
     // TODO: should we emit events here?
-    if (this.dateValue && !this.valueInRange(this.dateValue)) {
-      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
-    }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
       this.valueChange.emit(this.dateValue);
+    }
+    if (this.dateValue && !this.valueInRange(this.dateValue)) {
+      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
     }
   }
 
