@@ -64,5 +64,6 @@ export const getCurrentResourceStrings = (): IResourceStrings => ({
     ...CurrentResourceStrings.InputResStrings,
     ...CurrentResourceStrings.ListResStrings,
     ...CurrentResourceStrings.PaginatorResStrings,
-    ...CurrentResourceStrings.TimePickerResStrings
+    ...CurrentResourceStrings.TimePickerResStrings,
+    ...CurrentResourceStrings.TreeResStrings
 });
