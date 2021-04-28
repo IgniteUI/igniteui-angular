@@ -411,8 +411,8 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return this._selectedDate;
     }
 
+    /** @hidden @internal */
     public get minDateValue(): Date {
-        /** @hidden @internal */
         if (!this._dateMinValue) {
             const minDate = new Date();
             minDate.setHours(0, 0, 0, 0);
