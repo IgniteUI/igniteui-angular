@@ -547,7 +547,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            this.leaveAnimationPlayer.onDone(() => {
+            this.leaveAnimationPlayer?.onDone(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         }
@@ -559,7 +559,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            this.leaveAnimationPlayer.onDone(() => {
+            this.leaveAnimationPlayer?.onDone(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         }
@@ -587,7 +587,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            this.leaveAnimationPlayer.onDone(() => {
+            this.leaveAnimationPlayer?.onDone(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         }
@@ -599,7 +599,7 @@ export class IgxCarouselComponent extends IgxCarouselComponentBase implements On
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            this.leaveAnimationPlayer.onDone(() => {
+            this.leaveAnimationPlayer?.onDone(() => {
                 this.slides.find(s => s.active).nativeElement.focus();
             });
         }
