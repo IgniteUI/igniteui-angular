@@ -416,6 +416,7 @@ export class IgxGridStateDirective {
         if (typeof state === 'string') {
             state = JSON.parse(state) as IGridState;
         }
+        this.state = state;
         this.currGrid = this.grid;
         this.restoreGridState(state, features);
         this.grid.cdr.detectChanges(); // TODO
@@ -442,8 +443,9 @@ export class IgxGridStateDirective {
 
     /**
      * The method that calls corresponding methods to restore features from the passed IGridState object.
+     *
      */
-     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
+    private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
         // instead of piping it like below
         const columns = 'columns';
