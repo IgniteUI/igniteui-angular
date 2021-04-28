@@ -5185,7 +5185,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 sum += parseInt(col.calcWidth, 10);
             }
         }
-        if (this.pinning.columns === ColumnPinningPosition.Start) {
+        if (this.isPinningToStart) {
             sum += this.featureColumnsWidth();
         }
 
@@ -6679,7 +6679,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.hasVerticalScroll() && !this.isPercentWidth) {
             width -= this.scrollSize;
         }
-        if (this.pinning.columns === ColumnPinningPosition.End) {
+        if (!this.isPinningToStart) {
             width -= this.featureColumnsWidth();
         }
 
