@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, flush, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
@@ -132,10 +132,6 @@ describe('IgxDatePicker', () => {
                 calendar = fixture.componentInstance.datePicker.calendar;
             }));
 
-            afterAll(() => {
-                TestBed.resetTestingModule();
-            });
-
             it('should toggle the calendar with ALT + DOWN/UP ARROW key', fakeAsync(() => {
                 spyOn(datePicker.opening, 'emit').and.callThrough();
                 spyOn(datePicker.opened, 'emit').and.callThrough();
@@ -155,12 +151,27 @@ describe('IgxDatePicker', () => {
 
                 calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                 UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', calendar, true, true);
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                flush();
+            }));
+
+            it('should open the calendar with SPACE key', fakeAsync(() => {
+                spyOn(datePicker.opening, 'emit').and.callThrough();
+                spyOn(datePicker.opened, 'emit').and.callThrough();
+                expect(datePicker.collapsed).toBeTruthy();
+
+                const picker = fixture.debugElement.query(By.css(CSS_CLASS_DATE_PICKER));
+                UIInteractions.triggerEventHandlerKeyDown(' ', picker);
+
+                tick(350);
+                fixture.detectChanges();
+
+                expect(datePicker.collapsed).toBeFalsy();
+                expect(datePicker.opening.emit).toHaveBeenCalledTimes(1);
+                expect(datePicker.opened.emit).toHaveBeenCalledTimes(1);
             }));
 
             it('should close the calendar with ESC', fakeAsync(() => {
@@ -175,12 +186,11 @@ describe('IgxDatePicker', () => {
 
                 calendar = document.getElementsByClassName(CSS_CLASS_CALENDAR)[0];
                 UIInteractions.triggerKeyDownEvtUponElem('Escape', calendar, true);
-                tick();
+                tick(350);
                 fixture.detectChanges();
                 expect(datePicker.collapsed).toBeTruthy();
                 expect(datePicker.closing.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.closed.emit).toHaveBeenCalledTimes(1);
-                flush();
             }));
         });
 
@@ -500,7 +510,7 @@ describe('IgxDatePicker', () => {
             UIInteractions.clearOverlay();
         });
         describe('API tests', () => {
-            it('Should initialize and update all inputs propery', () => {
+            it('Should initialize and update all inputs properly', () => {
                 // no ngControl initialized
                 expect(datePicker.required).toEqual(false);
                 datePicker.ngOnInit();
@@ -510,18 +520,9 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.disabledDates).toEqual(null);
                 expect(datePicker.displayDensity).toEqual(DisplayDensity.comfortable);
                 expect(datePicker.displayFormat).toEqual(undefined);
+                expect(datePicker.calendarFormat).toEqual(undefined);
                 expect(datePicker.displayMonthsCount).toEqual(1);
-                expect(datePicker.calendarFormat).toEqual({
-                    day: 'numeric',
-                    month: 'short',
-                    weekday: 'short',
-                    year: 'numeric'
-                });
-                expect(datePicker.formatViews).toEqual({
-                    day: false,
-                    month: true,
-                    year: false
-                });
+                expect(datePicker.formatViews).toEqual(undefined);
                 expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Horizontal);
                 expect(datePicker.hideOutsideDays).toEqual(undefined);
                 expect(datePicker.inputFormat).toEqual(undefined);
@@ -576,7 +577,7 @@ describe('IgxDatePicker', () => {
                 let newFormat: any = { day: 'short' };
                 datePicker.calendarFormat = newFormat;
                 // this SHOULD NOT mutate the underlying base settings
-                expect(datePicker.calendarFormat).toEqual({
+                expect((datePicker as any).pickerCalendarFormat).toEqual({
                     day: 'short',
                     month: 'short',
                     weekday: 'short',
@@ -584,26 +585,26 @@ describe('IgxDatePicker', () => {
                 });
                 newFormat = { month: 'numeric' };
                 datePicker.calendarFormat = newFormat;
-                expect(datePicker.calendarFormat).toEqual({
-                    day: 'short',
+                expect((datePicker as any).pickerCalendarFormat).toEqual({
+                    day: 'numeric',
                     month: 'numeric',
                     weekday: 'short',
                     year: 'numeric'
                 });
                 datePicker.formatViews = null;
-                expect(datePicker.formatViews).toEqual({ day: false, month: true, year: false });
+                expect((datePicker as any).pickerFormatViews).toEqual({ day: false, month: true, year: false });
                 const formatViewVal: IFormattingViews = {};
                 datePicker.formatViews = formatViewVal;
-                expect(datePicker.formatViews).toEqual({ day: false, month: true, year: false });
+                expect((datePicker as any).pickerFormatViews).toEqual({ day: false, month: true, year: false });
                 formatViewVal.day = true;
                 datePicker.formatViews = formatViewVal;
-                expect(datePicker.formatViews).toEqual({ day: true, month: true, year: false });
+                expect((datePicker as any).pickerFormatViews).toEqual({ day: true, month: true, year: false });
                 formatViewVal.year = true;
                 datePicker.formatViews = formatViewVal;
-                expect(datePicker.formatViews).toEqual({ day: true, month: true, year: true });
+                expect((datePicker as any).pickerFormatViews).toEqual({ day: true, month: true, year: true });
                 formatViewVal.month = false;
                 datePicker.formatViews = formatViewVal;
-                expect(datePicker.formatViews).toEqual({ day: true, month: false, year: true });
+                expect((datePicker as any).pickerFormatViews).toEqual({ day: true, month: false, year: true });
                 datePicker.headerOrientation = PickerHeaderOrientation.Vertical;
                 expect(datePicker.headerOrientation).toEqual(PickerHeaderOrientation.Vertical);
                 datePicker.hideOutsideDays = false;
@@ -675,10 +676,10 @@ describe('IgxDatePicker', () => {
                 expect(mockDateEditor.value).toEqual(newDate);
                 expect(datePicker.valueChange.emit).toHaveBeenCalledWith(newDate);
                 expect(boundObject.date).toEqual(newDate);
-                datePicker.value = '03/03/2003';
-                expect(datePicker.value).toEqual('03/03/2003');
-                expect(mockDateEditor.value).toEqual('03/03/2003');
-                expect(datePicker.valueChange.emit).not.toHaveBeenCalledWith('03/03/2003' as any);
+                datePicker.value = '2003-03-03';
+                expect(datePicker.value).toEqual('2003-03-03');
+                // expect(mockDateEditor.value).toEqual('03/03/2003');
+                expect(datePicker.valueChange.emit).not.toHaveBeenCalledWith('2003-03-03' as any);
                 const customFormatter: (val: Date) => string = (val: Date) => val.getFullYear().toString();
                 datePicker.formatter = customFormatter;
                 expect(datePicker.formatter).toEqual(customFormatter);
@@ -974,8 +975,6 @@ describe('IgxDatePicker', () => {
                 mockDateEditor.valueChange.emit(validDate);
                 expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
                 expect(datePicker.valueChange.emit).toHaveBeenCalledWith(validDate);
-                mockDateEditor.valueChange.emit(validDate);
-                expect(datePicker.valueChange.emit).toHaveBeenCalledTimes(1);
 
                 const secondDate = new Date();
                 mockDateEditor.valueChange.emit(secondDate);
@@ -994,8 +993,8 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.close).not.toHaveBeenCalled();
                 // calendar instance is initialized properly
                 expect(mockCalendar.hasHeader).toEqual(!datePicker.isDropdown);
-                expect(mockCalendar.formatOptions).toEqual(datePicker.calendarFormat);
-                expect(mockCalendar.formatViews).toEqual(datePicker.formatViews);
+                expect(mockCalendar.formatOptions).toEqual((datePicker as any).pickerCalendarFormat);
+                expect(mockCalendar.formatViews).toEqual((datePicker as any).pickerFormatViews);
                 expect(mockCalendar.locale).toEqual(datePicker.locale);
                 expect(mockCalendar.vertical).toEqual(datePicker.headerOrientation === PickerHeaderOrientation.Vertical);
                 expect(mockCalendar.weekStart).toEqual(datePicker.weekStart);

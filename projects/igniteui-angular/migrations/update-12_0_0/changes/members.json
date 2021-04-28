@@ -9,6 +9,16 @@
             ]
         },
         {
+            "member": "onCellClick",
+            "replaceWith": "cellClick",
+            "definedIn": [
+                "IgxGridComponent",
+                "IgxTreeGridComponent",
+                "IgxHierarchicalGridComponent",
+                "IgxRowIslandComponent"
+            ]
+        },
+        {
             "member": "onScroll",
             "replaceWith": "gridScroll",
             "definedIn": [

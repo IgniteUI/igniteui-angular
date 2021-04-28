@@ -154,6 +154,38 @@
             }
         },
         {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
             "name": "onScroll",
             "replaceWith": "gridScroll",
             "owner": {
