@@ -412,7 +412,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     }
 
     public get minDateValue(): Date {
-    /** @hidden @internal */
+        /** @hidden @internal */
         if (!this._dateMinValue) {
             const minDate = new Date();
             minDate.setHours(0, 0, 0, 0);
@@ -1189,7 +1189,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return true;
     }
 
-    private parseToDate(value: Date | string): Date {
+    private parseToDate(value: Date | string): Date | null {
         return DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
     }
 
@@ -1262,7 +1262,10 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 if (event.cancel) {
                     return;
                 }
-                this.updateValue();
+                const value = this.parseToDate(this.value);
+                if ((this.dateTimeEditor.value as Date)?.getTime() !== value?.getTime()) {
+                    this.updateValue();
+                }
                 // Do not focus the input if clicking outside in dropdown mode
                 const input = this.getEditElement();
                 if (input && !(event.event && this.isDropdown)) {
