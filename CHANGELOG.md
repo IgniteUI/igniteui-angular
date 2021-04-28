@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
     - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
+        - `onCellClick` -> `cellClick`
         - `onScroll` -> `gridScroll`
         - `onSelection` -> `selected`
         - `onRowSelectionChange` -> `rowSelected`
@@ -135,6 +136,16 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `dragFinished`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
 
 
 ### New Features
@@ -227,18 +238,6 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
-
-### General:
-- `IgxSliderComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onValueChange` to `valueChange`
-        - `onValueChanged` to `dragFinished`
-- `IgxCircularProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
-- `IgxLinearProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
 
 ## 11.1.1
 
