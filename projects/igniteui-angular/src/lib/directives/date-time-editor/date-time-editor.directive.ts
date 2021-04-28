@@ -300,12 +300,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   public ngOnInit(): void {
     this.updateDefaultFormat();
+    this.setMask(this.inputFormat);
+    this.updateMask();
   }
 
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['locale'] && !changes['locale'].firstChange) {
       this.updateDefaultFormat();
+      if (!this._inputFormat) {
+        this.setMask(this.inputFormat);
+        this.updateMask();
+      }
     }
     if (changes['inputFormat'] && !changes['inputFormat'].firstChange) {
       this.updateMask();
@@ -475,20 +481,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private updateDefaultFormat(): void {
     this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
-    if (!this._inputFormat) {
-      this.setMask(this.inputFormat);
-      this.updateMask();
-    }
   }
 
   private updateMask(): void {
-    if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
-      if (!this._isFocused) {
-        this.inputValue = '';
-      }
-      return;
-    }
-
     if (this._isFocused) {
       // store the cursor position as it will be moved during masking
       const cursor = this.selectionEnd;
@@ -616,7 +611,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private setDateValue(value: Date | string) {
     this._dateValue = DateTimeUtil.isValidDate(value)
       ? value
-      : this.parseDate(value);
+      : DateTimeUtil.parseIsoDate(value);
   }
 
   private updateValue(newDate: Date): void {
