@@ -1,12 +1,14 @@
 <div class="wrapper">
     <div class="sample-content">
+        <div class="sample-buttons">
+            <igx-buttongroup [values]="filterModes" (selected)="selectDensity($event)"></igx-buttongroup>
+        </div>
         <igx-grid #grid1
             [columnSelection]="'single'"
             [data]="data"
-            [displayDensity]="density"
             [allowFiltering]="true"
+            [filterMode]="filterMode"
             [rowSelection] ="'multiple'"
-            [filterMode]="'excelStyleFilter'"
             [rowEditable]="false"
             [width]="'900px'"
             [primaryKey]="'ID'"
