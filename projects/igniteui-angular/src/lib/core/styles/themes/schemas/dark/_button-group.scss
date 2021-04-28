@@ -8,25 +8,32 @@
 
 /// Generates the base dark button-group schema.
 /// @type {Map}
-/// @prop {Color} item-background [igx-color: 'surface'] - The background color for button group items.
-/// @prop {Map} item-border-color [igx-color: ('grays', 400)] - The border color for button group items.
-/// @prop {Map} item-selected-border-color [igx-color: ('grays', 500)] - The border color for button group selected items.
-/// @prop {Map} item-disabled-border: [igx-color: ('grays', 200)] - The border color for button group disabled items.
+/// @prop {Map} item-border-color [igx-color: ('grays', 300), to-opaque: (#222)] - The border color for button group items.
+/// @prop {Map} item-selected-border-color [igx-color: ('grays', 400), to-opaque: (#222)] - The border color for button group selected items.
+/// @prop {Map} item-disabled-border: [igx-color: ('grays', 300), to-opaque: (#222)] - The border color for button group disabled items.
+/// @prop {Map} disabled-background-color [igx-color: ('grays', 100)] - The background color for a disabled item in the button group.
 $_base-dark-button-group: (
     item-background: (
         igx-color: 'surface',
     ),
 
     item-border-color: (
-        igx-color: ('grays', 400)
+        igx-color: ('grays', 300),
+        to-opaque: (#222)
     ),
 
     item-selected-border-color: (
-        igx-color: ('grays', 500)
+        igx-color: ('grays', 400),
+        to-opaque: (#222)
+    ),
+
+    disabled-background-color: (
+        igx-color: ('grays', 100)
     ),
 
     item-disabled-border: (
-        igx-color: ('grays', 200)
+        igx-color: ('grays', 300),
+        to-opaque: (#222)
     ),
 );
 
