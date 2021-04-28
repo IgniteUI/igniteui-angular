@@ -28,7 +28,6 @@ import { IgxDropDownModule } from '../../drop-down/public_api';
 import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxPrefixModule, IgxSuffixModule } from 'igniteui-angular';
-import { IgxRightButtonStyleDirective } from './tabs.directives';
 import { PlatformUtil } from '../../core/utils';
 
 const KEY_RIGHT_EVENT = new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true });
@@ -1246,7 +1245,7 @@ describe('IgxTabs', () => {
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
 
-            const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
+            const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
             expect(rightScrollButton.clientWidth).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
@@ -1259,12 +1258,12 @@ describe('IgxTabs', () => {
 
 
     it('should hide scroll buttons when no longer needed after deleting tabs.', async () => {
-        pending('Known issue - postponed!');
         const fixture = TestBed.createComponent(TabsContactsComponent);
+        const tabs = fixture.componentInstance.tabs;
         fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
         fixture.detectChanges();
 
-        const rightScrollButton = fixture.debugElement.query(By.directive(IgxRightButtonStyleDirective)).nativeNode;
+        const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
         expect(rightScrollButton.clientWidth).toBeTruthy();
 
         fixture.componentInstance.contacts.splice(0, 1);

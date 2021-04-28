@@ -160,16 +160,6 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     }
 
     /** @hidden */
-    public resolveTabLeftButtonClasses() {
-        return 'igx-tabs__header-button';
-    }
-
-    /** @hidden */
-    public resolveTabRightButtonClasses() {
-        return 'igx-tabs__header-button';
-    }
-
-    /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
             'igx-tabs__header-scroll': true,
