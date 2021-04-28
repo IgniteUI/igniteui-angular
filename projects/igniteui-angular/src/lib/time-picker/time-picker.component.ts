@@ -366,7 +366,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         }
         if (DateTimeUtil.isValidDate(this.value)) {
             // TODO: Update w/ clear behavior
-            return this.value.getTime() !== 0 && this.value.getHours() !== 0 && this.value.getMinutes() !== 0;
+            return this.value.getHours() !== 0 || this.value.getMinutes() !== 0 || this.value.getSeconds() !== 0;
         }
         return !!this.dateTimeEditor.value;
     }
