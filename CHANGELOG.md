@@ -7,10 +7,171 @@ All notable changes for each version of this project will be documented in this 
 ### General
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
+    - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
+        - `onCellClick` -> `cellClick`
+        - `onScroll` -> `gridScroll`
+        - `onSelection` -> `selected`
+        - `onRowSelectionChange` -> `rowSelected`
+        - `onColumnSelectionChange` -> `columnSelected`
+        - `onColumnPinning` -> `columnPin`
+        - `onColumnInit` -> `columnInit`
+        - `onSortingDone` -> `sortingDone`
+        - `onFilteringDone` -> `filteringDone`
+        - `onPagingDone` -> `pagingDone`
+        - `onRowAdded` -> `rowAdded`
+        - `onRowDeleted` -> `rowDeleted`
+        - `onColumnResized` -> `columnResized`
+        - `onContextMenu` -> `contextMenu`
+        - `onDoubleClick` -> `doubleClick`
+        - `onColumnVisibilityChanged` -> `columnVisibilityChanged`
+        - `onColumnMovingStart` -> `columnMovingStart`
+        - `onColumnMoving` -> `columnMoving`
+        - `onColumnMovingEnd` -> `columnMovingEnd`
+        - `onGridKeydown` -> `gridKeydown`
+        - `onRowDragStart` -> `rowDragStart`
+        - `onRowDragEnd` -> `rowDragEnd`
+        - `onGridCopy` -> `gridCopy`
+        - `onRowToggle` -> `rowToggle`
+        - `onRowPinning` -> `rowPinning`
+        - `onToolbarExporting` -> `toolbarExporting`
+        - `onRangeSelection` -> `rangeSelected`
+    - `IgxGridRowComponent`, `IgxGridGroupByRowComponent`, `IgxTreeGridRowComponent`, `IgxHierarchicalRowComponent` are no longer exposed in the public API. Automatic migration will change these imports with `RowType`.
+    - **Behavioral changes**
+    - `getRowByIndex`, `getRowByKey`, `cell.row` now return an object implemening the `RowType` interface.
+    - `dragData` emitted with `IRowDragEndEventArgs`, `IRowDragStartEventArgs` is now `RowType`
+    - `IRowDragEndEventArgs`, `IRowDragStartEventArgs` now emit `dragElement`, which holds the dragged row html element.
+    - `row` in `IPinRowEventArgs` is now `RowType`
 - `IgxTabs`, `IgxBottomNav`
     - **Breaking Change** - `IgxTabs` and `IgxBottomNav` components were completely refactored in order to provide more flexible and descriptive way to define tab headers and contents. Please make sure to update via `ng update` in order to migrate the existing `igx-tabs` and `igx-bottom-nav` definitions to the new ones.
+- `IgxForOfDirective`
+    - **Breaking Change** - `IgxForOfDirective` events are renamed as follows:
+        - `onChunkLoad` -> `chunkLoad`
+        - `onScrollbarVisibilityChanged` -> `scrollbarVisibilityChanged`
+        - `onContentSizeChange` -> `contentSizeChange`
+        - `onDataChanged` -> `dataChanged`
+        - `onBeforeViewDestroyed` -> `beforeViewDestroyed`
+        - `onChunkPreload` -> `chunkPreload`
+        - `onDataChanging` -> `dataChanging`
+- `IgxColumnComponent`
+    - **Breaking Change** - The `onColumnChange` output is renamed to `columnChange`.
+- **Breaking Change** - `IgxHierarchicalGrid` and `igxRowIsland` events are renamed as follows:
+    - `onGridCreated` -> `gridCreated`
+    - `onGridInitialized` -> `gridInitialized`
+    - `onDataPreLoad` -> `dataPreLoad`
+
+- `IgxDateTimeEditor`
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Breaking Change** - `value` type could be `Date` or `string`.
+    - **Breaking Change** - `onValueChange` event is renamed to `valueChange`.
+    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
+    - **Feature** - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
+    - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
+- `IgxDatePicker`
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-picker>
+      ```
+    - **Breaking Change** - `value` type could be `Date` or `string`.
+    - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
+    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
+        ```html
+            <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
+                <label igxLabel>Date: </label>
+                <igx-picker-toggle igxPrefix (click)="datePicker.toggle()">
+                    calendar_view_day
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="datePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-date-picker>
+        ```
+    - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `placeholder` defaults to the `inputFormat`
+    - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
+    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+    - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
+    - **Breaking Change** - `displayData` is renamed to `displayFormat`.
+    - **Breaking Change** - `dropDownOverlaySettings` and `modalOverlaySettings` are replaced by the `overlaySettings`.
+    - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+    - **Breaking Change** - `onDisabledDate` event is removed.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+- `IgxTimePicker`
+    - **Feature** - `value` accepts ISO 8601 string format.
+    - **Breaking Change** - `value` type could be `Date` or `string`.
+    - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
+    - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
+        ```html
+            <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
+                <label igxLabel>Time: </label>
+                <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
+                    alarm
+                </igx-picker-toggle>
+                <igx-picker-clear igxSuffix (click)="timePicker.clear()">
+                    delete
+                </igx-picker-clear>
+            </igx-time-picker>
+        ```
+    - **Breaking Change** - `format` is replaced by `inputFormat`.
+    - **Breaking Change** - `placeholder` defaults to the `inputFormat`
+    - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
+    - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+    - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+- `IgxDateRangePicker`
+    - **Feature** - `value` start and end accept ISO 8601 string format.
+    - **Feature** - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-range-picker>
+        <ng-template igxPickerActions let-calendar>
+          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-range-picker>
+      ```
+    - **Breaking Change** - `value` start and end types could be `Date` or `string`.
+    - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
+    - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+    - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `dragFinished`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+
 
 ### New Features
+- Added `IgxTree` component
+    - Allows users to render hierarchical data in an easy-to-navigate way. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Features API for handling selection (bi-state and cascading), node activation, node expansion state.
+    - Features extensive and easy-to-use keyboard navigation, fully compliant with W3 standards.
+    - Code example for a tree contructured from a hierarchical data set:
+    ```html
+        <igx-tree>
+            <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="isNodeExpanded(node)" [selected]="isNodeSelected(node)">
+                {{ node.text }}
+                <img [src]="node.image" alt="node.imageAlt" />
+                <igx-tree-node *ngFor="let child of node.children" [data]="child" [expanded]="isNodeExpanded(child)" [selected]="isNodeSelected(child)">
+                    {{ child.text }}
+                    <igx-tree-node *ngFor="let leafChild of child.children" [data]="leafChild" [expanded]="isNodeExpanded(leafChild)" [selected]="isNodeSelected(leafChild)">
+                        <a igxTreeNodeLink href="{{leafChild.location}}" target="_blank">{{ leafChild.text }}</a>
+                    </igx-tree-node>
+                </igx-tree-node>
+            </igx-tree-node>
+        </igx-tree>
+    ```
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/tree/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Tree-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/tree)
+
+- `IgxHierarchicalGrid`
+    - Added support for exporting hierarchical data.
 - `IgxForOf`, `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Behavioral Change** - Virtual containers now scroll smoothly when using the mouse wheel(s) to scroll them horizontally or vertically. This behavior more closely resembles the scrolling behavior of non-virtualized containers in most modern browsers.
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
@@ -47,6 +208,24 @@ All notable changes for each version of this project will be documented in this 
     - The `igx-tab-header` supports `igx-prefix` and `igx-suffix` directives in its `ng-content`.
 - `IgxBottomNav`
     - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled. 
+- `IgxOverlayService`
+    - `detach` and `detachAll` methods are added to `IgxOverlayService`. Calling `detach` will remove all the elements generated for the related overlay, as well as clean up all related resources. Calling `detachAll` will remove all elements generated by any call to `IgxOverlay` `attach`, and will clean up all related resources. _Note: calling `hide` or `hideAll` will not clean generated by the service elements and will not clean up related resources._
+- `IgxCombo`
+    - Any changes to `IComboItemAdditionEvent.addedItem` will be reflected in the item added to the data.
+    - `IgxComboComponent.onAddition` is now cancelable. You can prevent the item from being added by setting the event args `cancel` property to `true`.
+    ```typescript
+    public handleComboItemAddition(event: IComboItemAdditionEvent): void {
+        if (event.addedItem[this.combo.valueKey] === 'ForbiddenValue') {
+            event.cancel = true;
+        } else if (event.addedItem[this.combo.valueKey] === 'Change Me') {
+            const index = this.iter++;
+            event.addedItem = {
+                [this.combo.valueKey]: `customId${index}`,
+                [this.combo.displayKey]: `New item ${index}`;
+            }
+        }
+    }
+    ```
     
 ### Themes:
 - Breaking Changes:
@@ -58,13 +237,6 @@ All notable changes for each version of this project will be documented in this 
     /// Example with Indigo Design theme:
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
-
-
-
-
-### New Features
-- `IgxOverlayService`
-    - `detach` and `detachAll` methods are added to `IgxOverlayService`. Calling `detach` will remove all the elements generated for the related overlay, as well as clean up all related resources. Calling `detachAll` will remove all elements generated by any call to `IgxOverlay` `attach`, and will clean up all related resources. _Note: calling `hide` or `hideAll` will not clean generated by the service elements and will not clean up related resources._
 
 
 ## 11.1.1

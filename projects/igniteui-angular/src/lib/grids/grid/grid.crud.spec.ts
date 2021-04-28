@@ -439,9 +439,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
-        const row = grid.getRowByKey(rowID);
         expect(grid.data.length).toBe(11);
-        expect(row).toBeUndefined();
 
         grid.updateRow({ index: 97, value: 87}, rowID);
         fix.detectChanges();
@@ -460,9 +458,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         { index: 9, value: 9}, { index: 10, value: 10}, { index: 11, value: 11}];
         sampleData.forEach((record) => grid.addRow(record));
         fix.detectChanges();
-        const row = grid.getRowByKey(rowID);
         expect(grid.data.length).toBe(11);
-        expect(row).toBeUndefined();
 
         grid.deleteRow(rowID);
         fix.detectChanges();
@@ -501,8 +497,8 @@ describe('IgxGrid - CRUD operations #grid', () => {
         <igx-grid
             [data]="data"
             [height]="null"
-            (onRowAdded)="rowAdded()"
-            (onRowDeleted)="rowDeleted()"
+            (rowAdded)="rowAdded()"
+            (rowDeleted)="rowDeleted()"
             (cellEdit)="editDone($event)"
             (rowEdit)="editDone($event)"
             [autoGenerate]="true"

@@ -330,16 +330,16 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid = fix.componentInstance.grid;
             }));
 
-            it('should emit onColumnPinning event and allow changing the insertAtIndex param.', () => {
+            it('should emit columnPin event and allow changing the insertAtIndex param.', () => {
 
-                spyOn(grid.onColumnPinning, 'emit').and.callThrough();
+                spyOn(grid.columnPin, 'emit').and.callThrough();
 
                 const idCol = grid.getColumnByName('ID');
                 const idColIndex = idCol.index;
                 idCol.pinned = true;
                 fix.detectChanges();
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(1);
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                expect(grid.columnPin.emit).toHaveBeenCalledTimes(1);
+                expect(grid.columnPin.emit).toHaveBeenCalledWith({
                     column: idCol,
                     insertAtIndex: 0,
                     isPinned: false,
@@ -350,8 +350,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const cityCol = grid.getColumnByName('City');
                 cityCol.pinned = true;
                 fix.detectChanges();
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(2);
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                expect(grid.columnPin.emit).toHaveBeenCalledTimes(2);
+                expect(grid.columnPin.emit).toHaveBeenCalledWith({
                     column: cityCol,
                     insertAtIndex: 0,
                     isPinned: false,
@@ -361,8 +361,8 @@ describe('IgxGrid - Column Pinning #grid', () => {
 
                 idCol.pinned = false;
                 fix.detectChanges();
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledTimes(3);
-                expect(grid.onColumnPinning.emit).toHaveBeenCalledWith({
+                expect(grid.columnPin.emit).toHaveBeenCalledTimes(3);
+                expect(grid.columnPin.emit).toHaveBeenCalledWith({
                     column: idCol,
                     insertAtIndex: idColIndex,
                     isPinned: true,
@@ -567,7 +567,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
 
                 // check row DOM
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
 
                 GridSelectionFunctions.verifyRowHasCheckbox(row);
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeDefined();
@@ -682,7 +682,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(pinnedCols.length).toBe(3);
 
                 expect(grid.getColumnByName('CompanyName').isFirstPinned).toBeTruthy();
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 // check cells are rendered after main display container and have left offset
                 for (let i = 0; i <= pinnedCols.length - 1; i++) {
                     const elem = row.children[i + 1];
@@ -704,7 +704,7 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 fix.detectChanges();
                 grid = fix.componentInstance.grid;
                 // check row DOM
-                const row = grid.getRowByIndex(0).nativeElement;
+                const row = grid.gridAPI.get_row_by_index(0).nativeElement;
                 expect(GridFunctions.getRowDisplayContainer(fix, 0)).toBeTruthy();
 
                 expect(row.children[1].classList.contains(`${CELL_PINNED_CLASS}-first`)).toBeTruthy();

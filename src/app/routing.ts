@@ -116,7 +116,9 @@ import { AnimationsSampleComponent } from './styleguide/animations/animations.sa
 import { GridFormattingComponent } from './grid-formatting/grid-formatting.component';
 import { MainComponent } from './grid-finjs/main.component';
 import { GridEventsComponent } from './grid-events/grid-events.component';
+import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
+import { TreeSampleComponent } from './tree/tree.sample';
 
 const appRoutes = [
     {
@@ -406,6 +408,10 @@ const appRoutes = [
         component: GridRowPinningSampleComponent
     },
     {
+        path: 'gridRowAPI',
+        component: GridRowAPISampleComponent
+    },
+    {
         path: 'gridRemotePaging',
         component: GridRemotePagingSampleComponent
     },
@@ -484,6 +490,9 @@ const appRoutes = [
     {
         path: 'gridFinJS',
         component: MainComponent
+    },{
+        path: 'tree',
+        component: TreeSampleComponent
     },
     {
         path: 'gridUpdates',

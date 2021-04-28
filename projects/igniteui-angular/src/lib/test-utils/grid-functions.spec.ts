@@ -12,7 +12,6 @@ import { SortingDirection } from '../data-operations/sorting-expression.interfac
 import { UIInteractions, wait } from './ui-interactions.spec';
 import {
     IgxGridCellComponent,
-    IgxGridRowComponent,
     IgxColumnComponent,
     IgxGridBaseDirective
 } from '../grids/grid/public_api';
@@ -21,6 +20,7 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 import { parseDate } from '../core/utils';
+import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
 const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -184,11 +184,6 @@ export class GridFunctions {
     public static scrollLeft(grid: IgxGridComponent, newLeft: number) {
         const hScrollbar = grid.headerContainer.getScroll();
         hScrollbar.scrollLeft = newLeft;
-    }
-
-    public static scrollRight(grid: IgxGridComponent, newRight: number) {
-        const hScrollbar = grid.parentVirtDir.getScroll();
-        hScrollbar.scrollRight = newRight;
     }
 
     public static scrollTop(grid: IgxGridComponent, newTop: number) {
@@ -2065,6 +2060,10 @@ export class GridSummaryFunctions {
         GridSummaryFunctions.verifyColumnSummaries(summaryRow, summaryIndex, summaryLabels, summaryResults);
     }
 
+    public static verifyRowWithIndexIsOfType(grid, index: number, type: any) {
+        expect(grid.getRowByIndex(index) instanceof type).toBe(true);
+    }
+
     public static verifyColumnSummaries(summaryRow: DebugElement, summaryIndex: number, summaryLabels, summaryResults) {
         // const summary = summaryRow.query(By.css('igx-grid-summary-cell[data-visibleindex="' + summaryIndex + '"]'));
         const summary = GridSummaryFunctions.getSummaryCellByVisibleIndex(summaryRow, summaryIndex);
@@ -2224,7 +2223,7 @@ export class GridSelectionFunctions {
         expect(cell.nativeElement.classList.contains(CELL_ACTIVE_CSS_CLASS)).toBe(active);
     }
 
-    // Check the grid selected cell and cell in in the onSelection function
+    // Check the grid selected cell and cell in in the selected function
     public static verifyGridCellSelected(fix, cell: IgxGridCellComponent) {
         const selectedCellFromGrid = cell.grid.selectedCells[0];
         const selectedCell = fix.componentInstance.selectedCell;

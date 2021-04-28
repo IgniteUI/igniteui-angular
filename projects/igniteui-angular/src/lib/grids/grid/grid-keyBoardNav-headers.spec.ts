@@ -272,7 +272,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('Sorting: Should be able to sort a column with the keyboard', fakeAsync (() => {
             spyOn(grid.sorting, 'emit').and.callThrough();
-            spyOn(grid.onSortingDone, 'emit').and.callThrough();
+            spyOn(grid.sortingDone, 'emit').and.callThrough();
             grid.getColumnByName('ID').sortable = true;
             fix.detectChanges();
 
@@ -357,7 +357,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions.length).toEqual(0);
 
             expect(grid.sorting.emit).toHaveBeenCalledTimes(5);
-            expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(5);
+            expect(grid.sortingDone.emit).toHaveBeenCalledTimes(5);
         }));
 
         it('Filtering: Should be able to open filter row with the keyboard', () => {
@@ -549,7 +549,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('Column selection: Should be able to select columns when columnSelection is single', () => {
-            spyOn(grid.onColumnSelectionChange, 'emit').and.callThrough();
+            spyOn(grid.columnSelected, 'emit').and.callThrough();
             const columnID = grid.getColumnByName('ID');
             const columnParentID = grid.getColumnByName('ParentID');
             const columnName = grid.getColumnByName('Name');
@@ -592,7 +592,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             GridSelectionFunctions.verifyColumnAndCellsSelected(columnName, false);
-            expect(grid.onColumnSelectionChange.emit).toHaveBeenCalledTimes(3);
+            expect(grid.columnSelected.emit).toHaveBeenCalledTimes(3);
         });
 
         it('Group by: Should be able group columns with keyboard', () => {

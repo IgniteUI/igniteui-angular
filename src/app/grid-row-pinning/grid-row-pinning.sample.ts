@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, Inject, AfterViewInit } from '@angular/co
 import {
     IgxGridComponent,
     ColumnPinningPosition,
-    RowPinningPosition, IgxGridRowComponent,
+    RowPinningPosition,
     IgxTransactionService,
     IgxGridTransaction,
     IgxGridStateDirective,
@@ -13,7 +13,8 @@ import {
     IDisplayDensityOptions,
     GridSelectionMode,
     IPinningConfig,
-    IgxIconService
+    IgxIconService,
+    RowType
 } from 'igniteui-angular';
 import { pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
 
@@ -196,7 +197,7 @@ export class GridRowPinningSampleComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public togglePining(row: IgxGridRowComponent, event) {
+    public togglePining(row: RowType, event) {
         event.preventDefault();
         if (row.pinned) {
             row.unpin();

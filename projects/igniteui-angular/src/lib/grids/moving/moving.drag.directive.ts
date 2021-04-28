@@ -2,7 +2,7 @@ import { Directive, OnDestroy, Input, ElementRef, ViewContainerRef, NgZone, Rend
 import { IgxDragDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { Subscription, fromEvent } from 'rxjs';
 import { IgxColumnComponent } from '../columns/column.component';
-import { KEYS, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { IgxColumnMovingService } from './moving.service';
 
 /**
@@ -16,13 +16,19 @@ import { IgxColumnMovingService } from './moving.service';
 export class IgxColumnMovingDragDirective extends IgxDragDirective implements OnDestroy {
 
     @Input('igxColumnMovingDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
 
-    get column(): IgxColumnComponent {
+    public get data(): any {
+        return this._data;
+    }
+
+    public get column(): IgxColumnComponent {
         return this.data;
     }
 
-    get draggable(): boolean {
+    public get draggable(): boolean {
         return this.column && (this.column.movable || (this.column.groupable && !this.column.columnGroup));
     }
 
@@ -30,6 +36,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         return this.cms.icon;
     }
 
+    protected _data: any;
     private subscription$: Subscription;
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
@@ -77,10 +84,10 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
         const args = {
             source: this.column
         };
-        this.column.grid.onColumnMovingStart.emit(args);
+        this.column.grid.columnMovingStart.emit(args);
 
         this.subscription$ = fromEvent(this.column.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-            if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+            if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
                 this.onEscape(ev);
             }
         });
@@ -100,7 +107,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
                 source: this.column,
                 cancel: false
             };
-            this.column.grid.onColumnMoving.emit(args);
+            this.column.grid.columnMoving.emit(args);
 
             if (args.cancel) {
                 this.onEscape(event);

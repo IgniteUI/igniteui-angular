@@ -4,9 +4,10 @@ import { first } from 'rxjs/operators';
 import { SUPPORTED_KEYS, NAVIGATION_KEYS } from '../../core/utils';
 import { Injectable } from '@angular/core';
 import { IgxChildGridRowComponent } from './child-grid-row.component';
-import { IgxRowDirective, IgxGridBaseDirective } from '../grid/public_api';
+import { IgxGridBaseDirective } from '../grid/public_api';
 import { GridType } from '../common/grid.interface';
 import { IPathSegment } from './hierarchical-grid-base.directive';
+import { IgxRowDirective } from '../row.directive';
 
 @Injectable()
 export class IgxHierarchicalGridNavigationService extends IgxGridNavigationService {
@@ -15,7 +16,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
     protected _pendingNavigation = false;
 
 
-    dispatchEvent(event: KeyboardEvent) {
+    public dispatchEvent(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
         if (!this.activeNode || !(SUPPORTED_KEYS.has(key) || (key === 'tab' && this.grid.crudService.cell)) &&
             !this.grid.crudService.rowEditingBlocked && !this.grid.crudService.rowInEditMode) {
@@ -52,7 +53,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
                 scrollAmount += isNext ? 1 : -1;
                 this.grid.verticalScrollContainer.getScroll().scrollTop = scrollAmount;
                 this._pendingNavigation = true;
-                this.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+                this.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                     this._moveToChild(rowIndex, visibleColIndex, isNext, targetLayoutIndex, cb);
                     this._pendingNavigation = false;
                 });
@@ -104,7 +105,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
         }
     }
 
-    focusTbody(event) {
+    public focusTbody(event) {
         if (!this.activeNode || this.activeNode.row === null) {
             this.activeNode = {
                 row: 0,
@@ -157,7 +158,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
      * @param cb  Optional.Callback function called when operation is complete.
      */
     protected positionInParent(rowIndex, isNext, cb?: () => void) {
-        const rowObj = this.grid.getRowByIndex(rowIndex);
+        const rowObj = this.grid.gridAPI.get_row_by_index(rowIndex);
         if (!rowObj) {
             if (cb) {
                 cb();
@@ -171,7 +172,7 @@ export class IgxHierarchicalGridNavigationService extends IgxGridNavigationServi
             const scrollableGrid = isNext ? this.getNextScrollableDown(this.grid) : this.getNextScrollableUp(this.grid);
             scrollableGrid.grid.verticalScrollContainer.recalcUpdateSizes();
             scrollableGrid.grid.verticalScrollContainer.addScrollTop(positionInfo.offset);
-            scrollableGrid.grid.verticalScrollContainer.onChunkLoad.pipe(first()).subscribe(() => {
+            scrollableGrid.grid.verticalScrollContainer.chunkLoad.pipe(first()).subscribe(() => {
                 this._pendingNavigation = false;
                 if (cb) {
                     cb();

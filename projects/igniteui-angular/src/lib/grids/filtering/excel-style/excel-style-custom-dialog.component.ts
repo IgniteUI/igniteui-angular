@@ -17,7 +17,9 @@ import {
     IgxStringFilteringOperand,
     IgxBooleanFilteringOperand,
     IgxNumberFilteringOperand,
-    IgxDateFilteringOperand
+    IgxDateFilteringOperand,
+    IgxDateTimeFilteringOperand,
+    IgxTimeFilteringOperand
 } from '../../../data-operations/filtering-condition';
 import { IgxToggleDirective } from '../../../directives/toggle/toggle.directive';
 import {
@@ -30,9 +32,9 @@ import {
     AbsoluteScrollStrategy
 } from '../../../services/public_api';
 import { ILogicOperatorChangedArgs, IgxExcelStyleDefaultExpressionComponent } from './excel-style-default-expression.component';
-import { KEYS } from '../../../core/utils';
 import { IgxExcelStyleDateExpressionComponent } from './excel-style-date-expression.component';
 import { DisplayDensity } from '../../../core/density';
+import { PlatformUtil } from '../../../core/utils';
 
 /**
  * @hidden
@@ -96,7 +98,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef) {}
+    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) {}
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
@@ -208,12 +210,12 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
         }
     }
 
-    public onKeyDown(eventArgs) {
+    public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
     }
 
-    public onApplyButtonKeyDown(eventArgs) {
-        if (eventArgs.key === KEYS.TAB && !eventArgs.shiftKey) {
+    public onApplyButtonKeyDown(eventArgs: KeyboardEvent) {
+        if (eventArgs.key === this.platform.KEYMAP.TAB && !eventArgs.shiftKey) {
             eventArgs.stopPropagation();
             eventArgs.preventDefault();
         }
@@ -229,6 +231,10 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
             case DataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
+            case DataType.Time:
+                return IgxTimeFilteringOperand.instance().condition(conditionName);
+            case DataType.DateTime:
+                return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
         }

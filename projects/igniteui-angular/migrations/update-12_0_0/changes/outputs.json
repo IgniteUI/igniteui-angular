@@ -8,6 +8,1198 @@
                 "selector": "igx-column",
                 "type": "component"
             }
+        },
+        {
+            "name": "onChunkLoad",
+            "replaceWith": "chunkLoad",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onChunkLoad",
+            "replaceWith": "chunkLoad",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onScrollbarVisibilityChanged",
+            "replaceWith": "scrollbarVisibilityChanged",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onScrollbarVisibilityChanged",
+            "replaceWith": "scrollbarVisibilityChanged",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onContentSizeChange",
+            "replaceWith": "contentSizeChange",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onContentSizeChange",
+            "replaceWith": "contentSizeChange",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanged",
+            "replaceWith": "dataChanged",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onBeforeViewDestroyed",
+            "replaceWith": "beforeViewDestroyed",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "owner": {
+                "selector": "[igxFor][igxForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onChunkPreload",
+            "replaceWith": "chunkPreload",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onDataChanging",
+            "replaceWith": "dataChanging",
+            "owner": {
+                "selector": "[igxGridFor][igxGridForOf]",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onGridCreated",
+            "replaceWith": "gridCreated",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridInitialized",
+            "replaceWith": "gridInitialized",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnToggled",
+            "replaceWith": "columnToggled",
+            "owner": {
+                "selector": "igx-column-actions",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onCellClick",
+            "replaceWith": "cellClick",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onScroll",
+            "replaceWith": "gridScroll",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onScroll",
+            "replaceWith": "gridScroll",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onScroll",
+            "replaceWith": "gridScroll",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onScroll",
+            "replaceWith": "gridScroll",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowSelectionChange",
+            "replaceWith": "rowSelected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnSelectionChange",
+            "replaceWith": "columnSelected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnPinning",
+            "replaceWith": "columnPin",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnInit",
+            "replaceWith": "columnInit",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnInit",
+            "replaceWith": "columnInit",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnInit",
+            "replaceWith": "columnInit",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnInit",
+            "replaceWith": "columnInit",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSortingDone",
+            "replaceWith": "sortingDone",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onFilteringDone",
+            "replaceWith": "filteringDone",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onPagingDone",
+            "replaceWith": "pagingDone",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowAdded",
+            "replaceWith": "rowAdded",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDeleted",
+            "replaceWith": "rowDeleted",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnResized",
+            "replaceWith": "columnResized",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnResized",
+            "replaceWith": "columnResized",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnResized",
+            "replaceWith": "columnResized",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnResized",
+            "replaceWith": "columnResized",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onContextMenu",
+            "replaceWith": "contextMenu",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDoubleClick",
+            "replaceWith": "doubleClick",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnVisibilityChanged",
+            "replaceWith": "columnVisibilityChanged",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingStart",
+            "replaceWith": "columnMovingStart",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMoving",
+            "replaceWith": "columnMoving",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onColumnMovingEnd",
+            "replaceWith": "columnMovingEnd",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridKeydown",
+            "replaceWith": "gridKeydown",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragStart",
+            "replaceWith": "rowDragStart",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowDragEnd",
+            "replaceWith": "rowDragEnd",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onGridCopy",
+            "replaceWith": "gridCopy",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowToggle",
+            "replaceWith": "rowToggle",
+            "owner": {
+                "selector": "igx-row-toggle",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRowPinning",
+            "replaceWith": "rowPinning",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onToolbarExporting",
+            "replaceWith": "toolbarExporting",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "owner": {
+                "selector": "igx-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "owner": {
+                "selector": "igx-tree-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "owner": {
+                "selector": "igx-hierarchical-grid",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRangeSelection",
+            "replaceWith": "rangeSelected",
+            "owner": {
+                "selector": "igx-row-island",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChanged",
+            "replaceWith": "dragFinished",
+            "owner": {
+                "selector": "igx-slider",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "owner": {
+                "selector": "igx-linear-bar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onProgressChanged",
+            "replaceWith": "progressChanged",
+            "owner": {
+                "selector": "igx-circular-bar",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igxDateTimeEditor",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDisabledDate",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChanged",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValidationFailed",
+            "replaceWith": "validationFailed",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "rangeSelected",
+            "replaceWith": "valueChange",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
         }
     ]
 }

@@ -10,7 +10,7 @@ import {
     HORIZONTAL_NAV_KEYS,
     HEADER_KEYS,
     ROW_ADD_KEYS,
-    isEdge
+    PlatformUtil
 } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
@@ -47,6 +47,8 @@ export class IgxGridNavigationService {
     public set activeNode(value: IActiveNode) {
         this._activeNode = value;
     }
+
+    constructor(protected platform: PlatformUtil) { }
 
     handleNavigation(event: KeyboardEvent) {
         const key = event.key.toLowerCase();
@@ -214,7 +216,7 @@ export class IgxGridNavigationService {
         const scrollRowIndex = this.grid.hasPinnedRecords && this.grid.isRowPinningToTop ?
             rowIndex - this.grid.pinnedDataView.length : rowIndex;
         this.grid.verticalScrollContainer.scrollTo(scrollRowIndex);
-        this.grid.verticalScrollContainer.onChunkLoad
+        this.grid.verticalScrollContainer.chunkLoad
             .pipe(first()).subscribe(() => {
                 this.pendingNavigation = false;
                 if (cb) {
@@ -235,7 +237,7 @@ export class IgxGridNavigationService {
             return;
         }
         this.pendingNavigation = true;
-        this.grid.parentVirtDir.onChunkLoad
+        this.grid.parentVirtDir.chunkLoad
             .pipe(first())
             .subscribe(() => {
                 this.pendingNavigation = false;
@@ -336,7 +338,7 @@ export class IgxGridNavigationService {
                     this.grid.verticalScrollContainer.scrollPrevPage();
                 }
                 const editCell = this.grid.crudService.cell;
-                this.grid.verticalScrollContainer.onChunkLoad
+                this.grid.verticalScrollContainer.chunkLoad
                     .pipe(first()).subscribe(() => {
                         if (editCell && this.grid.rowList.map(r => r.index).indexOf(editCell.rowIndex) < 0) {
                             this.grid.tbody.nativeElement.focus({ preventScroll: true });
@@ -398,7 +400,7 @@ export class IgxGridNavigationService {
 
                 if (this.grid.crudService.cellInEditMode || this.grid.crudService.rowInEditMode) {
                     this.grid.crudService.endEdit(false, event);
-                    if (isEdge()) {
+                    if (this.platform.isEdge) {
                         this.grid.cdr.detectChanges();
                     }
                     this.grid.tbody.nativeElement.focus();
@@ -407,7 +409,7 @@ export class IgxGridNavigationService {
             case ' ':
             case 'spacebar':
             case 'space':
-                const rowObj = this.grid.getRowByIndex(this.activeNode.row);
+                const rowObj = this.grid.gridAPI.get_row_by_index(this.activeNode.row);
                 if (this.grid.isRowSelectable && rowObj) {
                     if (this.isDataRow(rowIndex)) {
                         if (rowObj.selected) {
@@ -492,7 +494,8 @@ export class IgxGridNavigationService {
 
     protected handleAlt(key: string, event: KeyboardEvent) {
         event.preventDefault();
-        const row = this.grid.getRowByIndex(this.activeNode.row) as any;
+        // todo TODO ROW
+        const row = this.grid.gridAPI.get_row_by_index(this.activeNode.row) as any;
 
         if (!(this.isToggleKey(key) || this.isAddKey(key)) || !row) {
             return;
@@ -584,7 +587,7 @@ export class IgxGridNavigationService {
             type === 'dataCell' ? row.cells?.find(c => c.visibleColumnIndex === this.activeNode.column) :
                 row.summaryCells?.find(c => c.visibleColumnIndex === this.activeNode.column);
         const keydownArgs = { targetType: type, event, cancel: false, target };
-        this.grid.onGridKeydown.emit(keydownArgs);
+        this.grid.gridKeydown.emit(keydownArgs);
         if (keydownArgs.cancel && type === 'dataCell') {
             this.grid.selectionService.clear();
             this.grid.selectionService.keyboardState.active = true;

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { IgxGridCellComponent } from '../cell.component';
 import { GridBaseAPIService } from '../api.service';
-import { getNodeSizeViaRange, PlatformUtil } from '../../core/utils';
+import { PlatformUtil } from '../../core/utils';
 import { DOCUMENT } from '@angular/common';
 import { IgxGridBaseDirective } from './public_api';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -66,8 +66,8 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      */
     public toggle(event: Event) {
         event.stopPropagation();
-        const expansionState = this.gridAPI.get_row_expansion_state(this.row.rowData);
-        this.gridAPI.set_row_expansion_state(this.row.rowID, !expansionState, event);
+        const expansionState = this.gridAPI.get_row_expansion_state(this.intRow.rowData);
+        this.gridAPI.set_row_expansion_state(this.intRow.rowID, !expansionState, event);
     }
 
     /**
@@ -90,7 +90,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
             leftPadding = parseFloat(indentationStyle.paddingLeft);
         }
         const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child) => getNodeSizeViaRange(range, child)));
+            .map((child: HTMLElement) => this.platformUtil.getNodeSizeViaRange(range, child)));
         return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
     }
 
@@ -109,7 +109,7 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     public get showExpanderIndicator() {
-        const isGhost = this.row.pinned && this.row.disabled;
-        return !this.editMode && (!this.row.pinned || isGhost);
+        const isGhost = this.intRow.pinned && this.intRow.disabled;
+        return !this.editMode && (!this.intRow.pinned || isGhost);
     }
 }

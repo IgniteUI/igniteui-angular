@@ -219,6 +219,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Pinning'
         },
         {
+            link: '/gridRowAPI',
+            icon: 'view_column',
+            name: 'Grid Row API'
+        },
+        {
             link: '/gridColumnResizing',
             icon: 'view_column',
             name: 'Grid Column Resizing'
@@ -459,6 +464,11 @@ export class AppComponent implements OnInit {
             link: '/hierarchicalGridAddRow',
             icon: 'view_column',
             name: 'HierarchicalGrid Add Row'
+        },
+        {
+            link: '/tree',
+            icon: 'account_tree',
+            name: 'Tree'
         },
         {
             link: '/treeGrid',

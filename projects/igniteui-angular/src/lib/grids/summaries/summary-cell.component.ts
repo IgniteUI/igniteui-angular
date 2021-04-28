@@ -4,12 +4,12 @@ import { IgxCurrencySummaryOperand,
          IgxNumberSummaryOperand,
          IgxPercentSummaryOperand,
          IgxSummaryOperand,
-         IgxSummaryResult } from './grid-summary';
+         IgxSummaryResult,
+         IgxTimeSummaryOperand} from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
 import { DataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
-import { IColumnPipeArgs } from '../columns/interfaces';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,6 +125,13 @@ export class IgxSummaryCellComponent {
      */
     public isDateOperand(): boolean {
         return this.column.summaries?.constructor === IgxDateSummaryOperand;
+    }
+
+    /**
+     * @hidden @internal
+     */
+     public isTimeOperand(): boolean {
+        return this.column.summaries?.constructor === IgxTimeSummaryOperand;
     }
 
     /**

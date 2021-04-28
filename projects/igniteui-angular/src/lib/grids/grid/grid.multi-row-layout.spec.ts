@@ -1157,7 +1157,7 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 
         expect(grid.verticalScrollContainer.getScroll().scrollTop).toBeGreaterThan(0);
 
-        const row = grid.getRowByIndex(NAVIGATE);
+        const row = grid.gridAPI.get_row_by_index(NAVIGATE);
         expect(GridFunctions.elementInGridView(grid, row.nativeElement)).toBeTruthy();
     }));
 });
@@ -1175,20 +1175,20 @@ describe('IgxGrid - multi-row-layout #grid', () => {
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
-    cols: Array<any> = [
+    public grid: IgxGridComponent;
+    public cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
         { field: 'CompanyName', rowStart: 1, colStart: 2 },
         { field: 'ContactName', rowStart: 1, colStart: 3 },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
     ];
-    colGroups = [
+    public colGroups = [
         {
             group: 'group1',
             columns: this.cols
         }
     ];
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 }
 
 @Component({

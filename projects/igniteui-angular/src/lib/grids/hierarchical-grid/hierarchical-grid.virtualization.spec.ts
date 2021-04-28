@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule, IgxHierarchicalRowComponent } from './public_api';
+import { IgxHierarchicalGridModule } from './public_api';
 import { Component, ViewChild } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { IgxRowIslandComponent } from './row-island.component';
@@ -14,6 +14,7 @@ import { FilteringLogic } from '../../data-operations/filtering-expression.inter
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
+import { IgxHierarchicalRowComponent } from './hierarchical-row.component';
 
 describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
     let fixture;
@@ -347,29 +348,29 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         fixture.componentInstance.data = fixture.componentInstance.generateData(10, 0);
         fixture.detectChanges();
 
-        fixture.componentInstance.rowIsland.onGridCreated.pipe(first(), delay(200)).subscribe(
+        fixture.componentInstance.rowIsland.gridCreated.pipe(first(), delay(200)).subscribe(
             async (args) => {
                 args.grid.data = fixture.componentInstance.generateData(10, 0);
                 await wait(200);
                 fixture.detectChanges();
 
-                expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(958);
+                expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(958);
                 done();
             }
         );
 
 
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(510);
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(510);
 
         // expand 1st row
         const row = hierarchicalGrid.dataRowList.toArray()[0];
         (row.nativeElement.children[0] as HTMLElement).click();
         fixture.detectChanges();
 
-        expect(hierarchicalGrid.verticalScrollContainer.getScroll().children[0].offsetHeight).toEqual(561);
+        expect((hierarchicalGrid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight).toEqual(561);
     });
 
-    it('should emit onScroll and onDataPreLoad on row island when child grid is scrolled.', async () => {
+    it('should emit onScroll and dataPreLoad on row island when child grid is scrolled.', async () => {
         const ri = fixture.componentInstance.rowIsland;
         const firstRow = hierarchicalGrid.dataRowList.toArray()[0];
         (firstRow.nativeElement.children[0] as HTMLElement).click();
@@ -380,8 +381,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         const elem = verticalScroll['scrollComponent'].elementRef.nativeElement;
 
 
-        spyOn(ri.onScroll, 'emit').and.callThrough();
-        spyOn(ri.onDataPreLoad, 'emit').and.callThrough();
+        spyOn(ri.gridScroll, 'emit').and.callThrough();
+        spyOn(ri.dataPreLoad, 'emit').and.callThrough();
 
 
         // scroll down
@@ -391,8 +392,8 @@ describe('IgxHierarchicalGrid Virtualization #hGrid', () => {
         await wait();
         fixture.detectChanges();
 
-        expect(ri.onScroll.emit).toHaveBeenCalled();
-        expect(ri.onDataPreLoad.emit).toHaveBeenCalled();
+        expect(ri.gridScroll.emit).toHaveBeenCalled();
+        expect(ri.dataPreLoad.emit).toHaveBeenCalled();
     });
 });
 
@@ -458,7 +459,7 @@ export class IgxHierarchicalGridTestBaseComponent {
         // 3 level hierarchy
         this.data = this.generateData(40, 3);
     }
-    generateData(count: number, level: number, parendID?) {
+    public generateData(count: number, level: number, parendID?) {
         const prods = [];
         const currLevel = level;
         let children;

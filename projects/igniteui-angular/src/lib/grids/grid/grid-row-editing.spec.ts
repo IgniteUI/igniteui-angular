@@ -29,6 +29,7 @@ import {
 } from '../../test-utils/grid-samples.spec';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { RowType } from '../common/row.interface';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
@@ -68,7 +69,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
             cell = grid.getCellByColumn(2, 'ProductName');
             cellDebug = GridFunctions.getRowCells(fix, 2)[2];
-            // row = grid.getRowByIndex(2);
+            // row = grid.gridAPI.get_row_by_index(2);
         }));
 
         it('Should throw a warning when [rowEditable] is set on a grid w/o [primaryKey]', () => {
@@ -96,7 +97,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should be able to enter edit mode on dblclick, enter and f2', () => {
             fix.detectChanges();
-            const row = grid.getRowByIndex(2);
+            const row = grid.gridAPI.get_row_by_index(2);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -124,7 +125,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Emit all events with proper arguments', () => {
-            const row = grid.getRowByIndex(2);
+            const row = grid.gridAPI.get_row_by_index(2);
             const initialRowData = {...cell.rowData};
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
@@ -146,7 +147,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(row.inEditMode).toBe(true);
             const cellEditArgs: IGridEditEventArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: cell.rowData,
                 oldValue: cell.value,
                 cancel: false,
@@ -174,7 +175,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             let cellEditExitArgs: IGridEditDoneEventArgs = {
                 cellID: cell.cellID,
                 rowID: cell.row.rowID,
-                rowData: cell.row.rowData,
+                rowData: cell.row.data,
                 oldValue: cell.value,
                 newValue: cell.value,
                 column: cell.column,
@@ -205,7 +206,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             cellEditExitArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: cell.value,
                 newValue: newCellValue,
@@ -229,7 +230,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             };
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
@@ -261,7 +262,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('Should display the banner below the edited row if it is not the last one', () => {
             cell.setEditMode(true);
-            const editRow = cell.row.nativeElement;
+            const editRow = cell.intRow.nativeElement;
             const banner = GridFunctions.getRowEditingOverlay(fix);
 
             fix.detectChanges();
@@ -281,7 +282,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(lastItemIndex, 'ProductName');
             cell.setEditMode(true);
 
-            const editRow = cell.row.nativeElement;
+            const editRow = cell.intRow.nativeElement;
             const banner = GridFunctions.getRowEditingOverlay(fix);
             fix.detectChanges();
 
@@ -299,7 +300,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell = grid.getCellByColumn(grid.data.length - 1, 'ProductName');
             cell.setEditMode(true);
 
-            const editRow = cell.row.nativeElement;
+            const editRow = cell.intRow.nativeElement;
             const banner = GridFunctions.getRowEditingOverlay(fix);
             fix.detectChanges();
 
@@ -365,7 +366,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
 
-            let row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+            let row: HTMLElement = grid.gridAPI.get_row_by_index(0).nativeElement;
             cell = grid.getCellByColumn(0, 'ProductName');
             cell.setEditMode(true);
 
@@ -375,7 +376,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(false);
 
 
-            row = grid.getRowByIndex(2).nativeElement;
+            row = grid.gridAPI.get_row_by_index(2).nativeElement;
             cell = grid.getCellByColumn(2, 'ProductName');
             cell.setEditMode(true);
 
@@ -384,7 +385,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(false);
 
 
-            row = grid.getRowByIndex(3).nativeElement;
+            row = grid.gridAPI.get_row_by_index(3).nativeElement;
             cell = grid.getCellByColumn(3, 'ProductName');
             cell.setEditMode(true);
 
@@ -393,7 +394,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.setEditMode(false);
 
 
-            row = grid.getRowByIndex(0).nativeElement;
+            row = grid.gridAPI.get_row_by_index(0).nativeElement;
             cell = grid.getCellByColumn(0, 'ProductName');
             cell.setEditMode(true);
 
@@ -405,7 +406,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('should end row editing when clearing or applying advanced filter', () => {
             fix.detectChanges();
-            const row = grid.getRowByIndex(2);
+            const row = grid.gridAPI.get_row_by_index(2);
 
             // Enter row edit mode
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -937,7 +938,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // put cell in edit mode
             cell.setEditMode(true);
             fix.detectChanges();
-            grid.deleteRow(grid.getRowByIndex(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
             fix.detectChanges();
 
             expect(grid.gridAPI.crudService.endEdit).toHaveBeenCalled();
@@ -1120,7 +1121,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should exit edit mode when edited row is being deleted`, () => {
-            const row = grid.getRowByIndex(0);
+            const row = grid.gridAPI.get_row_by_index(0);
             spyOn(grid.gridAPI.crudService, 'endEdit').and.callThrough();
             cell.setEditMode(true);
             fix.detectChanges();
@@ -1153,7 +1154,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const cacheValue = cell.value;
-            let rowElement = grid.getRowByIndex(0).nativeElement;
+            let rowElement = grid.gridAPI.get_row_by_index(0).nativeElement;
             expect(rowElement.classList).not.toContain(ROW_EDITED_CLASS);
 
             cell.setEditMode(true);
@@ -1170,14 +1171,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(grid.page).toEqual(1);
             expect(cell.value).toBe('Tofu');
-            rowElement = grid.getRowByIndex(0).nativeElement;
+            rowElement = grid.gridAPI.get_row_by_index(0).nativeElement;
             expect(rowElement.classList).not.toContain(ROW_EDITED_CLASS);
 
             // Previous page button click
             GridFunctions.navigateToPrevPage(grid.nativeElement);
             fix.detectChanges();
             expect(cell.value).toBe(cacheValue);
-            rowElement = grid.getRowByIndex(0).nativeElement;
+            rowElement = grid.gridAPI.get_row_by_index(0).nativeElement;
             expect(rowElement.classList).not.toContain(ROW_EDITED_CLASS);
         });
 
@@ -1561,7 +1562,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         let fix;
         let grid: IgxGridComponent;
         let cell: IgxGridCellComponent;
-        let initialRow: IgxRowDirective<IgxGridBaseDirective>;
+        let initialRow: RowType;
         let initialData: any;
         const $destroyer = new Subject<boolean>();
 
@@ -1571,7 +1572,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
             initialRow = grid.getRowByIndex(0);
-            initialData = {...initialRow.rowData};
+            initialData = {...initialRow.data};
             fix.componentInstance.pinnedFlag = true;
             fix.detectChanges();
         }));
@@ -1698,7 +1699,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(cell.value).toEqual(cellValue);
         });
 
-        it('When rowEdit is canceled the new row data should never be commited', () => {
+        it('When rowEdit is cancelled the new row data should never be commited', () => {
             grid.rowEdit.pipe(takeUntil($destroyer)).subscribe((evt) => {
                 evt.cancel = true;
             });
@@ -1712,17 +1713,17 @@ describe('IgxGrid - Row Editing #grid', () => {
             grid.gridAPI.crudService.endRowEditTabStop(true, null);
             fix.detectChanges();
 
-            const rowData = Object.assign(cell.row.rowData, newRowData);
+            const rowData = Object.assign({}, cell.row.data, newRowData);
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.rowData).not.toEqual(rowData);
+            expect(cell.row.data).not.toEqual(rowData);
 
             grid.gridAPI.crudService.endRowEditTabStop(false, null);
             fix.detectChanges();
 
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.rowData).not.toEqual(rowData);
+            expect(cell.row.data).not.toEqual(rowData);
         });
 
         it(`Should properly emit 'rowEdit' event - Button Click`, () => {
@@ -1974,7 +1975,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             // TODO: cellEdit should emit updated rowData - issue #7304
             const cellArgs = {
                 cellID: cell.cellID,
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 rowData: cell.rowData,
                 oldValue: 'Chai',
                 newValue: 'New Value',
@@ -2160,7 +2161,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it('cellEditDone, rowEditDone should emit the committed/new rowData', () => {
             const gridContent = GridFunctions.getGridContent(fix);
-            const row = grid.getRowByIndex(0);
+            const row = grid.gridAPI.get_row_by_index(0);
             const newCellValue = 'Aaaaa';
             const updatedRowData = Object.assign({}, row.rowData, { ProductName: newCellValue });
 
@@ -2174,7 +2175,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
-                rowID: cell.row.rowID,
+                rowID: cell.row.key,
                 cellID: cell.cellID,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: cell.value,
@@ -2207,7 +2208,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Should add correct class to the edited row', () => {
-            const row: HTMLElement = grid.getRowByIndex(0).nativeElement;
+            const row: HTMLElement = grid.gridAPI.get_row_by_index(0).nativeElement;
             expect(row.classList).not.toContain(ROW_EDITED_CLASS);
 
             cell.setEditMode(true);
@@ -2240,7 +2241,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it(`Should not allow editing a deleted row`, () => {
-            grid.deleteRow(grid.getRowByIndex(0).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(0).rowID);
             fix.detectChanges();
 
             cell.setEditMode(true);
@@ -2268,12 +2269,62 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(firstCell.selected).toBeFalsy();
         });
 
+        it(`Should verify getRowByIndex API editing members`, () => {
+            const row = grid.getRowByIndex(0);
+            row.delete();
+            fix.detectChanges();
+
+            // Check if row is deleted
+            expect(row.deleted).toBe(true);
+            spyOn(grid.gridAPI.crudService, 'endRowTransaction').and.callThrough();
+
+            const firstCell = grid.getCellByColumn(2, 'ProductName');
+            UIInteractions.simulateDoubleClickAndSelectEvent(firstCell);
+            fix.detectChanges();
+
+            const rowToUpdate = grid.getRowByIndex(2);
+            // Check if row is in edit mode
+            expect(rowToUpdate.inEditMode).toBe(true);
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(0);
+
+            const targetCell = grid.getCellByColumn(0, 'ProductName');
+            UIInteractions.simulateClickAndSelectEvent(targetCell);
+            fix.detectChanges();
+            expect(grid.gridAPI.crudService.endRowTransaction).toHaveBeenCalledTimes(1);
+
+            expect(rowToUpdate.inEditMode).toBe(false);
+
+            const newRow = {
+                ProductID: 123,
+                ProductName: 'DummyItem',
+            };
+
+            // Update with the visible row instance through get_row_by_index
+            grid.gridAPI.get_row_by_index(grid.getRowByIndex(2).index).update(newRow);
+            fix.detectChanges();
+            expect(grid.getRowByIndex(2).data.ProductID).toEqual(123);
+            expect(grid.getRowByIndex(2).data.ProductName).toEqual('DummyItem');
+
+            const newRowUpdate = {
+                InStock: true,
+                UnitsInStock: 1,
+                ProductName: 'DummyItemNew',
+            };
+
+            // Update with the getRowByIndex API method
+            grid.getRowByIndex(3).update(newRowUpdate);
+            fix.detectChanges();
+            expect(grid.getRowByIndex(3).data.InStock).toBe(true);
+            expect(grid.getRowByIndex(3).data.UnitsInStock).toEqual(1);
+            expect(grid.getRowByIndex(3).data.ProductName).toEqual('DummyItemNew');
+        });
+
         it(`Paging: Should not apply edited classes to the same row on a different page`, () => {
             // This is not a valid scenario if the grid does not have transactions enabled
             fix.componentInstance.paging = true;
             fix.detectChanges();
 
-            const rowEl: HTMLElement = grid.getRowByIndex(0).nativeElement;
+            const rowEl: HTMLElement = grid.gridAPI.get_row_by_index(0).nativeElement;
 
             expect(rowEl.classList).not.toContain(ROW_EDITED_CLASS);
 
@@ -2330,7 +2381,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(state[0].newValue['ProductName']).toEqual('Chaiiii');
             expect(state[1].type).toEqual(TransactionType.UPDATE);
             expect(state[1].newValue['ProductName']).toEqual(updateValue);
-            grid.deleteRow(grid.getRowByIndex(2).rowID);
+            grid.deleteRow(grid.gridAPI.get_row_by_index(2).rowID);
             fix.detectChanges();
 
             expect(trans.onStateUpdate.emit).toHaveBeenCalled();
@@ -2347,7 +2398,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             expect(state.length).toEqual(2);
             expect(state[1].type).toEqual(TransactionType.UPDATE);
             expect(state[1].newValue['ProductName']).toEqual(updateValue);
-            row = grid.getRowByIndex(2).nativeElement;
+            row = grid.gridAPI.get_row_by_index(2).nativeElement;
             expect(row.classList).not.toContain('igx -grid__tr--deleted');
 
             trans.redo();
@@ -2491,7 +2542,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         });
 
         it('Should properly mark cell/row as dirty if new value evaluates to `false`', () => {
-            const targetRow = grid.getRowByIndex(0);
+            const targetRow = grid.gridAPI.get_row_by_index(0);
             let targetRowElement = targetRow.element.nativeElement;
             let targetCellElement = targetRow.cells.toArray()[1].nativeElement;
             expect(targetRowElement.classList).not.toContain(ROW_EDITED_CLASS, 'row contains edited class w/o edits');

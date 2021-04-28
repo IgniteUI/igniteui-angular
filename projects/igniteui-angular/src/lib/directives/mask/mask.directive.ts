@@ -7,7 +7,7 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
-import { isIE, IBaseEventArgs, KEYCODES } from '../../core/utils';
+import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
 
 @Directive({
@@ -134,7 +134,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     private _end = 0;
     private _start = 0;
-    private _key: number;
+    private _key: string;
     private _oldText = '';
     private _dataValue = '';
     private _focused = false;
@@ -146,23 +146,24 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _onChangeCallback: (_: any) => void = noop;
 
     constructor(
-        protected elementRef: ElementRef,
+        protected elementRef: ElementRef<HTMLInputElement>,
         protected maskParser: MaskParsingService,
-        protected renderer: Renderer2) { }
+        protected renderer: Renderer2,
+        protected platform: PlatformUtil) { }
 
     /** @hidden */
     @HostListener('keydown', ['$event'])
-    public onKeyDown(event): void {
-        const key = event.keyCode || event.charCode;
+    public onKeyDown(event: KeyboardEvent): void {
+        const key = event.key;
         if (!key) {
             return;
         }
 
-        if (isIE() && this._stopPropagation) {
+        if (this.platform.isIE && this._stopPropagation) {
             this._stopPropagation = false;
         }
 
-        if ((key === KEYCODES.CTRL && key === KEYCODES.Z) || (key === KEYCODES.CTRL && key === KEYCODES.Y)) {
+        if ((event.ctrlKey && (key === this.platform.KEYMAP.Z || key === this.platform.KEYMAP.Y))) {
             event.preventDefault();
         }
 
@@ -171,9 +172,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._end = this.selectionEnd;
     }
 
-    /** @hidden */
-    @HostListener('input')
-    public onInputChanged(): void {
+    /** @hidden @internal */
+    @HostListener('input', ['$event.isComposing'])
+    public onInputChanged(isComposing: boolean): void {
         /**
          * '!this._focused' is a fix for #8165
          * On page load IE triggers input events before focus events and
@@ -182,7 +183,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
-        if (isIE() && (this._stopPropagation || !this._focused)) {
+        if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
         }
@@ -190,17 +191,17 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         if (this._hasDropAction) {
             this._start = this.selectionStart;
         }
-        if (this.inputValue.length < this._oldText.length && this._key === KEYCODES.INPUT_METHOD) {
+        if (this.inputValue.length < this._oldText.length && isComposing) {
             // software keyboard input delete
-            this._key = KEYCODES.BACKSPACE;
+            this._key = this.platform.KEYMAP.BACKSPACE;
         }
 
         let valueToParse = '';
         switch (this._key) {
-            case KEYCODES.DELETE:
+            case this.platform.KEYMAP.DELETE:
                 this._end = this._start === this._end ? ++this._end : this._end;
                 break;
-            case KEYCODES.BACKSPACE:
+            case this.platform.KEYMAP.BACKSPACE:
                 this._start = this.selectionStart;
                 break;
             default:
@@ -210,7 +211,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
         this.inputValue = replacedData.value;
-        if (this._key === KEYCODES.BACKSPACE) {
+        if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
         }
         this.setSelectionRange(replacedData.end);
@@ -234,6 +235,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('focus')
     public onFocus(): void {
+        if (this.nativeElement.readOnly) {
+            return;
+        }
         this._focused = true;
         this.showMask(this._dataValue);
     }
@@ -314,7 +318,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     protected showMask(value: string) {
         if (this.focusedValuePipe) {
-            if (isIE()) {
+            if (this.platform.isIE) {
                 this._stopPropagation = true;
             }
             // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format

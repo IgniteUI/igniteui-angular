@@ -49,7 +49,7 @@ describe('IgxGrid - Cell component #grid', () => {
         it('selection and selection events', () => {
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
-            spyOn(grid.onSelection, 'emit').and.callThrough();
+            spyOn(grid.selected, 'emit').and.callThrough();
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             const args: IGridCellEventArgs = {
                 cell: firstCell,
@@ -57,7 +57,7 @@ describe('IgxGrid - Cell component #grid', () => {
             };
             fix.detectChanges();
 
-            expect(grid.onSelection.emit).toHaveBeenCalledWith(args);
+            expect(grid.selected.emit).toHaveBeenCalledWith(args);
             expect(firstCell.selected).toBe(true);
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('true');
         });
@@ -66,12 +66,12 @@ describe('IgxGrid - Cell component #grid', () => {
             grid.getColumnByName('ID').editable = true;
             fix.detectChanges();
 
-            spyOn(grid.onSelection, 'emit').and.callThrough();
+            spyOn(grid.selected, 'emit').and.callThrough();
 
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
 
-            expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(grid.selected.emit).toHaveBeenCalledTimes(1);
 
             const gridContent = GridFunctions.getGridContent(fix);
             UIInteractions.triggerEventHandlerKeyDown('Enter', gridContent);
@@ -79,11 +79,11 @@ describe('IgxGrid - Cell component #grid', () => {
             UIInteractions.triggerEventHandlerKeyDown('Escape', gridContent);
             fix.detectChanges();
 
-            expect(grid.onSelection.emit).toHaveBeenCalledTimes(1);
+            expect(grid.selected.emit).toHaveBeenCalledTimes(1);
         });
 
         it('Should trigger onCellClick event when click into cell', () => {
-            spyOn(grid.onCellClick, 'emit').and.callThrough();
+            spyOn(grid.cellClick, 'emit').and.callThrough();
             const event = new Event('click');
             firstCell.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
@@ -92,26 +92,26 @@ describe('IgxGrid - Cell component #grid', () => {
             };
 
             fix.detectChanges();
-            expect(grid.onCellClick.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onCellClick.emit).toHaveBeenCalledWith(args);
+            expect(grid.cellClick.emit).toHaveBeenCalledTimes(1);
+            expect(grid.cellClick.emit).toHaveBeenCalledWith(args);
         });
 
-        it('Should trigger onDoubleClick event', () => {
+        it('Should trigger doubleClick event', () => {
             grid.columns[0].editable = true;
             fix.detectChanges();
-            spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+            spyOn(grid.doubleClick, 'emit').and.callThrough();
 
             cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fix.detectChanges();
-            expect(grid.onDoubleClick.emit).toHaveBeenCalledTimes(1);
+            expect(grid.doubleClick.emit).toHaveBeenCalledTimes(1);
 
             cellElem.triggerEventHandler('dblclick', new Event('dblclick'));
             fix.detectChanges();
-            expect(grid.onDoubleClick.emit).toHaveBeenCalledTimes(2);
+            expect(grid.doubleClick.emit).toHaveBeenCalledTimes(2);
         });
 
-        it('Should trigger onContextMenu event when right click into cell', () => {
-            spyOn(grid.onContextMenu, 'emit').and.callThrough();
+        it('Should trigger contextMenu event when right click into cell', () => {
+            spyOn(grid.contextMenu, 'emit').and.callThrough();
             const event = new Event('contextmenu');
             cellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
@@ -120,12 +120,12 @@ describe('IgxGrid - Cell component #grid', () => {
             };
 
             fix.detectChanges();
-            expect(grid.onContextMenu.emit).toHaveBeenCalledTimes(1);
-            expect(grid.onContextMenu.emit).toHaveBeenCalledWith(args);
+            expect(grid.contextMenu.emit).toHaveBeenCalledTimes(1);
+            expect(grid.contextMenu.emit).toHaveBeenCalledWith(args);
         });
 
-        it('Should trigger onDoubleClick event when double click into cell', () => {
-            spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+        it('Should trigger doubleClick event when double click into cell', () => {
+            spyOn(grid.doubleClick, 'emit').and.callThrough();
             const event = new Event('dblclick');
             spyOn(event, 'preventDefault');
             cellElem.nativeElement.dispatchEvent(event);
@@ -137,7 +137,7 @@ describe('IgxGrid - Cell component #grid', () => {
             fix.detectChanges();
 
             expect(event.preventDefault).not.toHaveBeenCalled();
-            expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
+            expect(grid.doubleClick.emit).toHaveBeenCalledWith(args);
         });
     });
 
@@ -285,7 +285,7 @@ describe('IgxGrid - Cell component #grid', () => {
             platformUtil.isIOS = oldIsIOS;
         }));
 
-        it('Should handle doubletap on iOS, trigger onDoubleClick event', fakeAsync(/** height/width setter rAF */() => {
+        it('Should handle doubletap on iOS, trigger doubleClick event', fakeAsync(/** height/width setter rAF */() => {
             const addListenerSpy = spyOn(HammerGesturesManager.prototype, 'addEventListener');
             const platformUtil: PlatformUtil = TestBed.inject(PlatformUtil);
             const oldIsIOS = platformUtil.isIOS;
@@ -301,7 +301,7 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(addListenerSpy).toHaveBeenCalledWith(firstCell.nativeElement, 'doubletap', firstCell.onDoubleClick,
                 { cssProps: {} as any });
 
-            spyOn(grid.onDoubleClick, 'emit').and.callThrough();
+            spyOn(grid.doubleClick, 'emit').and.callThrough();
 
             const event = {
                 type: 'doubletap',
@@ -315,7 +315,7 @@ describe('IgxGrid - Cell component #grid', () => {
 
             fix.detectChanges();
             expect(event.preventDefault).toHaveBeenCalled();
-            expect(grid.onDoubleClick.emit).toHaveBeenCalledWith(args);
+            expect(grid.doubleClick.emit).toHaveBeenCalledWith(args);
 
             platformUtil.isIOS = oldIsIOS;
         }));

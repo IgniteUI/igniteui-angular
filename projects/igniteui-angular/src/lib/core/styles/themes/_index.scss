@@ -62,6 +62,7 @@
 @import '../components/input/input-group-theme';
 @import '../components/icon/icon-theme';
 @import '../components/time-picker/time-picker-theme';
+@import '../components/tree/tree-theme';
 @import '../components/watermark/watermark-theme';
 
 /// Generates an Ignite UI for Angular global theme.
@@ -316,8 +317,8 @@
         @include igx-divider(igx-divider-theme($schema: $schema));
     }
 
-    @if not(index($exclude, 'igc-dock-manager')) {
-        @include igx-css-vars(igc-dock-manager-theme($schema: $schema));
+    @if not(index($exclude, 'igc-dockmanager')) {
+        @include igc-dock-manager(igc-dock-manager-theme($schema: $schema));
     }
 
     @if not(index($exclude, 'igx-drop-down')) {
@@ -472,6 +473,13 @@
             $active-item-border-radius: $roundness,
             $modal-shadow: if($elevation == false, none, null),
             $dropdown-shadow: if($elevation == false, none, null),
+        ));
+    }
+
+    @if not(index($exclude, 'igx-tree')) {
+        @include igx-tree(igx-tree-theme(
+            $palette: $palette,
+            $schema: $schema,
         ));
     }
 
@@ -733,4 +741,3 @@
         $elevation: $elevation,
     );
 }
-

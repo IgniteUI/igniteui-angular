@@ -8,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputGroupModule, IgxInputGroupComponent, IgxInputDirective } from '../../input-group/public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import {ControlsFunction} from '../../test-utils/controls-functions.spec';
+import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 
 describe('IgxDateTimeEditor', () => {
@@ -28,7 +28,7 @@ describe('IgxDateTimeEditor', () => {
         let inputDate: string;
         const initializeDateTimeEditor = (control?: NgControl) => {
             // const injector = { get: () => control };
-            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, DOCUMENT, locale);
+            dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
             dateTimeEditor.ngOnInit();
 
@@ -40,7 +40,7 @@ describe('IgxDateTimeEditor', () => {
             it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';
                 inputDate = '6/6/2000';
-                elementRef = { nativeElement: { value: inputDate } };
+                elementRef = { nativeElement: { value: inputDate, setSelectionRange: () => { } } };
                 initializeDateTimeEditor();
 
                 const date = new Date(2000, 5, 6);
@@ -61,13 +61,13 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.inputFormat = inputFormat;
-                expect(dateTimeEditor.mask).toEqual('0/0/00');
+                expect(dateTimeEditor.mask).toEqual('00/00/00');
 
                 dateTimeEditor.inputFormat = 'dd-MM-yyyy HH:mm:ss';
                 expect(dateTimeEditor.mask).toEqual('00-00-0000 00:00:00');
 
                 dateTimeEditor.inputFormat = 'H:m:s';
-                expect(dateTimeEditor.mask).toEqual('0:0:0');
+                expect(dateTimeEditor.mask).toEqual('00:00:00');
             });
         });
 
@@ -105,6 +105,30 @@ describe('IgxDateTimeEditor', () => {
 
                 dateTimeEditor.decrement();
                 expect(dateTimeEditor.value.getDate()).toEqual(date);
+            });
+
+            it('should correctly increment / decrement date portions with passed in spinDelta', () => {
+                inputFormat = 'dd/MM/yyyy';
+                inputDate = '12/10/2015';
+                elementRef = { nativeElement: { value: inputDate } };
+                initializeDateTimeEditor();
+
+                const date = new Date(2015, 11, 12, 14, 35, 12);
+                dateTimeEditor.value = date;
+                dateTimeEditor.spinDelta = { date: 2, month: 2, year: 2, hours: 2, minutes: 2, seconds: 2 };
+                spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
+
+                dateTimeEditor.increment();
+                expect(dateTimeEditor.value.getDate()).toEqual(14);
+
+                dateTimeEditor.decrement();
+                expect(dateTimeEditor.value.getDate()).toEqual(12);
+
+                dateTimeEditor.increment(DatePart.Minutes);
+                expect(dateTimeEditor.value.getMinutes()).toEqual(date.getMinutes() + 2);
+
+                dateTimeEditor.decrement(DatePart.Hours);
+                expect(dateTimeEditor.value.getHours()).toEqual(date.getHours() - 2);
             });
 
             it('should not loop over to next month when incrementing date', () => {
@@ -170,7 +194,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = '31/03/2020';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
-                dateTimeEditor.isSpinLoop = false;
+                dateTimeEditor.spinLoop = false;
 
                 dateTimeEditor.value = new Date(2020, 2, 31);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
@@ -286,7 +310,7 @@ describe('IgxDateTimeEditor', () => {
                 inputDate = '20/01/2019 23:13:12';
                 elementRef = { nativeElement: { value: inputDate } };
                 initializeDateTimeEditor();
-                dateTimeEditor.isSpinLoop = false;
+                dateTimeEditor.spinLoop = false;
                 dateTimeEditor.value = new Date(2019, 1, 20, 23, 0, 12);
                 spyOnProperty((dateTimeEditor as any), 'inputValue', 'get').and.returnValue(inputDate);
 
@@ -332,7 +356,10 @@ describe('IgxDateTimeEditor', () => {
     });
 
     describe('Integration tests', () => {
-        const dateTimeOptions = {day: '2-digit', month: '2-digit', year: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
+        const dateTimeOptions = {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: 'numeric', minute: 'numeric', second: 'numeric'
+        };
         let fixture;
         let inputElement: DebugElement;
         let dateTimeEditorDirective: IgxDateTimeEditorDirective;
@@ -538,7 +565,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(169, 0, 1, 0, 0, 0);
-                const customOptions = {day: '2-digit', month: '2-digit', year: 'numeric' };
+                const customOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
                 result = ControlsFunction.formatDate(date, customOptions);
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
@@ -613,7 +640,7 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputElement.nativeElement.value).toEqual('__/__/____ 2_:__:__');
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                date = new Date(0, 0, 0, 2, 0, 0);
+                date = new Date(2010, 10, 10, 2, 0, 0);
                 const longTimeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
                 result = ControlsFunction.formatDate(date, longTimeOptions);
                 const offset = date.getTimezoneOffset();
@@ -668,7 +695,7 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 19);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                const shortDateOptions = {day: 'numeric', month: 'numeric', year: '2-digit'};
+                const shortDateOptions = { day: 'numeric', month: 'numeric', year: '2-digit' };
                 const result = ControlsFunction.formatDate(date, shortDateOptions, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
 
@@ -695,7 +722,7 @@ describe('IgxDateTimeEditor', () => {
 
                 date = new Date(2028, 7, 16, 0, 0, 0);
                 inputDate = '16/07/28';
-                const longDateOptions = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                const longDateOptions = { day: '2-digit', month: '2-digit', year: '2-digit' };
                 inputDate = ControlsFunction.formatDate(date, longDateOptions, 'en-GB');
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
@@ -844,7 +871,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
 
-                const options = {day: '2-digit', month: '2-digit', year: '2-digit'};
+                const options = { day: '2-digit', month: '2-digit', year: '2-digit' };
                 const result = ControlsFunction.formatDate(newDate, options, 'en-GB');
                 expect(inputElement.nativeElement.value).toEqual(result);
                 expect(dateTimeEditorDirective.valueChange.emit).toHaveBeenCalledTimes(1);
@@ -937,6 +964,43 @@ describe('IgxDateTimeEditor', () => {
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledTimes(1);
                 expect(dateTimeEditorDirective.validationFailed.emit).toHaveBeenCalledWith(args);
             });
+            it('should properly increment/decrement date-time portions on wheel', fakeAsync(() => {
+                fixture.componentInstance.dateTimeFormat = 'dd-MM-yyyy';
+                fixture.detectChanges();
+                const today = new Date(2021, 12, 12);
+                dateTimeEditorDirective.value = today;
+
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                dateTimeEditorDirective.nativeElement.setSelectionRange(1, 1);
+                inputElement.triggerEventHandler('wheel', new WheelEvent('wheel', { deltaY: 1 }));
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
+            }));
+
+            it('should properly set placeholder with inputFormat applied', () => {
+                fixture.componentInstance.placeholder = 'Date:';
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual('Date:');
+            });
+
+            it('should be able to switch placeholders at runtime', () => {
+                let placeholder = 'Placeholder';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+
+                placeholder = 'Placeholder1';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+
+                // when an empty placeholder (incl. null, undefined) is provided, at run-time, we do not default to the inputFormat
+                placeholder = '';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+            });
         });
 
         describe('Form control tests: ', () => {
@@ -1025,6 +1089,12 @@ describe('IgxDateTimeEditor', () => {
                 fixture.componentInstance.submit();
                 expect(result).toBe(inputDate);
             });
+
+            it('should default to inputFormat as placeholder if none is provided', () => {
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yyyy';
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual('dd/MM/yyyy');
+            });
         });
     });
 });
@@ -1034,9 +1104,11 @@ describe('IgxDateTimeEditor', () => {
     template: `
 <igx-input-group #igxInputGroup>
         <input type="text" igxInput [disabled]="disabled" [readonly]="readonly"
-            [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat"
+            [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat" [placeholder]="placeholder"
             [(ngModel)]="date" [minValue]="minDate" [maxValue]="maxDate" [promptChar]="promptChar"/>
     </igx-input-group>
+
+    <input [(ngModel)]="placeholder" />
 `
 })
 export class IgxDateTimeEditorSampleComponent {
@@ -1049,11 +1121,12 @@ export class IgxDateTimeEditorSampleComponent {
     public promptChar = '_';
     public disabled = false;
     public readonly = false;
+    public placeholder = null;
 }
 
 @Component({
     template: `
-    <form (ngSubmit)="submit()" [formGroup]="reactiveForm">
+<form (ngSubmit)="submit()" [formGroup]="reactiveForm">
     <igx-input-group>
         <input formControlName="dateEditor" type="text"
         igxInput [igxDateTimeEditor]="dateTimeFormat" [minValue]="minDate" [maxValue]="maxDate"/>

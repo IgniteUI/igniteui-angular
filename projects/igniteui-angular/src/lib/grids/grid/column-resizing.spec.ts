@@ -636,8 +636,8 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[5].width).toEqual('89px');
         }));
 
-        it('should fire onColumnResized with correct event args.', fakeAsync(() => {
-            const resizingSpy = spyOn<any>(grid.onColumnResized, 'emit').and.callThrough();
+        it('should fire columnResized with correct event args.', fakeAsync(() => {
+            const resizingSpy = spyOn<any>(grid.columnResized, 'emit').and.callThrough();
             const headers: DebugElement[] = GridFunctions.getColumnHeaders(fixture);
 
             expect(grid.columns[0].width).toEqual('150px');
@@ -886,12 +886,12 @@ export class ResizableColumnsComponent {
 export class LargePinnedColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    timeGenerator: Calendar = new Calendar();
-    today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
-    data = [];
-    value: any;
+    public timeGenerator: Calendar = new Calendar();
+    public today: Date = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate(), 0, 0, 0);
+    public data = [];
+    public value: any;
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(75);
     }
 
@@ -952,9 +952,9 @@ export class NullColumnsComponent implements OnInit {
 export class ColGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    data = [];
+    public data = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
     }
 }
@@ -970,9 +970,9 @@ export class ColGridComponent implements OnInit {
 export class ColPercentageGridComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true }) public grid: IgxGridComponent;
 
-    data = [];
+    public data = [];
 
-    ngOnInit() {
+    public ngOnInit() {
         this.data = SampleTestData.generateProductData(10);
     }
 }

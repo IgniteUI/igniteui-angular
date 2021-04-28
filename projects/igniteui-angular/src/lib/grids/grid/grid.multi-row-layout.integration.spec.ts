@@ -26,7 +26,6 @@ interface ColGroupsType {
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
-    let colGroups: Array<ColGroupsType>;
     configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -46,7 +45,6 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture = TestBed.createComponent(ColumnLayouHidingTestComponent);
             fixture.detectChanges();
             grid = fixture.componentInstance.grid;
-            colGroups = fixture.componentInstance.colGroups;
         });
 
         it('should allow setting a whole group as hidden/shown.', () => {
@@ -497,9 +495,9 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('ContactTitle').pinned).toBeTruthy();
         });
 
-        it('should emit onColumnPinning event with correct parameters', () => {
+        it('should emit columnPin event with correct parameters', () => {
             let allArgs = [];
-            grid.onColumnPinning.subscribe((args) => {
+            grid.columnPin.subscribe((args) => {
                 allArgs.push(args);
             });
 
@@ -869,7 +867,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             const lastIndex = grid.data.length + grid.groupsRecords.length - 1;
@@ -901,7 +899,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(8);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeGreaterThan(0);
 
             grid.toggleAllGroupRows();
@@ -911,7 +909,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             fixture.detectChanges();
 
             expect(grid.rowList.length).toEqual(12);
-            expect(grid.verticalScrollContainer.getScroll().children[0].offsetHeight -
+            expect((grid.verticalScrollContainer.getScroll().children[0] as HTMLElement).offsetHeight -
                 grid.verticalScrollContainer.getScroll().offsetHeight).toBeLessThanOrEqual(0);
         }));
     });

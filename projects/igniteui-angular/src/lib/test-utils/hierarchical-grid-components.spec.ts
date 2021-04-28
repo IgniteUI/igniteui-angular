@@ -305,3 +305,44 @@ export class IgxHierGridExternalAdvancedFilteringComponent extends IgxHierarchic
 
     public data = SampleTestData.generateHGridData(5, 3);
 }
+
+@Component({
+    template: `
+    <igx-hierarchical-grid [data]="data" [height]="'1200px'" [width]="'700px'"
+        [allowFiltering]="true" [filterMode]="'excelStyleFilter'" #hierarchicalGrid>
+        <igx-column field="Artist" [filterable]="true" [sortable]="true"></igx-column>
+        <igx-column field="Debut" [sortable]="true" dataType="number"></igx-column>
+        <igx-column field="GrammyNominations" header="Grammy Nominations" [sortable]="true"></igx-column>
+        <igx-column field="GrammyAwards" header="Grammy Awards" [sortable]="true"></igx-column>
+
+        <igx-row-island [key]="'Albums'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
+            <igx-column field="Album"></igx-column>
+            <igx-column field="LaunchDate" header="Launch Date" [dataType]="'date'"></igx-column>
+            <igx-column field="BillboardReview" header="Billboard Review"></igx-column>
+            <igx-column field="USBillboard200" header="US Billboard 200"></igx-column>
+        <igx-row-island [key]="'Songs'" [allowFiltering]='true' [filterMode]="'excelStyleFilter'" [autoGenerate]="false">
+                <igx-column field="Number" header="No."></igx-column>
+                <igx-column field="Title"></igx-column>
+                <igx-column field="Released" dataType="date"></igx-column>
+                <igx-column field="Genre"></igx-column>
+        </igx-row-island>
+        </igx-row-island>
+
+        <igx-row-island [key]="'Tours'" [autoGenerate]="false">
+            <igx-column field="Tour"></igx-column>
+            <igx-column field="StartedOn" header="Started on"></igx-column>
+            <igx-column field="Location"></igx-column>
+            <igx-column field="Headliner"></igx-column>
+        <igx-row-island [key]="'TourData'" [autoGenerate]="false">
+                <igx-column field="Country"></igx-column>
+                <igx-column field="TicketsSold" header="Tickets Sold"></igx-column>
+                <igx-column field="Attendants"></igx-column>
+        </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>
+    `
+})
+export class IgxHierarchicalGridExportComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hGrid: IgxHierarchicalGridComponent;
+    public data = SampleTestData.hierarchicalGridExportData();
+}

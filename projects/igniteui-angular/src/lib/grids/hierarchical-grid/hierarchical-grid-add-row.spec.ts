@@ -9,7 +9,7 @@ import { wait } from '../../test-utils/ui-interactions.spec';
 describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
-    let actionStrip: IgxActionStripComponent;
+    let _actionStrip: IgxActionStripComponent;
     const endTransition = () => {
         // transition end needs to be simulated
         const animationElem = fixture.nativeElement.querySelector('.igx-grid__tr--inner');
@@ -30,7 +30,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             fixture = TestBed.createComponent(IgxHierarchicalGridActionStripComponent);
             fixture.detectChanges();
             hierarchicalGrid = fixture.componentInstance.hgrid;
-            actionStrip = fixture.componentInstance.actionStrip;
+            _actionStrip = fixture.componentInstance.actionStrip;
         }));
 
         it('Should collapse an expanded record when beginAddRow is called for it', () => {
@@ -42,7 +42,7 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             row.beginAddRow();
             fixture.detectChanges();
             expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
         });
 
         it('Should allow the expansion of a newly added (commited) record', async () => {
@@ -55,7 +55,8 @@ describe('IgxHierarchicalGrid - Add Row UI #tGrid', () => {
             fixture.detectChanges();
             endTransition();
             expect(row.expanded).toBeFalse();
-            expect(hierarchicalGrid.getRowByIndex(1).addRow).toBeTrue();
+
+            expect(hierarchicalGrid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
             hierarchicalGrid.gridAPI.crudService.endEdit(true);
             fixture.detectChanges();
             hierarchicalGrid.addRowSnackbar.triggerAction();

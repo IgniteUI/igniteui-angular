@@ -56,7 +56,7 @@ export class DateRangeSampleComponent {
     }
 }
 const minDateValidator = (minValue: Date): ValidatorFn => (control: AbstractControl): { [key: string]: any } | null => {
-    if (control.value && (control.value as DateRange).start.getTime() < minValue.getTime()) {
+    if (control.value && (control.value.start as Date).getTime() < minValue.getTime()) {
         return { minValue: true };
     }
 

@@ -14,13 +14,14 @@ import { IgxToggleDirective, IgxOverlayOutletDirective } from '../../../directiv
 import { IButtonGroupEventArgs } from '../../../buttonGroup/buttonGroup.component';
 import { takeUntil } from 'rxjs/operators';
 import { Subject, Subscription } from 'rxjs';
-import { KEYS } from '../../../core/utils';
 import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/public_api';
 import { IgxColumnComponent } from '../../columns/column.component';
-import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
 import { IActiveNode } from '../../grid-navigation.service';
 import { IgxGridBaseDirective } from '../../public_api';
+import { PlatformUtil } from '../../../core/utils';
+import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
+import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 
 /**
  * @hidden
@@ -94,6 +95,12 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      */
     @ViewChild('searchValueInput', { read: ElementRef })
     public searchValueInput: ElementRef;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('picker')
+    public picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     /**
      * @hidden @internal
@@ -304,7 +311,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         scrollStrategy: new CloseScrollStrategy()
     };
 
-    constructor(public cdr: ChangeDetectorRef) { }
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
     /**
      * @hidden @internal
@@ -610,7 +617,8 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         } else if (this.selectedColumn.filters.condition(this.selectedCondition).isUnary) {
             this.conditionSelect.input.nativeElement.focus();
         } else {
-            this.searchValueInput.nativeElement.focus();
+            const input = this.searchValueInput?.nativeElement || this.picker?.getEditElement();
+            input.focus();
         }
     }
 
@@ -662,9 +670,9 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     public onKeyDown(eventArgs: KeyboardEvent) {
         eventArgs.stopPropagation();
         const key = eventArgs.key;
-        if (!this.contextMenuToggle.collapsed && (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE)) {
+        if (!this.contextMenuToggle.collapsed && (key === this.platform.KEYMAP.ESCAPE)) {
             this.clearSelection();
-        } else if (key === KEYS.ESCAPE || key === KEYS.ESCAPE_IE) {
+        } else if (key === this.platform.KEYMAP.ESCAPE) {
             this.closeDialog();
         }
     }
@@ -770,9 +778,17 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
      * @hidden @internal
      */
     public invokeClick(eventArgs: KeyboardEvent) {
-        if (eventArgs.key === KEYS.ENTER || eventArgs.key === KEYS.SPACE || eventArgs.key === KEYS.SPACE_IE) {
+        if (this.platform.isActivationKey(eventArgs)) {
             eventArgs.preventDefault();
             (eventArgs.currentTarget as HTMLElement).click();
+        }
+    }
+
+    /** @hidden @internal */
+    public openPicker(args: KeyboardEvent) {
+        if (this.platform.isActivationKey(args)) {
+            args.preventDefault();
+            this.picker.open();
         }
     }
 

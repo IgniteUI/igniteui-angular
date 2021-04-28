@@ -18,18 +18,22 @@
                 [data]="data"
                 [displayDensity]="density"
                 [allowFiltering]="true"
-                (onColumnMovingStart)="onColumnMovingStart()"
-                (onColumnMoving)="onColumnMoving()"
-                (onColumnMovingEnd)="onColumnMovingEnd()"
+                (columnMovingStart)="columnMovingStart()"
+                (columnMoving)="columnMoving()"
+                (columnMovingEnd)="columnMovingEnd()"
                 [rowSelection] ="'multiple'"
                 [filterMode]="'excelStyleFilter'"
                 [paging]="false"
+                [rowEditable]="true"
                 [width]="'900px'"
+                [primaryKey]="'ID'"
                 >
                 <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
                     <igx-grid-toolbar-actions>
                         <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
                         <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                        <igx-grid-toolbar-advanced-filtering>
+                        </igx-grid-toolbar-advanced-filtering>
                     </igx-grid-toolbar-actions>
                   </igx-grid-toolbar>
                 <igx-column *ngFor="let c of columns" [field]="c.field"
@@ -43,7 +47,7 @@
                                                     [editable]="true"
                                                     [hidden]="c.hidden"
                                                     [pinned]="c.pinned"
-                                                    [hasSummary]="false"
+                                                    [hasSummary]="c.summary"
                                                     [dataType]="c.type">
                 </igx-column>
                 <igx-grid-footer>

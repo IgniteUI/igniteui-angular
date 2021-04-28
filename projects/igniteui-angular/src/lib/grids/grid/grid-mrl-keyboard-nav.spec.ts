@@ -1,4 +1,4 @@
-﻿import { Component, ViewChild} from '@angular/core';
+﻿import { Component, ViewChild } from '@angular/core';
 import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -39,7 +39,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
             it('should navigate through a single layout with right and left arrow keys', () => {
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell, fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [firstCell, _secondCell, _thirdCell, _fourthCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
 
                 fix.detectChanges();
@@ -94,7 +94,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
@@ -123,7 +123,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
 
@@ -148,7 +148,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [firstCell, _secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
@@ -176,7 +176,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
@@ -205,7 +205,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
 
@@ -233,7 +233,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
@@ -262,7 +262,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
@@ -285,7 +285,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
@@ -309,7 +309,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, _secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
@@ -338,7 +338,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_firstCell, secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(secondCell);
                 fix.detectChanges();
@@ -508,7 +508,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [thirdCell, secondCell, firstCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [_thirdCell, _secondCell, firstCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
@@ -574,7 +574,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 }];
                 fix.detectChanges();
 
-                const [firstCell, secondCell, thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [firstCell, _secondCell, _thirdCell] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
@@ -846,7 +846,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 });
                 fix.detectChanges();
 
-                let groupRow = (grid.getRowByIndex(0) as any) as IgxGridGroupByRowComponent;
+                let groupRow = (grid.gridAPI.get_row_by_index(0) as any) as IgxGridGroupByRowComponent;
                 UIInteractions.simulateClickAndSelectEvent(groupRow);
                 fix.detectChanges();
 
@@ -863,7 +863,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check next group row is active
-                groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow up
@@ -878,7 +878,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check first group row is active
-                groupRow = (grid.getRowByIndex(0) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(0) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
             });
 
@@ -933,7 +933,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check next group row is active
-                let groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                let groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow down
@@ -950,7 +950,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check group row is active
-                groupRow = (grid.getRowByIndex(2) as any) as IgxGridGroupByRowComponent;
+                groupRow = (grid.gridAPI.get_row_by_index(2) as any) as IgxGridGroupByRowComponent;
                 GridFunctions.verifyGroupRowIsFocused(groupRow);
 
                 // arrow up
@@ -1180,15 +1180,15 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 const firstBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
                 const secondBlock = fix.debugElement.queryAll(By.css('igx-grid-row'))[1].queryAll(By.css(CELL_BLOCK))[1];
-                let dummyCell;
+                let _dummyCell;
                 let firstCell;
                 let secondCell;
                 [firstCell,
-                    secondCell, dummyCell,
+                    secondCell, _dummyCell,
                     firstCell] = firstBlock.queryAll(By.css(CELL_CSS_CLASS));
                 [secondCell,
-                    dummyCell, dummyCell,
-                    dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
+                    _dummyCell, _dummyCell,
+                    _dummyCell] = secondBlock.queryAll(By.css(CELL_CSS_CLASS));
                 UIInteractions.simulateClickAndSelectEvent(firstCell);
                 fix.detectChanges();
 
@@ -1412,7 +1412,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     });
 
     // Note: Some tests execute await wait() and etc two times, because the grid scrolls two times.
-    // This means that we need to wait onChunkLoad event from the igxForOf two times.
+    // This means that we need to wait chunkLoad event from the igxForOf two times.
     describe('Navigation with scrolling', () => {
         describe('General', () => {
             it('should allow navigating down with scrolling', async () => {
@@ -1460,7 +1460,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
                 setupGridScrollDetection(fix, fix.componentInstance.grid);
 
-                const [ firstCell, secondCell, thirdCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
+                const [ _firstCell, _secondCell, thirdCell ] = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS));
 
                 UIInteractions.simulateClickAndSelectEvent(thirdCell);
                 fix.detectChanges();
@@ -2346,7 +2346,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 const secondBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[1];
                 const thirdBlock = fix.debugElement.query(By.css('igx-grid-row')).queryAll(By.css(CELL_BLOCK))[2];
 
-                const [secondCell, thirdCell, fourthCell ] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
+                const [secondCell, thirdCell, _fourthCell ] = thirdBlock.queryAll(By.css(CELL_CSS_CLASS));
                 const firstCell = secondBlock.queryAll(By.css(CELL_CSS_CLASS))[0];
 
                 fix.componentInstance.grid.headerContainer.getScroll().scrollLeft = 500;
@@ -2617,7 +2617,7 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [height]="'500px'" (onSelection)="cellSelected($event)">
+    <igx-grid #grid [data]="data" [height]="'500px'" (selected)="cellSelected($event)">
         <igx-column-layout *ngFor='let group of colGroups' [hidden]='group.hidden' [pinned]='group.pinned' [field]='group.group'>
             <igx-column *ngFor='let col of group.columns'
             [rowStart]="col.rowStart" [colStart]="col.colStart" [width]='col.width'
@@ -2628,21 +2628,21 @@ describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
 })
 export class ColumnLayoutTestComponent {
     @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    grid: IgxGridComponent;
+    public grid: IgxGridComponent;
     public selectedCell: IgxGridCellComponent;
-    cols: Array<any> = [
+    public cols: Array<any> = [
         { field: 'ID', rowStart: 1, colStart: 1 },
         { field: 'CompanyName', rowStart: 1, colStart: 2 },
         { field: 'ContactName', rowStart: 1, colStart: 3 },
         { field: 'ContactTitle', rowStart: 2, colStart: 1, rowEnd: 4, colEnd: 4 },
     ];
-    colGroups: Array<any> = [
+    public colGroups: Array<any> = [
         {
             group: 'group1',
             columns: this.cols
         }
     ];
-    data = SampleTestData.contactInfoDataFull();
+    public data = SampleTestData.contactInfoDataFull();
 
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;

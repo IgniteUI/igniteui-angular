@@ -72,6 +72,198 @@
                 "selector": "igx-tab-item",
                 "type": "component"
             }
+        },
+        {
+            "name": "class",
+            "remove": true,
+            "owner": {
+                "selector": "igx-tab-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "class",
+            "remove": true,
+            "owner": {
+                "selector": "igx-bottom-nav-item",
+                "type": "component"
+            }
+        },
+        {
+            "name": "isSpinLoop",
+            "replaceWith": "spinLoop",
+            "owner": {
+                "selector": "igxDateTimeEditor",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "editorTabIndex",
+            "replaceWith": "tabIndex",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "labelVisibility",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "mask",
+            "replaceWith": "inputFormat",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "monthsViewNumber",
+            "replaceWith": "displayMonthsCount",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "vertical",
+            "replaceWith": "headerOrientation",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "context",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayData",
+            "replaceWith": "displayFormat",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "format",
+            "replaceWith": "displayFormat",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "dropDownOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "modalOverlaySettings",
+            "replaceWith": "overlaySettings",
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "labelInternal",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "template",
+            "remove": true,
+            "owner": {
+                "selector": "igx-date-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "isSpinLoop",
+            "replaceWith": "spinLoop",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "vertical",
+            "replaceWith": "headerOrientation",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "context",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "template",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "promptChar",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "displayTime",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "labelVisibility",
+            "remove": true,
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "format",
+            "replaceWith": "inputFormat",
+            "owner": {
+                "selector": "igx-time-picker",
+                "type": "component"
+            }
+        },
+        {
+            "name": "monthsViewNumber",
+            "replaceWith": "displayMonthsCount",
+            "owner": {
+                "selector": "igx-date-range-picker",
+                "type": "component"
+            }
         }
     ]
 }

@@ -1,11 +1,11 @@
 import { Directive, Input, OnDestroy, NgModule, TemplateRef } from '@angular/core';
 import { IgxDragDirective } from '../directives/drag-drop/drag-drop.directive';
-import { KEYS } from '../core/utils';
 import { fromEvent, Subscription } from 'rxjs';
-import { IgxRowDirective, IgxGridBaseDirective } from './grid/public_api';
+import { IgxGridBaseDirective } from './grid/public_api';
 import { IRowDragStartEventArgs, IRowDragEndEventArgs } from './common/events';
 import { GridType } from './common/grid.interface';
 import { IgxHierarchicalRowComponent } from './hierarchical-grid/hierarchical-row.component';
+import { IgxRowDirective } from './row.directive';
 
 
 const ghostBackgroundClass = 'igx-grid__tr--ghost';
@@ -22,12 +22,18 @@ const cellActiveClass = 'igx-grid__td--active';
 })
 export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     @Input('igxRowDrag')
-    public data: any;
+    public set data(value: any) {
+        this._data = value;
+    }
+
+    public get data(): any {
+        return this._data.grid.createRow(this._data.index, this._data.rowData);
+    }
 
     private subscription$: Subscription;
     private _rowDragStarted = false;
     private get row(): IgxRowDirective<IgxGridBaseDirective & GridType> {
-        return this.data;
+        return this._data;
     }
 
     public onPointerDown(event) {
@@ -43,12 +49,13 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this._rowDragStarted = true;
             const args: IRowDragStartEventArgs = {
                 dragDirective: this,
-                dragData: this.row,
+                dragData: this.data,
+                dragElement: this.row.nativeElement,
                 cancel: false,
                 owner: this.row.grid
             };
 
-            this.row.grid.onRowDragStart.emit(args);
+            this.row.grid.rowDragStart.emit(args);
             if (args.cancel) {
                 this.ghostElement.parentNode.removeChild(this.ghostElement);
                 this.ghostElement = null;
@@ -61,7 +68,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             this.row.grid.markForCheck();
 
             this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
-                if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
+                if (ev.key === this.platformUtil.KEYMAP.ESCAPE) {
                     this._lastDropArea = false;
                     this.onPointerUp(event);
                 }
@@ -77,12 +84,13 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
         const args: IRowDragEndEventArgs = {
             dragDirective: this,
-            dragData: this.row,
+            dragData: this.data,
+            dragElement: this.row.nativeElement,
             animation: false,
             owner: this.row.grid
         };
         this.zone.run(() => {
-            this.row.grid.onRowDragEnd.emit(args);
+            this.row.grid.rowDragEnd.emit(args);
         });
 
         const dropArea = this._lastDropArea;
@@ -145,7 +153,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this._unsubscribe();
     }
 
-    private transitionEndEvent = (evt?) => {
+    private transitionEndEvent = () => {
         if (this.ghostElement) {
             this.ghostElement.removeEventListener('transitionend', this.transitionEndEvent, false);
         }
