@@ -1112,7 +1112,8 @@ describe('IgxTimePicker', () => {
                 fixture.componentInstance.maxValue = new Date(2020, 12, 12, 14, 35, 0);
                 fixture.detectChanges();
 
-                const dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).injector.get(IgxDateTimeEditorDirective);
+                const dateTimeEditor = fixture.debugElement.query(By.directive(IgxDateTimeEditorDirective)).
+                    injector.get(IgxDateTimeEditorDirective);
                 expect(dateTimeEditor.value).toEqual(fixture.componentInstance.date);
                 expect(dateTimeEditor.minValue).toEqual(fixture.componentInstance.minValue);
                 expect(dateTimeEditor.maxValue).toEqual(fixture.componentInstance.maxValue);
