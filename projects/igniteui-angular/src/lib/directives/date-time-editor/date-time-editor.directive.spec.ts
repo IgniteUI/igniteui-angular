@@ -18,7 +18,7 @@ describe('IgxDateTimeEditor', () => {
             ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
-        const ngModel = {
+        const _ngModel = {
             control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
             valid: false,
             statusChanges: new EventEmitter(),
@@ -26,7 +26,7 @@ describe('IgxDateTimeEditor', () => {
         let elementRef = { nativeElement: null };
         let inputFormat: string;
         let inputDate: string;
-        const initializeDateTimeEditor = (control?: NgControl) => {
+        const initializeDateTimeEditor = (_control?: NgControl) => {
             // const injector = { get: () => control };
             dateTimeEditor = new IgxDateTimeEditorDirective(renderer2, elementRef, maskParsingService, null, DOCUMENT, locale);
             dateTimeEditor.inputFormat = inputFormat;
@@ -37,10 +37,10 @@ describe('IgxDateTimeEditor', () => {
             dateTimeEditor.ngOnChanges(changes);
         };
         describe('Properties & Events', () => {
-           it('should emit valueChange event on clear()', () => {
+            it('should emit valueChange event on clear()', () => {
                 inputFormat = 'dd/M/yy';
                 inputDate = '6/6/2000';
-                elementRef = { nativeElement: { value: inputDate, setSelectionRange: () => {} } };
+                elementRef = { nativeElement: { value: inputDate, setSelectionRange: () => { } } };
                 initializeDateTimeEditor();
 
                 const date = new Date(2000, 5, 6);
@@ -61,13 +61,13 @@ describe('IgxDateTimeEditor', () => {
                 initializeDateTimeEditor();
 
                 dateTimeEditor.inputFormat = inputFormat;
-                expect(dateTimeEditor.mask).toEqual('0/0/00');
+                expect(dateTimeEditor.mask).toEqual('00/00/00');
 
                 dateTimeEditor.inputFormat = 'dd-MM-yyyy HH:mm:ss';
                 expect(dateTimeEditor.mask).toEqual('00-00-0000 00:00:00');
 
                 dateTimeEditor.inputFormat = 'H:m:s';
-                expect(dateTimeEditor.mask).toEqual('0:0:0');
+                expect(dateTimeEditor.mask).toEqual('00:00:00');
             });
         });
 
@@ -368,7 +368,8 @@ describe('IgxDateTimeEditor', () => {
             beforeAll(waitForAsync(() => {
                 TestBed.configureTestingModule({
                     declarations: [
-                        IgxDateTimeEditorSampleComponent
+                        IgxDateTimeEditorSampleComponent,
+                        IgxDateTimeEditorBaseTestComponent
                     ],
                     imports: [IgxInputGroupModule, IgxDateTimeEditorModule, FormsModule, NoopAnimationsModule]
                 })
@@ -379,6 +380,11 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('input'));
                 dateTimeEditorDirective = inputElement.injector.get(IgxDateTimeEditorDirective);
+            });
+            it('should properly update mask with inputFormat onInit', () => {
+                fixture = TestBed.createComponent(IgxDateTimeEditorBaseTestComponent);
+                fixture.detectChanges();
+                expect(fixture.componentInstance.dateEditor.elementRef.nativeElement.value).toEqual('09/11/2009');
             });
             it('should correctly display input format during user input', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
@@ -813,8 +819,8 @@ describe('IgxDateTimeEditor', () => {
                 expect(inputHTMLElement.selectionEnd).toEqual(17);
             }));
             it('should not block the user from typing/pasting dates outside of min/max range', () => {
-                fixture.componentInstance.minValue = '01/01/2000';
-                fixture.componentInstance.maxValue = '31/12/2000';
+                fixture.componentInstance.minDate = '01/01/2000';
+                fixture.componentInstance.maxDate = '31/12/2000';
                 fixture.detectChanges();
 
                 let date = new Date(2009, 10, 10, 10, 10, 10);
@@ -977,6 +983,28 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.value.getDate()).toEqual(today.getDate() - 1);
             }));
+            it('should properly set placeholder with inputFormat applied', () => {
+                fixture.componentInstance.placeholder = 'Date:';
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual('Date:');
+            });
+            it('should be able to switch placeholders at runtime', () => {
+                let placeholder = 'Placeholder';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+
+                placeholder = 'Placeholder1';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+
+                // when an empty placeholder (incl. null, undefined) is provided, at run-time, we do not default to the inputFormat
+                placeholder = '';
+                fixture.componentInstance.placeholder = placeholder;
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
+            });
         });
 
         describe('Form control tests: ', () => {
@@ -1065,18 +1093,37 @@ describe('IgxDateTimeEditor', () => {
                 fixture.componentInstance.submit();
                 expect(result).toBe(inputDate);
             });
+            it('should default to inputFormat as placeholder if none is provided', () => {
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yyyy';
+                fixture.detectChanges();
+                expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual('dd/MM/yyyy');
+            });
         });
     });
 });
 
+@Component({
+    template: `
+    <igx-input-group>
+        <input igxInput [igxDateTimeEditor]="'dd/MM/yyyy'" [value]="date"/>
+    </igx-input-group>
+    `
+})
+export class IgxDateTimeEditorBaseTestComponent {
+    @ViewChild(IgxDateTimeEditorDirective)
+    public dateEditor: IgxDateTimeEditorDirective;
+    public date = new Date(2009, 10, 9);
+}
 
 @Component({
     template: `
 <igx-input-group #igxInputGroup>
         <input type="text" igxInput [disabled]="disabled" [readonly]="readonly"
-            [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat"
+            [igxDateTimeEditor]="dateTimeFormat" [displayFormat]="displayFormat" [placeholder]="placeholder"
             [(ngModel)]="date" [minValue]="minDate" [maxValue]="maxDate" [promptChar]="promptChar"/>
     </igx-input-group>
+
+    <input [(ngModel)]="placeholder" />
 `
 })
 export class IgxDateTimeEditorSampleComponent {
@@ -1084,16 +1131,17 @@ export class IgxDateTimeEditorSampleComponent {
     public date: Date;
     public dateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
     public displayFormat: string;
-    public minDate: string;
-    public maxDate: string;
+    public minDate: string | Date;
+    public maxDate: string | Date;
     public promptChar = '_';
     public disabled = false;
     public readonly = false;
+    public placeholder = null;
 }
 
 @Component({
     template: `
-    <form (ngSubmit)="submit()" [formGroup]="reactiveForm">
+<form (ngSubmit)="submit()" [formGroup]="reactiveForm">
     <igx-input-group>
         <input formControlName="dateEditor" type="text"
         igxInput [igxDateTimeEditor]="dateTimeFormat" [minValue]="minDate" [maxValue]="maxDate"/>
@@ -1101,11 +1149,12 @@ export class IgxDateTimeEditorSampleComponent {
 </form>
 `
 })
-
 class IgxDateTimeEditorFormComponent {
-    @ViewChild('dateEditor', { read: IgxInputDirective, static: true }) formInput: IgxInputDirective;
-    @Output() submitted = new EventEmitter<any>();
-    reactiveForm: FormGroup;
+    @ViewChild('dateEditor', { read: IgxInputDirective, static: true })
+    public formInput: IgxInputDirective;
+    @Output()
+    public submitted = new EventEmitter<any>();
+    public reactiveForm: FormGroup;
     public dateTimeFormat = 'dd-MM-yyyy';
     public minDate: Date;
     public maxDate: Date;
@@ -1116,7 +1165,7 @@ class IgxDateTimeEditorFormComponent {
         });
     }
 
-    submit() {
+    public submit() {
         if (this.reactiveForm.valid) {
             this.submitted.emit(this.reactiveForm.value.dateEditor);
         }

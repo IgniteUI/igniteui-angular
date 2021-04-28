@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -13,11 +13,10 @@ import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 
-    configureTestSuite();
     let fixture;
     let grid: IgxGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
 
         TestBed.configureTestingModule({
             declarations: [
@@ -26,7 +25,7 @@ describe('IgxGrid - Grid Sorting #grid', () => {
                 GridWithPrimaryKeyComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {

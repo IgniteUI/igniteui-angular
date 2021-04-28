@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
@@ -50,14 +50,14 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
 import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -71,7 +71,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe(null, () => {
@@ -2181,6 +2181,28 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(2);
         }));
+
+        it('Should remove pending chip via its close button #9333', fakeAsync(() => {
+            GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('3', fix);
+            tick(DEBOUNCETIME);
+            const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
+            const filterRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const pendingChip = filterRow.queryAll(By.directive(IgxChipComponent))[0];
+            const chipCloseButton = pendingChip.query(By.css('div.igx-chip__remove')).nativeElement;
+
+            chipCloseButton.dispatchEvent(new Event('mousedown'));
+            inputGroup.nativeElement.dispatchEvent(new Event('focusout'));
+            chipCloseButton.dispatchEvent(new Event('mouseup'));
+            chipCloseButton.dispatchEvent(new Event('click'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const chips = filterRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toEqual(0, 'No chips should be present');
+        }));
     });
 
     describe('Integration scenarios', () => {
@@ -2755,8 +2777,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2771,8 +2792,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule]
-        })
-            .compileComponents();
+        });
     }));
 
     describe(null, () => {
@@ -5905,8 +5925,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent
@@ -5914,7 +5933,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
