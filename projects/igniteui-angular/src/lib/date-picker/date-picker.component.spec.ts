@@ -586,7 +586,7 @@ describe('IgxDatePicker', () => {
                 newFormat = { month: 'numeric' };
                 datePicker.calendarFormat = newFormat;
                 expect((datePicker as any).pickerCalendarFormat).toEqual({
-                    day: '2-digit',
+                    day: 'numeric',
                     month: 'numeric',
                     weekday: 'short',
                     year: 'numeric'
