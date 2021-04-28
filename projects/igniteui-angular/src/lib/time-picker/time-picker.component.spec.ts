@@ -15,7 +15,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { IBaseCancelableBrowserEventArgs } from '../core/utils';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
-xdescribe('IgxTimePicker', () => {
+describe('IgxTimePicker', () => {
     configureTestSuite();
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
