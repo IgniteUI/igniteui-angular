@@ -461,13 +461,9 @@ export class IgxGridStateDirective {
     }
 
     private restoreFeatures(state: IGridState) {
-        const sortingAndGroupByFeatures = this.featureKeys.includes('sorting') && this.featureKeys.includes('groupBy');
         this.featureKeys.forEach(f => {
             if (this.options[f]) {
                 const featureState = state[f];
-                if(f === 'sorting' && sortingAndGroupByFeatures){
-                    return;
-                }
                 if (featureState) {
                     const feature = this.getFeature(f);
                     feature.restoreFeatureState(this, featureState);
