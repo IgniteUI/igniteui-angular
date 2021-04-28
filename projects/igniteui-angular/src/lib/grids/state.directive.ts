@@ -443,7 +443,6 @@ export class IgxGridStateDirective {
 
     /**
      * The method that calls corresponding methods to restore features from the passed IGridState object.
-     *
      */
     private restoreGridState(state: IGridState, features?: GridFeatures | GridFeatures[]) {
         // TODO Notify the grid that columnList.changes is triggered by the state directive
