@@ -29,7 +29,6 @@ import { DisplayDensity } from '../../../core/density';
 import { GridSelectionMode } from '../../common/enums';
 import { GridBaseAPIService } from '../../api.service';
 import { SortingDirection } from '../../../data-operations/sorting-expression.interface';
-import { IgxSorting } from '../../../data-operations/sorting-strategy';
 
 /**
  * @hidden
@@ -559,14 +558,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addItems(shouldUpdateSelection);
         }
 
-        const sorting = new IgxSorting();
-        const expressions = [{
-            dir: SortingDirection.Asc,
-            fieldName: 'value',
-            ignoreCase: this.column.filteringIgnoreCase,
-            strategy: this.column.sortStrategy
-        }];
-        this.listData = sorting.sort(this.listData, expressions);
+        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => obj[key]);
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
@@ -709,7 +702,7 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         this.listData.unshift(blanks);
     }
 
-    private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
+    private getFilterItemLabel(element: any) {
         if (this.column.dataType === DataType.Date) {
             return element && element.label ? element.label : this.column.formatter ?
                 this.column.formatter(element) :
