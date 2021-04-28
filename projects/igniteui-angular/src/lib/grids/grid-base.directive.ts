@@ -4332,12 +4332,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed.
      * May degrade performance if used when not needed, or if misused:
      * ```typescript
-     * // not needed to use, because the grid updates itself succesfully when a primitive has changed:
+     * // DON'Ts:
+     * // don't call markForCheck from inside a loop
+     * // don't call markForCheck when a primitive has changed
      * grid.data.forEach(rec => {
      *  rec = newValue;
      *  grid.markForCheck();
      * });
-     * // if updating a nested property, Angular will not update the view, need to call markForCheck after the loop:
+     *
+     * // DOs
+     * // call markForCheck after updating a nested property
      * grid.data.forEach(rec => {
      *  rec.nestedProp1.nestedProp2 = newValue;
      * });
