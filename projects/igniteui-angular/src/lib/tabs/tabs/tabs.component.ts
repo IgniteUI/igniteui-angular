@@ -134,10 +134,14 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden @internal */
     public ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver = new ResizeObserver(() => {
-                this.setTabRightButtonStyle();
-                this.setTabLeftButtonStyle();
+                Promise.resolve().then(() => {
+                    this.setTabRightButtonStyle();
+                    this.setTabLeftButtonStyle();
+                });
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
@@ -147,6 +151,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
     /** @hidden @internal */
     public ngOnDestroy(): void {
+        super.ngOnDestroy();
+
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver.disconnect();
         });
@@ -260,23 +266,27 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
         this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        Promise.resolve().then (() => {
+            this.setTabLeftButtonStyle();
+            this.setTabRightButtonStyle();
+        });
     }
 
     private setTabLeftButtonStyle() {
-    const tabLeftButtonStyle = this.tabLeftButtonStyle();
+        const tabLeftButtonStyle = this.tabLeftButtonStyle();
 
-    if (tabLeftButtonStyle === TabScrollButtonStyle.Visible) {
-        this.leftButton.nativeElement.style.visibility = 'visible';
-        this.leftButton.nativeElement.style.display = '';
+        if (tabLeftButtonStyle === TabScrollButtonStyle.Visible) {
+            this.leftButton.nativeElement.style.visibility = 'visible';
+            this.leftButton.nativeElement.style.display = '';
+        }
+        if (tabLeftButtonStyle === TabScrollButtonStyle.Hidden) {
+            this.leftButton.nativeElement.style.visibility = 'hidden';
+            this.leftButton.nativeElement.style.display = '';
+        }
+        if (tabLeftButtonStyle === TabScrollButtonStyle.NotDisplayed) {
+            this.leftButton.nativeElement.style.display = 'none';
+        }
     }
-    if (tabLeftButtonStyle === TabScrollButtonStyle.Hidden) {
-        this.leftButton.nativeElement.style.visibility = 'hidden';
-        this.leftButton.nativeElement.style.display = '';
-    }
-    if (tabLeftButtonStyle === TabScrollButtonStyle.NotDisplayed) {
-        this.leftButton.nativeElement.style.display = 'none';
-    }
-}
 
     private setTabRightButtonStyle() {
         const tabRightButtonStyle = this.tabRightButtonStyle();
