@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -22,12 +22,11 @@ import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Column properties #grid', () => {
-    configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
@@ -42,8 +41,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 IgxGridPercentColumnComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        });
     }));
 
     it('should correctly initialize column templates', () => {

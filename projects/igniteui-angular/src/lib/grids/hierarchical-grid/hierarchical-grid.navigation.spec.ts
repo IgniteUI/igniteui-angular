@@ -17,18 +17,17 @@ const DEBOUNCE_TIME = 60;
 const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const GRID_FOOTER_CLASS = '.igx-grid__tfoot';
 describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent: DebugElement;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(waitForAsync(() => {
@@ -776,18 +775,17 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 });
 
 describe('IgxHierarchicalGrid sibling row islands Navigation #hGrid', () => {
-    configureTestSuite();
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let baseHGridContent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridMultiLayoutComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(waitForAsync(() => {

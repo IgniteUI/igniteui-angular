@@ -19,13 +19,12 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 
 describe('IgxHierarchicalGrid selection #hGrid', () => {
-    configureTestSuite();
     let fix;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     let rowIsland1;
     let rowIsland2;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -39,7 +38,7 @@ describe('IgxHierarchicalGrid selection #hGrid', () => {
                 IgxHierarchicalGridModule,
                 IgxIconModule,
                 IgxGridSelectionModule]
-        }).compileComponents();
+        });
     }));
 
     describe('Cell selection', () => {
