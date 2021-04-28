@@ -4889,7 +4889,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', 'Custom', 'a', 'custoM', 'custom'],
+                ['Select All', 'a', 'Custom', 'custoM', 'custom'],
                 [true, true, true, true, true]);
         }));
 
@@ -5264,7 +5264,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
         }));
 
-        it('Should sort items in excel style search case INsensitive', fakeAsync(() => {
+        it('Should sort items in excel style search correctly', fakeAsync(() => {
             const data = [
                 {
                     Downloads: 254,
@@ -5272,7 +5272,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ProductName: 'Ignite UI for JavaScript',
                     ReleaseDate: null,
                     ReleaseDateTime: null,
-                    ReleaseTime: null,
+                    ReleaseTime: new Date(2010, 4, 27, 23, 0, 0),
                     Released: false,
                     AnotherField: 'BWord'
                 },
@@ -5282,7 +5282,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ProductName: 'NetAdvantage',
                     ReleaseDate: null,
                     ReleaseDateTime: null,
-                    ReleaseTime: null,
+                    ReleaseTime: new Date(2021, 4, 27, 1, 0, 0),
                     Released: true,
                     AnotherField: 'bWord'
                 },
@@ -5292,7 +5292,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                     ProductName: 'Ignite UI for Angular',
                     ReleaseDate: null,
                     ReleaseDateTime: null,
-                    ReleaseTime: null,
+                    ReleaseTime: new Date(2015, 4, 27, 12, 0, 0),
                     Released: null,
                     AnotherField: 'aWord'
                 }
@@ -5300,12 +5300,12 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.componentInstance.data = data;
             fix.detectChanges();
 
-            // Open excel style custom filtering dialog.
+            // Open excel style custom filtering dialog for string column
             GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
             fix.detectChanges();
 
-            // Verify items order
+            // Verify items order is case INsensitive
             verifyExcelStyleFilterAvailableOptions(fix,
                 ['Select All', 'aWord', 'BWord'],
                 [true, true, true]);

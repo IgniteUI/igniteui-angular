@@ -32,7 +32,6 @@ import { FormattedValuesFilteringStrategy } from '../../../data-operations/filte
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { getLocaleCurrencyCode } from '@angular/common';
 import { SortingDirection } from '../../../data-operations/sorting-expression.interface';
-import { IgxSorting } from '../../../data-operations/sorting-strategy';
 
 /**
  * @hidden
@@ -613,14 +612,8 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addItems(shouldUpdateSelection);
         }
 
-        const sorting = new IgxSorting();
-        const expressions = [{
-            dir: SortingDirection.Asc,
-            fieldName: 'value',
-            ignoreCase: this.column.filteringIgnoreCase,
-            strategy: this.column.sortStrategy
-        }];
-        this.listData = sorting.sort(this.listData, expressions);
+        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => obj[key]);
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
