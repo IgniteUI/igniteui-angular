@@ -103,6 +103,10 @@ describe(`DateTimeUtil Unit tests`, () => {
             verifyTime(result, 11, 0, 0);
             result = DateTimeUtil.parseValueFromMask('10:00:00 PM', parts);
             verifyTime(result, 22, 0, 0);
+            result = DateTimeUtil.parseValueFromMask('12:00:00 PM', parts);
+            verifyTime(result, 12, 0, 0);
+            result = DateTimeUtil.parseValueFromMask('12:00:00 AM', parts);
+            verifyTime(result, 0, 0, 0);
         });
     });
 

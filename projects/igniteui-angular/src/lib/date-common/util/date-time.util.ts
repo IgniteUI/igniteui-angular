@@ -60,7 +60,12 @@ export abstract class DateTimeUtil {
             return null;
         }
 
-        if (/pm/g.test(inputData.toLowerCase())) {
+        const amPm = dateTimeParts.find(p => p.type === DatePart.AmPm);
+        if (amPm) {
+            parts[DatePart.Hours] %= 12;
+        }
+
+        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
             parts[DatePart.Hours] += 12;
         }
 
