@@ -894,7 +894,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     /** @hidden @internal */
     public okButtonClick(): void {
-        this.updateValue();
+        this.updateValue(this._selectedDate);
         this.close();
     }
 
@@ -1203,13 +1203,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         return hour;
     }
 
-    private updateValue(): void {
-        if (isDate(this.value)) {
+    private updateValue(newValue: Date | null): void {
+        if (!this.value) {
+            this.value = newValue ? new Date(newValue) : newValue;
+        } else if (isDate(this.value)) {
             const date = new Date(this.value);
-            date.setHours(this._selectedDate.getHours(), this._selectedDate.getMinutes(), this._selectedDate.getSeconds());
+            date.setHours(newValue?.getHours() || 0, newValue?.getMinutes() || 0, newValue?.getSeconds() || 0);
             this.value = date;
         } else {
-            this.value = this.toISOString(this._selectedDate);
+            this.value = newValue ? this.toISOString(newValue) : newValue;
         }
     }
 
@@ -1221,8 +1223,9 @@ export class IgxTimePickerComponent extends PickerBaseDirective
 
     private subscribeToDateEditorEvents(): void {
         this.dateTimeEditor.valueChange.pipe(
-            takeUntil(this._destroy$)).subscribe(date => {
-                this.value = isDate(this.value) ? this.parseToDate(date) : isDate(date) ? this.toISOString(date) : date;
+            // internal date editor directive is only used w/ Date object values:
+            takeUntil(this._destroy$)).subscribe((date: Date | null) => {
+                this.updateValue(date);
             });
 
         this.dateTimeEditor.validationFailed.pipe(
@@ -1264,7 +1267,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 }
                 const value = this.parseToDate(this.value);
                 if ((this.dateTimeEditor.value as Date)?.getTime() !== value?.getTime()) {
-                    this.updateValue();
+                    this.updateValue(this._selectedDate);
                 }
                 // Do not focus the input if clicking outside in dropdown mode
                 const input = this.getEditElement();
