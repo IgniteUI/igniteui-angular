@@ -60,6 +60,10 @@ export abstract class DateTimeUtil {
             return null;
         }
 
+        if (/pm/g.test(inputData.toLowerCase())) {
+            parts[DatePart.Hours] += 12;
+        }
+
         return new Date(
             parts[DatePart.Year] || 2000,
             parts[DatePart.Month] || 0,
