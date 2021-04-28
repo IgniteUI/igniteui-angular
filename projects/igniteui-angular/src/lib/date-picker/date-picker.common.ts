@@ -5,5 +5,6 @@ import { IBaseEventArgs } from '../core/utils';
  * when onValidationFailed event is fired.
  */
 export interface IDatePickerValidationFailedEventArgs extends IBaseEventArgs {
-    prevValue: Date;
+    prevValue: Date | string;
+    currentValue: Date | string;
 }

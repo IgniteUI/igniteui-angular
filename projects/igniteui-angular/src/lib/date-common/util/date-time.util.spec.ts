@@ -48,9 +48,9 @@ describe(`DateTimeUtil Unit tests`, () => {
             result = DateTimeUtil.parseDateTimeFormat('H:m:s');
             resDict = reduceToDictionary(result);
             expect(result.length).toEqual(5);
-            expect(resDict[DatePart.Hours]).toEqual(jasmine.objectContaining({start: 0, end: 2 }));
-            expect(resDict[DatePart.Minutes]).toEqual(jasmine.objectContaining({start: 3, end: 5 }));
-            expect(resDict[DatePart.Seconds]).toEqual(jasmine.objectContaining({start: 6, end: 8 }));
+            expect(resDict[DatePart.Hours]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
+            expect(resDict[DatePart.Minutes]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
+            expect(resDict[DatePart.Seconds]).toEqual(jasmine.objectContaining({ start: 6, end: 8 }));
 
             result = DateTimeUtil.parseDateTimeFormat('dd.MM.yyyy г.');
             resDict = reduceToDictionary(result);
@@ -85,6 +85,29 @@ describe(`DateTimeUtil Unit tests`, () => {
             result = DateTimeUtil.parseValueFromMask('10/31/2020', parts);
             expect(result).toEqual(new Date(2020, 9, 31));
         });
+
+        it('should correctly parse values in h:m:s tt format', () => {
+            const verifyTime = (val: Date, hours = 0, minutes = 0, seconds = 0, milliseconds = 0) => {
+                expect(val.getHours()).toEqual(hours);
+                expect(val.getMinutes()).toEqual(minutes);
+                expect(val.getSeconds()).toEqual(seconds);
+                expect(val.getMilliseconds()).toEqual(milliseconds);
+            };
+
+            const parts = DateTimeUtil.parseDateTimeFormat('h:m:s tt');
+            let result = DateTimeUtil.parseValueFromMask('11:34:12 AM', parts);
+            verifyTime(result, 11, 34, 12);
+            result = DateTimeUtil.parseValueFromMask('04:12:15 PM', parts);
+            verifyTime(result, 16, 12, 15);
+            result = DateTimeUtil.parseValueFromMask('11:00:00 AM', parts);
+            verifyTime(result, 11, 0, 0);
+            result = DateTimeUtil.parseValueFromMask('10:00:00 PM', parts);
+            verifyTime(result, 22, 0, 0);
+            result = DateTimeUtil.parseValueFromMask('12:00:00 PM', parts);
+            verifyTime(result, 12, 0, 0);
+            result = DateTimeUtil.parseValueFromMask('12:00:00 AM', parts);
+            verifyTime(result, 0, 0, 0);
+        });
     });
 
     it('should correctly parse a date value from input', () => {
@@ -104,7 +127,7 @@ describe(`DateTimeUtil Unit tests`, () => {
 
         input = '04:12:23 PM';
         dateParts = [
-            { start: 0, end: 2, type: DatePart.Hours, format: 'HH' },
+            { start: 0, end: 2, type: DatePart.Hours, format: 'hh' },
             { start: 2, end: 3, type: DatePart.Literal, format: ':' },
             { start: 3, end: 5, type: DatePart.Minutes, format: 'mm' },
             { start: 5, end: 6, type: DatePart.Literal, format: ':' },
@@ -114,7 +137,7 @@ describe(`DateTimeUtil Unit tests`, () => {
         ];
 
         result = DateTimeUtil.parseValueFromMask(input, dateParts);
-        expect(result.getHours()).toEqual(4);
+        expect(result.getHours()).toEqual(16);
         expect(result.getMinutes()).toEqual(12);
         expect(result.getSeconds()).toEqual(23);
 

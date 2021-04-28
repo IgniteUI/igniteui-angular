@@ -601,14 +601,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
      * @param date passed date that has to be set to the calendar.
      */
     public select(value: Date): void {
-        const oldValue = this.dateValue;
         this.value = value;
-        if (DateTimeUtil.validateMinMax(value, this.minValue, this.maxValue, false)) {
-            this.validationFailed.emit({
-                owner: this,
-                prevValue: oldValue
-            });
-        }
     }
 
     /**
@@ -839,7 +832,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             takeUntil(this._destroy$)).subscribe((event) => {
                 this.validationFailed.emit({
                     owner: this,
-                    prevValue: event.oldValue
+                    prevValue: event.oldValue,
+                    currentValue: this.value
                 });
             });
     }
