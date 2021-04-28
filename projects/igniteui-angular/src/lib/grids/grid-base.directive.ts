@@ -3008,7 +3008,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    private get hasNoData(): boolean {
+    public get hasNoData(): boolean {
         return !this.data || this.dataLength === 0;
     }
 
