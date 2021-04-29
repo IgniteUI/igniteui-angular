@@ -31,6 +31,7 @@ import { GridBaseAPIService } from '../../api.service';
 import { FormattedValuesFilteringStrategy } from '../../../data-operations/filtering-strategy';
 import { TreeGridFormattedValuesFilteringStrategy } from '../../tree-grid/tree-grid.filtering.strategy';
 import { getLocaleCurrencyCode } from '@angular/common';
+import { SortingDirection } from '../../../data-operations/sorting-expression.interface';
 
 /**
  * @hidden
@@ -612,7 +613,19 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
             this.addItems(shouldUpdateSelection);
         }
 
-        this.listData.sort((a, b) => this.sortData(a, b));
+        this.listData = this.column.sortStrategy.sort(this.listData, 'value', SortingDirection.Asc, this.column.sortingIgnoreCase,
+            (obj, key) => {
+                let resolvedValue = obj[key];
+                if (this.column.dataType === DataType.Time) {
+                    resolvedValue = new Date().setHours(
+                        resolvedValue.getHours(),
+                        resolvedValue.getMinutes(),
+                        resolvedValue.getSeconds(),
+                        resolvedValue.getMilliseconds());
+                }
+
+                return resolvedValue;
+            });
 
         if (this.containsNullOrEmpty) {
             this.addBlanksItem(shouldUpdateSelection);
@@ -753,26 +766,6 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
         blanks.isSpecial = true;
         blanks.isBlanks = true;
         this.listData.unshift(blanks);
-    }
-
-    private sortData(a: FilterListItem, b: FilterListItem) {
-        let valueA = a.value;
-        let valueB = b.value;
-        if (typeof(a) === DataType.String) {
-            valueA = a.value.toUpperCase();
-            valueB = b.value.toUpperCase();
-        }
-        if (this.column.dataType === DataType.Time) {
-            valueA = new Date().setHours(valueA.getHours(), valueA.getMinutes(), valueA.getSeconds(), valueA.getMilliseconds());
-            valueB = new Date().setHours(valueB.getHours(), valueB.getMinutes(), valueB.getSeconds(), valueB.getMilliseconds());
-        }
-        if (valueA < valueB) {
-            return -1;
-        } else if (valueA > valueB) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 
     private getFilterItemLabel(element: any, applyFormatter: boolean = true) {
