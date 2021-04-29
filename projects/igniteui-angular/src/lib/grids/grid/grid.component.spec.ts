@@ -279,12 +279,16 @@ describe('IgxGrid Component Tests #grid', () => {
             fixture.componentInstance.generateData(30);
             fixture.detectChanges();
             tick(100);
-
             // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
             expect(container.getAttribute('role')).toBe(null);
 
+            //Filter grid so no results are available and grid is empty
+            fixture.componentInstance.grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+            expect(container.getAttribute('role')).toBe(null);
+
             // clear grid data and check if attribute is now 'row'
+            fixture.componentInstance.grid.clearFilter();
             fixture.componentInstance.clearData();
             fixture.detectChanges();
             tick(100);

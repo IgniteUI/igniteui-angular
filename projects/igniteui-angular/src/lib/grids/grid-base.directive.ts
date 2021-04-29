@@ -3027,7 +3027,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    private get hasZeroResultFilter(): boolean {
+    public get hasZeroResultFilter(): boolean {
         return this.filteredData && this.filteredData.length === 0;
     }
 
