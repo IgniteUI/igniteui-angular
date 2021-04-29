@@ -618,6 +618,29 @@ export class SampleTestData {
         { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date('2018-03-01') }
     ]);
 
+    public static foodProductDateTimeData = () => ([
+        { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date(2015, 9, 1, 11, 37, 22),
+            ReceiveTime: new Date(2015, 10, 1, 8, 37, 11) },
+        { ProductID: 2, ProductName: 'Aniseed Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date(2016, 7, 18, 11, 17, 22),
+        ReceiveTime: new Date(2016, 10, 8, 12, 12, 2) },
+        { ProductID: 3, ProductName: 'Antons Cajun Seasoning', InStock: true, UnitsInStock: 52, OrderDate: new Date(2021, 4, 11, 7, 47, 1),
+        ReceiveTime: new Date(2021, 4, 29, 14, 7, 12) },
+        { ProductID: 4, ProductName: 'Boysenberry Spread', InStock: false, UnitsInStock: 0, OrderDate: new Date(2021, 4, 11, 18, 37, 2),
+        ReceiveTime: new Date(2021, 4, 27, 6, 40, 18) },
+        { ProductID: 5, ProductName: 'Uncle Bobs Dried Pears', InStock: false, UnitsInStock: 0, OrderDate: new Date(2019, 3, 17, 5, 5, 15),
+        ReceiveTime: new Date(2019, 3, 31, 12, 47, 42) },
+        { ProductID: 6, ProductName: 'Cranberry Sauce', InStock: true, UnitsInStock: 1098, OrderDate: new Date(2019, 9, 30, 16, 17, 27),
+        ReceiveTime: new Date(2019, 10, 11, 12, 47, 42) },
+        { ProductID: 7, ProductName: 'Queso Cabrales', InStock: false, UnitsInStock: 0, OrderDate: new Date(2015, 2, 12, 21, 31, 22),
+        ReceiveTime: new Date(2015, 3, 3, 20, 20, 24) },
+        { ProductID: 8, ProductName: 'Tofu', InStock: true, UnitsInStock: 7898, OrderDate: new Date(2018, 6, 14, 17, 27, 23),
+        ReceiveTime: new Date(2018, 6, 18, 15, 30, 30) },
+        { ProductID: 9, ProductName: 'Chocolate Biscuits', InStock: true, UnitsInStock: 6998, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
+        ReceiveTime: new Date(2021, 7, 7, 15, 30, 22) },
+        { ProductID: 10, ProductName: 'Chocolate', InStock: true, UnitsInStock: 20000, OrderDate: new Date(2021, 7, 3, 15, 15, 0),
+        ReceiveTime: new Date(2021, 7, 11, 14, 30, 0) }
+    ]);
+
     public static foodPercentProductData = () => ([
         { ProductID: 1, ProductName: 'Chai', InStock: true, UnitsInStock: 2760, OrderDate: new Date('2005-03-21'), Discount: 0.27 },
         { ProductID: 2, ProductName: 'Syrup', InStock: false, UnitsInStock: 198, OrderDate: new Date('2008-01-15'), Discount: 0.83 },
