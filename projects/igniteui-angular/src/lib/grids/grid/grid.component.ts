@@ -920,7 +920,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public onChipClicked(event: IChipClickEventArgs) {
         const sortingExpr = this.sortingExpressions;
         const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+        const groupExpr = this.groupingExpressions.find((expr) => expr.fieldName === event.owner.id);
         columnExpr.dir = 3 - columnExpr.dir;
+        groupExpr.dir = columnExpr.dir;
         this.sort(columnExpr);
         this.notifyChanges();
     }
