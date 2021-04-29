@@ -11,7 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule, IgxGridRow, IgxGroupByRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
@@ -88,12 +88,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
             expect(grid.columnList.length).toEqual(4, 'Invalid number of columns initialized');
             expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columnList.first.dataType).toEqual(DataType.Number, 'Invalid dataType set on column');
+            expect(grid.columnList.first.dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
             expect(grid.columnList.find((col) => col.index === 1).dataType)
-                .toEqual(DataType.String, 'Invalid dataType set on column');
+                .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
             expect(grid.columnList.find((col) => col.index === 2).dataType)
-                .toEqual(DataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columnList.last.dataType).toEqual(DataType.Date, 'Invalid dataType set on column');
+                .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
+            expect(grid.columnList.last.dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         }));
 
@@ -1113,25 +1113,25 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
             display density is changed`, async () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
 
-                fix.componentInstance.grid.height = '100%';
-                fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
-                fix.detectChanges();
-                await wait(100);
+            fix.componentInstance.grid.height = '100%';
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+            fix.detectChanges();
+            await wait(100);
 
-                fix.componentInstance.density = DisplayDensity.compact;
-                fix.detectChanges();
-                await wait(100);
+            fix.componentInstance.density = DisplayDensity.compact;
+            fix.detectChanges();
+            await wait(100);
 
-                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(330);
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-                expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-            });
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(330);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+        });
 
         it(`should render grid with correct height when parent container's height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
@@ -1195,22 +1195,22 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should not render with calcHeight null at any point when loading data and
             auto-sizing is required and initial data is empty`, () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
 
-                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeFalsy(); // initially body height is null in auto-sizing scenarios with empty data
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeFalsy(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
 
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
-                fix.detectChanges();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
+            fix.detectChanges();
 
-                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(510);
-                expect(fix.componentInstance.grid.calcHeight).toBe(510);
-            });
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
 
         it('should keep auto-sizing if initial data is set to small array that is then filled', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1233,21 +1233,21 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render with calcHeight null if initial data is small but then
             auto-size when it is filled`, async () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.componentInstance.data = fix.componentInstance.semiData;
-                fix.detectChanges();
-                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeFalsy();
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
-                fix.detectChanges();
-                await wait(500);
-                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(510);
-                expect(fix.componentInstance.grid.calcHeight).toBe(510);
-            });
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.semiData;
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeFalsy();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
+            fix.detectChanges();
+            await wait(500);
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
 
         it('should keep default height when filtering', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1939,8 +1939,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             const cols = fix.componentInstance.columns;
 
-            const row = {col0: 0, col1: 4, col2: 8, col3: 12, col4: 16};
-            const secondRow = {col0: 0, col1: 1, col2: 2, col3: 3, col4: 4};
+            const row = { col0: 0, col1: 4, col2: 8, col3: 12, col4: 16 };
+            const secondRow = { col0: 0, col1: 1, col2: 2, col3: 3, col4: 4 };
 
             expect(grid.getRowData(row)).toEqual(row);
 
@@ -2109,9 +2109,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
@@ -2132,10 +2132,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2170,9 +2170,9 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);

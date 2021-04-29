@@ -11,7 +11,7 @@ import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTextHighlightDirective } from '../../directives/text-highlight/text-highlight.directive';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
@@ -418,7 +418,7 @@ describe('IgxGrid - search API #grid - ', () => {
         });
 
         it('Highlight should be updated when a column is hidden/shown and columns have different data types', () => {
-            grid.columns[0].dataType = DataType.Number;
+            grid.columns[0].dataType = GridColumnDataType.Number;
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(0, 'ID').nativeElement;

@@ -14,7 +14,7 @@ import { IgxForOfDirective } from '../../../directives/for-of/for_of.directive';
 import { IgxGridExcelStyleFilteringComponent, FilterListItem } from './grid.excel-style-filtering.component';
 import { FilteringExpressionsTree } from '../../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { DataType } from '../../../data-operations/data-util';
+import { GridColumnDataType } from '../../../data-operations/data-util';
 import {
     IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand, IgxDateTimeFilteringOperand, IgxTimeFilteringOperand
@@ -30,7 +30,7 @@ import { PlatformUtil } from '../../../core/utils';
     selector: '[igxExcelStyleLoading]'
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -240,14 +240,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return itemSize;
     }
 
-     /**
-      * @hidden @internal
-      */
+    /**
+     * @hidden @internal
+     */
     public get type(): string {
         switch (this.esf.column?.dataType) {
-            case DataType.Number:
-            case DataType.Currency:
-            case DataType.Percent:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+            case GridColumnDataType.Percent:
                 return 'number';
             default:
                 return 'text';
@@ -358,10 +358,10 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 selectedItems.forEach(element => {
                     let condition = null;
                     if (element.value !== null && element.value !== undefined) {
-                        if (this.esf.column.dataType === DataType.Boolean) {
+                        if (this.esf.column.dataType === GridColumnDataType.Boolean) {
                             condition = this.createCondition(element.value.toString());
                         } else {
-                            const filterCondition = this.esf.column.dataType === DataType.Time ? 'at' : 'equals';
+                            const filterCondition = this.esf.column.dataType === GridColumnDataType.Time ? 'at' : 'equals';
                             condition = this.createCondition(filterCondition);
                         }
                     } else {
@@ -385,7 +385,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     condition: this.createCondition('in'),
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
-                    searchVal: new Set(this.esf.column.dataType === DataType.Date ?
+                    searchVal: new Set(this.esf.column.dataType === GridColumnDataType.Date ?
                         selectedItems.map(d => d.value.toISOString()) :
                         selectedItems.map(e => e.value))
                 });
@@ -413,17 +413,17 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
 
     private createCondition(conditionName: string) {
         switch (this.esf.column.dataType) {
-            case DataType.Boolean:
+            case GridColumnDataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
-            case DataType.Number:
-            case DataType.Currency:
-            case DataType.Percent:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+            case GridColumnDataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
-            case DataType.Date:
+            case GridColumnDataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
-            case DataType.Time:
+            case GridColumnDataType.Time:
                 return IgxTimeFilteringOperand.instance().condition(conditionName);
-            case DataType.DateTime:
+            case GridColumnDataType.DateTime:
                 return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);

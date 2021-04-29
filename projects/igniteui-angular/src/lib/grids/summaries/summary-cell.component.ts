@@ -1,13 +1,15 @@
 import { Component, Input, HostBinding, HostListener, ChangeDetectionStrategy, ElementRef } from '@angular/core';
-import { IgxCurrencySummaryOperand,
-         IgxDateSummaryOperand,
-         IgxNumberSummaryOperand,
-         IgxPercentSummaryOperand,
-         IgxSummaryOperand,
-         IgxSummaryResult,
-         IgxTimeSummaryOperand} from './grid-summary';
+import {
+    IgxCurrencySummaryOperand,
+    IgxDateSummaryOperand,
+    IgxNumberSummaryOperand,
+    IgxPercentSummaryOperand,
+    IgxSummaryOperand,
+    IgxSummaryResult,
+    IgxTimeSummaryOperand
+} from './grid-summary';
 import { IgxColumnComponent } from '../columns/column.component';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISelectionNode } from '../selection/selection.service';
 import { getLocaleCurrencyCode } from '@angular/common';
 
@@ -56,7 +58,7 @@ export class IgxSummaryCellComponent {
 
     @HostBinding('attr.id')
     public get attrCellID() {
-        return `${this.grid.id}_${this.rowIndex}_${ this.visibleColumnIndex}`;
+        return `${this.grid.id}_${this.rowIndex}_${this.visibleColumnIndex}`;
     }
 
     @HostListener('pointerdown')
@@ -66,7 +68,7 @@ export class IgxSummaryCellComponent {
             return;
         }
 
-        this.grid.navigation.setActiveNode({row: this.rowIndex, column: this.visibleColumnIndex}, 'summaryCell');
+        this.grid.navigation.setActiveNode({ row: this.rowIndex, column: this.visibleColumnIndex }, 'summaryCell');
         this.grid.cdr.detectChanges();
     }
 
@@ -86,7 +88,7 @@ export class IgxSummaryCellComponent {
         return this.element.nativeElement;
     }
 
-    public get columnDatatype(): DataType {
+    public get columnDatatype(): GridColumnDataType {
         return this.column.dataType;
     }
 
@@ -130,7 +132,7 @@ export class IgxSummaryCellComponent {
     /**
      * @hidden @internal
      */
-     public isTimeOperand(): boolean {
+    public isTimeOperand(): boolean {
         return this.column.summaries?.constructor === IgxTimeSummaryOperand;
     }
 

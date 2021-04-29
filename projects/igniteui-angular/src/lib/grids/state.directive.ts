@@ -5,7 +5,7 @@ import { IFilteringExpression } from '../data-operations/filtering-expression.in
 import { IgxColumnComponent } from './columns/column.component';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { IPagingState } from '../data-operations/paging-state.interface';
-import { DataType } from '../data-operations/data-util';
+import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxBooleanFilteringOperand, IgxNumberFilteringOperand, IgxDateFilteringOperand,
     IgxStringFilteringOperand, IFilteringOperation} from '../data-operations/filtering-condition';
 import { GridSelectionRange } from './selection/selection.service';
@@ -68,7 +68,7 @@ export interface IColumnState {
     groupable: boolean;
     movable: boolean;
     hidden: boolean;
-    dataType: DataType;
+    dataType: GridColumnDataType;
     hasSummary: boolean;
     field: string;
     width: any;
@@ -516,16 +516,16 @@ export class IgxGridStateDirective {
     private generateFilteringCondition(dataType: string, name: string): IFilteringOperation {
         let filters;
         switch (dataType) {
-            case DataType.Boolean:
+            case GridColumnDataType.Boolean:
                 filters = IgxBooleanFilteringOperand.instance();
                 break;
-            case DataType.Number:
+            case GridColumnDataType.Number:
                 filters = IgxNumberFilteringOperand.instance();
                 break;
-            case DataType.Date:
+            case GridColumnDataType.Date:
                 filters = IgxDateFilteringOperand.instance();
                 break;
-            case DataType.String:
+            case GridColumnDataType.String:
             default:
                 filters = IgxStringFilteringOperand.instance();
                 break;
