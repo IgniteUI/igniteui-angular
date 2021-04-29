@@ -163,7 +163,7 @@ export class IgxSorting implements IGridSortingStrategy {
         let resolvedValue = resolveNestedPath(obj, key);
         if (isDate || isTime) {
             const date = parseDate(resolvedValue);
-            resolvedValue  = isTime ?
+            resolvedValue  = isTime && date ?
                 new Date().setHours(date.getHours(), date.getMinutes(), date.getSeconds(), date.getMilliseconds()) : date;
 
         }
