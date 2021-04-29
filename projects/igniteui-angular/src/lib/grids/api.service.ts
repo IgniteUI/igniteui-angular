@@ -166,7 +166,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const data = this.get_all_data(grid.transactions.enabled);
         const index = this.get_row_index_in_data(row.id, data);
         const hasSummarized = grid.hasSummarizedColumns;
-        this._update_row(row, value);
+        this.crudService.updateRowEditData(row, value);
 
         const args = row.createEditEventArgs(true, event);
 
@@ -175,13 +175,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return args;
         }
 
-        grid.rowEdit.emit(args);
-
-        if (args.cancel) {
-            return args;
-        }
-
-        const cachedRowData = { ... args.oldValue };
         if (rowInEditMode) {
             const hasChanges = grid.transactions.getState(args.rowID, true);
             grid.transactions.endPending(false);
@@ -211,8 +204,6 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         grid.pipeTrigger++;
 
-        const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
-        grid.rowEditDone.emit(doneArgs);
         return args;
     }
 
@@ -496,19 +487,4 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             this.get_column_by_name(fieldName).sortStrategy : undefined;
     }
 
-    private _update_row(row: IgxRow, value?: any) {
-        const grid = this.grid;
-
-        const rowInEditMode = grid.gridAPI.crudService.row;
-        row.newData = value ?? rowInEditMode.transactionState;
-
-
-        if (rowInEditMode && row.id === rowInEditMode.id) {
-            row.data = { ...row.data, ...rowInEditMode.transactionState };
-        // TODO: Workaround for updating a row in edit mode through the API
-        } else if (this.grid.transactions.enabled) {
-            const state = grid.transactions.getState(row.id);
-            row.data = state ? Object.assign({}, row.data, state.value) : row.data;
-        }
-    }
 }

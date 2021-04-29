@@ -473,7 +473,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-     * This method emits `onEditDone` event.
      *
      * ```typescript
      * // update the second selected row's value
@@ -484,7 +483,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public update(value: any) {
         const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
-            this.grid.crudService.endEdit(false);
+            this.grid.transactions.endPending(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);

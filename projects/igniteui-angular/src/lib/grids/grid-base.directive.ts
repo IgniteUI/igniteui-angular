@@ -4449,7 +4449,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
      *   }, 1);
      * ```
-     * @param value
+     * @param value–
      * @param rowSelector correspond to rowID
      */
     // TODO: prevent event invocation
@@ -4457,7 +4457,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.crudService.exitCellEdit();
+                this.crudService.endCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);

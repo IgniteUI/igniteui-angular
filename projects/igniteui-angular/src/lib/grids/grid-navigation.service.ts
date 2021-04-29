@@ -540,7 +540,7 @@ export class IgxGridNavigationService {
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
                 const cancelable = this.grid.crudService.updateAddCell(false, event);
-                if (cancelable.cancel) {
+                if (cancelable && cancelable.cancel) {
                     this.grid.crudService.endAddRow();
                 } else {
                     this.grid.crudService.exitCellEdit(event);

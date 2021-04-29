@@ -219,7 +219,6 @@ abstract class BaseRow implements RowType {
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-     * This method emits `onEditDone` event.
      *
      * ```typescript
      * // update the second selected row's value
@@ -230,7 +229,7 @@ abstract class BaseRow implements RowType {
     public update(value: any): void {
         const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
-            this.grid.endEdit(false);
+            this.grid.transactions.endPending(false);
         }
         const row = new IgxRow(this.key, this.index, this.data, this.grid);
         this.grid.gridAPI.update_row(row, value);

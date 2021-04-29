@@ -1668,24 +1668,18 @@ describe('IgxGrid - Row Editing #grid', () => {
                 evt.cancel = true;
             });
 
-            grid.gridAPI.crudService.enterEditMode(cell);
+            cell.setEditMode(true);
+
             fix.detectChanges();
 
-            const newRowData = {ProductName: 'new product name', ReorderLevel: 20};
-            grid.updateRow(newRowData, 0);
-
-            grid.endRowEditTabStop(true, null);
+            cell.editValue = 'New Name';
             fix.detectChanges();
+            // On button click
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
 
-            const rowData = Object.assign({}, cell.row.data, newRowData);
+            const rowData = Object.assign({}, cell.row.data, {ProductName: 'New Name'});
             expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(true);
-            expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
-            expect(cell.row.data).not.toEqual(rowData);
-
-            grid.endRowEditTabStop(false, null);
-            fix.detectChanges();
-
-            expect(!!grid.gridAPI.crudService.rowInEditMode).toEqual(false);
             expect(grid.gridAPI.crudService.cellInEditMode).toEqual(false);
             expect(cell.row.data).not.toEqual(rowData);
         });

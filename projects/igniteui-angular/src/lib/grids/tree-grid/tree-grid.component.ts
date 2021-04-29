@@ -545,6 +545,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param parentRowID
      * @memberof IgxTreeGridComponent
      */
+    // TODO: remove evt emission
     public addRow(data: any, parentRowID?: any) {
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);

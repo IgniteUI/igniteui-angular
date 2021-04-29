@@ -177,11 +177,11 @@ export class IgxCellCrudState {
 
     public updateAddCell(exit: boolean, event?: Event) {
         if (!this.cell) {
-            return;
+            return
         }
 
         if (isEqual(this.cell.value, this.cell.editValue)) {
-            return {} as IGridEditEventArgs;
+            return;
         }
 
         const args = this.cellEdit(event);
@@ -217,12 +217,8 @@ export class IgxCellCrudState {
 
         const newValue = this.cell.castToNumber(this.cell.editValue);
         const args = this.cell?.createDoneEditEventArgs(newValue, event);
-        if (!this.cell) {
-            return args;
-        }
 
         this.cell.value = newValue;
-
 
         this.grid.cellEditExit.emit(args);
         this.endCellEdit();
@@ -292,41 +288,70 @@ export class IgxRowCrudState extends IgxCellCrudState {
         }
     }
 
-    /**
-     * @hidden @internal
-     */
-    public endRowTransaction(commit: boolean, row: IgxRow, event?: Event) {
-        row.newData = this.grid.transactions.getAggregatedValue(row.id, true);
-        let rowEditArgs = row.createEditEventArgs(true, event);
-
-        if (!commit) {
-            this.grid.transactions.endPending(false);
-        } else {
-            rowEditArgs = this.grid.gridAPI.update_row(row, row.newData, event);
-            if (rowEditArgs?.cancel) {
-                return true;
-            }
-        }
-
-        this.endRowEdit();
-
-        const nonCancelableArgs = row.createDoneEditEventArgs(rowEditArgs.oldValue, event);
-        this.grid.rowEditExit.emit(nonCancelableArgs);
-        this.grid.closeRowEditingOverlay();
+    public rowEdit(event: Event): IGridEditEventArgs {
+        const args = this.row.createEditEventArgs(true, event);
+        this.grid.rowEdit.emit(args);
+        return args;
     }
 
-    /** Exit row edit mode */
-    public exitRowEdit(commit: boolean, event?: Event) {
+    public updateRow(commit: boolean, event?: Event): IGridEditEventArgs {
         if (!this.grid.rowEditable ||
             this.grid.rowEditingOverlay &&
             this.grid.rowEditingOverlay.collapsed || !this.row) {
-            return false;
+            return {} as IGridEditEventArgs;
         }
 
-        const canceled = this.endRowTransaction(commit, this.row, event);
-        if (canceled) {
-            return true;
+        let args;
+        if (commit) {
+            this.row.newData = this.grid.transactions.getAggregatedValue(this.row.id, true);
+            this.updateRowEditData(this.row, this.row.newData);
+            args = this.rowEdit(event);
+            if (args.cancel) {
+                return args;
+            }
         }
+        
+
+        args = this.endRowTransaction(commit, event);
+
+        return args;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public endRowTransaction(commit: boolean, event?: Event): IGridEditEventArgs {
+        this.row.newData = this.grid.transactions.getAggregatedValue(this.row.id, true);
+        let rowEditArgs = this.row.createEditEventArgs(true, event);
+
+        let nonCancelableArgs;
+        if (!commit) {
+            this.grid.transactions.endPending(false);
+        } else {
+            rowEditArgs = this.grid.gridAPI.update_row(this.row, this.row.newData, event);
+            nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
+        }
+
+        nonCancelableArgs = this.exitRowEdit(rowEditArgs.oldValue, event);
+
+        return {...nonCancelableArgs, ...rowEditArgs};
+    }
+
+    public rowEditDone(cachedRowData, event: Event) {
+        const doneArgs = this.row.createDoneEditEventArgs(cachedRowData, event);
+        this.grid.rowEditDone.emit(doneArgs);
+        return doneArgs;
+    }
+
+
+    /** Exit row edit mode */
+    public exitRowEdit(cachedRowData, event?: Event): IGridEditDoneEventArgs {
+        const nonCancelableArgs = this.row.createDoneEditEventArgs(cachedRowData, event);
+        this.grid.rowEditExit.emit(nonCancelableArgs);
+        this.grid.closeRowEditingOverlay();
+
+        this.endRowEdit();
+        return nonCancelableArgs;
     }
 
     /** Clears row editing state */
@@ -341,6 +366,22 @@ export class IgxRowCrudState extends IgxCellCrudState {
         if (this.grid.rowEditable) {
             this.endRowEdit();
             this.grid.closeRowEditingOverlay();
+        }
+    }
+
+    public updateRowEditData(row: IgxRow, value?: any) {
+        const grid = this.grid;
+
+        const rowInEditMode = grid.gridAPI.crudService.row;
+        row.newData = value ?? rowInEditMode.transactionState;
+
+
+        if (rowInEditMode && row.id === rowInEditMode.id) {
+            row.data = { ...row.data, ...rowInEditMode.transactionState };
+        // TODO: Workaround for updating a row in edit mode through the API
+        } else if (this.grid.transactions.enabled) {
+            const state = grid.transactions.getState(row.id);
+            row.data = state ? Object.assign({}, row.data, state.value) : row.data;
         }
     }
 
@@ -380,9 +421,8 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 
     public endAdd(commit = true, event?: Event) {
         const row = this.row;
-        const cell = this.cell;
         const cachedRowData = { ...row.data };
-        if (!row && !cell) {
+        if (!row && !this.cell) {
             return;
         }
         if (commit) {
@@ -397,28 +437,28 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
                 this.grid.showSnackbarFor(showIndex);
             });
             const cancelable = this.updateAddCell(false, event);
-            if (cancelable.cancel) {
+            if (cancelable && cancelable.cancel) {
                 this.endAddRow();
             } else {
                 this.exitCellEdit(event);
             }
-            if (!cancelable.cancel) {
-                const args = row.createEditEventArgs(true, event);
-                this.grid.rowEdit.emit(args);
+            if (!(cancelable && cancelable.cancel)) {
+                const args = this.rowEdit(event);
                 if (args.cancel) {
                     return args.cancel;
                 }
                 const parentId = this._getParentRecordId();
                 this.grid.gridAPI.addRowToData(row.data, parentId);
-                const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
-                this.grid.rowEditDone.emit(doneArgs);
+                this.rowEditDone(cachedRowData, event);
+                // const doneArgs = row.createDoneEditEventArgs(cachedRowData, event);
+                // this.grid.rowEditDone.emit(doneArgs);
                 this.endRowEdit();
                 if (this.addRowParent.isPinned) {
                     this.grid.pinRow(row.id);
                 }
             }
             this.addRowParent = null;
-            this.cancelAddMode = cancelable.cancel;
+            this.cancelAddMode = !!(cancelable && cancelable.cancel);
         } else {
             this.exitCellEdit(event);
             this.cancelAddMode = true;
@@ -430,6 +470,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
             this.grid.cdr.detectChanges();
             this.grid.rowAdded.emit({ data: row.data });
         }
+
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData, event);
         this.grid.rowEditExit.emit(nonCancelableArgs);
         return this.cancelAddMode;
@@ -520,6 +561,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      * ```
      * @param commit
      */
+    // Implement the same representation of the method without evt invocation.
      public endEdit(commit = true, event?: Event) {
         let canceled = false;
         if (!this.row && !this.cell) {
@@ -540,9 +582,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             this.exitCellEdit(event);
         }
 
-        canceled = this.exitRowEdit(commit, event);
-        this.rowEditingBlocked = canceled;
-        if (canceled) {
+        const args = this.updateRow(commit, event);
+        this.rowEditingBlocked = args.cancel;
+        if (args.cancel) {
             return true;
         }
 
