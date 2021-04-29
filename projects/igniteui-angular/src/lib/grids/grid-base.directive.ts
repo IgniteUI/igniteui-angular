@@ -2957,7 +2957,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public abstract id: string;
     abstract data: any[];
-    abstract filteredData: any[];
+    public abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
      *
@@ -3027,7 +3027,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get hasZeroResultFilter(): boolean {
+    private get hasZeroResultFilter(): boolean {
         return this.filteredData && this.filteredData.length === 0;
     }
 
