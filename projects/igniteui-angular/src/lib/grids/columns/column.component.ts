@@ -1428,7 +1428,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      * @internal
      */
-    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
+     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
 
 
     /**

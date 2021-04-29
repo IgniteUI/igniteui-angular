@@ -35,6 +35,8 @@ const CSS_CLASS_DONE_BUTTON = 'igx-button--flat';
 const CSS_CLASS_LABEL = 'igx-input-group__label';
 const CSS_CLASS_OVERLAY_CONTENT = 'igx-overlay__content';
 const CSS_CLASS_DATE_RANGE = 'igx-date-range-picker';
+const CSS_CLASS_CALENDAR_DATE = 'igx-calendar__date';
+const CSS_CLASS_INACTIVE_DATE = 'igx-calendar__date--inactive';
 
 describe('IgxDateRangePicker', () => {
     describe('Unit tests: ', () => {
@@ -298,16 +300,25 @@ describe('IgxDateRangePicker', () => {
         let calendar: DebugElement | Element;
         let calendarDays: DebugElement[] | HTMLCollectionOf<Element>;
 
-        const selectDateRangeFromCalendar = (startDateDay: number, dayRange: number) => {
-            const startDateDayElIndex = startDateDay - 1;
-            const endDateDayElIndex = startDateDayElIndex + dayRange;
+        const selectDateRangeFromCalendar = (sDate: Date, eDate: Date) => {
             dateRange.open();
             fixture.detectChanges();
-            calendarDays = document.getElementsByClassName('igx-calendar__date');
-            const activeDays = Array.from(calendarDays).filter(d => !d.classList.contains('igx-calendar__date--hidden'));
-            UIInteractions.simulateClickAndSelectEvent(activeDays[startDateDayElIndex]);
-            if (dayRange !== 0) {
-                UIInteractions.simulateClickAndSelectEvent(activeDays[endDateDayElIndex]);
+            calendarDays = document.getElementsByClassName(CSS_CLASS_CALENDAR_DATE);
+            const nodesArray = Array.from(calendarDays);
+            const findNodeIndex: (d: Date) => number =
+                (d: Date) => nodesArray
+                    .findIndex(
+                        n => n.attributes['aria-label'].value === d.toDateString()
+                            && !n.classList.contains(CSS_CLASS_INACTIVE_DATE)
+                    );
+            const startIndex = findNodeIndex(sDate);
+            const endIndex = findNodeIndex(eDate);
+            if (startIndex === -1) {
+                throw new Error('Start date not found in calendar. Aborting.');
+            }
+            UIInteractions.simulateClickAndSelectEvent(calendarDays[startIndex]);
+            if (endIndex !== -1 && endIndex !== startIndex) { // do not click same date twice
+                UIInteractions.simulateClickAndSelectEvent(calendarDays[endIndex]);
             }
             fixture.detectChanges();
             dateRange.close();
@@ -351,7 +362,7 @@ describe('IgxDateRangePicker', () => {
                 expect(singleInputElement.nativeElement.value).toEqual(`${inputStartDate} - ${inputEndDate}`);
             };
 
-            xdescribe('Selection tests', () => {
+            describe('Selection tests', () => {
                 it('should assign range dates to the input when selecting a range from the calendar', () => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
@@ -362,7 +373,7 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -371,11 +382,10 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
-                    const dayRange = -5;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 5, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(endDate, startDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -384,11 +394,10 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.dateRange.displayFormat = 'M/d/yyyy';
                     fixture.detectChanges();
 
-                    const dayRange = 0;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = startDate;
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -398,9 +407,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                    const dayRange = Math.round(differenceMs / ONE_DAY);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRangeInSingleInput();
                 });
 
@@ -767,7 +774,7 @@ describe('IgxDateRangePicker', () => {
                 fixture = TestBed.createComponent(DateRangeTwoInputsTestComponent);
                 fixture.detectChanges();
                 dateRange = fixture.componentInstance.dateRange;
-                dateRange.value = { start: new Date('2/2/2020'), end: new Date('3/3/2020')};
+                dateRange.value = { start: new Date('2/2/2020'), end: new Date('3/3/2020') };
                 startInput = fixture.debugElement.query(By.css('input'));
                 endInput = fixture.debugElement.queryAll(By.css('input'))[1];
                 calendar = fixture.debugElement.query(By.css(CSS_CLASS_CALENDAR));
@@ -782,7 +789,7 @@ describe('IgxDateRangePicker', () => {
                 expect(endInput.nativeElement.value).toEqual(expectedEndDate);
             };
 
-            xdescribe('Selection tests', () => {
+            describe('Selection tests', () => {
                 it('should assign range values correctly when selecting dates from the calendar', () => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
@@ -792,14 +799,14 @@ describe('IgxDateRangePicker', () => {
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
 
                     dayRange = 13;
                     startDate = new Date(today.getFullYear(), today.getMonth(), 6, 0, 0, 0);
                     endDate = new Date(startDate);
                     endDate.setDate(endDate.getDate() + dayRange);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 
@@ -807,11 +814,10 @@ describe('IgxDateRangePicker', () => {
                     fixture.componentInstance.mode = PickerInteractionMode.DropDown;
                     fixture.detectChanges();
 
-                    const dayRange = -10;
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth(), 20, 0, 0, 0);
-                    selectDateRangeFromCalendar(endDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(endDate, startDate);
                     verifyDateRange();
                 });
 
@@ -820,10 +826,10 @@ describe('IgxDateRangePicker', () => {
                     fixture.detectChanges();
 
                     const today = new Date();
-                    startDate = today; // new Date(today.getFullYear(), today.getMonth(), 4, 0, 0, 0);
-                    endDate = today; // startDate;
+                    startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+                    endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0); // startDate;
 
-                    selectDateRangeFromCalendar(today.getDate(), 0);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 
@@ -833,9 +839,7 @@ describe('IgxDateRangePicker', () => {
                     const today = new Date();
                     startDate = new Date(today.getFullYear(), today.getMonth(), 1, 0, 0, 0);
                     endDate = new Date(today.getFullYear(), today.getMonth() + 2, 0, 0, 0, 0);
-                    const differenceMs = Math.abs(startDate.getTime() - endDate.getTime());
-                    const dayRange = Math.round(differenceMs / ONE_DAY);
-                    selectDateRangeFromCalendar(startDate.getDate(), dayRange);
+                    selectDateRangeFromCalendar(startDate, endDate);
                     verifyDateRange();
                 });
 

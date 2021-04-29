@@ -2,7 +2,6 @@ import { DatePart, DatePartInfo } from '../../directives/date-time-editor/date-t
 import { formatDate, FormatWidth, getLocaleDateFormat } from '@angular/common';
 import { ValidationErrors } from '@angular/forms';
 import { isDate } from '../../core/utils';
-import { MaskParsingService } from '../../directives/mask/mask-parsing.service';
 
 /** @hidden */
 const enum FormatDesc {
@@ -61,6 +60,15 @@ export abstract class DateTimeUtil {
             return null;
         }
 
+        const amPm = dateTimeParts.find(p => p.type === DatePart.AmPm);
+        if (amPm) {
+            parts[DatePart.Hours] %= 12;
+        }
+
+        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
+            parts[DatePart.Hours] += 12;
+        }
+
         return new Date(
             parts[DatePart.Year] || 2000,
             parts[DatePart.Month] || 0,
@@ -89,10 +97,8 @@ export abstract class DateTimeUtil {
                     }
                 }
 
-                DateTimeUtil.ensureLeadingZero(currentPart);
-                currentPart.end = currentPart.start + currentPart.format.length;
+                DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
                 position = currentPart.end;
-                dateTimeParts.push(currentPart);
             }
 
             currentPart = {
@@ -101,6 +107,11 @@ export abstract class DateTimeUtil {
                 type,
                 format: formatArray[i]
             };
+        }
+
+        // make sure the last member of a format like H:m:s is not omitted
+        if (!dateTimeParts.filter(p => p.format.includes(currentPart.format)).length) {
+            DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
         }
 
         return dateTimeParts;
@@ -372,15 +383,16 @@ export abstract class DateTimeUtil {
      */
     public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
         includeTime = true, includeDate = true): ValidationErrors {
+        if (!value) {
+            return null;
+        }
         const errors = {};
         const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
         const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
-        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))
-            || (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
+        if (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate)) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
-            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
+        if (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate)) {
             Object.assign(errors, { maxValue: true });
         }
 
@@ -418,6 +430,12 @@ export abstract class DateTimeUtil {
         }
 
         return false;
+    }
+
+    private static addCurrentPart(currentPart: DatePartInfo, dateTimeParts: DatePartInfo[]): void {
+        DateTimeUtil.ensureLeadingZero(currentPart);
+        currentPart.end = currentPart.start + currentPart.format.length;
+        dateTimeParts.push(currentPart);
     }
 
     private static daysInMonth(fullYear: number, month: number): number {

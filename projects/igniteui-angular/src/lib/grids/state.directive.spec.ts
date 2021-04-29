@@ -19,9 +19,7 @@ import { DefaultSortingStrategy } from '../data-operations/sorting-strategy';
 
 /* eslint-disable max-len */
 describe('IgxGridState - input properties #grid', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridStateComponent,
@@ -29,7 +27,7 @@ describe('IgxGridState - input properties #grid', () => {
                 IgxGridStateWithDetailsComponent
             ],
             imports: [ NoopAnimationsModule, IgxGridModule ]
-        }).compileComponents();
+        });
     }));
 
     it('should initialize an IgxGridState with default options object', () => {

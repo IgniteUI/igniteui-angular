@@ -199,6 +199,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Column Moving'
         },
         {
+            link: '/gridColumnTypes',
+            icon: 'view_column',
+            name: 'Grid Column Types'
+        },
+        {
             link: '/gridColumnSelecting',
             icon: 'view_column',
             name: 'Grid Column Selection'
