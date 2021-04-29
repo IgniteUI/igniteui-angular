@@ -817,7 +817,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.deleteRow(847);
             fix.detectChanges();
             tick();
-            
+
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['49', '61']);
