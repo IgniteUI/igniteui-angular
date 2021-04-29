@@ -33,17 +33,18 @@ describe('IgxGrid - CRUD operations #grid', () => {
     }));
 
     it('should support adding rows through the grid API', () => {
-        expect(grid.data.length).toEqual(data.length);
-        expect(grid.rowList.length).toEqual(grid.data.length);
+        let expectedLength = 1;
+        expect(grid.data.length).toEqual(expectedLength);
+        expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
             grid.addRow({ index: i, value: i});
         }
         fix.detectChanges();
 
-        expect(fix.componentInstance.rowsAdded).toEqual(10);
-        expect(grid.data.length).toEqual(data.length);
-        expect(grid.rowList.length).toEqual(grid.data.length);
+        expectedLength = 11
+        expect(grid.data.length).toEqual(expectedLength);
+        expect(grid.rowList.length).toEqual(expectedLength);
     });
 
     it('should support adding rows by manipulating the `data` @Input of the grid', () => {
@@ -76,9 +77,10 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.deleteRow(1);
         fix.detectChanges();
 
-        expect(grid.data.length).toEqual(0);
-        expect(data.length).toEqual(0);
-        expect(grid.rowList.length).toEqual(0);
+        let expectedLength = 0
+        expect(grid.data.length).toEqual(expectedLength);
+        expect(data.length).toEqual(expectedLength);
+        expect(grid.rowList.length).toEqual(expectedLength);
 
         for (let i = 0; i < 10; i++) {
             grid.addRow({ index: i, value: i});
@@ -91,9 +93,9 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         fix.detectChanges();
 
-        expect(grid.data.length).toEqual(data.length);
-        expect(grid.rowList.length).toEqual(data.length);
-        expect(fix.componentInstance.rowsDeleted).toEqual(3);
+        expectedLength = 8;
+        expect(grid.data.length).toEqual(expectedLength);
+        expect(grid.rowList.length).toEqual(expectedLength);
 
         expect(grid.rowList.first.cells.first.value).toEqual(1);
         expect(grid.rowList.last.cells.first.value).toEqual(8);
@@ -103,7 +105,6 @@ describe('IgxGrid - CRUD operations #grid', () => {
         fix.detectChanges();
 
         expect(grid.data.length).toEqual(8);
-        expect(fix.componentInstance.rowsDeleted).toEqual(3);
     });
 
     it('should support removing rows by manipulating the `data` @Input of the grid', () => {
@@ -344,8 +345,6 @@ describe('IgxGrid - CRUD operations #grid', () => {
         <igx-grid
             [data]="data"
             [height]="null"
-            (rowAdded)="rowAdded()"
-            (rowDeleted)="rowDeleted()"
             (cellEdit)="editDone($event)"
             (rowEdit)="editDone($event)"
             [autoGenerate]="true"
@@ -360,17 +359,6 @@ export class DefaultCRUDGridComponent {
     public data = [
         { index: 1, value: 1}
     ];
-
-    public rowsAdded = 0;
-    public rowsDeleted = 0;
-
-    public rowAdded() {
-        this.rowsAdded++;
-    }
-
-    public rowDeleted() {
-        this.rowsDeleted++;
-    }
 
     public editDone(event: IGridEditEventArgs) {
         if (event.newValue === 666) {

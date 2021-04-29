@@ -394,7 +394,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     // TODO: Consider changing the modifier to protected or private.
     public addRowParent = null;
 
-     /** Enters cell edit mode */
+     /** Starts row adding */
      public beginAddRow(cell, event?: Event) {
         this.createCell(cell);
         this.cell.primaryKey = this.primaryKey;
@@ -469,6 +469,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         if (!this.cancelAddMode) {
             this.grid.cdr.detectChanges();
             this.grid.rowAdded.emit({ data: row.data });
+            this.grid.rowAddedNotifier.next({ data: row.data });
         }
 
         const nonCancelableArgs = row.createDoneEditEventArgs(cachedRowData, event);
@@ -561,7 +562,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
      * ```
      * @param commit
      */
-    // Implement the same representation of the method without evt invocation.
+    // TODO: Implement the same representation of the method without evt emission.
      public endEdit(commit = true, event?: Event) {
         let canceled = false;
         if (!this.row && !this.cell) {

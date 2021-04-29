@@ -292,7 +292,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public deleteRowById(rowId: any) {
+    public deleteRowById(rowId: any): any {
         let index: number;
         const grid = this.grid;
         const data = this.get_all_data();
@@ -314,8 +314,9 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
             return;
         }
 
-        //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
-        grid.rowDeleted.emit({ data: data[index] });
+        const record = data[index];
+        // //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+        grid.rowDeletedNotifier.next({ data: data[index] });
 
         this.deleteRowFromData(rowId, index);
 
@@ -333,6 +334,8 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         if (dataAfterDelete.length % grid.perPage === 0 && dataAfterDelete.length / grid.perPage - 1 < grid.page && grid.page !== 0) {
             grid.page--;
         }
+
+        return record;
     }
 
     public get_row_id(rowData) {

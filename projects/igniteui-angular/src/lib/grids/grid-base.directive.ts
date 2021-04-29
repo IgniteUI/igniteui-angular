@@ -686,7 +686,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
-     * Emitted when a row added through the API.
+     * Emitted when a row is added.
      *
      * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
@@ -699,7 +699,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowAdded = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when a row is deleted through API.
+     * Emitted when a row is deleted.
      *
      * @remarks
      * Returns an `IRowDataEventArgs` object.
@@ -2689,6 +2689,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resizeNotify = new Subject();
 
     /** @hidden @internal */
+    public rowAddedNotifier = new Subject<IRowDataEventArgs>();
+    
+    /** @hidden @internal */
+    public rowDeletedNotifier = new Subject<IRowDataEventArgs>();
+
+    /** @hidden @internal */
     public pipeTriggerNotifier = new Subject();
 
     /**
@@ -3269,8 +3275,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.notifyChanges();
             }
         });
-        this.rowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
-        this.rowDeleted.pipe(destructor).subscribe(args => {
+        this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
+        this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
@@ -4389,7 +4395,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.rowAdded.emit({ data });
+        this.rowAddedNotifier.next({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -4406,15 +4412,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowSelector
      */
-    public deleteRow(rowSelector: any): void {
+    public deleteRow(rowSelector: any): any {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            this.deleteRowById(rowSelector);
+            return this.deleteRowById(rowSelector);
         }
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any) {
-        this.gridAPI.deleteRowById(rowId);
+    public deleteRowById(rowId: any): any {
+        return this.gridAPI.deleteRowById(rowId);
     }
 
     /**
