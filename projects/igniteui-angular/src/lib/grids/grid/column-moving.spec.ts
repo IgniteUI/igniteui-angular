@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,14 +20,12 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { IgxColumnComponent } from '../tree-grid/public_api';
 
 describe('IgxGrid - Column Moving #grid', () => {
-    configureTestSuite();
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__thead-title';
 
     let fixture; let grid: IgxGridComponent;
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 MovableColumnsComponent,
@@ -40,7 +38,7 @@ describe('IgxGrid - Column Moving #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe('', () => {

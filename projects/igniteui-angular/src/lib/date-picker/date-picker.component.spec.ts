@@ -963,7 +963,8 @@ describe('IgxDatePicker', () => {
                 datePicker.value = validDate;
                 expect(datePicker.validationFailed.emit).not.toHaveBeenCalled();
                 datePicker.value = invalidDate;
-                expect(datePicker.validationFailed.emit).toHaveBeenCalledWith({ owner: datePicker, prevValue: validDate });
+                expect(datePicker.validationFailed.emit).toHaveBeenCalledWith(
+                    { owner: datePicker, prevValue: validDate, currentValue: invalidDate });
             });
 
             it('Should change own value if value of underlying dateEditor changes', () => {

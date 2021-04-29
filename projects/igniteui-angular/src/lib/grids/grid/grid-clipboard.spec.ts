@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -10,17 +10,16 @@ import { CancelableEventArgs } from '../../core/utils';
 import { take } from 'rxjs/operators';
 
 describe('IgxGrid - Clipboard #grid', () => {
-    configureTestSuite();
+
     let fix;
     let grid: IgxGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridClipboardComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {

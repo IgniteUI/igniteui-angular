@@ -24,11 +24,9 @@ interface ColGroupsType {
 }
 
 describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
-    configureTestSuite();
-
     let fixture: ComponentFixture<FixtureType>;
     let grid: IgxGridComponent;
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutPinningTestComponent,
@@ -39,7 +37,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     describe('Hiding ', () => {

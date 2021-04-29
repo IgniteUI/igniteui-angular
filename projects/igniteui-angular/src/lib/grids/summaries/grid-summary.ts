@@ -268,8 +268,9 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      */
     public static latestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
-            first(data.filter(clear).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
-            new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
+            first(data.filter(clear).map(v => new Date(v)).sort((a, b) =>
+                new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
+                new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
     }
 
     /**
@@ -283,7 +284,7 @@ export class IgxTimeSummaryOperand extends IgxSummaryOperand {
      */
     public static earliestTime(data: any[]) {
         return data.length && data.filter(clear).length ?
-            last(data.filter(clear).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
+            last(data.filter(clear).map(v => new Date(v)).sort((a, b) => new Date().setHours(b.getHours(), b.getMinutes(), b.getSeconds()) -
             new Date().setHours(a.getHours(), a.getMinutes(), a.getSeconds()))) : undefined;
     }
     /**

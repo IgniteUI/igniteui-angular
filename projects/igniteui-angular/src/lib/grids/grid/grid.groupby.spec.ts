@@ -22,7 +22,7 @@ import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
-    configureTestSuite();
+
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
@@ -30,7 +30,7 @@ describe('IgxGrid - GroupBy #grid', () => {
     const DISABLED_CHIP = 'igx-chip--disabled';
     const CHIP = 'igx-chip';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultGridComponent,
@@ -42,7 +42,7 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GridGroupByRowCustomSelectorsComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     const checkGroups = (groupRows, expectedGroupOrder, grExpr?) => {
