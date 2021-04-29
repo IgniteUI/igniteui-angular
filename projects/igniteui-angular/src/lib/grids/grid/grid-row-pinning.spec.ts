@@ -1,5 +1,5 @@
-import { ViewChild, Component, DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { ViewChild, Component, DebugElement, OnInit } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
@@ -22,23 +22,24 @@ describe('Row Pinning #grid', () => {
     const FIXED_ROW_CONTAINER = '.igx-grid__tr--pinned ';
     const CELL_CSS_CLASS = '.igx-grid__td';
     const DEBOUNCE_TIME = 60;
-    configureTestSuite();
+
     let fix;
     let grid: IgxGridComponent;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 GridRowPinningComponent,
                 GridRowPinningWithMRLComponent,
                 GridRowPinningWithMDVComponent,
-                GridRowPinningWithTransactionsComponent
+                GridRowPinningWithTransactionsComponent,
+                GridRowPinningWithInitialPinningComponent
             ],
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe('', () => {
@@ -1241,6 +1242,23 @@ describe('Row Pinning #grid', () => {
             expect(selectedCell.rowIndex).toBe(1);
         });
     });
+
+    describe(' Initial pinning', () => {
+        let gridContent: DebugElement;
+
+        beforeEach(fakeAsync(() => {
+            fix = TestBed.createComponent(GridRowPinningWithInitialPinningComponent);
+            fix.detectChanges();
+            grid = fix.componentInstance.grid1;
+            setupGridScrollDetection(fix, grid);
+            gridContent = GridFunctions.getGridContent(fix);
+        }));
+
+        it('should pin rows on OnInit.', () => {
+            fix.detectChanges();
+            expect(grid.hasPinnedRecords).toBeTrue();
+        });
+    });
 });
 
 @Component({
@@ -1328,3 +1346,27 @@ export class GridRowPinningWithMDVComponent extends GridRowPinningComponent { }
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
 export class GridRowPinningWithTransactionsComponent extends GridRowPinningComponent { }
+
+@Component({
+    template: `
+        <igx-grid
+            #grid1
+            [allowFiltering]="true"
+            [pinning]='pinningConfig'
+            [width]='"800px"'
+            [height]='"500px"'
+            [data]="data"
+            [autoGenerate]="true">
+        </igx-grid>
+    `
+})
+export class GridRowPinningWithInitialPinningComponent implements OnInit {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public grid1: IgxGridComponent;
+
+    public data: any[] = SampleTestData.contactInfoDataFull();
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
+    public ngOnInit(): void {
+        this.grid1.pinRow(this.data[0].ID);
+    }
+}

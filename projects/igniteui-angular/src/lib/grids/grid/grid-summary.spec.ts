@@ -1,5 +1,5 @@
 ﻿import { Component, DebugElement, ViewChild } from '@angular/core';
-import { fakeAsync, TestBed, tick, ComponentFixture, flush, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, ComponentFixture, flush } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
@@ -33,7 +33,7 @@ import { DatePipe } from '@angular/common';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 
 describe('IgxGrid - Summaries #grid', () => {
-    configureTestSuite();
+
     const SUMMARY_CLASS = '.igx-grid-summary';
     const ITEM_CLASS = 'igx-grid-summary__item';
     const SUMMARY_ROW = 'igx-grid-summary-row';
@@ -41,7 +41,7 @@ describe('IgxGrid - Summaries #grid', () => {
     const EMPTY_SUMMARY_CLASS = 'igx-grid-summary--empty';
     const DEBOUNCETIME = 30;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ProductsComponent,
@@ -52,7 +52,7 @@ describe('IgxGrid - Summaries #grid', () => {
                 SummariesGroupByTransactionsComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        });
     }));
 
     describe('Base tests: ', () => {

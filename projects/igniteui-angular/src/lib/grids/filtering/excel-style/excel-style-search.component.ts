@@ -385,8 +385,9 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     condition: this.createCondition('in'),
                     fieldName: this.esf.column.field,
                     ignoreCase: this.esf.column.filteringIgnoreCase,
-                    searchVal: new Set(this.esf.column.dataType === DataType.Date ?
-                        selectedItems.map(d => d.value.toISOString()) :
+                    searchVal: new Set(this.esf.column.dataType === DataType.Date || this.esf.column.dataType === DataType.DateTime ?
+                        selectedItems.map(d => d.value.toISOString()) : this.esf.column.dataType === DataType.Time ?
+                        selectedItems.map(e => e.value.toLocaleTimeString()) :
                         selectedItems.map(e => e.value))
                 });
 

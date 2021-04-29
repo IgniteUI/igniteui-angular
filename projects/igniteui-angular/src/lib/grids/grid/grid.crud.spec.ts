@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IGridEditEventArgs, IGridEditDoneEventArgs } from '../common/events';
@@ -12,19 +12,17 @@ import { first } from 'rxjs/operators';
 const CELL_CSS_CLASS = '.igx-grid__td';
 
 describe('IgxGrid - CRUD operations #grid', () => {
-    configureTestSuite();
-
     let fix;
     let grid;
     let data;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultCRUDGridComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
