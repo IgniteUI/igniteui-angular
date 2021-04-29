@@ -55,7 +55,7 @@ export class GridUpdatesComponent implements OnInit {
     this.data[itemIndex] = { ...item };
 
     // Needed because of OnPush strategy
-    this.grid.cdr.markForCheck();
+    this.grid.markForCheck();
   }
 }
 
