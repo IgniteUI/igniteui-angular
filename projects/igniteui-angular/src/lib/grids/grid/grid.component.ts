@@ -1105,9 +1105,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param keyValue
      */
     public getRowByKey(key: any): RowType {
-        const rec = this.primaryKey ?
+        const rec = this.filteredSortedData ? this.primaryKey ?
             this.filteredSortedData.find(record => record[this.primaryKey] === key) :
-            this.filteredSortedData.find(record => record === key);
+            this.filteredSortedData.find(record => record === key) : undefined;
         const index = this.dataView.indexOf(rec);
         if (index < 0 || index > this.dataView.length) {
             return undefined;
