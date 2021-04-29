@@ -168,7 +168,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             if (document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
                 grid.expandChildren = value;
-                grid.markForCheck();
+                grid.cdr.detectChanges();
             } else {
                 // Else defer the detection on changes when the grid gets into view for performance.
                 grid.updateOnRender = true;
