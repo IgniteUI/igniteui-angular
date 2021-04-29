@@ -476,7 +476,9 @@ export class IgxGridSelectionService {
             this.rowSelection.add(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
-        rowsGroups.forEach(group => this.handleGroupState(group));
+        if (this.grid.groupingExpressions.length) {
+            rowsGroups.forEach(group => this.handleGroupState(group));
+        }
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
     }
@@ -496,8 +498,8 @@ export class IgxGridSelectionService {
             return;
         }
         this.handleParentGroupsState(group.groupParent);
-
     }
+
     public handleGroupState(group: IGroupByRecord) {
         if (group.records.every(x => this.isRowSelected(this.getRowID(x)))) {
             this.selectedGroupByRows.add(group);
@@ -526,7 +528,9 @@ export class IgxGridSelectionService {
             this.rowSelection.delete(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
-        rowsGroups.forEach(group => this.handleGroupState(group));
+        if (this.grid.groupingExpressions.length) {
+            rowsGroups.forEach(group => this.handleGroupState(group));
+        }
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
     }
@@ -556,6 +560,31 @@ export class IgxGridSelectionService {
         const newSelection = this.getSelectedRows().concat(added);
         this.selectedRowsChange.next();
         this.emitRowSelectionEvent(newSelection, added, [], event);
+    }
+
+    public selectGroupByRows(groupRow: IGroupByRecord, select: boolean, event?) {
+        const added: any[] = [];
+        const removed: any[] = [];
+        // Selection
+        if (select) {
+            groupRow.records.forEach(record => {
+                const rowID = this.getRowID(record);
+                if (!this.isRowSelected(rowID)) {
+                    added.push(rowID);
+                }
+            });
+        } else {
+            // Deselection
+            groupRow.records.forEach(record => {
+                const rowID = this.getRowID(record);
+                if (this.isRowSelected(rowID)) {
+                    removed.push(rowID);
+                }
+            });
+        }
+        const newSelection: any[] = this.getSelectedRows().filter(row => removed.indexOf(row) < 0).concat(added);
+
+        this.emitRowSelectionEvent(newSelection, added, removed, event);
     }
 
     public areAllRowSelected(): boolean {

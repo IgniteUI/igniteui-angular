@@ -217,11 +217,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
             return;
         }
         event.stopPropagation();
-        if (this.isSelected) {
-            this.gridSelection.deselectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)));
-        } else {
-            this.gridSelection.selectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)), false);
-        }
+        this.gridSelection.selectGroupByRows(this.groupRow, !this.isSelected, event);
     }
 
     /**
