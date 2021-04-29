@@ -1,5 +1,5 @@
 ﻿import { Component, ViewChild } from '@angular/core';
-import { TestBed, ComponentFixture, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, ComponentFixture, fakeAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridModule, IgxGridCellComponent, IGridCellEventArgs } from './public_api';
@@ -21,14 +21,13 @@ const CELL_BLOCK = '.igx-grid__mrl-block';
 describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule],
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -2442,14 +2441,13 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 describe('IgxGrid Multi Row Layout - navigateTo #grid', () => {
     let fix: ComponentFixture<ColumnLayoutTestComponent>;
 
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnLayoutTestComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
