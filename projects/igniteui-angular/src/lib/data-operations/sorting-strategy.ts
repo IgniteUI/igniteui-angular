@@ -113,8 +113,9 @@ export class IgxSorting implements IGridSortingStrategy {
             const column = grid ? grid.getColumnByName(expressions[level].fieldName) : null;
             const isDate = column?.dataType === DATE_TYPE || column?.dataType === DATE_TIME_TYPE;
             const isTime = column?.dataType === TIME_TYPE;
-            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate);
-            const groupRow: IGroupByRecord = {
+            const groupRow: IGroupByRecord | any = {};
+            const group = this.groupedRecordsByExpression(data, i, expressions[level], isDate, grid, groupRow);
+            Object.assign(groupRow, {
                 expression: expressions[level],
                 level,
                 records: cloneArray(group),
@@ -123,7 +124,7 @@ export class IgxSorting implements IGridSortingStrategy {
                 groups: [],
                 height: grid ? grid.renderedRowHeight : null,
                 column
-            };
+            });
             if (parent) {
                 parent.groups.push(groupRow);
             } else {
@@ -173,16 +174,24 @@ export class IgxSorting implements IGridSortingStrategy {
     private groupedRecordsByExpression(data: any[],
             index: number,
             expression: IGroupingExpression,
-            isDate: boolean = false): any[] {
+            isDate: boolean = false,
+            grid?: GridType,
+            groupRow?: IGroupByRecord): any[] {
         const res = [];
         const key = expression.fieldName;
         const len = data.length;
         const groupval = this.getFieldValue(data[index], key, isDate);
         res.push(data[index]);
+        if (grid && groupRow) {
+            grid.selectionService.rowsDirectParents.set(grid.primaryKey ? data[index][grid.primaryKey] : data[index], groupRow);
+        }
         index++;
         const comparer = expression.groupingComparer || DefaultSortingStrategy.instance().compareValues;
         for (let i = index; i < len; i++) {
             if (comparer(this.getFieldValue(data[i], key, isDate), groupval) === 0) {
+                if (grid && groupRow) {
+                    grid.selectionService.rowsDirectParents.set(grid.primaryKey ? data[i][grid.primaryKey] : data[i], groupRow);
+                }
                 res.push(data[i]);
             } else {
                 break;
@@ -218,7 +227,7 @@ export class IgxSorting implements IGridSortingStrategy {
         }
         // in case of multiple sorting
         for (i = 0; i < dataLen; i++) {
-            gbData = this.groupedRecordsByExpression(data, i, expr, isDate);
+            gbData = this.groupedRecordsByExpression(data, i, expr, isDate, grid);
             gbDataLen = gbData.length;
             if (gbDataLen > 1) {
                 gbData = this.sortDataRecursive(gbData, expressions, expressionIndex + 1, grid);

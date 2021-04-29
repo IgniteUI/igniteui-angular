@@ -217,15 +217,10 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
             return;
         }
         event.stopPropagation();
-        if (this.areAllRowsInTheGroupSelected) {
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.deselectRow(this.getRowID(row), event);
-            });
+        if (this.isSelected) {
+            this.gridSelection.deselectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)));
         } else {
-            // this.gridSelection.selectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)), false);
-            this.groupRow.records.forEach(row => {
-                this.gridSelection.selectRowById(this.getRowID(row), false, event);
-            });
+            this.gridSelection.selectRowsWithNoEvent(this.groupRow.records.map(r => this.getRowID(r)), false);
         }
     }
 
@@ -275,21 +270,14 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public get areAllRowsInTheGroupSelected(): boolean {
+    public get isSelected(): boolean {
         return this.gridSelection.selectedGroupByRows.has(this.groupRow);
     }
 
     /**
      * @hidden @internal
      */
-    public get selectedRowsInTheGroup(): any[] {
-        return this.groupRow.records.filter(rowID => this.gridSelection.filteredSelectedRowIds.indexOf(this.getRowID(rowID)) > -1);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public get groupByRowCheckboxIndeterminateState(): boolean {
+    public get isIndeterminate(): boolean {
         return this.gridSelection.indeterminateGroupByRows.has(this.groupRow);
     }
 
@@ -297,7 +285,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get groupByRowSelectorBaseAriaLabel(): string {
-        const ariaLabel: string = this.areAllRowsInTheGroupSelected ?
+        const ariaLabel: string = this.isSelected ?
             this.grid.resourceStrings.igx_grid_groupByArea_deselect_message : this.grid.resourceStrings.igx_grid_groupByArea_select_message;
         return ariaLabel.replace('{0}', this.groupRow.expression.fieldName).replace('{1}', this.groupRow.value);
     }

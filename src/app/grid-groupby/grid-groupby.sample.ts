@@ -2485,6 +2485,7 @@ export class GridGroupBySampleComponent implements OnInit {
     constructor(@Inject(DisplayDensityToken) public displayDensityOptions: IDisplayDensityOptions) { }
 
     public ngOnInit(): void {
+        this.data2 = this.data2.map((rec, index) => ({...rec, ID: index}));
         this.columns = [
             { dataType: 'string', field: 'ID', width: 100, hidden: true },
             { dataType: 'string', field: 'CompanyName', width: 300, groupable: true },

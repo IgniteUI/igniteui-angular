@@ -60,6 +60,7 @@ export class IgxGridSelectionService {
     public indeterminateRows: Set<any> = new Set<any>();
     public columnSelection: Set<string> = new Set<string>();
 
+    public rowsDirectParents: Map<any, IGroupByRecord> = new Map<any, IGroupByRecord>();
     public selectedGroupByRows: Set<IGroupByRecord> = new Set<IGroupByRecord>();
     public indeterminateGroupByRows: Set<IGroupByRecord> = new Set<IGroupByRecord>();
     /**
@@ -473,19 +474,13 @@ export class IgxGridSelectionService {
         const rowsGroups = new Set<IGroupByRecord>();
         rowIDs.forEach(rowID => {
             this.rowSelection.add(rowID);
-            rowsGroups.add(this.grid.getRowByKey(rowID).parent);
-            // this.grid.groupsRecords.forEach(group => {
-            //     if (this.grid.gridAPI.groupBy_is_row_in_group(group, rowID)) {
-            //         const directGroup = this.getGroupRecord(rowID, group);
-            //         rowsGroups.add(directGroup);
-            //         return;
-            //     }
-            // });
+            rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
         rowsGroups.forEach(group => this.handleGroupState(group));
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
     }
+
     public handleParentGroupsState(group: IGroupByRecord) {
         if (group.groups.every(x => this.selectedGroupByRows.has(x))) {
             this.selectedGroupByRows.add(group);
@@ -524,31 +519,12 @@ export class IgxGridSelectionService {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
-    // public getGroupRecord(rowID: any, group: IGroupByRecord) {
-    //     if (this.grid.gridAPI.groupBy_is_row_in_group(group, rowID) && group.groups.length === 0) {
-    //         return group;
-    //     }
-    //     let childGroupIndex = 0;
-    //     while (childGroupIndex < group.groups.length) {
-    //         if (this.grid.gridAPI.groupBy_is_row_in_group(group.groups[childGroupIndex], rowID)) {
-    //             return this.getGroupRecord(rowID, group.groups[childGroupIndex]);
-    //         } else {
-    //             childGroupIndex++;
-    //         }
-    //     }
-    // }
-
     /** Deselect specified rows. No event is emitted. */
     public deselectRowsWithNoEvent(rowIDs: any[]): void {
         const rowsGroups = new Set<IGroupByRecord>();
         rowIDs.forEach(rowID => {
             this.rowSelection.delete(rowID);
-            this.grid.groupsRecords.forEach(group => {
-                if (this.grid.gridAPI.groupBy_is_row_in_group(group, rowID)) {
-                    rowsGroups.add(group);
-                    return;
-                }
-            });
+            rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
         rowsGroups.forEach(group => this.handleGroupState(group));
         this.allRowsSelected = undefined;
