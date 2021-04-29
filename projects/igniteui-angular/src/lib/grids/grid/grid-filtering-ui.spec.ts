@@ -48,6 +48,8 @@ import { GridSelectionMode, FilterMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import localeFR from '@angular/common/locales/fr';
 import { FormattedValuesFilteringStrategy } from '../../data-operations/filtering-strategy';
+import { IgxCalendarComponent } from '../../calendar/calendar.component';
+import { IgxInputGroupComponent } from '../../input-group/public_api';
 
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
@@ -2180,6 +2182,28 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const rows = GridFunctions.getRows(fix);
             expect(rows.length).toEqual(2);
         }));
+
+        it('Should remove pending chip via its close button #9333', fakeAsync(() => {
+            GridFunctions.clickFilterCellChipUI(fix, 'Downloads');
+            fix.detectChanges();
+
+            GridFunctions.typeValueInFilterRowInput('3', fix);
+            tick(DEBOUNCETIME);
+            const inputGroup = fix.debugElement.query(By.directive(IgxInputGroupComponent));
+            const filterRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
+            const pendingChip = filterRow.queryAll(By.directive(IgxChipComponent))[0];
+            const chipCloseButton = pendingChip.query(By.css('div.igx-chip__remove')).nativeElement;
+
+            chipCloseButton.dispatchEvent(new Event('mousedown'));
+            inputGroup.nativeElement.dispatchEvent(new Event('focusout'));
+            chipCloseButton.dispatchEvent(new Event('mouseup'));
+            chipCloseButton.dispatchEvent(new Event('click'));
+            tick(DEBOUNCETIME);
+            fix.detectChanges();
+
+            const chips = filterRow.queryAll(By.directive(IgxChipComponent));
+            expect(chips.length).toEqual(0, 'No chips should be present');
+        }));
     });
 
     describe('Integration scenarios', () => {
@@ -4056,8 +4080,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
-                [true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702', '1,000'],
+                [true, true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -4846,15 +4870,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const column = grid.getColumnByName('AnotherField');
             expect(column.filteringIgnoreCase).toBeTrue();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
             fix.detectChanges();
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'a', 'Custom'],
+                [true, true, true]);
         }));
 
         it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
@@ -4862,17 +4884,13 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             column.filteringIgnoreCase = false;
             expect(column.filteringIgnoreCase).toBeFalse();
 
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
             tick(100);
             fix.detectChanges();
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-
-            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-            expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
-            expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'a', 'Custom', 'custoM', 'custom'],
+                [true, true, true, true, true]);
         }));
 
         it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
@@ -5244,6 +5262,53 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(4, 'incorrect rendered list items count');
             expect(listItems[2].innerText).toBe('No', 'incorrect list item label');
             expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
+        }));
+
+        it('Should sort items in excel style search correctly', fakeAsync(() => {
+            const data = [
+                {
+                    Downloads: 254,
+                    ID: 1,
+                    ProductName: 'Ignite UI for JavaScript',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2010, 4, 27, 23, 0, 0),
+                    Released: false,
+                    AnotherField: 'BWord'
+                },
+                {
+                    Downloads: 127,
+                    ID: 2,
+                    ProductName: 'NetAdvantage',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2021, 4, 27, 1, 0, 0),
+                    Released: true,
+                    AnotherField: 'bWord'
+                },
+                {
+                    Downloads: 20,
+                    ID: 3,
+                    ProductName: 'Ignite UI for Angular',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2015, 4, 27, 12, 0, 0),
+                    Released: null,
+                    AnotherField: 'aWord'
+                }
+            ];
+            fix.componentInstance.data = data;
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog for string column
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify items order is case INsensitive
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'aWord', 'BWord'],
+                [true, true, true]);
         }));
     });
 
@@ -5719,7 +5784,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             tick(1050);
             fix.detectChanges();
-
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {
@@ -6297,6 +6361,7 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
+    expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
     expect(labelElements.length).toBeGreaterThan(2);
     expect(checkboxElements.length).toBeGreaterThan(2);
     labels.forEach((l, index) => {
