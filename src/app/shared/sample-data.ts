@@ -12,8 +12,9 @@ export const SAMPLE_DATA = [
         Phone: '030-0074321',
         Fax: '030-0076545',
         Employees: 68,
-        DateCreated: new Date(2015, 10, 1, 11, 37, 22),
-        Contract: null
+        DateCreated: undefined,
+        Contract: null,
+        Time: new Date(2017, 10, 1, 11, 47, 0),
     },
     {
         ID: 'ANATR',
@@ -29,7 +30,8 @@ export const SAMPLE_DATA = [
         Fax: '(5) 555-3745',
         Employees: 47,
         DateCreated: new Date(2015, 10, 1, 11, 37, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2017, 10, 1, 12, 17, 1),
     },
     {
         ID: 'ANTON',
@@ -61,7 +63,8 @@ export const SAMPLE_DATA = [
         Fax: '(171) 555-6750',
         Employees: 71,
         DateCreated: new Date(2010, 2, 15, 15, 51, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2017, 11, 11, 11, 11, 1),
     },
     {
         ID: 'BERGS',
@@ -77,7 +80,8 @@ export const SAMPLE_DATA = [
         Fax: '0921-12 34 67',
         Employees: 213,
         DateCreated: new Date(2015, 2, 5, 5, 3, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2018, 9, 14, 14, 4, 3),
     },
     {
         ID: 'BLAUS',
@@ -93,7 +97,8 @@ export const SAMPLE_DATA = [
         Fax: '0621-08924',
         Employees: 347,
         DateCreated: new Date(2016, 7, 1, 19, 22, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2018, 6, 7, 7, 6, 5),
     },
     {
         ID: 'BLONP',
@@ -109,6 +114,7 @@ export const SAMPLE_DATA = [
         Fax: '88.60.15.32',
         Employees: 34,
         DateCreated: new Date(2016, 10, 5, 21, 21, 22),
+        Time: new Date(2018, 6, 17, 7, 6, 5),
         Contract: true
     },
     {
@@ -125,7 +131,8 @@ export const SAMPLE_DATA = [
         Fax: '(91) 555 91 99',
         Employees: 54,
         DateCreated: new Date(2016, 4, 20),
-        Contract: true
+        Contract: true,
+        Time: new Date(2018, 6, 7, 7, 7, 7),
     },
     {
         ID: 'BONAP',
@@ -141,7 +148,8 @@ export const SAMPLE_DATA = [
         Fax: '91.24.45.41',
         Employees: 68,
         DateCreated: new Date(2018, 3, 5, 8, 13, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2018, 6, 7, 9, 19, 5),
     },
     {
         ID: 'BOTTM',
@@ -157,7 +165,8 @@ export const SAMPLE_DATA = [
         Fax: '(604) 555-3745',
         Employees: 107,
         DateCreated: new Date(2017, 6, 10, 7, 33, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2018, 6, 7, 7, 6, 5),
     },
     {
         ID: 'BSBEV',
@@ -173,7 +182,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 197,
         DateCreated: new Date(2017, 10, 4, 12, 42, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2021, 1, 2, 1, 12, 21)
     },
     {
         ID: 'CACTU',
@@ -222,7 +232,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 380,
         DateCreated: new Date(2011, 8, 6, 4, 11, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2023, 7, 12, 4, 42, 21)
     },
     {
         ID: 'COMMI',
@@ -253,7 +264,8 @@ export const SAMPLE_DATA = [
         Fax: '(171) 555-9199',
         Employees: 150,
         DateCreated: new Date(2012, 6, 10, 5, 19, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2020, 9, 6, 14, 40, 20)
     },
     {
         ID: 'DRACD',
@@ -285,7 +297,8 @@ export const SAMPLE_DATA = [
         Fax: '40.67.89.89',
         Employees: 24,
         DateCreated: new Date(2015, 8, 4, 5, 11, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 9, 22, 16, 40, 10)
     },
     {
         ID: 'EASTC',
@@ -301,7 +314,8 @@ export const SAMPLE_DATA = [
         Fax: '(171) 555-3373',
         Employees: 123,
         DateCreated: new Date(2013, 4, 18, 15, 39, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2020, 5, 4, 17, 30, 15)
     },
     {
         ID: 'ERNSH',
@@ -318,7 +332,8 @@ export const SAMPLE_DATA = [
         Fax: '7675-3426',
         Employees: 9,
         DateCreated: new Date(2013, 7, 9, 15, 31, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 4, 7, 17, 30, 15)
     },
     {
         ID: 'FAMIA',
@@ -334,7 +349,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 67,
         DateCreated: new Date(2015, 6, 17, 16, 22, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 5, 17, 17, 45, 55)
     },
     {
         ID: 'FISSA',
@@ -350,7 +366,8 @@ export const SAMPLE_DATA = [
         Fax: '(91) 555 55 93',
         Employees: 87,
         DateCreated: new Date(2015, 6, 17, 14, 1, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2020, 3, 7, 15, 41, 27)
     },
     {
         ID: 'FOLIG',
@@ -366,7 +383,8 @@ export const SAMPLE_DATA = [
         Fax: '20.16.10.17',
         Employees: 37,
         DateCreated: new Date(2014, 5, 14, 15, 31, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2020, 8, 16, 16, 30, 15)
     },
     {
         ID: 'FOLKO',
@@ -382,7 +400,8 @@ export const SAMPLE_DATA = [
         Fax: null,
         Employees: 42,
         DateCreated: new Date(2011, 3, 21, 17, 11, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 8, 17, 10, 30, 15)
     },
     {
         ID: 'FRANK',
@@ -398,7 +417,8 @@ export const SAMPLE_DATA = [
         Fax: '089-0877451',
         Employees: 17,
         DateCreated: new Date(2015, 6, 17, 14, 41, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 8, 7, 14, 14, 19)
     },
     {
         ID: 'FRANR',
@@ -414,7 +434,8 @@ export const SAMPLE_DATA = [
         Fax: '40.32.21.20',
         Employees: 20,
         DateCreated: new Date(2011, 7, 14, 15, 21, 22),
-        Contract: true
+        Contract: true,
+        Time: new Date(2020, 6, 7, 20, 14, 15)
     },
     {
         ID: 'FRANS',
@@ -429,7 +450,8 @@ export const SAMPLE_DATA = [
         Fax: '011-4988261',
         Employees: 5,
         DateCreated: new Date(2012, 8, 3, 16, 31, 22),
-        Contract: false
+        Contract: false,
+        Time: new Date(2020, 6, 7, 22, 4, 5)
     }
 ];
 
