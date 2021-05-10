@@ -610,6 +610,7 @@ export class IgxGridSelectionService {
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
         this.pointerEventInGridBody = true;
+        document.body.addEventListener('pointerup', this.pointerOriginHandler);
 
         // No ctrl key pressed - no multiple selection
         if (!ctrl) {
@@ -678,7 +679,6 @@ export class IgxGridSelectionService {
     }
 
     public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
-        this.pointerEventInGridBody = false;
         if (this.dragMode) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
@@ -697,7 +697,9 @@ export class IgxGridSelectionService {
             return true;
         }
 
-        this.add(node);
+        if (this.pointerEventInGridBody) {
+            this.add(node);
+        }
         return false;
     }
 
@@ -1073,6 +1075,11 @@ export class IgxGridSelectionService {
     private isRowDeleted(rowID): boolean {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
     }
+
+    private pointerOriginHandler = () => {
+        this.pointerEventInGridBody = false;
+        document.body.removeEventListener('pointerup', this.pointerOriginHandler);
+    };
 }
 
 export const isChromium = (): boolean => (/Chrom|e?ium/g.test(navigator.userAgent) ||
