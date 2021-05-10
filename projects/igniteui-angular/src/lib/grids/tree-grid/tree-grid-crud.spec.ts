@@ -352,7 +352,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
             it('should support updating a child row through the rowObject API', () => {
                 verifyCellValue(fix, 6, 'Name', 'Peter Lewis');
                 verifyRowsCount(fix, 3, 10);
-                
+
                 const newRow = {
                     ID: 888,
                     Name: 'New Name',
@@ -362,7 +362,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 };
                 treeGrid.getRowByKey(299).update(newRow);
                 fix.detectChanges();
-                
+
                 verifyCellValue(fix, 6, 'Name', 'New Name');
                 verifyRowsCount(fix, 3, 10);
             });
@@ -543,7 +543,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 verifyCellValue(fix, 3, 'Name', 'Debra Morton');
                 verifyRowsCount(fix, 8, 8);
                 const newCellValue = 'Michael Myers';
-            
+
                 treeGrid.getCellByKey(7, 'Name').update(newCellValue);
                 fix.detectChanges();
 

@@ -42,7 +42,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         }
         fix.detectChanges();
 
-        expectedLength = 11
+        expectedLength = 11;
         expect(grid.data.length).toEqual(expectedLength);
         expect(grid.rowList.length).toEqual(expectedLength);
     });
@@ -77,7 +77,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
         grid.deleteRow(1);
         fix.detectChanges();
 
-        let expectedLength = 0
+        let expectedLength = 0;
         expect(grid.data.length).toEqual(expectedLength);
         expect(data.length).toEqual(expectedLength);
         expect(grid.rowList.length).toEqual(expectedLength);

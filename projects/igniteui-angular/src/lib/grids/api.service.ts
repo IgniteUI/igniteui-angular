@@ -158,7 +158,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         return args;
     }
 
-    // TODO: CRUD refactor to not emit editing evts. 
+    // TODO: CRUD refactor to not emit editing evts.
     public update_row(row: IgxRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
@@ -297,6 +297,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         const grid = this.grid;
         const data = this.get_all_data();
         if (grid.primaryKey) {
+            // eslint-disable-next-line @typescript-eslint/no-shadow
             index = data.map((record) => record[grid.primaryKey]).indexOf(rowId);
         } else {
             index = data.indexOf(rowId);

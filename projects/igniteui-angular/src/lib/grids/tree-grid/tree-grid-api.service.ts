@@ -82,7 +82,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         return column.dataType === DataType.Number && column.visibleIndex !== 0;
     }
 
-    public deleteRowById(rowID: any) {
+    public deleteRowById(rowID: any): any {
         const treeGrid = this.grid;
         const flatDataWithCascadeOnDeleteAndTransactions =
             treeGrid.primaryKey &&
@@ -94,11 +94,13 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
             treeGrid.transactions.startPending();
         }
 
-        super.deleteRowById(rowID);
+        const record = super.deleteRowById(rowID);
 
         if (flatDataWithCascadeOnDeleteAndTransactions) {
             treeGrid.transactions.endPending(true);
         }
+
+        return record;
     }
 
     public deleteRowFromData(rowID: any, index: number) {

@@ -177,7 +177,7 @@ export class IgxCellCrudState {
 
     public updateAddCell(exit: boolean, event?: Event) {
         if (!this.cell) {
-            return
+            return;
         }
 
         if (isEqual(this.cell.value, this.cell.editValue)) {
@@ -310,7 +310,6 @@ export class IgxRowCrudState extends IgxCellCrudState {
                 return args;
             }
         }
-        
 
         args = this.endRowTransaction(commit, event);
 
@@ -574,8 +573,9 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return canceled;
         }
 
+        let args;
         if (commit) {
-            const args = this.updateCell(true, event);
+            args = this.updateCell(true, event);
             if (args && args.cancel) {
                 return args.cancel;
             }
@@ -583,7 +583,7 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             this.exitCellEdit(event);
         }
 
-        const args = this.updateRow(commit, event);
+        args = this.updateRow(commit, event);
         this.rowEditingBlocked = args.cancel;
         if (args.cancel) {
             return true;

@@ -2690,7 +2690,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public rowAddedNotifier = new Subject<IRowDataEventArgs>();
-    
+
     /** @hidden @internal */
     public rowDeletedNotifier = new Subject<IRowDataEventArgs>();
 
@@ -4447,7 +4447,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (index < 0) {
                     return;
                 }
-                
+
                 const id = {
                     rowID: rowSelector,
                     columnID: col.index,
