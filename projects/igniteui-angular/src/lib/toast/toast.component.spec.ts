@@ -95,12 +95,17 @@ describe('IgxToast', () => {
         expect(toast.onClosed.emit).toHaveBeenCalled();
     }));
 
-    it('visibility is updated by the toggle() method', () => {
+    it('visibility is updated by the toggle() method and isVisible setter', fakeAsync(() => {
         expect(toast.isVisible).toBeFalse();
         toast.toggle();
-        fixture.detectChanges();
         expect(toast.isVisible).toBeTrue();
-    });
+        toast.isVisible = false;
+        expect(toast.collapsed).toBeFalse();
+        toast.isVisible = true;
+        // Opening happens in a RAF
+        tick(4000);
+        expect(toast.collapsed).toBeTrue();
+    }));
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;
