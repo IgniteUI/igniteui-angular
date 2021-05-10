@@ -146,6 +146,13 @@ All notable changes for each version of this project will be documented in this 
 - `IgxLinearProgressBarComponent`
     - **Breaking Change** - The following outputs are renamed:
         - `onProgressChanged` to `progressChanged`
+- `IgxToast`
+    - **Breaking Change** - The following deprecated methods and outputs have been removed
+        - Outputs `showing`, `shown`, `hiding`, `hidden`. Use `onOpening`, `onOpened`, `onClosing`, `onClosed` instead.
+        - Methods `show`, `hide`. Use `open`, `close` instead.
+- `IgxSnackbar`
+    - **Breaking Change** - The following deprecated methods have been removed
+        - `show`, `hide`. Use `open`, `close` instead.
 
 
 ### New Features
