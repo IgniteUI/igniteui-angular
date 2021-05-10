@@ -60,6 +60,15 @@ export abstract class DateTimeUtil {
             return null;
         }
 
+        const amPm = dateTimeParts.find(p => p.type === DatePart.AmPm);
+        if (amPm) {
+            parts[DatePart.Hours] %= 12;
+        }
+
+        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
+            parts[DatePart.Hours] += 12;
+        }
+
         return new Date(
             parts[DatePart.Year] || 2000,
             parts[DatePart.Month] || 0,
@@ -374,15 +383,16 @@ export abstract class DateTimeUtil {
      */
     public static validateMinMax(value: Date, minValue: Date | string, maxValue: Date | string,
         includeTime = true, includeDate = true): ValidationErrors {
+        if (!value) {
+            return null;
+        }
         const errors = {};
         const min = DateTimeUtil.isValidDate(minValue) ? minValue : DateTimeUtil.parseIsoDate(minValue);
         const max = DateTimeUtil.isValidDate(maxValue) ? maxValue : DateTimeUtil.parseIsoDate(maxValue);
-        if ((min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))
-            || (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate))) {
+        if (min && value && DateTimeUtil.lessThanMinValue(value, min, includeTime, includeDate)) {
             Object.assign(errors, { minValue: true });
         }
-        if ((max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))
-            || (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate))) {
+        if (max && value && DateTimeUtil.greaterThanMaxValue(value, max, includeTime, includeDate)) {
             Object.assign(errors, { maxValue: true });
         }
 

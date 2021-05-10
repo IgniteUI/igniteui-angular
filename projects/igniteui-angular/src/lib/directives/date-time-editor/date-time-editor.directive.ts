@@ -11,7 +11,7 @@ import {
 import { DOCUMENT } from '@angular/common';
 import { IgxMaskDirective } from '../mask/mask.directive';
 import { MaskParsingService } from '../mask/mask-parsing.service';
-import { PlatformUtil } from '../../core/utils';
+import { isDate, PlatformUtil } from '../../core/utils';
 import { IgxDateTimeEditorEventArgs, DatePartInfo, DatePart } from './date-time-editor.common';
 import { noop } from 'rxjs';
 import { DatePartDeltas } from './date-time-editor.common';
@@ -300,12 +300,18 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   public ngOnInit(): void {
     this.updateDefaultFormat();
+    this.setMask(this.inputFormat);
+    this.updateMask();
   }
 
   /** @hidden @internal */
   public ngOnChanges(changes: SimpleChanges) {
     if (changes['locale'] && !changes['locale'].firstChange) {
       this.updateDefaultFormat();
+      if (!this._inputFormat) {
+        this.setMask(this.inputFormat);
+        this.updateMask();
+      }
     }
     if (changes['inputFormat'] && !changes['inputFormat'].firstChange) {
       this.updateMask();
@@ -360,16 +366,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   /** @hidden @internal */
   public validate(control: AbstractControl): ValidationErrors | null {
-    if (!this.inputIsComplete() || !control.value) {
+    if (!control.value) {
+      return null;
+    }
+    // InvalidDate handling
+    if (isDate(control.value) && !DateTimeUtil.isValidDate(control.value)) {
       return { value: true };
     }
 
     let errors = {};
-    const valueDate = DateTimeUtil.isValidDate(control.value) ? control.value : this.parseDate(control.value);
+    const value = DateTimeUtil.isValidDate(control.value) ? control.value : DateTimeUtil.parseIsoDate(control.value);
     const minValueDate = DateTimeUtil.isValidDate(this.minValue) ? this.minValue : this.parseDate(this.minValue);
     const maxValueDate = DateTimeUtil.isValidDate(this.maxValue) ? this.maxValue : this.parseDate(this.maxValue);
     if (minValueDate || maxValueDate) {
-      errors = DateTimeUtil.validateMinMax(valueDate,
+      errors = DateTimeUtil.validateMinMax(value,
         minValueDate, maxValueDate,
         this.hasTimeParts, this.hasDateParts);
     }
@@ -471,20 +481,9 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
 
   private updateDefaultFormat(): void {
     this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
-    if (!this._inputFormat) {
-      this.setMask(this.inputFormat);
-      this.updateMask();
-    }
   }
 
   private updateMask(): void {
-    if (!this.dateValue || !DateTimeUtil.isValidDate(this.dateValue)) {
-      if (!this._isFocused) {
-        this.inputValue = '';
-      }
-      return;
-    }
-
     if (this._isFocused) {
       // store the cursor position as it will be moved during masking
       const cursor = this.selectionEnd;
@@ -612,7 +611,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   private setDateValue(value: Date | string) {
     this._dateValue = DateTimeUtil.isValidDate(value)
       ? value
-      : this.parseDate(value);
+      : DateTimeUtil.parseIsoDate(value);
   }
 
   private updateValue(newDate: Date): void {
@@ -620,11 +619,11 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.value = newDate;
 
     // TODO: should we emit events here?
-    if (this.dateValue && !this.valueInRange(this.dateValue)) {
-      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
-    }
     if (this.inputIsComplete() || this.inputValue === this.emptyMask) {
       this.valueChange.emit(this.dateValue);
+    }
+    if (this.dateValue && !this.valueInRange(this.dateValue)) {
+      this.validationFailed.emit({ oldValue: this._oldValue, newValue: this.dateValue, userInput: this.inputValue });
     }
   }
 
