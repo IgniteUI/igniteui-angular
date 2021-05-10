@@ -925,7 +925,11 @@
     }
 
     %cal-value--inactive--single--hover {
-        color: --var($theme, 'inactive-text-color');
+        @if $bootstrap-theme {
+            color: --var($theme, 'date-selected-text-color');
+        } @else {
+            color: --var($theme, 'inactive-text-color');
+        }
     }
 
     %cal-value--special {
@@ -1024,32 +1028,22 @@
     }
 
     %cal-value--range%cal-value--inactive%cal-value--selected {
-        background: transparent !important;
-
         %cal-value-content {
-            color: --var($theme, 'date-disabled-text-color');
-            background: transparent !important;
+            color: --var($theme, 'date-selected-text-color');
+        }
+
+        &:focus,
+        &:hover {
+            %cal-value-content {
+                color: --var($theme, 'date-selected-text-color');
+            }
         }
     }
 
     %cal-value--range%cal-value--inactive%cal-value--selected%cal-value--single {
-        background: transparent !important;
-
         %cal-value-content {
             color: --var($theme, 'date-selected-text-color');
             background: --var($theme, 'date-selected-background') !important;
-        }
-    }
-
-    %cal-value--inactive%cal-value--selected%cal-value--first {
-        &::after {
-            background: transparent !important;
-        }
-    }
-
-    %cal-value--inactive%cal-value--selected%cal-value--last {
-        &::before {
-            background: transparent !important;
         }
     }
 
