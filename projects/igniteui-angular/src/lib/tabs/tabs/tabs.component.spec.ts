@@ -1242,6 +1242,7 @@ describe('IgxTabs', () => {
         });
 
         it('should hide scroll buttons if visible when alignment is set to "justify".', async () => {
+            pending('Known issue - postponed!');
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
 
