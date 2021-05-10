@@ -898,7 +898,7 @@ export class IgxGridSelectionService {
     private pointerOriginHandler = () => {
         this.pointerEventInGridBody = false;
         document.body.removeEventListener('pointerup', this.pointerOriginHandler);
-    };
+    }
 
     /** Returns array of the selected columns fields. */
     getSelectedColumns(): Array<any> {
