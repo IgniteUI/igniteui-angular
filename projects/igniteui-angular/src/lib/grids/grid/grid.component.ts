@@ -1023,6 +1023,18 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
         });
+        this.filteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.groupingExpressions.length) {
+                const leafRowsDirectGroups = new Set<any>();
+                this.selectionService.rowsDirectParents.forEach(record => {
+                    if (record) {
+                        leafRowsDirectGroups.add(record);
+                    }
+                });
+                leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
+                this.selectionService.selectedRowsChange.next();
+            }
+        });
     }
 
     /**
