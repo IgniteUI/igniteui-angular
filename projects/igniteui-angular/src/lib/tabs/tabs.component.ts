@@ -22,7 +22,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabsGroupComponent } from './tabs-group.component';
-import { IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabItemTemplateDirective } from './tabs.directives';
+import { IgxTabItemTemplateDirective } from './tabs.directives';
 import { IgxTabsBase, IgxTabItemBase } from './tabs.common';
 import ResizeObserver from 'resize-observer-polyfill';
 import { mkenum, PlatformUtil } from '../core/utils';
@@ -32,6 +32,15 @@ export const IgxTabsType = mkenum({
     CONTENTFIT: 'contentfit'
 });
 export type IgxTabsType = (typeof IgxTabsType)[keyof typeof IgxTabsType];
+
+
+/** @hidden */
+enum TabScrollButtonStyle {
+    Visible = 'visible',
+    Hidden = 'hidden',
+    NotDisplayed = 'not_displayed'
+}
+
 
 let NEXT_TABS_ID = 0;
 
@@ -188,6 +197,18 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     public viewPort: ElementRef;
 
     /**
+     * @hidden
+     */
+    @ViewChild('leftButton')
+    public leftButton: ElementRef<HTMLElement>;
+
+    /**
+     * @hidden
+     */
+    @ViewChild('rightButton')
+    public rightButton: ElementRef<HTMLElement>;
+
+    /**
      * Provides an observable collection of all `IgxTabItemComponent`s.
      * ```typescript
      * const tabItems = this.myTabComponent.viewTabs;
@@ -320,6 +341,7 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
         this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.updateScrollButtons();
     }
 
     /**
@@ -365,9 +387,13 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
                         const newTab = this.tabs.toArray()[this._selectedIndex];
                         this.transformContentAnimation(newTab, 0);
                     }
+                    this.updateScrollButtons();
+
                 });
 
                 this._resizeObserver.observe(this.tabsContainer.nativeElement);
+                this._resizeObserver.observe(this.headerContainer.nativeElement);
+                this._resizeObserver.observe(this.viewPort.nativeElement);
             });
         }
 
@@ -545,6 +571,73 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             this.scrollElement(tabNativeElement, true);
         }
     }
+
+    private updateScrollButtons() {
+        const itemsContainerWidth = this.getTabItemsContainerWidth();
+
+        const leftButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.leftButton.nativeElement, leftButtonStyle);
+
+        const rightButtonStyle = this.resolveRightScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.rightButton.nativeElement, rightButtonStyle);
+    }
+
+    private setScrollButtonStyle(button: HTMLElement, buttonStyle: TabScrollButtonStyle) {
+        if (buttonStyle === TabScrollButtonStyle.Visible) {
+            button.style.visibility = 'visible';
+            button.style.display = '';
+        } else if (buttonStyle === TabScrollButtonStyle.Hidden) {
+            button.style.visibility = 'hidden';
+            button.style.display = '';
+        } else if (buttonStyle === TabScrollButtonStyle.NotDisplayed) {
+            button.style.display = 'none';
+        }
+    }
+    private resolveLeftScrollButtonStyle(itemsContainerWidth: number): TabScrollButtonStyle {
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const offset = this.offset;
+
+        if (offset === 0) {
+            // Fix for IE 11, a difference is accumulated from the widths calculations.
+            if (itemsContainerWidth - headerContainerWidth <= 1) {
+                return TabScrollButtonStyle.NotDisplayed;
+            }
+            return TabScrollButtonStyle.Hidden;
+        } else {
+            return TabScrollButtonStyle.Visible;
+        }
+    }
+
+    private resolveRightScrollButtonStyle(itemsContainerWidth: number): TabScrollButtonStyle {
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const offset = this.offset;
+        const total = offset + viewPortWidth;
+
+        // Fix for IE 11, a difference is accumulated from the widths calculations.
+        if (itemsContainerWidth - headerContainerWidth <= 1 && offset === 0) {
+            return TabScrollButtonStyle.NotDisplayed;
+        }
+
+        if (itemsContainerWidth > total) {
+            return TabScrollButtonStyle.Visible;
+        } else {
+            return TabScrollButtonStyle.Hidden;
+        }
+    }
+
+    private getTabItemsContainerWidth() {
+        // We use this hacky way to get the width of the itemsContainer,
+        // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
+        const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
+        let itemsContainerWidth = 0;
+        if (itemsContainerChildrenCount > 1) {
+            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+        }
+
+        return itemsContainerWidth;
+    }
 }
 
 /**
@@ -554,15 +647,11 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
     declarations: [IgxTabsComponent,
         IgxTabsGroupComponent,
         IgxTabItemComponent,
-        IgxTabItemTemplateDirective,
-        IgxRightButtonStyleDirective,
-        IgxLeftButtonStyleDirective],
+        IgxTabItemTemplateDirective],
     exports: [IgxTabsComponent,
         IgxTabsGroupComponent,
         IgxTabItemComponent,
-        IgxTabItemTemplateDirective,
-        IgxRightButtonStyleDirective,
-        IgxLeftButtonStyleDirective],
+        IgxTabItemTemplateDirective],
     imports: [CommonModule, IgxBadgeModule, IgxIconModule, IgxRippleModule]
 })
 
