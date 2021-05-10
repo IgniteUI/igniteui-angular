@@ -121,5 +121,6 @@ export { ITimePickerResourceStrings } from './lib/core/i18n/time-picker-resource
 export { IDatePickerResourceStrings } from './lib/core/i18n/date-picker-resources';
 export { IDateRangePickerResourceStrings } from './lib/core/i18n/date-range-picker-resources';
 export { IListResourceStrings } from './lib/core/i18n/list-resources';
+export { ITreeResourceStrings } from './lib/core/i18n/tree-resources';
 export { PickerInteractionMode } from './lib/date-common/types';
 export { SplitterType } from './lib/splitter/splitter.component';

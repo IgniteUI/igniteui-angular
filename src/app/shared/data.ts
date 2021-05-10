@@ -36,7 +36,7 @@ export const data = [{
     ReorderLevel: 25,
     Discontinued: false,
     OrderDate: new Date('2006-03-17').toISOString(),
-    OrderDate2: new Date('2006-03-17').toISOString()
+    OrderDate2: new Date(1991, 2, 12, 15, 40, 50).toISOString()
 }, {
     ProductID: 4,
     ProductName: 'Chef Antons Cajun Seasoning',
@@ -49,7 +49,7 @@ export const data = [{
     ReorderLevel: 0,
     Discontinued: false,
     OrderDate: new Date('2020-03-17'),
-    OrderDate2: new Date('2020-03-17')
+    OrderDate2:new Date(2020, 2, 12, 14, 4, 50).toISOString()
 }, {
     ProductID: 5,
     ProductName: 'Chef Antons Gumbo Mix',

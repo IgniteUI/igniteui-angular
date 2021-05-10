@@ -8,6 +8,7 @@ All notable changes for each version of this project will be documented in this 
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - **Breaking Change** - The `locale` and `pipeArgs` parameters are removed from the `operate` method exposed by the `IgxNumberSummaryOperand`, `IgxDateSummaryOperand`, `IgxCurrencySummaryOperand` and `IgxPercentSummaryOperand`. They are now set in the `igx-grid-summary-cell` template. To change the locale and format setting of the `igx-grid-summary-cell` the user can use the new `summaryFormatter` property of the `IgxColumnComponent`.
     - **Breaking Change** - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid` events are renamed as follows:
+        - `onCellClick` -> `cellClick`
         - `onScroll` -> `gridScroll`
         - `onSelection` -> `selected`
         - `onRowSelectionChange` -> `rowSelected`
@@ -77,7 +78,7 @@ All notable changes for each version of this project will be documented in this 
       ```
     - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
-    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`. 
+    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`.
         ```html
             <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
                 <label igxLabel>Date: </label>
@@ -135,6 +136,16 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
+- `IgxSliderComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onValueChange` to `valueChange`
+        - `onValueChanged` to `dragFinished`
+- `IgxCircularProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
+- `IgxLinearProgressBarComponent`
+    - **Breaking Change** - The following outputs are renamed:
+        - `onProgressChanged` to `progressChanged`
 
 
 ### New Features
@@ -189,6 +200,14 @@ All notable changes for each version of this project will be documented in this 
                 [summaryFormatter]="dateSummaryFormat">
             </igx-column>
         ```
+    - Two new column types are introduced `dateTime` and `time`. In order to operate with them is necessary to set the column property dataType to `'dateTime'` or `'time'`.
+
+        ```html
+        <igx-column field="OrderDate" header="Order Date"  [dataType]="'dateTime'" >
+        </igx-column>
+        <igx-column field="ClosingTime" header="Closing time"  [dataType]="'time'" >
+        </igx-column>
+        ```
     - **Behavioral Change** - `Column Autosize` feature now does not handle templated headers where the first level children are sized based on parent like default `div` and etc. Autosizing for such headers will not result in change.
     - **Behavioral Change** - Calling `autosize` through the `IgxColumnComponent` API now takes into consideration the `minWidth` and `maxWidth` of the column.
     - A new `IgxColumnComponent` input property is exposed called `autosizeHeader`, which if false, allows the autosizing to ignore the header cell and autosize only based on content cells.
@@ -196,7 +215,7 @@ All notable changes for each version of this project will be documented in this 
     - The `tabAlignment` property of the `IgxTabs` component replaces the `type` property and enables you to set the tab alignment to `start`, `center`, `end` and `justify`.
     - The `igx-tab-header` supports `igx-prefix` and `igx-suffix` directives in its `ng-content`.
 - `IgxBottomNav`
-    - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled. 
+    - The `IgxBottomNav` component exposes `disableAnimations` property which determines whether the contents should animate when switching the selected item. The property is set to `true` by default which means that the animations are disabled.
 - `IgxOverlayService`
     - `detach` and `detachAll` methods are added to `IgxOverlayService`. Calling `detach` will remove all the elements generated for the related overlay, as well as clean up all related resources. Calling `detachAll` will remove all elements generated by any call to `IgxOverlay` `attach`, and will clean up all related resources. _Note: calling `hide` or `hideAll` will not clean generated by the service elements and will not clean up related resources._
 - `IgxCombo`
@@ -215,7 +234,7 @@ All notable changes for each version of this project will be documented in this 
         }
     }
     ```
-    
+
 ### Themes:
 - Breaking Changes:
     - `IgxButton` theme has been simplified. The number of theme params (`igx-button-theme`) has been reduced significantly and no longer includes prefixed parameters (`flat-*`, `raised-*`, etc.). See the migration guide to update existing button themes. Updates performed with `ng update` will migrate existing button themes but some additional tweaking may be required to account for the abscense of prefixed params.
@@ -227,18 +246,6 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
-
-### General:
-- `IgxSliderComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onValueChange` to `valueChange`
-        - `onValueChanged` to `dragFinished`
-- `IgxCircularProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
-- `IgxLinearProgressBarComponent`
-    - **Breaking Change** - The following outputs are renamed:
-        - `onProgressChanged` to `progressChanged`
 
 ## 11.1.1
 

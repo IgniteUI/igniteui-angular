@@ -87,10 +87,8 @@
         selector: $selector,
         palette: $palette,
         elevations: $elevations,
-
         background-color: $background-color,
         title-text-color: $title-text-color,
-
         item-text-color: $item-text-color,
         dropdown-background: $dropdown-background,
         item-hover-background: $item-hover-background,
@@ -125,6 +123,12 @@
         compact: 0 rem(8px) 0 rem(12px)
     );
 
+    $grid-toolbar-spacer: (
+        comfortable: rem(16px),
+        cosy: rem(12px),
+        compact: rem(8px)
+    );
+
     $grid-toolbar-padding-rtl: (
         comfortable: 0 rem(24px) 0 rem(16px),
         cosy: 0 rem(16px) 0 rem(12px),
@@ -149,16 +153,24 @@
         min-height: map-get($grid-toolbar-height, 'comfortable');
         position: relative;
 
-        @include if-ltr(){
+        @include if-ltr() {
             padding: map-get($grid-toolbar-padding, 'comfortable');
         }
 
-        @include if-rtl(){
+        @include if-rtl() {
             padding: map-get($grid-toolbar-padding-rtl, 'comfortable');
         }
 
         [igxButton] {
-            margin-#{$left}: rem(16);
+            margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
+
+            &:first-of-type {
+                margin-#{$left}: 0;
+            }
+
+            &:last-of-type {
+                margin-#{$right}: 0;
+            }
         }
 
         &[dir='rtl'] {
@@ -167,6 +179,10 @@
             [igxButton] {
                 margin-#{$left}: 0;
                 margin-#{$right}: rem(8);
+
+                &:last-child {
+                    margin-#{$right}: 0;
+                }
             }
         }
     }
@@ -182,7 +198,7 @@
         }
 
         [igxButton] {
-            margin-#{$left}: rem(12);
+            margin-#{$left}: map-get($grid-toolbar-spacer, 'cosy');
         }
     }
 
@@ -197,7 +213,7 @@
         }
 
         [igxButton] {
-            margin-#{$left}: rem(8);
+            margin-#{$left}: map-get($grid-toolbar-spacer, 'compact');
         }
     }
 
@@ -206,17 +222,46 @@
         flex: 1 1 auto;
         @include ellipsis();
         max-width: 40ch;
+        margin-#{$right}: map-get($grid-toolbar-spacer, 'comfortable')
     }
 
     %igx-grid-toolbar__custom-content {
         display: flex;
-        flex-flow: row wrap;
+        flex-wrap: wrap;
+        flex-grow: 1;
+        justify-content: flex-end;
     }
 
     %igx-grid-toolbar__actions {
         display: flex;
         align-items: center;
         flex-flow: row wrap;
+        margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
+
+        > * {
+            display: flex;
+            margin-#{$left}: map-get($grid-toolbar-spacer, 'comfortable');
+
+            &:first-child {
+                margin-#{$left}: 0;
+            }
+        }
+    }
+
+    %igx-grid-toolbar__actions,
+    %igx-grid-toolbar__title,
+    %igx-grid-toolbar__custom-content {
+        &:empty {
+            display: none;
+        }
+    }
+
+    %igx-grid-toolbar__title:empty + %igx-grid-toolbar__custom-content:empty {
+        + %igx-grid-toolbar__actions {
+            width: 100%;
+            margin-left: 0;
+            justify-content: flex-end;
+        }
     }
 
     %igx-grid-toolbar__progress-bar {
