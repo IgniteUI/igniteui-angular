@@ -1,5 +1,5 @@
 import { Component, DebugElement, TemplateRef, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, waitForAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxGridComponent } from './grid.component';
 import { IgxGridModule } from './public_api';
@@ -11,7 +11,8 @@ import {
     DynamicColumnsComponent,
     GridAddColumnComponent,
     IgxGridCurrencyColumnComponent,
-    IgxGridPercentColumnComponent
+    IgxGridPercentColumnComponent,
+    IgxGridDateTimeColumnComponent
 } from '../../test-utils/grid-samples.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -20,14 +21,14 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { getLocaleCurrencySymbol } from '@angular/common';
 import { GridFunctions, GridSummaryFunctions } from '../../test-utils/grid-functions.spec';
+import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/date-time-editor.directive';
 
 describe('IgxGrid - Column properties #grid', () => {
-    configureTestSuite();
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnsFromIterableComponent,
@@ -39,11 +40,11 @@ describe('IgxGrid - Column properties #grid', () => {
                 DynamicColumnsComponent,
                 GridAddColumnComponent,
                 IgxGridCurrencyColumnComponent,
-                IgxGridPercentColumnComponent
+                IgxGridPercentColumnComponent,
+                IgxGridDateTimeColumnComponent
             ],
             imports: [IgxGridModule, NoopAnimationsModule]
-        })
-            .compileComponents();
+        });
     }));
 
     it('should correctly initialize column templates', () => {
@@ -747,6 +748,322 @@ describe('IgxGrid - Column properties #grid', () => {
             expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('-070.000%');
             expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('002.700%');
         }));
+
+    });
+
+    describe('DateTime and Time column tests', () => {
+        it('should display correctly the data when column dataType is dateTime #ivy', () => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            let orderDateColumn = grid.getColumnByName('OrderDate');
+
+            expect(orderDateColumn.cells[0].nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
+            expect(orderDateColumn.cells[5].nativeElement.innerText).toEqual('Oct 30, 2019, 4:17:27 PM');
+            expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('Aug 3, 2021, 3:15:00 PM');
+
+            orderDateColumn.pipeArgs = { format: 'short' };
+            fix.detectChanges();
+
+            grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            grid.clearSort();
+            fix.detectChanges();
+
+            orderDateColumn = grid.getColumnByName('OrderDate');
+            expect(orderDateColumn.cells[0].nativeElement.innerText).toEqual('10/1/15, 11:37 AM');
+            expect(orderDateColumn.cells[5].nativeElement.innerText).toEqual('10/30/19, 4:17 PM');
+            expect(orderDateColumn.cells[8].nativeElement.innerText).toEqual('8/3/21, 3:15 PM');
+        });
+
+        it('should display correctly the data when column dataType is time #ivy', () => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            let receiveTime = grid.getColumnByName('ReceiveTime');
+
+            expect(receiveTime.cells[0].nativeElement.innerText).toEqual('8:37:11 AM');
+            expect(receiveTime.cells[5].nativeElement.innerText).toEqual('12:47:42 PM');
+
+            receiveTime.pipeArgs = { format: 'shortTime' };
+            fix.detectChanges();
+
+            grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            grid.clearSort();
+            fix.detectChanges();
+
+            receiveTime = grid.getColumnByName('ReceiveTime');
+            expect(receiveTime.cells[0].nativeElement.innerText).toEqual('8:37 AM');
+            expect(receiveTime.cells[5].nativeElement.innerText).toEqual('12:47 PM');
+        });
+
+        it('DateTime: should preview the dateTime value correctly when cell is in edit mode correctly', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const orderColumn = grid.getColumnByName('OrderDate');
+            orderColumn.editable = true;
+            fix.detectChanges();
+
+            const firstCell = orderColumn.cells[0];
+
+            expect(firstCell.nativeElement.innerText).toEqual('Oct 1, 2015, 11:37:22 AM');
+
+            firstCell.setEditMode(true);
+            fix.detectChanges();
+            tick();
+
+            const input = firstCell.nativeElement.querySelector('.igx-input-group__input');
+            const prefix = firstCell.nativeElement.querySelector('igx-prefix');
+            const suffix = firstCell.nativeElement.querySelector('igx-suffix');
+            expect((input as any).value).toEqual('01/10/2015 11:37:22 AM');
+            expect(prefix).toBeNull();
+            expect(suffix).toBeNull();
+
+            const inputElement = fix.debugElement.query(By.css('input'));
+            const dateTimeEditor = inputElement.injector.get(IgxDateTimeEditorDirective);
+            dateTimeEditor.value = new Date(2021, 11, 3, 15, 15, 22);
+            fix.detectChanges();
+
+            grid.endEdit(true);
+            fix.detectChanges();
+
+            expect(firstCell.nativeElement.innerText).toEqual('Dec 3, 2021, 3:15:22 PM');
+        }));
+
+        it('Time: should preview the time value correctly when cell is in edit mode correctly', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const timeColumn = grid.getColumnByName('ReceiveTime');
+            timeColumn.editable = true;
+            fix.detectChanges();
+
+            const cell = timeColumn.cells[1];
+
+            expect(cell.nativeElement.innerText).toEqual('12:12:02 PM');
+
+            cell.setEditMode(true);
+            tick();
+            fix.detectChanges();
+
+            const input = cell.nativeElement.querySelector('.igx-input-group__input');
+            const prefix = cell.nativeElement.querySelector('igx-prefix');
+            const suffix = cell.nativeElement.querySelector('igx-suffix');
+            expect((input as any).value).toEqual('12:12:02 PM');
+            expect(prefix).not.toBeNull();
+            expect(suffix).not.toBeNull();
+
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true);
+            fix.detectChanges();
+            UIInteractions.triggerKeyDownEvtUponElem('ArrowDown', input, true);
+            fix.detectChanges();
+
+            grid.endEdit(true);
+            fix.detectChanges();
+
+            expect(cell.nativeElement.innerText).toEqual('10:12:02 AM');
+        }));
+
+        it('should display summaries correctly for dateTime and time column', () => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const column = grid.getColumnByName('OrderDate');
+            const receiveTimeColumn = grid.getColumnByName('ReceiveTime');
+            column.hasSummary = true;
+            receiveTimeColumn.hasSummary = true;
+            fix.detectChanges();
+
+            let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['10', 'Mar 12, 2015, 9:31:22 PM', 'Aug 3, 2021, 3:15:00 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['10', '6:40:18 AM', '8:20:24 PM']);
+
+            column.pipeArgs = { format: 'short' };
+            receiveTimeColumn.pipeArgs = { format: 'shortTime' };
+            grid.sort({ fieldName: 'Discount', dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 2,
+                ['Count', 'Earliest', 'Latest'], ['10', '3/12/15, 9:31 PM', '8/3/21, 3:15 PM']);
+            GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3,
+                ['Count', 'Earliest', 'Latest'], ['10', '6:40 AM', '8:20 PM']);
+        });
+
+        it('DateTime: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const orderDateColumn = grid.getColumnByName('OrderDate');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, orderDateColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Mar 12, 2015, 9:31:22 PM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('Aug 18, 2016, 11:17:22 AM');
+
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            fix.detectChanges();
+
+            orderDateColumn.pipeArgs = {
+                format: 'short'
+              };
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, orderDateColumn.field);
+            tick(100);
+            fix.detectChanges();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('3/12/15, 9:31 PM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('8/18/16, 11:17 AM');
+        }));
+
+        it('Time: filtering UI list should be populated with correct values based on the pipeArgs' ,fakeAsync(()=> {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const timeColumn = grid.getColumnByName('ReceiveTime');
+            grid.allowFiltering = true;
+            fix.detectChanges();
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, timeColumn.field);
+            tick(200);
+            fix.detectChanges();
+
+            let excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            let esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            let checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40:18 AM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12:02 PM');
+            GridFunctions.clickCancelExcelStyleFiltering(fix);
+            tick(200);
+            fix.detectChanges();
+
+            timeColumn.pipeArgs = { format: 'shortTime' };
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, timeColumn.field);
+            tick(200);
+            fix.detectChanges();
+
+            excelMenu = GridFunctions.getExcelStyleFilteringComponent(fix);
+            esfSearch = GridFunctions.getExcelFilteringSearchComponent(fix, excelMenu);
+            checkBoxes = esfSearch.querySelectorAll('igx-checkbox');
+
+            expect((checkBoxes[1].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('6:40 AM');
+            expect((checkBoxes[3].querySelector('.igx-checkbox__label') as HTMLElement).innerText).toEqual('12:12 PM');
+        }));
+
+        it('DateTime: dateTime input should be disabled when try to filter based on unary conditions - today or etc. #ivy' ,fakeAsync(()=> {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            tick();
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+            const orderDateColumn = grid.getColumnByName('OrderDate');
+            grid.allowFiltering = true;
+            grid.filterMode = 'excelStyleFilter';
+            fix.detectChanges();
+
+            GridFunctions.clickExcelFilterIcon(fix, orderDateColumn.field);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickExcelFilterCascadeButton(fix);
+            tick(100);
+            fix.detectChanges();
+            GridFunctions.clickOperatorFromCascadeMenu(fix, 4);
+            tick(200);
+            fix.detectChanges();
+
+            const inputElement = fix.debugElement.query(By.css('igx-input-group.igx-input-group--disabled'));
+            expect(inputElement).not.toBeNull();
+        }));
+
+        it('Sorting dateTime column', () => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
+            const currColumn = 'OrderDate';
+            grid.sort({ fieldName: currColumn, dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            const sortedValues = [new Date(2015, 2, 12, 21, 31, 22), new Date(2015, 9, 1, 11, 37, 22), new Date(2016, 7, 18, 11, 17, 22),
+                new Date(2018, 6, 14, 17, 27, 23), new Date(2019, 3, 17, 5, 5, 15), new Date(2019, 9, 30, 16, 17, 27),
+                new Date(2021, 4, 11, 7, 47, 1), new Date(2021, 4, 11, 18, 37, 2),
+                new Date(2021, 7, 3, 15, 15, 0), new Date(2021, 7, 3, 15, 15, 0)];
+
+            expect(grid.rowList.length).toEqual(sortedValues.length);
+            sortedValues.forEach((value, index) => {
+                expect(grid.getCellByColumn(index, currColumn).value.toISOString()).toEqual(value.toISOString());
+            });
+
+            grid.sort({ fieldName: currColumn, dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(sortedValues.length);
+            sortedValues.forEach((value, index) => {
+                expect(grid.getCellByColumn(sortedValues.length - 1 - index, currColumn).value.toISOString()).toEqual(value.toISOString());
+            });
+        });
+
+        it('Sorting time column', () => {
+            const fix = TestBed.createComponent(IgxGridDateTimeColumnComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
+            const currentColumn = 'ReceiveTime';
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+            fix.detectChanges();
+
+            const sortedValues = ['6:40:18 AM', '8:37:11 AM', '12:12:02 PM', '12:47:42 PM', '12:47:42 PM', '2:07:12 PM',
+            '2:30:00 PM', '3:30:22 PM', '3:30:30 PM', '8:20:24 PM'];
+
+            expect(grid.rowList.length).toEqual(sortedValues.length);
+            sortedValues.forEach((value, index) => {
+                expect(grid.getCellByColumn(index, currentColumn).value.toLocaleTimeString()).toEqual(value);
+            });
+
+            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Desc, ignoreCase: false });
+            fix.detectChanges();
+
+            expect(grid.rowList.length).toEqual(sortedValues.length);
+            sortedValues.forEach((value, index) => {
+                expect(grid.getCellByColumn(sortedValues.length - 1 - index, currentColumn).value.toLocaleTimeString()).toEqual(value);
+            });
+        });
 
     });
 

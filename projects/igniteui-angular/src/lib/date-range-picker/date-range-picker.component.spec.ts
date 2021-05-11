@@ -508,29 +508,17 @@ describe('IgxDateRangePicker', () => {
                     spyOn(dateRange.closing, 'emit').and.callThrough();
                     spyOn(dateRange.closed, 'emit').and.callThrough();
 
-                    const dayRange = 8;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() + 3;
-                    const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    calendarDays = document.getElementsByClassName('igx-calendar__date');
-                    UIInteractions.simulateClickAndSelectEvent(calendarDays[startDateDayElIndex]);
-                    UIInteractions.simulateClickAndSelectEvent(calendarDays[endDateDayElIndex]);
-                    fixture.detectChanges();
 
                     const doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
                     UIInteractions.simulateClickAndSelectEvent(doneBtn);
                     tick();
                     fixture.detectChanges();
 
-                    verifyDateRangeInSingleInput();
-                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.collapsed).toBeTrue();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);

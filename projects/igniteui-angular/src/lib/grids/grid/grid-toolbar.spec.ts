@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TestBed, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
@@ -25,9 +25,7 @@ const DATA = [
 ];
 
 describe('IgxGrid - Grid Toolbar #grid - ', () => {
-    configureTestSuite();
-
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 DefaultToolbarComponent,
@@ -41,8 +39,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
                 IgxExcelExporterService,
                 IgxCsvExporterService
             ]
-        })
-        .compileComponents();
+        });
     }));
 
     describe('Basic Tests - ', () => {
