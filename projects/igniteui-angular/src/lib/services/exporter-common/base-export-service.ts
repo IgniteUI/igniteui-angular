@@ -1,6 +1,6 @@
 import { EventEmitter } from '@angular/core';
 import { cloneArray, cloneValue, IBaseEventArgs, resolveNestedPath, yieldingLoop } from '../../core/utils';
-import { DataType, DataUtil } from '../../data-operations/data-util';
+import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ExportUtilities } from './export-utilities';
 import { IgxExporterOptionsBase } from './exporter-options-base';
 import { ITreeGridRecord } from '../../grids/tree-grid/tree-grid.interfaces';
@@ -44,7 +44,7 @@ export interface IColumnInfo {
     header: string;
     field: string;
     skip: boolean;
-    dataType?: DataType;
+    dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
 }
@@ -328,12 +328,12 @@ export abstract class IgxBaseExporter {
         const tagName = grid.nativeElement.tagName.toLowerCase();
 
         const hasFiltering = (grid.filteringExpressionsTree && grid.filteringExpressionsTree.filteringOperands.length > 0) ||
-                (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
+            (grid.advancedFilteringExpressionsTree && grid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
 
         const hasSorting = grid.sortingExpressions &&
             grid.sortingExpressions.length > 0;
 
-        switch(tagName) {
+        switch (tagName) {
             case 'igx-hierarchical-grid': {
                 this.prepareHierarchicalGridData(grid as IgxHierarchicalGridComponent, hasFiltering, hasSorting);
                 break;
@@ -385,7 +385,7 @@ export abstract class IgxBaseExporter {
         const childLayoutList = grid.childLayoutList;
         const columnFields = this._ownersMap.get(grid).columns.map(col => col.field);
 
-        for(const entry of records) {
+        for (const entry of records) {
             const expansionStateVal = grid.expansionStates.has(entry) ? grid.expansionStates.get(entry) : false;
 
             const dataWithoutChildren = Object.keys(entry)
@@ -421,7 +421,7 @@ export abstract class IgxBaseExporter {
     private prepareIslandData(island: IgxRowIslandComponent, islandGrid: IgxHierarchicalGridComponent, data: any[]): any[] {
         if (islandGrid !== undefined) {
             const hasFiltering = (islandGrid.filteringExpressionsTree &&
-                    islandGrid.filteringExpressionsTree.filteringOperands.length > 0) ||
+                islandGrid.filteringExpressionsTree.filteringOperands.length > 0) ||
                 (islandGrid.advancedFilteringExpressionsTree &&
                     islandGrid.advancedFilteringExpressionsTree.filteringOperands.length > 0);
 
@@ -432,30 +432,30 @@ export abstract class IgxBaseExporter {
                 (!hasFiltering || !this.options.ignoreFiltering) &&
                 (!hasSorting || !this.options.ignoreSorting);
 
-                if (skipOperations) {
-                    data = islandGrid.filteredSortedData;
-                } else {
-                    if (hasFiltering && !this.options.ignoreFiltering) {
-                        const filteringState: IFilteringState = {
-                            expressionsTree: islandGrid.filteringExpressionsTree,
-                            advancedExpressionsTree: islandGrid.advancedFilteringExpressionsTree,
-                            strategy: islandGrid.filterStrategy
-                        };
+            if (skipOperations) {
+                data = islandGrid.filteredSortedData;
+            } else {
+                if (hasFiltering && !this.options.ignoreFiltering) {
+                    const filteringState: IFilteringState = {
+                        expressionsTree: islandGrid.filteringExpressionsTree,
+                        advancedExpressionsTree: islandGrid.advancedFilteringExpressionsTree,
+                        strategy: islandGrid.filterStrategy
+                    };
 
-                        data = DataUtil.filter(data, filteringState, islandGrid);
-                    }
-
-                    if (hasSorting && !this.options.ignoreSorting) {
-                        this._sort = cloneValue(islandGrid.sortingExpressions[0]);
-
-                        data = DataUtil.sort(data, islandGrid.sortingExpressions, islandGrid.sortStrategy, islandGrid);
-                    }
+                    data = DataUtil.filter(data, filteringState, islandGrid);
                 }
+
+                if (hasSorting && !this.options.ignoreSorting) {
+                    this._sort = cloneValue(islandGrid.sortingExpressions[0]);
+
+                    data = DataUtil.sort(data, islandGrid.sortingExpressions, islandGrid.sortStrategy, islandGrid);
+                }
+            }
         } else {
             const hasFiltering = (island.filteringExpressionsTree &&
                 island.filteringExpressionsTree.filteringOperands.length > 0) ||
-            (island.advancedFilteringExpressionsTree &&
-                island.advancedFilteringExpressionsTree.filteringOperands.length > 0);
+                (island.advancedFilteringExpressionsTree &&
+                    island.advancedFilteringExpressionsTree.filteringOperands.length > 0);
 
             const hasSorting = island.sortingExpressions &&
                 island.sortingExpressions.length > 0;

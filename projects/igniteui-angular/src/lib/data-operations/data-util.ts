@@ -20,7 +20,7 @@ import { GridType } from '../grids/common/grid.interface';
 /**
  * @hidden
  */
-export const DataType = mkenum({
+export const GridColumnDataType = mkenum({
     String: 'string',
     Number: 'number',
     Boolean: 'boolean',
@@ -30,7 +30,7 @@ export const DataType = mkenum({
     Currency: 'currency',
     Percent: 'percent'
 });
-export type DataType = (typeof DataType)[keyof typeof DataType];
+export type GridColumnDataType = (typeof GridColumnDataType)[keyof typeof GridColumnDataType];
 
 /**
  * @hidden
@@ -221,8 +221,8 @@ export class DataUtil {
         return data;
     }
 
-    public static parseValue(dataType: DataType, value: any): any {
-        if (dataType === DataType.Number || dataType === DataType.Currency || dataType === DataType.Percent) {
+    public static parseValue(dataType: GridColumnDataType, value: any): any {
+        if (dataType === GridColumnDataType.Number || dataType === GridColumnDataType.Currency || dataType === GridColumnDataType.Percent) {
             value = parseFloat(value);
         }
 

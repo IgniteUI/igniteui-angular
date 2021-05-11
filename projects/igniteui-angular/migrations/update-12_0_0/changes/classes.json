@@ -1,0 +1,9 @@
+{
+    "$schema": "../../common/schema/class.schema.json",
+    "changes": [
+        {
+            "name": "DataType",
+            "replaceWith": "GridColumnDataType"
+        }
+    ]
+}
