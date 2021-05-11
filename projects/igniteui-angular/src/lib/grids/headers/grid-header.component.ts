@@ -12,7 +12,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -67,7 +67,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
             'igx-grid__th': !this.column.columnGroup,
             asc: this.ascending,
             desc: this.descending,
-            'igx-grid__th--number': this.column.dataType === DataType.Number,
+            'igx-grid__th--number': this.column.dataType === GridColumnDataType.Number,
             'igx-grid__th--sortable': this.column.sortable,
             'igx-grid__th--selectable': this.selectable,
             'igx-grid__th--filtrable': this.column.filterable && this.grid.filteringService.isFilterRowVisible,

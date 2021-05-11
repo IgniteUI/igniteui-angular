@@ -36,6 +36,7 @@ All notable changes for each version of this project will be documented in this 
         - `onToolbarExporting` -> `toolbarExporting`
         - `onRangeSelection` -> `rangeSelected`
     - `IgxGridRowComponent`, `IgxGridGroupByRowComponent`, `IgxTreeGridRowComponent`, `IgxHierarchicalRowComponent` are no longer exposed in the public API. Automatic migration will change these imports with `RowType`.
+    - The IgxColumn data type `DataType` is renamed to `GridColumnDataType`.
     - **Behavioral changes**
     - `getRowByIndex`, `getRowByKey`, `cell.row` now return an object implemening the `RowType` interface.
     - `dragData` emitted with `IRowDragEndEventArgs`, `IRowDragStartEventArgs` is now `RowType`
