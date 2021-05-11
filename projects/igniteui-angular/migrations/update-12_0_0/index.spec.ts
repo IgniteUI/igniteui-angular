@@ -1787,4 +1787,30 @@ export class SimpleComponent {
     `
         );
     });
+
+    it('Should not add duplicate disabled to igxInput when moving the property from input-group', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+// this is the expected output
+// putting just the disabled attribute on an igx-input-group is an invalid scenario
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+    });
 });

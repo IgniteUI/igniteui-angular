@@ -481,25 +481,28 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
         inputGroups.forEach((el) => {
             const parentEl = (el as Element);
             if (hasAttribute(parentEl, INPUT_GROUP_CHANGES.ATTRIBUTES)) {
-                const inputChildren = findElementNodes([el], INPUT_GROUP_CHANGES.INPUT_TAG).reduce((prev, curr) => prev.concat(curr), [])
-                .filter(template => hasAttribute(template as Element, INPUT_GROUP_CHANGES.DIRECTIVE));
+                const inputChildren = findElementNodes([el], INPUT_GROUP_CHANGES.INPUT_TAG)
+                    .reduce((prev, curr) => prev.concat(curr), [])
+                    .filter(template => hasAttribute(template as Element, INPUT_GROUP_CHANGES.DIRECTIVE));
                 INPUT_GROUP_CHANGES.ATTRIBUTES.forEach((a: string) => {
                     const attr = getAttribute(parentEl, a)[0];
                     if (attr) {
-                        inputChildren.forEach(node => {
-                            const { startTag, file } = getSourceOffset(node as Element);
-                            // input is self-closing, so the element === startTag
-                            const repTxt = file.content.substring(startTag.start, startTag.end);
-                            const matches = repTxt.match(/\/?>/g);
-                            // should always be only 1 match
-                            const lastIndex = repTxt.indexOf(matches[0]);
-                            let property =`${attr.name}`;
-                            if (attr.name === INPUT_GROUP_CHANGES.ATTRIBUTES[0] || attr.value) {
-                                property += `="${attr.value}"`;
+                        inputChildren.forEach((node: Element) => {
+                            if (!hasAttribute(node, INPUT_GROUP_CHANGES.ATTRIBUTES)) {
+                                const { startTag, file } = getSourceOffset(node as Element);
+                                // input is self-closing, so the element === startTag
+                                const repTxt = file.content.substring(startTag.start, startTag.end);
+                                const matches = repTxt.match(/\/?>/g);
+                                // should always be only 1 match
+                                const lastIndex = repTxt.indexOf(matches[0]);
+                                let property = `${attr.name}`;
+                                if (attr.name === INPUT_GROUP_CHANGES.ATTRIBUTES[0] || attr.value) {
+                                    property += `="${attr.value}"`;
+                                }
+                                const addedAttr =
+                                    `${repTxt.substring(0, lastIndex)} ${property}${repTxt.substring(lastIndex)}`;
+                                addChange(file.url, new FileChange(startTag.start, addedAttr, repTxt, 'replace'));
                             }
-                            const addedAttr =
-                                `${repTxt.substring(0, lastIndex)} ${property}${repTxt.substring(lastIndex)}`;
-                            addChange(file.url, new FileChange(startTag.start, addedAttr, repTxt, 'replace'));
                         });
                     }
                 });
