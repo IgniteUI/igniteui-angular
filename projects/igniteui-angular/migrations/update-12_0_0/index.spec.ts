@@ -1574,4 +1574,129 @@ export class HGridMultiRowDragComponent {
     }
 }`);
     });
+
+    it('Should move input-group disabled property to input child', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input-group disabled property to input child', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input group disabled property w/ XHTML syntax closing', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name"/>
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true"/>
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should only move input-group disabled to igxInput directive', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input-group disabled string values to underlying igxInput', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group disabled="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" disabled="true">
+    </igx-input-group>
+    `
+        );
+    });
 });
