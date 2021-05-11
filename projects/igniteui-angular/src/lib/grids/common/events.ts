@@ -134,6 +134,7 @@ export interface IColumnMovingEventArgs extends IBaseEventArgs {
 export interface IColumnMovingEndEventArgs extends IBaseEventArgs {
     source: IgxColumnComponent;
     target: IgxColumnComponent;
+    cancel: boolean;
 }
 
 export interface IGridKeydownEventArgs extends IBaseEventArgs {

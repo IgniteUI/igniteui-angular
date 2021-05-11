@@ -123,7 +123,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             column.move(2);
 
             columnsList = grid.columnList.toArray();
-            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1] };
+            const args = { source: grid.columnList.toArray()[2], target: grid.columnList.toArray()[1], cancel: false };
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledTimes(1);
             expect(grid.columnMovingEnd.emit).toHaveBeenCalledWith(args);
         });
