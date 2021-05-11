@@ -53,7 +53,7 @@ export class MaskSampleComponent {
     public notify(snackbar, message) {
         snackbar.message = message;
         snackbar.actionText = 'Dismiss';
-        snackbar.show();
+        snackbar.open();
     }
 }
 
