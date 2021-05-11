@@ -1,5 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
+    AfterViewInit,
     Component,
     ContentChild,
     ContentChildren,
@@ -35,6 +36,8 @@ import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 import { mkenum, PlatformUtil } from '../core/utils';
+import { BehaviorSubject } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -55,7 +58,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -136,6 +139,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxInputGroupTheme;
+    private _theme$ = new BehaviorSubject(undefined);
     private _resourceStrings = CurrentResourceStrings.InputResStrings;
 
     /** @hidden */
@@ -227,17 +231,6 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      * }
      */
     public get theme(): IgxInputGroupTheme {
-        if (!this._theme) {
-            if(this.platform.isIE) {
-                this._theme = IgxInputGroupTheme.Material;
-            } else {
-                this._theme = this.document.defaultView
-                    .getComputedStyle(this.element.nativeElement)
-                    .getPropertyValue('--theme')
-                    .trim() as IgxInputGroupTheme;
-            }
-        }
-
         return this._theme;
     }
 
@@ -255,6 +248,12 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private platform: PlatformUtil
     ) {
         super(_displayDensityOptions);
+
+        this._theme$.pipe(delay(0)).subscribe(value => {
+            if(!this._theme) {
+                this._theme = value as IgxInputGroupTheme;
+            }
+        });
     }
 
     /** @hidden */
@@ -446,6 +445,23 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden */
     public set filled(val) {
         this._filled = val;
+    }
+
+    /** @hidden @internal */
+    public ngAfterViewInit() {
+        if (!this._theme) {
+            if(this.platform.isIE) {
+                this._theme$.next(IgxInputGroupTheme.Material);
+            } else {
+                const cssProp = this.document.defaultView
+                    .getComputedStyle(this.element.nativeElement)
+                    .getPropertyValue('--theme')
+                    .trim();
+
+                this._theme$.next(cssProp);
+            }
+        }
+
     }
 }
 
