@@ -389,6 +389,12 @@ export class IgxGridSelectionService {
     _selectionRange: Range;
     rowSelection: Set<any> = new Set<any>();
     columnSelection: Set<string> = new Set<string>();
+    /**
+     * Toggled when a pointerdown event is triggered inside the grid body (cells).
+     * When `false` the drag select behavior is disabled.
+     */
+    private pointerEventInGridBody = false;
+
     private allRowsSelected: boolean;
 
     /**
@@ -583,6 +589,8 @@ export class IgxGridSelectionService {
         this.initKeyboardState();
         this.pointerState.ctrl = ctrl;
         this.pointerState.shift = shift;
+        this.pointerEventInGridBody = true;
+        document.body.addEventListener('pointerup', this.pointerOriginHandler);
 
         // No ctrl key pressed - no multiple selection
         if (!ctrl) {
@@ -629,7 +637,7 @@ export class IgxGridSelectionService {
 
     pointerEnter(node: ISelectionNode, event: PointerEvent): boolean {
         // https://www.w3.org/TR/pointerevents/#the-button-property
-        this.dragMode = event.buttons === 1 && (event.button === -1 || event.button === 0);
+        this.dragMode = (event.buttons === 1 && (event.button === -1 || event.button === 0)) && this.pointerEventInGridBody;
         if (!this.dragMode) {
             return false;
         }
@@ -647,7 +655,7 @@ export class IgxGridSelectionService {
         return true;
     }
 
-    pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
+    public pointerUp(node: ISelectionNode, emitter: EventEmitter<GridSelectionRange>): boolean {
         if (this.dragMode) {
             this.restoreTextSelection();
             this.addRangeMeta(node, this.pointerState);
@@ -666,7 +674,9 @@ export class IgxGridSelectionService {
             return true;
         }
 
-        this.add(node);
+        if (this.pointerEventInGridBody) {
+            this.add(node);
+        }
         return false;
     }
 
@@ -883,6 +893,11 @@ export class IgxGridSelectionService {
 
     private isRowDeleted(rowID): boolean {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
+    }
+
+    private pointerOriginHandler = () => {
+        this.pointerEventInGridBody = false;
+        document.body.removeEventListener('pointerup', this.pointerOriginHandler);
     }
 
     /** Returns array of the selected columns fields. */
