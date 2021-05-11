@@ -12,7 +12,7 @@ import {
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxFilteringService, ExpressionUI } from '../grid-filtering.service';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
-import { DataType } from '../../../data-operations/data-util';
+import { GridColumnDataType } from '../../../data-operations/data-util';
 import {
     IgxStringFilteringOperand,
     IgxBooleanFilteringOperand,
@@ -98,14 +98,14 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     };
 
 
-    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) {}
+    constructor(private cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
     public ngAfterViewInit(): void {
         this._customDialogOverlaySettings.outlet = this.grid.outlet;
     }
 
     public get template(): TemplateRef<any> {
-        if (this.column.dataType === DataType.Date) {
+        if (this.column.dataType === GridColumnDataType.Date) {
             return this.dateExpressionTemplate;
         }
 
@@ -153,7 +153,7 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
     public onApplyButtonClick() {
         this.expressionsList = this.expressionsList.filter(
             element => element.expression.condition &&
-            (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
+                (element.expression.searchVal || element.expression.searchVal === 0 || element.expression.condition.isUnary));
 
         if (this.expressionsList.length > 0) {
             this.expressionsList[0].beforeOperator = null;
@@ -223,17 +223,17 @@ export class IgxExcelStyleCustomDialogComponent implements AfterViewInit {
 
     private createCondition(conditionName: string) {
         switch (this.column.dataType) {
-            case DataType.Boolean:
+            case GridColumnDataType.Boolean:
                 return IgxBooleanFilteringOperand.instance().condition(conditionName);
-            case DataType.Number:
-            case DataType.Currency:
-            case DataType.Percent:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+            case GridColumnDataType.Percent:
                 return IgxNumberFilteringOperand.instance().condition(conditionName);
-            case DataType.Date:
+            case GridColumnDataType.Date:
                 return IgxDateFilteringOperand.instance().condition(conditionName);
-            case DataType.Time:
+            case GridColumnDataType.Time:
                 return IgxTimeFilteringOperand.instance().condition(conditionName);
-            case DataType.DateTime:
+            case GridColumnDataType.DateTime:
                 return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
