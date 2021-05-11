@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, AfterViewInit, QueryList, ViewChildren } 
 import { FilteringExpressionsTree, FilteringLogic,
   IgxNumberSummaryOperand, IgxSummaryResult, IGridState, IgxGridStateDirective,
   IgxExpansionPanelComponent, IgxGridBaseDirective,
-  IGridStateOptions, GridFeatures, DataType } from 'igniteui-angular';
+  IGridStateOptions, GridFeatures, GridColumnDataType } from 'igniteui-angular';
 import { take } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { TREEGRID_FLAT_DATA, EMPLOYEE_DATA, employeesData } from './data';
@@ -30,7 +30,7 @@ interface GridState {
     width: any;
     maxWidth?: any;
     minWidth?: any;
-    dataType: DataType;
+    dataType: GridColumnDataType;
     pinned?: boolean;
     groupable?: boolean;
     movable?: boolean;

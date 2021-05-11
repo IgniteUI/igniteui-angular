@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { DataType } from 'igniteui-angular';
+import { GridColumnDataType } from 'igniteui-angular';
 
 interface GridConfig {
     field: string;
-    type: DataType;
+    type: GridColumnDataType;
     groupable?: boolean;
 }
 
@@ -13,14 +13,14 @@ interface GridConfig {
 })
 export class GridNestedPropsSampleComponent {
     public data = [];
-    public config: GridConfig [] = [
-        { field: 'id', type: DataType.Number },
-        { field: 'padding.left', type: DataType.Number },
-        { field: 'padding.top', type: DataType.Number },
-        { field: 'margin.bottom', type: DataType.Number },
-        { field: 'margin.top', type: DataType.Number },
-        { field: 'misc.font.lineHeight', type: DataType.Number },
-        { field: 'misc.font.family', type: DataType.String, groupable: true }
+    public config: GridConfig[] = [
+        { field: 'id', type: GridColumnDataType.Number },
+        { field: 'padding.left', type: GridColumnDataType.Number },
+        { field: 'padding.top', type: GridColumnDataType.Number },
+        { field: 'margin.bottom', type: GridColumnDataType.Number },
+        { field: 'margin.top', type: GridColumnDataType.Number },
+        { field: 'misc.font.lineHeight', type: GridColumnDataType.Number },
+        { field: 'misc.font.family', type: GridColumnDataType.String, groupable: true }
     ];
 
     public treeData = [
