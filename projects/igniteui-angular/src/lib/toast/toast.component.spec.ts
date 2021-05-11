@@ -7,7 +7,7 @@ import {
     ComponentFixture,
 } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import {
     IgxToastComponent,
     IgxToastModule,
@@ -19,7 +19,7 @@ describe('IgxToast', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ToastInitializeTestComponent],
-            imports: [BrowserAnimationsModule, IgxToastModule],
+            imports: [NoopAnimationsModule, IgxToastModule]
         }).compileComponents();
     }));
 
@@ -73,18 +73,27 @@ describe('IgxToast', () => {
         expect(toast.onOpening.emit).toHaveBeenCalled();
     });
 
-    it('should emit onHiding when toast is hidden', () => {
-        spyOn(toast.hiding, 'emit');
+    it('should emit onClosing when toast is hidden', () => {
+        spyOn(toast.onClosing, 'emit');
+        toast.open();
         toast.close();
-        expect(toast.hiding.emit).toHaveBeenCalled();
+        expect(toast.onClosing.emit).toHaveBeenCalled();
     });
 
-    it('should emit onOpened when toast is opened', () => {
-        expect(toast.isVisible).toBeFalse();
+    it('should emit onOpened when toast is opened', fakeAsync(() => {
+        spyOn(toast.onOpened, 'emit');
         toast.open();
-        fixture.detectChanges();
-        expect(toast.isVisible).toBeTrue();
-    });
+        tick(4000);
+        expect(toast.onOpened.emit).toHaveBeenCalled();
+    }));
+
+    it('should emit onClosed when toast is closed', fakeAsync(() => {
+        spyOn(toast.onClosed, 'emit');
+        toast.open();
+        toast.close();
+        tick(4000);
+        expect(toast.onClosed.emit).toHaveBeenCalled();
+    }));
 
     it('visibility is updated by the toggle() method', () => {
         expect(toast.isVisible).toBeFalse();

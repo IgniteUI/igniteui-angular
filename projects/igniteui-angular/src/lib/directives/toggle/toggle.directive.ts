@@ -302,7 +302,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     /**
      * Offsets the content along the corresponding axis by the provided amount
      */
-    setOffset(deltaX: number, deltaY: number) {
+    public setOffset(deltaX: number, deltaY: number) {
         this.overlayService.setOffset(this._overlayId, deltaX, deltaY);
     }
 
@@ -335,8 +335,8 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.cdr.detectChanges();
         this.unsubscribe();
         this.overlayService.detach(this.overlayId);
-        delete this._overlayId;
         const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId, event: ev.event };
+        delete this._overlayId;
         this.onClosed.emit(closedEventArgs);
     };
 
@@ -428,7 +428,7 @@ export class IgxToggleActionDirective implements OnInit {
      * @hidden
      */
     @Input('igxToggleAction')
-    set target(target: any) {
+    public set target(target: any) {
         if (target !== null && target !== '') {
             this._target = target;
         }
@@ -437,7 +437,7 @@ export class IgxToggleActionDirective implements OnInit {
     /**
      * @hidden
      */
-    get target(): any {
+    public get target(): any {
         if (typeof this._target === 'string') {
             return this.navigationService.get(this._target);
         }
