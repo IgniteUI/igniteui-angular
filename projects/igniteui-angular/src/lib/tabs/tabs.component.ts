@@ -392,7 +392,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
                 });
 
                 this._resizeObserver.observe(this.tabsContainer.nativeElement);
-                this._resizeObserver.observe(this.headerContainer.nativeElement);
                 this._resizeObserver.observe(this.viewPort.nativeElement);
             });
         }
@@ -496,6 +495,9 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             } else {
                 this.hideIndicator();
             }
+        });
+        Promise.resolve().then(() => {
+            this.updateScrollButtons();
         });
     }
 
