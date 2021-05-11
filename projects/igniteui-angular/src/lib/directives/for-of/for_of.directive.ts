@@ -34,7 +34,7 @@ import { IgxScrollInertiaModule } from './../scroll-inertia/scroll_inertia.direc
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from './for_of.sync.service';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, throttleTime, first } from 'rxjs/operators';
-import {ResizeObserver} from '@juggle/resize-observer';
+import { ResizeObserver } from '@juggle/resize-observer';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { VirtualHelperBaseDirective } from './base.helper.component';
 
