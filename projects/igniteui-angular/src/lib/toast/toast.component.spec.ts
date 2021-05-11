@@ -50,20 +50,20 @@ describe('IgxToast', () => {
 
     it('should auto hide after it\'s open', fakeAsync(() => {
         spyOn(toast.onClosing, 'emit');
-        toast.displayTime = 1000;
+        toast.displayTime = 100;
 
         toast.open();
-        tick(1000);
+        tick(100);
         expect(toast.onClosing.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide after it\'s open', fakeAsync(() => {
         spyOn(toast.onClosing, 'emit');
-        toast.displayTime = 1000;
+        toast.displayTime = 100;
         toast.autoHide = false;
 
         toast.open();
-        tick(1000);
+        tick(100);
         expect(toast.onClosing.emit).not.toHaveBeenCalled();
     }));
 
@@ -81,35 +81,48 @@ describe('IgxToast', () => {
     });
 
     it('should emit onOpened when toast is opened', fakeAsync(() => {
+        toast.displayTime = 100;
+        toast.autoHide = false;
         spyOn(toast.onOpened, 'emit');
         toast.open();
-        tick(4000);
+        tick(100);
         expect(toast.onOpened.emit).toHaveBeenCalled();
     }));
 
     it('should emit onClosed when toast is closed', fakeAsync(() => {
+        toast.displayTime = 100;
+        toast.autoHide = false;
         spyOn(toast.onClosed, 'emit');
         toast.open();
         toast.close();
-        tick(4000);
+        tick(100);
         expect(toast.onClosed.emit).toHaveBeenCalled();
     }));
 
     it('visibility is updated by the toggle() method and isVisible setter', fakeAsync(() => {
+        toast.displayTime = 100;
+        toast.autoHide = false;
+
         expect(toast.isVisible).toBeFalse();
         toast.toggle();
         expect(toast.isVisible).toBeTrue();
         toast.isVisible = false;
-        expect(toast.collapsed).toBeFalse();
+        // Opening happens in a RAF
+        tick(100);
+        expect(toast.collapsed).toBeTrue();
         toast.isVisible = true;
         // Opening happens in a RAF
-        tick(4000);
-        expect(toast.collapsed).toBeTrue();
+        tick(100);
+        expect(toast.collapsed).toBeFalse();
     }));
 
     it('can set message through show method', fakeAsync(() => {
         toast.displayTime = 100;
         toast.autoHide = false;
+
+        toast.message = 'Message';
+        expect(toast.toastMessage).toBe('Message');
+        expect(toast.message).toBe('Message');
 
         toast.open('Custom Message');
         tick(100);
