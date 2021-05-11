@@ -1574,4 +1574,66 @@ export class HGridMultiRowDragComponent {
     }
 }`);
     });
+
+    it('should replace output names in toast', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-toast (showing)="method()" (shown)="method()" (hiding)="method()" (hidden)="method()"></igx-toast>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-toast (onOpening)="method()" (onOpened)="method()" (onClosing)="method()" (onClosed)="method()"></igx-toast>
+    `
+        );
+    });
+
+    it('Should update toast output subscriptions', async () => {
+        pending('set up tests for migrations through lang service');
+        appTree.create(
+            '/testSrc/appPrefix/component/toast.component.ts', `
+import { IgxToastComponent } from 'igniteui-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+export class SimpleComponent {
+    @ViewChild('toast', { static: true })
+    public toast: IgxToastComponent;
+
+    public ngOnInit() {
+        this.toast.showing.subscribe();
+        this.toast.shown.subscribe();
+        this.toast.hiding.subscribe();
+        this.toast.hidden.subscribe();
+        this.toast.show();
+        this.toast.hide();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync('migration-20', {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/toast.component.ts'))
+            .toEqual(`
+import { IgxToastComponent } from 'igniteui-angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+export class SimpleComponent {
+    @ViewChild('toast', { static: true })
+    public toast: IgxToastComponent;
+
+    public ngOnInit() {
+        this.toast.onOpening.subscribe();
+        this.toast.onOpened.subscribe();
+        this.toast.onClosing.subscribe();
+        this.toast.onClosed.subscribe();
+        this.toast.open();
+        this.toast.close();
+    }
+}`);
+    });
 });
