@@ -1013,6 +1013,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 }
             }
         });
+        if (this.selectedRows.length) {
+            const selRows = this.selectedRows;
+            this.selectionService.clearRowSelection();
+            this.selectRows(selRows, true);
+            this.cdr.detectChanges();
+        }
     }
 
     /**
@@ -1025,6 +1031,75 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
         });
+
+        this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
+            if (this.groupingExpressions.length) {
+                if (args.data) {
+                    const rec = this.primaryKey ? args.data[this.primaryKey] : args.data;
+                    const group = this.selectionService.rowsDirectParents.get(rec);
+                    let siblingID;
+                    if (group.records.length > 1) {
+                        let sibling;
+                        group.records.forEach(record => {
+                            if (record !== args.data) {
+                                sibling = record;
+                                return;
+                            }
+                        });
+                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
+                        requestAnimationFrame(() => {
+                            if (this.transactions.enabled) {
+                                this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID), true);
+                            } else {
+                                this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                            }
+                            this.selectionService.selectedRowsChange.next();
+                        });
+                    }
+                } else {
+                    // if a row has been added and before commiting the transaction deleted
+                    const leafRowsDirectGroups = new Set<any>();
+                    // Wait for the change detection to update records through pipes
+                    requestAnimationFrame(() => {
+                        this.selectionService.rowsDirectParents.forEach(record => {
+                            if (record) {
+                                leafRowsDirectGroups.add(record);
+                            }
+                        });
+                        leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group, true));
+                        this.selectionService.selectedRowsChange.next();
+                    });
+                }
+            }
+        });
+
+        this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
+            if (this.groupingExpressions.length) {
+                const recID = this.primaryKey ? args.data[this.primaryKey] : args.data;
+                let rec = this._gridAPI.get_rec_by_id(recID);
+
+                requestAnimationFrame(() => {
+                    // console.log(this.selectionService.rowsDirectParents.get(recID));
+                });
+                if (rec) {
+                    const group = this.selectionService.rowsDirectParents.get(recID);
+                    this.selectionService.handleGroupState(group);
+                    this.selectionService.selectedRowsChange.next();
+                } else {
+                    // The record is still not available
+                    // Wait for the change detection to update records through pipes
+                    requestAnimationFrame(() => {
+                        rec = this._gridAPI.get_rec_by_id(recID);
+                        if (rec) {
+                            const group = this.selectionService.rowsDirectParents.get(recID);
+                            this.selectionService.handleGroupState(group);
+                            this.selectionService.selectedRowsChange.next();
+                        }
+                    });
+                }
+            }
+        });
+
         this.filteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.groupingExpressions.length) {
                 const leafRowsDirectGroups = new Set<any>();

@@ -61,8 +61,8 @@ export class IgxGridSelectionService {
     public columnSelection: Set<string> = new Set<string>();
 
     public rowsDirectParents: Map<any, IGroupByRecord> = new Map<any, IGroupByRecord>();
-    public selectedGroupByRows: Set<IGroupByRecord> = new Set<IGroupByRecord>();
-    public indeterminateGroupByRows: Set<IGroupByRecord> = new Set<IGroupByRecord>();
+    public selectedGroupByRows: Set<any> = new Set<any>();
+    public indeterminateGroupByRows: Set<any> = new Set<any>();
     /**
      * @hidden @internal
      */
@@ -476,7 +476,7 @@ export class IgxGridSelectionService {
             this.rowSelection.add(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
-        if (this.grid.groupingExpressions.length) {
+        if (this.grid?.groupingExpressions.length) {
             rowsGroups.forEach(group => this.handleGroupState(group));
         }
         this.allRowsSelected = undefined;
@@ -484,15 +484,16 @@ export class IgxGridSelectionService {
     }
 
     public handleParentGroupsState(group: IGroupByRecord) {
-        if (group.groups.every(x => this.selectedGroupByRows.has(x))) {
-            this.selectedGroupByRows.add(group);
-            this.indeterminateGroupByRows.delete(group);
-        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(x) || this.selectedGroupByRows.has(x))) {
-            this.selectedGroupByRows.delete(group);
-            this.indeterminateGroupByRows.add(group);
+        if (group.groups.every(x => this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+            this.selectedGroupByRows.add(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
+        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(x.value + x.expression.fieldName) ||
+            this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.add(group.value + group.expression.fieldName);
         } else {
-            this.selectedGroupByRows.delete(group);
-            this.indeterminateGroupByRows.delete(group);
+            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
         }
         if (group.level === 0) {
             return;
@@ -500,16 +501,19 @@ export class IgxGridSelectionService {
         this.handleParentGroupsState(group.groupParent);
     }
 
-    public handleGroupState(group: IGroupByRecord) {
-        if (group.records.every(x => this.isRowSelected(this.getRowID(x)))) {
-            this.selectedGroupByRows.add(group);
-            this.indeterminateGroupByRows.delete(group);
-        } else if (group.records.every(x => !this.isRowSelected(this.getRowID(x)))) {
-            this.selectedGroupByRows.delete(group);
-            this.indeterminateGroupByRows.delete(group);
+    public handleGroupState(group: IGroupByRecord, isCRUD = false) {
+        const visibleRowIDs = this.allData;
+        const visibleRecordsInGroup = isCRUD ? group.records.filter(rec => visibleRowIDs.indexOf(rec) > -1) : group.records;
+
+        if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x)))) {
+            this.selectedGroupByRows.add(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
+        } else if (visibleRecordsInGroup.every(x => !this.isRowSelected(this.getRowID(x)))) {
+            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
         } else {
-            this.selectedGroupByRows.delete(group);
-            this.indeterminateGroupByRows.add(group);
+            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
+            this.indeterminateGroupByRows.add(group.value + group.expression.fieldName);
         }
 
         if (group.groupParent) {
