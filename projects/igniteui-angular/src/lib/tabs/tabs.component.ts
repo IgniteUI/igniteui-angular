@@ -495,8 +495,6 @@ export class IgxTabsComponent implements IgxTabsBase, AfterViewInit, OnDestroy {
             } else {
                 this.hideIndicator();
             }
-        });
-        Promise.resolve().then(() => {
             this.updateScrollButtons();
         });
     }
