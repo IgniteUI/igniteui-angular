@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 import {
     ChangeDetectorRef,
     Component,
@@ -86,58 +86,6 @@ export class IgxToastComponent extends IgxToggleDirective
     @HostBinding('attr.id')
     @Input()
     public id = `igx-toast-${NEXT_ID++}`;
-
-    /**
-     * Emits an event prior the toast is shown.
-     * Provides reference to the `IgxToastComponent` as event argument.
-     * ```html
-     * <igx-toast (showing)="handleShowing($event)"></igx-toast>
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateProperty(`'showing' property is deprecated. You can use 'onOpening' instead.`)
-    @Output()
-    public showing = new EventEmitter<IgxToastComponent>();
-
-    /**
-     * Emits an event when the toast is shown.
-     * Provides reference to the `IgxToastComponent` as event argument.
-     * ```html
-     * <igx-toast (shown)="handleShown($event)"></igx-toast>
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateProperty(`'shown' property is deprecated. You can use 'onOpened' instead.`)
-    @Output()
-    public shown = new EventEmitter<IgxToastComponent>();
-
-    /**
-     * Emits an event prior the toast is hidden.
-     * Provides reference to the `IgxToastComponent` as event argument.
-     * ```html
-     * <igx-toast (hiding)="handleHiding($event)"></igx-toast>
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateProperty(`'hiding' property is deprecated. You can use 'onClosing' instead.`)
-    @Output()
-    public hiding = new EventEmitter<IgxToastComponent>();
-
-    /**
-     *  Emits an event when the toast is hidden.
-     *  Provides reference to the `IgxToastComponent` as event argument.
-     * ```html
-     * <igx-toast (hidden)="handleHidden($event)"></igx-toast>
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateProperty(`'hidden' property is deprecated. You can use 'onClosed' instead.`)
-    @Output()
-    public hidden = new EventEmitter<IgxToastComponent>();
 
     /**
      * Sets/gets the `role` attribute.
@@ -329,37 +277,6 @@ export class IgxToastComponent extends IgxToggleDirective
     }
 
     /**
-     * @deprecated
-     * Shows the toast.
-     * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
-     *
-     * ```typescript
-     * this.toast.show();
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
-    public show(message?: string): void {
-        this.open(message);
-    }
-
-    /**
-     * @deprecated
-     * Hides the toast.
-     *
-     * ```typescript
-     * this.toast.hide();
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
-    public hide(): void {
-        this.close();
-    }
-
-    /**
      * Shows the toast.
      * If `autoHide` is enabled, the toast will hide after `displayTime` is over.
      *
@@ -390,7 +307,6 @@ export class IgxToastComponent extends IgxToggleDirective
             this.toastMessage = message;
         }
 
-        this.showing.emit(this);
         super.open(overlaySettings);
 
         if (this.autoHide) {
@@ -409,7 +325,6 @@ export class IgxToastComponent extends IgxToggleDirective
      */
     public close() {
         clearInterval(this.timeoutId);
-        this.hiding.emit(this);
         super.close();
     }
 
@@ -431,12 +346,10 @@ export class IgxToastComponent extends IgxToggleDirective
     public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
             this.isVisibleChange.emit(true);
-            this.shown.emit(this);
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
             this.isVisibleChange.emit(false);
-            this.hidden.emit(this);
         });
     }
 

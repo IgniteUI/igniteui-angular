@@ -1,8 +1,8 @@
 <div #headerContainer class="igx-tabs__header">
     <button
+        #leftButton
         igxButton="icon"
         igxRipple
-        igxLeftButtonStyle
         class="igx-tabs__header-button"
         (click)="scrollLeft()"
     >
@@ -26,9 +26,9 @@
         </div>
     </div>
     <button
+        #rightButton
         igxButton="icon"
         igxRipple
-        igxRightButtonStyle
         class="igx-tabs__header-button"
         (click)="scrollRight()"
     >
