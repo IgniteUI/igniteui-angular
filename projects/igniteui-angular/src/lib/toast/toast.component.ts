@@ -329,18 +329,6 @@ export class IgxToastComponent extends IgxToggleDirective
     }
 
     /**
-     * Toggles the visible state of the toast.
-     * ```typescript
-     * this.toast.toggle();
-     * ```
-     *
-     * @memberof IgxToastComponent
-     */
-    public toggle() {
-        super.toggle();
-    }
-
-    /**
      * @hidden
      */
     public ngOnInit() {
