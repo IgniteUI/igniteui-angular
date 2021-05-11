@@ -732,7 +732,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         });
 
         this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
-            this.calendar?.daysView.focusActiveDate();
+            this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 

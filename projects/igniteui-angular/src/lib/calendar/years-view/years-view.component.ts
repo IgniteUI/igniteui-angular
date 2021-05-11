@@ -138,7 +138,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      * ```
      */
     @Input()
-    public get yearFormat(): string {
+    public get yearFormat(): any {
         return this._yearFormat;
     }
 
@@ -150,7 +150,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *
      * @memberof IgxYearsViewComponent
      */
-    public set yearFormat(value: string) {
+    public set yearFormat(value: any) {
         this._yearFormat = value;
         this.initYearFormatter();
     }
