@@ -8,7 +8,7 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 ## Simple Snackbar
 
 ```html
-<button (click)="snackbar.show()">Show snackbar</button>
+<button (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
             message="This is a simple snackbar!">
@@ -17,25 +17,25 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 You can be more descriptive and set a message `message="This is a simple snackbar!"`.
 
-You can show the snackbar by using `snackbar.show()` method.
+You can show the snackbar by using `snackbar.open()` method.
 
 
 ## Snackbar with button and action
 
 ```html
-<button (click)="snackbar.show()">Show snackbar</button>
+<button (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
              message="This is a snackbar with a button and action!"
              actionName="Dismiss"
-             (onAction)="snackbar.hide()">
+             (onAction)="snackbar.close()">
 </igx-snackbar>
 ```
 You can set the id of the component by `id="Snackbar"`, otherwise it will be automatically generated.
 
 You can set the title of the button by setting `actionName="Dismiss"`.
 
-You can hide the Snackbar by using `snackbar.hide()` method.
+You can hide the Snackbar by using `snackbar.close()` method.
 
 By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds. The automatic hiding behavior can be controlled via the following attributes:
  - `autoHide` - whether the snackbar should be hidden after a certain time interval.
@@ -45,11 +45,11 @@ By default, the IgxSnackbar will be automatically hidden after 4000 milliseconds
 ## Snackbar with custom content
 
 ```html
-<button (click)="snackbar.show()">Show snackbar</button>
+<button (click)="snackbar.open()">Show snackbar</button>
 
 <igx-snackbar #snackbar
              actionName="Dismiss"
-             (onAction)="snackbar.hide()">
+             (onAction)="snackbar.close()">
     <span>Custom content</span>
 </igx-snackbar>
 ```
