@@ -3,9 +3,7 @@ import { NgModule } from '@angular/core';
 import { IgxRippleModule } from '../../directives/ripple/ripple.directive';
 import { IgxIconModule } from '../../icon/public_api';
 import { IgxTabHeaderComponent } from './tab-header.component';
-import {
-    IgxLeftButtonStyleDirective, IgxRightButtonStyleDirective, IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective
-} from './tabs.directives';
+import { IgxTabHeaderIconDirective, IgxTabHeaderLabelDirective } from './tabs.directives';
 import { IgxTabItemComponent } from './tab-item.component';
 import { IgxTabContentComponent } from './tab-content.component';
 import { IgxTabsComponent } from './tabs.component';
@@ -20,9 +18,7 @@ import { IgxSuffixModule } from '../../directives/suffix/suffix.directive';
         IgxTabHeaderComponent,
         IgxTabContentComponent,
         IgxTabHeaderLabelDirective,
-        IgxTabHeaderIconDirective,
-        IgxRightButtonStyleDirective,
-        IgxLeftButtonStyleDirective
+        IgxTabHeaderIconDirective
     ],
     exports:  [
         IgxTabsComponent,

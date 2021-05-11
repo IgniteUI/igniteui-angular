@@ -1,7 +1,9 @@
-import { Component, ElementRef, HostBinding, Input, ViewChild } from '@angular/core';
+import { AnimationBuilder } from '@angular/animations';
+import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
 import { mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
+import ResizeObserver from 'resize-observer-polyfill';
 
 export const IgxTabsAlignment = mkenum({
     start: 'start',
@@ -9,6 +11,14 @@ export const IgxTabsAlignment = mkenum({
     center: 'center',
     justify: 'justify'
 });
+
+/** @hidden */
+enum TabScrollButtonStyle {
+    Visible = 'visible',
+    Hidden = 'hidden',
+    NotDisplayed = 'not_displayed'
+}
+
 export type IgxTabsAlignment = (typeof IgxTabsAlignment)[keyof typeof IgxTabsAlignment];
 
 /** @hidden */
@@ -49,7 +59,8 @@ let NEXT_TAB_ID = 0;
     templateUrl: 'tabs.component.html',
     providers: [{ provide: IgxTabsBase, useExisting: IgxTabsComponent }]
 })
-export class IgxTabsComponent extends IgxTabsDirective {
+
+export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit, OnDestroy {
 
     /**
      * An @Input property which determines the tab alignment. Defaults to `start`.
@@ -83,6 +94,14 @@ export class IgxTabsComponent extends IgxTabsDirective {
     public selectedIndicator: ElementRef<HTMLElement>;
 
     /** @hidden */
+    @ViewChild('leftButton')
+    public leftButton: ElementRef<HTMLElement>;
+
+    /** @hidden */
+    @ViewChild('rightButton')
+    public rightButton: ElementRef<HTMLElement>;
+
+    /** @hidden */
     @HostBinding('class.igx-tabs')
     public defaultClass = true;
 
@@ -93,6 +112,34 @@ export class IgxTabsComponent extends IgxTabsDirective {
     protected componentName = 'igx-tabs';
 
     private _tabAlignment: string | IgxTabsAlignment = 'start';
+    private _resizeObserver: ResizeObserver;
+
+    constructor(builder: AnimationBuilder, private ngZone: NgZone) {
+        super(builder);
+    }
+
+
+    /** @hidden @internal */
+    public ngAfterViewInit(): void {
+        super.ngAfterViewInit();
+
+        this.ngZone.runOutsideAngular(() => {
+            this._resizeObserver = new ResizeObserver(() => {
+                this.updateScrollButtons();
+            });
+            this._resizeObserver.observe(this.headerContainer.nativeElement);
+            this._resizeObserver.observe(this.viewPort.nativeElement);
+        });
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy(): void {
+        super.ngOnDestroy();
+
+        this.ngZone.runOutsideAngular(() => {
+            this._resizeObserver.disconnect();
+        });
+    }
 
     /** @hidden */
     public scrollLeft() {
@@ -154,6 +201,15 @@ export class IgxTabsComponent extends IgxTabsDirective {
         return NEXT_TAB_ID++;
     }
 
+    /** @hidden */
+    protected onItemChanges() {
+        super.onItemChanges();
+
+        Promise.resolve().then(() => {
+            this.updateScrollButtons();
+        });
+    }
+
     private alignSelectedIndicator(element: HTMLElement, duration = 0.3): void {
         if (this.selectedIndicator) {
             this.selectedIndicator.nativeElement.style.visibility = 'visible';
@@ -192,6 +248,74 @@ export class IgxTabsComponent extends IgxTabsDirective {
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
         this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.updateScrollButtons();
+    }
+
+    private updateScrollButtons() {
+        const itemsContainerWidth = this.getTabItemsContainerWidth();
+
+        const leftButtonStyle = this.resolveLeftScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.leftButton.nativeElement, leftButtonStyle);
+
+        const rightButtonStyle = this.resolveRightScrollButtonStyle(itemsContainerWidth);
+        this.setScrollButtonStyle(this.rightButton.nativeElement, rightButtonStyle);
+    }
+
+    private setScrollButtonStyle(button: HTMLElement, buttonStyle: TabScrollButtonStyle) {
+        if (buttonStyle === TabScrollButtonStyle.Visible) {
+            button.style.visibility = 'visible';
+            button.style.display = '';
+        } else if (buttonStyle === TabScrollButtonStyle.Hidden) {
+            button.style.visibility = 'hidden';
+            button.style.display = '';
+        } else if (buttonStyle === TabScrollButtonStyle.NotDisplayed) {
+            button.style.display = 'none';
+        }
+    }
+    private resolveLeftScrollButtonStyle(itemsContainerWidth: number): TabScrollButtonStyle {
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const offset = this.offset;
+
+        if (offset === 0) {
+            // Fix for IE 11, a difference is accumulated from the widths calculations.
+            if (itemsContainerWidth - headerContainerWidth <= 1) {
+                return TabScrollButtonStyle.NotDisplayed;
+            }
+            return TabScrollButtonStyle.Hidden;
+        } else {
+            return TabScrollButtonStyle.Visible;
+        }
+    }
+
+    private resolveRightScrollButtonStyle(itemsContainerWidth: number): TabScrollButtonStyle {
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
+        const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
+        const offset = this.offset;
+        const total = offset + viewPortWidth;
+
+        // Fix for IE 11, a difference is accumulated from the widths calculations.
+        if (itemsContainerWidth - headerContainerWidth <= 1 && offset === 0) {
+            return TabScrollButtonStyle.NotDisplayed;
+        }
+
+        if (itemsContainerWidth > total) {
+            return TabScrollButtonStyle.Visible;
+        } else {
+            return TabScrollButtonStyle.Hidden;
+        }
+    }
+
+    private getTabItemsContainerWidth() {
+        // We use this hacky way to get the width of the itemsContainer,
+        // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
+        const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
+        let itemsContainerWidth = 0;
+        if (itemsContainerChildrenCount > 1) {
+            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+            itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
+        }
+
+        return itemsContainerWidth;
     }
 }
 
