@@ -11,7 +11,7 @@ import {
     TemplateRef,
     ViewChild
 } from '@angular/core';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { GridBaseAPIService } from '../api.service';
 import { IgxColumnComponent } from '../columns/column.component';
@@ -66,7 +66,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     @HostBinding('class.igx-grid__th--number')
     public get numberStyle() {
-        return this.column.dataType === DataType.Number;
+        return this.column.dataType === GridColumnDataType.Number;
     }
 
     @HostBinding('class.igx-grid__th--sortable')

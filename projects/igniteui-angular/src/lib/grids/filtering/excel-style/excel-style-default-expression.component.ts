@@ -10,9 +10,9 @@ import {
 import { IgxColumnComponent } from '../../columns/column.component';
 import { ExpressionUI } from '../grid-filtering.service';
 import { IgxButtonGroupComponent } from '../../../buttonGroup/buttonGroup.component';
-import { DataType, DataUtil } from '../../../data-operations/data-util';
+import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
-import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy  } from '../../../services/public_api';
+import { OverlaySettings, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../../../services/public_api';
 import { IBaseEventArgs, PlatformUtil } from '../../../core/utils';
 import { FilteringLogic } from '../../../data-operations/filtering-expression.interface';
 import { DisplayDensity } from '../../../core/density';
@@ -94,16 +94,16 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
 
     public get type() {
         switch (this.column.dataType) {
-            case DataType.Number:
-            case DataType.Currency:
-            case DataType.Percent:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
+            case GridColumnDataType.Percent:
                 return 'number';
             default:
                 return 'text';
         }
     }
 
-    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) {}
+    constructor(public cdr: ChangeDetectorRef, protected platform: PlatformUtil) { }
 
     public get conditions() {
         return this.column.filters.conditionList();
@@ -131,7 +131,7 @@ export class IgxExcelStyleDefaultExpressionComponent implements AfterViewInit {
     }
 
     public getIconName(): string {
-        if (this.column.dataType === DataType.Boolean && this.expressionUI.expression.condition === null) {
+        if (this.column.dataType === GridColumnDataType.Boolean && this.expressionUI.expression.condition === null) {
             return this.getCondition(this.conditions[0]).iconName;
         } else if (!this.expressionUI.expression.condition) {
             return 'filter_list';

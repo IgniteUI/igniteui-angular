@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { cloneArray, isEqual, reverseMapper, mergeObjects } from '../core/utils';
-import { DataUtil, DataType } from '../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../data-operations/data-util';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxGridCellComponent } from './cell.component';
 import { IgxGridBaseDirective } from './grid-base.directive';
@@ -299,7 +299,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === DataType.Number;
+        return column.dataType === GridColumnDataType.Number;
     }
 
     public get_data(): any[] {

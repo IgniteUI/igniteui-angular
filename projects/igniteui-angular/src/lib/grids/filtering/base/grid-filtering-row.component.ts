@@ -13,7 +13,7 @@ import {
     ViewRef,
     HostListener
 } from '@angular/core';
-import { DataType, DataUtil } from '../../../data-operations/data-util';
+import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
 import { IgxDropDownComponent, ISelectionEventArgs } from '../../../drop-down/public_api';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
@@ -204,13 +204,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     }
 
     public get template(): TemplateRef<any> {
-        if (this.column.dataType === DataType.Date) {
+        if (this.column.dataType === GridColumnDataType.Date) {
             return this.defaultDateUI;
         }
-        if (this.column.dataType === DataType.Time) {
+        if (this.column.dataType === GridColumnDataType.Time) {
             return this.defaultTimeUI;
         }
-        if (this.column.dataType === DataType.DateTime) {
+        if (this.column.dataType === GridColumnDataType.DateTime) {
             return this.defaultDateTimeUI;
         }
         return this.defaultFilterUI;
@@ -218,11 +218,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public get type() {
         switch (this.column.dataType) {
-            case DataType.String:
-            case DataType.Boolean:
+            case GridColumnDataType.String:
+            case GridColumnDataType.Boolean:
                 return 'text';
-            case DataType.Number:
-            case DataType.Currency:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Currency:
                 return 'number';
         }
     }
@@ -242,9 +242,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public get placeholder(): string {
         if (this.expression.condition && this.expression.condition.isUnary) {
             return this.filteringService.getChipLabel(this.expression);
-        } else if (this.column.dataType === DataType.Date) {
+        } else if (this.column.dataType === GridColumnDataType.Date) {
             return this.filteringService.grid.resourceStrings.igx_grid_filter_row_date_placeholder;
-        } else if (this.column.dataType === DataType.Boolean) {
+        } else if (this.column.dataType === GridColumnDataType.Boolean) {
             return this.filteringService.grid.resourceStrings.igx_grid_filter_row_boolean_placeholder;
         } else {
             return this.filteringService.grid.resourceStrings.igx_grid_filter_row_placeholder;
@@ -269,7 +269,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     public onInputKeyDown(event: KeyboardEvent) {
         this.isKeyPressed = true;
         event.stopPropagation();
-        if (this.column.dataType === DataType.Boolean) {
+        if (this.column.dataType === GridColumnDataType.Boolean) {
             if (this.platform.isActivationKey(event)) {
                 this.inputGroupPrefix.nativeElement.focus();
                 this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
@@ -304,7 +304,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         // The 'iskeyPressed' flag is needed for a case in IE, because the input event is fired on focus and for some reason,
         // when you have a japanese character as a placeholder, on init the value here is empty string .
         const target = eventArgs.target;
-        if (this.column.dataType === DataType.DateTime) {
+        if (this.column.dataType === GridColumnDataType.DateTime) {
             this.value = eventArgs;
             return;
         }
@@ -332,7 +332,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Event handler for input click event.
      */
     public onInputClick() {
-        if (this.column.dataType === DataType.Boolean && this.dropDownConditions.collapsed) {
+        if (this.column.dataType === GridColumnDataType.Boolean && this.dropDownConditions.collapsed) {
             this.inputGroupPrefix.nativeElement.focus();
             this.toggleConditionsDropDown(this.inputGroupPrefix.nativeElement);
         }
@@ -356,7 +356,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
      * Returns the icon name of the current condition.
      */
     public getIconName(): string {
-        if (this.column.dataType === DataType.Boolean && this.expression.condition === null) {
+        if (this.column.dataType === GridColumnDataType.Boolean && this.expression.condition === null) {
             return this.getCondition(this.conditions[0]).iconName;
         } else {
             return this.expression.condition.iconName;
@@ -744,11 +744,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             ignoreCase: this.column.filteringIgnoreCase
         };
 
-        if (this.column.dataType !== DataType.Boolean) {
+        if (this.column.dataType !== GridColumnDataType.Boolean) {
             this.expression.condition = this.getCondition(this.conditions[0]);
         }
 
-        if (this.column.dataType === DataType.Date && this.input) {
+        if (this.column.dataType === GridColumnDataType.Date && this.input) {
             this.input.nativeElement.value = null;
         }
 
