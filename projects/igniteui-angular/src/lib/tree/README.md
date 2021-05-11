@@ -20,7 +20,7 @@ The specification for the tree can be found [here](https://github.com/IgniteUI/i
     {{ node.text }}
     <img [src]="node.image" alt="node.imageAlt" />
     <igx-tree-node *ngFor="let child of node.children" [data]="child" [expanded]="isNodeExpanded(child)" [selected]="isNodeSelected(child)">
-	  {{ child.text }}
+      {{ child.text }}
       <igx-tree-node *ngFor="let leafChild of child.children" [data]="leafChild" [expanded]="isNodeExpanded(leafChild)" [selected]="isNodeSelected(leafChild)">
         <a igxTreeNodeLink href="{{leafChild.location}}" target="_blank">{{ leafChild.text }}</a>
       </igx-tree-node>
