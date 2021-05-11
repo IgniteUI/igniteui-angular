@@ -1574,4 +1574,44 @@ export class HGridMultiRowDragComponent {
     }
 }`);
     });
+
+    it('should rename DataType to GridColumnDataType', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts',
+            `import { Component, ViewChild } from '@angular/core';
+        import { IgxColumnComponent, DataType } from 'igniteui-angular';
+
+        @Component({
+            selector: 'column-dataType',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class ColumnDataType {
+            public dataType: DataType = DataType.Boolean;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        const expectedContent = `import { Component, ViewChild } from '@angular/core';
+        import { IgxColumnComponent, GridColumnDataType } from 'igniteui-angular';
+
+        @Component({
+            selector: 'column-dataType',
+            templateUrl: './test.component.html',
+            styleUrls: ['./test.component.scss']
+        })
+        export class ColumnDataType {
+            public dataType: GridColumnDataType = GridColumnDataType.Boolean;
+        }
+        `;
+
+        expect(
+            tree.readContent(
+                '/testSrc/appPrefix/component/test.component.ts'
+            )
+        ).toEqual(expectedContent);
+    });
 });
