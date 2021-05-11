@@ -1,4 +1,4 @@
-import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync } from '@angular/core/testing';
 import { IgxGridModule } from './grid.module';
 import { IgxGridComponent } from './grid.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -14,7 +14,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DropPosition } from '../moving/moving.service';
 
 describe('IgxGrid - multi-column headers #grid', () => {
-    configureTestSuite();
+
     let contactInf;
     let countryInf;
     let addressInf;
@@ -24,7 +24,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
     let countryCol;
     let emptyCol;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 CollapsibleColumnGroupTestComponent,
@@ -35,7 +35,7 @@ describe('IgxGrid - multi-column headers #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe('Base Tests', () => {

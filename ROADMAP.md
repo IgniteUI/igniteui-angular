@@ -8,13 +8,13 @@
 2. **[DONE]** Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
 3. **[DONE]** Switch thumb templatable and add indeterminate state [#8949](https://github.com/IgniteUI/igniteui-angular/issues/8949)
 4. **[DONE]** IgxDateTimeEditor should support spin delta [#7169](https://github.com/IgniteUI/igniteui-angular/issues/7169)
-5. Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
+5. **[DONE]** Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
 6. **[DONE]** Export Hierarchical Grid to Excel [#5848](https://github.com/IgniteUI/igniteui-angular/issues/5848)
-7. Tree component [#7475](https://github.com/IgniteUI/igniteui-angular/issues/7475)
-8. IgxDatePicker refactoring [#6483](https://github.com/IgniteUI/igniteui-angular/issues/6483)
-9. IgxTimePicker refactoring [#6482](https://github.com/IgniteUI/igniteui-angular/issues/6482)
+7. **[DONE]** Tree component [#7475](https://github.com/IgniteUI/igniteui-angular/issues/7475)
+8. **[DONE]** IgxDatePicker refactoring [#6483](https://github.com/IgniteUI/igniteui-angular/issues/6483)
+9. **[DONE]** IgxTimePicker refactoring [#6482](https://github.com/IgniteUI/igniteui-angular/issues/6482)
 10. **[DONE]** Tabs and Bottom Nav Components Refactoring [#8793](https://github.com/IgniteUI/igniteui-angular/issues/8793)
-11. Datetime and Time column types [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
+11. **[DONE]** Datetime and Time column types [#7678](https://github.com/IgniteUI/igniteui-angular/issues/7678)
 12. **[DONE]** Add detach method to IgxOverlay [#6063](https://github.com/IgniteUI/igniteui-angular/issues/6063)
 13. **[DONE]** Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
 
@@ -27,7 +27,7 @@
 
 # Previous Milestone
 
-## Milestone 15 (Due by February, 2021)
+## Milestone 15 (Released February 17th, 2021)
 
 1. **[DONE]** Filters should support filtering by formatted value [#8009](https://github.com/IgniteUI/igniteui-angular/issues/8009)
 2. **[DONE]** Support changing theme dynamically on Input Group [#8619](https://github.com/IgniteUI/igniteui-angular/issues/8619)
@@ -72,7 +72,7 @@
 16. **[DONE]** Allow setting of the name of the worksheet in exported workbook in IgxExcelExporter [#7396](https://github.com/IgniteUI/igniteui-angular/issues/7396)
 17. **[DONE]** Enhance behavior of the Select All checkbox in Excel Style Filtering [#6617](https://github.com/IgniteUI/igniteui-angular/issues/6617)
 
-## Milestone 12 (Due by August 17th, 2020)
+## Milestone 12 (Released August 19th, 2020)
 
 1. **[DONE]** igx-grid improve IGridEditEventArgs [#4965](https://github.com/IgniteUI/igniteui-angular/issues/4965)
 2. **[DONE]** igxCombo has to include caseSensitive property in filter search [#7282](https://github.com/IgniteUI/igniteui-angular/issues/7282)

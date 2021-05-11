@@ -4,6 +4,7 @@ import { resolveNestedPath, parseDate } from '../core/utils';
 import { GridType } from '../grids/common/grid.interface';
 
 const DateType = 'date';
+const DateTimeType = 'dateTime';
 const TimeType = 'time';
 
 export interface IFilteringStrategy {
@@ -61,7 +62,7 @@ export abstract class BaseFilteringStrategy implements IFilteringStrategy  {
             } else {
                 const expression = expressions as IFilteringExpression;
                 const column = grid && grid.getColumnByName(expression.fieldName);
-                const isDate = column ? column.dataType === DateType : false;
+                const isDate = column ? column.dataType === DateType || column.dataType === DateTimeType : false;
                 const isTime = column ? column.dataType === TimeType : false;
                 return this.findMatchByExpression(rec, expression, isDate, isTime, grid);
             }

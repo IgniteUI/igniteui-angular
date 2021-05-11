@@ -60,6 +60,15 @@ export abstract class DateTimeUtil {
             return null;
         }
 
+        const amPm = dateTimeParts.find(p => p.type === DatePart.AmPm);
+        if (amPm) {
+            parts[DatePart.Hours] %= 12;
+        }
+
+        if (amPm && DateTimeUtil.getCleanVal(inputData, amPm, promptChar).toLowerCase() === 'pm') {
+            parts[DatePart.Hours] += 12;
+        }
+
         return new Date(
             parts[DatePart.Year] || 2000,
             parts[DatePart.Month] || 0,

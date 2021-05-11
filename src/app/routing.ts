@@ -119,6 +119,7 @@ import { GridEventsComponent } from './grid-events/grid-events.component';
 import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
+import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 
 const appRoutes = [
     {
@@ -390,6 +391,10 @@ const appRoutes = [
     {
         path: 'gridColumnMoving',
         component: GridColumnMovingSampleComponent
+    },
+    {
+        path: 'gridColumnTypes',
+        component: GridColumnTypesSampleComponent
     },
     {
         path: 'gridColumnSelecting',
