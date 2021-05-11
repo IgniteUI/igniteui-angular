@@ -1200,6 +1200,38 @@
                 "selector": "igx-date-range-picker",
                 "type": "component"
             }
+        },
+        {
+            "name": "showing",
+            "replaceWith": "onOpening",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "shown",
+            "replaceWith": "onOpened",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "hiding",
+            "replaceWith": "onClosing",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
+        },
+        {
+            "name": "hidden",
+            "replaceWith": "onClosed",
+            "owner": {
+                "selector": "igx-toast",
+                "type": "component"
+            }
         }
     ]
 }

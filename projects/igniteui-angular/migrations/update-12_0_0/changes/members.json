@@ -595,6 +595,62 @@
             "definedIn": [
                 "IgxRangePickerComponent"
             ]
+        },
+        {
+            "member": "showing",
+            "replaceWith": "onOpening",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "shown",
+            "replaceWith": "onOpened",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "hiding",
+            "replaceWith": "onClosing",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "hidden",
+            "replaceWith": "onClosed",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "show",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "hide",
+            "replaceWith": "close",
+            "definedIn": [
+                "IgxToastComponent"
+            ]
+        },
+        {
+            "member": "show",
+            "replaceWith": "open",
+            "definedIn": [
+                "IgxSnackbarComponent"
+            ]
+        },
+        {
+            "member": "hide",
+            "replaceWith": "close",
+            "definedIn": [
+                "IgxSnackbarComponent"
+            ]
         }
     ]
 }

@@ -14,7 +14,7 @@ import {
     Output
 } from '@angular/core';
 import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from '../animations/main';
-import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
+import { DeprecateProperty } from '../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 /**
@@ -222,30 +222,6 @@ export class IgxSnackbarComponent {
     private timeoutId;
 
     constructor() { }
-
-    /**
-     * @deprecated
-     * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
-     * ```typescript
-     * this.snackbar.show();
-     * ```
-     */
-    @DeprecateMethod(`'show' is deprecated. Use 'open' method instead.`)
-    public show(message?: string): void {
-        this.open(message);
-    }
-
-    /**
-     * @deprecated
-     * Hides the snackbar.
-     * ```typescript
-     * this.snackbar.hide();
-     * ```
-     */
-    @DeprecateMethod(`'hide' is deprecated. Use 'close' method instead.`)
-    public hide(): void {
-        this.close();
-    }
 
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
