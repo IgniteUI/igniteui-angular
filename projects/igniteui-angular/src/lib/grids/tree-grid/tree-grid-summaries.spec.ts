@@ -810,12 +810,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             tick(16);
         }));
 
-        it('Delete root node', () => {
+        it('Delete root node', fakeAsync(() => {
             treeGrid.toggleRow(847);
             fix.detectChanges();
 
             treeGrid.deleteRow(847);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -830,6 +831,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -844,6 +846,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -858,19 +861,21 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Commit transactions
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+            tick();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-        });
+        }));
 
-        it('Delete a root node with cascadeOnDelete set to false', () => {
+        it('Delete a root node with cascadeOnDelete set to false', fakeAsync(() => {
             treeGrid.cascadeOnDelete = false;
             treeGrid.expandAll();
             fix.detectChanges();
 
             treeGrid.deleteRow(147);
             fix.detectChanges();
+            tick();
 
             // Verify summary is updated
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -885,23 +890,26 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Commit transactions
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['6']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
-        });
+        }));
 
-        it('Delete child node', () => {
+        it('Delete child node', fakeAsync(() => {
             treeGrid.deleteRow(317);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
 
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['0']);
@@ -914,6 +922,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -926,6 +935,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -941,6 +951,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Clear transactions
             treeGrid.transactions.clear();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -950,15 +961,16 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-        });
+        }));
 
-        it('Delete child node cascadeOnDelete set to false', () => {
+        it('Delete child node cascadeOnDelete set to false', fakeAsync(() => {
             treeGrid.cascadeOnDelete = false;
             treeGrid.expandAll();
             fix.detectChanges();
 
             treeGrid.deleteRow(317);
             fix.detectChanges();
+            tick();
 
             // Verify summaries are not changed
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
@@ -973,15 +985,16 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Commit
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['6']);
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 3);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
-        });
+        }));
 
-        it('Add root node', () => {
+        it('Add root node', fakeAsync(() => {
             const newRow = {
                 ID: 11,
                 ParentID: -1,
@@ -991,6 +1004,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             };
             treeGrid.addRow(newRow);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
@@ -999,6 +1013,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1008,6 +1023,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
@@ -1016,13 +1032,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Commit transactions
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+            tick();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
-        });
+        }));
 
-        it('Add child node', () => {
+        it('Add child node', fakeAsync(() => {
             const newRow = {
                 ID: 11,
                 ParentID: 317,
@@ -1032,12 +1049,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             };
             treeGrid.addRow(newRow);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
 
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -1049,6 +1068,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
@@ -1060,6 +1080,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -1067,9 +1088,9 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 8);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
-        });
+        }));
 
-        it('Update root node', () => {
+        it('Update root node', fakeAsync(() => {
             const newRow = {
                 ID: 847,
                 ParentID: -1,
@@ -1079,6 +1100,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             };
             treeGrid.updateRow(newRow, 847);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1087,6 +1109,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1096,6 +1119,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1104,13 +1128,14 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Commit transactions
             treeGrid.transactions.commit(fix.componentInstance.data);
             fix.detectChanges();
+            tick();
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(1);
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
-        });
+        }));
 
-        it('Update child node', () => {
+        it('Update child node', fakeAsync(() => {
             const newRow = {
                 ID: 317,
                 ParentID: 147,
@@ -1120,6 +1145,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             };
             treeGrid.updateRow(newRow, 317);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1127,6 +1153,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
@@ -1139,6 +1166,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
@@ -1151,6 +1179,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 6);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['2']);
@@ -1159,9 +1188,9 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['13', '43']);
-        });
+        }));
 
-        it('Update child node and change tree structure', () => {
+        it('Update child node and change tree structure', fakeAsync(() => {
             treeGrid.expandAll();
             fix.detectChanges();
 
@@ -1174,6 +1203,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             };
             treeGrid.getRowByKey(317).update(newRow);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
@@ -1190,6 +1220,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1205,6 +1236,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['5']);
@@ -1221,6 +1253,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Clear transactions
             treeGrid.transactions.clear();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1232,17 +1265,19 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 7);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
-        });
+        }));
 
-        it('Update cell', () => {
+        it('Update cell', fakeAsync(() => {
             treeGrid.summaryPosition = 'top';
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             treeGrid.updateCell(-1, 147, 'Age');
             const cell = treeGrid.getCellByColumn(4, 'Age');
             cell.update(100);
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1255,6 +1290,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Clear transactions
             treeGrid.transactions.clear();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1263,15 +1299,17 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 1);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['29', '43']);
-        });
+        }));
 
-        it('Update cell and change tree grid structure', () => {
+        it('Update cell and change tree grid structure', fakeAsync(() => {
             treeGrid.summaryPosition = 'top';
             treeGrid.expandAll();
             fix.detectChanges();
+            tick();
 
             treeGrid.updateCell(317, 17, 'ParentID');
             fix.detectChanges();
+            tick();
 
             let summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
@@ -1287,6 +1325,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Undo transactions
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
 
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['4']);
@@ -1302,6 +1341,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             // Redo transactions
             treeGrid.transactions.redo();
             fix.detectChanges();
+            tick();
+
             summaryRow = GridSummaryFunctions.getRootSummaryRow(fix);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['42', '55']);
@@ -1312,7 +1353,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             summaryRow = GridSummaryFunctions.getSummaryRowByDataRowIndex(fix, 5);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 1, ['Count'], ['3']);
             GridSummaryFunctions.verifyColumnSummaries(summaryRow, 3, ['Min', 'Max'], ['35', '61']);
-        });
+        }));
     });
 
     describe('Keyboard Navigation', () => {
