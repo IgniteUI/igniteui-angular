@@ -1699,4 +1699,30 @@ export class HGridMultiRowDragComponent {
     `
         );
     });
+
+    it('Should move disabled attribute w/ no value to igxInput', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group disabled>
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+// this is the expected output
+// putting just the disabled attribute on an igx-input-group is an invalid scenario
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group disabled>
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+    });
 });

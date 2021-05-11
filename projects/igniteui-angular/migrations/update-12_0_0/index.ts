@@ -493,8 +493,12 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
                             const matches = repTxt.match(/\/?>/g);
                             // should always be only 1 match
                             const lastIndex = repTxt.indexOf(matches[0]);
+                            let property =`${attr.name}`;
+                            if (attr.name === INPUT_GROUP_CHANGES.ATTRIBUTES[0] || attr.value) {
+                                property += `="${attr.value}"`;
+                            }
                             const addedAttr =
-                                `${repTxt.substring(0, lastIndex)} ${attr.name}="${attr.value}"${repTxt.substring(lastIndex)}`;
+                                `${repTxt.substring(0, lastIndex)} ${property}${repTxt.substring(lastIndex)}`;
                             addChange(file.url, new FileChange(startTag.start, addedAttr, repTxt, 'replace'));
                         });
                     }
