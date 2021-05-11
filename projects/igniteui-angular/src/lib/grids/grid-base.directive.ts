@@ -29,7 +29,7 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import {ResizeObserver} from '@juggle/resize-observer';
+import { ResizeObserver } from '@juggle/resize-observer';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';

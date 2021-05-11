@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDes
 import { mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
-import ResizeObserver from 'resize-observer-polyfill';
+import { ResizeObserver } from '@juggle/resize-observer';
 
 export const IgxTabsAlignment = mkenum({
     start: 'start',
