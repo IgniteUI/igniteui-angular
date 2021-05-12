@@ -36,7 +36,7 @@ import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 import { isIE, mkenum } from '../core/utils';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
 const IgxInputGroupTheme = mkenum({
@@ -139,7 +139,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _type: IgxInputGroupType = null;
     private _filled = false;
     private _theme: IgxInputGroupTheme;
-    private _theme$ = new BehaviorSubject(undefined);
+    private _theme$ = new Subject();
     private _resourceStrings = CurrentResourceStrings.InputResStrings;
 
     /** @hidden */
@@ -249,9 +249,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         super(_displayDensityOptions);
 
         this._theme$.pipe(delay(0)).subscribe(value => {
-            if(!this._theme) {
-                this._theme = value as IgxInputGroupTheme;
-            }
+            this._theme = value as IgxInputGroupTheme;
         });
     }
 
@@ -448,13 +446,17 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /** @hidden @internal */
     public ngAfterViewInit() {
-        if (!this._theme && !isIE()) {
-            const themeProp = this.document.defaultView
-                .getComputedStyle(this.element.nativeElement)
-                .getPropertyValue('--igx-input-group-variant')
-                .trim();
+        if (!this._theme) {
+            if(isIE()) {
+                this._theme$.next(IgxInputGroupTheme.Material);
+            } else {
+                const themeProp = this.document.defaultView
+                    .getComputedStyle(this.element.nativeElement)
+                    .getPropertyValue('--igx-input-group-variant')
+                    .trim();
 
-            this._theme$.next(themeProp);
+                this._theme$.next(themeProp);
+            }
         }
     }
 }
