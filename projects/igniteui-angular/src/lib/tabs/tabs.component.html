@@ -1,7 +1,7 @@
 <!-- TODO Remove tab container from here -->
 <div #tabsContainer>
     <div class="igx-tabs__header" #headerContainer>
-        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollLeft()" igxLeftButtonStyle>
+        <button #leftButton igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollLeft()">
             <igx-icon>navigate_before</igx-icon>
         </button>
         <div class="igx-tabs__header-wrapper-fixed" #viewPort>
@@ -19,7 +19,7 @@
                 <div #selectedIndicator *ngIf="groups.length > 0 || contentTabs.length > 0" class="igx-tabs__header-menu-item-indicator"></div>
             </div>
         </div>
-        <button igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollRight()" igxRightButtonStyle>
+        <button #rightButton igxRipple class="igx-tabs__header-button" igxButton="icon" (click)="scrollRight()">
             <igx-icon>navigate_next</igx-icon>
         </button>
     </div>
