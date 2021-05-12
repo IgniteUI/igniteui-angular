@@ -18,6 +18,9 @@ export class ListSampleComponent implements OnInit {
     @ViewChild('fruitList', { static: true })
     private fruitList: IgxListComponent;
 
+    @ViewChild('checkbox', { static: true })
+    private checkbox: any;
+
     @ViewChild('declarativeList', { static: true })
     private declarativeList: any;
 
@@ -153,7 +156,7 @@ export class ListSampleComponent implements OnInit {
         _fo.items = this.declarativeList.items;
         _fo.inputValue = this.search2;
 
-        _fo.get_value = (item: any) => item.element.nativeElement.textContent.trim();
+        _fo.get_value = (item: any) => item.element.textContent.trim();
 
         _fo.metConditionFn = (item: any) => {
             item.hidden = false;
