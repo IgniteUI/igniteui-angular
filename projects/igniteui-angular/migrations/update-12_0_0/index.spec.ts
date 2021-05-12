@@ -1852,4 +1852,30 @@ export class SimpleComponent {
     `
         );
     });
+
+    it('Should move disabled input group to textarea w/ igxInput', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <textarea igxInput [(ngModel)]="name">Some Text</textarea>
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+// this is the expected output
+// putting just the disabled attribute on an igx-input-group is an invalid scenario
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <textarea igxInput [(ngModel)]="name" [disabled]="true">Some Text</textarea>
+    </igx-input-group>
+    `
+        );
+    });
 });
