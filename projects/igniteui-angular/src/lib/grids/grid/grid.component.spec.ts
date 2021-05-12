@@ -1970,7 +1970,7 @@ describe('IgxGrid Component Tests #grid', () => {
             const indexToCompare = 32;
 
             let firstRow = grid.getRowByIndex(0);
-            let secondRow = grid.getRowByIndex(1)
+            let secondRow = grid.getRowByIndex(1);
             let thirdRow = grid.getRowByIndex(2);
 
             expect(indexToCompare > virtRowsLength).toBe(true);
@@ -1991,7 +1991,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             firstRow = grid.getRowByIndex(0);
-            secondRow = grid.getRowByIndex(1)
+            secondRow = grid.getRowByIndex(1);
             thirdRow = grid.getRowByIndex(2);
 
             // First row is IgxGroupByRow second row is igxGridRow
@@ -2003,7 +2003,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
 
             firstRow = grid.getRowByIndex(0);
-            secondRow = grid.getRowByIndex(1)
+            secondRow = grid.getRowByIndex(1);
             thirdRow = grid.getRowByIndex(2);
 
             expect(firstRow.expanded).toBe(true);
@@ -2027,7 +2027,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(firstRow.expanded).toBe(false);
 
             firstRow = grid.getRowByIndex(0);
-            secondRow = grid.getRowByIndex(1)
+            secondRow = grid.getRowByIndex(1);
             thirdRow = grid.getRowByIndex(2);
 
             // First row is still IgxGroupByRow and now the second row is as well IgxGroupByRow
