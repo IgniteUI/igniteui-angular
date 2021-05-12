@@ -37,7 +37,6 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 
 import { isIE, mkenum } from '../core/utils';
 import { Subject } from 'rxjs';
-import { delay } from 'rxjs/operators';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -248,7 +247,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     ) {
         super(_displayDensityOptions);
 
-        this._theme$.pipe(delay(0)).subscribe(value => {
+        this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;
         });
     }
@@ -448,14 +447,18 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     public ngAfterViewInit() {
         if (!this._theme) {
             if(isIE()) {
-                this._theme$.next(IgxInputGroupTheme.Material);
+                Promise.resolve().then(() => {
+                    this._theme$.next(IgxInputGroupTheme.Material);
+                });
             } else {
                 const themeProp = this.document.defaultView
                     .getComputedStyle(this.element.nativeElement)
                     .getPropertyValue('--igx-input-group-variant')
                     .trim();
 
-                this._theme$.next(themeProp);
+                Promise.resolve().then(() => {
+                    this._theme$.next(themeProp);
+                });
             }
         }
     }
