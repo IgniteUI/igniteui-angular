@@ -1,5 +1,5 @@
 import { DebugElement } from '@angular/core';
-import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, flush, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective } from '../../directives/input/input.directive';
@@ -57,8 +57,7 @@ const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -72,7 +71,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe(null, () => {
@@ -2778,8 +2777,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 });
 
 describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxGridFilteringComponent,
@@ -2794,8 +2792,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule,
                 IgxGridExcelStyleFilteringModule]
-        })
-            .compileComponents();
+        });
     }));
 
     describe(null, () => {
@@ -4085,8 +4082,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
 
             verifyExcelStyleFilterAvailableOptions(fix,
-                ['Select All', '(Blanks)', '0', '20', '100', '127', '254'],
-                [true, true, true, true, true, true, true]);
+                ['Select All', '(Blanks)', '0', '20', '100', '127', '254', '702', '1,000'],
+                [true, true, true, true, true, true, true, true, true]);
 
             GridFunctions.clickExcelFilterIcon(fix, 'ProductName');
             tick(100);
@@ -4862,38 +4859,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(0, 'incorrect rendered list items count');
         }));
 
-        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', async () => {
+        it('Should ignore duplicate records when column\'\s filteringIgnoreCase is true', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             expect(column.filteringIgnoreCase).toBeTrue();
 
-            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
             fix.detectChanges();
-            await wait(100);
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'a', 'Custom'],
+                [true, true, true]);
+        }));
 
-            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-        });
-
-        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', async () => {
+        it('Should not ignore duplicate records when column\'\s filteringIgnoreCase is false', fakeAsync(() => {
             const column = grid.getColumnByName('AnotherField');
             column.filteringIgnoreCase = false;
             expect(column.filteringIgnoreCase).toBeFalse();
 
-            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'AnotherField');
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
             fix.detectChanges();
-            await wait(100);
 
-            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-
-            expect(listItems.length).toBe(5, 'incorrect rendered list items count');
-            expect(listItems[1].innerText).toBe('Custom', 'incorrect list item label');
-            expect(listItems[3].innerText).toBe('custoM', 'incorrect list item label');
-            expect(listItems[4].innerText).toBe('custom', 'incorrect list item label');
-        });
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'a', 'Custom', 'custoM', 'custom'],
+                [true, true, true, true, true]);
+        }));
 
         it('Should display "Add to current filter selection" button on typing in input', fakeAsync(() => {
             // Open excel style filtering dialog.
@@ -5266,6 +5257,63 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems[2].innerText).toBe('No', 'incorrect list item label');
             expect(listItems[3].innerText).toBe('Yes', 'incorrect list item label');
         });
+
+        it('Should sort items in excel style search correctly', fakeAsync(() => {
+            const data = [
+                {
+                    Downloads: 254,
+                    ID: 1,
+                    ProductName: 'Ignite UI for JavaScript',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2010, 4, 27, 23, 0, 0),
+                    Released: false,
+                    AnotherField: 'BWord'
+                },
+                {
+                    Downloads: 127,
+                    ID: 2,
+                    ProductName: 'NetAdvantage',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2021, 4, 27, 1, 0, 0),
+                    Released: true,
+                    AnotherField: 'bWord'
+                },
+                {
+                    Downloads: 20,
+                    ID: 3,
+                    ProductName: 'Ignite UI for Angular',
+                    ReleaseDate: null,
+                    ReleaseDateTime: null,
+                    ReleaseTime: new Date(2015, 4, 27, 12, 0, 0),
+                    Released: null,
+                    AnotherField: 'aWord'
+                }
+            ];
+            fix.componentInstance.data = data;
+            fix.detectChanges();
+
+            // Open excel style custom filtering dialog for string column
+            GridFunctions.clickExcelFilterIcon(fix, 'AnotherField');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify items order is case INsensitive
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', 'aWord', 'BWord'],
+                [true, true, true]);
+
+            // Open excel style custom filtering dialog for time column
+            GridFunctions.clickExcelFilterIcon(fix, 'ReleaseTime');
+            tick(100);
+            fix.detectChanges();
+
+            // Verify items order is based only on time and not date
+            verifyExcelStyleFilterAvailableOptions(fix,
+                ['Select All', '1:00:00 AM', '12:00:00 PM', '11:00:00 PM'],
+                [true, true, true, true]);
+        }));
     });
 
     describe('Templates: ', () => {
@@ -5737,7 +5785,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 
             tick(1050);
             fix.detectChanges();
-
         }));
 
         it('Done callback should be executed only once per column', fakeAsync(() => {
@@ -5928,8 +5975,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
 describe('IgxGrid - Custom Filtering Strategy #grid', () => {
     let fix: ComponentFixture<any>;
     let grid: IgxGridComponent;
-    configureTestSuite();
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 CustomFilteringStrategyComponent
@@ -5937,7 +5983,7 @@ describe('IgxGrid - Custom Filtering Strategy #grid', () => {
             imports: [
                 NoopAnimationsModule,
                 IgxGridModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {
@@ -6323,6 +6369,7 @@ const verifyExcelStyleFilterAvailableOptions = (fix, labels: string[], checked: 
     const labelElements: any[] = Array.from(GridFunctions.getExcelStyleSearchComponentListItems(fix, excelMenu));
     const checkboxElements: any[] = Array.from(GridFunctions.getExcelStyleFilteringCheckboxes(fix, excelMenu));
 
+    expect(labelElements.length).toBe(labels.length, 'incorrect rendered list items count');
     expect(labelElements.length).toBeGreaterThan(2);
     expect(checkboxElements.length).toBeGreaterThan(2);
     labels.forEach((l, index) => {

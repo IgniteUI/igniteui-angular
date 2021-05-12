@@ -15,7 +15,7 @@ import {
 } from '@angular/core';
 import { notifyChanges } from '../watch-changes';
 import { WatchColumnChanges } from '../watch-changes';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import {
     IgxFilteringOperand,
     IgxBooleanFilteringOperand,
@@ -688,7 +688,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public dataType: DataType = DataType.String;
+    public dataType: GridColumnDataType = GridColumnDataType.String;
 
     /** @hidden */
     @Input()
@@ -1428,7 +1428,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      * @internal
      */
-     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss';
+     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
 
 
     /**
@@ -1609,29 +1609,30 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this._filterCellTemplate = this.filterCellTemplateDirective.template;
         }
         if (!this._columnPipeArgs.format) {
-            this._columnPipeArgs.format = this.dataType === DataType.Time ? DEFAULT_TIME_FORMAT : this.dataType === DataType.DateTime?
-                DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
+            this._columnPipeArgs.format = this.dataType === GridColumnDataType.Time ?
+                DEFAULT_TIME_FORMAT : this.dataType === GridColumnDataType.DateTime ?
+                    DEFAULT_DATE_TIME_FORMAT : DEFAULT_DATE_FORMAT;
         }
         if (!this.summaries) {
             switch (this.dataType) {
-                case DataType.String:
-                case DataType.Boolean:
+                case GridColumnDataType.String:
+                case GridColumnDataType.Boolean:
                     this.summaries = IgxSummaryOperand;
                     break;
-                case DataType.Number:
+                case GridColumnDataType.Number:
                     this.summaries = IgxNumberSummaryOperand;
                     break;
-                case DataType.Date:
-                case DataType.DateTime:
+                case GridColumnDataType.Date:
+                case GridColumnDataType.DateTime:
                     this.summaries = IgxDateSummaryOperand;
                     break;
-                case DataType.Time:
+                case GridColumnDataType.Time:
                     this.summaries = IgxTimeSummaryOperand;
                     break;
-                case DataType.Currency:
+                case GridColumnDataType.Currency:
                     this.summaries = IgxCurrencySummaryOperand;
                     break;
-                case DataType.Percent:
+                case GridColumnDataType.Percent:
                     this.summaries = IgxPercentSummaryOperand;
                     break;
                 default:
@@ -1641,24 +1642,24 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         }
         if (!this.filters) {
             switch (this.dataType) {
-                case DataType.Boolean:
+                case GridColumnDataType.Boolean:
                     this.filters = IgxBooleanFilteringOperand.instance();
                     break;
-                case DataType.Number:
-                case DataType.Currency:
-                case DataType.Percent:
+                case GridColumnDataType.Number:
+                case GridColumnDataType.Currency:
+                case GridColumnDataType.Percent:
                     this.filters = IgxNumberFilteringOperand.instance();
                     break;
-                case DataType.Date:
+                case GridColumnDataType.Date:
                     this.filters = IgxDateFilteringOperand.instance();
                     break;
-                case DataType.Time:
+                case GridColumnDataType.Time:
                     this.filters = IgxTimeFilteringOperand.instance();
                     break;
-                case DataType.DateTime:
+                case GridColumnDataType.DateTime:
                     this.filters = IgxDateTimeFilteringOperand.instance();
                     break;
-                case DataType.String:
+                case GridColumnDataType.String:
                 default:
                     this.filters = IgxStringFilteringOperand.instance();
                     break;

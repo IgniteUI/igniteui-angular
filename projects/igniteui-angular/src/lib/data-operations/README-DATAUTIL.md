@@ -86,9 +86,9 @@ items: Array<Object> = [
 * **SortingStrategy** - class which implements **ISortingStrategy** interface. It specifies sorting algorithm.
 * **FilteringStrategy** - class which implements **IFilteringStrategy** interface. It specifies filtering algorithm.
 * **FilteringLogic** - class which describes the filtering logic between the different filtering expressions. Its values are **FilteringLogic.And**, **FilteringLogic.Or**.
-* **DataType** - enumeration which represent basic data types. Its values are:
-    * **DataType.Boolean**
-    * **DataType.Date**
-    * **DataType.Number**
-    * **DataType.String**
+* **GridColumnDataType** - enumeration which represent basic data types. Its values are:
+    * **GridColumnDataType.Boolean**
+    * **GridColumnDataType.Date**
+    * **GridColumnDataType.Number**
+    * **GridColumnDataType.String**
     
