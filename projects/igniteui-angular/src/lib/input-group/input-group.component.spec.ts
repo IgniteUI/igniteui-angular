@@ -363,8 +363,8 @@ const testInputGroupType = (type: IgxInputGroupType, component: IgxInputGroupCom
 };
 
 @Component({
-    template: `<igx-input-group #igxInputGroup [disabled]="disabled">
-                    <input igxInput />
+    template: `<igx-input-group #igxInputGroup>
+                    <input igxInput [disabled]="disabled"/>
                 </igx-input-group>`
 })
 class InputGroupDisabledComponent {
@@ -378,22 +378,25 @@ class InputGroupDisabledComponent {
 }
 
 @Component({
-    template: `<igx-input-group #igxInputGroup disabled>
-                    <input igxInput />
+    template: `<igx-input-group #igxInputGroup>
+                    <input igxInput disabled/>
                 </igx-input-group>`
 })
 class InputGroupDisabledWithoutValueComponent {
     @ViewChild('igxInputGroup')
     public igxInputGroup: IgxInputGroupComponent;
 
+    @ViewChild(IgxInputDirective)
+    public inputDir: IgxInputDirective;
+
     public changeDisableState() {
-        this.igxInputGroup.disabled = !this.igxInputGroup.disabled;
+        this.inputDir.disabled = !this.inputDir.disabled;
     }
 }
 
 @Component({
-    template: `<igx-input-group #igxInputGroup [disabled]="disabled">
-                    <input igxInput />
+    template: `<igx-input-group #igxInputGroup>
+                    <input igxInput [disabled]="disabled"/>
                 </igx-input-group>`
 })
 class InputGroupDisabledByDefaultComponent {
