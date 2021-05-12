@@ -1721,7 +1721,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
         });
 
-        fit('should test getRowByIndex API members', () => {
+        it('should test getRowByIndex API members', () => {
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
