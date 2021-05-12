@@ -192,6 +192,40 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected scrollTabHeaderIntoView() {
     }
 
+    /** @hidden */
+    protected onItemChanges() {
+        this.setAttributes();
+
+        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
+
+            // Check if there is selected tab
+            let selectedIndex = -1;
+            this.items.some((tab, i) => {
+                if (tab.selected) {
+                    selectedIndex = i;
+                }
+                return tab.selected;
+            });
+
+            if (selectedIndex >= 0) {
+                // Select the same tab that was previously selected
+                Promise.resolve().then(() => {
+                    this.selectedIndex = selectedIndex;
+                });
+            } else {
+                // Select the tab on the same index the previous selected tab was
+                Promise.resolve().then(() => {
+                    this.updateSelectedTabs(null);
+                });
+            }
+        } else if (this.selectedIndex >= this.items.length) {
+            // Select the last tab
+            Promise.resolve().then(() => {
+                this.selectedIndex = this.items.length - 1;
+            });
+        }
+    }
+
     private setAttributes() {
         this.items.forEach(item => {
             if (item.panelComponent && !item.headerComponent.nativeElement.getAttribute('id')) {
@@ -250,39 +284,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                     oldItem: oldTab
                 });
             }
-        }
-    }
-
-    private onItemChanges() {
-        this.setAttributes();
-
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
-
-            // Check if there is selected tab
-            let selectedIndex = -1;
-            this.items.some((tab, i) => {
-                if (tab.selected) {
-                    selectedIndex = i;
-                }
-                return tab.selected;
-            });
-
-            if (selectedIndex >= 0) {
-                // Select the same tab that was previously selected
-                Promise.resolve().then(() => {
-                    this.selectedIndex = selectedIndex;
-                });
-            } else {
-                // Select the tab on the same index the previous selected tab was
-                Promise.resolve().then(() => {
-                    this.updateSelectedTabs(null);
-                });
-            }
-        } else if (this.selectedIndex >= this.items.length) {
-            // Select the last tab
-            Promise.resolve().then(() => {
-                this.selectedIndex = this.items.length - 1;
-            });
         }
     }
 

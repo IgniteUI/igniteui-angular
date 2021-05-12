@@ -1,5 +1,5 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
-import { waitForAsync, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxHierarchicalGridModule } from './public_api';
@@ -24,7 +24,6 @@ import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
-    configureTestSuite();
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
 
@@ -33,7 +32,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
     const FILTERING_ROW_CLASS = 'igx-grid-filtering-row';
     const FILTERING_CELL_CLASS = 'igx-grid-filtering-cell';
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
@@ -41,7 +40,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
-        }).compileComponents();
+        });
     }));
 
     beforeEach(fakeAsync(() => {

@@ -1141,6 +1141,10 @@
         position: relative;
         background: inherit;
         z-index: 10000;
+
+        %igx-grid__hierarchical-expander--empty {
+            border-#{$right}: 1px solid transparent;
+        }
     }
 
     %igx-grid__tr--pinned-top {
@@ -1206,6 +1210,7 @@
 
     %igx-grid__tr--inner {
         display: flex;
+        background: inherit;
     }
 
     %igx-grid__tr--add-animate {

@@ -34,7 +34,7 @@ import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
-import { DataType } from '../data-operations/data-util';
+import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { ISortingExpression, SortingDirection } from '../data-operations/sorting-expression.interface';
@@ -4297,14 +4297,33 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Manually marks the `IgxGridComponent` for change detection.
+     * Triggers change detection for the `IgxGridComponent`.
+     * Calling markForCheck also triggers the grid pipes explicitly, resulting in all updates being processed.
+     * May degrade performance if used when not needed, or if misused:
+     * ```typescript
+     * // DON'Ts:
+     * // don't call markForCheck from inside a loop
+     * // don't call markForCheck when a primitive has changed
+     * grid.data.forEach(rec => {
+     *  rec = newValue;
+     *  grid.markForCheck();
+     * });
+     *
+     * // DOs
+     * // call markForCheck after updating a nested property
+     * grid.data.forEach(rec => {
+     *  rec.nestedProp1.nestedProp2 = newValue;
+     * });
+     * grid.markForCheck();
+     * ```
      *
      * @example
      * ```typescript
-     * this.grid1.markForCheck();
+     * grid.markForCheck();
      * ```
      */
     public markForCheck() {
+        this.pipeTrigger++;
         this.cdr.detectChanges();
     }
 
@@ -6559,13 +6578,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected resolveDataTypes(rec) {
         if (typeof rec === 'number') {
-            return DataType.Number;
+            return GridColumnDataType.Number;
         } else if (typeof rec === 'boolean') {
-            return DataType.Boolean;
+            return GridColumnDataType.Boolean;
         } else if (typeof rec === 'object' && rec instanceof Date) {
-            return DataType.Date;
+            return GridColumnDataType.Date;
         }
-        return DataType.String;
+        return GridColumnDataType.String;
     }
 
     /**

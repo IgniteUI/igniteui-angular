@@ -7,55 +7,45 @@ import { resizeObserverIgnoreError } from './helper-utils.spec';
  *
  * @hidden
  */
-export const configureTestSuite = () => {
 
-  let originReset;
-  beforeAll(() => {
-    originReset = TestBed.resetTestingModule;
-    TestBed.resetTestingModule();
-    TestBed.resetTestingModule = () => TestBed;
-    resizeObserverIgnoreError();
-  });
+export const configureTestSuite = (configureAction?: () => void) => {
 
-  const clearStyles = () => {
-    const head = document.getElementsByTagName('head')[0];
-    const styles = head.getElementsByTagName('style');
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-    for (let index = 0; index < styles.length; index++) {
-      head.removeChild(styles[index]);
-    }
-  };
-
-  /** Clear the svg tags from the svgContainer created by the IconService
-    to avoid increasing their count to over 10000. */
-  const clearSVGContainer = () => {
-    document.querySelectorAll('svg').forEach((tag) => tag.remove());
-  };
-
-  afterEach(() => {
-    clearSVGContainer();
     const testBedApi: any = getTestBed();
-    testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => {
-      try {
-        fixture.destroy();
-      } catch (e) {
-        console.error('Error: during cleanup of component', {
-          component: fixture.componentInstance,
-          stacktrace: e,
-        });
-      }
-    });
-    testBedApi._activeFixtures = [];
-    testBedApi._instantiated = false;
-    // reset Ivy TestBed
-    if (testBedApi._testModuleRef) {
-      testBedApi._testModuleRef = null;
-    }
-  });
+    const originReset = TestBed.resetTestingModule;
 
-  afterAll(() => {
-    clearStyles();
-    TestBed.resetTestingModule = originReset;
-    TestBed.resetTestingModule();
-  });
+    const clearStyles = () => {
+        document.querySelectorAll('style').forEach(tag => tag.remove());
+    };
+
+    const clearSVGContainer = () => {
+        document.querySelectorAll('svg').forEach(tag => tag.remove());
+    };
+
+    beforeAll(() => {
+        TestBed.resetTestingModule();
+        TestBed.resetTestingModule = () => TestBed;
+        resizeObserverIgnoreError();
+    });
+
+    if (configureAction) {
+        beforeAll((done: DoneFn) => (async () => {
+            configureAction();
+            await TestBed.compileComponents();
+        })().then(done).catch(done.fail));
+    }
+
+    afterEach(() => {
+        clearStyles();
+        clearSVGContainer();
+        testBedApi._activeFixtures.forEach((fixture: ComponentFixture<any>) => fixture.destroy());
+        // reset ViewEngine TestBed
+        testBedApi._instantiated = false;
+        // reset Ivy TestBed
+        testBedApi._testModuleRef = null;
+    });
+
+    afterAll(() => {
+        TestBed.resetTestingModule = originReset;
+        TestBed.resetTestingModule();
+    });
 };

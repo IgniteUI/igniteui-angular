@@ -1,7 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import {
     IgxGridComponent,
-    DataType,
+    GridColumnDataType,
     IgxNumberFilteringOperand,
     IgxDateFilteringOperand,
     IgxStringFilteringOperand,
@@ -26,30 +26,54 @@ export class GridFilterTemplateSampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true, summary: true },
-            { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string'},
-            { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'Address', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'City', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'Region', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'PostalCode', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'Phone', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'Fax', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'string' },
-            { field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: false, type: 'number' },
-            { field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: false, type: 'date' },
-            { field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
-                summary: true, type: 'boolean' }
+            {
+                field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'ContactTitle', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'Address', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'City', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'Region', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'PostalCode', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'Phone', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'Fax', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'string'
+            },
+            {
+                field: 'Employees', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: false, type: 'number'
+            },
+            {
+                field: 'DateCreated', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: false, type: 'date'
+            },
+            {
+                field: 'Contract', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
+                summary: true, type: 'boolean'
+            }
         ];
         this.data = [
             {
@@ -230,7 +254,7 @@ export class GridFilterTemplateSampleComponent implements OnInit {
             {
                 ID: 'CACTU',
                 CompanyName:
-                'Cactus Comidas para llevar',
+                    'Cactus Comidas para llevar',
                 ContactName: 'Patricio Simpson',
                 ContactTitle: 'Sales Agent',
                 Address: 'Cerrito 333',
@@ -358,7 +382,7 @@ export class GridFilterTemplateSampleComponent implements OnInit {
             {
                 ID: 'ERNSH',
                 CompanyName:
-                'Ernst Handel',
+                    'Ernst Handel',
                 ContactName: 'Roland Mendel',
                 ContactTitle: 'Sales Manager',
                 Address: 'Kirchgasse 6',
@@ -497,11 +521,11 @@ export class GridFilterTemplateSampleComponent implements OnInit {
         }
 
         switch (column.dataType) {
-            case DataType.Number:
+            case GridColumnDataType.Number:
                 value = Number.parseInt(value, 10);
                 operand = IgxNumberFilteringOperand.instance().condition('equals');
                 break;
-            case DataType.Date:
+            case GridColumnDataType.Date:
                 value = new Date(value);
                 operand = IgxDateFilteringOperand.instance().condition('equals');
                 break;

@@ -14,7 +14,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 describe('Column Pinning UI #grid', () => {
-    configureTestSuite();
+
     let fix: ComponentFixture<ColumnPinningTestComponent>;
     let grid: IgxGridComponent;
     let columnChooser: IgxColumnActionsComponent;
@@ -23,7 +23,7 @@ describe('Column Pinning UI #grid', () => {
     const verifyCheckbox = ControlsFunction.verifyCheckbox;
     const verifyColumnIsPinned = GridFunctions.verifyColumnIsPinned;
 
-    beforeAll(waitForAsync(() => {
+    configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
                 ColumnPinningTestComponent,
@@ -34,7 +34,7 @@ describe('Column Pinning UI #grid', () => {
                 NoopAnimationsModule,
                 IgxGridModule
             ]
-        }).compileComponents();
+        });
     }));
 
     describe('', () => {
