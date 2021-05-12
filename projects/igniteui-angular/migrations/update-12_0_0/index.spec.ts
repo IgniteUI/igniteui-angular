@@ -1675,4 +1675,181 @@ export class SimpleComponent {
             )
         ).toEqual(expectedContent);
     });
+
+    it('Should move input-group disabled property to input child', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input-group disabled property to input child', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input group disabled property w/ XHTML syntax closing', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name"/>
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" [disabled]="true"/>
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should only move input-group disabled to igxInput directive', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move input-group disabled string values to underlying igxInput', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group disabled="true">
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" disabled="true">
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should move disabled attribute w/ no value to igxInput', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group disabled>
+        <input igxInput [(ngModel)]="name">
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+// this is the expected output
+// putting just the disabled attribute on an igx-input-group is an invalid scenario
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group disabled>
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+    });
+
+    it('Should not add duplicate disabled to igxInput when moving the property from input-group', async () => {
+        appTree.create(
+            `/testSrc/appPrefix/component/test.component.html`,
+            `
+    <igx-input-group [disabled]="true">
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+// this is the expected output
+// putting just the disabled attribute on an igx-input-group is an invalid scenario
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.html')
+        ).toEqual(
+            `
+    <igx-input-group>
+        <input igxInput [(ngModel)]="name" disabled>
+    </igx-input-group>
+    `
+        );
+    });
 });

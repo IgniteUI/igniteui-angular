@@ -98,13 +98,14 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     public isFocused = false;
 
     /**
-     * An @Input property that disables the `IgxInputGroupComponent`.
+     * @hidden @internal
+     * When truthy, disables the `IgxInputGroupComponent`.
+     * Controlled by the underlying `IgxInputDirective`.
      * ```html
-     * <igx-input-group [disabled]="'true'"></igx-input-group>
+     * <igx-input-group [disabled]="true"></igx-input-group>
      * ```
      */
     @HostBinding('class.igx-input-group--disabled')
-    @Input()
     public disabled = false;
 
     /**
