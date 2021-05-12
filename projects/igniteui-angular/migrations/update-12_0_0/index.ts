@@ -472,7 +472,7 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
     const INPUT_GROUP_CHANGES = {
         GROUP_TAG: 'igx-input-group',
         ATTRIBUTES: ['[disabled]', 'disabled'],
-        INPUT_TAG: 'input',
+        INPUT_TAG: ['input', 'textarea'],
         DIRECTIVE: 'igxInput'
     };
 
