@@ -1186,6 +1186,29 @@ describe('IgxTimePicker', () => {
                 expect(selectedAMPM).toEqual(ampm);
             }));
 
+            it('should display correctly non-zero padded time format', fakeAsync(() => {
+                fixture.componentInstance.date = new Date(2021, 24, 2, 8, 5, 5);
+                fixture.componentInstance.timePicker.mode = PickerInteractionMode.DropDown;
+                timePicker.inputFormat = 'h:m:s';
+                fixture.detectChanges();
+
+                timePicker.open();
+                tick();
+                fixture.detectChanges();
+
+                const selectedItems = fixture.debugElement.queryAll(By.css(CSS_CLASS_SELECTED_ITEM));
+                const selectedHour = selectedItems[0].nativeElement.innerText;
+                const selectedMinutes = selectedItems[1].nativeElement.innerText;
+                const selectedAMPM = selectedItems[2].nativeElement.innerText;
+
+                const hours = fixture.componentInstance.date.getHours();
+                const minutes = fixture.componentInstance.date.getMinutes();
+                const seconds = fixture.componentInstance.date.getSeconds();
+
+                expect(selectedHour).toEqual(hours.toString());
+                expect(selectedMinutes).toEqual(minutes.toString());
+                expect(selectedAMPM).toEqual(seconds.toString());
+            }));
 
             it('should display selected time in dialog header', fakeAsync(() => {
                 fixture.componentInstance.timePicker.mode = PickerInteractionMode.Dialog;
