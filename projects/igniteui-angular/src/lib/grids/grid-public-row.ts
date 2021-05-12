@@ -262,7 +262,7 @@ export class IgxGridRow extends BaseRow implements RowType {
     public get parent(): RowType {
         let parent: IgxGroupByRow;
         if (!this.grid.groupingExpressions.length) {
-            return null;
+            return undefined;
         }
 
         let i = this.index - 1;
