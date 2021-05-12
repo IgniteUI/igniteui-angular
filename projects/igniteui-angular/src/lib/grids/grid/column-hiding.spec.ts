@@ -653,7 +653,7 @@ describe('Column Hiding UI #grid', () => {
 
         it('height can be controlled via columnsAreaMaxHeight input.', () => {
             expect(columnChooser.columnsAreaMaxHeight).toBe('100%');
-            expect(columnChooserElement.nativeElement.offsetHeight >= 310).toBe(true);
+            expect(columnChooserElement.nativeElement.offsetHeight >= 230).toBe(true);
 
             columnChooser.columnsAreaMaxHeight = '150px';
             fix.detectChanges();
