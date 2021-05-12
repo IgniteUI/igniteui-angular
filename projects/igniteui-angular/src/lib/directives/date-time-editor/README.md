@@ -94,14 +94,15 @@ public datePart: typeof DatePart = DatePart;
 ### API
 | Name | Type | Description |
 |:-----|:----|:------------|
-| `value` | Date | The value of the editor. |
+| `value` | Date \| string | The value of the editor. |
 | `displayFormat` | string | The display value of the editor. |
 | `inputFormat` | string | The format that the editor will use to display the date/time. |
-| `minValue` | string / Date | Sets the minimum value required for the editor to remain valid. |
-| `maxValue` | string / Date | Sets the maximum value required for the editor to remain valid. |
-| `isSpinLoop` | boolean | Loop over the currently spun segment. |
+| `minValue` | Date \| string | Sets the minimum value required for the editor to remain valid. |
+| `maxValue` | Date \| string | Sets the maximum value required for the editor to remain valid. |
+| `spinLoop` | boolean | Loop over the currently spun segment. |
+| `spinDelta` | DatePartDeltas | Delta values used to increment or decrement each editor date part on spin actions. All values default to `1`.
 | `promptChar` | string | Defines the empty characters in the mask. |
-| `locale` | string | Locale settings used in displayFormat. |  
+| `locale` | string | Locale settings used in displayFormat. |
 
 #### Methods
 | Name | Type | Description |
@@ -115,5 +116,3 @@ public datePart: typeof DatePart = DatePart;
 |:-----|:----|:------------|
 | `valueChanged` | custom | Fired when the editor's value has changed. |
 | `validationFailed` | custom | Fired when the editor is not within a specified range. Can revert back to a previously valid state by changing the `newValue` property of the `args` parameter. |
-
-
