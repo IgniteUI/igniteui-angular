@@ -2018,7 +2018,6 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // index
             expect(secondRow.index).toBe(1);
-            expect(secondRow.viewIndex).toBe(1);
 
             // select group row
             expect(firstRow.selected).toBeFalse();
