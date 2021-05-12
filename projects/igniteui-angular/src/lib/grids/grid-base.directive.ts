@@ -4606,6 +4606,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
         this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
+        this.cdr.detectChanges();
     }
 
     /**
