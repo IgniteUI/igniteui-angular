@@ -2018,7 +2018,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowByIndex(1).key).toBeUndefined();
             expect(grid.getRowByIndex(1).data).toBeUndefined();
             expect(grid.getRowByIndex(1).pinned).toBeUndefined();
-            expect(grid.getRowByIndex(1).selected).toBeUndefined();
+            expect(grid.getRowByIndex(1).selected).toBeFalse();
             expect(grid.getRowByIndex(2).key).toBeTruthy();
             expect(grid.getRowByIndex(2).data).toBeTruthy();
             expect(grid.getRowByIndex(2).pinned).toBe(false);
