@@ -1986,6 +1986,11 @@ describe('IgxGrid Component Tests #grid', () => {
             // GroupBy column and get the collapsed grouped row
             expect(firstRow instanceof IgxGridRow).toBe(true);
 
+            // index
+            expect(firstRow.index).toBe(0);
+            expect(firstRow.viewIndex).toBe(0);
+            expect(firstRow.parent).toBeUndefined();
+
             fix.detectChanges();
             grid.groupBy({ fieldName: 'col1', dir: SortingDirection.Asc });
             fix.detectChanges();
@@ -2007,6 +2012,13 @@ describe('IgxGrid Component Tests #grid', () => {
             thirdRow = grid.getRowByIndex(2);
 
             expect(firstRow.expanded).toBe(true);
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
+
+            // index
+            expect(secondRow.index).toBe(1);
+            expect(secondRow.viewIndex).toBe(1);
 
             // select group row
             expect(firstRow.selected).toBeFalse();
@@ -2022,7 +2034,15 @@ describe('IgxGrid Component Tests #grid', () => {
                 expect(row.selected).toBeTrue();
             });
 
-            firstRow.expanded = false;
+            firstRow.selected = !firstRow.selected;
+
+            expect(firstRow.selected).toBeFalse();
+            expect(secondRow.selected).toBeFalse();
+            firstRow.children.forEach(row => {
+                expect(row.selected).toBeFalse();
+            });
+
+            (firstRow as IgxGroupByRow).toggle();
             fix.detectChanges();
             expect(firstRow.expanded).toBe(false);
 
@@ -2039,6 +2059,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(thirdRow.hasChildren).toBe(false);
             expect(thirdRow.children).toBeUndefined();
             expect(thirdRow.parent instanceof IgxGroupByRow).toBe(true);
+            expect(thirdRow.parent.parent).toBeUndefined();
             expect(thirdRow.index).toEqual(2);
             expect(secondRow.isSummaryRow).toBeUndefined();
 
@@ -2082,8 +2103,11 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             tick();
 
+            const firstRow = grid.getRowByIndex(0);
             // Return the first row after page change
-            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+            expect(firstRow instanceof IgxGridRow).toBe(true);
+            expect(firstRow.index).toBe(0);
+            expect(firstRow.viewIndex).toBe(5);
         }));
     });
 

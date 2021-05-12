@@ -1721,7 +1721,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(pinnedChipExpectedPosition.nativeElement.getElementsByClassName('igx-grid__td--pinned-chip').length).toBe(0);
         });
 
-        it('should test getRowByIndex API members', () => {
+        fit('should test getRowByIndex API members', () => {
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
@@ -1730,6 +1730,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             // Check getRowByIndex expanded, children and parent members
             expect(firstRow.expanded).toBe(true);
             expect(firstRow.hasChildren).toBe(true);
+            expect(firstRow.children[0].hasChildren).toBeFalse();
             // children.length equals the filtered our chidlren!
             expect(firstRow.children.length).toEqual(1);
             expect(firstRow.children[0] instanceof IgxTreeGridRow).toBeTrue();
@@ -1739,6 +1740,10 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             firstRow.expanded = false;
             expect(firstRow.expanded).toBe(false);
+
+            expect(firstRow.pinned).toBeFalse();
+            firstRow.pin();
+            expect(firstRow.pinned).toBeTrue();
         });
     });
 });
