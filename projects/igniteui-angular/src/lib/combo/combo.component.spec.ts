@@ -803,12 +803,14 @@ describe('igxCombo', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxComboSampleComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
             input = fixture.debugElement.query(By.css(`.${CSS_CLASS_COMBO_INPUTGROUP}`));
-        });
+            tick();
+            fixture.detectChanges();
+        }));
         it('should initialize the combo component properly', () => {
             const toggleButton = fixture.debugElement.query(By.css('.' + CSS_CLASS_TOGGLEBUTTON));
             expect(fixture.componentInstance).toBeDefined();
@@ -1127,12 +1129,14 @@ describe('igxCombo', () => {
                 ]
             }).compileComponents();
         }));
-        beforeEach(() => {
+        beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(IgxComboInContainerTestComponent);
             fixture.detectChanges();
             combo = fixture.componentInstance.combo;
             containerElement = fixture.debugElement.query(By.css('.comboContainer')).nativeElement;
-        });
+            tick();
+            fixture.detectChanges();
+        }));
         it('should adjust combo width to the container element width when set to 100%', () => {
             const containerWidth = 500;
             const comboWrapper = fixture.debugElement.query(By.css(CSS_CLASS_COMBO)).nativeElement;
