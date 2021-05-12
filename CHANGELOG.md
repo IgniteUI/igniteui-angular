@@ -106,10 +106,10 @@ All notable changes for each version of this project will be documented in this 
         ```html
             <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
                 <label igxLabel>Time: </label>
-                <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
+                <igx-picker-toggle igxPrefix>
                     alarm
                 </igx-picker-toggle>
-                <igx-picker-clear igxSuffix (click)="timePicker.clear()">
+                <igx-picker-clear igxSuffix>
                     delete
                 </igx-picker-clear>
             </igx-time-picker>
@@ -120,6 +120,7 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+    - **Behavioral Change** - The dropdown/dialog displays time portions within `minValue` and `maxValue` range if set or time between 00:00 and 24:00 in the provided `inputFormat`. The displayed values for each time portion are calculated based on the items delta always starting from zero. If the `minValue` or `maxValue` does not match the items delta, the displayed values will start/end from the next/last possible value that matches the delta. Upon opening, the selected time will be the bound value. In cases when there is not a bound value, it is outside the min/max range or does not match the items delta, the selected time will be the closest possible time that matches the items delta.
 - `IgxDateRangePicker`
     - **Feature** - `value` start and end accept ISO 8601 string format.
     - **Feature** - The actions template now exposes the Calendar component as implicit context:
