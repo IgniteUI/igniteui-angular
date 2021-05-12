@@ -264,6 +264,14 @@
                 "selector": "igx-date-range-picker",
                 "type": "component"
             }
+        },
+        {
+            "name": "disabled",
+            "remove": true,
+            "owner": {
+                "selector": "igx-input-group",
+                "type": "component"
+            }
         }
     ]
 }
