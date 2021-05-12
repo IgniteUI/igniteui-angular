@@ -38,17 +38,17 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         COMPONENT: 'igx-date-picker',
         TEMPLATE_DIRECTIVE: 'igxDatePickerTemplate',
         TEMPLATE_WARN_MSG:
-`\n<!-- igxDatePickerTemplate has been removed.
+            `\n<!-- igxDatePickerTemplate has been removed.
 Label, prefix, suffix and hint can now be projected directly.
 See https://www.infragistics.com/products/ignite-ui-angular/angular/components/date-picker -->\n`
-     }, {
+    }, {
         COMPONENT: 'igx-time-picker',
         TEMPLATE_DIRECTIVE: 'igxTimePickerTemplate',
         TEMPLATE_WARN_MSG:
-`\n<!-- igxTimePickerTemplate has been removed.
+            `\n<!-- igxTimePickerTemplate has been removed.
 Label, prefix, suffix and hint can now be projected directly.
 See https://www.infragistics.com/products/ignite-ui-angular/angular/components/time-picker -->\n`
-     }];
+    }];
     const EDITORS_MODE = ['[mode]', 'mode'];
     const EDITORS_LABEL = ['[label]', 'label'];
     const EDITORS_LABEL_VISIBILITY = ['[labelVisibility]', 'labelVisibility'];
@@ -466,6 +466,50 @@ See https://www.infragistics.com/products/ignite-ui-angular/angular/components/t
             applyChanges();
             changes.clear();
         }
+    }
+
+    // input group disabled property
+    const INPUT_GROUP_CHANGES = {
+        GROUP_TAG: 'igx-input-group',
+        ATTRIBUTES: ['[disabled]', 'disabled'],
+        INPUT_TAG: 'input',
+        DIRECTIVE: 'igxInput'
+    };
+
+    for (const path of htmlFiles) {
+        const inputGroups = findElementNodes(parseFile(host, path), INPUT_GROUP_CHANGES.GROUP_TAG);
+        inputGroups.forEach((el) => {
+            const parentEl = (el as Element);
+            if (hasAttribute(parentEl, INPUT_GROUP_CHANGES.ATTRIBUTES)) {
+                const inputChildren = findElementNodes([el], INPUT_GROUP_CHANGES.INPUT_TAG)
+                    .reduce((prev, curr) => prev.concat(curr), [])
+                    .filter(template => hasAttribute(template as Element, INPUT_GROUP_CHANGES.DIRECTIVE));
+                INPUT_GROUP_CHANGES.ATTRIBUTES.forEach((a: string) => {
+                    const attr = getAttribute(parentEl, a)[0];
+                    if (attr) {
+                        inputChildren.forEach((node: Element) => {
+                            if (!hasAttribute(node, INPUT_GROUP_CHANGES.ATTRIBUTES)) {
+                                const { startTag, file } = getSourceOffset(node as Element);
+                                // input is self-closing, so the element === startTag
+                                const repTxt = file.content.substring(startTag.start, startTag.end);
+                                const matches = repTxt.match(/\/?>/g);
+                                // should always be only 1 match
+                                const lastIndex = repTxt.indexOf(matches[0]);
+                                let property = `${attr.name}`;
+                                if (attr.name === INPUT_GROUP_CHANGES.ATTRIBUTES[0] || attr.value) {
+                                    property += `="${attr.value}"`;
+                                }
+                                const addedAttr =
+                                    `${repTxt.substring(0, lastIndex)} ${property}${repTxt.substring(lastIndex)}`;
+                                addChange(file.url, new FileChange(startTag.start, addedAttr, repTxt, 'replace'));
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        applyChanges();
+        changes.clear();
     }
 
     // Apply all selector and input changes

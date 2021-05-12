@@ -224,7 +224,7 @@
                 </igx-time-picker>
 
                 <igx-input-group #inputGroup type="box" *ngIf="selectedColumn && selectedColumn.dataType === 'dateTime'"
-                type="box" [disabled]="!selectedColumn || !selectedCondition || (selectedColumn && selectedColumn.filters.condition(selectedCondition).isUnary)"
+                type="box"
                 [displayDensity]="'compact'">
                     <input #input igxInput tabindex="0"
                         [placeholder]="grid.resourceStrings.igx_grid_filter_row_date_placeholder"
