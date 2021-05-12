@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { DataType } from '../../../data-operations/data-util';
+import { GridColumnDataType } from '../../../data-operations/data-util';
 import { IFilteringOperation } from '../../../data-operations/filtering-condition';
 import { IFilteringExpression } from '../../../data-operations/filtering-expression.interface';
 import { ISelectionEventArgs, IgxDropDownComponent } from '../../../drop-down/public_api';
@@ -162,16 +162,16 @@ export class IgxExcelStyleConditionalFilterComponent implements OnDestroy {
      */
     public get subMenuText() {
         switch (this.esf.column.dataType) {
-            case DataType.Boolean:
+            case GridColumnDataType.Boolean:
                 return this.esf.grid.resourceStrings.igx_grid_excel_boolean_filter;
-            case DataType.Number:
-            case DataType.Percent:
+            case GridColumnDataType.Number:
+            case GridColumnDataType.Percent:
                 return this.esf.grid.resourceStrings.igx_grid_excel_number_filter;
-            case DataType.Date:
-            case DataType.DateTime:
-            case DataType.Time:
+            case GridColumnDataType.Date:
+            case GridColumnDataType.DateTime:
+            case GridColumnDataType.Time:
                 return this.esf.grid.resourceStrings.igx_grid_excel_date_filter;
-            case DataType.Currency:
+            case GridColumnDataType.Currency:
                 return this.esf.grid.resourceStrings.igx_grid_excel_currency_filter;
             default:
                 return this.esf.grid.resourceStrings.igx_grid_excel_text_filter;

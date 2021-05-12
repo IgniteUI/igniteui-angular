@@ -36,6 +36,7 @@ All notable changes for each version of this project will be documented in this 
         - `onToolbarExporting` -> `toolbarExporting`
         - `onRangeSelection` -> `rangeSelected`
     - `IgxGridRowComponent`, `IgxGridGroupByRowComponent`, `IgxTreeGridRowComponent`, `IgxHierarchicalRowComponent` are no longer exposed in the public API. Automatic migration will change these imports with `RowType`.
+    - The IgxColumn data type `DataType` is renamed to `GridColumnDataType`.
     - **Behavioral changes**
     - `getRowByIndex`, `getRowByKey`, `cell.row` now return an object implemening the `RowType` interface.
     - `dragData` emitted with `IRowDragEndEventArgs`, `IRowDragStartEventArgs` is now `RowType`
@@ -58,6 +59,8 @@ All notable changes for each version of this project will be documented in this 
     - `onGridCreated` -> `gridCreated`
     - `onGridInitialized` -> `gridInitialized`
     - `onDataPreLoad` -> `dataPreLoad`
+- `IgxInputGroupComponent`
+    - **Breaking Change** - `disabled` property removed. Use the underlying `IgxInputDirective.disabled` to control the disabled state of the input group. Please make sure to update via `ng update` to migrate an usage of `disabled` in your template files. Please make sure to check out the [update guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-111x-to-120x).
 
 - `IgxDateTimeEditor`
     - **Feature** - `value` accepts ISO 8601 string format.
