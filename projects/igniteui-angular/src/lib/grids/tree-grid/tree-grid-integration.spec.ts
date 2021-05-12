@@ -20,7 +20,7 @@ import { IgxToggleModule } from '../../directives/toggle/toggle.directive';
 import { IgxNumberFilteringOperand, IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 import { IgxHierarchicalTransactionService } from '../../services/transaction/igx-hierarchical-transaction';
 import { IgxGridTransaction } from '../grid-base.directive';
-import { IgxGridCellComponent } from '../grid/public_api';
+import { IgxGridCellComponent, IgxTreeGridRow } from '../grid/public_api';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { HierarchicalTransaction, TransactionType } from '../../services/public_api';
 import { DropPosition } from '../moving/moving.service';
@@ -1706,10 +1706,12 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
+            const firstRow = treeGrid.getRowByIndex(0);
+
             // Check getRowByIndex expanded, children and parent members
-            expect(treeGrid.getRowByIndex(0).expanded).toBe(true);
+            expect(firstRow.expanded).toBe(true);
             // children.length equals the filtered our chidlren!
-            expect(treeGrid.getRowByIndex(0).children.length).toEqual(1);
+            expect(firstRow.children.length).toEqual(1);
             expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
 
             const firstColumnField = treeGrid.columns[0].field;
@@ -1723,15 +1725,20 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.filter('ID', 957, IgxStringFilteringOperand.instance().condition('contains'), false);
             fix.detectChanges();
 
+            const firstRow = treeGrid.getRowByIndex(0);
+
             // Check getRowByIndex expanded, children and parent members
-            expect(treeGrid.getRowByIndex(0).expanded).toBe(true);
-            expect(treeGrid.getRowByIndex(0).hasChildren).toBe(true);
+            expect(firstRow.expanded).toBe(true);
+            expect(firstRow.hasChildren).toBe(true);
             // children.length equals the filtered our chidlren!
-            expect(treeGrid.getRowByIndex(0).children.length).toEqual(1);
+            expect(firstRow.children.length).toEqual(1);
+            expect(firstRow.children[0] instanceof IgxTreeGridRow).toBeTrue();
+            expect(firstRow.children[0].parent instanceof IgxTreeGridRow).toBeTrue();
+            expect(firstRow.children[0].parent.key).toBe(firstRow.key);
             expect(treeGrid.getRowByIndex(1).parent.rowID).toEqual(147);
 
-            treeGrid.getRowByIndex(0).expanded = false;
-            expect(treeGrid.getRowByIndex(0).expanded).toBe(false);
+            firstRow.expanded = false;
+            expect(firstRow.expanded).toBe(false);
         });
     });
 });
