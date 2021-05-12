@@ -285,7 +285,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             //Filter grid so no results are available and grid is empty
             fixture.componentInstance.grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
-            expect(container.getAttribute('role')).toBe(null);
+            expect(container.getAttribute('role')).toMatch('row');
 
             // clear grid data and check if attribute is now 'row'
             fixture.componentInstance.grid.clearFilter();
