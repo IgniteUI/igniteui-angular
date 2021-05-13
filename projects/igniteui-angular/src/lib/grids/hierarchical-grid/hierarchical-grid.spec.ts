@@ -412,7 +412,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        expect(childGrid.nativeElement.offsetWidth - 370 - childGrid.scrollSize).toBeLessThanOrEqual(hierarchicalGrid.scrollSize);
+        expect(childGrid.nativeElement.offsetWidth)
+        .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.offsetWidth - row.expander.nativeElement.offsetWidth);
         const  sizeWithoutSrollBar = childGrid.nativeElement.offsetWidth;
 
         hierarchicalGrid.clearFilter();
