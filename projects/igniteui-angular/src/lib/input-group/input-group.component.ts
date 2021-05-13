@@ -455,13 +455,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     this._theme$.next(IgxInputGroupTheme.Material);
                 });
             } else {
-                const themeProp = this.document.defaultView
+                const cssProp = this.document.defaultView
                     .getComputedStyle(this.element.nativeElement)
                     .getPropertyValue('--igx-input-group-variant')
                     .trim();
 
                 Promise.resolve().then(() => {
-                    this._theme$.next(themeProp);
+                    this._theme$.next(cssProp);
                 });
             }
         }
