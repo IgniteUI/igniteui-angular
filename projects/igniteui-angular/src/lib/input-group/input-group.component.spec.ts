@@ -218,7 +218,7 @@ describe('IgxInputGroup', () => {
         const pointerEvent = UIInteractions.createPointerEvent('pointerdown', pointOnPrefix);
         const preventDefaultSpy = spyOn(pointerEvent, 'preventDefault');
 
-        Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement });
+        Object.defineProperty(pointerEvent, 'target', { value: input.nativeElement, configurable: true });
         const inputGroupDebugElement = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
 
         // input group is not focused we should not prevent default on pointer down
@@ -226,7 +226,7 @@ describe('IgxInputGroup', () => {
         expect(preventDefaultSpy).not.toHaveBeenCalled();
         expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
 
-        Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement });
+        Object.defineProperty(pointerEvent, 'target', { value: prefix.nativeElement, configurable: true });
 
         // input group is not focused we should not prevent default on pointer down
         inputGroupDebugElement.triggerEventHandler('pointerdown', pointerEvent);

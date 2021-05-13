@@ -95,27 +95,23 @@ export class ListPanningSampleComponent {
 
     public onLeftPanHandler(args) {
         args.keepItem = true;
-        this.toast.message = 'Composing message...';
-        this.toast.open();
+        this.toast.open('Composing message...');
     }
 
     public onRightPanHandler(args) {
         args.keepItem = true;
-        this.toast.message = 'Dialing...';
-        this.toast.open();
+        this.toast.open('Dialing...');
     }
 
     public onLeftPanHandler2(args) {
         args.keepItem = true;
-        this.toast.message = 'Edit contact.';
-        this.toast.open();
+        this.toast.open('Edit contact.');
     }
 
     public onRightPanHandler2(args) {
         args.keepItem = false;
         setTimeout((idx = args.item.index - 1) => {
-            this.toast.message = 'Contact removed.';
-            this.toast.open();
+            this.toast.open('Contact removed.');
             this.navItems2.splice(idx, 1);
         }, 500);
     }
