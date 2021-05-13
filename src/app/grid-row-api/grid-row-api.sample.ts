@@ -253,6 +253,7 @@ export class GridRowAPISampleComponent implements OnInit {
         const row = grid.getRowByIndex(index);
         const state = `
             index: ${row.index},
+            viewIndex: ${row.viewIndex},
             -----------------------------,
             isSummaryRow: ${row.isSummaryRow},
             summaries: ${row.summaries},
