@@ -33,7 +33,7 @@ import {
     IgxExpansionPanelBodyComponent,
     IgxExpansionPanelDescriptionDirective,
     IgxExpansionPanelTitleDirective,
-      IgxExpansionPanelIconDirective
+    IgxExpansionPanelIconDirective
   ],
   imports: [
     CommonModule,

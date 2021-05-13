@@ -29,7 +29,7 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import ResizeObserver from 'resize-observer-polyfill';
+import { ResizeObserver } from '@juggle/resize-observer';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
@@ -5976,6 +5976,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @param commit
      */
     // TODO: Facade for crud service refactoring. To be removed
+    // TODO: do not remove this, as it is used in rowEditTemplate, but mark is as internal and hidden
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }
