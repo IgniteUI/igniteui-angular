@@ -408,6 +408,7 @@
         display: flex;
         flex-flow: column nowrap;
         width: 100%;
+        min-width: 290px;
         background: --var($theme, 'content-background');
         outline: none;
         border-radius: --var($theme, 'border-radius');
