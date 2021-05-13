@@ -20,7 +20,6 @@
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {
-        min-width: 200px;
         box-shadow: igx-elevation($elevation: 24);
         border-radius: --var($theme, 'border-radius');
         background: --var($theme, 'content-background');
