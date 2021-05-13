@@ -141,6 +141,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _filled = false;
     private _theme: IgxInputGroupTheme;
     private _theme$ = new Subject();
+    private _subscription: Subscription;
     private _resourceStrings = CurrentResourceStrings.InputResStrings;
 
     /** @hidden */
