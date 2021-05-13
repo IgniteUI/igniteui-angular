@@ -29,19 +29,12 @@
         "dist"
     ],
     "typedocOptions": {
-        "mode": "file",
         "out": "dist/igniteui-angular/docs/typescript",
         "exclude": "**/*.spec.ts",
         "theme":  "node_modules/igniteui-typedoc-theme/dist",
         "excludePrivate": true,
         "excludeProtected": true,
-        "excludeNotExported": true,
         "name": "Ignite UI for Angular",
-        "target": "es2015",
-        "module": "commonjs",
-        "moduleResolution": "node",
-        "preserveConstEnums": true,
-        "stripInternal": true,
         "readme": "none"
     },
     "angularCompilerOptions": {
