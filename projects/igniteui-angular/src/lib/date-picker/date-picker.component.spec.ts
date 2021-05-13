@@ -1512,7 +1512,7 @@ describe('IgxDatePicker', () => {
             };
             moduleRef = {};
             injector = { get: () => ngModel };
-            inputGroup = new IgxInputGroupComponent(null, null, null, document, null);
+            inputGroup = new IgxInputGroupComponent(null, null, null, document, null, null);
             renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute'], [{}, 'aria-labelledby', 'test-label-id-1']);
             spyOn(renderer2, 'setAttribute').and.callFake(() => {
             });
