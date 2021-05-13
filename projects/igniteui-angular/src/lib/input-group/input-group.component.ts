@@ -12,7 +12,8 @@ import {
     QueryList,
     Inject,
     Optional,
-    Renderer2,
+    OnDestroy,
+    ChangeDetectorRef,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -36,7 +37,7 @@ import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
 import { isIE, mkenum } from '../core/utils';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 const IgxInputGroupTheme = mkenum({
     Material: 'material',
@@ -57,7 +58,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit, OnDestroy {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -139,6 +140,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     private _filled = false;
     private _theme: IgxInputGroupTheme;
     private _theme$ = new Subject();
+    private _subscription: Subscription;
     private _resourceStrings = CurrentResourceStrings.InputResStrings;
 
     /** @hidden */
@@ -243,12 +245,13 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any,
-        private renderer: Renderer2
+        private cdr: ChangeDetectorRef
     ) {
         super(_displayDensityOptions);
 
-        this._theme$.asObservable().subscribe(value => {
+        this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;
+            this.cdr.detectChanges();
         });
     }
 
@@ -461,6 +464,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                 });
             }
         }
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy() {
+        this._subscription.unsubscribe();
     }
 }
 
