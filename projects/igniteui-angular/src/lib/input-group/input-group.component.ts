@@ -251,8 +251,9 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     ) {
         super(_displayDensityOptions);
 
-        this._theme$.asObservable().subscribe(value => {
+        this._subscription = this._theme$.asObservable().subscribe(value => {
             this._theme = value as IgxInputGroupTheme;
+            this.cdr.detectChanges();
         });
     }
 
