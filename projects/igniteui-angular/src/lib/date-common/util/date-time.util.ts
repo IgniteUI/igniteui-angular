@@ -113,6 +113,12 @@ export abstract class DateTimeUtil {
         if (!dateTimeParts.filter(p => p.format.includes(currentPart.format)).length) {
             DateTimeUtil.addCurrentPart(currentPart, dateTimeParts);
         }
+        // formats like "y" or "yyy" are treated like "yyyy" while editing
+        const yearPart = dateTimeParts.filter(p => p.type === DatePart.Year)[0];
+        if (yearPart && yearPart.format !== 'yy') {
+            yearPart.end += 4 - yearPart.format.length;
+            yearPart.format = 'yyyy';
+        }
 
         return dateTimeParts;
     }
