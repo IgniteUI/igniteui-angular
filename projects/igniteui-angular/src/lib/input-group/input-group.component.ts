@@ -470,7 +470,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /** @hidden @internal */
     public ngOnDestroy() {
-        this._theme$.unsubscribe();
+        this._subscription.unsubscribe();
     }
 }
 
