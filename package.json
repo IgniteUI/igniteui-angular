@@ -23,7 +23,7 @@
     "test:lib:watch": "ng test igniteui-angular",
     "test:schematics": "ts-node --project projects/igniteui-angular/migrations/tsconfig.json ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/migrations/**/*.spec.ts ./projects/igniteui-angular/schematics/**/*.spec.ts",
     "test:styles": "ts-node --skip-project ./node_modules/jasmine/bin/jasmine.js ./projects/igniteui-angular/src/lib/core/styles/spec/tests.ts",
-    "build:lib": "ng build igniteui-angular --prod && gulp buildStyle",
+    "build:lib": "ng build igniteui-angular --configuration production && gulp buildStyle",
     "build:style": "gulp buildStyle",
     "build:migration": "gulp copyMigrations && tsc --listEmittedFiles --project ./projects/igniteui-angular/migrations/tsconfig.json",
     "build:schematics": "gulp copySchematics && tsc --listEmittedFiles --project ./projects/igniteui-angular/schematics/tsconfig.json",
