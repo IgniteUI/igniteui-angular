@@ -31,6 +31,7 @@ import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
+import { StateUpdateEvent, TransactionEventOrigin, TransactionType } from 'igniteui-angular';
 
 let NEXT_ID = 0;
 
@@ -1039,34 +1040,42 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     const group = this.selectionService.rowsDirectParents.get(rec);
                     let siblingID;
                     if (group.records.length > 1) {
-                        let sibling;
-                        group.records.forEach(record => {
-                            if (record !== args.data) {
-                                sibling = record;
-                                return;
+                        group.records.some(record => {
+                            const ID = this.primaryKey ? record[this.primaryKey] : record;
+                            if (ID !== rec) {
+                                siblingID = ID;
+                                return true;
                             }
                         });
-                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
                         requestAnimationFrame(() => {
                             if (this.transactions.enabled) {
-                                this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID), true);
-                            } else {
                                 this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                            } else {
+                                this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID), false);
                             }
                             this.selectionService.selectedRowsChange.next();
                         });
+                    } else {
+                        this.selectionService.handleGroupState(group);
+                        this.selectionService.selectedRowsChange.next();
                     }
                 } else {
                     // if a row has been added and before commiting the transaction deleted
                     const leafRowsDirectGroups = new Set<any>();
                     // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
-                        this.selectionService.rowsDirectParents.forEach(record => {
-                            if (record) {
-                                leafRowsDirectGroups.add(record);
+                        for (const [key, value] of this.selectionService.rowsDirectParents.entries()) {
+                            if (value) {
+                                for (const rec of this.selectionService.allData) {
+                                    const recID = this.primaryKey ? rec[this.primaryKey] : rec;
+                                    if (recID === key) {
+                                        leafRowsDirectGroups.add(value);
+                                        break;
+                                    }
+                                }
                             }
-                        });
-                        leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group, true));
+                        }
+                        leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
                         this.selectionService.selectedRowsChange.next();
                     });
                 }
@@ -1077,13 +1086,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             if (this.groupingExpressions.length) {
                 const recID = this.primaryKey ? args.data[this.primaryKey] : args.data;
                 let rec = this._gridAPI.get_rec_by_id(recID);
-
-                requestAnimationFrame(() => {
-                    // console.log(this.selectionService.rowsDirectParents.get(recID));
-                });
                 if (rec) {
                     const group = this.selectionService.rowsDirectParents.get(recID);
-                    this.selectionService.handleGroupState(group);
+                    this.selectionService.handleGroupState(group, false);
                     this.selectionService.selectedRowsChange.next();
                 } else {
                     // The record is still not available
@@ -1092,7 +1097,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                         rec = this._gridAPI.get_rec_by_id(recID);
                         if (rec) {
                             const group = this.selectionService.rowsDirectParents.get(recID);
-                            this.selectionService.handleGroupState(group);
+                            this.selectionService.handleGroupState(group, false);
                             this.selectionService.selectedRowsChange.next();
                         }
                     });
@@ -1101,15 +1106,93 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         });
 
         this.filteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
-            if (this.groupingExpressions.length) {
-                const leafRowsDirectGroups = new Set<any>();
-                this.selectionService.rowsDirectParents.forEach(record => {
-                    if (record) {
-                        leafRowsDirectGroups.add(record);
+            requestAnimationFrame(() => {
+                if (this.groupingExpressions.length) {
+                    const leafRowsDirectGroups = new Set<any>();
+                    if (this.transactions.enabled) {
+                        for (const [key, value] of this.selectionService.rowsDirectParents.entries()) {
+                            if (value) {
+                                for (const rec of this.selectionService.allData) {
+                                    const recID = this.primaryKey ? rec[this.primaryKey] : rec;
+                                    if (recID === key) {
+                                        leafRowsDirectGroups.add(value);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        this.selectionService.rowsDirectParents.forEach(record => {
+                            if (record) {
+                                leafRowsDirectGroups.add(record);
+                            }
+                        });
                     }
-                });
-                leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
-                this.selectionService.selectedRowsChange.next();
+                    leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
+                    this.selectionService.selectedRowsChange.next();
+                }
+            });
+        });
+
+        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event: StateUpdateEvent) => {
+            let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+                if (this.groupingExpressions.length) {
+                    const recID = event.actions[0].transaction.id;
+                    const group = this.selectionService.rowsDirectParents.get(recID);
+                    let siblingID;
+                    if (group.records.length > 1) {
+                        let sibling;
+                        const rec = this._gridAPI.getRowData(recID);
+                        group.records.some(record => {
+                            if (record !== rec) {
+                                sibling = record;
+                                return true;
+                            }
+                        });
+                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
+                        requestAnimationFrame(() => {
+                            const groupSibling = this.selectionService.rowsDirectParents.get(siblingID);
+                            this.selectionService.handleGroupState(groupSibling);
+                            this.selectionService.selectedRowsChange.next();
+                        });
+                    } else {
+                        this.selectionService.handleGroupState(group, false);
+                        this.selectionService.selectedRowsChange.next();
+                    }
+                }
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+                if (this.groupingExpressions.length) {
+                    const recID = event.actions[0].transaction.id;
+                    const group = this.selectionService.rowsDirectParents.get(recID);
+                    let siblingID;
+                    if (group.records.length > 1) {
+                        let sibling;
+                        const rec = this._gridAPI.getRowData(recID);
+                        group.records.some(record => {
+                            if (record !== rec) {
+                                sibling = record;
+                                return true;
+                            }
+                        });
+                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
+                        requestAnimationFrame(() => {
+                            const groupSibling = this.selectionService.rowsDirectParents.get(siblingID);
+                            this.selectionService.handleGroupState(groupSibling);
+                            this.selectionService.selectedRowsChange.next();
+                        });
+                    } else {
+                        this.selectionService.handleGroupState(group, false);
+                        this.selectionService.selectedRowsChange.next();
+                    }
+                }
+            }
+            if (actions.length) {
+                for (const action of actions) {
+                    //this.deselectChildren(action.transaction.id);
+                }
             }
         });
     }

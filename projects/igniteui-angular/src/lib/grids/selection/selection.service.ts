@@ -511,11 +511,14 @@ export class IgxGridSelectionService {
         this.handleParentGroupsState(group.groupParent);
     }
 
-    public handleGroupState(group: IGroupByRecord, isCRUD = false) {
+    public handleGroupState(group: IGroupByRecord, isCRUD = true) {
+        if (!group) {
+            return;
+        }
         const visibleRowIDs = this.allData;
         const visibleRecordsInGroup = isCRUD ? group.records.filter(rec => visibleRowIDs.indexOf(rec) > -1) : group.records;
 
-        if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x)))) {
+        if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x))) && visibleRecordsInGroup.length) {
             this.selectedGroupByRows.add(group.value + group.expression.fieldName);
             this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
         } else if (visibleRecordsInGroup.every(x => !this.isRowSelected(this.getRowID(x)))) {
