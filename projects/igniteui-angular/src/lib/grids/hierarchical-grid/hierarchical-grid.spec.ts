@@ -1169,7 +1169,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
         const firstRow = child1Grid.componentInstance.getRowByIndex(0);
         firstRow.expanded = true;
         expect(firstRow.hasChildren).toBe(true);
-        expect(firstRow.children).toBeNull();
+        expect(firstRow.children).toBeUndefined();
         expect(firstRow.viewIndex).toEqual(0);
         expect(firstRow.key).toBeDefined();
         expect(firstRow.data.ID).toEqual('00');

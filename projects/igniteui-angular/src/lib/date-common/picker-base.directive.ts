@@ -227,7 +227,9 @@ export abstract class PickerBaseDirective extends DisplayDensityBase implements 
 
     protected _destroy$ = new Subject();
 
-    public abstract valueChange: EventEmitter<string | Date | DateRange | null>;
+    // D.P. EventEmitter<string | Date | DateRange | null> throws on strict checks for more restrictive overrides
+    // w/ TS2416 Type 'string | Date ...' not assignable to type 'DateRange' due to observer method check
+    public abstract valueChange: EventEmitter<any>;
 
     constructor(public element: ElementRef,
         @Inject(LOCALE_ID) protected _localeId: string,
