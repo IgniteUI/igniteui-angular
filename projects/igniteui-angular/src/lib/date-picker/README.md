@@ -91,54 +91,53 @@ The date picker also supports binding through `ngModel` if two-way date-bind is 
 # API
 
 ###### Inputs
-| Name   |      Type      |  Description |
-|:----------|:-------------:|:------|
-| `id` | string | Unique identifier of the component. If not provided it will be automatically generated.|
-| `todayBottonLabel` | `string` | Renders today button with custom content, which selects today date from calendar, and fill the datePicker input. |
-| `cancelButtonLabel` | `string` | Renders cancel button with custom content, which closes the calendar. |
-| `formatter` | `function` | Applied custom formatter on the selected or passed in date. |
-| `formatViews` | `PickersFormatViews` | Determines if `day`, `month` and `year` will be rendered in the calendar. `locale` and `calendarFormat` are taken into account as well, if present.
-| `disabled` | `boolean` | Disables the date picker. |
-| `weekStart`| `Number | WEEKDAYS` | Sets on which day will the week start. |
-| `locale` | `string` | Sets the locale used for formatting and displaying the dates in the calendar. For more information check out [this](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) page for valid formats. |
-| `displayFormat` | `string` | The format used to display the picker's value when it's not being edited. |
-| `inputFormat` | `string` | The editor's input mask. |
-| `disabledDates` | `DateRangeDescriptor[]` | Configure the disabled dates. |
-| `specialDates` | `DateRangeDescriptor[]` | Configure the special dates. |
-| `calendarFormat` | `PickersFormatOptions` | The calendar's format options for the day view.
-| `value` | `Date | string` | The date picker's value and the selected date in the calendar. |
-| `headerOrientation` | `'horizontal' | 'vertical'` | Determines whether the calendar's header renders in vertical or horizontal state. Applies only in dialog mode. |
-| `mode` | `'dropdown' | 'dialog'` | Sets whether `IgxDatePickerComponent` is in dialog or dropdown mode. |
-| `spinLoop` | `boolean` | Determines if the currently spun date segment should loop over. |
-| `spinDelta` | `DatePartDeltas` | Delta values used to increment or decrement each editor date part on spin actions. All values default to `1`.
-| `type` | `IgxInputGroupType` | Determines how the picker will be styled.
-| `displayMonthsCount` | `number` | Sets the number of displayed month views. Default is `2`. |
-| `hideOutsideDays`| `boolean` | Controls the visibility of the dates that do not belong to the current month. |
-| `overlaySettings` | `OverlaySettings` | Changes the default overlay settings used by the `IgxDatePickerComponent`.
-| `placeholder` | `string` | Sets the placeholder text for empty input.
-| `minValue` | `Date | string` | The minimum value required for the picker to remain valid.
-| `maxValue` | `Date | string` | The maximum value required for the editor to remain valid.
-
-
+| Name | Description | Type |
+|:-----|:------------|:----|
+| `id` | `attr.id` of the picker. | string |
+| `mode` | Sets whether `IgxDatePickerComponent` is in dialog or dropdown mode. | InteractionMode |
+| `value` | The value of the editor. | Date |
+| `minValue` | The minimum value required for the picker to remain valid. | Date \| string |
+| `maxValue` | The maximum value required for the editor to remain valid. | Date \| string |
+| `displayFormat` | The display value of the editor. | string |
+| `inputFormat` | The format that the editor will use to display the date/time. | string |
+| `calendarFormat` | The calendar's format options for the day view. | PickersFormatOptions | 
+| `specialDates` | Dates that will be marked as special in the calendar. | DateRangeDescriptor[] |
+| `disabledDates` | Dates that will be disabled in the calendar. | DateRangeDescriptor[] |
+| `formatViews` | Determines if `day`, `month` and `year` will be rendered in the calendar. `locale` and `formatOptions` are taken into account as well, if present. | PickersFormatViews |
+| `displayMonthsCount` | Sets the number of displayed month views. Default is `2`. | number |
+| `hideOutsideDays` | Sets whether dates that are not part of the current month will be displayed. Default is `false`. | boolean |
+| `showWeekNumbers` | Shows or hides week numbers. | number |
+| `tabindex` | The editor's tabindex. | number |
+| `weekStart`| Sets the start day of the week. | number |
+| `locale` | Locale settings used in `displayFormat` and for localizing the calendar.  | string |
+| `overlaySettings` | Changes the default overlay settings used by the `IgxDatePickerComponent`. | OverlaySettings |
+| `placeholder` | Sets the placeholder text for empty input. | string |
+| `disabled` | Disables or enables the picker. | boolean |
+| `outlet` | The container used for the pop up element. | IgxOverlayOutletDirective \| ElementRef |
+| `type` | Determines how the picker will be styled. | IgxInputGroupType |
+| `spinLoop` | Determines if the currently spun date segment should loop over. | boolean |
+| `spinDelta` | Delta values used to increment or decrement each editor date part on spin actions. All values default to `1`. | DatePartDeltas |
+| `cancelButtonLabel` | The label of the `cancel` button. No button is rendered if there is no label provided. | string |
+| `todayButtonLabel` | The label of the `select today` button. No button is rendered if there is no label provided. | string |
+| `headerOrientation` | Determines whether the calendar's header renders in `vertical` or `horizontal` state. Applies only in `dialog` mode. | 'horizontal' \| 'vertical' |
 
 ### Outputs
-| Name | Return Type | Description |
-|:--:|:---|:---|
-| `opening`  | `IBaseCancelableBrowserEventArgs` | Fired when the calendar has started opening, cancelable. |
-| `opened`  | `IBaseEventArgs` | Fired after the calendar has opened. |
-| `closing`  | `IBaseCancelableBrowserEventArgs` | Fired when the calendar has started closing, cancelable. |
-| `closed`  | `IBaseEventArgs` | Fired after the calendar has closed. |
-| `validationFailed`  | `IDatePickerValidationFailedEventArgs` | Emitted when a user enters an invalid date string or when the value is not within a min/max range. |
-| `valueChange` | `Date` | Emitted when the picker's value changes. Allows two-way binding of `value`. |
+| Name | Description | Emitted with |
+|:-----|:------------|:----|
+| `opening` | Fired when the calendar has started opening, cancelable. | IBaseCancelableBrowserEventArgs |
+| `opened` | Fired after the calendar has opened. | IBaseEventArgs |
+| `closing` | Fired when the calendar has started closing, cancelable. | IBaseCancelableBrowserEventArgs |
+| `closed` | Fired after the calendar has closed. | IBaseEventArgs |
+| `valueChange` | Emitted when the picker's value changes. Allows two-way binding of `value`. | Date |
+| `validationFailed` | Emitted when a user enters an invalid date string or when the value is not within a min/max range. | IDatePickerValidationFailedEventArgs |
 
 ### Methods
-| Name   | Arguments | Return Type | Description |
-|:----------:|:------|:------|:------|
-| `select` | `Date` | `void` | Accepts a Date object and selects the corresponding date from the calendar. |
-| `clear` | n/a | `void` | Clears the editor's date. |
-| `selectToday` | n/a | `void` | Selects today's date in calendar and changes the input field value. |
-| `open` | `OverlaySettings` | `void` | Opens the calendar. |
-| `close` | n/a | `void` | Closes the calendar. |
-| `toggle` | `OverlaySettings` | `void` | Toggles the calendar between opened and closed states. |
-| `increment` | `DatePart?, number?` | | `void` | Accepts a `DatePart` and increments it by one. If no value is provided, it defaults to the part at the position of the cursor.
-| `decrement` | `DatePart?, number?` | `void` | Accepts a `DatePart` and decrements it by one. If no value is provided, it defaults to the part at the position of the cursor.
+| Name | Description | Return type |
+|:-----|:------------|:----|
+| `select` | Accepts a Date object and selects the corresponding date from the calendar. | void |
+| `clear` | Clears the editor's date. | void |
+| `open` | Opens the calendar. | void |
+| `close` | Closes the calendar. | void |
+| `toggle` | Toggles the calendar between opened and closed states. | void |
+| `increment` | Accepts a `DatePart` and increments it by one. If no value is provided, it defaults to the part at the position of the cursor. | void |
+| `decrement` | Accepts a `DatePart` and decrements it by one. If no value is provided, it defaults to the part at the position of the cursor. | void |

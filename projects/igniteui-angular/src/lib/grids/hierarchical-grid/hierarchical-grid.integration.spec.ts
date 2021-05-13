@@ -910,7 +910,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.calcHeight - expectedHeight).toBeLessThanOrEqual(1);
         }));
 
-        xit('should search in both pinned and unpinned rows.', () => {
+        it('should search in both pinned and unpinned rows.', () => {
             let findCount = hierarchicalGrid.findNext('Product: A0');
             fixture.detectChanges();
 
@@ -918,10 +918,10 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(spans.length).toBe(1);
             expect(findCount).toEqual(1);
 
-            // Pin 3rd row
-            hierarchicalGrid.pinRow('2');
+            // Pin 1st row
+            hierarchicalGrid.pinRow('0');
             fixture.detectChanges();
-            expect(hierarchicalGrid.pinnedRows.length).toBe(2);
+            expect(hierarchicalGrid.pinnedRows.find(r => r.rowID === '0')).toBeDefined();
 
             findCount = hierarchicalGrid.findNext('Product: A0');
             fixture.detectChanges();
