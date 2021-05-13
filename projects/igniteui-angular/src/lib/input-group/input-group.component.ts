@@ -36,7 +36,7 @@ import { IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from './inputGroupType';
 import { IInputResourceStrings } from '../core/i18n/input-resources';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 
-import { isIE, mkenum } from '../core/utils';
+import { mkenum, PlatformUtil } from '../core/utils';
 import { Subject, Subscription } from 'rxjs';
 
 const IgxInputGroupTheme = mkenum({
@@ -223,7 +223,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
 
     /**
      * Returns the theme of the input.
-     * The returned value is of tyep IgxInputGroupType.
+     * The returned value is of type IgxInputGroupType.
      * ```typescript
      * @ViewChild("MyInputGroup")
      * public inputGroup: IgxInputGroupComponent;
@@ -231,7 +231,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
      *  let inputTheme = this.inputGroup.theme;
      * }
      */
-    public get theme() {
+    public get theme(): IgxInputGroupTheme {
         return this._theme;
     }
 
@@ -245,6 +245,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
         private _inputGroupType: IgxInputGroupType,
         @Inject(DOCUMENT)
         private document: any,
+        private platform: PlatformUtil,
         private cdr: ChangeDetectorRef
     ) {
         super(_displayDensityOptions);
@@ -449,7 +450,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     /** @hidden @internal */
     public ngAfterViewInit() {
         if (!this._theme) {
-            if(isIE()) {
+            if(this.platform.isIE) {
                 Promise.resolve().then(() => {
                     this._theme$.next(IgxInputGroupTheme.Material);
                 });
