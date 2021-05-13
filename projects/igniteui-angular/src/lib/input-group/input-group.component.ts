@@ -13,6 +13,7 @@ import {
     Inject,
     Optional,
     Renderer2,
+    OnDestroy,
 } from '@angular/core';
 import { IgxHintDirective } from '../directives/hint/hint.directive';
 import {
@@ -57,7 +58,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
         { provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent },
     ],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit, OnDestroy {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -463,6 +464,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                 });
             }
         }
+    }
+
+    /** @hidden @internal */
+    public ngOnDestroy() {
+        this._theme$.unsubscribe();
     }
 }
 
