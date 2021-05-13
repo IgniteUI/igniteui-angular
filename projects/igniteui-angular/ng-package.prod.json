@@ -4,14 +4,14 @@
   "lib": {
     "entryFile": "src/public_api.ts",
     "umdModuleIds": {
-      "resize-observer-polyfill": "ResizeObserver"
+      "@juggle/resize-observer": "ResizeObserver"
     }
   },
-  "whitelistedNonPeerDependencies": [
+  "allowedNonPeerDependencies": [
       "@types/hammerjs",
       "hammerjs",
       "jszip",
-      "resize-observer-polyfill",
+      "@juggle/resize-observer",
       "igniteui-trial-watermark",
       "lodash.mergewith",
       "uuid",

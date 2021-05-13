@@ -201,6 +201,20 @@ export class GridRowAPISampleComponent implements OnInit {
         row.selected = !row.selected;
     }
 
+    public selectChildren(grid: IgxGridComponent | IgxTreeGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        const children = row.children;
+        children.forEach(ch => {
+            ch.selected = !ch.selected;
+        });
+    }
+
+    public selectParent(grid: IgxGridComponent | IgxTreeGridComponent, index: number) {
+        const row = grid.getRowByIndex(index);
+        const parent = row.parent;
+        parent.selected = !parent.selected;
+    }
+
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
@@ -239,6 +253,7 @@ export class GridRowAPISampleComponent implements OnInit {
         const row = grid.getRowByIndex(index);
         const state = `
             index: ${row.index},
+            viewIndex: ${row.viewIndex},
             -----------------------------,
             isSummaryRow: ${row.isSummaryRow},
             summaries: ${row.summaries},
@@ -246,6 +261,7 @@ export class GridRowAPISampleComponent implements OnInit {
             isGroupByRow: ${row.isGroupByRow},
             groupByRow: ${row.groupRow?.value},
             -----------------------------,
+            parent: ${row.parent},
             expanded: ${row.expanded},
             key: ${row.key},
             pinned: ${row.pinned},

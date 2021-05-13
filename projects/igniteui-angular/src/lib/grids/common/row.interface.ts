@@ -22,9 +22,10 @@ export interface RowType {
     expanded?: boolean;
     deleted?: boolean;
     inEditMode?: boolean;
-    children?: ITreeGridRecord[];
-    parent?: ITreeGridRecord;
+    children?: RowType[];
+    parent?: RowType;
     hasChildren?: boolean;
+    treeRow? : ITreeGridRecord;
     grid: GridType;
     update?: (value: any) => void;
     delete?: () => any;
