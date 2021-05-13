@@ -1742,7 +1742,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(firstRow.expanded).toBe(false);
 
             expect(firstRow.pinned).toBeFalse();
-            firstRow.pin();
+            firstRow.pinned = true;
             expect(firstRow.pinned).toBeTrue();
         });
     });
