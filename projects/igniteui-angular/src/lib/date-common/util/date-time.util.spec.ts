@@ -44,6 +44,32 @@ describe(`DateTimeUtil Unit tests`, () => {
             expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
             expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 8 }));
 
+            // d/M/y should be 00/00/0000
+            result = DateTimeUtil.parseDateTimeFormat('d/M/y');
+            resDict = reduceToDictionary(result);
+            expect(result.length).toEqual(5);
+            expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
+            expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
+            expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
+
+            // d/M/yyy should be 00/00/0000
+            result = DateTimeUtil.parseDateTimeFormat('d/M/yyy');
+            resDict = reduceToDictionary(result);
+            expect(result.length).toEqual(5);
+            expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
+            expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
+            expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
+
+
+            // d/M/yyyy should 00/00/0000
+            result = DateTimeUtil.parseDateTimeFormat('d/M/yyyy');
+            resDict = reduceToDictionary(result);
+            expect(result.length).toEqual(5);
+            expect(resDict[DatePart.Date]).toEqual(jasmine.objectContaining({ start: 0, end: 2 }));
+            expect(resDict[DatePart.Month]).toEqual(jasmine.objectContaining({ start: 3, end: 5 }));
+            expect(resDict[DatePart.Year]).toEqual(jasmine.objectContaining({ start: 6, end: 10 }));
+
+
             // H:m:s should be 00:00:00
             result = DateTimeUtil.parseDateTimeFormat('H:m:s');
             resDict = reduceToDictionary(result);
