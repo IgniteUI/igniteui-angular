@@ -4653,6 +4653,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public clearFilter(name?: string) {
         this.filteringService.clearFilter(name);
+        this.cdr.detectChanges();
     }
 
     /**
@@ -5203,8 +5204,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (this.selectionService.areAllRowSelected()) {
             this.selectionService.clearRowSelection(event);
+            this.cdr.detectChanges();
         } else {
             this.selectionService.selectAllRows(event);
+            this.cdr.detectChanges();
         }
     }
 
