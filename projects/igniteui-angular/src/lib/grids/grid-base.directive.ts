@@ -3008,7 +3008,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public get hasNoData(): boolean {
+    private get hasNoData(): boolean {
         return !this.data || this.dataLength === 0;
     }
 
@@ -4576,7 +4576,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public filter(name: string, value: any, conditionOrExpressionTree?: IFilteringOperation | IFilteringExpressionsTree,
         ignoreCase?: boolean) {
         this.filteringService.filter(name, value, conditionOrExpressionTree, ignoreCase);
-        this.cdr.detectChanges();
     }
 
     /**
@@ -4653,7 +4652,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public clearFilter(name?: string) {
         this.filteringService.clearFilter(name);
-        this.cdr.detectChanges();
     }
 
     /**
@@ -5204,10 +5202,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         if (this.selectionService.areAllRowSelected()) {
             this.selectionService.clearRowSelection(event);
-            this.cdr.detectChanges();
         } else {
             this.selectionService.selectAllRows(event);
-            this.cdr.detectChanges();
         }
     }
 
