@@ -34,7 +34,7 @@ module.exports = function (config) {
       tags: 'tGrid'
     },
     preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage']
+      'projects/igniteui-angular/**/*.js': ['coverage', 'coverage']
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage/tree-grid'),
