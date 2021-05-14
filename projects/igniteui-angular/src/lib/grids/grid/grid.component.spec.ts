@@ -1960,7 +1960,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        it(`Verify that getRowByIndex returns correct data`, () => {
+        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2002,6 +2002,8 @@ describe('IgxGrid Component Tests #grid', () => {
             // First row is IgxGroupByRow second row is igxGridRow
             expect(firstRow instanceof IgxGroupByRow).toBe(true);
             expect(secondRow instanceof IgxGridRow).toBe(true);
+            expect(secondRow.index).toBe(0);
+            expect(secondRow.viewIndex).toBe(0);
 
             // expand/collapse first group row
             firstRow.expanded = true;
@@ -2018,6 +2020,7 @@ describe('IgxGrid Component Tests #grid', () => {
 
             // index
             expect(secondRow.index).toBe(1);
+            expect(secondRow.viewIndex).toBe(1);
 
             // select group row
             expect(firstRow.selected).toBeFalse();
