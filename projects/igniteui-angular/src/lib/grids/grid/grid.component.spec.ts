@@ -274,7 +274,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
         }));
 
-        fit ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+        it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
             const fixture = TestBed.createComponent(IgxGridTestComponent);
             const grid = fixture.componentInstance.grid;
 
