@@ -661,7 +661,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const rec = this.filteredSortedData ?this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
+        const rec = this.filteredSortedData ? this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
             this.filteredSortedData.find(r => r === key) : undefined;
         const index = this.dataView.findIndex(r => r.data && r.data === rec);
         if (index < 0 || index >= this.filteredSortedData.length) {
