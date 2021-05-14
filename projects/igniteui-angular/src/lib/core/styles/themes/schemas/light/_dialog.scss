@@ -31,15 +31,11 @@ $_light-dialog: extend(
         ),
 
         title-color: (
-            igx-color: 'surface',
-            text-contrast: (),
-            rgba: .87
+            igx-color: ('grays', 900),
         ),
 
         message-color: (
-            igx-color: 'surface',
-            text-contrast: (),
-            rgba: .6
+            igx-color: ('grays', 700),
         ),
 
         border-color: transparent,
