@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, Inject } from '@angular/core';
-import { TestBed, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { IgxInputGroupComponent, IgxInputGroupModule } from './input-group.component';
 import { DisplayDensityToken, DisplayDensity } from '../core/displayDensity';
@@ -41,7 +41,7 @@ describe('IgxInputGroup', () => {
             .compileComponents();
     }));
 
-    it('Initializes an input group.', () => {
+    it('Initializes an input group.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);
         fixture.detectChanges();
 
@@ -49,11 +49,13 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        tick();
+        fixture.detectChanges();
         // the default type should be line
         testInputGroupType('line', igxInputGroup, inputGroupElement);
-    });
+    }));
 
-    it('Initializes an input group with type box.', () => {
+    it('Initializes an input group with type box.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupBoxComponent);
         fixture.detectChanges();
 
@@ -61,10 +63,12 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        tick();
+        fixture.detectChanges();
         testInputGroupType('box', igxInputGroup, inputGroupElement);
-    });
+    }));
 
-    it('Initializes an input group with type border.', () => {
+    it('Initializes an input group with type border.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupBorderComponent);
         fixture.detectChanges();
 
@@ -72,10 +76,12 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        tick();
+        fixture.detectChanges();
         testInputGroupType('border', igxInputGroup, inputGroupElement);
-    });
+    }));
 
-    it('Initializes an input group with type search.', () => {
+    it('Initializes an input group with type search.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupSearchComponent);
         fixture.detectChanges();
 
@@ -83,15 +89,20 @@ describe('IgxInputGroup', () => {
         expect(inputGroupElement.classList.contains(INPUT_GROUP_CSS_CLASS)).toBe(true);
 
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+        tick();
+        fixture.detectChanges();
         testInputGroupType('search', igxInputGroup, inputGroupElement);
-    });
+    }));
 
-    it('Should respect type Token and be able to change input group type programmatically.', () => {
+    it('Should respect type Token and be able to change input group type programmatically.', fakeAsync(() => {
         const fixture = TestBed.createComponent(InputGroupComponent);
         fixture.detectChanges();
 
         const inputGroupElement = fixture.debugElement.query(By.css('igx-input-group')).nativeElement;
         const igxInputGroup = fixture.componentInstance.igxInputGroup;
+
+        tick();
+        fixture.detectChanges();
 
         // a Token is passed and can be obtained
         expect(fixture.componentInstance.IGTOKEN).toBe('box');
@@ -120,7 +131,7 @@ describe('IgxInputGroup', () => {
         igxInputGroup.type = null;
         fixture.detectChanges();
         testInputGroupType('box', igxInputGroup, inputGroupElement);
-    });
+    }));
 
     it('disabled input should properly detect changes.', () => {
         const fixture = TestBed.createComponent(InputGroupDisabledComponent);
