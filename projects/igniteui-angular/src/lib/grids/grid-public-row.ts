@@ -260,20 +260,6 @@ export class IgxGridRow extends BaseRow implements RowType {
         super();
     }
 
-    public get parent(): any {
-        if (!this.grid.groupingExpressions.length) {
-            return null;
-        }
-
-        let i = this.index - 1;
-        while (i >= 0) {
-            if (this.grid.groupingResult[i].expression) {
-                return this.grid.groupingResult[i];
-            }
-            i--;
-        }
-    }
-
     /**
      * Returns the view index calculated per the grid page.
      */

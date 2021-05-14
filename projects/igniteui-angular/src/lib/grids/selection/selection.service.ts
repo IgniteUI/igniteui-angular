@@ -61,8 +61,8 @@ export class IgxGridSelectionService {
     public columnSelection: Set<string> = new Set<string>();
 
     public rowsDirectParents: Map<any, IGroupByRecord> = new Map<any, IGroupByRecord>();
-    public selectedGroupByRows: Set<any> = new Set<any>();
-    public indeterminateGroupByRows: Set<any> = new Set<any>();
+    public selectedGroupByRows: Set<string> = new Set<string>();
+    public indeterminateGroupByRows: Set<string> = new Set<string>();
     /**
      * @hidden @internal
      */
@@ -486,56 +486,13 @@ export class IgxGridSelectionService {
             this.rowSelection.add(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
+
         if (this.grid?.groupingExpressions.length) {
             rowsGroups.forEach(group => this.handleGroupState(group));
         }
+
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
-    }
-
-    public handleParentGroupsState(group: IGroupByRecord) {
-        if (group.groups.every(x => this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
-            this.selectedGroupByRows.add(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
-        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(x.value + x.expression.fieldName) ||
-            this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
-            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.add(group.value + group.expression.fieldName);
-        } else {
-            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
-        }
-        if (group.level === 0) {
-            return;
-        }
-        this.handleParentGroupsState(group.groupParent);
-    }
-
-    public handleGroupState(group: IGroupByRecord, isCRUD = true) {
-        if (!group) {
-            return;
-        }
-        const visibleRowIDs = this.allData;
-        const visibleRecordsInGroup = isCRUD ? group.records.filter(rec => visibleRowIDs.indexOf(rec) > -1) : group.records;
-
-        if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x))) && visibleRecordsInGroup.length) {
-            this.selectedGroupByRows.add(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
-        } else if (visibleRecordsInGroup.every(x => !this.isRowSelected(this.getRowID(x)))) {
-            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.delete(group.value + group.expression.fieldName);
-        } else {
-            this.selectedGroupByRows.delete(group.value + group.expression.fieldName);
-            this.indeterminateGroupByRows.add(group.value + group.expression.fieldName);
-        }
-
-        if (group.groupParent) {
-            this.handleParentGroupsState(group.groupParent);
-        }
-    }
-
-    public getRowID(rowData): IgxGridRowComponent {
-        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
     /** Deselect specified rows. No event is emitted. */
@@ -545,19 +502,11 @@ export class IgxGridSelectionService {
             this.rowSelection.delete(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
-        if (this.grid.groupingExpressions.length) {
+        if (this.grid?.groupingExpressions.length) {
             rowsGroups.forEach(group => this.handleGroupState(group));
         }
         this.allRowsSelected = undefined;
         this.selectedRowsChange.next();
-    }
-
-    public isRowSelected(rowID): boolean {
-        return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
-    }
-
-    public isRowInIndeterminateState(rowID): boolean {
-        return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
     /** Select range from last selected row to the current specified row. */
@@ -579,10 +528,12 @@ export class IgxGridSelectionService {
         this.emitRowSelectionEvent(newSelection, added, [], event);
     }
 
+    /**
+     * @hidden @internal
+     */
     public selectGroupByRows(groupRow: IGroupByRecord, select: boolean, event?) {
         const added: any[] = [];
         const removed: any[] = [];
-        // Selection
         if (select) {
             groupRow.records.forEach(record => {
                 const rowID = this.getRowID(record);
@@ -591,7 +542,6 @@ export class IgxGridSelectionService {
                 }
             });
         } else {
-            // Deselection
             groupRow.records.forEach(record => {
                 const rowID = this.getRowID(record);
                 if (this.isRowSelected(rowID)) {
@@ -602,6 +552,42 @@ export class IgxGridSelectionService {
         const newSelection: any[] = this.getSelectedRows().filter(row => removed.indexOf(row) < 0).concat(added);
 
         this.emitRowSelectionEvent(newSelection, added, removed, event);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public handleGroupState(group: IGroupByRecord, isCRUD = true) {
+        if (!group) {
+            return;
+        }
+
+        const visibleRowIDs = this.allData;
+        const visibleRecordsInGroup = isCRUD ? group.records.filter(rec => visibleRowIDs.indexOf(rec) > -1) : group.records;
+        const groupID = group.value + group.expression.fieldName;
+
+        if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x))) && visibleRecordsInGroup.length) {
+            this.selectedGroupByRows.add(groupID);
+            this.indeterminateGroupByRows.delete(groupID);
+        } else if (visibleRecordsInGroup.every(x => !this.isRowSelected(this.getRowID(x)))) {
+            this.selectedGroupByRows.delete(groupID);
+            this.indeterminateGroupByRows.delete(groupID);
+        } else {
+            this.selectedGroupByRows.delete(groupID);
+            this.indeterminateGroupByRows.add(groupID);
+        }
+
+        if (group.groupParent) {
+            this.handleParentGroupsState(group.groupParent);
+        }
+    }
+
+    public isRowSelected(rowID): boolean {
+        return this.rowSelection.size > 0 && this.rowSelection.has(rowID);
+    }
+
+    public isRowInIndeterminateState(rowID): boolean {
+        return this.indeterminateRows.size > 0 && this.indeterminateRows.has(rowID);
     }
 
     public areAllRowSelected(): boolean {
@@ -652,6 +638,13 @@ export class IgxGridSelectionService {
         }
         const rowIndex = this.getRowIDs(this.grid.gridAPI.get_all_data(true)).indexOf(rowID);
         return rowIndex < 0 ? {} : this.grid.gridAPI.get_all_data(true)[rowIndex];
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public getRowID(rowData): IgxGridRowComponent {
+        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
     public getRowIDs(data): Array<any> {
@@ -829,6 +822,25 @@ export class IgxGridSelectionService {
 
     private isRowDeleted(rowID): boolean {
         return this.grid.gridAPI.row_deleted_transaction(rowID);
+    }
+
+    private handleParentGroupsState(group: IGroupByRecord) {
+        const groupID = group.value + group.expression.fieldName;
+        if (group.groups.every(x => this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+            this.selectedGroupByRows.add(groupID);
+            this.indeterminateGroupByRows.delete(groupID);
+        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(x.value + x.expression.fieldName) ||
+            this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+            this.selectedGroupByRows.delete(groupID);
+            this.indeterminateGroupByRows.add(groupID);
+        } else {
+            this.selectedGroupByRows.delete(groupID);
+            this.indeterminateGroupByRows.delete(groupID);
+        }
+        if (group.level === 0) {
+            return;
+        }
+        this.handleParentGroupsState(group.groupParent);
     }
 
     private pointerOriginHandler = () => {

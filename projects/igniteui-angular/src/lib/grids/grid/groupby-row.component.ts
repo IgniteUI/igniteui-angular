@@ -205,13 +205,6 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public getRowID(rowData): IgxGridRowComponent {
-        return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
-    }
-
-    /**
-     * @hidden @internal
-     */
     public onGroupSelectorClick(event) {
         if (!this.grid.isMultiRowSelectionEnabled) {
             return;
