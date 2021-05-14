@@ -285,8 +285,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
             expect(container.getAttribute('role')).toBe(null);
 
-            //Filter grid so no results are available and grid is empty
-            grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+            // Filter grid so no results are available and grid is empty
+            grid.filter('index', '111', IgxStringFilteringOperand.instance().condition('contains'), true);
             fixture.detectChanges();
             grid.markForCheck();
             expect(container.getAttribute('role')).toMatch('row');
