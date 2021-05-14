@@ -10,7 +10,7 @@ import {
 } from './schema';
 import {
     getLanguageService, getRenamePositions, getIdentifierPositions, replaceMatch,
-    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME
+    createProjectService, isMemberIgniteUI, NG_LANG_SERVICE_PACKAGE_NAME, NG_CORE_PACKAGE_NAME, findMatches
 } from './tsUtils';
 import {
     getProjectPaths, getWorkspace, getProjects, escapeRegExp,
@@ -34,6 +34,15 @@ export class UpdateChanges {
     public get projectService(): tss.server.ProjectService {
         if (!this._projectService) {
             this._projectService = createProjectService(this.serverHost);
+            // Force Angular service to compile project on initial load w/ configure project
+            // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
+            // and no actual angular metadata will be resolved for the rest of the migration
+            const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+            const mainPath = '/src/app/app.component.ts';//path.posix.join('/', wsProject.root, wsProject.architect?.build?.options['main']);
+            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(mainPath), false);
+            this._projectService.openClientFile(scriptInfo.fileName);
+            const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
+            project.getLanguageService().getSemanticDiagnostics(mainPath);
         }
         return this._projectService;
     }
@@ -415,7 +424,6 @@ export class UpdateChanges {
     }
 
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
-        const langServ = this.getDefaultLanguageService(entryPath);
         let content = this.host.read(entryPath).toString();
         const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
@@ -423,11 +431,18 @@ export class UpdateChanges {
             if (!content.includes(change.member)) {
                 continue;
             }
-            const source = langServ.getProgram().getSourceFile(entryPath);
-            const matches = getIdentifierPositions(source, change.member);
+
+            const langServ = this.getDefaultLanguageService(entryPath);
+            let matches: number[];
+            if (entryPath.endsWith('.ts')) {
+                const source = langServ.getProgram().getSourceFile(entryPath);
+                matches = getIdentifierPositions(source, change.member).map(x => x.start);
+            } else {
+                matches = findMatches(content, change.member);
+            }
             for (const matchPosition of matches) {
-                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition.start)) {
-                    changes.add({ change, position: matchPosition.start });
+                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {
+                    changes.add({ change, position: matchPosition });
                 }
             }
         }
