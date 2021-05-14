@@ -175,7 +175,7 @@ function typedocWatchFunc(cb) {
 
 const TYPEDOC = {
     EXPORT_JSON_PATH: slash(path.join(DOCS_OUTPUT_PATH, 'typescript-exported')),
-    PROJECT_PATH: slash(path.join(__dirname, 'projects', 'igniteui-angular', 'src')),
+    PROJECT_PATH: slash(path.join(__dirname, 'projects', 'igniteui-angular', 'src', 'public_api.ts')),
     TEMPLATE_STRINGS_PATH: slash(path.join(__dirname, 'extras', 'template', 'strings', 'shell-strings.json'))
 };
 
