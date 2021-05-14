@@ -484,6 +484,29 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
+
+        it('Should be able to cancel columnMovingEnd event.', (async () => {
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
+
+            // step 1 - try moving a column
+            const header = headers[0].nativeElement;
+            UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 156, 71);
+            await wait();
+            UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
+            await wait(50);
+            UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
+            await wait();
+            fixture.detectChanges();
+
+            // step 2 - verify the event was canceled(in componentInstance)
+            const columnsList = grid.columnList.toArray();
+            expect(columnsList[0].field).toEqual('ID');
+            expect(columnsList[1].field).toEqual('Name');
+            expect(columnsList[2].field).toEqual('LastName');
+        }));
+
         xit('Should preserve filtering after columns are reordered.', async () => {
             pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
