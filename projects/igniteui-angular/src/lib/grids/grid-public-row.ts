@@ -165,20 +165,6 @@ abstract class BaseRow implements RowType {
     }
 
     /**
-     * Returns the child rows. Always returns null for IgxGridRow.
-     */
-    public get children(): null | ITreeGridRecord[] {
-        return null;
-    }
-
-    /**
-     * Returns the parent row, if any. Always returns null for IgxGridRow.
-     */
-    public get parent(): null | ITreeGridRecord {
-        return null;
-    }
-
-    /**
      * Returns if the row has child rows. Always return false for IgxGridRow.
      */
     public get hasChildren(): boolean {
@@ -269,6 +255,26 @@ export class IgxGridRow extends BaseRow implements RowType {
         }
         return this.index + this.grid.page * this.grid.perPage;
     }
+
+    /**
+     * Returns the parent row, if grid is grouped.
+     */
+    public get parent(): RowType {
+        let parent: IgxGroupByRow;
+        if (!this.grid.groupingExpressions.length) {
+            return undefined;
+        }
+
+        let i = this.index - 1;
+        while (i >= 0 && !parent) {
+            const rec = this.grid.dataView[i];
+            if (this.grid.isGroupByRecord(rec)) {
+                parent = new IgxGroupByRow(this.grid, i, rec);
+            }
+            i--;
+        }
+        return parent;
+    }
 }
 
 export class IgxTreeGridRow extends BaseRow implements RowType {
@@ -299,15 +305,23 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     /**
      * Returns the child rows.
      */
-    public get children(): ITreeGridRecord[] {
-        return this.treeRow.children;
+    public get children(): RowType[] {
+        const children: IgxTreeGridRow[] = [];
+        if (this.treeRow.expanded) {
+            this.treeRow.children.forEach((rec, i) => {
+                const row = new IgxTreeGridRow(this.grid, this.index + 1 + i, rec.data);
+                children.push(row);
+            });
+        }
+        return children;
     }
 
     /**
      * Returns the parent row.
      */
-    public get parent(): ITreeGridRecord {
-        return this.treeRow.parent;
+    public get parent(): RowType {
+        const row = this.grid.getRowByKey(this.treeRow.parent.rowID);
+        return row;
     }
 
     /**
@@ -429,12 +443,55 @@ export class IgxGroupByRow implements RowType {
     }
 
     /**
+     * Returns the child rows.
+     */
+    public get children(): RowType[] {
+        const children: IgxGridRow[] = [];
+        this.groupRow.records.forEach((rec, i) => {
+            const row = new IgxGridRow(this.grid, this.index + 1 + i, rec);
+            children.push(row);
+        });
+        return children;
+    }
+
+    /**
      * @hidden
      */
     constructor(grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
         this.grid = grid;
         this.index = index;
         this.isGroupByRow = true;
+    }
+
+    /**
+     * Gets whether the row is selected.
+     * Default value is `false`.
+     * ```typescript
+     * row.selected = true;
+     * ```
+     */
+    public get selected(): boolean {
+        return this.children.every(row => row.selected);
+    }
+
+    /**
+     * Sets whether the row is selected.
+     * Default value is `false`.
+     * ```typescript
+     * row.selected = !row.selected;
+     * ```
+     */
+    public set selected(val: boolean) {
+        if (val) {
+            this.children.forEach(row => {
+                this.grid.selectionService.selectRowsWithNoEvent([row.key]);
+            });
+        } else {
+            this.children.forEach(row => {
+                this.grid.selectionService.deselectRowsWithNoEvent([row.key]);
+            });
+        }
+        this.grid.cdr.markForCheck();
     }
 
     /**

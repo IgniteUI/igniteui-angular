@@ -15,17 +15,17 @@ The specification for the tree can be found [here](https://github.com/IgniteUI/i
 
 ## Usage
 ```html
-    <igx-tree>
-	<igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="isNodeExpanded(node)" [selected]="isNodeSelected(node)">
-		{{ node.text }}
-		<img [src]="node.image" alt="node.imageAlt" />
-		<igx-tree-node *ngFor="let child of node.children" [data]="child" [expanded]="isNodeExpanded(child)" [selected]="isNodeSelected(child)">
-			{{ child.text }}
-            <igx-tree-node *ngFor="let leafChild of child.children" [data]="leafChild" [expanded]="isNodeExpanded(leafChild)" [selected]="isNodeSelected(leafChild)">
-                <a igxTreeNodeLink href="{{leafChild.location}}" target="_blank">{{ leafChild.text }}</a>
-            </igx-tree-node>
-		</igx-tree-node>
-	</igx-tree-node>
+<igx-tree>
+  <igx-tree-node *ngFor="let node of data" [data]="node" [expanded]="isNodeExpanded(node)" [selected]="isNodeSelected(node)">
+    {{ node.text }}
+    <img [src]="node.image" alt="node.imageAlt" />
+    <igx-tree-node *ngFor="let child of node.children" [data]="child" [expanded]="isNodeExpanded(child)" [selected]="isNodeSelected(child)">
+      {{ child.text }}
+      <igx-tree-node *ngFor="let leafChild of child.children" [data]="leafChild" [expanded]="isNodeExpanded(leafChild)" [selected]="isNodeSelected(leafChild)">
+        <a igxTreeNodeLink href="{{leafChild.location}}" target="_blank">{{ leafChild.text }}</a>
+      </igx-tree-node>
+    </igx-tree-node>
+  </igx-tree-node>
 </igx-tree>
 ```
 

@@ -11,7 +11,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
@@ -19,7 +19,6 @@ import { GridType } from '../common/grid.interface';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { IgxGridRowComponent } from './grid-row.component';
 import { IgxGridComponent } from './grid.component';
 import { GridSelectionMode } from '../common/enums';
 
@@ -253,7 +252,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      */
     public get dataType(): any {
         const column = this.groupRow.column;
-        return (column && column.dataType) || DataType.String;
+        return (column && column.dataType) || GridColumnDataType.String;
     }
 
     /**
