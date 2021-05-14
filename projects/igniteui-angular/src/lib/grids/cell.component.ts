@@ -26,8 +26,8 @@ import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
 import { ISearchInfo } from './grid/public_api';
-import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
-import { DataType } from '../data-operations/data-util';
+import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
+import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 
 /**
@@ -289,17 +289,17 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.id')
     public get attrCellID() {
-        return `${this.intRow.gridID}_${this.rowIndex}_${ this.visibleColumnIndex}`;
+        return `${this.intRow.gridID}_${this.rowIndex}_${this.visibleColumnIndex}`;
     }
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.column.dataType === DataType.Percent ?
-        this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
-        this.column.dataType === DataType.Currency ?
-        this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
-            this.column.pipeArgs.digitsInfo, this.grid.locale) :
-        this.value;
+        return this.editMode || this.cellTemplate ? '' : this.column.dataType === GridColumnDataType.Percent ?
+            this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
+            this.column.dataType === GridColumnDataType.Currency ?
+                this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
+                    this.column.pipeArgs.digitsInfo, this.grid.locale) :
+                this.value;
     }
 
     @HostBinding('class.igx-grid__td--bool-true')
@@ -332,7 +332,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (this._cellSelection === value) {
             return;
         }
-         this.zone.runOutsideAngular(() => {
+        this.zone.runOutsideAngular(() => {
             if (value === GridSelectionMode.multiple) {
                 this.addPointerListeners(value);
             } else {
@@ -448,7 +448,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.aria-selected')
     public get ariaSelected() {
-        return this.selected || this.column.selected  || this.intRow.selected;
+        return this.selected || this.column.selected || this.intRow.selected;
     }
 
     /**
@@ -549,7 +549,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @ViewChild('inlineEditor', { read: TemplateRef, static: true })
     protected inlineEditorTemplate: TemplateRef<any>;
 
-    @ViewChild('addRowCell', { read: TemplateRef, static: true})
+    @ViewChild('addRowCell', { read: TemplateRef, static: true })
     protected addRowCellTemplate: TemplateRef<any>;
 
     @ViewChild(IgxTextHighlightDirective, { read: IgxTextHighlightDirective })
@@ -579,7 +579,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 colEnd: this.column.colEnd,
                 columnVisibleIndex: this.visibleColumnIndex
             } : null
-            };
+        };
     }
 
     /**
@@ -623,7 +623,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     /** @hidden @internal */
     public get currencyCode(): string {
         return this.column.pipeArgs.currencyCode ?
-            this.column.pipeArgs.currencyCode  : getLocaleCurrencyCode(this.grid.locale);
+            this.column.pipeArgs.currencyCode : getLocaleCurrencyCode(this.grid.locale);
     }
 
     /** @hidden @internal */
@@ -728,7 +728,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         });
         if (this.platformUtil.isIOS) {
             this.touchManager.addEventListener(this.nativeElement, 'doubletap', this.onDoubleClick, {
-                cssProps: { } /* don't disable user-select, etc */
+                cssProps: {} /* don't disable user-select, etc */
             } as HammerOptions);
         }
     }
@@ -819,7 +819,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         if (!this.platformUtil.isLeftClick(event)) {
             event.preventDefault();
-            this.grid.navigation.setActiveNode({rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex});
+            this.grid.navigation.setActiveNode({ rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex });
             this.selectionService.addKeyboardRange();
             this.selectionService.initKeyboardState();
             this.selectionService.primaryButton = false;
@@ -839,7 +839,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public pointerenter = (event: PointerEvent) => {
-        const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID || this.grid.navigation.activeNode.gridID !== this.gridID)) {
             return;
         }
@@ -857,9 +857,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public pointerup = (event: PointerEvent) => {
-        const isHierarchicalGrid =  this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
+        const isHierarchicalGrid = this.grid.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid';
         if (!this.platformUtil.isLeftClick(event) || (isHierarchicalGrid && (!this.grid.navigation.activeNode.gridID ||
-        this.grid.navigation.activeNode.gridID !== this.gridID))) {
+            this.grid.navigation.activeNode.gridID !== this.gridID))) {
             return;
         }
         if (this.selectionService.pointerUp(this.selectionNode, this.grid.rangeSelected)) {
@@ -1016,7 +1016,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.addEventListener('pointerup', this.pointerup);
     }
 
-    private  removePointerListeners(selection) {
+    private removePointerListeners(selection) {
         if (selection !== GridSelectionMode.multiple) {
             return;
         }

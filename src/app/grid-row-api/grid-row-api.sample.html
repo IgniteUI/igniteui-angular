@@ -16,6 +16,12 @@
             <button (click)="select(grid, index)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectChildren(grid, index)">Select Children</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectParent(grid, index)">Select Parent</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
             <button (click)="logState(grid, index, gridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
@@ -84,6 +90,12 @@
             <button (click)="select(treeGridHier, tHIndex)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectChildren(treeGridHier, tHIndex)">Select Children</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectParent(treeGridHier, tHIndex)">Select Parent</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
             <button (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log row state</button>
         </div>
         <div style="margin-right: 5px;">
@@ -137,6 +149,12 @@
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="select(treeGrid, tIndex)">Select</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectChildren(treeGrid, tIndex)">Select Children</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="selectParent(treeGrid, tIndex)">Select Parent</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="logState(treeGrid, tIndex, tGridLogger)">Log row state</button>

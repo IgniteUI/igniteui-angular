@@ -193,7 +193,8 @@ export const getSourceOffset = (element: Element): SourceOffset => {
     const { startSourceSpan, endSourceSpan } = element;
     return {
         startTag: { start: startSourceSpan.start.offset, end: startSourceSpan.end.offset },
-        endTag: { start: endSourceSpan.start.offset, end: endSourceSpan.end.offset },
+        // V.S. May 11th, 2021: Tag could be self-closing
+        endTag: { start: endSourceSpan?.start.offset, end: endSourceSpan?.end.offset },
         file: {
             content: startSourceSpan.start.file.content,
             url: startSourceSpan.start.file.url

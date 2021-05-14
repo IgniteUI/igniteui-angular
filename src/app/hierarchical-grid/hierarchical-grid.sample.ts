@@ -4,7 +4,8 @@ import {
     IgxHierarchicalGridComponent,
     IGridCellEventArgs,
     GridSelectionMode,
-    DisplayDensity
+    DisplayDensity,
+    RowType
 } from 'igniteui-angular';
 
 @Component({
@@ -154,6 +155,15 @@ export class HierarchicalGridSampleComponent implements AfterViewInit {
             this.localData1 = this.data2;
         } else {
             this.localData1 = this.data1;
+        }
+    }
+
+    public togglePining(row: RowType, event) {
+        event.preventDefault();
+        if (row.pinned) {
+            row.unpin();
+        } else {
+            row.pin();
         }
     }
 }
