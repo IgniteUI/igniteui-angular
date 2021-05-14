@@ -58,7 +58,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
             }
             this.row.grid.dragRowID = this.row.rowID;
             this.row.grid.rowDragging = true;
-            this.row.grid.markForCheck();
+            this.row.grid.cdr.detectChanges();
 
             this.subscription$ = fromEvent(this.row.grid.document.defaultView, 'keydown').subscribe((ev: KeyboardEvent) => {
                 if (ev.key === KEYS.ESCAPE || ev.key === KEYS.ESCAPE_IE) {
@@ -96,7 +96,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
 
     protected createGhost(pageX, pageY) {
         this.row.grid.endEdit(true);
-        this.row.grid.markForCheck();
+        this.row.grid.cdr.detectChanges();
         this.ghostContext = {
             $implicit: this.row.rowData,
             data: this.row.rowData,
@@ -141,7 +141,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
         this.onTransitionEnd(null);
         this.row.grid.dragRowID = null;
         this.row.grid.rowDragging = false;
-        this.row.grid.markForCheck();
+        this.row.grid.cdr.detectChanges();
         this._unsubscribe();
     }
 
