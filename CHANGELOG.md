@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.0.1
+
+### General
+- **Breaking Change** - `IgxOverlayService` events are renamed as follows:
+    - `onOpening` -> `opening`
+    - `onOpened` -> `opened`
+    - `onClosing` -> `closing`
+    - `onClosed` -> `closed`
+    - `onAppended` -> `contentAppended`
+    - `onAnimation` -> `animationStarting`
+
 ## 12.0.0
 
 ### General
