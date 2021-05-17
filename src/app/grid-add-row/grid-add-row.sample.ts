@@ -22,6 +22,17 @@ export class GridAddRowSampleComponent implements OnInit {
             actionStrip.show(row);
         }
     }
+    rowEditDone(event){
+        console.log(event);
+
+    }
+    selectRows(){
+        if (this.grid.selectedRows.length === this.grid.data.length) {
+            this.grid.deselectAllRows();
+        } else {
+            this.grid.selectAllRows();
+        }
+    }
 
     public onMouseLeave(actionstrip, event?) {
         if (!event || event.relatedTarget.nodeName.toLowerCase() !== 'igx-drop-down-item') {

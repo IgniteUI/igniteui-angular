@@ -1034,6 +1034,34 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.updateGroupsState();
         });
 
+        this.cellEditDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            const isGroupByField = this.groupingExpressions.find(grp => grp.fieldName === args.column.field);
+            if (!this.rowEditable && this.groupingExpressions.length && isGroupByField) {
+                const group = this.selectionService.rowsDirectParents.get(args.rowID);
+                if (group.records.length > 1) {
+                    const siblingID = this.getSiblingRecordID(group, args.rowID);
+                    requestAnimationFrame(() => {
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
+                        this.selectionService.selectedRowsChange.next();
+                    });
+                }
+            }
+        });
+        this.rowEditDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
+            if (this.groupingExpressions.length) {
+                const group = this.selectionService.rowsDirectParents.get(args.rowID);
+                if (group.records.length > 1) {
+                    const siblingID = this.getSiblingRecordID(group, args.rowID);
+                    requestAnimationFrame(() => {
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
+                        this.selectionService.selectedRowsChange.next();
+                    });
+                }
+            }
+        });
+
         this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.groupingExpressions.length) {
                 if (args.data) {

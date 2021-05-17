@@ -1,7 +1,7 @@
 <div>
-    <app-grid-with-transactions>
+    <!-- <app-grid-with-transactions> -->
         <igx-grid #grid [data]="dataFull" [width]="'800px'" [paging]="paging" [perPage]="perPage" [height]="'500px'"
-            [primaryKey]="'ID'" (mouseleave)="onMouseLeave(actionstrip)"
+            [primaryKey]="'ID'" (mouseleave)="onMouseLeave(actionstrip)" (rowEditDone)="rowEditDone($event)"
             (mouseover)="onMouseOver($event, grid, actionstrip)" [rowEditable]="true" [rowSelection]="'multiple'"
             [allowFiltering]="true" [selectedRows]="['CACTU']">
             <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
@@ -13,8 +13,8 @@
                 <igx-grid-editing-actions [addRow]="true"></igx-grid-editing-actions>
             </igx-action-strip>
         </igx-grid>
-    </app-grid-with-transactions>
-
+    <!-- </app-grid-with-transactions> -->
+    <button igxButton="raised" (click)="selectRows()">SelectAll</button>
     <button igxButton="raised" (click)="undo()">Undo</button>
     <button igxButton="raised" (click)="redo()">Redo</button>
     <button igxButton="raised" (click)="commit()">Commit</button>

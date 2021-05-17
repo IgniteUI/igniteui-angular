@@ -659,6 +659,8 @@ export class IgxGridSelectionService {
     public clearAllSelectedRows(): void {
         this.rowSelection.clear();
         this.indeterminateRows.clear();
+        this.selectedGroupByRows.clear();
+        this.indeterminateGroupByRows.clear();
         this.clearHeaderCBState();
         this.selectedRowsChange.next();
     }
