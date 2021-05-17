@@ -1,5 +1,14 @@
-import { Component, NgModule, EventEmitter, Output, Input, ViewChild, ElementRef,
-    ContentChild, HostBinding } from '@angular/core';
+import {
+    Component,
+    ContentChild,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    Input,
+    NgModule,
+    Output,
+    ViewChild
+} from '@angular/core';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { IgxExpansionPanelComponent } from '../expansion-panel/public_api';
 import { IgxIconModule, IgxIconComponent } from '../icon/public_api';
@@ -168,7 +177,7 @@ export class IgxBannerComponent implements IToggleView {
     private _bannerEvent: BannerEventArgs;
     private _animationSettings: ToggleAnimationSettings;
 
-    constructor(public elementRef: ElementRef) { }
+    constructor(public elementRef: ElementRef<HTMLElement>) { }
 
     /**
      * Opens the banner
@@ -185,7 +194,7 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public open(event?: Event) {
-        this._bannerEvent = { banner: this, event};
+        this._bannerEvent = { banner: this, event };
         const openingArgs = {
             banner: this,
             event,
@@ -213,7 +222,7 @@ export class IgxBannerComponent implements IToggleView {
      * ```
      */
     public close(event?: Event) {
-        this._bannerEvent = { banner: this, event};
+        this._bannerEvent = { banner: this, event };
         const closingArgs = {
             banner: this,
             event,
@@ -240,7 +249,7 @@ export class IgxBannerComponent implements IToggleView {
      * <button (click)="banner.toggle()">Toggle Banner</button>
      * ```
      */
-    toggle(event?: Event) {
+    public toggle(event?: Event) {
         if (this.collapsed) {
             this.open(event);
         } else {

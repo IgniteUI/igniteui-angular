@@ -55,7 +55,7 @@ export * from './lib/data-operations/data-util';
 export * from './lib/action-strip/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
-export * from './lib/banner/banner.component';
+export * from './lib/banner/public_api';
 export * from './lib/buttonGroup/buttonGroup.component';
 export * from './lib/calendar/public_api';
 export * from './lib/card/card.component';
