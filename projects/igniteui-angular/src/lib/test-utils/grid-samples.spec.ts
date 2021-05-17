@@ -804,10 +804,6 @@ export class MovableColumnsComponent extends BasicGridComponent {
         if (event.target.field === 'Region') {
             event.cancel = true;
         }
-
-        if (event.target.field === 'Name') {
-            event.cancel = true;
-        }
     }
 }
 

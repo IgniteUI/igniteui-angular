@@ -455,6 +455,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(fixture.componentInstance.countEnd).toEqual(1);
             expect(fixture.componentInstance.source).toEqual(grid.columnList.toArray()[1]);
             expect(fixture.componentInstance.target).toEqual(grid.columnList.toArray()[0]);
+            expect(fixture.componentInstance.cancel).toBe(false);
         }));
 
         it('Should be able to cancel columnMoving event.', (async () => {
@@ -488,7 +489,14 @@ describe('IgxGrid - Column Moving #grid', () => {
         it('Should be able to cancel columnMovingEnd event.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
-            // step 1 - try moving a column
+            // step 1 - subscribe to the columnMovingEnd event in order to cancel it
+            grid.columnMovingEnd.subscribe((e) => {
+                if (fixture.componentInstance.target.field === "Name") {
+                    e.cancel = true;
+                }
+            });
+
+            // step 2 - try moving a column
             const header = headers[0].nativeElement;
             UIInteractions.simulatePointerEvent('pointerdown', header, 150, 65);
             await wait();
@@ -497,10 +505,10 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointermove', header, 330, 75);
             await wait(50);
             UIInteractions.simulatePointerEvent('pointerup', header, 330, 75);
-            await wait();
+            await wait(50);
             fixture.detectChanges();
 
-            // step 2 - verify the event was canceled(in componentInstance)
+            // step 3 - verify the event was canceled(in componentInstance)
             const columnsList = grid.columnList.toArray();
             expect(columnsList[0].field).toEqual('ID');
             expect(columnsList[1].field).toEqual('Name');
