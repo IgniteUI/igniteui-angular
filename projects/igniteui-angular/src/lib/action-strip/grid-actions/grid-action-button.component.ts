@@ -26,7 +26,7 @@ export class IgxGridActionButtonComponent {
      * @hidden
      * @internal
      */
-    @ViewChild(TemplateRef)
+    @ViewChild('menuItemTemplate')
     public templateRef: TemplateRef<any>;
 
     /**
