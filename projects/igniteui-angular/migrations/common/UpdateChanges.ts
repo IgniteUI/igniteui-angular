@@ -438,7 +438,7 @@ export class UpdateChanges {
                 const source = langServ.getProgram().getSourceFile(entryPath);
                 matches = getIdentifierPositions(source, change.member).map(x => x.start);
             } else {
-                matches = findMatches(content, change.member);
+                matches = findMatches(content, `.${change.member}`);
             }
             for (const matchPosition of matches) {
                 if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {

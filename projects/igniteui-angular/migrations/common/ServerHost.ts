@@ -1,4 +1,5 @@
 import { Tree } from '@angular-devkit/schematics';
+import { posix } from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
@@ -42,7 +43,7 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public fileExists(path: string): boolean {
-        return this.host.exists(path);
+        return this.host.exists(path) || ts.sys.fileExists(path);
     }
 
     public directoryExists(path: string): boolean {
@@ -96,6 +97,10 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public realpath(path: string): string {
+        // if (this.host.exists(path)) {
+        //     // host paths are realtive, adjust so they resolve correctly
+        //     path = posix.join('.', path);
+        // }
         return ts.sys.realpath(path);
     }
 
