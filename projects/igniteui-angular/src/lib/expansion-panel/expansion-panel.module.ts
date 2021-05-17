@@ -17,31 +17,28 @@ import {
  * @hidden
  */
 @NgModule({
-  declarations: [
-    IgxExpansionPanelComponent,
-    IgxExpansionPanelHeaderComponent,
-    IgxExpansionPanelBodyComponent,
-    IgxExpansionPanelDescriptionDirective,
-    IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelIconDirective
-  ],
-  entryComponents: [
-  ],
-  exports: [
-    IgxExpansionPanelComponent,
-    IgxExpansionPanelHeaderComponent,
-    IgxExpansionPanelBodyComponent,
-    IgxExpansionPanelDescriptionDirective,
-    IgxExpansionPanelTitleDirective,
-    IgxExpansionPanelIconDirective
-  ],
-  imports: [
-    CommonModule,
-    IgxRippleModule,
-    IgxIconModule,
-    IgxButtonModule,
-    IgxAvatarModule
-  ]
+    declarations: [
+        IgxExpansionPanelComponent,
+        IgxExpansionPanelHeaderComponent,
+        IgxExpansionPanelBodyComponent,
+        IgxExpansionPanelDescriptionDirective,
+        IgxExpansionPanelTitleDirective,
+        IgxExpansionPanelIconDirective
+    ],
+    exports: [
+        IgxExpansionPanelComponent,
+        IgxExpansionPanelHeaderComponent,
+        IgxExpansionPanelBodyComponent,
+        IgxExpansionPanelDescriptionDirective,
+        IgxExpansionPanelTitleDirective,
+        IgxExpansionPanelIconDirective
+    ],
+    imports: [
+        CommonModule,
+        IgxRippleModule,
+        IgxIconModule,
+        IgxButtonModule,
+        IgxAvatarModule
+    ]
 })
-export class IgxExpansionPanelModule {
-}
+export class IgxExpansionPanelModule { }
