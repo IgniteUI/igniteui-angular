@@ -1451,15 +1451,14 @@ export class IgxSliderComponent implements
         IgxSliderThumbComponent,
         IgxThumbLabelComponent,
         IgxTicksComponent,
-        IgxTickLabelsPipe],
+        IgxTickLabelsPipe
+    ],
     exports: [
         IgxSliderComponent,
         IgxThumbFromTemplateDirective,
         IgxThumbToTemplateDirective,
-        IgxTickLabelTemplateDirective,
-        IgxSliderThumbComponent,
-        IgxThumbLabelComponent,
-        IgxTicksComponent],
+        IgxTickLabelTemplateDirective
+    ],
     imports: [CommonModule, FormsModule]
 })
 export class IgxSliderModule {

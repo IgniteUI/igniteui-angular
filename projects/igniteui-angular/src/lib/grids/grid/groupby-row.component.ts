@@ -11,7 +11,7 @@ import {
     OnDestroy
 } from '@angular/core';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode } from '../selection/selection.service';
@@ -177,7 +177,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * const groupRowElement = this.nativeElement;
      * ```
      */
-     public get nativeElement(): any {
+    public get nativeElement(): any {
         return this.element.nativeElement;
     }
 
@@ -205,7 +205,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-     public getRowID(rowData): IgxGridRowComponent {
+    public getRowID(rowData): IgxGridRowComponent {
         return this.grid.primaryKey ? rowData[this.grid.primaryKey] : rowData;
     }
 
@@ -259,16 +259,16 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * this.grid1.rowList.first.grid;
      * ```
      */
-     public get grid(): IgxGridComponent {
+    public get grid(): IgxGridComponent {
         return this.gridAPI.grid as IgxGridComponent;
     }
 
     /**
      * @hidden
      */
-     public get dataType(): any {
+    public get dataType(): any {
         const column = this.groupRow.column;
-        return (column && column.dataType) || DataType.String;
+        return (column && column.dataType) || GridColumnDataType.String;
     }
 
     /**
@@ -307,7 +307,7 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-     public get showRowSelectors(): boolean {
+    public get showRowSelectors(): boolean {
         return this.grid.rowSelection !== GridSelectionMode.none && !this.hideGroupRowSelectors;
     }
 

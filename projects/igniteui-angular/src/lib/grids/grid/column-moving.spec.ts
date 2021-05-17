@@ -484,7 +484,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-        xit('Should preserve filtering after columns are reordered.', async () => {
+        it('Should preserve filtering after columns are reordered.', async () => {
             pending('This scenario need to be reworked with new Filtering row');
             fixture.componentInstance.isFilterable = true;
             fixture.detectChanges();

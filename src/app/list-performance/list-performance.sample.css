@@ -1,17 +1,3 @@
-::ng-deep .igx-list__item-actions .igx-icon {
-    color: lightgray;
-    cursor: pointer;
-}
-
-::ng-deep .igx-list__item-actions .igx-icon.favorite {
-    color: orange;
-}
-
-::ng-deep .igx-list__item-actions .delete-item:hover {
-    color: crimson;
-    cursor: pointer;
-}
-
 .virtualized-items {
     position: relative;
     overflow: hidden;

@@ -25,7 +25,7 @@ import { IgxCalendarComponent } from '../calendar/public_api';
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const DEBOUNCE_TIME = 16;
-const dEFAULT_ICON_TEXT = 'calendar_today';
+const DEFAULT_ICON_TEXT = 'date_range';
 const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeric' };
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
@@ -508,29 +508,17 @@ describe('IgxDateRangePicker', () => {
                     spyOn(dateRange.closing, 'emit').and.callThrough();
                     spyOn(dateRange.closed, 'emit').and.callThrough();
 
-                    const dayRange = 8;
-                    const today = new Date();
-                    startDate = new Date(today.getFullYear(), today.getMonth(), 10, 0, 0, 0);
-                    endDate = new Date(startDate);
-                    endDate.setDate(endDate.getDate() + dayRange);
-                    const startDateDayElIndex = startDate.getDate() + 3;
-                    const endDateDayElIndex = startDateDayElIndex + dayRange;
                     dateRange.open();
                     tick();
                     fixture.detectChanges();
                     expect(dateRange.collapsed).toBeFalsy();
-                    calendarDays = document.getElementsByClassName('igx-calendar__date');
-                    UIInteractions.simulateClickAndSelectEvent(calendarDays[startDateDayElIndex]);
-                    UIInteractions.simulateClickAndSelectEvent(calendarDays[endDateDayElIndex]);
-                    fixture.detectChanges();
 
                     const doneBtn = document.getElementsByClassName(CSS_CLASS_DONE_BUTTON)[0];
                     UIInteractions.simulateClickAndSelectEvent(doneBtn);
                     tick();
                     fixture.detectChanges();
 
-                    verifyDateRangeInSingleInput();
-                    expect(dateRange.collapsed).toBeTruthy();
+                    expect(dateRange.collapsed).toBeTrue();
                     expect(dateRange.closing.emit).toHaveBeenCalledTimes(1);
                     expect(dateRange.closing.emit).toHaveBeenCalledWith({ owner: dateRange, cancel: false, event: undefined });
                     expect(dateRange.closed.emit).toHaveBeenCalledTimes(1);
@@ -1180,7 +1168,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
-                expect(inputGroup.children[0].nativeElement.innerText).toBe(dEFAULT_ICON_TEXT);
+                expect(inputGroup.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
                 expect(inputGroup.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
@@ -1201,7 +1189,7 @@ describe('IgxDateRangePicker', () => {
                 expect(suffixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
                 const addPrefixSingleRangeInput = inputGroups[2];
-                expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(dEFAULT_ICON_TEXT);
+                expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
                 expect(addPrefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
                 expect(addPrefixSingleRangeInput.children[1].nativeElement.innerText).toBe(additionalIconText);
                 expect(addPrefixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
