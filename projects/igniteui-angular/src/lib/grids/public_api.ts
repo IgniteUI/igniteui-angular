@@ -9,6 +9,7 @@ export * from './grid-public-row';
 export * from './common/row.interface';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
+export * from './grid.rowEdit.directive';
 export * from './column-actions/column-actions.module';
 export * from './state.directive';
 export * from './toolbar/grid-toolbar.component';

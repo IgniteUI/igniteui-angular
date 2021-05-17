@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Host, HostListener } from '@angular/core';
+import { Directive, ElementRef, HostListener } from '@angular/core';
 import { GridBaseAPIService } from './api.service';
 
 /** @hidden @internal */
@@ -38,7 +38,7 @@ export class IgxRowEditTabStopDirective {
         return this.api.grid;
     }
 
-    constructor(public api: GridBaseAPIService<any>, public element: ElementRef) {}
+    constructor(public api: GridBaseAPIService<any>, public element: ElementRef<HTMLElement>) {}
 
     @HostListener('keydown.Tab', [`$event`])
     @HostListener('keydown.Shift.Tab', [`$event`])
