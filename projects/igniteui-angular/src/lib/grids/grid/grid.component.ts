@@ -31,7 +31,7 @@ import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { StateUpdateEvent, TransactionEventOrigin, TransactionType } from 'igniteui-angular';
+import { StateUpdateEvent, TransactionEventOrigin, TransactionType } from '../../services/transaction/transaction';
 
 let NEXT_ID = 0;
 
