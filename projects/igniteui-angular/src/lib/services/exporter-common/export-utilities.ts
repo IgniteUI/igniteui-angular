@@ -33,8 +33,12 @@ export class ExportUtilities {
             a.href = url;
             document.body.appendChild(a);
             a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+
+            new Promise(() => {
+                document.body.removeChild(a);
+            }).then(() => {
+                window.URL.revokeObjectURL(url);
+            });
         }
     }
 
