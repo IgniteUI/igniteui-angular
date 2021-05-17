@@ -1,4 +1,3 @@
-
 /**
  * @hidden
  */
@@ -23,18 +22,22 @@ export class ExportUtilities {
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
-        const a = document.createElement('a');
+        const a = document.createElement('a');        
+
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob, fileName);
         } else {
             const url = window.URL.createObjectURL(blob);
+            a.href = url;    
             a.download = fileName;
-
-            a.href = url;
             document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
+           
+            new Promise(() => {
+                a.click();
+            }). then(() => {
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            });
         }
     }
 
