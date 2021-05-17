@@ -485,13 +485,12 @@ describe('IgxGrid - Column Moving #grid', () => {
             expect(columnsList[2].field).toEqual('LastName');
         }));
 
-
         it('Should be able to cancel columnMovingEnd event.', (async () => {
             const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
 
             // step 1 - subscribe to the columnMovingEnd event in order to cancel it
             grid.columnMovingEnd.subscribe((e) => {
-                if (fixture.componentInstance.target.field === "Name") {
+                if (fixture.componentInstance.target.field === 'Name') {
                     e.cancel = true;
                 }
             });

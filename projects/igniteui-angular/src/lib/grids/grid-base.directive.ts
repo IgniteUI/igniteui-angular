@@ -4244,11 +4244,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         const eventArgs: IColumnMovingEndEventArgs = { source: column, target, cancel: false };
 
         this.columnMovingEnd.emit(eventArgs);
-        
+
         if (eventArgs.cancel) {
             return;
         }
-        
+
         if (column === target || (column.level !== target.level) ||
             (column.topLevelParent !== target.topLevelParent)) {
             return;
