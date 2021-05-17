@@ -1014,7 +1014,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 }
             }
         });
-        if (this.selectedRows.length) {
+        if (this.groupingExpressions.length && this.selectedRows.length) {
             const selRows = this.selectedRows;
             this.selectionService.clearRowSelection();
             this.selectRows(selRows, true);
@@ -1031,22 +1031,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
+            this.updateGroupsState();
         });
 
         this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.groupingExpressions.length) {
                 if (args.data) {
-                    const rec = this.primaryKey ? args.data[this.primaryKey] : args.data;
+                    const rec = this.selectionService.getRowID(args.data);
                     const group = this.selectionService.rowsDirectParents.get(rec);
-                    let siblingID;
                     if (group.records.length > 1) {
-                        group.records.some(record => {
-                            const ID = this.primaryKey ? record[this.primaryKey] : record;
-                            if (ID !== rec) {
-                                siblingID = ID;
-                                return true;
-                            }
-                        });
+                        const siblingID = this.getSiblingRecordID(group, rec);
                         requestAnimationFrame(() => {
                             if (this.transactions.enabled) {
                                 this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
@@ -1061,20 +1055,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     }
                 } else {
                     // if a row has been added and before commiting the transaction deleted
-                    const leafRowsDirectGroups = new Set<any>();
+                    const leafRowsDirectGroups = new Set<IGroupByRecord>();
                     // Wait for the change detection to update records through pipes
                     requestAnimationFrame(() => {
-                        for (const [key, value] of this.selectionService.rowsDirectParents.entries()) {
-                            if (value) {
-                                for (const rec of this.selectionService.allData) {
-                                    const recID = this.primaryKey ? rec[this.primaryKey] : rec;
-                                    if (recID === key) {
-                                        leafRowsDirectGroups.add(value);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
+                        this.getVisibleDirectGroups(leafRowsDirectGroups);
                         leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
                         this.selectionService.selectedRowsChange.next();
                     });
@@ -1084,7 +1068,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
         this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.groupingExpressions.length) {
-                const recID = this.primaryKey ? args.data[this.primaryKey] : args.data;
+                const recID = this.selectionService.getRowID(args.data);
                 let rec = this._gridAPI.get_rec_by_id(recID);
                 if (rec) {
                     const group = this.selectionService.rowsDirectParents.get(recID);
@@ -1107,30 +1091,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
         this.filteringDone.pipe(takeUntil(this.destroy$)).subscribe(() => {
             requestAnimationFrame(() => {
-                if (this.groupingExpressions.length) {
-                    const leafRowsDirectGroups = new Set<any>();
-                    if (this.transactions.enabled) {
-                        for (const [key, value] of this.selectionService.rowsDirectParents.entries()) {
-                            if (value) {
-                                for (const rec of this.selectionService.allData) {
-                                    const recID = this.primaryKey ? rec[this.primaryKey] : rec;
-                                    if (recID === key) {
-                                        leafRowsDirectGroups.add(value);
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        this.selectionService.rowsDirectParents.forEach(record => {
-                            if (record) {
-                                leafRowsDirectGroups.add(record);
-                            }
-                        });
-                    }
-                    leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
-                    this.selectionService.selectedRowsChange.next();
-                }
+                this.updateGroupsState();
             });
         });
 
@@ -1138,57 +1099,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             let actions = [];
             if (event.origin === TransactionEventOrigin.REDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-                if (this.groupingExpressions.length) {
-                    const recID = event.actions[0].transaction.id;
-                    const group = this.selectionService.rowsDirectParents.get(recID);
-                    let siblingID;
-                    if (group.records.length > 1) {
-                        let sibling;
-                        const rec = this._gridAPI.getRowData(recID);
-                        group.records.some(record => {
-                            if (record !== rec) {
-                                sibling = record;
-                                return true;
-                            }
-                        });
-                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
-                        requestAnimationFrame(() => {
-                            const groupSibling = this.selectionService.rowsDirectParents.get(siblingID);
-                            this.selectionService.handleGroupState(groupSibling);
-                            this.selectionService.selectedRowsChange.next();
-                        });
-                    } else {
-                        this.selectionService.handleGroupState(group, false);
-                        this.selectionService.selectedRowsChange.next();
-                    }
-                }
+                this.handleGroupsWithTransaction(event.actions[0].transaction.id);
             } else if (event.origin === TransactionEventOrigin.UNDO) {
                 actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-                if (this.groupingExpressions.length) {
-                    const recID = event.actions[0].transaction.id;
-                    const group = this.selectionService.rowsDirectParents.get(recID);
-                    let siblingID;
-                    if (group.records.length > 1) {
-                        let sibling;
-                        const rec = this._gridAPI.getRowData(recID);
-                        group.records.some(record => {
-                            if (record !== rec) {
-                                sibling = record;
-                                return true;
-                            }
-                        });
-                        siblingID = this.primaryKey ? sibling[this.primaryKey] : sibling;
-                        requestAnimationFrame(() => {
-                            const groupSibling = this.selectionService.rowsDirectParents.get(siblingID);
-                            this.selectionService.handleGroupState(groupSibling);
-                            this.selectionService.selectedRowsChange.next();
-                        });
-                    } else {
-                        this.selectionService.handleGroupState(group, false);
-                        this.selectionService.selectedRowsChange.next();
-                    }
-                }
+                this.handleGroupsWithTransaction(event.actions[0].transaction.id);
             }
+            // TO DO: Should we remove this
             if (actions.length) {
                 for (const action of actions) {
                     //this.deselectChildren(action.transaction.id);
@@ -1376,6 +1292,68 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         }
 
         return row;
+    }
+
+    private getSiblingRecordID(group: IGroupByRecord, recID: any) {
+        let siblingID;
+        if (group.records.length > 1) {
+            group.records.some(record => {
+                const ID = this.selectionService.getRowID(record);
+                if (ID !== recID) {
+                    siblingID = ID;
+                    return true;
+                }
+            });
+        }
+        return siblingID;
+    }
+
+    private getVisibleDirectGroups(groups: Set<IGroupByRecord>) {
+        for (const [key, value] of this.selectionService.rowsDirectParents.entries()) {
+            if (value) {
+                for (const rec of this.selectionService.allData) {
+                    const recID = this.selectionService.getRowID(rec);
+                    if (recID === key) {
+                        groups.add(value);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    private updateGroupsState() {
+        if (this.groupingExpressions.length) {
+            const leafRowsDirectGroups = new Set<IGroupByRecord>();
+            if (this.transactions.enabled) {
+                this.getVisibleDirectGroups(leafRowsDirectGroups);
+            } else {
+                this.selectionService.rowsDirectParents.forEach(record => {
+                    if (record) {
+                        leafRowsDirectGroups.add(record);
+                    }
+                });
+            }
+            leafRowsDirectGroups.forEach(group => this.selectionService.handleGroupState(group));
+            this.selectionService.selectedRowsChange.next();
+        }
+    }
+
+    private handleGroupsWithTransaction(recID: any) {
+        if (this.groupingExpressions.length) {
+            const group = this.selectionService.rowsDirectParents.get(recID);
+            if (group.records.length > 1) {
+                const siblingID = this.getSiblingRecordID(group, recID);
+                requestAnimationFrame(() => {
+                    const groupSibling = this.selectionService.rowsDirectParents.get(siblingID);
+                    this.selectionService.handleGroupState(groupSibling);
+                    this.selectionService.selectedRowsChange.next();
+                });
+            } else {
+                this.selectionService.handleGroupState(group, false);
+                this.selectionService.selectedRowsChange.next();
+            }
+        }
     }
 
     private _setupNavigationService() {
