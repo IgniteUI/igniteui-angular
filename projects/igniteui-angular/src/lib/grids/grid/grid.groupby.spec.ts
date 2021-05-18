@@ -19,7 +19,6 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -1070,7 +1069,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             grid.selectAllRows();
@@ -1123,7 +1121,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1168,7 +1165,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const selectionCount = grid.selectedRows.length;
@@ -1204,7 +1200,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1239,7 +1234,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1271,7 +1265,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1297,7 +1290,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1323,7 +1315,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1346,8 +1337,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            fix.detectChanges();
-            tick(100);
             fix.detectChanges();
 
             grid.filter('ID', '2', IgxStringFilteringOperand.instance().condition('doesNotEqual'), true);
@@ -1387,8 +1376,6 @@ describe('IgxGrid - GroupBy #grid', () => {
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
             fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
 
@@ -1421,7 +1408,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1465,7 +1451,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1507,7 +1492,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
@@ -1549,8 +1533,6 @@ describe('IgxGrid - GroupBy #grid', () => {
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
             fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
 
             const grRow = grid.groupsRowList.toArray()[0];
 
@@ -1562,6 +1544,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
             expect(grid.selectedRows.length).toEqual(3);
@@ -1614,6 +1597,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             clickAndSendInputElementValue(input, 'NetAdvantage', fix);
             GridFunctions.simulateGridContentKeydown(fix, 'Enter');
             fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
 
             expect(grRow.groupRow.records.length).toEqual(3);
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
@@ -1658,6 +1643,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             clickAndSendInputElementValue(input, 'NetAdvantage', fix);
             GridFunctions.simulateGridContentKeydown(fix, 'Enter');
             fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
@@ -1700,6 +1687,8 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
             GridFunctions.simulateGridContentKeydown(fix, 'Enter');
+            fix.detectChanges();
+            tick(100);
             fix.detectChanges();
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
@@ -1744,6 +1733,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             clickAndSendInputElementValue(input, 'Ignite UI for Angular', fix);
             GridFunctions.simulateGridContentKeydown(fix, 'Enter');
             fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false));
         }));
@@ -1763,8 +1754,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            fix.detectChanges();
-            tick(100);
             fix.detectChanges();
 
             const grRow1 = grid.groupsRowList.toArray()[0];
@@ -1819,7 +1808,6 @@ describe('IgxGrid - GroupBy #grid', () => {
             grid.groupBy({
                 fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
             });
-            tick();
             fix.detectChanges();
 
             grid.hideRowSelectors = true;
@@ -1841,35 +1829,33 @@ describe('IgxGrid - GroupBy #grid', () => {
         }));
 
     it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
-            const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
-            const grid = fix.componentInstance.instance;
-            fix.componentInstance.width = '1200px';
-            tick();
-            grid.columnWidth = '200px';
-            tick();
-            grid.rowSelection = GridSelectionMode.multiple;
-            tick();
-            fix.detectChanges();
+        const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
 
-            grid.groupBy({
-                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
-            });
-            fix.detectChanges();
-            tick(100);
-            fix.detectChanges();
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
 
-            const grRow = grid.groupsRowList.toArray()[0];
-            const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
-            const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const grRow = grid.groupsRowList.toArray()[0];
+        const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
-            spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
+        spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
 
-            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
+        grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
 
-            grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
-        }));
+        grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+    }));
 
     // GroupBy + Resizing
     it('should retain same size for group row after a column is resized.', fakeAsync(() => {
@@ -2394,7 +2380,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         fix.detectChanges();
         const productNameCol = fix.nativeElement.querySelector('igx-grid-header-group[id$="_-1_0_2"]');
-        UIInteractions.simulateMouseEvent('click', productNameCol,0, 0);
+        UIInteractions.simulateMouseEvent('click', productNameCol, 0, 0);
         tick();
         fix.detectChanges();
         const chips = fix.nativeElement.querySelectorAll('igx-chip');
@@ -3636,5 +3622,5 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(_event, _context) {}
+    public onGroupByRowClick(_event, _context) { }
 }
