@@ -34,7 +34,7 @@ module.exports = function (config) {
       tags: 'tGrid'
     },
     preprocessors: {
-      'projects/igniteui-angular/**/*.js': ['coverage', 'coverage']
+      'projects/igniteui-angular/**/*.js': ['coverage']
     },
     coverageReporter: {
       dir: require('path').join(__dirname, '../../coverage/tree-grid'),
@@ -45,7 +45,7 @@ module.exports = function (config) {
         { type: 'lcovonly' },
       ]
     },
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
     specReporter: {
       suppressSkipped: true,
       suppressErrorSummary: false,
