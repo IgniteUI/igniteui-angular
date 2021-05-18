@@ -1903,6 +1903,6 @@ export class SimpleComponent {
             public interactionMode: PickerInteractionMode = PickerInteractionMode.Dialog;
         }
         `
-        )
+        );
     });
 });
