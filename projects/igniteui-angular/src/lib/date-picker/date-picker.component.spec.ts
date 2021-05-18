@@ -1,5 +1,5 @@
 import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NgForm, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import {
@@ -44,7 +44,8 @@ describe('IgxDatePicker', () => {
                     IgxDatePickerTestKbrdComponent,
                     IgxDatePickerTestComponent,
                     IgxDatePickerNgModelComponent,
-                    IgxDatePickerWithProjectionsComponent
+                    IgxDatePickerWithProjectionsComponent,
+                    IgxDatePickerInFormComponent
                 ],
                 imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule,
                     NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
@@ -195,7 +196,7 @@ describe('IgxDatePicker', () => {
         });
 
         describe('NgControl integration', () => {
-            let fixture: ComponentFixture<IgxDatePickerNgModelComponent>;
+            let fixture: ComponentFixture<IgxDatePickerNgModelComponent | IgxDatePickerInFormComponent>;
             let datePicker: IgxDatePickerComponent;
 
             beforeEach(fakeAsync(() => {
@@ -217,11 +218,29 @@ describe('IgxDatePicker', () => {
                 expect(datePicker).toBeDefined();
                 expect(inputGroup.isRequired).toBeTruthy();
 
-                fixture.componentInstance.isRequired = false;
+                (fixture.componentInstance as IgxDatePickerNgModelComponent).isRequired = false;
                 fixture.detectChanges();
 
                 expect(inputGroup.isRequired).toBeFalsy();
             });
+
+            it('should set validity to initial when the form is reset', fakeAsync(() => {
+                fixture = TestBed.createComponent(IgxDatePickerInFormComponent);
+                fixture.detectChanges();
+                datePicker = fixture.componentInstance.datePicker;
+
+                const input = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
+                input.focus();
+                tick();
+                fixture.detectChanges();
+
+                datePicker.clear();
+                expect((datePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
+
+                (fixture.componentInstance as IgxDatePickerInFormComponent).form.resetForm();
+                tick();
+                expect((datePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
+            }));
         });
 
         describe('Projected elements', () => {
@@ -452,7 +471,7 @@ describe('IgxDatePicker', () => {
                 }
             } as any;
             mockInputDirective = {
-                valid: 'mock',
+                valid: IgxInputState.INITIAL,
                 nativeElement: {
                     _listeners: {
                         none: []
@@ -494,7 +513,7 @@ describe('IgxDatePicker', () => {
                         this.dispatchEvent('blur');
                     }
                 },
-                focus: () => {}
+                focus: () => { }
             };
             datePicker = new IgxDatePickerComponent(elementRef, null, overlay, mockModuleRef, mockInjector, renderer2, null);
             (datePicker as any).inputGroup = mockInputGroup;
@@ -1134,12 +1153,12 @@ describe('IgxDatePicker', () => {
                 mockControlInstance.validator = null;
                 mockControlInstance.asyncValidator = null;
                 // initial value
-                expect(mockInputDirective.valid).toEqual('mock');
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INITIAL);
                 mockNgControl.statusChanges.emit();
-                expect(mockInputDirective.valid).toEqual('mock');
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INITIAL);
                 mockControlInstance.touched = true;
                 mockNgControl.statusChanges.emit();
-                expect(mockInputDirective.valid).toEqual('mock');
+                expect(mockInputDirective.valid).toEqual(IgxInputState.INITIAL);
                 mockControlInstance.validator = () => { };
                 mockNgControl.statusChanges.emit();
                 expect(mockInputDirective.valid).toEqual(IgxInputState.INITIAL);
@@ -1198,7 +1217,7 @@ export class IgxDatePickerTestKbrdComponent {
 }
 
 @Component({
-    template:`
+    template: `
         <igx-date-picker [mode]="mode">
             <label igxLabel>Label</label>
             <igx-picker-toggle igxPrefix *ngIf="showCustomToggle">CustomToggle</igx-picker-toggle>
@@ -1216,4 +1235,21 @@ export class IgxDatePickerWithProjectionsComponent {
     public mode: PickerInteractionMode = PickerInteractionMode.DropDown;
     public showCustomToggle = false;
     public showCustomClear = false;
+}
+
+@Component({
+    template: `
+    <form #form="ngForm">
+        <igx-date-picker name="datePicker" id="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
+    </form>
+    `
+})
+export class IgxDatePickerInFormComponent {
+    @ViewChild('form')
+    public form: NgForm;
+
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
+
+    public date: Date = new Date(2012, 5, 3);
 }

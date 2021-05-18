@@ -790,7 +790,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private updateValidity() {
-        if (this._ngControl) {
+        // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+        if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
             if (this.inputGroup.isFocused) {
                 this.inputDirective.valid = this._ngControl.valid
                     ? IgxInputState.VALID
@@ -800,14 +801,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                     ? IgxInputState.INITIAL
                     : IgxInputState.INVALID;
             }
+        } else {
+            this.inputDirective.valid = IgxInputState.INITIAL;
         }
     }
 
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+    }
+
     private onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            this.updateValidity();
-        }
+        this.updateValidity();
         this.inputGroup.isRequired = this.required;
     };
 
