@@ -293,11 +293,12 @@ export const isFirefox = (): boolean => {
 @Injectable({ providedIn: 'root' })
 export class PlatformUtil {
     public isBrowser: boolean = isPlatformBrowser(this.platformId);
-
     public isIOS = this.isBrowser && /iPad|iPhone|iPod/.test(navigator.userAgent) && !('MSStream' in window);
+    public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
+    public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
 
-    constructor(@Inject(PLATFORM_ID) private platformId) {
-    }
+    constructor(@Inject(PLATFORM_ID) private platformId: any) { }
 }
 
 /**
