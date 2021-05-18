@@ -7,8 +7,7 @@
 // theme configuration
 
 // Import utilities
-@import './utilities';
-
+@use 'utilities';
 
 // Common component modules
 @import '../components/_common/igx-control';

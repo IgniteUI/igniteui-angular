@@ -3,6 +3,14 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
+/// The global keyframes registry map.
+/// @type List
+$keyframes: () !default;
+
+/// The global component registry map.
+/// @type List
+$components: () !default;
+
 /// @access private
 @mixin _icon-w-margin($margin, $left) {
     > * {
