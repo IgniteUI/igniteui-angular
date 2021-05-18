@@ -6,6 +6,8 @@ import { IgxColumnMovingModule } from '../moving/moving.module';
 import { IgxGridFilteringModule } from '../filtering/base/filtering.module';
 import { IgxGridResizingModule } from '../resizing/resize.module';
 import { SortingIndexPipe } from './sorting-index.pipe';
+export * from './grid-header-group.component';
+export * from './grid-header.component';
 
 @NgModule({
     declarations: [

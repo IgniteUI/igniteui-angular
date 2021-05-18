@@ -36,6 +36,8 @@ import {
     IgxRowCollapsedIndicatorDirective,
     IgxRowExpandedIndicatorDirective
 } from './grid/grid.directives';
+export * from './common/grid-pipes.module';
+
 /**
  * @hidden
  */

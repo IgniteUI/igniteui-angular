@@ -20,6 +20,7 @@ import {
     IgxSummaryFormatterPipe,
     IgxGridAddRowPipe
 } from './pipes';
+export * from './pipes';
 
 @NgModule({
     declarations: [

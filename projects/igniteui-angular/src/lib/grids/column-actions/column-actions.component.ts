@@ -13,7 +13,7 @@ import {
 import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from '../common/enums';
 import { IgxColumnActionsBaseDirective } from './column-actions-base.directive';
-import { IgxCheckboxComponent, IChangeCheckboxEventArgs } from '../../checkbox/checkbox.component';
+import { IgxCheckboxComponent } from '../../checkbox/checkbox.component';
 import { IColumnToggledEventArgs } from '../common/events';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { DeprecateProperty } from '../../core/deprecateDecorators';

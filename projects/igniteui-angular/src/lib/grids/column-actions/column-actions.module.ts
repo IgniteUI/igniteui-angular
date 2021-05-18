@@ -4,6 +4,9 @@ import { IgxColumnHidingDirective } from './column-hiding.directive';
 import { IgxColumnPinningDirective } from './column-pinning.directive';
 import { IgxColumnActionsComponent } from './column-actions.component';
 import { IgxGridPipesModule } from '../common/grid-pipes.module';
+export * from './column-actions.component';
+export * from './column-hiding.directive';
+export * from './column-pinning.directive';
 
 @NgModule({
     declarations: [
@@ -21,4 +24,4 @@ import { IgxGridPipesModule } from '../common/grid-pipes.module';
         IgxColumnActionsComponent
     ]
 })
-export class IgxColumnActionsModule {}
+export class IgxColumnActionsModule { }
