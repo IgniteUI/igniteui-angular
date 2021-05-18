@@ -32,11 +32,11 @@ export class ExportUtilities {
 
             a.href = url;
             document.body.appendChild(a);
-            a.click();
-
+            
             new Promise(() => {
-                document.body.removeChild(a);
+                a.click();
             }).then(() => {
+                document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
             });
         }
