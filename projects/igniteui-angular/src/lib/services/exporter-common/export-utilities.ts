@@ -32,7 +32,7 @@ export class ExportUtilities {
 
             a.href = url;
             document.body.appendChild(a);
-            
+
             new Promise(() => {
                 a.click();
             }).then(() => {
