@@ -14,6 +14,7 @@
             </igx-action-strip>
         </igx-grid>
     <!-- </app-grid-with-transactions> -->
+    <button igxButton="raised" (click)="grid.addRow({ID: 5555});">Add row</button>
     <button igxButton="raised" (click)="selectRows()">SelectAll</button>
     <button igxButton="raised" (click)="undo()">Undo</button>
     <button igxButton="raised" (click)="redo()">Redo</button>

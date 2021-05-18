@@ -1038,10 +1038,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             const isGroupByField = this.groupingExpressions.find(grp => grp.fieldName === args.column.field);
             if (!this.rowEditable && this.groupingExpressions.length && isGroupByField) {
                 const group = this.selectionService.rowsDirectParents.get(args.rowID);
-                if (group.records.length > 1) {
+                if (group?.records.length > 1) {
                     const siblingID = this.getSiblingRecordID(group, args.rowID);
                     requestAnimationFrame(() => {
                         this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
+                        this.selectionService.selectedRowsChange.next();
+                    });
+                } else {
+                    requestAnimationFrame(() => {
                         this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
                         this.selectionService.selectedRowsChange.next();
                     });
@@ -1051,10 +1056,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         this.rowEditDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
             if (this.groupingExpressions.length) {
                 const group = this.selectionService.rowsDirectParents.get(args.rowID);
-                if (group.records.length > 1) {
+                if (group?.records.length > 1) {
                     const siblingID = this.getSiblingRecordID(group, args.rowID);
                     requestAnimationFrame(() => {
                         this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(siblingID));
+                        this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
+                        this.selectionService.selectedRowsChange.next();
+                    });
+                } else {
+                    requestAnimationFrame(() => {
                         this.selectionService.handleGroupState(this.selectionService.rowsDirectParents.get(args.rowID));
                         this.selectionService.selectedRowsChange.next();
                     });
@@ -1078,8 +1088,17 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                             this.selectionService.selectedRowsChange.next();
                         });
                     } else {
-                        this.selectionService.handleGroupState(group);
-                        this.selectionService.selectedRowsChange.next();
+                        // Note: When delete last record in nested group, we cannot correctly handle parent groups
+                        // this.selectionService.handleGroupState(group);
+                        // this.selectionService.selectedRowsChange.next();
+
+                        const leafRowsDirectGroups = new Set<IGroupByRecord>();
+                        // Wait for the change detection to update records through pipes
+                        requestAnimationFrame(() => {
+                            this.getVisibleDirectGroups(leafRowsDirectGroups);
+                            leafRowsDirectGroups.forEach(gr => this.selectionService.handleGroupState(gr));
+                            this.selectionService.selectedRowsChange.next();
+                        });
                     }
                 } else {
                     // if a row has been added and before commiting the transaction deleted
@@ -1099,9 +1118,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 const recID = this.selectionService.getRowID(args.data);
                 let rec = this._gridAPI.get_rec_by_id(recID);
                 if (rec) {
-                    const group = this.selectionService.rowsDirectParents.get(recID);
-                    this.selectionService.handleGroupState(group, false);
-                    this.selectionService.selectedRowsChange.next();
+                    // Note: requestAnimationFrame is needed in order to add the record into the map when adding new row through API
+                    requestAnimationFrame(() => {
+                        const group = this.selectionService.rowsDirectParents.get(recID);
+                        this.selectionService.handleGroupState(group, false);
+                        this.selectionService.selectedRowsChange.next();
+                    });
                 } else {
                     // The record is still not available
                     // Wait for the change detection to update records through pipes
@@ -1378,8 +1400,16 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     this.selectionService.selectedRowsChange.next();
                 });
             } else {
-                this.selectionService.handleGroupState(group, false);
-                this.selectionService.selectedRowsChange.next();
+                // this.selectionService.handleGroupState(group, false);
+                // this.selectionService.selectedRowsChange.next();
+
+                const leafRowsDirectGroups = new Set<IGroupByRecord>();
+                // Wait for the change detection to update records through pipes
+                requestAnimationFrame(() => {
+                    this.getVisibleDirectGroups(leafRowsDirectGroups);
+                    leafRowsDirectGroups.forEach(gr => this.selectionService.handleGroupState(gr));
+                    this.selectionService.selectedRowsChange.next();
+                });
             }
         }
     }
