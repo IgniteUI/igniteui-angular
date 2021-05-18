@@ -1,5 +1,5 @@
 import { TemplateRef } from '@angular/core';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { ISortingStrategy } from '../../data-operations/sorting-strategy';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IColumnPipeArgs } from '../columns/interfaces';
@@ -12,7 +12,7 @@ export interface ColumnType {
     field: string;
     header?: string;
     index: number;
-    dataType: DataType;
+    dataType: GridColumnDataType;
     inlineEditorTemplate: TemplateRef<any>;
     visibleIndex: number;
     editable: boolean;

@@ -70,7 +70,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      * ```
      */
     @Input()
-    public get monthFormat(): string {
+    public get monthFormat(): any {
         return this._monthFormat;
     }
 
@@ -82,7 +82,7 @@ export class IgxMonthsViewComponent implements ControlValueAccessor {
      *
      * @memberof IgxMonthsViewComponent
      */
-    public set monthFormat(value: string) {
+    public set monthFormat(value: any) {
         this._monthFormat = value;
         this.initMonthFormatter();
     }

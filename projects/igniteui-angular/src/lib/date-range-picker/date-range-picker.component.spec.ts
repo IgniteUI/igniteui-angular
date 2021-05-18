@@ -25,7 +25,7 @@ import { IgxCalendarComponent } from '../calendar/public_api';
 // The number of milliseconds in one day
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const DEBOUNCE_TIME = 16;
-const dEFAULT_ICON_TEXT = 'calendar_today';
+const DEFAULT_ICON_TEXT = 'date_range';
 const DEFAULT_FORMAT_OPTIONS = { day: '2-digit', month: '2-digit', year: 'numeric' };
 const CSS_CLASS_INPUT_GROUP = '.igx-input-group__bundle';
 const CSS_CLASS_INPUT = '.igx-input-group__input';
@@ -1168,7 +1168,7 @@ describe('IgxDateRangePicker', () => {
                 fixture.detectChanges();
 
                 const inputGroup = fixture.debugElement.query(By.css(CSS_CLASS_INPUT_GROUP));
-                expect(inputGroup.children[0].nativeElement.innerText).toBe(dEFAULT_ICON_TEXT);
+                expect(inputGroup.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
                 expect(inputGroup.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
             });
 
@@ -1189,7 +1189,7 @@ describe('IgxDateRangePicker', () => {
                 expect(suffixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
 
                 const addPrefixSingleRangeInput = inputGroups[2];
-                expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(dEFAULT_ICON_TEXT);
+                expect(addPrefixSingleRangeInput.children[0].nativeElement.innerText).toBe(DEFAULT_ICON_TEXT);
                 expect(addPrefixSingleRangeInput.children[0].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();
                 expect(addPrefixSingleRangeInput.children[1].nativeElement.innerText).toBe(additionalIconText);
                 expect(addPrefixSingleRangeInput.children[1].children[0].classes[CSS_CLASS_ICON]).toBeTruthy();

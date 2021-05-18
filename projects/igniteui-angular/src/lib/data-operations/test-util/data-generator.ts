@@ -1,4 +1,4 @@
-import {DataType} from '../data-util';
+import { GridColumnDataType } from '../data-util';
 
 /**
  * @hidden
@@ -15,7 +15,7 @@ const COUNT_COLS = 4;
  */
 export interface IDataColumn {
     fieldName: string;
-    type: DataType;
+    type: GridColumnDataType;
 }
 
 /**
@@ -23,7 +23,7 @@ export interface IDataColumn {
  */
 export class DataGenerator {
     public columns: IDataColumn[] = [];
-    public data: any [] = [];
+    public data: any[] = [];
     constructor(countRows = COUNT_ROWS, countCols = COUNT_COLS) {
         this.columns = this.generateColumns(countCols);
         this.data = this.generateData(countRows);
@@ -31,7 +31,7 @@ export class DataGenerator {
     public generateArray(startValue, endValue) {
         const len = Math.abs(startValue - endValue);
         const decrement = startValue > endValue;
-        return Array.from({length: len + 1}, (e, i) => decrement ? startValue - i : startValue + i);
+        return Array.from({ length: len + 1 }, (e, i) => decrement ? startValue - i : startValue + i);
     }
     public getValuesForColumn(data, fieldName) {
         return data.map((x) => x[fieldName]);
@@ -47,19 +47,19 @@ export class DataGenerator {
         const defaultColumns: IDataColumn[] = [
             {
                 fieldName: 'number',
-                type: DataType.Number
+                type: GridColumnDataType.Number
             },
             {
                 fieldName: 'string',
-                type: DataType.String
+                type: GridColumnDataType.String
             },
             {
                 fieldName: 'date',
-                type: DataType.Date
+                type: GridColumnDataType.Date
             },
             {
                 fieldName: 'boolean',
-                type: DataType.Boolean
+                type: GridColumnDataType.Boolean
             }
         ];
         if (countCols <= 0) {
@@ -73,7 +73,7 @@ export class DataGenerator {
         for (i = 0; i < len; i++) {
             res.push({
                 fieldName: `col${i}`,
-                type: DataType.String
+                type: GridColumnDataType.String
             });
         }
         return res;
@@ -90,13 +90,13 @@ export class DataGenerator {
             for (j = 0; j < this.columns.length; j++) {
                 col = this.columns[j];
                 switch (col.type) {
-                    case DataType.Number:
+                    case GridColumnDataType.Number:
                         val = i;
                         break;
-                    case DataType.Date:
+                    case GridColumnDataType.Date:
                         val = new Date(Date.now() + i * 24 * 60 * 60 * 1000);
                         break;
-                    case DataType.Boolean:
+                    case GridColumnDataType.Boolean:
                         val = !!(i % 2);
                         break;
                     default:

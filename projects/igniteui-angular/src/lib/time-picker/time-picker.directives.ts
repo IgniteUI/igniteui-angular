@@ -264,18 +264,19 @@ export class IgxTimeItemDirective {
     }
 
     public get isSelectedTime(): boolean {
+        const currentValue = this.value.length < 2 ? `0${this.value}` : this.value;
         const dateType = this.itemList.type;
         const inputDateParts = DateTimeUtil.parseDateTimeFormat(this.timePicker.inputFormat);
         switch (dateType) {
             case 'hourList':
                 const hourPart = inputDateParts.find(element => element.type === 'hours');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, hourPart, hourPart.format.length) === currentValue;
             case 'minuteList':
                 const minutePart = inputDateParts.find(element => element.type === 'minutes');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, minutePart, minutePart.format.length) === currentValue;
             case 'secondsList':
                 const secondsPart = inputDateParts.find(element => element.type === 'seconds');
-                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart, secondsPart.format.length) === this.value;
+                return DateTimeUtil.getPartValue(this.timePicker.selectedDate, secondsPart, secondsPart.format.length) === currentValue;
             case 'ampmList':
                 const ampmPart = inputDateParts.find(element => element.format === 'tt');
                 return DateTimeUtil.getPartValue(this.timePicker.selectedDate, ampmPart, ampmPart.format.length) === this.value;

@@ -36,6 +36,7 @@ All notable changes for each version of this project will be documented in this 
         - `onToolbarExporting` -> `toolbarExporting`
         - `onRangeSelection` -> `rangeSelected`
     - `IgxGridRowComponent`, `IgxGridGroupByRowComponent`, `IgxTreeGridRowComponent`, `IgxHierarchicalRowComponent` are no longer exposed in the public API. Automatic migration will change these imports with `RowType`.
+    - The IgxColumn data type `DataType` is renamed to `GridColumnDataType`.
     - **Behavioral changes**
     - `getRowByIndex`, `getRowByKey`, `cell.row` now return an object implemening the `RowType` interface.
     - `dragData` emitted with `IRowDragEndEventArgs`, `IRowDragStartEventArgs` is now `RowType`
@@ -58,34 +59,21 @@ All notable changes for each version of this project will be documented in this 
     - `onGridCreated` -> `gridCreated`
     - `onGridInitialized` -> `gridInitialized`
     - `onDataPreLoad` -> `dataPreLoad`
-
+- `IgxInputGroupComponent`
+    - **Breaking Change** - `disabled` property removed. Use the underlying `IgxInputDirective.disabled` to control the disabled state of the input group. Please make sure to update via `ng update` to migrate an usage of `disabled` in your template files. Please make sure to check out the [update guide](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/update-guide#from-111x-to-120x).
 - `IgxDateTimeEditor`
-    - **Feature** - `value` accepts ISO 8601 string format.
-    - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onValueChange` event is renamed to `valueChange`.
     - **Breaking Change** - `isSpinLoop` property is renamed to `spinLoop`.
-    - **Feature** - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
-    - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
 - `IgxDatePicker`
-    - **Feature** - `value` accepts ISO 8601 string format.
-    - **Feature** - The actions template now exposes the Calendar component as implicit context:
-      ```html
-      <igx-date-picker>
-        <ng-template igxPickerActions let-calendar>
-          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
-        </ng-template>
-      </igx-date-picker>
-      ```
-    - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onSelection` event is renamed to `valueChange`.
-    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `formatter`, `context`, `labelInternal`, `template`.
+    - **Breaking Change** - new way to define custom elements in the `igx-date-picker` while the following properties are deleted or deprecated: `context`, `labelInternal`, `template`.
         ```html
-            <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="dd/MM/yyyy">
+            <igx-date-picker #datePicker [(value)]="date" [displayFormat]="'longDate'" [inputFormat]="'dd/MM/yyyy'">
                 <label igxLabel>Date: </label>
-                <igx-picker-toggle igxPrefix (click)="datePicker.toggle()">
+                <igx-picker-toggle igxPrefix>
                     calendar_view_day
                 </igx-picker-toggle>
-                <igx-picker-clear igxSuffix (click)="datePicker.clear()">
+                <igx-picker-clear igxSuffix>
                     delete
                 </igx-picker-clear>
             </igx-date-picker>
@@ -96,22 +84,23 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
     - **Breaking Change** - `displayData` is renamed to `displayFormat`.
-    - **Breaking Change** - `dropDownOverlaySettings` and `modalOverlaySettings` are replaced by the `overlaySettings`.
+    - **Breaking Change** - `dropDownOverlaySettings` and `modalOverlaySettings` are replaced by `overlaySettings`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
     - **Breaking Change** - `onDisabledDate` event is removed.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
+    - **Breaking Change** - `igxDatePickerActions` is renamed to `igxPickerActions`
+    - **Behavioral Change** - Upon opening, the focused date will always be the selected/bound date. If there is no selected/bound date, the date picker will focus today's date. If `minValue` and/or `maxValue` are applied and today's date (or the bound date) is outside of the specified range, the focused date will be respectively `minValue` or `maxValue`.
 - `IgxTimePicker`
-    - **Feature** - `value` accepts ISO 8601 string format.
     - **Breaking Change** - `value` type could be `Date` or `string`.
     - **Breaking Change** - `onValueChanged` event is renamed to `valueChange`.
     - **Breaking Change** - new way to define custom elements in the `igx-time-picker` while the following properties are deleted or deprecated: `context`, `promptChar`, `displayTime`, `template`.
         ```html
             <igx-time-picker #timePicker [(value)]="time" [displayFormat]="'mediumTime'" [inputFormat]="hh:mm:ss">
                 <label igxLabel>Time: </label>
-                <igx-picker-toggle igxPrefix (click)="timePicker.toggle()">
+                <igx-picker-toggle igxPrefix>
                     alarm
                 </igx-picker-toggle>
-                <igx-picker-clear igxSuffix (click)="timePicker.clear()">
+                <igx-picker-clear igxSuffix>
                     delete
                 </igx-picker-clear>
             </igx-time-picker>
@@ -122,17 +111,8 @@ All notable changes for each version of this project will be documented in this 
     - **Breaking Change** - `vertical` is renamed to `headerOrientation`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `onValidationFailed` event is renamed to `validationFailed`.
+    - **Behavioral Change** - The dropdown/dialog displays time portions within `minValue` and `maxValue` range if set or time between 00:00 and 24:00 in the provided `inputFormat`. The displayed values for each time portion are calculated based on the items delta always starting from zero. If the `minValue` or `maxValue` does not match the items delta, the displayed values will start/end from the next/last possible value that matches the delta. Upon opening, the selected time will be the bound value. In cases when there is not a bound value, it is outside the min/max range or does not match the items delta, the selected time will be the closest possible time that matches the items delta.
 - `IgxDateRangePicker`
-    - **Feature** - `value` start and end accept ISO 8601 string format.
-    - **Feature** - The actions template now exposes the Calendar component as implicit context:
-      ```html
-      <igx-date-range-picker>
-        <ng-template igxPickerActions let-calendar>
-          <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
-        </ng-template>
-      </igx-date-range-picker>
-      ```
-    - **Breaking Change** - `value` start and end types could be `Date` or `string`.
     - **Breaking Change** - `rangeSelected` event is renamed to `valueChange`.
     - **Breaking Change** - `onOpening`, `onOpened`, `onClosing` and `onClosed` events are renamed respectively to `opening`, `opened`, `closing` and `closed`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
@@ -241,6 +221,40 @@ All notable changes for each version of this project will be documented in this 
         }
     }
     ```
+- `IgxDateTimeEditor`
+    - `value` accepts ISO 8601 string format.
+    - `spinDelta` input property which allows a user to provide different delta values that will be used for spinning. All parts default to `1`.
+    - `increment` and `decrement` methods now accept an optional `delta` parameter which targets the currently spun date portion. It takes precedence over the values set in `spinDelta`.
+- `IgxDatePicker`
+    - `value` accepts ISO 8601 string format.
+    - The actions template now exposes the Calendar component as implicit context:
+      ```html
+      <igx-date-picker>
+        <ng-template igxPickerActions let-calendar>
+            <button igxButton="flat" (click)="calendar.viewDate = today">Today</button>
+        </ng-template>
+      </igx-date-picker>
+      ```
+- `IgxTimePicker`
+    - `value` accepts ISO 8601 string format.
+    - The `igxPickerActions` directive can now be used to provide custom buttons to the picker's pop-up:
+      ```html
+      <igx-time-picker #timePicker>
+        <ng-template igxPickerActions>
+            <button igxButton="flat" (click)="timePicker.close()">Close</button>
+        </ng-template>
+      </igx-time-picker>
+      ```
+- `IgxDateRangePicker`
+    - `value` start and end accept ISO 8601 string format.
+    - The `igxPickerActions` directive can now be used to template the pickers `Done` button:
+      ```html
+      <igx-date-range-picker #rangePicker>
+        <ng-template igxPickerActions>
+            <button igxButton="flat" (click)="rangePicker.close()">Close</button>
+        </ng-template>
+      </igx-date-range-picker>
+      ```
 
 ### Themes:
 - Breaking Changes:
