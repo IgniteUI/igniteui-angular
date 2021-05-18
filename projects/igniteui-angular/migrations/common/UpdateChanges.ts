@@ -221,15 +221,35 @@ export class UpdateChanges {
 
     protected updateClasses(entryPath: string) {
         let fileContent = this.host.read(entryPath).toString();
+        const alreadyReplaced = new Set<string>();
         for (const change of this.classChanges.changes) {
             if (fileContent.indexOf(change.name) !== -1) {
                 const positions = getRenamePositions(entryPath, change.name, this.service);
                 // loop backwards to preserve positions
                 for (let i = positions.length; i--;) {
                     const pos = positions[i];
-                    fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
+                    // V.S. 18th May 2021: If several classes are renamed w/ the same import, erase them
+                    if (i === 0 && alreadyReplaced.has(change.replaceWith)) {
+                        const trailingCommaWhiteSpace = new RegExp(/,([\s]*)(?=(\s}))/, 'g');
+                        let afterReplace = fileContent.slice(pos.end);
+                        const beforeReplace = fileContent.slice(0, pos.start);
+                        const leadingComma = afterReplace[0] === ',' ? 1 : 0;
+                        // recalculate if needed
+                        afterReplace = leadingComma ? afterReplace : fileContent.slice(pos.end  + leadingComma);
+                        const doubleSpaceReplace =
+                            beforeReplace[beforeReplace.length - 1].match(/\s/) !== null && afterReplace[0].match(/\s/) !== null ?
+                                1 :
+                                0;
+                        fileContent = (fileContent.slice(0, pos.start - doubleSpaceReplace) +
+                            '' +
+                            afterReplace).replace(trailingCommaWhiteSpace, '');
+                    } else {
+                        fileContent = fileContent.slice(0, pos.start) + change.replaceWith + fileContent.slice(pos.end);
+                    }
                 }
                 if (positions.length) {
+                    // using a set should be a lot quicker that getting position for renames of replace
+                    alreadyReplaced.add(change.replaceWith);
                     this.host.overwrite(entryPath, fileContent);
                 }
             }
