@@ -23,22 +23,28 @@ export class ExportUtilities {
     }
 
     public static saveBlobToFile(blob: Blob, fileName) {
+        const ua = window.navigator.userAgent;
+        const iOS = !!ua.match(/iPad/i) || !!ua.match(/iPhone/i);
         const a = document.createElement('a');
+
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob, fileName);
         } else {
             const url = window.URL.createObjectURL(blob);
             a.download = fileName;
-
             a.href = url;
             document.body.appendChild(a);
-            
-            new Promise(() => {
+
+            if (iOS) {
+                new Promise(() => {
+                    a.click();
+                }).then(() => {
+                    this.removeAnchorElementAndUrl(a, url);
+                });
+            } else {
                 a.click();
-            }).then(() => {
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-            });
+                this.removeAnchorElementAndUrl(a, url);
+            }
         }
     }
 
@@ -66,5 +72,10 @@ export class ExportUtilities {
 
     public static isNullOrWhitespaces(value: string): boolean {
         return value === undefined || value === null || !value.trim();
+    }
+
+    private static removeAnchorElementAndUrl(a: HTMLAnchorElement, url: string) {
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
     }
 }
