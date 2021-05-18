@@ -718,7 +718,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             expect(headerCheckbox.getAttribute('aria-checked')).toMatch('true');
             expect(headerCheckbox.getAttribute('aria-label')).toMatch('Deselect all filtered');
 
-            grid.onHeaderSelectorClick(UIInteractions.getMouseEvent('click'));
+            GridSelectionFunctions.clickHeaderRowCheckbox(fix);
             fix.detectChanges();
 
             expect(firstRow.getAttribute('aria-selected')).toMatch('false');
