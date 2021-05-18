@@ -235,7 +235,7 @@ export class UpdateChanges {
                         const beforeReplace = fileContent.slice(0, pos.start);
                         const leadingComma = afterReplace[0] === ',' ? 1 : 0;
                         // recalculate if needed
-                        afterReplace = leadingComma ? afterReplace : fileContent.slice(pos.end  + leadingComma);
+                        afterReplace = !leadingComma ? afterReplace : fileContent.slice(pos.end  + leadingComma);
                         const doubleSpaceReplace =
                             beforeReplace[beforeReplace.length - 1].match(/\s/) !== null && afterReplace[0].match(/\s/) !== null ?
                                 1 :
