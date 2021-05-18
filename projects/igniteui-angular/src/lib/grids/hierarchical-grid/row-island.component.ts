@@ -58,6 +58,7 @@ export interface IGridCreatedEventArgs extends IBaseEventArgs {
     selector: 'igx-row-island',
     template: ``,
     providers: [IgxRowIslandAPIService,
+        IgxFilteringService,
         IgxGridSelectionService]
 })
 export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
@@ -167,7 +168,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             if (document.body.contains(grid.nativeElement)) {
                 // Detect changes right away if the grid is visible
                 grid.expandChildren = value;
-                grid.markForCheck();
+                grid.cdr.detectChanges();
             } else {
                 // Else defer the detection on changes when the grid gets into view for performance.
                 grid.updateOnRender = true;
@@ -262,6 +263,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public ngOnInit() {
+        this.filteringService.grid = this;
         this.rootGrid = this.hgridAPI.grid;
         this.rowIslandAPI.rowIsland = this;
         this.ri_columnListDiffer = this.differs.find([]).create(null);

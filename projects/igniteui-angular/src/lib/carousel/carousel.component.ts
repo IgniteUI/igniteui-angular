@@ -563,7 +563,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.next();
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+            this.focusSlideElement();
         }
     }
 
@@ -573,7 +573,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport) {
             event.preventDefault();
             this.prev();
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+            this.focusSlideElement();
         }
     }
 
@@ -599,7 +599,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.first.active = true;
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+            this.focusSlideElement();
         }
     }
 
@@ -609,7 +609,7 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
         if (this.keyboardSupport && this.slides.length > 0) {
             event.preventDefault();
             this.slides.last.active = true;
-            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+            this.focusSlideElement();
         }
     }
 
@@ -1112,17 +1112,29 @@ export class IgxCarouselComponent implements OnDestroy, AfterContentInit {
     }
 
     private updateSlidesSelection() {
-        requestAnimationFrame(() => {
-            if (this.currentSlide) {
-                this.currentSlide.active = true;
-                const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
-                activeSlides.forEach(slide => slide.active = false);
-            } else if (this.total) {
-                this.slides.first.active = true;
-            }
-            this.play();
-        });
+        if (this.platformUtil.isBrowser) {
+            requestAnimationFrame(() => {
+                if (this.currentSlide) {
+                    this.currentSlide.active = true;
+                    const activeSlides = this.slides.filter(slide => slide.active && slide.index !== this.currentSlide.index);
+                    activeSlides.forEach(slide => slide.active = false);
+                } else if (this.total) {
+                    this.slides.first.active = true;
+                }
+                this.play();
+            });
+        }
     }
+    private focusSlideElement() {
+        if (this.leaveAnimationPlayer) {
+            this.leaveAnimationPlayer.onDone(() => {
+                this.slides.find(s => s.active).nativeElement.focus();
+            });
+        } else {
+            requestAnimationFrame(() => this.slides.find(s => s.active).nativeElement.focus());
+        }
+    }
+
 }
 
 export interface ISlideEventArgs extends IBaseEventArgs {

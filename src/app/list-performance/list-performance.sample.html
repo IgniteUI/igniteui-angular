@@ -18,7 +18,7 @@
                     <igx-list-item igxRipple="pink" igxRippleTarget=".igx-list__item" *igxFor="let item of data | igxFilter: fo1; scrollOrientation : 'vertical'; containerSize: '500px'; itemSize: '56px'">
                         <igx-avatar igxListThumbnail [src]="item.avatar" roundShape="true"></igx-avatar>
                         <span igxListLine igxListLineTitle>{{item.text}}</span>
-                        <igx-icon igxListAction [class.favorite]="item.favorite">star</igx-icon>
+                        <igx-icon igxListAction [color]="item.favorite ? 'orange' : 'lightgray'">star</igx-icon>
                     </igx-list-item>
                 </div>
             </igx-list>

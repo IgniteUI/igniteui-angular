@@ -28,6 +28,16 @@
                     [paging]="false"
                     [width]="'100%'"
                     [height]="'450px'">
+                    <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+                        <igx-grid-toolbar-actions>
+                            <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
+                            <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+                            <igx-grid-toolbar-exporter [exportCSV]="true" [exportExcel]="true">
+                                <span excelText>Export to Excel 👌</span>
+                                <span csvText>Export to CSV 👍</span>
+                            </igx-grid-toolbar-exporter>
+                        </igx-grid-toolbar-actions>
+                    </igx-grid-toolbar>
                     <igx-column *ngFor="let c of columns"
                         [field]="c.field"
                         [header]="c.field"

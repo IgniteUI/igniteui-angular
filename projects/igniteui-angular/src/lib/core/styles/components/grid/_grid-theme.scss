@@ -752,6 +752,10 @@
                 color: inherit;
             }
         }
+
+        > [aria-activedescendant] {
+            outline-style: none;
+        }
     }
 
     %grid-thead {
@@ -1192,6 +1196,7 @@
 
     %igx-grid__tr--inner {
         display: flex;
+        background: inherit;
     }
 
     %igx-grid__tr--add-animate {
@@ -1408,7 +1413,9 @@
 
         // Have a more stable visual editing experience
         igx-input-group,
-        igx-select {
+        igx-select,
+        igx-date-picker,
+        igx-time-picker {
             width: 100%;
             height: 100%;
         }
@@ -1418,10 +1425,12 @@
             padding-top: 0 !important;
         }
 
-        igx-date-picker,
-        igx-time-picker,
         igx-date-range-picker {
             height: 100%;
+        }
+
+        igx-time-picker [igxLabel] {
+            display: none;
         }
 
         %form-group-bundle {
@@ -1771,6 +1780,7 @@
         display: flex;
         overflow: hidden;
         background: --var($theme, 'root-summaries-background');
+        outline-style: none;
 
         %igx-grid-summary__result {
             color: --var($theme, 'root-summaries-text-color');

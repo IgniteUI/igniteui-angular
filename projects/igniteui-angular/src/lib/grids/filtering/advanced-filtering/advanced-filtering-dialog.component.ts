@@ -19,6 +19,7 @@ import { AbsoluteScrollStrategy, AutoPositionStrategy } from '../../../services/
 import { IgxColumnComponent } from '../../columns/column.component';
 import { GridType } from '../../common/grid.interface';
 import { DataUtil } from './../../../data-operations/data-util';
+import { IActiveNode } from '../../grid-navigation.service';
 
 /**
  * @hidden
@@ -258,7 +259,7 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
     /**
      * @hidden @internal
      */
-    public lastActiveNode;
+    public lastActiveNode = {} as IActiveNode;
 
     /**
      * @hidden @internal

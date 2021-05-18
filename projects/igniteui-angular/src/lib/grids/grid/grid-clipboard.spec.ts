@@ -146,7 +146,7 @@ describe('IgxGrid - Clipboard #grid', () => {
             data: grid.getSelectedData(true, true),
             cancel: true
         });
-        expect(eventData).toEqual('');
+        expect(eventData).toEqual('' || 'undefined');
     });
 
     it('Copy when there is a cell in edit mode', fakeAsync(() => {

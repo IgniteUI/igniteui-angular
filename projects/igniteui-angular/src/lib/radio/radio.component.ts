@@ -323,6 +323,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
     public onKeyUp(event: KeyboardEvent) {
         event.stopPropagation();
         this.focused = true;
+        this.select();
     }
 
     /**
@@ -348,9 +349,11 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
             this.nativeRadio.nativeElement.blur();
         }
 
-        this.checked = true;
-        this.change.emit({ value: this.value, radio: this });
-        this._onChangeCallback(this.value);
+        if(!this.checked) {
+            this.checked = true;
+            this.change.emit({ value: this.value, radio: this });
+            this._onChangeCallback(this.value);
+        }
     }
 
     /**
