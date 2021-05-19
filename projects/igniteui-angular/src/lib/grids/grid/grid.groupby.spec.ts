@@ -1828,7 +1828,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    fit('Should have the correct properties in the custom row selector template', fakeAsync(() => {
+    it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
