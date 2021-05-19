@@ -1828,7 +1828,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it('Should have the correct properties in the custom row selector template', fakeAsync(() => {
+    fit('Should have the correct properties in the custom row selector template', fakeAsync(() => {
         const fix = TestBed.createComponent(GridGroupByRowCustomSelectorsComponent);
         const grid = fix.componentInstance.instance;
         fix.componentInstance.width = '1200px';
@@ -1845,16 +1845,30 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         const grRow = grid.groupsRowList.toArray()[0];
-        const contextSelect = { selectedCount: 0, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
-        const contextUnselect = { selectedCount: 2, totalCount: 2, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const contextDeselected = { selected: false, indeterminate: false, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const contextIndeterminate = { selected: false, indeterminate: true, groupRow: grid.groupsRowList.toArray()[0].groupRow };
+        const contextSelected = { selected: true, indeterminate: false, groupRow: grid.groupsRowList.toArray()[0].groupRow };
 
         spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextDeselected);
+
+        grid.selectRows([2], true);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextIndeterminate);
+
+        grid.selectRows([8]);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+
+        grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelected);
     }));
 
     // GroupBy + Resizing
@@ -3599,6 +3613,7 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
         <igx-grid #gridGroupByRowCustomSelectors
             [width]='width'
             [height]='height'
+            [primaryKey]="'ID'"
             [data]="data">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
@@ -3608,9 +3623,9 @@ export class CustomSortingStrategy extends DefaultSortingStrategy {
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <ng-template igxGroupByRowSelector let-context>
-                <igx-checkbox (click)="onGroupByRowClick($event, context)" hidden='true'></igx-checkbox>
-                <p>Selected rows in the group: {{context.selectedCount}};<p>
-                <p>Total rows in the group: {{context.totalCount}};<p>
+                <igx-checkbox (click)="onGroupByRowClick($event, context)"></igx-checkbox>
+                <p>Is row selected: {{context.selected}};<p>
+                <p>Is row indetrmnate: {{context.indeterminate}};<p>
                 <p>Group Row instance: {{context.groupRow}};<p>
             </ng-template>
         </igx-grid>
@@ -3622,5 +3637,7 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(_event, _context) { }
+    public onGroupByRowClick(_event, _context) {
+        _event.stopPropagation();
+    }
 }
