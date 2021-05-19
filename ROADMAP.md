@@ -2,7 +2,24 @@
 
 # Current Milestone
 
-## Milestone 16 (Due by April, 2021)
+## Going down the road
+
+## Milestone 17 (Due by July, 2021)
+
+1. Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
+2. Expose a column input for passing additional data/state in the template contexts of the column [#9020](https://github.com/IgniteUI/igniteui-angular/issues/9020)
+3. Expose a new cell-like object API for the data grids [#9555](https://github.com/IgniteUI/igniteui-angular/issues/9555)
+4. PDF Export feature on Angular Grid [#5696](https://github.com/IgniteUI/igniteui-angular/issues/5696)
+5. Change the way igxGrid allows using the igxPaginator [#9097](https://github.com/IgniteUI/igniteui-angular/issues/9097)
+6. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
+7. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
+
+1. Scheduler component
+2. Grid Cell Merging
+
+# Previous Milestone
+
+## Milestone 16 (Released May 14th, 2021)
 
 1. **[DONE]** Themes: Expose elevations as custom CSS props [#8920](https://github.com/IgniteUI/igniteui-angular/issues/8920)
 2. **[DONE]** Themes: Scope custom CSS props to component selectors [#8868](https://github.com/IgniteUI/igniteui-angular/issues/8868)
@@ -18,14 +35,6 @@
 12. **[DONE]** Add detach method to IgxOverlay [#6063](https://github.com/IgniteUI/igniteui-angular/issues/6063)
 13. **[DONE]** Accept ISO 8601 Date-only string as input for IgxDateTimeEditorDirective [#6994](https://github.com/IgniteUI/igniteui-angular/issues/6994)
 
-## Going down the road
-
-1. Accordion component
-2. Scheduler component
-3. Grid Cell Merging
-4. Global palette values for components
-
-# Previous Milestone
 
 ## Milestone 15 (Released February 17th, 2021)
 
