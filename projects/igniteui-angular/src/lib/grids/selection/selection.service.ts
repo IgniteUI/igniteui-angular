@@ -487,7 +487,7 @@ export class IgxGridSelectionService {
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
 
-        if (this.grid?.groupingExpressions.length) {
+        if (this.grid?.groupingExpressions?.length) {
             rowsGroups.forEach(group => this.handleGroupState(group));
         }
 
@@ -502,7 +502,7 @@ export class IgxGridSelectionService {
             this.rowSelection.delete(rowID);
             rowsGroups.add(this.rowsDirectParents.get(rowID));
         });
-        if (this.grid?.groupingExpressions.length) {
+        if (this.grid?.groupingExpressions?.length) {
             rowsGroups.forEach(group => this.handleGroupState(group));
         }
         this.allRowsSelected = undefined;
