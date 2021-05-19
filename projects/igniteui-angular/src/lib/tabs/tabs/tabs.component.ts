@@ -74,6 +74,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this._tabAlignment = value;
         requestAnimationFrame(() => {
             this.realignSelectedIndicator();
+            this.updateScrollButtons();
         });
     }
 
@@ -273,16 +274,25 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         }
     }
     private resolveLeftScrollButtonStyle(itemsContainerWidth: number): TabScrollButtonStyle {
+        const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
         const headerContainerWidth = this.headerContainer.nativeElement.offsetWidth;
         const offset = this.offset;
+        const total = offset + viewPortWidth;
 
         if (offset === 0) {
             // Fix for IE 11, a difference is accumulated from the widths calculations.
             if (itemsContainerWidth - headerContainerWidth <= 1) {
                 return TabScrollButtonStyle.NotDisplayed;
             }
+
+            if (itemsContainerWidth > total && (this.tabAlignment === 'center' || this.tabAlignment === 'end')) {
+                return TabScrollButtonStyle.Visible;
+            }
             return TabScrollButtonStyle.Hidden;
         } else {
+            if (offset < 0 && this.tabAlignment !== 'end' ) {
+                return TabScrollButtonStyle.Hidden;
+            }
             return TabScrollButtonStyle.Visible;
         }
     }
@@ -298,7 +308,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
             return TabScrollButtonStyle.NotDisplayed;
         }
 
-        if (itemsContainerWidth > total) {
+        if (itemsContainerWidth > total && this.tabAlignment !== 'end') {
             return TabScrollButtonStyle.Visible;
         } else {
             return TabScrollButtonStyle.Hidden;
