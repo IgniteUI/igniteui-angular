@@ -4,7 +4,6 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "node",
             "request": "launch",
@@ -34,6 +33,25 @@
             "env": {
                 "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/migrations/tsconfig.json"
             }
+        },
+        {
+            "name": "Typedoc plugin",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/typedoc/bin/typedoc",
+            "args": [
+                "${workspaceFolder}/projects/igniteui-angular/src/public_api.ts",
+                "--localize",
+                "jp",
+                "--tsconfig",
+                "${workspaceFolder}/tsconfig.json"
+            ],
+            "runtimeExecutable": "/Users/alexov/.nvm/versions/node/v14.15.2/bin/node",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
         }
     ]
 }
