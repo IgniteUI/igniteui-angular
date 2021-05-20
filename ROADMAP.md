@@ -2,8 +2,6 @@
 
 # Current Milestone
 
-## Going down the road
-
 ## Milestone 17 (Due by July, 2021)
 
 1. Accordion component to Ignite UI for Angular [#9559](https://github.com/IgniteUI/igniteui-angular/issues/9559)
@@ -13,6 +11,8 @@
 5. Change the way igxGrid allows using the igxPaginator [#9097](https://github.com/IgniteUI/igniteui-angular/issues/9097)
 6. Themes: Move code to Sass modules [#9554](https://github.com/IgniteUI/igniteui-angular/issues/9554)
 7. Themes: Split themes and aid with Grid refactoring [#9556](https://github.com/IgniteUI/igniteui-angular/issues/9556)
+
+## Going down the road
 
 1. Scheduler component
 2. Grid Cell Merging
