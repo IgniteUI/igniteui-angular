@@ -2,6 +2,7 @@
 @use 'variables' as *;
 @use 'mixins' as *;
 @use 'app-layout';
+@import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
 
 /* autoprefixer grid: on */
 body {

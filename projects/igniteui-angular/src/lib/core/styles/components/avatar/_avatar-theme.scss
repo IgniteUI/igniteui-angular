@@ -83,7 +83,7 @@
         indigo-design: null,
     ), $variant);
 
-    %_igx-avatar-outline {
+    %igx-avatar-outline {
         position: absolute;
         content: '';
         width: 100%;
@@ -108,7 +108,7 @@
         &::after {
             box-shadow: none;
             @if $bootstrap-theme {
-                @extend %_igx-avatar-outline;
+                @extend %igx-avatar-outline;
             }
             transition: box-shadow .15s $ease-in-out-quad;
         }

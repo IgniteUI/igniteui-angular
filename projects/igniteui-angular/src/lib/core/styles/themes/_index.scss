@@ -4,16 +4,13 @@
 ////
 
 @use '../base' as *;
-@use 'schemas/light' as *;
-@use 'schemas/dark' as *;
+@use 'schemas' as *;
 @use 'palettes' as *;
 
 @forward 'palettes';
 @forward 'utilities';
 @forward 'schemas';
 @forward 'core';
-@forward '../components/avatar/avatar-theme';
-@forward '../components/avatar/avatar-component';
 
 // Import all component mixins
 @use '../components/action-strip/action-strip-theme' as *;
@@ -73,6 +70,10 @@
 @use '../components/time-picker/time-picker-theme' as *;
 @use '../components/tree/tree-theme' as *;
 @use '../components/watermark/watermark-theme' as *;
+// NOTE: Importing core includes additional styles. Investigate.
+@import './core';
+//
+@import '../components/ripple/ripple-component';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.

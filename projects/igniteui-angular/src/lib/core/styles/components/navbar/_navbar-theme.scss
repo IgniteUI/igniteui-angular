@@ -167,7 +167,7 @@
     igx-navbar-title,
     [igxNavbarTitle] {
         @extend %igx-navbar-part;
-        @extend %igx-navbar-title;
+        @extend %igx-navbar-title !optional;
     }
 }
 

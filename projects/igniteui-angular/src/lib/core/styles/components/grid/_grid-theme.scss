@@ -1659,16 +1659,16 @@
     }
 
     %igx-grid__th--active {
-        @extend %grid-cell--active;
+        @extend %grid-cell--active !optional;
 
         %igx-grid__th--selected,
         %igx-grid__th--selectable {
-            @extend %grid-cell--active;
+            @extend %grid-cell--active !optional;
         }
     }
 
     %igx-grid-summary--active {
-        @extend %grid-cell--active;
+        @extend %grid-cell--active !optional;
     }
 
     %igx-grid__th--sortable {
@@ -1973,7 +1973,7 @@
 
     %igx-grid__group-row--active {
         background: var-get($theme, 'group-row-selected-background');
-        @extend %grid-cell--active;
+        @extend %grid-cell--active !optional;
 
         %igx-grid__grouping-indicator {
             color: var-get($theme, 'expand-icon-color');
@@ -2648,7 +2648,7 @@
     }
 
     %igx-grid__tr-container--active {
-        @extend %grid-cell--active;
+        @extend %grid-cell--active !optional;
     }
 
     %igx-grid__hierarchical-expander {

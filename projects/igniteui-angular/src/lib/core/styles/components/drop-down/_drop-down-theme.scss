@@ -437,7 +437,7 @@
         pointer-events: auto;
 
         label {
-            @extend %igx-drop-down__header;
+            @extend %igx-drop-down__header !optional;
         }
 
         %igx-drop-down__item {
