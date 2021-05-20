@@ -34,6 +34,7 @@ export class UIInteractions {
         });
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
+        document.body.style.overflow = 'hidden';
     }
 
     /**

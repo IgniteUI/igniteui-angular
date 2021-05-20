@@ -23,7 +23,6 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
@@ -2821,7 +2820,7 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
-    nullData() {
+    public nullData() {
         this._records.next(null);
     }
 
@@ -2862,7 +2861,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         this.data = this.localService.records;
     }
 
-    nullData() {
+    public nullData() {
         this.localService.nullData();
     }
 
@@ -2873,7 +2872,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
@@ -2907,7 +2906,7 @@ export class IgxGridRemoteOnDemandComponent {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
