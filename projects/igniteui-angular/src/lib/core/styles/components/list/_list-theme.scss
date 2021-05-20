@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -251,7 +254,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires em
-/// @requires --var
+/// @requires var-get
 @mixin igx-list($theme) {
     @include igx-css-vars($theme);
 
@@ -301,14 +304,14 @@
         position: relative;
         display: flex;
         flex-flow: column nowrap;
-        background: --var($theme, 'background');
+        background: var-get($theme, 'background');
         height: 100%;
         overflow: hidden;
         z-index: 0;
-        border-radius: --var($theme, 'border-radius');
+        border-radius: var-get($theme, 'border-radius');
 
         @if $bootstrap-theme {
-            border: --var($theme, 'border-width') solid --var($theme, 'border-color');
+            border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
         }
     }
 
@@ -319,7 +322,7 @@
 
     %igx-list__message--empty {
         text-align: center;
-        color: --var($theme, 'item-text-color');
+        color: var-get($theme, 'item-text-color');
         padding: map-get($list-empty-padding, 'comfortable');
         z-index: 1;
     }
@@ -327,8 +330,8 @@
     %igx-list-header {
         display: flex;
         align-items: center;
-        color: --var($theme, 'header-text-color');
-        background: --var($theme, 'header-background');
+        color: var-get($theme, 'header-text-color');
+        background: var-get($theme, 'header-background');
         padding: map-get($list-item-padding, 'comfortable');
         user-select: none;
     }
@@ -345,39 +348,39 @@
         display: flex;
         flex-flow: column wrap;
         justify-content: center;
-        border-radius: --var($theme, 'item-border-radius');
-        color: --var($theme, 'item-text-color');
-        background: --var($theme, 'item-background');
+        border-radius: var-get($theme, 'item-border-radius');
+        color: var-get($theme, 'item-text-color');
+        background: var-get($theme, 'item-background');
 
         &:hover {
-            color: --var($theme, 'item-text-color-hover');
-            background: --var($theme, 'item-background-hover');
+            color: var-get($theme, 'item-text-color-hover');
+            background: var-get($theme, 'item-background-hover');
 
             %igx-list__item-lines {
                 color: currentColor;
             }
 
             %igx-list__item-line-title {
-                color: --var($theme, 'item-title-color-hover');
+                color: var-get($theme, 'item-title-color-hover');
             }
 
             %igx-list__item-line-subtitle {
-                color: --var($theme, 'item-subtitle-color-hover');
+                color: var-get($theme, 'item-subtitle-color-hover');
             }
 
             %igx-list__item-actions {
-                color: --var($theme, 'item-action-color-hover');
+                color: var-get($theme, 'item-action-color-hover');
 
                 igx-icon {
-                    color: --var($theme, 'item-action-color-hover')
+                    color: var-get($theme, 'item-action-color-hover')
                 }
             }
 
             %igx-list__item-thumbnail {
-                color: --var($theme, 'item-thumbnail-color-hover');
+                color: var-get($theme, 'item-thumbnail-color-hover');
 
                 igx-icon {
-                    color: --var($theme, 'item-thumbnail-color-hover')
+                    color: var-get($theme, 'item-thumbnail-color-hover')
                 }
             }
         }
@@ -402,19 +405,19 @@
     }
 
     %igx-list__item-line-subtitle {
-        color: --var($theme, 'item-subtitle-color');
+        color: var-get($theme, 'item-subtitle-color');
         opacity: .74
     }
 
     %igx-list__item-line-title {
-        color: --var($theme, 'item-title-color');
+        color: var-get($theme, 'item-title-color');
     }
 
     %igx-list__item-actions {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: --var($theme, 'item-action-color');
+        color: var-get($theme, 'item-action-color');
 
         > * {
             margin-#{$left}: rem(8px);
@@ -425,7 +428,7 @@
         }
 
         igx-icon {
-            color: --var($theme, 'item-action-color')
+            color: var-get($theme, 'item-action-color')
         }
     }
 
@@ -434,7 +437,7 @@
         align-items: center;
         position: relative;
         padding: map-get($list-item-padding, 'comfortable');
-        border-radius: --var($theme, 'item-border-radius');
+        border-radius: var-get($theme, 'item-border-radius');
         background: inherit;
         z-index: 2;
     }
@@ -453,7 +456,7 @@
         justify-content: center;
         align-self: flex-start;
         padding: 0;
-        color: --var($theme, 'item-thumbnail-color');
+        color: var-get($theme, 'item-thumbnail-color');
 
         > igx-icon {
             @include if-ltr() {
@@ -552,31 +555,31 @@
 
     %igx-list-item-content--active {
         %igx-list__item-line-title {
-            color: --var($theme, 'item-title-color-active')
+            color: var-get($theme, 'item-title-color-active')
         }
 
         %igx-list__item-line-subtitle {
-            color: --var($theme, 'item-subtitle-color-active')
+            color: var-get($theme, 'item-subtitle-color-active')
         }
 
         %igx-list__item-actions {
-            color: --var($theme, 'item-action-color-active');
+            color: var-get($theme, 'item-action-color-active');
 
             igx-icon {
-                color: --var($theme, 'item-action-color-active')
+                color: var-get($theme, 'item-action-color-active')
             }
         }
 
         %igx-list__item-thumbnail {
-            color: --var($theme, 'item-thumbnail-color-active');
+            color: var-get($theme, 'item-thumbnail-color-active');
 
             igx-icon {
-                color: --var($theme, 'item-thumbnail-color-active')
+                color: var-get($theme, 'item-thumbnail-color-active')
             }
         }
 
-        color: --var($theme, 'item-text-color-active');
-        background: --var($theme, 'item-background-active');
+        color: var-get($theme, 'item-text-color-active');
+        background: var-get($theme, 'item-background-active');
         z-index: 3;
     }
 

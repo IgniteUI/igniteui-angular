@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -89,7 +92,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-dialog($theme) {
     @include igx-css-vars($theme);
     $left: if-ltr(left, right);
@@ -137,10 +140,10 @@
     %igx-dialog-window {
         position: relative;
         min-width: $dialog-min-width;
-        border: 1px solid --var($theme, 'border-color');
-        border-radius: --var($theme, 'border-radius');
-        background: --var($theme, 'background');
-        box-shadow: --var($theme, 'shadow');
+        border: 1px solid var-get($theme, 'border-color');
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'background');
+        box-shadow: var-get($theme, 'shadow');
         overflow: hidden;
 
         .igx-calendar {
@@ -154,16 +157,16 @@
 
     %igx-dialog-title {
         display: flex;
-        color: --var($theme, 'title-color');
+        color: var-get($theme, 'title-color');
         padding: $dialog-title-padding;
 
         @if $bootstrap-theme {
-            border-bottom: 1px solid --var($theme, 'border-color');
+            border-bottom: 1px solid var-get($theme, 'border-color');
         }
     }
 
     %igx-dialog-content {
-        color: --var($theme, 'message-color');
+        color: var-get($theme, 'message-color');
         padding: $dialog-message-padding;
     }
 
@@ -189,7 +192,7 @@
         padding: $dialog-actions-padding;
 
         @if $bootstrap-theme {
-            border-top: 1px solid --var($theme, 'border-color');
+            border-top: 1px solid var-get($theme, 'border-color');
         }
 
         button + button {

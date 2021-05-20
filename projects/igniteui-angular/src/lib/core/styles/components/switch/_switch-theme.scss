@@ -1,5 +1,8 @@
-// @import '../ripple/ripple-theme';
-// @import '../ripple/ripple-component';
+@use '../../base' as *;
+@use '../../typography/base' as *;
+@use '../../themes/schemas/light' as *;
+@use '../ripple/ripple-theme' as *;
+@use '../ripple/ripple-component' as *;
 
 ////
 /// @group themes
@@ -154,7 +157,7 @@
 /// @requires em
 /// @requires {mixin} scale-in-out
 /// @requires {mixin} animation
-/// @requires --var
+/// @requires var-get
 @mixin igx-switch($theme) {
     @include igx-css-vars($theme);
     @include scale-in-out($start-scale: .9);
@@ -204,21 +207,21 @@
     ), $variant);
 
     $thumb-resting-shadow: map-get((
-        material: --var($theme, 'resting-shadow'),
+        material: var-get($theme, 'resting-shadow'),
         fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $thumb-hover-shadow: map-get((
-        material: --var($theme, 'hover-shadow'),
+        material: var-get($theme, 'hover-shadow'),
         fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
     $thumb-disabled-shadow: map-get((
-        material: --var($theme, 'disabled-shadow'),
+        material: var-get($theme, 'disabled-shadow'),
         fluent: none,
         bootstrap: none,
         indigo-design: none
@@ -234,7 +237,8 @@
     $input-transition: all .2s $ease-in-out-quad;
 
     $ripple-theme: igx-ripple-theme(
-        $color: --var($theme, 'thumb-on-color')
+        $schema: $light-schema,
+        $color: var-get($theme, 'thumb-on-color')
     );
 
     $left: if-ltr(left, right);
@@ -262,36 +266,36 @@
         align-items: center;
         width: rem($switch-width);
         height: rem($switch-height);
-        border: 1px solid --var($theme, 'border-color');
-        border-radius: --var($theme, 'border-radius-track');
-        background: --var($theme, 'track-off-color');
+        border: 1px solid var-get($theme, 'border-color');
+        border-radius: var-get($theme, 'border-radius-track');
+        background: var-get($theme, 'track-off-color');
         cursor: pointer;
         user-select: none;
         transition: $input-transition;
 
         @if $variant == 'indigo-design' {
-            border: 2px solid --var($theme, 'border-color');
+            border: 2px solid var-get($theme, 'border-color');
         }
 
         &:hover,
         &:focus {
-            border-color: --var($theme, 'border-hover-color');
+            border-color: var-get($theme, 'border-hover-color');
         }
     }
 
     %switch-composite--x {
-        background: --var($theme, 'track-on-color');
-        border-color: --var($theme, 'border-on-color');
+        background: var-get($theme, 'track-on-color');
+        border-color: var-get($theme, 'border-on-color');
 
         &:hover,
         &:focus {
-            border-color: --var($theme, 'border-on-hover-color');
+            border-color: var-get($theme, 'border-on-hover-color');
         }
     }
 
     %switch-composite--disabled {
-        background: --var($theme, 'track-disabled-color');
-        border-color: --var($theme, 'border-disabled-color');
+        background: var-get($theme, 'track-disabled-color');
+        border-color: var-get($theme, 'border-disabled-color');
     }
 
     %switch-composite-thumb {
@@ -300,8 +304,8 @@
         width: rem($switch-thumb-width);
         height: $switch-thumb-height;
         min-width: rem($switch-thumb-width);
-        border-radius: --var($theme, 'border-radius-thumb');
-        background: --var($theme, 'thumb-off-color');
+        border-radius: var-get($theme, 'border-radius-thumb');
+        background: var-get($theme, 'thumb-off-color');
         box-shadow: $thumb-resting-shadow;
         transition: $input-transition;
 
@@ -319,7 +323,7 @@
     }
 
     %switch-composite-thumb--x {
-        background: --var($theme, 'thumb-on-color');
+        background: var-get($theme, 'thumb-on-color');
 
         @include if-ltr() {
             transform: translateX(#{rem($switch-width) - rem($switch-thumb-width) - rem($switch-on-offset)});
@@ -331,7 +335,7 @@
     }
 
     %switch-composite-thumb--disabled {
-        background: --var($theme, 'thumb-disabled-color');
+        background: var-get($theme, 'thumb-disabled-color');
         box-shadow: $thumb-disabled-shadow;
     }
 
@@ -347,7 +351,7 @@
         overflow: hidden;
         pointer-events: none;
         filter: opacity(1);
-        border-radius: --var($theme, 'border-radius-ripple');
+        border-radius: var-get($theme, 'border-radius-ripple');
     }
 
     %igx-switch--focused {
@@ -361,7 +365,7 @@
                 position: absolute;
                 top: -$focus-outline-offset-top;
                 left: -$focus-outline-offset-left;
-                box-shadow: 0 0 0 1px --var($theme, 'focus-outline-color');
+                box-shadow: 0 0 0 1px var-get($theme, 'focus-outline-color');
                 width: calc(100% + (#{$focus-outline-offset-left} * 2));
                 height: calc(100% + (#{$focus-outline-offset-top} * 2));
             }
@@ -369,15 +373,15 @@
 
         @if $variant == 'bootstrap' {
             %switch-composite {
-                border-radius: --var($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 2px --var($theme, 'focus-outline-color');
+                border-radius: var-get($theme, 'border-radius-thumb');
+                box-shadow: 0 0 0 2px var-get($theme, 'focus-outline-color');
             }
         }
 
         @if $variant == 'indigo-design' {
             %switch-composite {
-                border-radius: --var($theme, 'border-radius-thumb');
-                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color');
+                border-radius: var-get($theme, 'border-radius-thumb');
+                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color');
             }
         }
     }
@@ -385,24 +389,24 @@
     %igx-switch--focused-checked {
         @if $variant == 'indigo-design' {
             %switch-composite {
-                box-shadow: 0 0 0 3px --var($theme, 'focus-outline-color-focused');
+                box-shadow: 0 0 0 3px var-get($theme, 'focus-outline-color-focused');
             }
         }
     }
 
     %switch-ripple--focused {
-        background: --var($theme, 'track-off-color');
+        background: var-get($theme, 'track-off-color');
         transition: background .2s $ease-out-quad;
         opacity: .12;
     }
 
     %switch-ripple--focused-checked {
-        background: --var($theme, 'thumb-on-color');
+        background: var-get($theme, 'thumb-on-color');
     }
 
     %switch-label {
         display: inline-block;
-        color: --var($theme, 'label-color');
+        color: var-get($theme, 'label-color');
         cursor: pointer;
         user-select: none;
         word-wrap: break-all;
@@ -429,7 +433,7 @@
     }
 
     %switch-label--disabled {
-        color: --var($theme, 'label-disabled-color');
+        color: var-get($theme, 'label-disabled-color');
     }
 
     %switch-ripple--hover {
@@ -446,13 +450,13 @@
 
     %switch-ripple--hover-unchecked {
         &::after {
-            background: --var($theme, 'track-off-color');
+            background: var-get($theme, 'track-off-color');
         }
     }
 
     %switch-ripple--hover-checked {
         &::after {
-            background: --var($theme, 'thumb-on-color');
+            background: var-get($theme, 'thumb-on-color');
         }
     }
 

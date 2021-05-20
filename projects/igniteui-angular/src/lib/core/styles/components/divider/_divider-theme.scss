@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -43,7 +45,7 @@
 ///
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires --var
+/// @requires var-get
 ///
 @mixin igx-divider($theme) {
     @include igx-css-vars($theme);
@@ -51,11 +53,11 @@
     %igx-divider-display {
         display: block;
         height: 1px;
-        background: --var($theme, 'color');
+        background: var-get($theme, 'color');
     }
 
     %igx-divider--dashed {
-        background: linear-gradient(to right, --var($theme, 'color') 50%, transparent 50%);
+        background: linear-gradient(to right, var-get($theme, 'color') 50%, transparent 50%);
         background-size: 10px 1px; /* dash size */
     }
 
@@ -67,7 +69,7 @@
     }
 
     %igx-divider--vertical-dashed {
-        background: linear-gradient(to bottom, --var($theme, 'color') 50%, transparent 50%);
+        background: linear-gradient(to bottom, var-get($theme, 'color') 50%, transparent 50%);
         background-size: 1px 10px; /* dash size */
     }
 }

@@ -1,5 +1,6 @@
-@import './excel-filtering-component';
-@import './advanced-filtering-component';
+@use '../../base' as *;
+@use './excel-filtering-component' as *;
+@use './advanced-filtering-component' as *;
 
 ////
 /// @group components
@@ -7,8 +8,8 @@
 /// @requires {mixin} bem-block
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
-/// @requires {mixin} _excel-filtering-partial
-/// @requires {mixin} _advanced-filtering-partial
+/// @requires {mixin} excel-filtering-partial
+/// @requires {mixin} advanced-filtering-partial
 ////
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
@@ -902,8 +903,8 @@
         }
     }
 
-    @include _excel-filtering-partial();
-    @include _advanced-filtering-partial();
+    @include excel-filtering-partial();
+    @include advanced-filtering-partial();
 }
 
 @include b(igx-drop-area) {

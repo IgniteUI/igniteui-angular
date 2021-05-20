@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -46,17 +48,16 @@
 }
 
 /// @param {Map} $theme - The theme used to style the component.
-/// @param {Map} $palette [$default-palette] - The palette used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires --var
-@mixin igx-ripple($theme, $palette: $default-palette) {
+/// @requires var-get
+@mixin igx-ripple($theme) {
     @include igx-css-vars($theme);
 
     %igx-ripple-display {
         display: block;
         position: absolute;
         border-radius: 50%;
-        background: --var($theme, 'color');
+        background: var-get($theme, 'color');
         pointer-events: none;
         transform-origin: center;
         transform: translate3d(0, 0, 0) scale(0);

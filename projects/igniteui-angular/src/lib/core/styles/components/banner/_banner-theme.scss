@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -62,7 +65,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-banner($theme) {
     @include igx-css-vars($theme);
 
@@ -87,7 +90,7 @@
         padding-#{$left}: 0;
         padding-top: map-get($banner-padding, 'comfortable');
         padding-bottom: map-get($banner-padding, 'comfortable');
-        background: --var($theme, 'banner-background');
+        background: var-get($theme, 'banner-background');
         align-items: center;
         position: relative;
         flex-wrap: wrap;
@@ -100,21 +103,21 @@
         min-width: rem(40);
         height: rem(40);
         margin-#{$left}: rem(16);
-        color: --var($theme, 'banner-illustration-color');
+        color: var-get($theme, 'banner-illustration-color');
     }
 
     %igx-banner__border-top {
-        border-top: 1px solid --var($theme, 'banner-border-color');
+        border-top: 1px solid var-get($theme, 'banner-border-color');
         top: -1px
     }
 
     %igx-banner__border-bottom {
-        border-bottom: 1px solid --var($theme, 'banner-border-color');
+        border-bottom: 1px solid var-get($theme, 'banner-border-color');
         top: 0;
     }
 
     %igx-banner__text {
-        color: --var($theme, 'banner-message-color');
+        color: var-get($theme, 'banner-message-color');
         flex: 1 0 0%;
         margin-#{$left}: rem(24);
     }

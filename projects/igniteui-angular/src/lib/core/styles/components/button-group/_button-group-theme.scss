@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -172,7 +175,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires igx-color
-/// @requires --var
+/// @requires var-get
 @mixin igx-button-group($theme) {
     @include igx-css-vars($theme);
     $group-item-min-width: 24px;
@@ -190,9 +193,9 @@
 
     %igx-group-display {
         display: flex;
-        box-shadow: --var($theme, 'shadow');
+        box-shadow: var-get($theme, 'shadow');
         transition: $transition;
-        border-radius: --var($theme, 'border-radius');
+        border-radius: var-get($theme, 'border-radius');
 
         button {
             // The margin here is required to fix a bug in Safari #7858
@@ -203,9 +206,9 @@
     }
 
     %igx-group-item {
-        border: $group-item-border-thickness solid --var($theme, 'item-border-color');
-        color: --var($theme, 'item-text-color');
-        background: --var($theme, 'item-background');
+        border: $group-item-border-thickness solid var-get($theme, 'item-border-color');
+        color: var-get($theme, 'item-text-color');
+        background: var-get($theme, 'item-background');
         min-width: $group-item-min-width;
         display: flex;
         flex: 1 0 0%;
@@ -227,31 +230,31 @@
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: --var($theme, 'border-radius');
-            border-bottom-#{$left}-radius: --var($theme, 'border-radius');
+            border-top-#{$left}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
         }
 
         &:last-of-type {
-            border-top-#{$right}-radius: --var($theme, 'border-radius');
-            border-bottom-#{$right}-radius: --var($theme, 'border-radius');
+            border-top-#{$right}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
         }
 
         &[igxButton][disabled='true'] {
-            color: --var($theme, 'disabled-text-color');
-            background: --var($theme, 'disabled-background-color');
-            border-color: --var($theme, 'item-disabled-border');
+            color: var-get($theme, 'disabled-text-color');
+            background: var-get($theme, 'disabled-background-color');
+            border-color: var-get($theme, 'item-disabled-border');
         }
 
         &:hover,
         &:focus {
-            color: --var($theme, 'item-hover-text-color');
-            background: --var($theme, 'item-hover-background');
+            color: var-get($theme, 'item-hover-text-color');
+            background: var-get($theme, 'item-hover-background');
             z-index: 2;
         }
 
         &:focus {
             @if $bootstrap-theme or $indigo-theme {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'shadow-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'shadow-color');
             }
         }
     }
@@ -263,8 +266,8 @@
         }
 
         &:first-of-type {
-            border-top-#{$left}-radius: --var($theme, 'border-radius');
-            border-top-#{$right}-radius: --var($theme, 'border-radius');
+            border-top-#{$left}-radius: var-get($theme, 'border-radius');
+            border-top-#{$right}-radius: var-get($theme, 'border-radius');
             border-bottom-#{$left}-radius: 0;
             border-bottom-#{$right}-radius: 0;
         }
@@ -272,27 +275,27 @@
         &:last-of-type {
             border-top-#{$left}-radius: 0;
             border-top-#{$right}-radius: 0;
-            border-bottom-#{$left}-radius: --var($theme, 'border-radius');
-            border-bottom-#{$right}-radius: --var($theme, 'border-radius');
+            border-bottom-#{$left}-radius: var-get($theme, 'border-radius');
+            border-bottom-#{$right}-radius: var-get($theme, 'border-radius');
         }
     }
 
     %igx-group-item-selected {
-        color: --var($theme, 'item-selected-text-color');
-        background: --var($theme, 'item-selected-background');
-        border-color: --var($theme, 'item-selected-border-color');
+        color: var-get($theme, 'item-selected-text-color');
+        background: var-get($theme, 'item-selected-background');
+        border-color: var-get($theme, 'item-selected-border-color');
         position: relative;
         z-index: 1;
 
         &:hover,
         &:focus {
-            color: --var($theme, 'item-selected-text-color');
-            background: --var($theme, 'item-selected-hover-background');
+            color: var-get($theme, 'item-selected-text-color');
+            background: var-get($theme, 'item-selected-hover-background');
         }
 
         @if $indigo-theme {
             &:focus {
-                box-shadow: 0 0 0 rem(3px) --var($theme, 'selected-shadow-color');
+                box-shadow: 0 0 0 rem(3px) var-get($theme, 'selected-shadow-color');
             }
         }
 

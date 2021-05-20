@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -57,7 +60,7 @@
     @return extend($theme, (
         name: $name,
         selector: $selector,
-        palette: $default-palette,
+        palette: $palette,
         background: $background,
         border-radius: $border-radius,
         text-color: $text-color,
@@ -66,7 +69,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires --var
+/// @requires var-get
 @mixin igx-tooltip($theme) {
     @include igx-css-vars($theme);
 
@@ -74,9 +77,9 @@
         display: inline-flex;
         justify-content: center;
         flex-flow: column wrap;
-        background: --var($theme, 'background');
-        color: --var($theme, 'text-color');
-        border-radius: --var($theme, 'border-radius');
+        background: var-get($theme, 'background');
+        color: var-get($theme, 'text-color');
+        border-radius: var-get($theme, 'border-radius');
         margin: 0 auto;
     }
 

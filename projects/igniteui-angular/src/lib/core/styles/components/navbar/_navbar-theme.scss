@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -85,7 +88,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires em
-/// @requires --var
+/// @requires var-get
 @mixin igx-navbar($theme) {
     @include igx-css-vars($theme);
 
@@ -105,9 +108,9 @@
         min-height: 56px;
         max-height: 128px;
         padding: $navbar-padding;
-        background: --var($theme, 'background');
-        color: --var($theme, 'text-color');
-        box-shadow: --var($theme, 'shadow');
+        background: var-get($theme, 'background');
+        color: var-get($theme, 'text-color');
+        box-shadow: var-get($theme, 'shadow');
         z-index: 4;
         overflow: hidden;
     }
@@ -136,11 +139,11 @@
     %igx-navbar-icon-display {
         > igx-icon {
             cursor: pointer;
-            color: --var($theme, 'idle-icon-color');
+            color: var-get($theme, 'idle-icon-color');
             transition: color .15s $ease-out-quad;
 
             &:hover {
-                color: --var($theme, 'hover-icon-color');
+                color: var-get($theme, 'hover-icon-color');
             }
         }
     }

@@ -1,3 +1,5 @@
+@use 'functions' as *;
+
 ////
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -12,7 +14,7 @@ $keyframes: () !default;
 $components: () !default;
 
 /// @access private
-@mixin _icon-w-margin($margin, $left) {
+@mixin icon-w-margin($margin, $left) {
     > * {
         margin-#{$left}: $margin;
 
@@ -202,7 +204,7 @@ $components: () !default;
                 }
 
                 @if $_valid-base and $_valid-variant {
-                    --igx-#{$name}-#{$variant}: #{_gen-hsla-color($name, $variant, $theme)};
+                    --igx-#{$name}-#{$variant}: #{gen-hsla-color($name, $variant, $theme)};
                 } @else if $name != '_meta' {
                     --igx-#{$name}-#{$variant}: #{$value};
                 }

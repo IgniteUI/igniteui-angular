@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -104,7 +106,7 @@
 /// @requires {mixin} ellipsis
 /// @requires rem
 /// @requires em
-/// @requires --var
+/// @requires var-get
 @mixin igx-grid-toolbar($theme) {
     @include igx-css-vars($theme);
 
@@ -148,7 +150,7 @@
         grid-row: 1;
         font-size: $grid-toolbar-fs;
         border-bottom: 1px solid igx-color(map-get($theme, 'palette'), 'grays', 300);
-        background: --var($theme, 'background-color');
+        background: var-get($theme, 'background-color');
         height: auto;
         min-height: map-get($grid-toolbar-height, 'comfortable');
         position: relative;
@@ -218,7 +220,7 @@
     }
 
     %igx-grid-toolbar__title {
-        color: --var($theme, 'title-text-color');
+        color: var-get($theme, 'title-text-color');
         flex: 1 1 auto;
         @include ellipsis();
         max-width: 40ch;
@@ -272,7 +274,7 @@
         bottom: rem(-1px);
         height: rem(2px);
         overflow: hidden;
-        background: --var($theme, 'background-color');
+        background: var-get($theme, 'background-color');
 
         igx-linear-bar > * {
             border-radius: 0;
@@ -304,7 +306,7 @@
 
     %igx-grid-toolbar__dd-list {
         list-style: none;
-        background: --var($theme, 'dropdown-background');
+        background: var-get($theme, 'dropdown-background');
         margin: 0;
         padding: 0;
         box-shadow: igx-elevation($elevation: 8);
@@ -314,17 +316,17 @@
         cursor: pointer;
         position: relative;
         padding: em(8px) em(16px);
-        color: --var($theme, 'item-text-color');
+        color: var-get($theme, 'item-text-color');
         white-space: nowrap;
 
         &:hover {
-            background: --var($theme, 'item-hover-background');
-            color: --var($theme, 'item-hover-text-color');
+            background: var-get($theme, 'item-hover-background');
+            color: var-get($theme, 'item-hover-text-color');
         }
 
         &:focus {
-            background: --var($theme, 'item-focus-background');
-            color: --var($theme, 'item-focus-text-color');
+            background: var-get($theme, 'item-focus-background');
+            color: var-get($theme, 'item-focus-text-color');
         }
     }
 }

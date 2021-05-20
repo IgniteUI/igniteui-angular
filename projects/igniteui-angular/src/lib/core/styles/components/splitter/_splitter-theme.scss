@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -66,10 +69,10 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-splitter($theme) {
     @include igx-css-vars($theme);
-    $splitter-color: --var($theme, 'bar-color');
+    $splitter-color: var-get($theme, 'bar-color');
     $hitbox-size: 4px;
     $debug-hitbox: false;
     $hitbox-debug-color: rgba(coral, .24);
@@ -120,10 +123,10 @@
     %igx-splitter-bar--focus {
         // Remove the default browser outline styles
         outline: transparent solid 1px;
-        box-shadow: inset 0 0 0 1px --var($theme, 'focus-color');
+        box-shadow: inset 0 0 0 1px var-get($theme, 'focus-color');
 
         @if $variant == 'indigo-design' {
-            background: --var($theme, 'focus-color');
+            background: var-get($theme, 'focus-color');
         }
     }
 
@@ -145,18 +148,18 @@
     }
 
     %igx-splitter-handle {
-        background: --var($theme, 'handle-color');
-        border-radius: --var($theme, 'border-radius');
+        background: var-get($theme, 'handle-color');
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %igx-splitter-handle--horizontal {
         width: 25%;
-        height: --var($theme, 'size');
+        height: var-get($theme, 'size');
         margin: 0 rem(48px);
     }
 
     %igx-splitter-handle--vertical {
-        width: --var($theme, 'size');
+        width: var-get($theme, 'size');
         height: 25%;
         margin: rem(48px) 0;
     }
@@ -171,14 +174,14 @@
         position: relative;
         width: 0;
         height: 0;
-        border-right: --var($theme, 'size') solid transparent;
-        border-left: --var($theme, 'size') solid transparent;
+        border-right: var-get($theme, 'size') solid transparent;
+        border-left: var-get($theme, 'size') solid transparent;
         cursor: pointer;
         z-index: 1;
     }
 
     %igx-splitter-expander--start {
-        border-bottom: --var($theme, 'size') solid --var($theme, 'expander-color');
+        border-bottom: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;
@@ -191,7 +194,7 @@
 
     %igx-splitter-expander--end {
         border-bottom: unset;
-        border-top: --var($theme, 'size') solid --var($theme, 'expander-color');
+        border-top: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;
@@ -203,9 +206,9 @@
     }
 
     %igx-splitter-expander--start-vertical {
-        border-top: --var($theme, 'size') solid transparent;
-        border-right: --var($theme, 'size') solid --var($theme, 'expander-color');
-        border-bottom: --var($theme, 'size') solid transparent;
+        border-top: var-get($theme, 'size') solid transparent;
+        border-right: var-get($theme, 'size') solid var-get($theme, 'expander-color');
+        border-bottom: var-get($theme, 'size') solid transparent;
         border-left: unset;
 
         &::before {
@@ -218,10 +221,10 @@
     }
 
     %igx-splitter-expander--end-vertical {
-        border-top: --var($theme, 'size') solid transparent;
+        border-top: var-get($theme, 'size') solid transparent;
         border-right: unset;
-        border-bottom: --var($theme, 'size') solid transparent;
-        border-left: --var($theme, 'size') solid --var($theme, 'expander-color');
+        border-bottom: var-get($theme, 'size') solid transparent;
+        border-left: var-get($theme, 'size') solid var-get($theme, 'expander-color');
 
         &::before {
             @extend %igx-splitter-hitbox;

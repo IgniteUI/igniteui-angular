@@ -1,3 +1,6 @@
+@use '../base' as *;
+@use 'base' as *;
+
 ////
 /// @group typography
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -5,6 +8,7 @@
 
 // Import the typography mixins from component themes
 // with typography support.
+@import '../components/banner/banner-theme';
 @import '../components/bottom-nav/bottom-nav-theme';
 @import '../components/button/button-theme';
 @import '../components/calendar/calendar-theme';
@@ -37,6 +41,7 @@
 @import '../components/time-picker/time-picker-theme';
 @import '../components/toast/toast-theme';
 @import '../components/tooltip/tooltip-theme';
+@import '../components/tree/tree-theme';
 
 /// @access private
 @mixin _igx-typography-styles($font-family, $type-scale) {

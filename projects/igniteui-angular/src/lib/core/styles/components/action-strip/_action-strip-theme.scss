@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -67,7 +69,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-action-strip($theme) {
     @include igx-css-vars($theme);
 
@@ -92,7 +94,7 @@
         pointer-events: none;
         top: 0;
         #{$left}: 0;
-        background: --var($theme, 'background');
+        background: var-get($theme, 'background');
         color: inherit;
         padding: map-get($padding, 'comfortable');
         z-index: 9999;
@@ -175,9 +177,9 @@
         justify-content: center;
         pointer-events: all;
         position: relative;
-        color: --var($theme, 'color');
-        border-radius: --var($theme, 'actions-border-radius');
-        background: --var($theme, 'actions-background');
+        color: var-get($theme, 'color');
+        border-radius: var-get($theme, 'actions-border-radius');
+        background: var-get($theme, 'actions-background');
         max-height: 36px;
 
         &:last-child {
@@ -185,16 +187,16 @@
         }
 
         igx-icon {
-            color: --var($theme, 'color');
+            color: var-get($theme, 'color');
         }
 
         [igxButton='icon'] {
             igx-icon {
-                color: --var($theme, 'color');
+                color: var-get($theme, 'color');
             }
 
             @if $variant == 'indigo-design' {
-                border-radius: --var($theme, 'actions-border-radius');
+                border-radius: var-get($theme, 'actions-border-radius');
             }
         }
     }
@@ -211,7 +213,7 @@
 
     %igx-action-strip__delete {
         igx-icon {
-            color: --var($theme, 'delete-action');
+            color: var-get($theme, 'delete-action');
         }
     }
 }

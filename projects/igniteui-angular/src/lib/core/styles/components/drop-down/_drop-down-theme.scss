@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -199,7 +202,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-drop-down($theme) {
     @include igx-css-vars($theme);
 
@@ -254,11 +257,11 @@
 
     %igx-drop-down__list {
         overflow: hidden;
-        border-radius: --var($theme, 'border-radius');
-        background: --var($theme, 'background-color');
-        box-shadow: --var($theme, 'shadow');
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'background-color');
+        box-shadow: var-get($theme, 'shadow');
         min-width: rem(128px);
-        border: --var($theme, 'border-width') solid --var($theme, 'border-color');
+        border: var-get($theme, 'border-width') solid var-get($theme, 'border-color');
     }
 
     %igx-drop-down__list-scroll {
@@ -301,21 +304,21 @@
     }
 
     %igx-drop-down__item {
-        color: --var($theme, 'item-text-color');
+        color: var-get($theme, 'item-text-color');
         cursor: pointer;
         padding: map-get($item-padding, 'comfortable');
-        border-radius: --var($theme, 'item-border-radius');
+        border-radius: var-get($theme, 'item-border-radius');
 
         &:focus {
             outline: 0;
             outline-color: transparent;
-            background: --var($theme, 'focused-item-background');
-            color: --var($theme, 'focused-item-text-color');
+            background: var-get($theme, 'focused-item-background');
+            color: var-get($theme, 'focused-item-text-color');
         }
 
         &:hover {
-            background: --var($theme, 'hover-item-background');
-            color: --var($theme, 'hover-item-text-color');
+            background: var-get($theme, 'hover-item-background');
+            color: var-get($theme, 'hover-item-text-color');
         }
     }
 
@@ -395,7 +398,7 @@
     }
 
     %igx-drop-down__header {
-        color: --var($theme, 'header-text-color');
+        color: var-get($theme, 'header-text-color');
         pointer-events: none;
         padding: map-get($header-item-padding, 'comfortable');
     }
@@ -443,38 +446,38 @@
     }
 
     %igx-drop-down__item--focused {
-        background: --var($theme, 'focused-item-background');
-        color: --var($theme, 'focused-item-text-color');
+        background: var-get($theme, 'focused-item-background');
+        color: var-get($theme, 'focused-item-text-color');
 
         &:hover {
-            color: --var($theme, 'focused-item-text-color');
-            background: --var($theme, 'focused-item-background');
+            color: var-get($theme, 'focused-item-text-color');
+            background: var-get($theme, 'focused-item-background');
         }
     }
 
     %igx-drop-down__item--selected {
-        background: --var($theme, 'selected-item-background');
-        color: --var($theme, 'selected-item-text-color');
+        background: var-get($theme, 'selected-item-background');
+        color: var-get($theme, 'selected-item-text-color');
 
         &:hover {
-            background: --var($theme, 'selected-hover-item-background');
-            color: --var($theme, 'selected-hover-item-text-color');
+            background: var-get($theme, 'selected-hover-item-background');
+            color: var-get($theme, 'selected-hover-item-text-color');
         }
     }
 
     %igx-drop-down__item--selected--focused {
-        background: --var($theme, 'selected-focus-item-background');
-        color: --var($theme, 'selected-focus-item-text-color');
+        background: var-get($theme, 'selected-focus-item-background');
+        color: var-get($theme, 'selected-focus-item-text-color');
     }
 
     %igx-drop-down__item--disabled {
-        background: --var($theme, 'disabled-item-background');
-        color: --var($theme, 'disabled-item-text-color');
+        background: var-get($theme, 'disabled-item-background');
+        color: var-get($theme, 'disabled-item-text-color');
         cursor: default;
         pointer-events: none;
 
         &:hover {
-            background: --var($theme, 'disabled-item-background');
+            background: var-get($theme, 'disabled-item-background');
         }
     }
 }

@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -59,14 +62,14 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-column-actions($theme) {
     @include igx-css-vars($theme);
 
     %column-actions-display {
         display: flex;
         flex-flow: column nowrap;
-        background: --var($theme, 'background-color');
+        background: var-get($theme, 'background-color');
         box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
         width: 100%;
         flex: 1 1 auto;
@@ -74,7 +77,7 @@
     }
 
     %column-actions-title {
-        color: --var($theme, 'title-color');
+        color: var-get($theme, 'title-color');
         margin: 0;
         padding: rem(16px) rem(16px) rem(8px);
     }

@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -77,7 +80,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-toast($theme) {
     @include igx-css-vars($theme);
 
@@ -108,10 +111,10 @@
         margin: $margin;
         padding: $padding;
         min-width: $width;
-        color: --var($theme, 'text-color');
-        background: --var($theme, 'background');
+        color: var-get($theme, 'text-color');
+        background: var-get($theme, 'background');
         border: $border;
-        border-radius: --var($theme, 'border-radius');
+        border-radius: var-get($theme, 'border-radius');
         box-shadow: map-get($theme, 'shadow');
         backdrop-filter: blur(10px);
     }

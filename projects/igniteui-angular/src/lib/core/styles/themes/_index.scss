@@ -3,67 +3,76 @@
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
 
-// Import the core module first
-@import 'core';
+@use '../base' as *;
+@use 'schemas/light' as *;
+@use 'schemas/dark' as *;
+@use 'palettes' as *;
+
+@forward 'palettes';
+@forward 'utilities';
+@forward 'schemas';
+@forward 'core';
+@forward '../components/avatar/avatar-theme';
+@forward '../components/avatar/avatar-component';
 
 // Import all component mixins
-@import '../components/action-strip/action-strip-theme';
-@import '../components/avatar/avatar-theme';
-@import '../components/badge/badge-theme';
-@import '../components/bottom-nav/bottom-nav-theme';
-@import '../components/button/button-theme';
-@import '../components/button-group/button-group-theme';
-@import '../components/banner/banner-theme';
-@import '../components/calendar/calendar-theme';
-@import '../components/card/card-theme';
-@import '../components/carousel/carousel-theme';
-@import '../components/charts/data-chart-theme';
-@import '../components/charts/doughnut-chart-theme';
-@import '../components/charts/gauge-theme';
-@import '../components/charts/financial-chart-theme';
-@import '../components/charts/graph-theme';
-@import '../components/charts/category-chart-theme';
-@import '../components/charts/geo-map-theme';
-@import '../components/charts/pie-chart-theme';
-@import '../components/charts/sparkline-theme';
-@import '../components/charts/funnel-chart-theme';
-@import '../components/charts/shape-chart-theme';
-@import '../components/checkbox/checkbox-theme';
-@import '../components/chip/chip-theme';
-@import '../components/column-actions/column-actions-theme';
-@import '../components/combo/combo-theme';
-@import '../components/date-picker/date-picker-theme';
-@import '../components/date-range-picker/date-range-picker-theme';
-@import '../components/dialog/dialog-theme';
-@import '../components/divider/divider-theme';
-@import '../components/dock-manager/dock-manager-theme';
-@import '../components/drop-down/drop-down-theme';
-@import '../components/expansion-panel/expansion-panel-theme';
-@import '../components/grid/grid-theme';
-@import '../components/grid-summary/grid-summary-theme';
-@import '../components/paginator/paginator-theme';
-@import '../components/grid-toolbar/grid-toolbar-theme';
-@import '../components/highlight/highlight-theme';
-@import '../components/overlay/overlay-theme';
-@import '../components/toast/toast-theme';
-@import '../components/tooltip/tooltip-theme';
-@import '../components/tabs/tabs-theme';
-@import '../components/scrollbar/scrollbar-theme';
-@import '../components/switch/switch-theme';
-@import '../components/snackbar/snackbar-theme';
-@import '../components/slider/slider-theme';
-@import '../components/splitter/splitter-theme';
-@import '../components/ripple/ripple-theme';
-@import '../components/radio/radio-theme';
-@import '../components/progress/progress-theme';
-@import '../components/navbar/navbar-theme';
-@import '../components/navdrawer/navdrawer-theme';
-@import '../components/list/list-theme';
-@import '../components/input/input-group-theme';
-@import '../components/icon/icon-theme';
-@import '../components/time-picker/time-picker-theme';
-@import '../components/tree/tree-theme';
-@import '../components/watermark/watermark-theme';
+@use '../components/action-strip/action-strip-theme' as *;
+@use '../components/avatar/avatar-theme' as *;
+@use '../components/badge/badge-theme' as *;
+@use '../components/bottom-nav/bottom-nav-theme' as *;
+@use '../components/button/button-theme' as *;
+@use '../components/button-group/button-group-theme' as *;
+@use '../components/banner/banner-theme' as *;
+@use '../components/calendar/calendar-theme' as *;
+@use '../components/card/card-theme' as *;
+@use '../components/carousel/carousel-theme' as *;
+@use '../components/charts/data-chart-theme' as *;
+@use '../components/charts/doughnut-chart-theme' as *;
+@use '../components/charts/gauge-theme' as *;
+@use '../components/charts/financial-chart-theme' as *;
+@use '../components/charts/graph-theme' as *;
+@use '../components/charts/category-chart-theme' as *;
+@use '../components/charts/geo-map-theme' as *;
+@use '../components/charts/pie-chart-theme' as *;
+@use '../components/charts/sparkline-theme' as *;
+@use '../components/charts/funnel-chart-theme' as *;
+@use '../components/charts/shape-chart-theme' as *;
+@use '../components/checkbox/checkbox-theme' as *;
+@use '../components/chip/chip-theme' as *;
+@use '../components/column-actions/column-actions-theme' as *;
+@use '../components/combo/combo-theme' as *;
+@use '../components/date-picker/date-picker-theme' as *;
+@use '../components/date-range-picker/date-range-picker-theme' as *;
+@use '../components/dialog/dialog-theme' as *;
+@use '../components/divider/divider-theme' as *;
+@use '../components/dock-manager/dock-manager-theme' as *;
+@use '../components/drop-down/drop-down-theme' as *;
+@use '../components/expansion-panel/expansion-panel-theme' as *;
+@use '../components/grid/grid-theme' as *;
+@use '../components/grid-summary/grid-summary-theme' as *;
+@use '../components/paginator/paginator-theme' as *;
+@use '../components/grid-toolbar/grid-toolbar-theme' as *;
+@use '../components/highlight/highlight-theme' as *;
+@use '../components/overlay/overlay-theme' as *;
+@use '../components/toast/toast-theme' as *;
+@use '../components/tooltip/tooltip-theme' as *;
+@use '../components/tabs/tabs-theme' as *;
+@use '../components/scrollbar/scrollbar-theme' as *;
+@use '../components/switch/switch-theme' as *;
+@use '../components/snackbar/snackbar-theme' as *;
+@use '../components/slider/slider-theme' as *;
+@use '../components/splitter/splitter-theme' as *;
+@use '../components/ripple/ripple-theme' as *;
+@use '../components/radio/radio-theme' as *;
+@use '../components/progress/progress-theme' as *;
+@use '../components/navbar/navbar-theme' as *;
+@use '../components/navdrawer/navdrawer-theme' as *;
+@use '../components/list/list-theme' as *;
+@use '../components/input/input-group-theme' as *;
+@use '../components/icon/icon-theme' as *;
+@use '../components/time-picker/time-picker-theme' as *;
+@use '../components/tree/tree-theme' as *;
+@use '../components/watermark/watermark-theme' as *;
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.
@@ -113,12 +122,6 @@
     }
 
     @if not(index($exclude, 'igx-avatar')) {
-        // Palette is no longer required, the component adjusts
-        // its colors based on the context in browsers with CSS vars
-        // support.
-        // In older browsers, the component defaults to the old
-        // behavior where hard-coded values from the $default-palette
-        // are used.
         @include igx-avatar(igx-avatar-theme($schema: $schema));
     }
 

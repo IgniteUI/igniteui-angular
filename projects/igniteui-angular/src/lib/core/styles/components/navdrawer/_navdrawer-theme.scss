@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -148,7 +151,7 @@
 /// @requires {mixin} igx-css-vars
 /// @requires $overlay-color
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-navdrawer($theme) {
     @include igx-css-vars($theme);
 
@@ -178,18 +181,18 @@
         max-width: 90%;
         min-height: 100%;
         overflow-x: hidden;
-        background: --var($theme, 'background');
+        background: var-get($theme, 'background');
         top: 0;
         bottom: 0;
         #{$left}: 0;
         z-index: 999;
         transition: width, transform;
         transition-timing-function: $ease-out-quad, $ease-out-quad;
-        box-shadow: --var($theme, 'shadow');
+        box-shadow: var-get($theme, 'shadow');
         @if $variant != 'indigo-design' {
-            border-#{$right}: 1px solid --var($theme, 'border-color');
+            border-#{$right}: 1px solid var-get($theme, 'border-color');
         }
-        border-radius: --var($theme, 'border-radius');
+        border-radius: var-get($theme, 'border-radius');
     }
 
     %aside-panning {
@@ -232,7 +235,7 @@
         left: auto;
         right: 0;
         border-#{$right}: none;
-        border-#{$left}: 1px solid --var($theme, 'border-color');
+        border-#{$left}: 1px solid var-get($theme, 'border-color');
     }
 
     %aside--mini {
@@ -260,7 +263,7 @@
 
     %overlay {
         opacity: 1;
-        background: $overlay-color;
+        background: igx-color(map-get($theme, 'palette'), 'grays');
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
@@ -295,7 +298,7 @@
         display: flex;
         align-items: center;
         flex-flow: row nowrap;
-        color: --var($theme, 'item-text-color');
+        color: var-get($theme, 'item-text-color');
         max-height: $drawer-item-max-h;
         min-width: $drawer-item-min-w;
 
@@ -313,7 +316,7 @@
         user-select: none;
         outline: transparent;
         white-space: nowrap;
-        border-radius: --var($theme, 'item-border-radius');
+        border-radius: var-get($theme, 'item-border-radius');
         text-decoration: none;
         width: calc(100% - #{$drawer-item-margin * 2});
         border: none;
@@ -334,7 +337,7 @@
         }
 
         igx-icon {
-            color: --var($theme, 'item-icon-color');
+            color: var-get($theme, 'item-icon-color');
             @if $variant == 'indigo-design' {
                 margin-#{$left}: rem(4px);
             }
@@ -371,23 +374,23 @@
 
         &:hover,
         &:focus {
-            background: --var($theme, 'item-hover-background');
-            color: --var($theme, 'item-hover-text-color');
+            background: var-get($theme, 'item-hover-background');
+            color: var-get($theme, 'item-hover-text-color');
             box-shadow: none;
 
             igx-icon {
-                color: --var($theme, 'item-hover-icon-color');
+                color: var-get($theme, 'item-hover-icon-color');
             }
         }
     }
 
     %item--active {
         // should be app primary color
-        color: --var($theme, 'item-active-text-color');
-        background: --var($theme, 'item-active-background');
+        color: var-get($theme, 'item-active-text-color');
+        background: var-get($theme, 'item-active-background');
 
         igx-icon {
-            color: --var($theme, 'item-active-icon-color');
+            color: var-get($theme, 'item-active-icon-color');
         }
 
         // Need this to override the igx-buttons
@@ -410,11 +413,11 @@
 
         &:focus,
         &:hover {
-            color: --var($theme, 'item-active-text-color');
-            background: --var($theme, 'item-active-background');
+            color: var-get($theme, 'item-active-text-color');
+            background: var-get($theme, 'item-active-background');
 
             igx-icon {
-                color: --var($theme, 'item-active-icon-color');
+                color: var-get($theme, 'item-active-icon-color');
             }
         }
     }
@@ -423,7 +426,7 @@
         display: block;
         padding: rem(12px) rem(16px);
         white-space: nowrap;
-        color: --var($theme, 'item-header-text-color');
+        color: var-get($theme, 'item-header-text-color');
     }
 
     %style-dummy {

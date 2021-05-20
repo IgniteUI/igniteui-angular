@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -93,7 +95,7 @@
 /// @requires {mixin} igx-css-vars
 /// @requires {mixin} ellipsis
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-grid-summary($theme) {
     @include igx-css-vars($theme);
 
@@ -101,8 +103,8 @@
     $right: if-ltr(right, left);
 
     $cell-pin: (
-        style: --var($theme, 'pinned-border-width') --var($theme, 'pinned-border-style'),
-        color: --var($theme, 'pinned-border-color')
+        style: var-get($theme, 'pinned-border-width') var-get($theme, 'pinned-border-style'),
+        color: var-get($theme, 'pinned-border-color')
     );
 
     $item-padding: (
@@ -123,7 +125,7 @@
         flex-direction: column;
         flex: 1 1 0%;
         padding: map-get($summary-padding, 'comfortable');
-        background: --var($theme, 'background-color', inherit);
+        background: var-get($theme, 'background-color', inherit);
         overflow: hidden;
         outline-style: none;
 
@@ -136,7 +138,7 @@
         }
 
         &:focus::after {
-            background: --var($theme, 'focus-background-color');
+            background: var-get($theme, 'focus-background-color');
         }
     }
 
@@ -188,17 +190,17 @@
     }
 
     %igx-grid-summary__label {
-        color: --var($theme, 'label-color');
+        color: var-get($theme, 'label-color');
         min-width: rem(30px);
         margin-#{$right}: rem(3px);
 
         &:hover {
-            color: --var($theme, 'label-hover-color');
+            color: var-get($theme, 'label-hover-color');
         }
     }
 
     %igx-grid-summary__result {
-        color: --var($theme, 'result-color');
+        color: var-get($theme, 'result-color');
         font-weight: 600;
         flex: 1 1 auto;
         text-align: #{$right};

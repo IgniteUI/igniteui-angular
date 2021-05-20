@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -72,7 +75,7 @@
 
     @return extend($theme, (
         name: $name,
-        palette: $default-palette,
+        palette: $palette,
         background: $background,
         foreground: $foreground,
         background-selected: $background-selected,
@@ -90,7 +93,7 @@
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires --var
+/// @requires var-get
 @mixin igx-tree($theme) {
     @include igx-css-vars($theme);
 
@@ -163,8 +166,8 @@
         min-height: map-get($node-height, 'comfortable');
         padding: 0 map-get($node-indent, 'comfortable');
         position: relative;
-        background: --var($theme, 'background');
-        color: --var($theme, 'foreground');
+        background: var-get($theme, 'background');
+        color: var-get($theme, 'foreground');
 
         // We need this here, since we count on it to calculate the width of the tree drop indicator
         igx-icon {
@@ -186,7 +189,7 @@
 
         &:hover {
             &::after {
-                background: --var($theme, 'hover-color');
+                background: var-get($theme, 'hover-color');
             }
         }
 
@@ -239,13 +242,13 @@
     }
 
     %node-wrapper--selected {
-        background: --var($theme, 'background-selected');
-        color: --var($theme, 'foreground-selected');
+        background: var-get($theme, 'background-selected');
+        color: var-get($theme, 'foreground-selected');
     }
 
     %node-wrapper--active {
-        background: --var($theme, 'background-active');
-        color: --var($theme, 'foreground-active');
+        background: var-get($theme, 'background-active');
+        color: var-get($theme, 'foreground-active');
     }
 
     %indigo-opacity {
@@ -261,17 +264,17 @@
     }
 
     %node-wrapper--active-selected {
-        background: --var($theme, 'background-active-selected');
-        color: --var($theme, 'foreground-active-selected');
+        background: var-get($theme, 'background-active-selected');
+        color: var-get($theme, 'foreground-active-selected');
     }
 
     %node-wrapper--focused {
-        box-shadow: inset 0 0 0 1px --var($theme, 'border-color');
+        box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
     }
 
     %node-wrapper--disabled {
-        background: --var($theme, 'background-disabled') !important;
-        color: --var($theme, 'foreground-disabled') !important;
+        background: var-get($theme, 'background-disabled') !important;
+        color: var-get($theme, 'foreground-disabled') !important;
 
         box-shadow: none !important;
 
@@ -282,7 +285,7 @@
         }
 
         %node-toggle-button {
-            color: --var($theme, 'foreground-disabled') !important;
+            color: var-get($theme, 'foreground-disabled') !important;
         }
     }
 
@@ -316,7 +319,7 @@
         > div {
             flex: 1;
             height: rem(1px);
-            background: --var($theme, 'drop-area-color');
+            background: var-get($theme, 'drop-area-color');
         }
     }
 

@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -63,18 +65,18 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-highlight($theme) {
     @include igx-css-vars($theme);
 
     %igx-highlight {
-        color: --var($theme, 'resting-color');
-        background: --var($theme, 'resting-background');
+        color: var-get($theme, 'resting-color');
+        background: var-get($theme, 'resting-background');
     }
 
     %igx-highlight--active {
-        color: --var($theme, 'active-color');
-        background: --var($theme, 'active-background');
+        color: var-get($theme, 'active-color');
+        background: var-get($theme, 'active-background');
     }
 }
 

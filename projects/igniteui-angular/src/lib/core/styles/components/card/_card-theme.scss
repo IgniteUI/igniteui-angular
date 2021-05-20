@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -116,7 +119,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires em
-/// @requires --var
+/// @requires var-get
 @mixin igx-card($theme) {
     @include igx-css-vars($theme);
 
@@ -137,25 +140,25 @@
     %igx-card-display {
         display: flex;
         flex-direction: column;
-        box-shadow: --var($theme, 'resting-shadow');
+        box-shadow: var-get($theme, 'resting-shadow');
         overflow: hidden;
-        border-radius: --var($theme, 'border-radius');
-        background: --var($theme, 'background');
+        border-radius: var-get($theme, 'border-radius');
+        background: var-get($theme, 'background');
         transition: $card-transitions;
         backface-visibility: hidden;
 
         @if $not-material-theme {
-            border: 1px solid --var($theme, 'outline-color');
+            border: 1px solid var-get($theme, 'outline-color');
         }
 
         &:hover {
-            box-shadow: --var($theme, 'hover-shadow');
+            box-shadow: var-get($theme, 'hover-shadow');
         }
     }
 
     %igx-card--outlined {
         box-shadow: none;
-        border: 1px solid --var($theme, 'outline-color');
+        border: 1px solid var-get($theme, 'outline-color');
 
         &:hover {
             box-shadow: none;
@@ -173,7 +176,7 @@
         align-content: flex-start;
         width: 100%;
         padding: $card-heading-padding;
-        color: --var($theme, 'header-text-color');
+        color: var-get($theme, 'header-text-color');
 
         &:empty {
             display: block;
@@ -223,7 +226,7 @@
     }
 
     %igx-card-header-subtitle {
-        color: --var($theme, 'subtitle-text-color');
+        color: var-get($theme, 'subtitle-text-color');
     }
 
     %igx-card-tgroup {
@@ -235,7 +238,7 @@
         width: 100%;
         flex: 1 1 auto;
         padding: $card-content-padding;
-        color: --var($theme, 'content-text-color');
+        color: var-get($theme, 'content-text-color');
     }
 
     %igx-card-media {
@@ -281,7 +284,7 @@
         display: flex;
         align-items: center;
         order: 1;
-        color: --var($theme, 'actions-text-color');
+        color: var-get($theme, 'actions-text-color');
         margin-#{$left}: auto;
 
         &:empty {
@@ -358,7 +361,7 @@
         flex-flow: row nowrap;
 
         %igx-button--icon {
-            color: --var($theme, 'actions-text-color');
+            color: var-get($theme, 'actions-text-color');
         }
     }
 

@@ -1,3 +1,9 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+@use '../../themes/schemas/dark' as *;
+@use '../button-group/button-group-component' as *;
+@use '../button-group/button-group-theme' as *;
+
 ////
 /// @group themes
 /// @access private
@@ -9,8 +15,8 @@
 /// @param {Map} $palette - The palette map used as base for the component.
 /// @requires igx-color
 /// @requires rem
-/// @requires --var
-@mixin _excel-filtering($theme, $palette) {
+/// @requires var-get
+@mixin excel-filtering($theme, $palette) {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
     $variant: map-get($theme, 'variant');
@@ -61,14 +67,14 @@
         display: flex;
         flex-direction: column;
         height: 100%;
-        background: --var($theme, 'filtering-row-background');
+        background: var-get($theme, 'filtering-row-background');
         // TODO The border-radius should not be hardcoded.
         border-radius: rem(4px);
 
         @include igx-button-group(igx-button-group-theme(
             $shadow: none,
             $schema: $dark-schema,
-            $item-background: --var($theme, 'filtering-row-background'),
+            $item-background: var-get($theme, 'filtering-row-background'),
             $item-hover-background: igx-color($palette, 'grays', 100),
             $item-selected-background: igx-color($palette, 'grays', 100),
             $item-text-color: igx-color($palette, 'grays', 700),
@@ -327,7 +333,7 @@
     %grid-excel-menu__secondary {
         width: 520px;
         min-width: 520px;
-        background: --var($theme, 'filtering-row-background');
+        background: var-get($theme, 'filtering-row-background');
         box-shadow: igx-elevation($elevation: 12);
         border-radius: rem(4px);
     }

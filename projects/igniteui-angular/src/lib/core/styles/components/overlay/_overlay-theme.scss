@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -48,7 +50,7 @@
 ///
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
-/// @requires --var
+/// @requires var-get
 ///
 @mixin igx-overlay($theme) {
     @include igx-css-vars($theme);
@@ -73,7 +75,7 @@
     }
 
     %overlay-wrapper--modal {
-        background: --var($theme, 'background-color');
+        background: var-get($theme, 'background-color');
         pointer-events: initial;
     }
 

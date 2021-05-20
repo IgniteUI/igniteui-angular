@@ -1,3 +1,5 @@
+@use '../../base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -77,7 +79,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires em
-/// @requires --var
+/// @requires var-get
 @mixin igx-progress-linear($theme) {
     @include igx-css-vars($theme);
 
@@ -104,7 +106,7 @@
         indigo-design: rem(20px),
     ), $variant);
 
-    $stripe-color: --var($theme, 'stripes-color');
+    $stripe-color: var-get($theme, 'stripes-color');
     $value-fs: em(14px, 16px);
     $value-fw: 600;
     $value-margin: 0;
@@ -122,9 +124,9 @@
         position: relative;
         width: inherit;
         height: $bar-height;
-        background: --var($theme, 'track-color');
+        background: var-get($theme, 'track-color');
         overflow: hidden;
-        border-radius: --var($theme, 'track-border-radius');
+        border-radius: var-get($theme, 'track-border-radius');
         z-index: 0;
     }
 
@@ -177,29 +179,29 @@
     }
 
     %linear-indicator--default {
-        background: --var($theme, 'fill-color-default')
+        background: var-get($theme, 'fill-color-default')
     }
 
     %linear-indicator--danger {
-        background-color: --var($theme, 'fill-color-danger');
+        background-color: var-get($theme, 'fill-color-danger');
     }
 
     %linear-indicator--warning {
-        background-color: --var($theme, 'fill-color-warning');
+        background-color: var-get($theme, 'fill-color-warning');
     }
 
     %linear-indicator--info {
-        background-color: --var($theme, 'fill-color-info');
+        background-color: var-get($theme, 'fill-color-info');
     }
 
     %linear-indicator--success {
-        background-color: --var($theme, 'fill-color-success');
+        background-color: var-get($theme, 'fill-color-success');
     }
 
 
     %linear-value {
         margin: $value-margin;
-        color: --var($theme, 'text-color');
+        color: var-get($theme, 'text-color');
         font-size: $value-fs;
         font-weight: $value-fw;
     }
@@ -261,7 +263,7 @@
 ///   // Pass the theme to the igx-progress-circular component mixin
 ///   @include igx-progress-circular($my-progress-circle-theme);
 @function igx-progress-circular-theme(
-    $palette: $default-palette,
+    $palette: null,
     $schema: $light-schema,
 
     $base-circle-color: null,
@@ -308,7 +310,7 @@
 /// @requires {mixin} igx-css-vars
 /// @requires rem
 /// @requires {mixin} rotate-center
-/// @requires --var
+/// @requires var-get
 @mixin igx-progress-circular($theme) {
     // Include rotate animation
     @include rotate-center();
@@ -351,7 +353,7 @@
     %circular-inner {
         stroke-width: $stroke-width;
         fill: transparent;
-        stroke: --var($theme, 'base-circle-color');
+        stroke: var-get($theme, 'base-circle-color');
     }
 
     %circular-outer {
@@ -375,7 +377,7 @@
     %circular-text {
         font-size: $circular-value-fs;
         font-weight: $circular-value-fw;
-        fill: --var($theme, 'text-color');
+        fill: var-get($theme, 'text-color');
     }
 
     %circular-text--hidden {
@@ -383,11 +385,11 @@
     }
 
     %circular-gradient-start {
-        stop-color: --var($theme, 'progress-circle-color-start');
+        stop-color: var-get($theme, 'progress-circle-color-start');
     }
 
     %circular-gradient-end {
-        stop-color: --var($theme, 'progress-circle-color-end');
+        stop-color: var-get($theme, 'progress-circle-color-end');
     }
 
     @include keyframes('indeterminate-accordion') {

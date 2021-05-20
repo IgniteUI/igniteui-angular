@@ -1,7 +1,7 @@
-@import '../../projects/igniteui-angular/src/lib/core/styles/themes/index';
-@import 'variables';
-@import 'mixins';
-@import 'app-layout';
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes/index' as *;
+@use 'variables' as *;
+@use 'mixins' as *;
+@use 'app-layout';
 
 /* autoprefixer grid: on */
 body {

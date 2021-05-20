@@ -1,3 +1,6 @@
+@use '../../base' as *;
+@use '../../typography/base' as *;
+
 ////
 /// @group themes
 /// @access public
@@ -96,7 +99,7 @@
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
 /// @requires rem
-/// @requires --var
+/// @requires var-get
 @mixin igx-expansion-panel($theme) {
     @include igx-css-vars($theme);
 
@@ -110,17 +113,17 @@
     %igx-expansion-panel {
         display: flex;
         flex-direction: column;
-        border-radius: --var($theme, 'border-radius');
+        border-radius: var-get($theme, 'border-radius');
         overflow: hidden;
     }
 
     %igx-expansion-panel__header-title {
-        color: --var($theme, 'header-title-color');
+        color: var-get($theme, 'header-title-color');
         margin-#{$right}: rem(16px, 16px);
     }
 
     %igx-expansion-panel__header-description {
-        color: --var($theme, 'header-description-color');
+        color: var-get($theme, 'header-description-color');
     }
 
     %igx-expansion-panel__header-title,
@@ -135,12 +138,12 @@
         align-items: center;
         padding: $panel-padding;
         cursor: pointer;
-        background: --var($theme, 'header-background');
+        background: var-get($theme, 'header-background');
 
         &:focus,
         &:active
         {
-            background: --var($theme, 'header-focus-background');
+            background: var-get($theme, 'header-focus-background');
             outline: transparent;
         }
     }
@@ -174,29 +177,29 @@
         justify-content: center;
         user-select: none;
 
-        color: --var($theme, 'header-icon-color');
+        color: var-get($theme, 'header-icon-color');
 
         igx-icon {
-            color: --var($theme, 'header-icon-color');
+            color: var-get($theme, 'header-icon-color');
         }
     }
 
     %igx-expansion-panel__body {
-        color: --var($theme, 'body-color');
-        background: --var($theme, 'body-background');
+        color: var-get($theme, 'body-color');
+        background: var-get($theme, 'body-background');
         overflow: hidden;
     }
 
     %igx-expansion-panel--disabled {
         %igx-expansion-panel__header-title,
         %igx-expansion-panel__header-description {
-            color: --var($theme, 'disabled-color')
+            color: var-get($theme, 'disabled-color')
         }
 
         %igx-expansion-panel__header-icon--start,
         %igx-expansion-panel__header-icon--end {
             igx-icon {
-                color: --var($theme, 'disabled-color');
+                color: var-get($theme, 'disabled-color');
             }
         }
     }
