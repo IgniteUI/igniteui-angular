@@ -401,23 +401,26 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(childGridSecondRow.inEditMode).toBeFalsy();
     });
 
-    it('child grid width should be recalculated if parent no longer shows scrollbar.', async () => {
+    it('child grid width should be recalculated if parent no longer shows scrollbar.', () => {
         hierarchicalGrid.height = '1000px';
         fixture.detectChanges();
         hierarchicalGrid.filter('ProductName', 'A0', IgxStringFilteringOperand.instance().condition('contains'), true);
         fixture.detectChanges();
         const row = hierarchicalGrid.getRowByIndex(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
+        fixture.detectChanges();
+
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        expect(childGrid.calcWidth - 370 - childGrid.scrollSize).toBeLessThanOrEqual(5);
+        expect(childGrid.nativeElement.offsetWidth)
+        .toBeLessThanOrEqual(hierarchicalGrid.nativeElement.offsetWidth - row.expander.nativeElement.offsetWidth);
+        const  sizeWithoutSrollBar = childGrid.nativeElement.offsetWidth;
 
         hierarchicalGrid.clearFilter();
         fixture.detectChanges();
-        await wait(100);
-        fixture.detectChanges();
 
-        expect(childGrid.calcWidth - 370 ).toBeLessThan(3);
+        expect(childGrid.nativeElement.offsetWidth - 370 ).toBeLessThan(3);
+        expect(sizeWithoutSrollBar).toBeGreaterThan(childGrid.nativeElement.offsetWidth);
     });
 
     it('should not expand children when hasChildrenKey is false for the row', () => {
