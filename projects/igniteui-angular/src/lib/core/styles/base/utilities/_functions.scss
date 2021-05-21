@@ -1,6 +1,5 @@
 @use '../variables' as *;
 @use '../linear-channel-values' as *;
-@use 'sass:meta';
 
 ////
 /// @group Utilities
@@ -211,115 +210,6 @@
     }
 }
 
-/// Returns a CSS variable string reference as a list of words.
-/// @access private
-/// @param {String} $value [] - The CSS variable reference (e.g. var(--igx-primary-500).
-/// @param {String} $separator ['-'] - The character to split the string by.
-/// @example scss Split a CSS variable reference into Sass list.
-/// $list: var-to-parts(var(--igx-primary-500)); // igx primary 500
-/// @returns {List}
-@function var-to-parts($value, $separator: '-') {
-    @if type-of($value) != 'string' {
-        @return null;
-    }
-
-    $parts: str-replace($value, 'var(--');
-    $parts: str-replace($parts, ')');
-    @return str-split($parts, $separator);
-}
-
-/// Detects if the passed value is a CSS variable and retrieves the
-/// referenced color from the passed palette.
-/// If the value is not a CSS variable it's simply passed through.
-/// @access private
-/// @returns {Color | Map}
-@function igx-color-from-var($value, $palette: $default-palette, $raw: true) {
-    $parts: var-to-parts($value);
-    $is-igx: index($parts, 'igx');
-
-    @if $parts and $is-igx {
-        $c: nth($parts, 2);
-        $v: to-number(nth($parts, 3));
-        $color: igx-color($palette, $c, $v);
-        @return if($raw, $color, (($c $v): $color));
-    }
-
-    @return $value;
-}
-
-/// Mixes two colors to produce an opaque color.
-/// @access public
-/// @param {Color} $color-1 - The first color, usually transparent.
-/// @param {Color} $color-2 [#fff] - The second color, usually opaque.
-/// @param {Map} $palette [$default-palette] - Pass an igx-palette if the passed colors are CSS variable references.
-/// @requires {function} igx-color-from-var
-/// @return {Color} - The color representation of the rgba value.
-@function to-opaque($color-1, $color-2: #fff, $palette: null) {
-    $color-1: igx-color-from-var($color-1, $palette);
-    $color-2: igx-color-from-var($color-2, $palette);
-
-    @if type-of($color-1) == color and type-of($color-2) == color {
-        $red: red($color-1);
-        $green: green($color-1);
-        $blue: blue($color-1);
-        $a: alpha($color-1);
-        $r: floor($a * $red + (1 - $a) * red($color-2));
-        $g: floor($a * $green + (1 - $a) * green($color-2));
-        $b: floor($a * $blue + (1 - $a) * blue($color-2));
-        @return rgb($r, $g, $b);
-    }
-    @return $color-1;
-}
-
-/// Returns a contrast color for a passed color.
-/// @access public
-/// @group Palettes
-/// @param {Color} $background - The background color used to return a contrast/forground color for.
-/// @param {Color} $foreground - The foreground color used in case it has enough contrast against the provided background.
-/// @param {String} $contrast - The contrast level according to WCAG 2.0 standards.
-/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
-/// @link https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html
-@function text-contrast(
-    $background,
-    $foreground: white,
-    $contrast: 'AAA',
-    $palette: null
-) {
-    $background: igx-color-from-var($background, $palette, $raw: false);
-    $foreground: igx-color-from-var($foreground, $palette);
-
-    @if type-of($background) == 'map' {
-        @return igx-contrast-color(null, nth(map-keys($background), 1)...);
-    }
-
-    @if type-of($foreground) == 'color' and type-of($background) == 'color' {
-        $level: map-get((
-            'A': 3,
-            'AA': 4.5,
-            'AAA': 7
-        ), $contrast);
-
-        @if $level == null {
-            @error "$contrast must be 'A', 'AA', or 'AAA'";
-        }
-
-        @if contrast($background, $foreground) >= $level {
-            @return $foreground;
-        } @else {
-            $lightContrast: contrast($background, white);
-            $darkContrast: contrast($background, black);
-
-            @if ($lightContrast > $darkContrast) {
-                @return white;
-            } @else {
-                @return black;
-            }
-        }
-    } @else {
-        @return $background;
-    }
-}
-
 /// Generates a Material-like color palette for a single color.
 /// @access private
 /// @group Palettes
@@ -475,7 +365,7 @@ $p-test: igx-palette(#fff, #000);
     @if $palette == null {
         @return if(
             legacy(),
-            igx-color($default-palette, $color, $variant),
+            igx-color($theme-palette, $color, $variant),
             #{var(--igx-#{$color}-#{$variant})}
         );
     }
@@ -493,6 +383,115 @@ $p-test: igx-palette(#fff, #000);
 /// @returns {Color} [#fff] - Returns white if no palette, color and/or variant matches found.
 @function igx-contrast-color($palette: null, $color: primary, $variant: 500) {
     @return igx-color($palette, $color, #{$variant}-contrast);
+}
+
+/// Returns a CSS variable string reference as a list of words.
+/// @access private
+/// @param {String} $value [] - The CSS variable reference (e.g. var(--igx-primary-500).
+/// @param {String} $separator ['-'] - The character to split the string by.
+/// @example scss Split a CSS variable reference into Sass list.
+/// $list: var-to-parts(var(--igx-primary-500)); // igx primary 500
+/// @returns {List}
+@function var-to-parts($value, $separator: '-') {
+    @if type-of($value) != 'string' {
+        @return null;
+    }
+
+    $parts: str-replace($value, 'var(--');
+    $parts: str-replace($parts, ')');
+    @return str-split($parts, $separator);
+}
+
+/// Detects if the passed value is a CSS variable and retrieves the
+/// referenced color from the passed palette.
+/// If the value is not a CSS variable it's simply passed through.
+/// @access private
+/// @returns {Color | Map}
+@function igx-color-from-var($value, $palette: $theme-palette, $raw: true) {
+    $parts: var-to-parts($value);
+    $is-igx: index($parts, 'igx');
+
+    @if $parts and $is-igx {
+        $c: nth($parts, 2);
+        $v: to-number(nth($parts, 3));
+        $color: igx-color($palette, $c, $v);
+        @return if($raw, $color, (($c $v): $color));
+    }
+
+    @return $value;
+}
+
+/// Mixes two colors to produce an opaque color.
+/// @access public
+/// @param {Color} $color-1 - The first color, usually transparent.
+/// @param {Color} $color-2 [#fff] - The second color, usually opaque.
+/// @param {Map} $palette [$default-palette] - Pass an igx-palette if the passed colors are CSS variable references.
+/// @requires {function} igx-color-from-var
+/// @return {Color} - The color representation of the rgba value.
+@function to-opaque($color-1, $color-2: #fff, $palette: $theme-palette) {
+    $color-1: igx-color-from-var($color-1, $palette);
+    $color-2: igx-color-from-var($color-2, $palette);
+
+    @if type-of($color-1) == color and type-of($color-2) == color {
+        $red: red($color-1);
+        $green: green($color-1);
+        $blue: blue($color-1);
+        $a: alpha($color-1);
+        $r: floor($a * $red + (1 - $a) * red($color-2));
+        $g: floor($a * $green + (1 - $a) * green($color-2));
+        $b: floor($a * $blue + (1 - $a) * blue($color-2));
+        @return rgb($r, $g, $b);
+    }
+    @return $color-1;
+}
+
+/// Returns a contrast color for a passed color.
+/// @access public
+/// @group Palettes
+/// @param {Color} $background - The background color used to return a contrast/forground color for.
+/// @param {Color} $foreground - The foreground color used in case it has enough contrast against the provided background.
+/// @param {String} $contrast - The contrast level according to WCAG 2.0 standards.
+/// @returns {Color} - Returns either white or black depending on the luminance of the input color.
+/// @link https://www.w3.org/TR/UNDERSTANDING-WCAG20/visual-audio-contrast-contrast.html
+@function text-contrast(
+    $background,
+    $foreground: white,
+    $contrast: 'AAA',
+    $palette: null
+) {
+    $background: igx-color-from-var($background, $palette, $raw: false);
+    $foreground: igx-color-from-var($foreground, $palette);
+
+    @if type-of($background) == 'map' {
+        @return igx-contrast-color(null, nth(map-keys($background), 1)...);
+    }
+
+    @if type-of($foreground) == 'color' and type-of($background) == 'color' {
+        $level: map-get((
+            'A': 3,
+            'AA': 4.5,
+            'AAA': 7
+        ), $contrast);
+
+        @if $level == null {
+            @error "$contrast must be 'A', 'AA', or 'AAA'";
+        }
+
+        @if contrast($background, $foreground) >= $level {
+            @return $foreground;
+        } @else {
+            $lightContrast: contrast($background, white);
+            $darkContrast: contrast($background, black);
+
+            @if ($lightContrast > $darkContrast) {
+                @return white;
+            } @else {
+                @return black;
+            }
+        }
+    } @else {
+        @return $background;
+    }
 }
 
 /// Test if `$value` is a valid direction.
@@ -673,7 +672,7 @@ $p-test: igx-palette(#fff, #000);
 ///   $resolved-value: resolve-value($value, $palette);
 @function resolve-value($value, $payload: null) {
     $result: null;
-    // $dp: $default-palette;
+    $tp: $theme-palette;
 
     // Uncomment to discover some broken themes
     // @if type-of($value) != 'map' or type-of($value) != 'list' {
@@ -683,11 +682,11 @@ $p-test: igx-palette(#fff, #000);
     @each $fn, $args in $value {
         $func: get-function($fn);
 
-        @if legacy() or length(map-keys($value)) > 1 {
+        @if length(map-keys($value)) > 1 {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call($func, $payload, $args...);
+                $result: call($func, $payload or $tp, $args...);
             } @else if $fn == 'to-opaque' and type-of($args) == 'map' {
-                $result: call($func, $result, resolve-value($args, $payload));
+                $result: call($func, $result, resolve-value($args, $payload or $tp));
             } @else if $result {
                 $result: call($func, $result, $args...);
             } @else {
@@ -695,7 +694,7 @@ $p-test: igx-palette(#fff, #000);
             }
         } @else {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call($func, null, $args...);
+                $result: call($func, $payload, $args...);
             } @else {
                 $result: call($func, $args...);
             }

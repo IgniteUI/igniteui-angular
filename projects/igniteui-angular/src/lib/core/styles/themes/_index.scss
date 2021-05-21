@@ -23,7 +23,7 @@
 /// @param {Boolean} $elevation [true] - Turns on/off elevations for all components in the theme.
 /// @param {Map} $elevations [$igx-elevations] - The elevation map to be used by all component themes.
 /// @requires $components
-/// @requires $default-palette
+/// @requires $theme-palette
 /// @requires $igx-elevations
 /// @requires {function} is-component
 @mixin igx-theme(
@@ -46,7 +46,7 @@
         }
     }
 
-    $default-palette: $palette !global;
+    $theme-palette: $palette !global;
     $igx-legacy-support: $legacy-support !global;
 
     @if length($exclude) > 0 {
@@ -59,28 +59,24 @@
 
     @if not(index($exclude, 'igx-ripple')) {
         @include igx-ripple(igx-ripple-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-avatar')) {
         @include igx-avatar(igx-avatar-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-action-strip')) {
         @include igx-action-strip(igx-action-strip-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-badge')) {
         @include igx-badge(igx-badge-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $shadow: if($elevation == false, none, null),
@@ -89,7 +85,6 @@
 
     @if not(index($exclude, 'igx-bottom-nav')) {
         @include igx-bottom-nav(igx-bottom-nav-theme(
-            $palette: $palette,
             $schema: $schema,
             $shadow: if($elevation == false, none, null),
         ));
@@ -97,7 +92,6 @@
 
     @if not(index($exclude, 'igx-button')) {
         @include igx-button(igx-button-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $resting-shadow: if($elevation == false, none, null),
@@ -108,7 +102,6 @@
 
     @if not(index($exclude, 'igx-button-group')) {
         @include igx-button-group(igx-button-group-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $shadow: if($elevation == false, 'none', null),
@@ -117,14 +110,12 @@
 
     @if not(index($exclude, 'igx-banner')) {
         @include igx-banner(igx-banner-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'igx-calendar')) {
         @include igx-calendar(igx-calendar-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $date-border-radius: $roundness,
@@ -134,7 +125,6 @@
 
     @if not(index($exclude, 'igx-card')) {
         @include igx-card(igx-card-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $resting-shadow: if($elevation == false, none, null),
@@ -144,7 +134,6 @@
 
     @if not(index($exclude, 'igx-carousel')) {
         @include igx-carousel(igx-carousel-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $button-shadow: if($elevation == false, none, null),
@@ -153,7 +142,6 @@
 
     @if not(index($exclude, 'igx-splitter')) {
         @include igx-splitter(igx-splitter-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));
@@ -161,91 +149,78 @@
 
     @if not(index($exclude, 'data-chart')) {
         @include igx-css-vars(igx-data-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'doughnut-chart')) {
         @include igx-css-vars(igx-doughnut-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'linear-gauge')) {
         @include igx-css-vars(igx-linear-gauge-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'radial-gauge')) {
         @include igx-css-vars(igx-radial-gauge-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'financial-chart')) {
         @include igx-css-vars(igx-financial-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'bullet-graph')) {
         @include igx-css-vars(igx-bullet-graph-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'category-chart')) {
         @include igx-css-vars(igx-category-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'geo-map')) {
         @include igx-css-vars(igx-geo-map-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'pie-chart')) {
         @include igx-css-vars(igx-pie-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'sparkline')) {
         @include igx-css-vars(igx-sparkline-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'funnel-chart')) {
         @include igx-css-vars(igx-funnel-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'shape-chart')) {
         @include igx-css-vars(igx-shape-chart-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'igx-checkbox')) {
         @include igx-checkbox(igx-checkbox-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $border-radius-ripple: $roundness,
@@ -254,7 +229,6 @@
 
     @if not(index($exclude, 'igx-chip')) {
         @include igx-chip(igx-chip-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $ghost-shadow: if($elevation == false, none, null),
@@ -263,21 +237,18 @@
 
     @if not(index($exclude, 'igx-column-actions')) {
         @include igx-column-actions(igx-column-actions-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-combo')) {
         @include igx-combo(igx-combo-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-date-picker')) {
         @include igx-date-picker(igx-calendar-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));
@@ -285,14 +256,12 @@
 
     @if not(index($exclude, 'igx-date-range-picker')) {
         @include igx-date-range-picker(igx-date-range-picker-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-dialog')) {
         @include igx-dialog(igx-dialog-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $shadow: if($elevation == false, none, null),
@@ -301,21 +270,18 @@
 
     @if not(index($exclude, 'igx-divider')) {
         @include igx-divider(igx-divider-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igc-dockmanager')) {
         @include igc-dock-manager(igc-dock-manager-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-drop-down')) {
         @include igx-drop-down(igx-drop-down-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $shadow: if($elevation == false, none, null),
@@ -324,7 +290,6 @@
 
     @if not(index($exclude, 'igx-expansion-panel')) {
         @include igx-expansion-panel(igx-expansion-panel-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));
@@ -332,7 +297,6 @@
 
     @if not(index($exclude, 'igx-grid')) {
         @include igx-grid(igx-grid-theme(
-            $palette: $palette,
             $schema: $schema,
             $drop-area-border-radius: $roundness,
             $grid-shadow: if($elevation == false, none, null),
@@ -342,35 +306,30 @@
 
     @if not(index($exclude, 'igx-grid-summary')) {
         @include igx-grid-summary(igx-grid-summary-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-grid-toolbar')) {
         @include igx-grid-toolbar(igx-grid-toolbar-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-highlight')) {
         @include igx-highlight(igx-highlight-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-icon')) {
         @include igx-icon(igx-icon-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-input-group')) {
         @include igx-input-group(igx-input-group-theme(
-            $palette: $palette,
             $schema: $schema,
             $box-border-radius: $roundness,
             $border-border-radius: $roundness,
@@ -383,7 +342,6 @@
 
     @if not(index($exclude, 'igx-list')) {
         @include igx-list(igx-list-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $item-border-radius: $roundness,
@@ -392,7 +350,6 @@
 
     @if not(index($exclude, 'igx-navbar')) {
         @include igx-navbar(igx-navbar-theme(
-            $palette: $palette,
             $schema: $schema,
             $shadow: if($elevation == false, none, null),
         ));
@@ -400,7 +357,6 @@
 
     @if not(index($exclude, 'igx-nav-drawer')) {
         @include igx-navdrawer(igx-navdrawer-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $item-border-radius: $roundness,
@@ -410,56 +366,48 @@
 
     @if not(index($exclude, 'igx-overlay')) {
         @include igx-overlay(igx-overlay-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-paginator')) {
         @include igx-paginator(igx-paginator-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-circular-bar')) {
         @include igx-progress-circular(igx-progress-circular-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-linear-bar')) {
         @include igx-progress-linear(igx-progress-linear-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-radio')) {
         @include igx-radio(igx-radio-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-scrollbar')) {
         @include igx-scrollbar(igx-scrollbar-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-slider')) {
         @include igx-slider(igx-slider-theme(
-            $palette: $palette,
             $schema: $schema
         ));
     }
 
     @if not(index($exclude, 'igx-snackbar')) {
         @include igx-snackbar(igx-snackbar-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $shadow: if($elevation == false, none, null),
@@ -468,7 +416,6 @@
 
     @if not(index($exclude, 'igx-switch')) {
         @include igx-switch(igx-switch-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius-track: $roundness,
             $border-radius-thumb: $roundness,
@@ -481,7 +428,6 @@
 
     @if not(index($exclude, 'igx-tabs')) {
         @include igx-tabs(igx-tabs-theme(
-            $palette: $palette,
             $schema: $schema,
             $disable-shadow: if($elevation == false, true, false),
         ));
@@ -489,7 +435,6 @@
 
     @if not(index($exclude, 'igx-toast')) {
         @include igx-toast(igx-toast-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));
@@ -497,7 +442,6 @@
 
     @if not(index($exclude, 'igx-tooltip')) {
         @include igx-tooltip(igx-tooltip-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));
@@ -505,7 +449,6 @@
 
     @if not(index($exclude, 'igx-time-picker')) {
         @include igx-time-picker(igx-time-picker-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
             $active-item-border-radius: $roundness,
@@ -516,14 +459,12 @@
 
     @if not(index($exclude, 'igx-tree')) {
         @include igx-tree(igx-tree-theme(
-            $palette: $palette,
             $schema: $schema,
         ));
     }
 
     @if not(index($exclude, 'igx-watermark')) {
         @include igx-watermark(igx-watermark-theme(
-            $palette: $palette,
             $schema: $schema,
             $border-radius: $roundness,
         ));

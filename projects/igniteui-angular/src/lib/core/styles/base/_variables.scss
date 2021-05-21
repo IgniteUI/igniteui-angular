@@ -12,6 +12,16 @@ $browser-context: 16px !default;
 /// @type String
 $browser-line-height: 27px !default;
 
-/// The global themes registry map.
-$themes: () !default;
+/// The global keyframes registry map.
+/// @type List
+$keyframes: () !default;
 
+/// The global component registry map.
+/// @type List
+$components: () !default;
+
+/// The palette as passed to the igx-theme mixin
+$theme-palette: null;
+
+/// Determines if IE11 is enabled
+$igx-legacy-support: false;
