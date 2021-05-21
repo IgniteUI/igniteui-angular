@@ -1,3 +1,6 @@
+@use 'node_modules/sass-true' as *;
+@use '../base/index' as *;
+
 $_my-elevations: igx-elevations(red, green, blue);
 
 @include describe('Elevations') {

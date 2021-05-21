@@ -6,70 +6,13 @@
 @use '../base' as *;
 @use 'schemas' as *;
 @use 'palettes' as *;
+@use '../components' as *;
 
 @forward 'palettes';
 @forward 'utilities';
 @forward 'schemas';
 @forward 'core';
-
-// Import all component mixins
-@use '../components/action-strip/action-strip-theme' as *;
-@use '../components/avatar/avatar-theme' as *;
-@use '../components/badge/badge-theme' as *;
-@use '../components/bottom-nav/bottom-nav-theme' as *;
-@use '../components/button/button-theme' as *;
-@use '../components/button-group/button-group-theme' as *;
-@use '../components/banner/banner-theme' as *;
-@use '../components/calendar/calendar-theme' as *;
-@use '../components/card/card-theme' as *;
-@use '../components/carousel/carousel-theme' as *;
-@use '../components/charts/data-chart-theme' as *;
-@use '../components/charts/doughnut-chart-theme' as *;
-@use '../components/charts/gauge-theme' as *;
-@use '../components/charts/financial-chart-theme' as *;
-@use '../components/charts/graph-theme' as *;
-@use '../components/charts/category-chart-theme' as *;
-@use '../components/charts/geo-map-theme' as *;
-@use '../components/charts/pie-chart-theme' as *;
-@use '../components/charts/sparkline-theme' as *;
-@use '../components/charts/funnel-chart-theme' as *;
-@use '../components/charts/shape-chart-theme' as *;
-@use '../components/checkbox/checkbox-theme' as *;
-@use '../components/chip/chip-theme' as *;
-@use '../components/column-actions/column-actions-theme' as *;
-@use '../components/combo/combo-theme' as *;
-@use '../components/date-picker/date-picker-theme' as *;
-@use '../components/date-range-picker/date-range-picker-theme' as *;
-@use '../components/dialog/dialog-theme' as *;
-@use '../components/divider/divider-theme' as *;
-@use '../components/dock-manager/dock-manager-theme' as *;
-@use '../components/drop-down/drop-down-theme' as *;
-@use '../components/expansion-panel/expansion-panel-theme' as *;
-@use '../components/grid/grid-theme' as *;
-@use '../components/grid-summary/grid-summary-theme' as *;
-@use '../components/paginator/paginator-theme' as *;
-@use '../components/grid-toolbar/grid-toolbar-theme' as *;
-@use '../components/highlight/highlight-theme' as *;
-@use '../components/overlay/overlay-theme' as *;
-@use '../components/toast/toast-theme' as *;
-@use '../components/tooltip/tooltip-theme' as *;
-@use '../components/tabs/tabs-theme' as *;
-@use '../components/scrollbar/scrollbar-theme' as *;
-@use '../components/switch/switch-theme' as *;
-@use '../components/snackbar/snackbar-theme' as *;
-@use '../components/slider/slider-theme' as *;
-@use '../components/splitter/splitter-theme' as *;
-@use '../components/ripple/ripple-theme' as *;
-@use '../components/radio/radio-theme' as *;
-@use '../components/progress/progress-theme' as *;
-@use '../components/navbar/navbar-theme' as *;
-@use '../components/navdrawer/navdrawer-theme' as *;
-@use '../components/list/list-theme' as *;
-@use '../components/input/input-group-theme' as *;
-@use '../components/icon/icon-theme' as *;
-@use '../components/time-picker/time-picker-theme' as *;
-@use '../components/tree/tree-theme' as *;
-@use '../components/watermark/watermark-theme' as *;
+@forward '../components';
 
 /// Generates an Ignite UI for Angular global theme.
 /// @param {Map} $palette - An igx-palette to be used by the global theme.

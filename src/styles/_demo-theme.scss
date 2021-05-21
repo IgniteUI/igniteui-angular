@@ -1,4 +1,4 @@
-@use '../../projects/igniteui-angular/src/lib/core/styles/themes/index' as *;
+@use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 @use 'variables' as *;
 @use 'mixins' as *;
 @use 'app-layout';
@@ -24,6 +24,11 @@ body {
 .dock {
     @include igx-css-vars(igc-dock-manager-theme());
 }
+
+@include igx-avatar(igx-avatar-theme(
+    $background: red,
+    $color: white
+));
 
 .nav-header {
     @if luminance($igx-background-color) < .5 {

@@ -445,7 +445,7 @@
 /// @param {Map} $type-scale - A typographic scale as produced by igx-type-scale.
 /// @param {Map} $categories [(haeder-comfortable: 'overline', header-compact: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
-@mixin _excel-filtering-typography($type-scale, $categories: (
+@mixin excel-filtering-typography($type-scale, $categories: (
     header-comfortable: 'overline',
     header-compact: 'subtitle-1')
 ) {
