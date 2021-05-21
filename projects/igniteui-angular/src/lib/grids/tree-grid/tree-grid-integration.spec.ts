@@ -1300,7 +1300,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.movable = true;
             fix.detectChanges();
 
-            const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-item'))[0].nativeElement;
+            const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[0].nativeElement;
 
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
             await wait();

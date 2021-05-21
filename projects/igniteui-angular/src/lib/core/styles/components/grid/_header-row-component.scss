@@ -1,0 +1,71 @@
+////
+/// @access private
+/// @group components
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@mixin _header-row {
+    @include b(igx-grid-thead) {
+        @extend %grid-thead-container !optional;
+
+        @include e(wrapper) {
+            @extend %grid-thead !optional;
+
+            igx-display-container {
+                @extend %grid-display-container-thead !optional;
+            }
+
+            &:focus {
+                @extend %disable-focus-styles !optional;
+            }
+        }
+
+        @include e(title) {
+            @extend %grid-cell-display !optional;
+            @extend %grid-cell-header !optional;
+            @extend %grid-thead-title !optional;
+        }
+
+        @include e(title, $m: pinned-last) {
+            @extend %grid-thead-title--pinned !optional;
+        }
+
+        @include e(group) {
+            @extend %grid-thead-group !optional;
+        }
+
+        @include e(subgroup) {
+            @extend %grid-thead-subgroup !optional;
+        }
+
+        @include e(item) {
+            @extend %grid-thead-item !optional;
+        }
+
+        @include e(thumb) {
+            @extend %grid-thead-thumb !optional;
+        }
+
+        @include m(compact) {
+            @include e(wrapper) {
+                @extend %grid-thead--compact !optional;
+            }
+
+            @include e(title) {
+                @extend %grid-thead-title--compact !optional;
+            }
+        }
+
+        @include m(cosy) {
+            @include e(wrapper) {
+                @extend %grid-thead--cosy !optional;
+            }
+
+            @include e(title) {
+                @extend %grid-thead-title--cosy !optional;
+            }
+        }
+    }
+}

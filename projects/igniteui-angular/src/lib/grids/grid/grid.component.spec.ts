@@ -32,7 +32,7 @@ describe('IgxGrid Component Tests #grid', () => {
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    const THEAD_CLASS = '.igx-grid__thead';
+    const THEAD_CLASS = '.igx-grid-thead';
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite((() => {
@@ -1694,7 +1694,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
-            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
+            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid-thead').querySelector('.igx-grid__cbx-selection');
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -2188,7 +2188,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
@@ -2211,7 +2211,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
@@ -2249,7 +2249,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(grid.calcHeight).toBe(expectedHeight);

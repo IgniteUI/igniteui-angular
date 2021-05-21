@@ -1,6 +1,6 @@
 <ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <div class="igx-grid__thead-group igx-grid__mrl-block"
+    <div class="igx-grid-thead__group igx-grid__mrl-block"
      [ngClass]="{
          'igx-grid__th--pinned-last': hasLastPinnedChildColumn,
          'igx-grid__th--pinned-first': hasFirstPinnedChildColumn
@@ -10,7 +10,7 @@
      '-ms-grid-rows':column.getGridTemplate(true, true),
      '-ms-grid-columns':column.getGridTemplate(false, true)}">
         <ng-container *ngFor="let child of column.children" >
-            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
+            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
                 [column]="child"
                 [igxColumnMovingDrag]="child"
@@ -35,7 +35,7 @@
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
     <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
-    <div class="igx-grid__thead-title"
+    <div class="igx-grid-thead__title"
         role="columnheader"
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expanded"
@@ -66,9 +66,9 @@
         <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
         </ng-container>
     </div>
-    <div class="igx-grid__thead-group">
+    <div class="igx-grid-thead__group">
         <ng-container *ngFor="let child of column.children">
-            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid__thead-subgroup"
+            <igx-grid-header-group *ngIf="!child.hidden" class="igx-grid-thead__subgroup"
                 [ngClass]="child.headerGroupClasses"
                 [column]="child"
                 [style.min-width]="child.calcWidth | igxHeaderGroupWidth:grid.defaultHeaderGroupMinWidth:grid.hasColumnLayouts"

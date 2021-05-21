@@ -25,7 +25,7 @@ import { RowType } from '../common/row.interface';
 describe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const DISABLED_CHIP = 'igx-chip--disabled';
@@ -2177,7 +2177,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         });
         fix.detectChanges();
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
+        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(1);
     }));
 
     it('should apply group area if a column is groupable.', fakeAsync(() => {
@@ -2186,7 +2186,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(1);
+        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(1);
         expect(gridElement.clientHeight).toEqual(700);
     }));
 
@@ -2864,8 +2864,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const groupArea = fix.debugElement.query(By.css('.igx-grid__grouparea'));
-        const gridHeader = fix.debugElement.query(By.css('.igx-grid__thead'));
+        const groupArea = fix.debugElement.query(By.css('.igx-grid-grouparea'));
+        const gridHeader = fix.debugElement.query(By.css('.igx-grid-thead'));
         const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
         const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
 
@@ -3226,7 +3226,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // Try to group by a column group
-        const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-title'))[0].nativeElement;
+        const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__title'))[0].nativeElement;
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
@@ -3253,7 +3253,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
+        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(0);
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {
@@ -3277,7 +3277,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         // Try to group by a column group
-        const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-title'))[0].nativeElement;
+        const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__title'))[0].nativeElement;
         UIInteractions.simulatePointerEvent('pointerdown', header, 10, 10);
         await wait();
         UIInteractions.simulatePointerEvent('pointermove', header, 150, 22);
@@ -3304,7 +3304,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid__grouparea').length).toEqual(0);
+        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(0);
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {

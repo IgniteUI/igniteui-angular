@@ -2135,7 +2135,7 @@
         padding-#{$right}: map-get($grid-grouping-indicator-padding, 'compact')
     }
 
-    %igx-grid__grouparea {
+    %igx-grid-grouparea {
         grid-row: 2;
         display: flex;
         align-items: center;
@@ -2155,7 +2155,7 @@
         }
     }
 
-    %igx-grid__grouparea-connector {
+    %igx-grid-grouparea__connector {
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -2172,12 +2172,12 @@
         }
     }
 
-    %igx-grid__grouparea--cosy {
+    %igx-grid-grouparea--cosy {
         min-height: map-get($grouparea-min-height, 'cosy');
         padding: map-get($grouparea-padding, 'cosy');
     }
 
-    %igx-grid__grouparea--compact {
+    %igx-grid-grouparea--compact {
         min-height: map-get($grouparea-min-height, 'compact');
         padding: map-get($grouparea-padding, 'compact');
     }

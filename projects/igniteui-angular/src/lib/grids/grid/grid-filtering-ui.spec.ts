@@ -1251,7 +1251,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
-            const head = grid.nativeElement.querySelector('.igx-grid__thead');
+            const head = grid.nativeElement.querySelector('.igx-grid-thead');
             const body = grid.nativeElement.querySelector('.igx-grid__tbody');
 
             expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
@@ -2002,7 +2002,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             // Verify the ESF icons are visible.
             const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-            const thead = gridNativeElement.querySelector('.igx-grid__thead-wrapper');
+            const thead = gridNativeElement.querySelector('.igx-grid-thead__wrapper');
             const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
             expect(filterIcons.length).toEqual(6, 'incorrect esf filter icons count');
 
@@ -2583,7 +2583,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
-                const thead = fix.debugElement.query(By.css('.igx-grid__thead-wrapper')).nativeElement;
+                const thead = fix.debugElement.query(By.css('.igx-grid-thead__wrapper')).nativeElement;
                 const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
                 const frElem = filteringRow.nativeElement;
                 expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
@@ -2600,7 +2600,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             }));
 
         it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
-            const head = grid.nativeElement.querySelector('.igx-grid__thead');
+            const head = grid.nativeElement.querySelector('.igx-grid-thead');
             const body = grid.nativeElement.querySelector('.igx-grid__tbody');
 
             expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);

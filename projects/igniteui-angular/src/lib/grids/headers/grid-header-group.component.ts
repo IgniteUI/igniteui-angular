@@ -120,7 +120,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.grid.getHeaderGroupWidth(this.column);
     }
 
-    @HostBinding('class.igx-grid__thead-item')
+    @HostBinding('class.igx-grid-thead__item')
     public defaultCss = true;
 
     constructor(private cdr: ChangeDetectorRef,

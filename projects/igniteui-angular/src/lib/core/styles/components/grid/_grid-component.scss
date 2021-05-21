@@ -1,5 +1,7 @@
 @import './excel-filtering-component';
 @import './advanced-filtering-component';
+@import './group-by-area-component';
+@import './header-row-component';
 
 ////
 /// @group components
@@ -9,6 +11,7 @@
 /// @requires {mixin} bem-mod
 /// @requires {mixin} _excel-filtering-partial
 /// @requires {mixin} _advanced-filtering-partial
+/// @requires {mixin} _group-by-area
 ////
 @include b(igx-grid) {
     $this: bem--selector-to-string(&);
@@ -18,48 +21,6 @@
 
     @include e(caption) {
         @extend %grid-caption !optional;
-    }
-
-    @include e(thead) {
-        @extend %grid-thead-container !optional;
-    }
-
-    @include e(thead-wrapper) {
-        @extend %grid-thead !optional;
-
-        igx-display-container {
-            @extend %grid-display-container-thead !optional;
-        }
-
-        &:focus {
-            @extend %disable-focus-styles !optional;
-        }
-    }
-
-    @include e(thead-title) {
-        @extend %grid-cell-display !optional;
-        @extend %grid-cell-header !optional;
-        @extend %grid-thead-title !optional;
-    }
-
-    @include e(thead-group) {
-        @extend %grid-thead-group !optional;
-    }
-
-    @include e(thead-subgroup) {
-        @extend %grid-thead-subgroup !optional;
-    }
-
-    @include e(thead-title, $m: pinned-last) {
-        @extend %grid-thead-title--pinned !optional;
-    }
-
-    @include e(thead-item) {
-        @extend %grid-thead-item !optional;
-    }
-
-    @include e(thead-thumb) {
-        @extend %grid-thead-thumb !optional;
     }
 
     @include e(tbody) {
@@ -206,7 +167,6 @@
     @include e(tr, $m: deleted) {
         @extend %igx-grid__tr--deleted !optional;
     }
-
 
     @include e(tr, $m: highlighted) {
         @extend %igx-grid__tr--highlighted !optional;
@@ -480,14 +440,6 @@
         @extend %igx-grid__row-indentation !optional;
     }
 
-    @include e(grouparea) {
-        @extend %igx-grid__grouparea !optional;
-    }
-
-    @include e(grouparea-connector) {
-        @extend %igx-grid__grouparea-connector !optional;
-    }
-
     @include e(grouping-indicator) {
         @extend %igx-grid__grouping-indicator !optional;
     }
@@ -703,14 +655,6 @@
             @extend %grid-cell-display--cosy !optional;
         }
 
-        @include e(thead-wrapper) {
-            @extend %grid-thead--cosy !optional;
-        }
-
-        @include e(thead-title) {
-            @extend %grid-thead-title--cosy !optional;
-        }
-
         @include e(th-title) {
             @extend %grid-cell-header-title--cosy !optional;
         }
@@ -725,10 +669,6 @@
 
         @include e(row-indentation) {
             @extend %igx-grid__row-indentation--cosy !optional;
-        }
-
-        @include e(grouparea) {
-            @extend %igx-grid__grouparea--cosy !optional;
         }
 
         @include e(header-indentation) {
@@ -816,14 +756,6 @@
             @extend %grid-cell-display--compact !optional;
         }
 
-        @include e(thead-wrapper) {
-            @extend %grid-thead--compact !optional;
-        }
-
-        @include e(thead-title) {
-            @extend %grid-thead-title--compact !optional;
-        }
-
         @include e(th-title) {
             @extend %grid-cell-header-title--compact !optional;
         }
@@ -838,10 +770,6 @@
 
         @include e(row-indentation) {
             @extend %igx-grid__row-indentation--compact !optional;
-        }
-
-        @include e(grouparea) {
-            @extend %igx-grid__grouparea--compact !optional;
         }
 
         @include e(header-indentation) {
@@ -904,6 +832,8 @@
 
     @include _excel-filtering-partial();
     @include _advanced-filtering-partial();
+    @include _group-by-area();
+    @include _header-row();
 }
 
 @include b(igx-drop-area) {

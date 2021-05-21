@@ -22,7 +22,7 @@ import { IgxColumnComponent } from '../tree-grid/public_api';
 describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_GROUP_HEADER_CLASS = '.igx-grid__thead-title';
+    const COLUMN_GROUP_HEADER_CLASS = '.igx-grid-thead__title';
 
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {

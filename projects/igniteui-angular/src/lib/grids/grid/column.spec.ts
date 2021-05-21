@@ -26,7 +26,7 @@ import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/da
 describe('IgxGrid - Column properties #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
         TestBed.configureTestingModule({
