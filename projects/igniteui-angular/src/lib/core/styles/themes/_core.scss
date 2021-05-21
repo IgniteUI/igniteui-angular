@@ -71,22 +71,6 @@
 @use '../components/watermark/watermark-component' as watermark;
 @use '../print';
 
-// Includes the base for each theme.
-[class^='igx-'] {
-    &,
-    *,
-    *::before,
-    *::after {
-        box-sizing: border-box;
-    }
-}
-
-// Angular hack for binding to [hidden] property
-// not working
-[hidden] {
-    display: none !important;
-}
-
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
 /// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.
@@ -105,9 +89,28 @@
 
     $enhanced-accessibility: $enhanced-accessibility !global;
 
+    // Angular hack for binding to [hidden] property
+    // not working
+    [hidden] {
+        display: none !important;
+    }
+
+    // Common styles
     @include vhelper.component();
     @include display-container.component();
     @include drag.component();
+
+    // Includes the base for each theme.
+    [class^='igx-'] {
+        &,
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+        }
+    }
+
+    // Component styles
     @include ripple.component();
     @include action-strip.component();
     @include avatar.component();

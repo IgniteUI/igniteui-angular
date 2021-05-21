@@ -2,33 +2,30 @@
 
 /// @group themes
 /// @access private
-@mixin igx-vhelper {
-    $left: if-ltr(left, right);
-    $right: if-ltr(right, left);
+$_right: if-ltr(right, left);
 
-    %vhelper-display {
-        display: block;
-        overflow: auto;
-        z-index: 10001;
-    }
+%vhelper-display {
+    display: block;
+    overflow: auto;
+    z-index: 10001;
+}
 
-    %vhelper--vertical {
-        position: absolute;
-        top: 0;
-        #{$right}: 0;
-    }
+%vhelper--vertical {
+    position: absolute;
+    top: 0;
+    #{$_right}: 0;
+}
 
-    %vhelper--horizontal {
-        width: 100%;
-    }
+%vhelper--horizontal {
+    width: 100%;
+}
 
-    %vhelper-content--vertical {
-        width: 1px;
-    }
+%vhelper-content--vertical {
+    width: 1px;
+}
 
-    %vhelper-content--horizontal {
-        height: 1px;
-    }
+%vhelper-content--horizontal {
+    height: 1px;
 }
 
 @mixin component {
