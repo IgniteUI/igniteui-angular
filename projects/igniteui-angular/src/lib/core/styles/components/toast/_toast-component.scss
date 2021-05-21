@@ -7,8 +7,11 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-toast) {
-    $this: bem--selector-to-string(&);
-    @include register-component(str-slice($this, 2, -1));
-    @extend %igx-toast-display !optional;
+
+@mixin component {
+    @include b(igx-toast) {
+        $this: bem--selector-to-string(&);
+        @include register-component(str-slice($this, 2, -1));
+        @extend %igx-toast-display !optional;
+    }
 }

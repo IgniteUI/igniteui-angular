@@ -12,10 +12,12 @@
     width: 100%;
 }
 
-@include b(igx-display-container) {
-    @extend %display-container !optional;
+@mixin component {
+    @include b(igx-display-container) {
+        @extend %display-container !optional;
 
-    @include m(inactive) {
-        @extend %display-container--inactive !optional;
+        @include m(inactive) {
+            @extend %display-container--inactive !optional;
+        }
     }
 }

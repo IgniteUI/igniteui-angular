@@ -1,5 +1,6 @@
 @use '../variables' as *;
 @use '../linear-channel-values' as *;
+@use 'sass:meta';
 
 ////
 /// @group Utilities
@@ -232,7 +233,7 @@
 /// If the value is not a CSS variable it's simply passed through.
 /// @access private
 /// @returns {Color | Map}
-@function igx-color-from-var($value, $palette: $_default-palette, $raw: true) {
+@function igx-color-from-var($value, $palette: $default-palette, $raw: true) {
     $parts: var-to-parts($value);
     $is-igx: index($parts, 'igx');
 
@@ -250,10 +251,10 @@
 /// @access public
 /// @param {Color} $color-1 - The first color, usually transparent.
 /// @param {Color} $color-2 [#fff] - The second color, usually opaque.
-/// @param {Map} $palette [$_default-palette] - Pass an igx-palette if the passed colors are CSS variable references.
+/// @param {Map} $palette [$default-palette] - Pass an igx-palette if the passed colors are CSS variable references.
 /// @requires {function} igx-color-from-var
 /// @return {Color} - The color representation of the rgba value.
-@function to-opaque($color-1, $color-2: #fff, $palette: $_default-palette) {
+@function to-opaque($color-1, $color-2: #fff, $palette: null) {
     $color-1: igx-color-from-var($color-1, $palette);
     $color-2: igx-color-from-var($color-2, $palette);
 
@@ -447,9 +448,6 @@
     );
 }
 
-// TODO: Restructure so that there's only one default palette.
-$_default-palette: igx-palette($primary: #09f, $secondary: #e41c77);
-
 /// @access private
 /// Used in igx-color to test internally
 /// for color and variant validity.
@@ -477,7 +475,7 @@ $p-test: igx-palette(#fff, #000);
     @if $palette == null {
         @return if(
             legacy(),
-            igx-color($_default-palette, $color, $variant),
+            igx-color($default-palette, $color, $variant),
             #{var(--igx-#{$color}-#{$variant})}
         );
     }
@@ -675,7 +673,7 @@ $p-test: igx-palette(#fff, #000);
 ///   $resolved-value: resolve-value($value, $palette);
 @function resolve-value($value, $payload: null) {
     $result: null;
-    $dp: $_default-palette;
+    // $dp: $default-palette;
 
     // Uncomment to discover some broken themes
     // @if type-of($value) != 'map' or type-of($value) != 'list' {
@@ -687,9 +685,9 @@ $p-test: igx-palette(#fff, #000);
 
         @if legacy() or length(map-keys($value)) > 1 {
             @if $result == null and ($fn == 'igx-color' or $fn == 'igx-contrast-color') {
-                $result: call($func, $payload or $dp, $args...);
+                $result: call($func, $payload, $args...);
             } @else if $fn == 'to-opaque' and type-of($args) == 'map' {
-                $result: call($func, $result, resolve-value($args, $payload or $dp));
+                $result: call($func, $result, resolve-value($args, $payload));
             } @else if $result {
                 $result: call($func, $result, $args...);
             } @else {

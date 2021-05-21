@@ -7,13 +7,16 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-ripple) {
-    $this: bem--selector-to-string(&);
-    @include register-component(str-slice($this, 2, -1));
 
-    @extend %igx-ripple-wrapper !optional;
+@mixin component {
+    @include b(igx-ripple) {
+        $this: bem--selector-to-string(&);
+        @include register-component(str-slice($this, 2, -1));
 
-    @include e(inner) {
-        @extend %igx-ripple-display !optional;
+        @extend %igx-ripple-wrapper !optional;
+
+        @include e(inner) {
+            @extend %igx-ripple-display !optional;
+        }
     }
 }

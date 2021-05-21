@@ -7,37 +7,40 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-badge) {
-    $this: bem--selector-to-string(&);
-    @include register-component(str-slice($this, 2, -1));
 
-    @extend %igx-badge-display !optional;
+@mixin component {
+    @include b(igx-badge) {
+        $this: bem--selector-to-string(&);
+        @include register-component(str-slice($this, 2, -1));
 
-    @include e(value) {
-        @extend %igx-badge-value !optional;
-    }
+        @extend %igx-badge-display !optional;
 
-    @include m(default) {
-        @extend %igx-badge--default !optional;
-    }
+        @include e(value) {
+            @extend %igx-badge-value !optional;
+        }
 
-    @include m(info) {
-        @extend %igx-badge--info !optional;
-    }
+        @include m(default) {
+            @extend %igx-badge--default !optional;
+        }
 
-    @include m(success) {
-        @extend %igx-badge--success !optional;
-    }
+        @include m(info) {
+            @extend %igx-badge--info !optional;
+        }
 
-    @include m(warning) {
-        @extend %igx-badge--warn !optional;
-    }
+        @include m(success) {
+            @extend %igx-badge--success !optional;
+        }
 
-    @include m(error) {
-        @extend %igx-badge--error !optional;
-    }
+        @include m(warning) {
+            @extend %igx-badge--warn !optional;
+        }
 
-    @include m(hidden) {
-        @extend %igx-badge--hidden !optional;
+        @include m(error) {
+            @extend %igx-badge--error !optional;
+        }
+
+        @include m(hidden) {
+            @extend %igx-badge--hidden !optional;
+        }
     }
 }

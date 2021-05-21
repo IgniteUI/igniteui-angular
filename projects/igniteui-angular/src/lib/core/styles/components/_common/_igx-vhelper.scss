@@ -31,22 +31,24 @@
     }
 }
 
-@include b(igx-vhelper) {
-    @include m(vertical) {
-        @extend %vhelper-display !optional;
-        @extend %vhelper--vertical !optional;
+@mixin component {
+    @include b(igx-vhelper) {
+        @include m(vertical) {
+            @extend %vhelper-display !optional;
+            @extend %vhelper--vertical !optional;
 
-        @include e(placeholder-content) {
-            @extend %vhelper-content--vertical !optional;
+            @include e(placeholder-content) {
+                @extend %vhelper-content--vertical !optional;
+            }
         }
-    }
 
-    @include m(horizontal) {
-        @extend %vhelper-display !optional;
-        @extend %vhelper--horizontal !optional;
+        @include m(horizontal) {
+            @extend %vhelper-display !optional;
+            @extend %vhelper--horizontal !optional;
 
-        @include e(placeholder-content) {
-            @extend %vhelper-content--horizontal !optional;
+            @include e(placeholder-content) {
+                @extend %vhelper-content--horizontal !optional;
+            }
         }
     }
 }

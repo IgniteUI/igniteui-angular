@@ -7,21 +7,24 @@
 /// @requires {mixin} bem-elem
 /// @requires {mixin} bem-mod
 ////
-@include b(igx-navbar) {
-    $this: bem--selector-to-string(&);
-    @include register-component(str-slice($this, 2, -1));
 
-    @extend %igx-navbar-display !optional;
+@mixin component {
+    @include b(igx-navbar) {
+        $this: bem--selector-to-string(&);
+        @include register-component(str-slice($this, 2, -1));
 
-    @include e(title) {
-        @extend %igx-navbar-title !optional;
-    }
+        @extend %igx-navbar-display !optional;
 
-    @include e(left) {
-        @extend %igx-navbar-left !optional;
-    }
+        @include e(title) {
+            @extend %igx-navbar-title !optional;
+        }
 
-    @include e(right) {
-        @extend %igx-navbar-right !optional;
+        @include e(left) {
+            @extend %igx-navbar-left !optional;
+        }
+
+        @include e(right) {
+            @extend %igx-navbar-right !optional;
+        }
     }
 }
