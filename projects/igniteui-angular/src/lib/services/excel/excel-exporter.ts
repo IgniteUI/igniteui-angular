@@ -76,8 +76,9 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
         const firstDataElement = data[0];
+        const columnsLength = firstDataElement ? Object.keys(firstDataElement.data).length : 0;
 
-        if(data.length > EXCEL_MAX_ROWS || firstDataElement?.data.length > EXCEL_MAX_COLS) {
+        if(data.length > EXCEL_MAX_ROWS || columnsLength > EXCEL_MAX_COLS) {
             throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
         }
 
