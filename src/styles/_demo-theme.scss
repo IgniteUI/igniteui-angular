@@ -25,11 +25,6 @@ body {
     @include igx-css-vars(igc-dock-manager-theme());
 }
 
-@include igx-avatar(igx-avatar-theme(
-    $background: red,
-    $color: white
-));
-
 .nav-header {
     @if luminance($igx-background-color) < .5 {
         @include nav-logo('../assets/images/rsrcs/igniteui-logo-dark-bg', $igx-background-color);
