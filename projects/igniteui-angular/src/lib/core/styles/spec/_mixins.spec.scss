@@ -1,5 +1,6 @@
 @use 'node_modules/sass-true' as *;
-@use '../base/index' as *;
+@use '../base' as *;
+@use '../components' as *;
 
 @include describe('Register Component') {
     $components: () !default;
@@ -131,7 +132,7 @@
 
         @include assert() {
             @include output() {
-                @include  if-rtl() {
+                @include if-rtl() {
                     margin: 1px;
                 }
             }
@@ -141,6 +142,7 @@
             }
         }
     }
+
     @include it('should return styles only when the global direction is LTR') {
         $direction: 'ltr' !global;
 

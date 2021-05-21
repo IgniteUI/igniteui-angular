@@ -87,9 +87,6 @@
     display: none !important;
 }
 
-$direction: ltr !default;
-$enhanced-accessibility: false !default;
-
 /// @param {boolean} $print-layout [true] - Activates the printing styles of the components.
 /// @param {string} $direction [ltr] - Sets the layout direction. Can be 'ltr' or 'rtl'.
 /// @param {boolean} $enhanced-accesibility [false] - Switches component colors and other properties to more accessible values.

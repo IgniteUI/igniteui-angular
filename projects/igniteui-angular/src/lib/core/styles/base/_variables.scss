@@ -21,7 +21,13 @@ $keyframes: () !default;
 $components: () !default;
 
 /// The palette as passed to the igx-theme mixin
-$theme-palette: null;
+$theme-palette: null !default;
 
 /// Determines if IE11 is enabled
-$igx-legacy-support: false;
+$igx-legacy-support: false !default;
+
+/// Determines the content direction.
+$direction: ltr !default;
+
+/// Determines whether color-blind palettes are enabled.
+$enhanced-accessibility: false !default;
