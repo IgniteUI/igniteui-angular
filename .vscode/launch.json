@@ -12,7 +12,7 @@
                 "-r",
                 "ts-node/register",
                 "./node_modules/jasmine/bin/jasmine.js",
-                "./projects/igniteui-angular/migrations/common/UpdateChanges.spec.ts"
+                "./projects/igniteui-angular/migrations/**/*.spec.ts"
             ],
             "env": {
                 "TS_NODE_PROJECT": "projects/igniteui-angular/migrations/tsconfig.json"
@@ -33,6 +33,25 @@
             "env": {
                 "TS_NODE_PROJECT": "${workspaceFolder}/projects/igniteui-angular/migrations/tsconfig.json"
             }
+        },
+        {
+            "name": "Typedoc plugin",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/node_modules/typedoc/bin/typedoc",
+            "args": [
+                "${workspaceFolder}/projects/igniteui-angular/src/public_api.ts",
+                "--localize",
+                "jp",
+                "--tsconfig",
+                "${workspaceFolder}/tsconfig.json"
+            ],
+            "runtimeExecutable": "/Users/alexov/.nvm/versions/node/v14.15.2/bin/node",
+            "sourceMaps": true,
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
         }
     ]
 }

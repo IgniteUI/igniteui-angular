@@ -1,6 +1,5 @@
 import { filter, Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { getWorkspace, getWorkspacePath, getProjectPaths } from './util';
-import { WorkspaceSchema } from '@schematics/angular/utility/workspace-models';
 
 /**
  * Filter tree to project source dirs

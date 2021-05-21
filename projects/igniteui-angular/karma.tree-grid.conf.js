@@ -45,7 +45,7 @@ module.exports = function (config) {
         { type: 'lcovonly' },
       ]
     },
-    reporters: ['progress'],
+    reporters: ['progress', 'coverage'],
     specReporter: {
       suppressSkipped: true,
       suppressErrorSummary: false,

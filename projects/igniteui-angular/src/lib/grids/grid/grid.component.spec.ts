@@ -11,7 +11,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { IgxGridModule, IgxGridRow, IgxGroupByRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
-import { DataType } from '../../data-operations/data-util';
+import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { BasicGridComponent } from '../../test-utils/grid-base-components.spec';
@@ -23,7 +23,6 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
@@ -87,12 +86,12 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid).toBeDefined('Grid initializing through autoGenerate failed');
             expect(grid.columnList.length).toEqual(4, 'Invalid number of columns initialized');
             expect(grid.rowList.length).toEqual(1, 'Invalid number of rows initialized');
-            expect(grid.columnList.first.dataType).toEqual(DataType.Number, 'Invalid dataType set on column');
+            expect(grid.columnList.first.dataType).toEqual(GridColumnDataType.Number, 'Invalid dataType set on column');
             expect(grid.columnList.find((col) => col.index === 1).dataType)
-                .toEqual(DataType.String, 'Invalid dataType set on column');
+                .toEqual(GridColumnDataType.String, 'Invalid dataType set on column');
             expect(grid.columnList.find((col) => col.index === 2).dataType)
-                .toEqual(DataType.Boolean, 'Invalid dataType set on column');
-            expect(grid.columnList.last.dataType).toEqual(DataType.Date, 'Invalid dataType set on column');
+                .toEqual(GridColumnDataType.Boolean, 'Invalid dataType set on column');
+            expect(grid.columnList.last.dataType).toEqual(GridColumnDataType.Date, 'Invalid dataType set on column');
             expect(fix.componentInstance.columnEventCount).toEqual(4);
         }));
 
@@ -269,6 +268,33 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+        }));
+
+        it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+            expect(container.getAttribute('role')).toBe(null);
+
+            //Filter grid so no results are available and grid is empty
+            grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+            grid.markForCheck();
+            fixture.detectChanges();
+            expect(container.getAttribute('role')).toMatch('row');
+
+            // clear grid data and check if attribute is now 'row'
+            grid.clearFilter();
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            expect(container.getAttribute('role')).toMatch('row');
+
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -1110,25 +1136,25 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render 10 records if height is 100% and parent container's height is unset and
             display density is changed`, async () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
 
-                fix.componentInstance.grid.height = '100%';
-                fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
-                fix.detectChanges();
-                await wait(100);
+            fix.componentInstance.grid.height = '100%';
+            fix.componentInstance.data = fix.componentInstance.fullData.slice(0, 11);
+            fix.detectChanges();
+            await wait(100);
 
-                fix.componentInstance.density = DisplayDensity.compact;
-                fix.detectChanges();
-                await wait(100);
+            fix.componentInstance.density = DisplayDensity.compact;
+            fix.detectChanges();
+            await wait(100);
 
-                const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(330);
-                expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
-                expect(fix.componentInstance.grid.rowList.length).toEqual(11);
-            });
+            const defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(330);
+            expect(fix.componentInstance.isVerticalScrollbarVisible()).toBeTruthy();
+            expect(fix.componentInstance.grid.rowList.length).toEqual(11);
+        });
 
         it(`should render grid with correct height when parent container's height is set
             and the total row height is smaller than parent height #1861`, fakeAsync(() => {
@@ -1192,22 +1218,22 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should not render with calcHeight null at any point when loading data and
             auto-sizing is required and initial data is empty`, () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.detectChanges();
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.detectChanges();
 
-                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeFalsy(); // initially body height is null in auto-sizing scenarios with empty data
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeFalsy(); // initially body height is null in auto-sizing scenarios with empty data
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
 
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
-                fix.detectChanges();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
+            fix.detectChanges();
 
-                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(510);
-                expect(fix.componentInstance.grid.calcHeight).toBe(510);
-            });
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
 
         it('should keep auto-sizing if initial data is set to small array that is then filled', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1230,21 +1256,21 @@ describe('IgxGrid Component Tests #grid', () => {
 
         it(`should render with calcHeight null if initial data is small but then
             auto-size when it is filled`, async () => {
-                const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
-                fix.componentInstance.data = fix.componentInstance.semiData;
-                fix.detectChanges();
-                let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                expect(defaultHeight).toBeFalsy();
-                expect(fix.componentInstance.grid.calcHeight).toBeNull();
-                fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
-                fix.detectChanges();
-                await wait(500);
-                defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
-                const defaultHeightNum = parseInt(defaultHeight, 10);
-                expect(defaultHeight).not.toBeFalsy();
-                expect(defaultHeightNum).toBe(510);
-                expect(fix.componentInstance.grid.calcHeight).toBe(510);
-            });
+            const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
+            fix.componentInstance.data = fix.componentInstance.semiData;
+            fix.detectChanges();
+            let defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            expect(defaultHeight).toBeFalsy();
+            expect(fix.componentInstance.grid.calcHeight).toBeNull();
+            fix.componentInstance.data = Array.from({ length: 100000 }, (_, i) => ({ ID: i, CompanyName: 'CN' + i }));
+            fix.detectChanges();
+            await wait(500);
+            defaultHeight = fix.debugElement.query(By.css(TBODY_CLASS)).styles.height;
+            const defaultHeightNum = parseInt(defaultHeight, 10);
+            expect(defaultHeight).not.toBeFalsy();
+            expect(defaultHeightNum).toBe(510);
+            expect(fix.componentInstance.grid.calcHeight).toBe(510);
+        });
 
         it('should keep default height when filtering', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
@@ -1935,8 +1961,8 @@ describe('IgxGrid Component Tests #grid', () => {
             const grid = fix.componentInstance.grid;
             const cols = fix.componentInstance.columns;
 
-            const row = {col0: 0, col1: 4, col2: 8, col3: 12, col4: 16};
-            const secondRow = {col0: 0, col1: 1, col2: 2, col3: 3, col4: 4};
+            const row = { col0: 0, col1: 4, col2: 8, col3: 12, col4: 16 };
+            const secondRow = { col0: 0, col1: 1, col2: 2, col3: 3, col4: 4 };
 
             expect(grid.getRowData(row)).toEqual(row);
 
@@ -1969,6 +1995,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const virtRowsLength = grid.dataRowList.length;
             const indexToCompare = 32;
 
+            let firstRow = grid.getRowByIndex(0);
+            let secondRow = grid.getRowByIndex(1);
+            let thirdRow = grid.getRowByIndex(2);
+
             expect(indexToCompare > virtRowsLength).toBe(true);
             // Check if the comparable row is within the virt container
             expect(grid.gridAPI.get_row_by_index(virtRowsLength - 1) instanceof IgxGridRowComponent).toBe(true);
@@ -1980,53 +2010,104 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowByIndex(32) instanceof IgxGridRow).toBe(true);
 
             // GroupBy column and get the collapsed grouped row
-            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+            expect(firstRow instanceof IgxGridRow).toBe(true);
+
+            // index
+            expect(firstRow.index).toBe(0);
+            expect(firstRow.viewIndex).toBe(0);
+            expect(firstRow.parent).toBeUndefined();
 
             fix.detectChanges();
             grid.groupBy({ fieldName: 'col1', dir: SortingDirection.Asc });
             fix.detectChanges();
 
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
+
             // First row is IgxGroupByRow second row is igxGridRow
-            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
-            expect(grid.getRowByIndex(1) instanceof IgxGridRow).toBe(true);
+            expect(firstRow instanceof IgxGroupByRow).toBe(true);
+            expect(secondRow instanceof IgxGridRow).toBe(true);
 
             // expand/collapse first group row
-            grid.getRowByIndex(0).expanded = true;
+            firstRow.expanded = true;
             fix.detectChanges();
-            expect(grid.getRowByIndex(0).expanded).toBe(true);
 
-            grid.getRowByIndex(0).expanded = false;
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
+
+            expect(firstRow.expanded).toBe(true);
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
+
+            // index
+            expect(secondRow.index).toBe(1);
+
+            // select group row
+            expect(firstRow.selected).toBeFalse();
+            expect(secondRow.selected).toBeFalse();
+            firstRow.children.forEach(row => {
+                expect(row.selected).toBeFalse();
+            });
+            firstRow.selected = !firstRow.selected;
+
+            expect(firstRow.selected).toBeTrue();
+            expect(secondRow.selected).toBeTrue();
+            firstRow.children.forEach(row => {
+                expect(row.selected).toBeTrue();
+            });
+
+            firstRow.selected = !firstRow.selected;
+
+            expect(firstRow.selected).toBeFalse();
+            expect(secondRow.selected).toBeFalse();
+            firstRow.children.forEach(row => {
+                expect(row.selected).toBeFalse();
+            });
+
+            (firstRow as IgxGroupByRow).toggle();
             fix.detectChanges();
-            expect(grid.getRowByIndex(0).expanded).toBe(false);
+            expect(firstRow.expanded).toBe(false);
+
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
 
             // First row is still IgxGroupByRow and now the second row is as well IgxGroupByRow
-            expect(grid.getRowByIndex(0) instanceof IgxGroupByRow).toBe(true);
-            expect(grid.getRowByIndex(1) instanceof IgxGroupByRow).toBe(true);
+            expect(firstRow instanceof IgxGroupByRow).toBe(true);
+            expect(firstRow.key).toBeUndefined();
+            expect(secondRow instanceof IgxGroupByRow).toBe(true);
 
             // Check hasChildren and other API members for igxGrid
-            expect(grid.getRowByIndex(2).hasChildren).toBe(false);
-            expect(grid.getRowByIndex(2).index).toEqual(2);
-            expect(grid.getRowByIndex(1).isSummaryRow).toBeUndefined();
+            expect(thirdRow.hasChildren).toBe(false);
+            expect(thirdRow.children).toBeUndefined();
+            expect(thirdRow.parent instanceof IgxGroupByRow).toBe(true);
+            expect(thirdRow.parent.parent).toBeUndefined();
+            expect(thirdRow.index).toEqual(2);
+            expect(secondRow.isSummaryRow).toBeUndefined();
 
             // GroupByRow check
-            expect(grid.getRowByIndex(2).isGroupByRow).toBeUndefined();
-            expect(grid.getRowByIndex(1).isGroupByRow).toBe(true);
-            expect(grid.getRowByIndex(2).groupRow).toBeUndefined();
-            expect(grid.getRowByIndex(1).groupRow).toBeTruthy();
+            expect(thirdRow.isGroupByRow).toBeUndefined();
+            expect(secondRow.isGroupByRow).toBe(true);
+            expect(thirdRow.groupRow).toBeUndefined();
+            expect(secondRow.groupRow).toBeTruthy();
+
 
             // key and rowData check - first with group row (index 1) and then with IgxGridRow (index 2)
-            expect(grid.getRowByIndex(1).key).toBeUndefined();
-            expect(grid.getRowByIndex(1).data).toBeUndefined();
-            expect(grid.getRowByIndex(1).pinned).toBeUndefined();
-            expect(grid.getRowByIndex(1).selected).toBeUndefined();
-            expect(grid.getRowByIndex(2).key).toBeTruthy();
-            expect(grid.getRowByIndex(2).data).toBeTruthy();
-            expect(grid.getRowByIndex(2).pinned).toBe(false);
-            expect(grid.getRowByIndex(2).selected).toBe(false);
+            expect(secondRow.key).toBeUndefined();
+            expect(secondRow.data).toBeUndefined();
+            expect(secondRow.pinned).toBeUndefined();
+            expect(secondRow.selected).toBeFalse();
+            expect(thirdRow.key).toBeTruthy();
+            expect(thirdRow.data).toBeTruthy();
+            expect(thirdRow.pinned).toBe(false);
+            expect(thirdRow.selected).toBe(false);
 
             // Toggle selection
-            grid.getRowByIndex(2).selected = true;
-            expect(grid.getRowByIndex(2).selected).toBe(true);
+            thirdRow.selected = true;
+            expect(thirdRow.selected).toBe(true);
         });
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
@@ -2047,8 +2128,11 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             tick();
 
+            const firstRow = grid.getRowByIndex(0);
             // Return the first row after page change
-            expect(grid.getRowByIndex(0) instanceof IgxGridRow).toBe(true);
+            expect(firstRow instanceof IgxGridRow).toBe(true);
+            expect(firstRow.index).toBe(0);
+            expect(firstRow.viewIndex).toBe(5);
         }));
     });
 
@@ -2103,9 +2187,9 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
@@ -2126,10 +2210,10 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2164,9 +2248,9 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
             const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-            grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
@@ -2736,7 +2820,7 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
-    nullData() {
+    public nullData() {
         this._records.next(null);
     }
 
@@ -2777,7 +2861,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         this.data = this.localService.records;
     }
 
-    nullData() {
+    public nullData() {
         this.localService.nullData();
     }
 
@@ -2788,7 +2872,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
@@ -2822,7 +2906,7 @@ export class IgxGridRemoteOnDemandComponent {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });

@@ -1,6 +1,6 @@
 import { GridBaseAPIService } from '../api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { DataType, DataUtil } from '../../data-operations/data-util';
+import { GridColumnDataType, DataUtil } from '../../data-operations/data-util';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { HierarchicalTransaction, TransactionType, State } from '../../services/public_api';
 import { Injectable } from '@angular/core';
@@ -79,7 +79,7 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
-        return column.dataType === DataType.Number && column.visibleIndex !== 0;
+        return column.dataType === GridColumnDataType.Number && column.visibleIndex !== 0;
     }
 
     public deleteRowById(rowID: any): any {
