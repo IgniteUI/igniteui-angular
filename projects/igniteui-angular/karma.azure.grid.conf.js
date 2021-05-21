@@ -4,7 +4,7 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['parallel','jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
+    frameworks: ['parallel', 'jasmine', 'jasmine-spec-tags', '@angular-devkit/build-angular'],
     files: [
       { pattern: '../../node_modules/hammerjs/hammer.min.js', watched: false },
       { pattern: '../../node_modules/hammer-simulator/index.js', watched: false },
@@ -29,7 +29,7 @@ module.exports = function (config) {
       },
       tagPrefix: '#',
       tags: 'grid',
-      skipTags: 'perf,ivy' // TODO: Remove ivy skip, once Azure run is updated
+      skipTags: 'perf' // TODO: Remove ivy skip, once Azure run is updated
     },
     port: 9876,
     colors: true,

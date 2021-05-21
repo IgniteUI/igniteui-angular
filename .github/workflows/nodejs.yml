@@ -35,10 +35,7 @@ jobs:
         run: npm run build:lib
       - name: Test
         run: |
-            npm run test:lib:others
-            npm run test:lib:grid
-            npm run test:lib:hgrid
-            npm run test:lib:tgrid
+            npm run test:lib
             npm run test:styles
             npm run test:schematics
         env:
