@@ -1,5 +1,6 @@
 @use '../variables' as *;
-@use '../linear-channel-values' as *;
+@use 'sass:math';
+@use 'sass:color';
 
 ////
 /// @group Utilities
@@ -46,17 +47,27 @@
     @return $num;
 }
 
+/// Calculates the linear channel value for a given sRGB color.
+/// @access private
+@function _lcv($value) {
+    @return if(
+        $value < .03928,
+        $value / 12.92,
+        math.pow((($value + .055) / 1.055), 2.4)
+    );
+}
+
 /// Calculates the luminance for a given color.
 /// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests.
 ///
 /// @param {Color} $color - The color to calculate luminance for.
 @function luminance($color) {
     @if type-of($color) == 'color' {
-        $red: nth($linear-channel-values, red($color) + 1);
-        $green: nth($linear-channel-values, green($color) + 1);
-        $blue: nth($linear-channel-values, blue($color) + 1);
+        $r: color.red($color) / 255;
+        $g: color.green($color) / 255;
+        $b: color.blue($color) / 255;
 
-        @return .2126 * $red + .7152 * $green + .0722 * $blue;
+        @return .2126 * _lcv($r) + .7152 * _lcv($g) + .0722 * _lcv($b);
     }
     @return $color;
 }
