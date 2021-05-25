@@ -162,7 +162,6 @@
         }
 
         @include e(drop-indicator, $m: active) {
-            // ??
             @extend %igx-grid-th__drop-indicator--active !optional;
         }
 
