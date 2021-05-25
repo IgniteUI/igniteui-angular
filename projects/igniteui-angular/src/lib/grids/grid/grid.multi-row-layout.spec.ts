@@ -13,7 +13,7 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { ICellPosition } from '../common/events';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
-const GRID_COL_THEAD_CLASS = '.igx-grid__th';
+const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 const GRID_MRL_BLOCK = '.igx-grid__mrl-block';
 
 describe('IgxGrid - multi-row-layout #grid', () => {

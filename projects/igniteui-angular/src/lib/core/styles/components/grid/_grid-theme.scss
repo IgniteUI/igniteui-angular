@@ -1612,7 +1612,7 @@
     }
 
 
-    %igx-grid__th-expander {
+    %igx-grid-th__expander {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1630,15 +1630,15 @@
         }
     }
 
-    %igx-grid__th-group-title {
+    %igx-grid-th__group-title {
         @include ellipsis();
     }
 
-    %igx-grid__th--collapsible {
+    %igx-grid-th--collapsible {
         justify-content: normal;
     }
 
-    %igx-grid__th--selectable {
+    %igx-grid-th--selectable {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
@@ -1648,7 +1648,7 @@
         }
     }
 
-    %igx-grid__th--selected {
+    %igx-grid-th--selected {
         color: --var($theme, 'header-selected-text-color');
         background: --var($theme, 'header-selected-background');
 
@@ -1657,11 +1657,11 @@
         }
     }
 
-    %igx-grid__th--active {
+    %igx-grid-th--active {
         @extend %grid-cell--active;
 
-        %igx-grid__th--selected,
-        %igx-grid__th--selectable {
+        %igx-grid-th--selected,
+        %igx-grid-th--selectable {
             @extend %grid-cell--active;
         }
     }
@@ -1670,7 +1670,7 @@
         @extend %grid-cell--active;
     }
 
-    %igx-grid__th--sortable {
+    %igx-grid-th--sortable {
         .sort-icon {
             cursor: pointer;
             opacity: .7;
@@ -1681,7 +1681,7 @@
         }
     }
 
-    %igx-grid__th--sorted {
+    %igx-grid-th--sorted {
         .sort-icon {
             opacity: 1;
             color: --var($theme, 'sorted-header-icon-color');
@@ -1692,13 +1692,13 @@
         }
     }
 
-    %igx-grid__th--filtrable {
+    %igx-grid-th--filtrable {
         %grid-cell-header-title {
             opacity: .7;
         }
     }
 
-    %igx-grid__th--filtrable-sortable {
+    %igx-grid-th--filtrable-sortable {
         .sort-icon {
             &:hover {
                 opacity: 1;
@@ -1823,8 +1823,8 @@
     }
 
     // Column moving
-    %igx-grid__th-drop-indicator-left,
-    %igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator-left,
+    %igx-grid-th__drop-indicator-right {
         position: absolute;
         width: 1px;
         height: 100%;
@@ -1832,17 +1832,17 @@
         z-index: 1;
     }
 
-    %igx-grid__th-drop-indicator-left {
+    %igx-grid-th__drop-indicator-left {
         #{$left}: -1px;
     }
 
-    %igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator-right {
         #{$right}: -1px;
     }
 
-    %igx-grid__th-drop-indicator--active {
-        &%igx-grid__th-drop-indicator-left,
-        &%igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator--active {
+        &%igx-grid-th__drop-indicator-left,
+        &%igx-grid-th__drop-indicator-right {
             border-#{$right}: 1px solid --var($theme, 'drop-indicator-color');
         }
 

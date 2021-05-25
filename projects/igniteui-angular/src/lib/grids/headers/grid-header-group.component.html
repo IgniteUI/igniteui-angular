@@ -1,9 +1,9 @@
 <ng-container *ngIf="grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__group igx-grid__mrl-block"
      [ngClass]="{
-         'igx-grid__th--pinned-last': hasLastPinnedChildColumn,
-         'igx-grid__th--pinned-first': hasFirstPinnedChildColumn
+         'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
+         'igx-grid-th--pinned-first': hasFirstPinnedChildColumn
         }"
      [ngStyle]="{'grid-template-rows':column.getGridTemplate(true, false),
      'grid-template-columns':column.getGridTemplate(false, false),
@@ -20,12 +20,12 @@
             </igx-grid-header-group>
         </ng-container>
     </div>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>
 
 
 <ng-template #defaultColumn>
-    <span class="igx-grid__th-group-title" [title]="title">{{column.header}}</span>
+    <span class="igx-grid-th__group-title" [title]="title">{{column.header}}</span>
 </ng-template>
 
 <ng-template #defaultCollapseIndicator>
@@ -34,19 +34,19 @@
 </ng-template>
 
 <ng-container *ngIf="!grid.hasColumnLayouts && column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
     <div class="igx-grid-thead__title"
         role="columnheader"
         [attr.aria-label]="column.header || column.field"
         [attr.aria-expanded]="column.expanded"
         [attr.aria-selected]="column.selected"
         [ngClass]="{
-            'igx-grid__th--pinned-last': hasLastPinnedChildColumn,
-            'igx-grid__th--pinned-first': hasFirstPinnedChildColumn,
-            'igx-grid__th--collapsible': column.collapsible,
-            'igx-grid__th--selectable': selectable,
-            'igx-grid__th--selected': selected,
-            'igx-grid__th--active': activeGroup}"
+            'igx-grid-th--pinned-last': hasLastPinnedChildColumn,
+            'igx-grid-th--pinned-first': hasFirstPinnedChildColumn,
+            'igx-grid-th--collapsible': column.collapsible,
+            'igx-grid-th--selectable': selectable,
+            'igx-grid-th--selected': selected,
+            'igx-grid-th--active': activeGroup}"
         [igxColumnMovingDrag]="column"
         [ghostHost]="grid.outlet.nativeElement"
         [attr.droppable]="true"
@@ -57,7 +57,7 @@
         (pointerleave)="onPointerLeave()"
         >
         <ng-container *ngIf="column.collapsible">
-            <div class="igx-grid__th-expander" (click)="toggleExpandState($event)">
+            <div class="igx-grid-th__expander" (click)="toggleExpandState($event)">
                 <ng-container
                     *ngTemplateOutlet="column.collapsibleIndicatorTemplate ? column.collapsibleIndicatorTemplate : defaultCollapseIndicator; context: {$implicit: column, column: column}">
                 </ng-container>
@@ -76,14 +76,14 @@
             </igx-grid-header-group>
         </ng-container>
     </div>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>
 
 <ng-container *ngIf="!column.columnGroup">
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-left"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-left"></span>
     <igx-grid-header
         role="columnheader"
-        class="igx-grid__th--fw"
+        class="igx-grid-th--fw"
         [id]="grid.id + '_' + column.field"
         [ngClass]="column.headerClasses"
         [igxColumnMovingDrag]="column"
@@ -92,13 +92,14 @@
         (pointerdown)="activate()"
         [igxColumnMovingDrop]="column"
         [column]="column"
+        [density]="grid.displayDensity"
     >
     </igx-grid-header>
     <igx-grid-filtering-cell *ngIf="grid.allowFiltering && grid.filterMode == 'quickFilter'" [column]="column" [attr.draggable]="false"></igx-grid-filtering-cell>
-    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid__th-resize-handle"
+    <span *ngIf="!column.columnGroup && column.resizable" class="igx-grid-th__resize-handle"
         [igxResizeHandle]="column"
         [attr.draggable]="false"
         [style.cursor]="colResizingService.resizeCursor">
     </span>
-    <span *ngIf="grid.hasMovableColumns" class="igx-grid__th-drop-indicator-right"></span>
+    <span *ngIf="grid.hasMovableColumns" class="igx-grid-th__drop-indicator-right"></span>
 </ng-container>

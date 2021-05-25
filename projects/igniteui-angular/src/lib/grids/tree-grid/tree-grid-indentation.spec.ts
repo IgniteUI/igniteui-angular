@@ -136,7 +136,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             treeGrid.cdr.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css('.igx-grid-th__resize-handle')).nativeElement;
 
             // Verify before resizing width
             expect(header.nativeElement.getBoundingClientRect().width).toBe(225);
@@ -293,7 +293,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             tick(16);
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css('.igx-grid-th__resize-handle')).nativeElement;
 
             // Verify before resizing width
             expect(header.nativeElement.getBoundingClientRect().width).toBe(180);

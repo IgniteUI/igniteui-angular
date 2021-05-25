@@ -668,7 +668,7 @@ export class IgxGridNavigationService {
         }
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
             if (this.grid.filterMode === FilterMode.excelStyleFilter) {
-                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
+                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid-th--active`);
                 this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
             } else {
                 this.performHorizontalScrollToCell(column.visibleIndex);

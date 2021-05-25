@@ -29,7 +29,7 @@ import { IgxGridRowComponent } from './grid-row.component';
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
     const TBODY_CLASS = '.igx-grid__tbody-content';
     const THEAD_CLASS = '.igx-grid-thead';

@@ -25,7 +25,7 @@ import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/da
 
 describe('IgxGrid - Column properties #grid', () => {
 
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
@@ -227,7 +227,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         const CELL_CSS_CLASS = '.igx-grid__td';
-        const COLUMN_NUMBER_CLASS = 'igx-grid__th--number';
+        const COLUMN_NUMBER_CLASS = 'igx-grid-th--number';
         const CELL_NUMBER_CLASS = 'igx-grid__td--number';
 
         // Verify haeder clases

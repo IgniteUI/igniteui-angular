@@ -68,4 +68,126 @@
             }
         }
     }
+
+    @include b(igx-grid-th) {
+        @extend %grid-cell-display !optional;
+        @extend %grid-cell-header !optional;
+
+        @include e(expander) {
+            @extend %igx-grid-th__expander !optional
+        }
+
+        @include e(group-title) {
+            @extend %igx-grid-th__group-title !optional
+        }
+
+        @include e(title) {
+            @extend %grid-cell-header-title !optional;
+        }
+
+        @include e(icons) {
+            @extend %grid-cell-header-icons !optional;
+        }
+
+        @include e(resize-handle) {
+            @extend %grid__resize-handle !optional;
+        }
+
+        @include e(resize-line) {
+            @extend %grid__resize-line !optional;
+        }
+
+        @include m(collapsible) {
+            @extend %igx-grid-th--collapsible !optional;
+        }
+
+        @include m(sortable) {
+            @extend %igx-grid-th--sortable !optional;
+        }
+
+        @include m(selectable) {
+            @extend %igx-grid-th--selectable !optional;
+        }
+
+        @include m(filtrable) {
+            @extend %igx-grid-th--filtrable !optional;
+        }
+
+        @include mx(filtrable, sortable) {
+            @extend %igx-grid-th--filtrable-sortable !optional;
+        }
+
+        @include m(sorted) {
+            @extend %igx-grid-th--sorted !optional;
+        }
+
+        @include m(selected) {
+            @extend %igx-grid-th--selected !optional;
+        }
+
+        @include m(active) {
+            @extend %igx-grid-th--active !optional;
+        }
+
+        @include m(number) {
+            @extend %grid-cell-number !optional;
+        }
+
+        @include m(pinned) {
+            @extend %grid-cell--pinned !optional;
+        }
+
+        @include m(pinned-last) {
+            @extend %grid-cell--pinned-last !optional;
+        }
+
+        @include m(pinned-first) {
+            @extend %grid-cell--pinned-first !optional;
+        }
+
+        @include m(fw) {
+            @extend %grid-cell--fixed-width !optional;
+        }
+
+        @include m(filtering) {
+            @extend %grid-cell-header--filtering !optional;
+        }
+
+        @include e(drop-indicator-left) {
+            @extend %igx-grid-th__drop-indicator-left !optional;
+        }
+
+        @include e(drop-indicator-right) {
+            @extend %igx-grid-th__drop-indicator-right !optional;
+        }
+
+        @include e(drop-indicator, $m: active) {
+            // ??
+            @extend %igx-grid-th__drop-indicator--active !optional;
+        }
+
+        @include m(cosy) {
+            @extend %grid-cell-header--cosy !optional;
+
+            @include e(title) {
+                @extend %grid-cell-header-title--cosy !optional;
+            }
+
+            @include e(icons) {
+                @extend %grid-cell-header-icons--cosy !optional;
+            }
+        }
+
+        @include m(compact) {
+            @extend %grid-cell-header--compact !optional;
+
+            @include e(title) {
+                @extend %grid-cell-header-title--compact !optional;
+            }
+
+            @include e(icons) {
+                @extend %grid-cell-header-icons--compact !optional;
+            }
+        }
+    }
 }

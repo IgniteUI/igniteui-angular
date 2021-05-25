@@ -560,7 +560,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             GridFunctions.closeFilterRow(fix);
 
             const gridheaders = fix.debugElement.queryAll(By.css('igx-grid-header'));
-            const headerOfTypeNumber = gridheaders.find(gh => gh.nativeElement.classList.contains('igx-grid__th--number'));
+            const headerOfTypeNumber = gridheaders.find(gh => gh.nativeElement.classList.contains('igx-grid-th--number'));
             const filterCellsForTypeNumber = headerOfTypeNumber.parent.query(By.css(FILTER_UI_CELL));
             expect(filterCellsForTypeNumber.queryAll(By.css('.igx-filtering-chips')).length).toBe(1);
         }));
@@ -2399,7 +2399,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const headerResArea = headers[1].children[2].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
@@ -2441,7 +2441,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
@@ -2490,7 +2490,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const headerResArea = headers[2].children[2].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);

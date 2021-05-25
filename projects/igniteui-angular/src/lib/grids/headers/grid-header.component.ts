@@ -21,6 +21,7 @@ import { Subject } from 'rxjs';
 import { GridType } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
+import { DisplayDensity } from 'igniteui-angular';
 
 /**
  * @hidden
@@ -34,6 +35,9 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     @Input()
     public column: IgxColumnComponent;
+
+    @Input()
+    public density: DisplayDensity;
 
     /**
      * @hidden
@@ -49,9 +53,27 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.column.selected;
     }
 
-    @HostBinding('class.igx-grid__th')
+    @HostBinding('class.igx-grid-th')
     public get columnGroupStyle() {
         return !this.column.columnGroup;
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-th--cosy')
+    public get cosyStyle() {
+        return this.density === 'cosy';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-th--compact')
+    public get compactStyle() {
+        return this.density === 'compact';
     }
 
     @HostBinding('class.asc')
@@ -64,32 +86,32 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
         return this.sortDirection === SortingDirection.Desc;
     }
 
-    @HostBinding('class.igx-grid__th--number')
+    @HostBinding('class.igx-grid-th--number')
     public get numberStyle() {
         return this.column.dataType === GridColumnDataType.Number;
     }
 
-    @HostBinding('class.igx-grid__th--sortable')
+    @HostBinding('class.igx-grid-th--sortable')
     public get sortableStyle() {
         return this.column.sortable;
     }
 
-    @HostBinding('class.igx-grid__th--selectable')
+    @HostBinding('class.igx-grid-th--selectable')
     public get selectableStyle() {
         return this.selectable;
     }
 
-    @HostBinding('class.igx-grid__th--filterable')
+    @HostBinding('class.igx-grid-th--filtrable')
     public get filterableStyle() {
         return this.column.filterable && this.grid.filteringService.isFilterRowVisible;
     }
 
-    @HostBinding('class.igx-grid__th--sorted')
+    @HostBinding('class.igx-grid-th--sorted')
     public get sortedStyle() {
         return this.sorted;
     }
 
-    @HostBinding('class.igx-grid__th--selected')
+    @HostBinding('class.igx-grid-th--selected')
     public get selectedStyle() {
         return this.selected;
     }

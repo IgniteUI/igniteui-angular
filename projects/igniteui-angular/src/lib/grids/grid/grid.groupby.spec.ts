@@ -24,7 +24,7 @@ import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
@@ -1884,7 +1884,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
         tick(200);
-        const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+        const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);

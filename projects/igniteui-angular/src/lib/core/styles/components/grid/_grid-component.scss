@@ -200,91 +200,6 @@
         @extend %igx-grid__tr-container--active !optional;
     }
 
-    @include e(th) {
-        @extend %grid-cell-display !optional;
-        @extend %grid-cell-header !optional;
-    }
-
-    @include e(th-expander) {
-        @extend %igx-grid__th-expander !optional
-    }
-
-    @include e(th-group-title) {
-        @extend %igx-grid__th-group-title !optional
-    }
-
-    @include e(th, $m: collapsible) {
-        @extend %igx-grid__th--collapsible !optional;
-    }
-
-    @include e(th, $m: sortable) {
-        @extend %igx-grid__th--sortable !optional;
-    }
-
-    @include e(th, $m: selectable) {
-        @extend %igx-grid__th--selectable !optional;
-    }
-
-    @include e(th, $m: filtrable) {
-        @extend %igx-grid__th--filtrable !optional;
-    }
-
-    @include e(th, $mods: (filtrable, sortable)) {
-        @extend %igx-grid__th--filtrable-sortable !optional;
-    }
-
-    @include e(th, $m: sorted) {
-        @extend %igx-grid__th--sorted !optional;
-    }
-
-    @include e(th, $m: selected) {
-        @extend %igx-grid__th--selected !optional;
-    }
-
-    @include e(th, $m: active) {
-        @extend %igx-grid__th--active !optional;
-    }
-
-    @include e(th, $m: number) {
-        @extend %grid-cell-number !optional;
-    }
-
-    @include e(th, $m: pinned) {
-        @extend %grid-cell--pinned !optional;
-    }
-
-    @include e(th, $m: pinned-last) {
-        @extend %grid-cell--pinned-last !optional;
-    }
-
-    @include e(th, $m: pinned-first) {
-        @extend %grid-cell--pinned-first !optional;
-    }
-
-    @include e(th, $m: fw) {
-        @extend %grid-cell--fixed-width !optional;
-    }
-
-    @include e(th, $m: filtering) {
-        @extend %grid-cell-header--filtering !optional;
-    }
-
-    @include e(th-title) {
-        @extend %grid-cell-header-title !optional;
-    }
-
-    @include e(th-icons) {
-        @extend %grid-cell-header-icons !optional;
-    }
-
-    @include e(th-resize-handle) {
-        @extend %grid__resize-handle !optional;
-    }
-
-    @include e(th-resize-line) {
-        @extend %grid__resize-line !optional;
-    }
-
     @include e(td) {
         @extend %grid-cell-display !optional;
     }
@@ -442,18 +357,6 @@
 
     @include e(grouping-indicator) {
         @extend %igx-grid__grouping-indicator !optional;
-    }
-
-    @include e(th-drop-indicator-left) {
-        @extend %igx-grid__th-drop-indicator-left !optional;
-    }
-
-    @include e(th-drop-indicator-right) {
-        @extend %igx-grid__th-drop-indicator-right !optional;
-    }
-
-    @include e(th-drop-indicator, $m: active) {
-        @extend %igx-grid__th-drop-indicator--active !optional;
     }
 
     @include e(scroll-on-drag-left) {
@@ -627,7 +530,6 @@
         }
     }
 
-
     @include m(cosy) {
         @extend %grid-display !optional;
 
@@ -647,20 +549,8 @@
             @extend %grid__drag-ghost-image--cosy !optional;
         }
 
-        @include e(th) {
-            @extend %grid-cell-header--cosy !optional;
-        }
-
         @include e(td) {
             @extend %grid-cell-display--cosy !optional;
-        }
-
-        @include e(th-title) {
-            @extend %grid-cell-header-title--cosy !optional;
-        }
-
-        @include e(th-icons) {
-            @extend %grid-cell-header-icons--cosy !optional;
         }
 
         @include e(group-content) {
@@ -748,20 +638,8 @@
             @extend %grid__drag-ghost-image--compact !optional;
         }
 
-        @include e(th) {
-            @extend %grid-cell-header--compact !optional;
-        }
-
         @include e(td) {
             @extend %grid-cell-display--compact !optional;
-        }
-
-        @include e(th-title) {
-            @extend %grid-cell-header-title--compact !optional;
-        }
-
-        @include e(th-icons) {
-            @extend %grid-cell-header-icons--compact !optional;
         }
 
         @include e(group-content) {

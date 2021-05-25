@@ -89,7 +89,7 @@ $print-background: #eee;
             background: $print-background !important;
         }
 
-        .igx-grid__th-title,
+        .igx-grid-th__title,
         .igx-grid__td-text {
             white-space: unset !important;
             text-overflow: initial !important;
@@ -106,7 +106,7 @@ $print-background: #eee;
             display: none;
         }
 
-        .igx-grid__th--pinned-last {
+        .igx-grid-th--pinned-last {
             border-right: 2px solid red !important;
         }
     }
