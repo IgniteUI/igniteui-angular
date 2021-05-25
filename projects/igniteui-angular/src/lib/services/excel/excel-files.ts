@@ -102,7 +102,7 @@ export class WorksheetFile implements IExcelFile {
                 sheetData += `<row r="${i + 1}"${this.rowHeight}>`;
 
                 //const headersForLevel = owner.columns.filter(c => c.level === i && c.type === ColumnType.MultiColumnHeader);
-                const headersForLevel = owner.columns.filter(c => c.level === i);
+                const headersForLevel = owner.columns.filter(c => c.level === i && c.columnSpans > 0 && !c.skip);
 
                 for (const currentCol of headersForLevel) {
                     let columnCoordinate;

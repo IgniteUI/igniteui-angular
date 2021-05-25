@@ -747,7 +747,9 @@ export abstract class IgxBaseExporter {
 
             const isMultiColHeader = column instanceof IgxColumnGroupComponent;
             const colSpan = isMultiColHeader ?
-                column.allChildren.filter(ch => !(ch instanceof IgxColumnGroupComponent)).length :
+                column.allChildren
+                    .filter(ch => !(ch instanceof IgxColumnGroupComponent) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
+                    .length :
                 1;
 
             const columnInfo: IColumnInfo = {
@@ -762,7 +764,7 @@ export abstract class IgxBaseExporter {
                 type: isMultiColHeader ? ColumnType.MultiColumnHeader : ColumnType.ColumnHeader,
                 columnSpans: colSpan,
                 level: column.level,
-                startIndex: column.visibleIndex,
+                startIndex: column.visibleIndex
             };
 
             if (column.level > maxLevel) {
