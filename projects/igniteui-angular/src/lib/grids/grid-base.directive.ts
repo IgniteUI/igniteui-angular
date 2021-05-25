@@ -29,7 +29,7 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { getResizeObserver } from '../core/utils';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
@@ -2818,7 +2818,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new ResizeObserver(() => { });
+    protected observer: ResizeObserver = new (getResizeObserver())(noop);
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -3548,7 +3548,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            this.observer = new ResizeObserver(() => this.resizeNotify.next());
+            this.observer = new (getResizeObserver())(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
     }
