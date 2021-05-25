@@ -30,11 +30,10 @@ export class ExportUtilities {
         } else {
             const url = window.URL.createObjectURL(blob);
             a.download = fileName;
+
             a.href = url;
             document.body.appendChild(a);
-
             a.click();
-
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }
