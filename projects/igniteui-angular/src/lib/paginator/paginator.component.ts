@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
+import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding, TemplateRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -11,6 +11,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IPageEventArgs } from '../grids/public_api';
 
 @Component({
     selector: 'igx-paginator',
@@ -60,6 +61,17 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     @Input()
     public dropdownHidden = false;
+
+    /**
+     * Gets/Sets a custom `ng-template` for the pagination UI.
+     *
+     * @example
+     * ```html
+     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
+     * ```
+     */
+    @Input()
+    public paginationTemplate: TemplateRef<any>;
 
     /**
      * @deprecated Use 'resourceStrings' instead.
@@ -117,6 +129,19 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public pageChange = new EventEmitter<number>();
 
     /**
+     * Emitted after paging is performed.
+     *
+     * @remarks
+     * Returns an object consisting of the previous and next pages.
+     * @example
+     * ```html
+     * igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
+     * ```
+     */
+    @Output()
+    public pagingDone = new EventEmitter<IPageEventArgs>();
+
+    /**
      * Total pages calculated from totalRecords and perPage
      */
     public totalPages: number;
@@ -164,8 +189,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set page(value: number) {
+        if (this._page === value || value < 0 || value > this.totalPages) {
+            return;
+        }
+        const eventArgs: IPageEventArgs = { previous: this._page, current: value };
         this._page = value;
         this.pageChange.emit(this._page);
+
+        this.pagingDone.emit(eventArgs);
     }
 
     /**
