@@ -15,6 +15,9 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: JSZip;
 }
 
+const EXCEL_MAX_ROWS = 1048576;
+const EXCEL_MAX_COLS = 16384;
+
 /**
  * **Ignite UI for Angular Excel Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_excel.html)
@@ -72,7 +75,14 @@ export class IgxExcelExporterService extends IgxBaseExporter {
     }
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
-        const level = data[0]?.level;
+        const firstDataElement = data[0];
+        const columnsLength = firstDataElement ? Object.keys(firstDataElement.data).length : 0;
+
+        if(data.length > EXCEL_MAX_ROWS || columnsLength > EXCEL_MAX_COLS) {
+            throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
+        }
+
+        const level = firstDataElement?.level;
 
         if (typeof level !== 'undefined') {
             let maxLevel = 0;
