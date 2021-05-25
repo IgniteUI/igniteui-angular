@@ -21,7 +21,7 @@ import { Subject } from 'rxjs';
 import { GridType } from '../common/grid.interface';
 import { GridSelectionMode } from '../common/enums';
 import { IgxGridExcelStyleFilteringComponent } from '../filtering/excel-style/grid.excel-style-filtering.component';
-import { DisplayDensity } from 'igniteui-angular';
+import { DisplayDensity } from '../../core/displayDensity';
 
 /**
  * @hidden
