@@ -2,7 +2,7 @@ import { AnimationReferenceMetadata } from '@angular/animations';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
@@ -27,6 +27,13 @@ import {
 import { setImmediate } from './setImmediate';
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
+
+/**
+ * Returns the ResizeObserver type or the polyfilled version if not available.
+ *
+ * @hidden @internal
+ */
+export const getResizeObserver = () => window.ResizeObserver || Polyfill;
 
 /**
  * @hidden
@@ -381,7 +388,7 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  * Related issue: https://github.com/angular/angular/issues/31712
  */
 export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => new Observable((observer) => {
-    const instance = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+    const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
         observer.next(entries);
     });
     instance.observe(target);

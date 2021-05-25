@@ -520,7 +520,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public refreshGridState(args?) {
         super.refreshGridState();
-        if (this.primaryKey && this.foreignKey) {
+        if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
@@ -661,8 +661,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const rec = this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
-            this.filteredSortedData.find(r => r === key);
+        const rec = this.filteredSortedData ? this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
+            this.filteredSortedData.find(r => r === key) : undefined;
         const index = this.dataView.findIndex(r => r.data && r.data === rec);
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;
