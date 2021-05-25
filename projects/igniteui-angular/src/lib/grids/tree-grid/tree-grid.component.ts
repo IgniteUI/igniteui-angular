@@ -520,7 +520,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
-        if (this.primaryKey && this.foreignKey) {
+        if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
