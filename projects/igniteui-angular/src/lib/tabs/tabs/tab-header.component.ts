@@ -3,7 +3,7 @@ import { IgxTabItemDirective } from '../tab-item.directive';
 import { IgxTabHeaderDirective } from '../tab-header.directive';
 import { IgxTabHeaderBase } from '../tabs.base';
 import { IgxTabsComponent } from './tabs.component';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { getResizeObserver } from '../../core/utils';
 import { PlatformUtil } from '../../core/utils';
 
 @Component({
@@ -106,7 +106,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     /** @hidden @internal */
     public ngAfterViewInit(): void {
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new ResizeObserver(() => {
+            this._resizeObserver = new (getResizeObserver())(() => {
                 this.tabs.realignSelectedIndicator();
             });
             this._resizeObserver.observe(this.nativeElement);
