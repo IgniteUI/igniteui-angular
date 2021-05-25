@@ -457,9 +457,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         }
         expandedStates.set(rowID, expanded);
         grid.expansionStates = expandedStates;
-        if (grid.rowEditable) {
-            grid.endEdit(false);
-        }
+        grid.endEdit(false);
     }
 
     public get_rec_by_id(rowID) {
