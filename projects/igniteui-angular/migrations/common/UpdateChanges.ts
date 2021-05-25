@@ -229,8 +229,10 @@ export class UpdateChanges {
                 for (let i = positions.length; i--;) {
                     const pos = positions[i];
                     // V.S. 18th May 2021: If several classes are renamed w/ the same import, erase them
+                    // TODO: Refactor to make use of TSLS API instead of string replace
                     if (i === 0 && alreadyReplaced.has(change.replaceWith)) {
-                        const trailingCommaWhiteSpace = new RegExp(/,([\s]*)(?=(\s}))/, 'g');
+                        // only match the first trailing white space, right after the replace position
+                        const trailingCommaWhiteSpace = new RegExp(/,([\s]*)(?=(\s}))/);
                         let afterReplace = fileContent.slice(pos.end);
                         const beforeReplace = fileContent.slice(0, pos.start);
                         const leadingComma = afterReplace[0] === ',' ? 1 : 0;
