@@ -30,8 +30,6 @@ export class ExportUtilities {
         } else {
             const url = window.URL.createObjectURL(blob);
             a.download = fileName;
-            a.href = url;
-            document.body.appendChild(a);
 
             a.href = url;
             document.body.appendChild(a);
