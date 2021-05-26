@@ -33,6 +33,7 @@ describe(`Update to ${version}`, () => {
 
     // IgxOverlayService
     it('should update overlay events subscriptions', async () => {
+        pending('set up tests for migrations through lang service');
         appTree.create(
             '/testSrc/appPrefix/service/test.component.ts', `
 import { Component, OnInit } from '@angular/core';
