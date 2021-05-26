@@ -50,7 +50,7 @@ export class SimpleComponent implements OnInit {
         this.overlayService.onAnimation.subscribe();
     }
 }`);
-        const tree = await schematicRunner.runSchematicAsync('migration-21', {}, appTree)
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
         expect(tree.readContent('/testSrc/appPrefix/service/test.component.ts'))
@@ -69,5 +69,129 @@ export class SimpleComponent implements OnInit {
         this.overlayService.animationStarting.subscribe();
     }
 }`);
+    });
+
+    it('should update banner event subscriptions in .ts file', async () => {
+        pending('ts language service tests do not pass');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts', `
+import { Component, OnInit } from '@angular/core';
+import { IgxBannerComponent } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxBannerComponent)
+    public banner: IgxBannerComponent
+
+    public ngOnInit() {
+        this.banner.onOpening.subscribe();
+        this.banner.onOpened.subscribe();
+        this.banner.onClosing.subscribe();
+        this.banner.onClosed.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(`
+import { Component, OnInit } from '@angular/core';
+import { IgxBannerComponent } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxBannerComponent)
+    public banner: IgxBannerComponent
+
+    public ngOnInit() {
+        this.banner.opening.subscribe();
+        this.banner.opened.subscribe();
+        this.banner.closing.subscribe();
+        this.banner.closed.subscribe();
+    }
+}`);
+    });
+
+    it('should update banner event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-banner
+    (onOpening)="handleEvent($event, 'opening')"
+    (onOpened)="handleEvent($event, 'opened')"
+    (onClosing)="handleEvent($event, 'closing')"
+    (onClosed)="handleEvent($event, 'closed')"
+>
+    Display something onOpening, onClosing, onOpened, onClosed
+</igx-banner>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-banner
+    (opening)="handleEvent($event, 'opening')"
+    (opened)="handleEvent($event, 'opened')"
+    (closing)="handleEvent($event, 'closing')"
+    (closed)="handleEvent($event, 'closed')"
+>
+    Display something onOpening, onClosing, onOpened, onClosed
+</igx-banner>`);
+    });
+
+    it('should update expansion panel event subscriptions in .ts file', async () => {
+        pending('ts language service tests do not pass');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts', `
+import { Component, OnInit } from '@angular/core';
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxExpansionPanelComponent)
+    public panel: IgxExpansionPanelComponent
+
+    @ViewChild(IgxExpansionPanelHeaderComponent)
+    public header: IgxExpansionPanelHeaderComponent
+
+    public ngOnInit() {
+        this.panel.onExpanded.subscribe();
+        this.panel.onCollapsed.subscribe();
+        this.header.onInteraction.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(`
+import { Component, OnInit } from '@angular/core';
+import { IgxExpansionPanelComponent, IgxExpansionPanelHeaderComponent } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxExpansionPanelComponent)
+    public panel: IgxExpansionPanelComponent
+
+    @ViewChild(IgxExpansionPanelHeaderComponent)
+    public header: IgxExpansionPanelHeaderComponent
+
+    public ngOnInit() {
+        this.panel.contentExpanded.subscribe();
+        this.panel.contentCollapsed.subscribe();
+        this.header.interaction.subscribe();
+    }
+}`);
+    });
+
+    it('should update expansion panel event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-expansion-panel (onExpanded)="handleExpanded($event)" (onCollapsed)="handleCollapsed($event)">
+    <igx-expansion-panel-header (onInteraction)="handleInteraction($event)">
+        Trigger something onInteraction and onExpanded and onCollapsed
+    </igx-expansion-panel-header>
+</igx-expansion-panel>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-expansion-panel (contentExpanded)="handleExpanded($event)" (contentCollapsed)="handleCollapsed($event)">
+    <igx-expansion-panel-header (interaction)="handleInteraction($event)">
+        Trigger something onInteraction and onExpanded and onCollapsed
+    </igx-expansion-panel-header>
+</igx-expansion-panel>`);
     });
 });
