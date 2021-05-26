@@ -15,7 +15,7 @@ import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { DataParent } from '../../test-utils/sample-test-data.spec';
-import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
+import { IgxGridRowEditingTransactionComponent, MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-samples.spec';
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
@@ -38,7 +38,9 @@ describe('IgxGrid - GroupBy #grid', () => {
                 GroupByDataMoreColumnsComponent,
                 GroupByEmptyColumnFieldComponent,
                 MultiColumnHeadersWithGroupingComponent,
-                GridGroupByRowCustomSelectorsComponent
+                GridGroupByRowCustomSelectorsComponent,
+                IgxGridRowEditingTransactionComponent,
+                InitialGroupingGridComponent
             ],
             imports: [NoopAnimationsModule, IgxGridModule]
         });
@@ -1322,6 +1324,43 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, false, true));
         }));
 
+    it('group rows checkboxes should have correct state when initial grouping and selection are applied',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(InitialGroupingGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.detectChanges();
+
+            expect(grid.groupsRecords.length).toBe(5);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[0], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[1], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[2], false, true));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[3], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[4], true, false));
+        }));
+
+    it('group rows checkboxes should have correct state when ungroup and group by another field',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(InitialGroupingGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.detectChanges();
+
+            expect(grid.groupsRecords.length).toBe(5);
+            grid.clearGrouping();
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.groupsRecords.length).toBe(3);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[0], false, true));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[1], false, true));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[2], false, false));
+        }));
+
     it('group row checkbox should remain the right state after filter is applied, all rows are selected and filter is removed',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1360,6 +1399,85 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
+    it(`group row checkbox should remain the right state after deleting a row and apply filter 
+         with enabled batch updating`, fakeAsync(() => {
+        const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+        fix.detectChanges();
+        const grid = fix.componentInstance.grid;
+        grid.rowSelection = GridSelectionMode.multiple;
+
+        grid.groupBy({
+            fieldName: 'InStock', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+        grid.selectRows([1, 6, 8, 9, 10]);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+        grid.filter('ProductName', 'Chai', IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        // 1 3 6 8 9 10
+        grid.deleteRow(3);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+        grid.clearFilter();
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+    }));
+
+    it('group row checkbox should remain the right state after adding a new row and apply filter', fakeAsync(() => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        fix.componentInstance.width = '1200px';
+        tick();
+        grid.columnWidth = '200px';
+        tick();
+        grid.rowSelection = GridSelectionMode.multiple;
+        tick();
+        fix.detectChanges();
+
+        grid.groupBy({
+            fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+        });
+        fix.detectChanges();
+
+        const grRow = grid.groupsRowList.toArray()[0];
+
+        GridSelectionFunctions.clickRowCheckbox(grRow);
+        fix.detectChanges();
+
+        const newRow = { ID: '9', ProductName: 'NetAdvantage', Downloads: '350' };
+        grid.addRow(newRow);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        grid.filter('ID', 9, IgxStringFilteringOperand.instance().condition('doesNotContain'), true);
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+        grid.clearFilter();
+        fix.detectChanges();
+        tick(100);
+        fix.detectChanges();
+
+        expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+    }));
+
     it('group row checkbox should remain the right state after selecting all rows in group and adding a new row to that group',
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
@@ -1391,6 +1509,98 @@ describe('IgxGrid - GroupBy #grid', () => {
             fix.detectChanges();
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        }));
+
+    it('group row checkbox should remain the right state after adding a new row to that group with enabled batch updating',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            GridSelectionFunctions.clickRowCheckbox(grRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            const newRow = {
+                ProductID: 11,
+                ProductName: 'Uncle Bobs Dried Pears',
+                InStock: true, UnitsInStock: 2760,
+                OrderDate: new Date('2005-03-21')
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+            grid.transactions.undo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+            grid.transactions.redo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+        }));
+
+    it('group row checkbox should remain the right state after adding a new row and delete it with enabled batch updating',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            GridSelectionFunctions.clickRowCheckbox(grRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            const newRow = {
+                ProductID: 11,
+                ProductName: 'Uncle Bobs Dried Pears',
+                InStock: true, UnitsInStock: 2760,
+                OrderDate: new Date('2005-03-21')
+            };
+            grid.addRow(newRow);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+            grid.deleteRow(11);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            grid.transactions.undo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+            grid.transactions.redo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
     it('should select/deselect all rows in group from API',
@@ -1515,6 +1725,50 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(groupByRowCheckboxElement.getAttribute('aria-label'))
                 .toMatch('Deselect all rows in the group with field name ProductName and value NetAdvantage');
 
+        }));
+
+    it(`edit selected row so it goes to another group after row editing is Done.`,
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(DefaultGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.componentInstance.enableEditing = true;
+            fix.componentInstance.width = '1200px';
+            grid.primaryKey = 'ID';
+            grid.columnWidth = '200px';
+            grid.rowSelection = GridSelectionMode.multiple;
+            grid.rowEditable = true;
+            fix.detectChanges();
+
+            grid.groupBy({
+                fieldName: 'ProductName', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            grid.selectRows([5]);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            const cell = grid.getCellByKey(5, 'ProductName');
+            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            fix.detectChanges();
+            expect(cell.editMode).toBe(true);
+
+            const editCellDom = fix.debugElement.query(By.css('.igx-grid__td--editing'));
+            const input = editCellDom.query(By.css('input'));
+            clickAndSendInputElementValue(input, 'NetAdvantage', fix);
+            expect(grRow.groupRow.records.length).toEqual(2);
+
+            const doneButtonElement = GridFunctions.getRowEditingDoneButton(fix);
+            doneButtonElement.click();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grRow.groupRow.records.length).toEqual(3);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
     it(`edit selected row so it goes to another group where all rows are selected as well.
@@ -1791,6 +2045,49 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick(100);
             fix.detectChanges();
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow3, true, false));
+        }));
+
+    it('group row checkbox should remain the right state after delete a row with enabled batch updating',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
+            fix.detectChanges();
+            const grid = fix.componentInstance.grid;
+            grid.rowSelection = GridSelectionMode.multiple;
+
+            grid.groupBy({
+                fieldName: 'InStock', dir: SortingDirection.Desc, ignoreCase: false
+            });
+            fix.detectChanges();
+
+            const grRow = grid.groupsRowList.toArray()[0];
+
+            GridSelectionFunctions.clickRowCheckbox(grRow);
+            fix.detectChanges();
+
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+            grid.deselectRows([3]);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+            grid.deleteRow(3);
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
+
+            grid.transactions.undo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
+
+            grid.transactions.redo();
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
         }));
 
     it('should hide/show checkboxes when change hideRowSelectors',
@@ -3438,6 +3735,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         return fix.whenStable();
     };
 });
+
 @Component({
     template: `
         <igx-grid
@@ -3446,7 +3744,9 @@ describe('IgxGrid - GroupBy #grid', () => {
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
-            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            [autoGenerate]="true" 
+            (columnInit)="columnsCreated($event)" 
+            (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -3482,6 +3782,28 @@ export class DefaultGridComponent extends DataParent {
     public onGroupingDoneHandler(sortExpr) {
         this.currentSortExpressions = sortExpr;
     }
+}
+@Component({
+    template: `
+        <igx-grid
+            [(groupingExpressions)]='currentGroupingExpressions'
+            [selectedRows]='[2, 3, 8]'
+            [primaryKey]="'ID'"
+            [width]='width'
+            [height]='height'
+            [data]="data"
+            [rowSelection]="'multiple'"
+            [autoGenerate]="true" >
+        </igx-grid>
+    `
+})
+export class InitialGroupingGridComponent extends DataParent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+
+    public width = '800px';
+    public height = null;
+    public currentGroupingExpressions = [{ fieldName: 'ProductName', dir: SortingDirection.Asc }];
 }
 
 @Component({

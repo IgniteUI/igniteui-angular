@@ -1031,7 +1031,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             this.crudService.endEdit(false);
             this.summaryService.updateSummaryCache(args);
             this._headerFeaturesWidth = NaN;
-            this.updateGroupsState();
+            requestAnimationFrame(() => {
+                this.updateGroupsState();
+            });
         });
 
         this.cellEditDone.pipe(takeUntil(this.destroy$)).subscribe((args) => {
