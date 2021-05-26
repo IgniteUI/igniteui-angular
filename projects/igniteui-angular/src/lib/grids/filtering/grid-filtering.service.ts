@@ -95,7 +95,7 @@ export class IgxFilteringService implements OnDestroy {
             scrollStrategy: new AbsoluteScrollStrategy()
         };
 
-        this._overlayService.onOpening.pipe(
+        this._overlayService.opening.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
@@ -108,7 +108,7 @@ export class IgxFilteringService implements OnDestroy {
                 }
             });
 
-        this._overlayService.onClosed.pipe(
+        this._overlayService.closed.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
                 const instance = this.grid.excelStyleFilteringComponent ?
