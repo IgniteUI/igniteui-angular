@@ -737,11 +737,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
 
+        this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (this.collapsed) {
-                    this._onTouchedCallback();
                     this.updateValidityOnBlur();
                 }
             });

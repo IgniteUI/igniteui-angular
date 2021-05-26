@@ -736,6 +736,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
+        this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
@@ -774,13 +776,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
-    /** @hidden @internal */
-    public subscribeToClick() {
+    private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (!this.isDropdown) {
-                    this.open();
+                    this.toggle();
                 }
             });
     }
@@ -881,6 +882,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // do not focus the input if clicking outside in dropdown mode
             if (this.getEditElement() && !(args.event && this.isDropdown)) {
                 this.inputDirective.focus();
+            } else {
+                this._onTouchedCallback();
+                this.updateValidity();
             }
         });
 

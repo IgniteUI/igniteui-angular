@@ -710,6 +710,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             // outside click
             this.updateValidityOnBlur();
         } else {
+            this.onTouchCallback();
             // input click
             if (this.hasProjectedInputs && this._focusedInput) {
                 this._focusedInput.setFocus();
