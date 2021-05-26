@@ -716,7 +716,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             const args = { owner: this, cancel: false, event: eventArgs.event };
             const overlayEvent = eventArgs as OverlayCancelableEventArgs;
             this.opening.emit(args);
@@ -731,16 +731,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.updateCalendar();
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             this.handleClosing(eventArgs as OverlayCancelableEventArgs);
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe(() => {
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
