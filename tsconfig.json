@@ -33,7 +33,7 @@
     "typedocOptions": {
         "out": "dist/igniteui-angular/docs/typescript",
         "exclude": "**/*.spec.ts",
-        "theme":  "node_modules/igniteui-typedoc-theme/dist",
+        "theme":  "node_modules/ig-typedoc-theme/dist",
         "excludePrivate": true,
         "excludeProtected": true,
         "name": "Ignite UI for Angular",
