@@ -113,7 +113,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     private saveFile(data: string, fileName: string): void {
         const blob = new Blob([ExportUtilities.stringToArrayBuffer(atob(data))], {
-            type: ''
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 
         ExportUtilities.saveBlobToFile(blob, fileName);
