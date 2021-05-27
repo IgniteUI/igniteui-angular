@@ -29,7 +29,7 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { getResizeObserver } from '../core/utils';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
@@ -2818,7 +2818,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new ResizeObserver(() => { });
+    protected observer: ResizeObserver = new (getResizeObserver())(noop);
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -3312,7 +3312,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
 
-        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
+        this.overlayService.opening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
@@ -3321,7 +3321,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
+        this.overlayService.opened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
             // do not hide the advanced filtering overlay on scroll
@@ -3344,7 +3344,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+        this.overlayService.closed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this.overlayService.detach(this._advancedFilteringOverlayId);
                 this._advancedFilteringOverlayId = null;
@@ -3548,7 +3548,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            this.observer = new ResizeObserver(() => this.resizeNotify.next());
+            this.observer = new (getResizeObserver())(() => this.resizeNotify.next());
             this.observer.observe(this.nativeElement);
         });
     }
