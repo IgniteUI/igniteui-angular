@@ -259,14 +259,16 @@ export class IgxGridGroupByRowComponent implements OnDestroy {
      * @hidden @internal
      */
     public get isSelected(): boolean {
-        return this.gridSelection.selectedGroupByRows.has(this.groupRow.value + this.groupRow.expression.fieldName);
+        const groupID = this.gridSelection.calculateGroupID(this.groupRow);
+        return this.gridSelection.selectedGroupByRows.has(groupID);
     }
 
     /**
      * @hidden @internal
      */
     public get isIndeterminate(): boolean {
-        return this.gridSelection.indeterminateGroupByRows.has(this.groupRow.value + this.groupRow.expression.fieldName);
+        const groupID = this.gridSelection.calculateGroupID(this.groupRow);
+        return this.gridSelection.indeterminateGroupByRows.has(groupID);
     }
 
     /**

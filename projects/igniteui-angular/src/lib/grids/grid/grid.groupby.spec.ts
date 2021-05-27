@@ -1338,6 +1338,39 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[4], true, false));
         }));
 
+    it('group rows checkboxes should have correct state when add new group to the initial grouping',
+        fakeAsync(() => {
+            const fix = TestBed.createComponent(InitialGroupingGridComponent);
+            const grid = fix.componentInstance.instance;
+            fix.detectChanges();
+            grid.height = null;
+            fix.detectChanges();
+
+            expect(grid.groupsRecords.length).toBe(5);
+
+            grid.groupBy({
+                fieldName: 'Released', dir: SortingDirection.Asc, ignoreCase: false
+            });
+            fix.detectChanges();
+            tick(100);
+            fix.detectChanges();
+
+            expect(grid.groupsRecords.length).toBe(5);
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[0], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[1], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[2], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[3], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[4], false, true));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[5], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[6], true, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[7], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[8], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[9], false, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[10], true, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[11], true, false));
+            expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grid.groupsRowList.toArray()[12], true, false));
+        }));
+
     it('group rows checkboxes should have correct state when ungroup and group by another field',
         fakeAsync(() => {
             const fix = TestBed.createComponent(InitialGroupingGridComponent);

@@ -564,7 +564,7 @@ export class IgxGridSelectionService {
 
         const visibleRowIDs = this.allData;
         const visibleRecordsInGroup = isCRUD ? group.records.filter(rec => visibleRowIDs.indexOf(rec) > -1) : group.records;
-        const groupID = group.value + group.expression.fieldName;
+        const groupID = this.calculateGroupID(group);
 
         if (visibleRecordsInGroup.every(x => this.isRowSelected(this.getRowID(x))) && visibleRecordsInGroup.length) {
             this.selectedGroupByRows.add(groupID);
@@ -798,6 +798,17 @@ export class IgxGridSelectionService {
         this.columnSelection.clear();
     }
 
+    /**
+     * @hidden @internal
+     */
+    public calculateGroupID(group: IGroupByRecord, groupID = '') {
+        groupID += group.value + group.expression.fieldName;
+        if (group.groupParent) {
+            return this.calculateGroupID(group.groupParent, groupID);
+        }
+        return groupID;
+    }
+
     protected areEqualCollections(first, second): boolean {
         return first.length === second.length && new Set(first.concat(second)).size === first.length;
     }
@@ -827,12 +838,12 @@ export class IgxGridSelectionService {
     }
 
     private handleParentGroupsState(group: IGroupByRecord) {
-        const groupID = group.value + group.expression.fieldName;
-        if (group.groups.every(x => this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+        const groupID = this.calculateGroupID(group);
+        if (group.groups.every(x => this.selectedGroupByRows.has(this.calculateGroupID(x)))) {
             this.selectedGroupByRows.add(groupID);
             this.indeterminateGroupByRows.delete(groupID);
-        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(x.value + x.expression.fieldName) ||
-            this.selectedGroupByRows.has(x.value + x.expression.fieldName))) {
+        } else if (group.groups.some(x => this.indeterminateGroupByRows.has(this.calculateGroupID(x)) ||
+            this.selectedGroupByRows.has(this.calculateGroupID(x)))) {
             this.selectedGroupByRows.delete(groupID);
             this.indeterminateGroupByRows.add(groupID);
         } else {
