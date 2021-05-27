@@ -1,7 +1,7 @@
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
@@ -2243,7 +2243,59 @@ describe('IgxTimePicker', () => {
             expect(inputGroup.isRequired).toBeFalsy();
         });
     });
+
+    describe('FormControl integration', () => {
+        let fixture: ComponentFixture<IgxTimePickerInFormComponent>;
+        let timePicker: IgxTimePickerComponent;
+        configureTestSuite();
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxTimePickerInFormComponent
+                ],
+                imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
+            }).compileComponents();
+        }));
+        beforeEach(fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxTimePickerInFormComponent);
+            fixture.detectChanges();
+            timePicker = fixture.componentInstance.timePicker;
+        }));
+
+        it('should set validity to initial when the form is reset', fakeAsync(() => {
+            const tpInput = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
+            tpInput.focus();
+            tick();
+            fixture.detectChanges();
+
+            tpInput.blur();
+            tick();
+            fixture.detectChanges();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INVALID);
+
+            fixture.componentInstance.form.resetForm();
+            tick();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INITIAL);
+        }));
+    });
 });
+
+@Component({
+    template: `
+    <form #form="ngForm">
+        <igx-time-picker name="timePicker" [(ngModel)]="date" [required]="true"></igx-time-picker>
+    </form>
+    `
+})
+export class IgxTimePickerInFormComponent {
+    @ViewChild('form')
+    public form: NgForm;
+
+    @ViewChild(IgxTimePickerComponent)
+    public timePicker: IgxTimePickerComponent;
+
+    public date: Date = null;
+}
 
 @Component({
     template: `

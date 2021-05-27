@@ -1599,14 +1599,16 @@ export class IgxTimePickerComponent implements
     }
 
     protected onStatusChanged() {
+        const input = this._inputDirective || this._inputDirectiveUserTemplate;
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            const input = this._inputDirective || this._inputDirectiveUserTemplate;
             if (this._inputGroup.isFocused) {
                 input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
                 input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
+        } else {
+            input.valid = IgxInputState.INITIAL;
         }
 
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
