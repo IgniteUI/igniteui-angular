@@ -42,6 +42,52 @@
             "definedIn": [
                 "IgxOverlayService"
             ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },{
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },{
+            "member": "onCollapsed",
+            "replaceWith": "contentCollapsed",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },
+        {
+            "member": "onExpanded",
+            "replaceWith": "contentExpanded",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },{
+            "member": "onInteraction",
+            "replaceWith": "interaction",
+            "definedIn": [
+                "IgxExpansionPanelHeaderComponent"
+            ]
         }
     ]
 }
