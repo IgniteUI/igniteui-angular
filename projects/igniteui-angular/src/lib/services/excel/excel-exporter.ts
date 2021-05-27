@@ -15,6 +15,9 @@ export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: JSZip;
 }
 
+const EXCEL_MAX_ROWS = 1048576;
+const EXCEL_MAX_COLS = 16384;
+
 /**
  * **Ignite UI for Angular Excel Exporter Service** -
  * [Documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/exporter_excel.html)
@@ -73,10 +76,23 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
         const firstDataElement = data[0];
+        const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
+
         let rootKeys;
         let columnCount;
         let columnWidths;
         let indexOfLastPinnedColumn;
+
+
+        const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
+            isHierarchicalGrid ?
+                data.some(d =>  Object.keys(d.data).length > EXCEL_MAX_COLS) :
+                Object.keys(firstDataElement.data).length > EXCEL_MAX_COLS :
+            false;
+
+        if(data.length > EXCEL_MAX_ROWS || columnsExceedLimit) {
+            throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
+        }
 
         if (typeof firstDataElement !== 'undefined') {
             let maxLevel = 0;
@@ -89,7 +105,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 throw Error('Can create an outline of up to eight levels!');
             }
 
-            if (firstDataElement.type === ExportRecordType.HierarchicalGridRecord) {
+            if (isHierarchicalGrid) {
                 columnCount = data
                     .map(a => this._ownersMap.get(a.owner).columns.length + a.level)
                     .sort((a,b) => b - a)[0];
@@ -123,7 +139,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
 
     private saveFile(data: string, fileName: string): void {
         const blob = new Blob([ExportUtilities.stringToArrayBuffer(atob(data))], {
-            type: ''
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 
         ExportUtilities.saveBlobToFile(blob, fileName);

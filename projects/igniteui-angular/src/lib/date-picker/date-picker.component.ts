@@ -839,7 +839,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
             const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.opening.emit(args);
             eventArgs.cancel = args.cancel;
@@ -852,7 +852,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._collapsed = false;
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
             const args: IBaseEventArgs = { owner: this };
             this.opened.emit(args);
             if (this._calendar?.daysView?.selectedDates) {
@@ -866,7 +866,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
             const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.closing.emit(args);
             eventArgs.cancel = args.cancel;
@@ -879,7 +879,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe((_event) => {
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe((_event) => {
             const args: IBaseEventArgs = { owner: this };
             this.closed.emit(args);
             this._overlayService.detach(this._overlayId);

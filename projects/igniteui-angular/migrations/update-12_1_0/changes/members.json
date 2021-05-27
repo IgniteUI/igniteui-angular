@@ -1,0 +1,93 @@
+{
+    "$schema": "../../common/schema/members-changes.schema.json",
+    "changes": [
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onAppended",
+            "replaceWith": "contentAppended",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onAnimation",
+            "replaceWith": "animationStarting",
+            "definedIn": [
+                "IgxOverlayService"
+            ]
+        },
+        {
+            "member": "onOpening",
+            "replaceWith": "opening",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onOpened",
+            "replaceWith": "opened",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },{
+            "member": "onClosing",
+            "replaceWith": "closing",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },
+        {
+            "member": "onClosed",
+            "replaceWith": "closed",
+            "definedIn": [
+                "IgxBannerComponent"
+            ]
+        },{
+            "member": "onCollapsed",
+            "replaceWith": "contentCollapsed",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },
+        {
+            "member": "onExpanded",
+            "replaceWith": "contentExpanded",
+            "definedIn": [
+                "IgxExpansionPanelComponent"
+            ]
+        },{
+            "member": "onInteraction",
+            "replaceWith": "interaction",
+            "definedIn": [
+                "IgxExpansionPanelHeaderComponent"
+            ]
+        }
+    ]
+}
