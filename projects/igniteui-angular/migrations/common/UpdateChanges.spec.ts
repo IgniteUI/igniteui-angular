@@ -321,7 +321,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake<any>((filePath: string) => {
             if (filePath === jsonPath) {
                 return true;
             }

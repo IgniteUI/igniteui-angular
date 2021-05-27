@@ -37,10 +37,12 @@ export class UpdateChanges {
             // Force Angular service to compile project on initial load w/ configure project
             // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
             // and no actual angular metadata will be resolved for the rest of the migration
-            const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
-            const mainPath = '/src/app/app.component.ts';//path.posix.join('/', wsProject.root, wsProject.architect?.build?.options['main']);
-            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.asNormalizedPath(mainPath), false);
+            const mainPath = path.resolve(this._projectService.currentDirectory, 'src/app/app.component.ts');
+            // const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+            // path.posix.join('/', wsProject.root, wsProject.architect?.build?.options['main']);
+            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainPath),false);
             this._projectService.openClientFile(scriptInfo.fileName);
+
             const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
             project.getLanguageService().getSemanticDiagnostics(mainPath);
         }
@@ -432,16 +434,17 @@ export class UpdateChanges {
                 continue;
             }
 
-            const langServ = this.getDefaultLanguageService(entryPath);
+            const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
+            const langServ = this.getDefaultLanguageService(absPath);
             let matches: number[];
             if (entryPath.endsWith('.ts')) {
-                const source = langServ.getProgram().getSourceFile(entryPath);
+                const source = langServ.getProgram().getSourceFile(absPath);
                 matches = getIdentifierPositions(source, change.member).map(x => x.start);
             } else {
-                matches = findMatches(content, `.${change.member}`);
+                matches = findMatches(content, `.${change.member}`).map(pos => pos + 1);
             }
             for (const matchPosition of matches) {
-                if (isMemberIgniteUI(change, langServ, entryPath, matchPosition)) {
+                if (isMemberIgniteUI(change, langServ, absPath, matchPosition)) {
                     changes.add({ change, position: matchPosition });
                 }
             }

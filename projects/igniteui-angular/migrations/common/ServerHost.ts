@@ -1,5 +1,5 @@
 import { Tree } from '@angular-devkit/schematics';
-import { posix } from 'path';
+import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
@@ -16,6 +16,7 @@ export class ServerHost implements ts.server.ServerHost {
 
     public readFile(path: string, encoding?: string): string | undefined {
         let content;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             content = this.host.read(path).toString(encoding);
         } finally {
@@ -43,16 +44,24 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public fileExists(path: string): boolean {
-        return this.host.exists(path) || ts.sys.fileExists(path);
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        let flag = false;
+        try {
+            flag = this.host.exists(path);
+        } finally {
+            // eslint-disable-next-line no-unsafe-finally
+            return flag || ts.sys.fileExists(path);
+        }
     }
 
     public directoryExists(path: string): boolean {
         let exists: boolean;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             exists = this.host.getDir(path) !== void 0;
         } finally {
             // eslint-disable-next-line no-unsafe-finally
-            return exists || this.fileExists(path);
+            return exists || ts.sys.directoryExists(path);
         }
     }
 
@@ -61,15 +70,17 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public getCurrentDirectory(): string {
-        return this.host.root.path;
+        return process.cwd();
     }
 
     public getDirectories(path: string): string[] {
-        return this.host.getDir(path).subdirs;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        return this.host.getDir(path).subdirs.map(e => pathFs.resolve(e));
     }
 
     public readDirectory(path: string): string[] {
-        return this.host.getDir(path).subfiles;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        return this.host.getDir(path).subfiles.map(e => pathFs.resolve(e));
     }
 
     public require(initialPath: string, moduleName: string) {
@@ -97,10 +108,6 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public realpath(path: string): string {
-        // if (this.host.exists(path)) {
-        //     // host paths are realtive, adjust so they resolve correctly
-        //     path = posix.join('.', path);
-        // }
         return ts.sys.realpath(path);
     }
 
