@@ -3744,8 +3744,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
-            [autoGenerate]="true" 
-            (columnInit)="columnsCreated($event)" 
+            [autoGenerate]="true"
+            (columnInit)="columnsCreated($event)"
             (onGroupingDone)="onGroupingDoneHandler($event)">
         </igx-grid>
         <ng-template #dropArea>
