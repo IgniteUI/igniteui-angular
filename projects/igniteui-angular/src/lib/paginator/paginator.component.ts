@@ -11,7 +11,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IPageEventArgs } from '../grids/public_api';
+import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
 
 @Component({
     selector: 'igx-paginator',
@@ -129,13 +129,26 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public pageChange = new EventEmitter<number>();
 
     /**
+     * Emitted before paging is performed.
+     *
+     * @remarks
+     * Returns an object consisting of the current and next pages.
+     * @example
+     * ```html
+     * <igx-paginator (paging)="pagingHandler($event)"></igx-paginator>
+     * ```
+     */
+       @Output()
+       public paging = new EventEmitter<IPageCancellableEventArgs>();
+
+    /**
      * Emitted after paging is performed.
      *
      * @remarks
-     * Returns an object consisting of the previous and next pages.
+     * Returns an object consisting of the previous and current pages.
      * @example
      * ```html
-     * igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
+     * <igx-paginator (pagingDone)="pagingDone($event)"></igx-paginator>
      * ```
      */
     @Output()
@@ -192,7 +205,13 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         if (this._page === value || value < 0 || value > this.totalPages) {
             return;
         }
+        const cancelEventArgs: IPageCancellableEventArgs = { current: this._page, next: value, cancel: false };
         const eventArgs: IPageEventArgs = { previous: this._page, current: value };
+
+        this.paging.emit(cancelEventArgs);
+        if (cancelEventArgs.cancel) {
+            return;
+        }
         this._page = value;
         this.pageChange.emit(this._page);
 
