@@ -218,7 +218,7 @@ export class IgxDatePickerComponent implements IDatePicker, ControlValueAccessor
      * <igx-date-picker locale="ja-JP" [value]="date"></igx-date-picker>
      * ```
      */
-    @Input() public locale: 'en';
+    @Input() public locale = 'en';
 
     /**
      * Gets/Sets the default template editor's tabindex.
