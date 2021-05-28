@@ -432,14 +432,15 @@ export class UpdateChanges {
         const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
         // use the absolute path for ALL LS operations
         // do not overwrite the entryPath, as Tree operations require relative paths
-        const langServ = this.getDefaultLanguageService(absPath);
         const changes = new Set<{ change; position }>();
+        let langServ;
         for (const change of memberChanges.changes) {
 
             if (!content.includes(change.member)) {
                 continue;
             }
 
+            langServ = langServ || this.getDefaultLanguageService(absPath);
             let matches: number[];
             if (entryPath.endsWith('.ts')) {
                 const source = langServ.getProgram().getSourceFile(absPath);
