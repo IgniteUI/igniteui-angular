@@ -64,64 +64,64 @@ import {
 @Injectable({ providedIn: 'root' })
 export class IgxOverlayService implements OnDestroy {
     /**
-     * Emitted before the component is opened.
+     * Emitted just before the overlay content starts to open.
      * ```typescript
-     * onOpening(event: OverlayCancelableEventArgs){
-     *     const onOpening = event;
+     * opening(event: OverlayCancelableEventArgs){
+     *     const opening = event;
      * }
      * ```
      */
-    public onOpening = new EventEmitter<OverlayCancelableEventArgs>();
+    public opening = new EventEmitter<OverlayCancelableEventArgs>();
 
     /**
-     * Emitted after the component is appended to the overlay, and before animations are started.
+     * Emitted after the overlay content is opened and all animations are finished.
      * ```typescript
-     * onAppended(event: OverlayEventArgs){
-     *     const onAppended = event;
+     * opened(event: OverlayEventArgs){
+     *     const opened = event;
      * }
      * ```
      */
-    public onAppended = new EventEmitter<OverlayEventArgs>();
+    public opened = new EventEmitter<OverlayEventArgs>();
 
     /**
-     * Emitted after the component is opened and all animations are finished.
+     * Emitted just before the overlay content starts to close.
      * ```typescript
-     * onOpened(event: OverlayEventArgs){
-     *     const onOpened = event;
+     * closing(event: OverlayCancelableEventArgs){
+     *     const closing = event;
      * }
      * ```
      */
-    public onOpened = new EventEmitter<OverlayEventArgs>();
+    public closing = new EventEmitter<OverlayClosingEventArgs>();
 
     /**
-     * Emitted before the component is closed.
+     * Emitted after the overlay content is closed and all animations are finished.
      * ```typescript
-     * onClosing(event: OverlayCancelableEventArgs){
-     *     const onClosing = event;
+     * closed(event: OverlayEventArgs){
+     *     const closed = event;
      * }
      * ```
      */
-    public onClosing = new EventEmitter<OverlayClosingEventArgs>();
+    public closed = new EventEmitter<OverlayEventArgs>();
 
     /**
-     * Emitted after the component is closed and all animations are finished.
+     * Emitted after the content is appended to the overlay, and before animations are started.
      * ```typescript
-     * onClosed(event: OverlayEventArgs){
-     *     const onClosed = event;
+     * contentAppended(event: OverlayEventArgs){
+     *     const contentAppended = event;
      * }
      * ```
      */
-    public onClosed = new EventEmitter<OverlayEventArgs>();
+     public contentAppended = new EventEmitter<OverlayEventArgs>();
 
     /**
-     * Emitted before animation is started
+     * Emitted just before the overlay animation start.
      * ```typescript
-     * onAnimation(event: OverlayAnimationEventArgs){
-     *     const onAnimation = event;
+     * animationStarting(event: OverlayAnimationEventArgs){
+     *     const animationStarting = event;
      * }
      * ```
      */
-    public onAnimation = new EventEmitter<OverlayAnimationEventArgs>();
+    public animationStarting = new EventEmitter<OverlayAnimationEventArgs>();
 
     private _componentId = 0;
     private _overlayInfos: OverlayInfo[] = [];
@@ -303,7 +303,7 @@ export class IgxOverlayService implements OnDestroy {
      *
      * @param component ElementRef to show in overlay
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
-     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(element: ElementRef, settings?: OverlaySettings): string;
     /**
@@ -313,7 +313,7 @@ export class IgxOverlayService implements OnDestroy {
      * @param settings Display settings for the overlay, such as positioning and scroll/close behavior.
      * @param moduleRef Optional reference to an object containing Injector and ComponentFactoryResolver
      * that can resolve the component's factory
-     * @returns Id of the created overlay. Valid until `onClosed` is emitted.
+     * @returns Id of the created overlay. Valid until `detach` is called.
      */
     public attach(component: Type<any>, settings?: OverlaySettings,
         moduleRef?: Pick<NgModuleRef<any>, 'injector' | 'componentFactoryResolver'>): string;
@@ -335,7 +335,7 @@ export class IgxOverlayService implements OnDestroy {
         const elementRect = info.elementRef.nativeElement.getBoundingClientRect();
         info.initialSize = { width: elementRect.width, height: elementRect.height };
         this.moveElementToOverlay(info);
-        this.onAppended.emit({ id: info.id, componentRef: info.componentRef });
+        this.contentAppended.emit({ id: info.id, componentRef: info.componentRef });
         // TODO: why we had this check?
         // if (this._overlayInfos.indexOf(info) === -1) {
         //     this._overlayInfos.push(info);
@@ -398,7 +398,7 @@ export class IgxOverlayService implements OnDestroy {
         }
 
         const eventArgs: OverlayCancelableEventArgs = { id, componentRef: info.componentRef, cancel: false };
-        this.onOpening.emit(eventArgs);
+        this.opening.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
         }
@@ -416,10 +416,10 @@ export class IgxOverlayService implements OnDestroy {
             this.buildAnimationPlayers(info);
             this.playOpenAnimation(info);
         } else {
-            //  to eliminate flickering show the element just before onOpened fires
+            //  to eliminate flickering show the element just before opened fires
             info.wrapperElement.style.visibility = '';
             info.visible = true;
-            this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+            this.opened.emit({ id: info.id, componentRef: info.componentRef });
         }
     }
 
@@ -529,14 +529,14 @@ export class IgxOverlayService implements OnDestroy {
             return;
         }
         const eventArgs: OverlayClosingEventArgs = { id, componentRef: info.componentRef, cancel: false, event };
-        this.onClosing.emit(eventArgs);
+        this.closing.emit(eventArgs);
         if (eventArgs.cancel) {
             return;
         }
         if (info.settings.positionStrategy.settings.closeAnimation) {
             this.playCloseAnimation(info, event);
         } else {
-            this.onCloseDone(info);
+            this.closeDone(info);
         }
     }
 
@@ -639,13 +639,13 @@ export class IgxOverlayService implements OnDestroy {
         }
     }
 
-    private onCloseDone(info: OverlayInfo) {
+    private closeDone(info: OverlayInfo) {
         info.visible = false;
         if (info.wrapperElement) {
             // to eliminate flickering show the element just before animation start
             info.wrapperElement.style.visibility = 'hidden';
         }
-        this.onClosed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
+        this.closed.emit({ id: info.id, componentRef: info.componentRef, event: info.event });
         delete info.event;
     }
 
@@ -703,7 +703,7 @@ export class IgxOverlayService implements OnDestroy {
             info.openAnimationPlayer.setPosition(position);
         }
 
-        this.onAnimation.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
+        this.animationStarting.emit({ id: info.id, animationPlayer: info.openAnimationPlayer, animationType: 'open' });
 
         //  to eliminate flickering show the element just before animation start
         info.wrapperElement.style.visibility = '';
@@ -733,7 +733,7 @@ export class IgxOverlayService implements OnDestroy {
             info.closeAnimationPlayer.setPosition(position);
         }
 
-        this.onAnimation.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
+        this.animationStarting.emit({ id: info.id, animationPlayer: info.closeAnimationPlayer, animationType: 'close' });
         info.event = event;
         info.closeAnimationPlayer.play();
     }
@@ -915,7 +915,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private openAnimationDone(info: OverlayInfo){
-        this.onOpened.emit({ id: info.id, componentRef: info.componentRef });
+        this.opened.emit({ id: info.id, componentRef: info.componentRef });
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -931,7 +931,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private closeAnimationDone(info: OverlayInfo){
-        this.onCloseDone(info);
+        this.closeDone(info);
         if (info.closeAnimationPlayer) {
             info.closeAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
@@ -948,7 +948,7 @@ export class IgxOverlayService implements OnDestroy {
     }
 
     private finishAnimations(info: OverlayInfo) {
-        // TODO: should we emit here onOpened or onClosed events
+        // TODO: should we emit here opened or closed events
         if (info.openAnimationPlayer) {
             info.openAnimationPlayer.reset();
             // calling reset does not change hasStarted to false. This is why we are doing it here via internal field
