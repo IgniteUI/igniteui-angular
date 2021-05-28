@@ -125,13 +125,13 @@ export class IgxExpansionPanelHeaderComponent {
      * }
      * ```
      * ```html
-     *  <igx-expansion-panel-header (onInteraction)="handleInteraction($event)">
+     *  <igx-expansion-panel-header (interaction)="handleInteraction($event)">
      *      ...
      *  </igx-expansion-panel-header>
      * ```
      */
     @Output()
-    public onInteraction = new EventEmitter<IExpansionPanelCancelableEventArgs >();
+    public interaction = new EventEmitter<IExpansionPanelCancelableEventArgs >();
 
     /**
      * @hidden
@@ -207,7 +207,7 @@ export class IgxExpansionPanelHeaderComponent {
         return;
         }
         const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, panel: this.panel, owner: this.panel, cancel: false };
-        this.onInteraction.emit(eventArgs);
+        this.interaction.emit(eventArgs);
         if (eventArgs.cancel === true) {
             return;
         }
@@ -220,7 +220,7 @@ export class IgxExpansionPanelHeaderComponent {
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
-            this.onInteraction.emit(eventArgs);
+            this.interaction.emit(eventArgs);
             if (eventArgs.cancel === true) {
                 return;
             }
@@ -233,7 +233,7 @@ export class IgxExpansionPanelHeaderComponent {
      public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
             const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
-            this.onInteraction.emit(eventArgs);
+            this.interaction.emit(eventArgs);
             if (eventArgs.cancel === true) {
                 return;
             }
