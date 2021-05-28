@@ -1600,17 +1600,18 @@ export class IgxTimePickerComponent implements
 
     protected onStatusChanged() {
         const input = this._inputDirective || this._inputDirectiveUserTemplate;
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            if (this._inputGroup.isFocused) {
-                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+        if (input) {
+            if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
+                (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
+                if (this._inputGroup.isFocused) {
+                    input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                } else {
+                    input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                }
             } else {
-                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                input.valid = IgxInputState.INITIAL;
             }
-        } else {
-            input.valid = IgxInputState.INITIAL;
         }
-
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {
             this._inputGroup.isRequired = this.required;
         }

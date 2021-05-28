@@ -1752,7 +1752,7 @@ describe('IgxTimePicker', () => {
         }));
 
         it('should set validity to initial when the form is reset', fakeAsync(() => {
-            timePicker.maxValue = '16:45';
+            fixture.componentInstance.date = null;
             fixture.detectChanges();
 
             const tpInput = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
@@ -2389,11 +2389,12 @@ export class IgxTimePickerCustomLabelComponent {
     template: `
     <form #form="ngForm">
         <input class="dummyInput" #dummyInput/>
-        <igx-time-picker name="tp" mode="dropdown"
+        <igx-time-picker required mode="dropdown"
+                name="tp"
                 [isSpinLoop]="isSpinLoop"
                 [(ngModel)]="date"
                 [itemsDelta]="itemsDelta"
-                [format]="format" >
+                [format]="format">
         </igx-time-picker>
     </form>
     `
