@@ -421,17 +421,17 @@ describe('IgxDatePicker', () => {
                 cancel: false
             };
             overlay = {
-                onOpening: new EventEmitter<OverlayCancelableEventArgs>(),
-                onOpened: new EventEmitter<OverlayEventArgs>(),
-                onClosed: new EventEmitter<OverlayEventArgs>(),
-                onClosing: new EventEmitter<OverlayClosingEventArgs>(),
+                opening: new EventEmitter<OverlayCancelableEventArgs>(),
+                opened: new EventEmitter<OverlayEventArgs>(),
+                closed: new EventEmitter<OverlayEventArgs>(),
+                closing: new EventEmitter<OverlayClosingEventArgs>(),
                 show(..._args) {
-                    this.onOpening.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
-                    this.onOpened.emit(mockOverlayEventArgs);
+                    this.opening.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
+                    this.opened.emit(mockOverlayEventArgs);
                 },
                 hide(..._args) {
-                    this.onClosing.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
-                    this.onClosed.emit(mockOverlayEventArgs);
+                    this.closing.emit(Object.assign({}, mockOverlayEventArgs, { cancel: false }));
+                    this.closed.emit(mockOverlayEventArgs);
                 },
                 detach: (..._args) => { },
                 attach: (..._args) => mockOverlayId
@@ -563,7 +563,7 @@ describe('IgxDatePicker', () => {
                 expect(() => datePicker.displayValue.transform(today)).toThrow();
                 // set
                 datePicker.open();
-                overlay.onOpened.emit(mockOverlayEventArgs);
+                overlay.opened.emit(mockOverlayEventArgs);
                 expect(datePicker.collapsed).toBeFalsy();
                 datePicker.disabled = true;
                 expect(datePicker.disabled).toBeTruthy();
@@ -852,7 +852,7 @@ describe('IgxDatePicker', () => {
                 expect(overlay.hide).toHaveBeenCalled();
                 expect(overlay.hide).toHaveBeenCalledWith(mockOverlayId);
                 expect(overlay.detach).not.toHaveBeenCalled();
-                overlay.onClosed.emit(mockOverlayEventArgs);
+                overlay.closed.emit(mockOverlayEventArgs);
                 expect(overlay.detach).toHaveBeenCalledWith(mockOverlayId);
             });
 
@@ -1008,7 +1008,7 @@ describe('IgxDatePicker', () => {
                 // assign overlay id
                 datePicker.open();
                 datePicker.ngAfterViewInit();
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 spyOn(datePicker, 'close');
                 expect(datePicker.close).not.toHaveBeenCalled();
                 // calendar instance is initialized properly
@@ -1085,19 +1085,19 @@ describe('IgxDatePicker', () => {
                 expect(datePicker.disabledDates).toEqual(null);
                 expect(datePicker.minValue).toBeUndefined();
                 expect(datePicker.maxValue).toBeUndefined();
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([]);
                 datePicker.maxValue = mockMaxValue;
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([{ type: DateRangeType.After, dateRange: [mockMaxValue] }]);
                 mockCalendar.disabledDates = [];
                 datePicker.maxValue = undefined;
                 datePicker.minValue = mockMinValue;
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([{ type: DateRangeType.Before, dateRange: [mockMinValue] }]);
                 mockCalendar.disabledDates = [];
                 datePicker.maxValue = mockMaxValue;
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
@@ -1109,7 +1109,7 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ];
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
@@ -1121,7 +1121,7 @@ describe('IgxDatePicker', () => {
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] }
                 ];
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 expect(mockCalendar.disabledDates).toEqual([
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
                     { type: DateRangeType.After, dateRange: [mockMaxValue] },
@@ -1132,7 +1132,7 @@ describe('IgxDatePicker', () => {
                 mockCalendar.disabledDates = [];
                 datePicker.minValue = mockMinValue;
                 datePicker.maxValue = mockMaxValue;
-                overlay.onOpening.emit(mockOverlayEventArgs);
+                overlay.opening.emit(mockOverlayEventArgs);
                 // if _calendar already has disabled dates, min + max are added anyway
                 expect(mockCalendar.disabledDates).toEqual([
                     { type: DateRangeType.Before, dateRange: [mockMinValue] },
