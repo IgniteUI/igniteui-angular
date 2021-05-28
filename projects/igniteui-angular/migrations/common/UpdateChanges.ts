@@ -37,14 +37,16 @@ export class UpdateChanges {
             // Force Angular service to compile project on initial load w/ configure project
             // otherwise if the first compilation occurs on an HTML file the project won't have proper refs
             // and no actual angular metadata will be resolved for the rest of the migration
-            const mainPath = path.resolve(this._projectService.currentDirectory, 'src/app/app.component.ts');
-            // const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
-            // path.posix.join('/', wsProject.root, wsProject.architect?.build?.options['main']);
-            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainPath),false);
+            const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
+            const mainRelPath = wsProject.architect?.build?.options['main'] ?
+                path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
+                `src/main.ts`;
+            const mainAbsPath = path.resolve(this._projectService.currentDirectory, mainRelPath);
+            const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
             this._projectService.openClientFile(scriptInfo.fileName);
 
             const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
-            project.getLanguageService().getSemanticDiagnostics(mainPath);
+            project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
         }
         return this._projectService;
     }
@@ -248,7 +250,7 @@ export class UpdateChanges {
                         const beforeReplace = fileContent.slice(0, pos.start);
                         const leadingComma = afterReplace[0] === ',' ? 1 : 0;
                         // recalculate if needed
-                        afterReplace = !leadingComma ? afterReplace : fileContent.slice(pos.end  + leadingComma);
+                        afterReplace = !leadingComma ? afterReplace : fileContent.slice(pos.end + leadingComma);
                         const doubleSpaceReplace =
                             beforeReplace[beforeReplace.length - 1].match(/\s/) !== null && afterReplace[0].match(/\s/) !== null ?
                                 1 :

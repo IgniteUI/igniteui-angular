@@ -185,7 +185,7 @@ const patchHostOverwrite = (host: Tree, fileVersions: Map<string, number>) => {
  */
 export const createProjectService = (serverHost: tss.server.ServerHost): tss.server.ProjectService => {
     // set traceToConsole to true to enable logging
-    const logger = new Logger(true, tss.server.LogLevel.verbose);
+    const logger = new Logger(false, tss.server.LogLevel.verbose);
     const projectService = new tss.server.ProjectService({
         host: serverHost,
         logger,
