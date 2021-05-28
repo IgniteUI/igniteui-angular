@@ -2,6 +2,14 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.1.0
+
+### New Features
+- `IgxPaginatorComponent`
+    - Added `paginationTemplate` input property, which allows you to define a custom pagination template
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable
+
+
 ## 12.0.1
 
 ### General
