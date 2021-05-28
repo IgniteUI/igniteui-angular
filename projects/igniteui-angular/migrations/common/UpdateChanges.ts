@@ -429,6 +429,10 @@ export class UpdateChanges {
 
     protected updateClassMembers(entryPath: string, memberChanges: MemberChanges) {
         let content = this.host.read(entryPath).toString();
+        const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
+        // use the absolute path for ALL LS operations
+        // do not overwrite the entryPath, as Tree operations require relative paths
+        const langServ = this.getDefaultLanguageService(absPath);
         const changes = new Set<{ change; position }>();
         for (const change of memberChanges.changes) {
 
@@ -436,10 +440,6 @@ export class UpdateChanges {
                 continue;
             }
 
-            // use the absolute path for ALL LS operations
-            // do not overwrite the entryPath, as Tree operations require relative paths
-            const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
-            const langServ = this.getDefaultLanguageService(absPath);
             let matches: number[];
             if (entryPath.endsWith('.ts')) {
                 const source = langServ.getProgram().getSourceFile(absPath);
