@@ -20,23 +20,8 @@ steps:
 - script: npm run build:lib
   displayName: 'Build source code and styles'
 
-- script: npm run test:lib:azure:others
-  displayName: 'Run non-grid tests'
-  env:
-    NODE_OPTIONS: "--max_old_space_size=4096"
-
-- script: npm run test:lib:azure:grid
-  displayName: 'Run grid tests'
-  env:
-    NODE_OPTIONS: "--max_old_space_size=4096"
-
-- script: npm run test:lib:azure:tgrid
-  displayName: 'Run tree grid tests'
-  env:
-    NODE_OPTIONS: "--max_old_space_size=4096"
-
-- script: npm run test:lib:azure:hgrid
-  displayName: 'Run hierarchical grid tests'
+- script: npm run test:lib:azure
+  displayName: 'Run all tests'
   env:
     NODE_OPTIONS: "--max_old_space_size=4096"
 
@@ -64,8 +49,8 @@ steps:
     testRunner: 'JUnit'
     testResultsFiles: '**/TESTS-*.xml'
 
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
+# - task: PublishCodeCoverageResults@1
+#   inputs:
+#     codeCoverageTool: Cobertura
+#     summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+#     reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
