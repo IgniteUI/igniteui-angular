@@ -3,6 +3,10 @@ import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
+/**
+ * Langauge server host is responsible for **most** of the FS operations / checks
+ * Angular's Ivy LS sometimes bypasses these, calling path methods instead of tsLsHost operations
+ */
 export class ServerHost implements ts.server.ServerHost {
     public readonly args: string[];
     public readonly newLine: string;
@@ -14,8 +18,13 @@ export class ServerHost implements ts.server.ServerHost {
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
     }
 
+    /**
+     * Read a file's content from the Virtual Tree
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public readFile(path: string, encoding?: string): string | undefined {
         let content;
+        // ensure the path is relative, so it can be found in the Tree, reflecting latest state
         path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             content = this.host.read(path).toString(encoding);
@@ -43,10 +52,16 @@ export class ServerHost implements ts.server.ServerHost {
         return ts.sys.resolvePath(path);
     }
 
+    /**
+     * Checks for file in Virtual Tree w/ relative path
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public fileExists(path: string): boolean {
+        // check for file in Tree, as schematics might need for check
         path = pathFs.relative(this.getCurrentDirectory(), path);
         let flag = false;
         try {
+            // wrap in try-catch, as Tree.exists throws on failure
             flag = this.host.exists(path);
         } finally {
             // eslint-disable-next-line no-unsafe-finally
@@ -73,13 +88,25 @@ export class ServerHost implements ts.server.ServerHost {
         return process.cwd();
     }
 
+    /**
+     * Get all subdirs of a directory from the Tree (w/ relative paths)
+     * Map returned paths to be absolute
+     */
     public getDirectories(path: string): string[] {
+        // check directory contents in Tree (w/ relative paths)
         path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
         return this.host.getDir(path).subdirs.map(e => pathFs.resolve(e));
     }
 
+    /**
+     * Get all files of a directory from the Tree (w/ relative paths)
+     * Map returned paths to be absolute
+     */
     public readDirectory(path: string): string[] {
+        // check directory contents in Tree (w/ relative paths)
         path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
         return this.host.getDir(path).subfiles.map(e => pathFs.resolve(e));
     }
 

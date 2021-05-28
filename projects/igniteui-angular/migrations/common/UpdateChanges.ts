@@ -434,6 +434,8 @@ export class UpdateChanges {
                 continue;
             }
 
+            // use the absolute path for ALL LS operations
+            // do not overwrite the entryPath, as Tree operations require relative paths
             const absPath = tss.server.toNormalizedPath(path.join(process.cwd(), entryPath));
             const langServ = this.getDefaultLanguageService(absPath);
             let matches: number[];
