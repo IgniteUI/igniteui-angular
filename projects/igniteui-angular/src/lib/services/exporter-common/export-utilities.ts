@@ -24,6 +24,7 @@ export class ExportUtilities {
 
     public static saveBlobToFile(blob: Blob, fileName) {
         const a = document.createElement('a');
+
         if (window.navigator && window.navigator.msSaveOrOpenBlob) {
             window.navigator.msSaveOrOpenBlob(blob, fileName);
         } else {
