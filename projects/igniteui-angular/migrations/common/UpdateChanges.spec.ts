@@ -49,7 +49,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -92,7 +92,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'selectors.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -130,7 +130,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'outputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -174,7 +174,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -244,7 +244,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -280,7 +280,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -321,7 +321,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake<any>((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -409,7 +409,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -443,7 +443,7 @@ describe('UpdateChanges', () => {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'classes.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -507,7 +507,7 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -562,7 +562,7 @@ export class Test {
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'theme-props.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -628,7 +628,7 @@ $var3: igx-comp-theme(
             ]
         };
         const jsonPath = path.join(__dirname, 'changes', 'imports.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -691,7 +691,7 @@ export class AppModule { }`);
             }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
@@ -763,7 +763,7 @@ export class AppModule { }`);
             }]
         };
         const jsonPath = path.join(__dirname, 'changes', 'inputs.json');
-        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+        spyOn(fs, 'existsSync').and.callFake((filePath: fs.PathLike) => {
             if (filePath === jsonPath) {
                 return true;
             }
