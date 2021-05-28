@@ -1750,6 +1750,25 @@ describe('IgxTimePicker', () => {
             // Testing 11:10:00 AM
             expect(timePicker.applyDisabledStyleForItem('ampm', 'AM')).toBe(false);
         }));
+
+        it('should set validity to initial when the form is reset', fakeAsync(() => {
+            timePicker.maxValue = '16:45';
+            fixture.detectChanges();
+
+            const tpInput = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
+            tpInput.focus();
+            tick();
+            fixture.detectChanges();
+
+            tpInput.blur();
+            tick();
+            fixture.detectChanges();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INVALID);
+
+            fixture.componentInstance.form.resetForm();
+            tick();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INITIAL);
+        }));
     });
 
     describe('Timepicker with outlet', () => {
@@ -2243,59 +2262,7 @@ describe('IgxTimePicker', () => {
             expect(inputGroup.isRequired).toBeFalsy();
         });
     });
-
-    describe('FormControl integration', () => {
-        let fixture: ComponentFixture<IgxTimePickerInFormComponent>;
-        let timePicker: IgxTimePickerComponent;
-        configureTestSuite();
-        beforeAll(waitForAsync(() => {
-            TestBed.configureTestingModule({
-                declarations: [
-                    IgxTimePickerInFormComponent
-                ],
-                imports: [IgxTimePickerModule, IgxInputGroupModule, FormsModule, NoopAnimationsModule]
-            }).compileComponents();
-        }));
-        beforeEach(fakeAsync(() => {
-            fixture = TestBed.createComponent(IgxTimePickerInFormComponent);
-            fixture.detectChanges();
-            timePicker = fixture.componentInstance.timePicker;
-        }));
-
-        it('should set validity to initial when the form is reset', fakeAsync(() => {
-            const tpInput = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
-            tpInput.focus();
-            tick();
-            fixture.detectChanges();
-
-            tpInput.blur();
-            tick();
-            fixture.detectChanges();
-            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INVALID);
-
-            fixture.componentInstance.form.resetForm();
-            tick();
-            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INITIAL);
-        }));
-    });
 });
-
-@Component({
-    template: `
-    <form #form="ngForm">
-        <igx-time-picker name="timePicker" [(ngModel)]="date" [required]="true"></igx-time-picker>
-    </form>
-    `
-})
-export class IgxTimePickerInFormComponent {
-    @ViewChild('form')
-    public form: NgForm;
-
-    @ViewChild(IgxTimePickerComponent)
-    public timePicker: IgxTimePickerComponent;
-
-    public date: Date = null;
-}
 
 @Component({
     template: `
@@ -2420,18 +2387,21 @@ export class IgxTimePickerCustomLabelComponent {
 
 @Component({
     template: `
-    <input class="dummyInput" #dummyInput/>
-    <igx-time-picker mode="dropdown"
-            [isSpinLoop]="isSpinLoop"
-            [(ngModel)]="date"
-            [itemsDelta]="itemsDelta"
-            [format]="format" >
-    </igx-time-picker>
+    <form #form="ngForm">
+        <input class="dummyInput" #dummyInput/>
+        <igx-time-picker name="tp" mode="dropdown"
+                [isSpinLoop]="isSpinLoop"
+                [(ngModel)]="date"
+                [itemsDelta]="itemsDelta"
+                [format]="format" >
+        </igx-time-picker>
+    </form>
     `
 })
 export class IgxTimePickerDropDownComponent {
     @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
     @ViewChild('dummyInput') public dummyInput: ElementRef;
+    @ViewChild(NgForm) public form: NgForm;
     public itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
     public format = 'hh:mm tt';
     public isSpinLoop = true;
