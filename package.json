@@ -125,7 +125,7 @@
     "ng-packagr": "^12.0.0",
     "pngcrush": "^2.0.1",
     "protractor": "~7.0.0",
-    "sass-true": "^5.0.0",
+    "sass-true": "^6.0.1",
     "sassdoc": "^2.7.3",
     "sassdoc-plugin-localization": "^1.4.3",
     "stylelint": "^13.13.1",
