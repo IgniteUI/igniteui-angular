@@ -197,7 +197,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             this.expression = selectedItem.expression;
         }
 
-        this.filteringService.grid.selectedLocale
+        this.filteringService.grid.localeChange
             .pipe(takeUntil(this.$destroyer))
             .subscribe(() => {
                 this.cdr.markForCheck();
