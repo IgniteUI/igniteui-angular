@@ -104,7 +104,8 @@ export class WorksheetFile implements IExcelFile {
 
                 const headersForLevel = owner.columns
                     .filter(c => (c.level < i && c.type !== ColumnType.MultiColumnHeader || c.level === i) && c.columnSpans > 0 && !c.skip)
-                    .sort((a, b) => a.startIndex-b.startIndex);
+                    .sort((a, b) => a.startIndex-b.startIndex)
+                    .sort((a, b) => (a.pinned === b.pinned) ? 0 : a.pinned ? -1 : 1);
 
                 let startValue = 0;
                 for (const currentCol of headersForLevel) {
@@ -246,7 +247,8 @@ export class WorksheetFile implements IExcelFile {
 
         const headersForLevel = worksheetData.owner.columns
             .filter(c => c.type !== ColumnType.MultiColumnHeader && !c.skip)
-            .sort((a, b) => a.startIndex-b.startIndex);
+            .sort((a, b) => a.startIndex-b.startIndex)
+            .sort((a,b) => a.pinned === b.pinned ? 0 : a.pinned ? -1 : 1);
 
         const record = worksheetData.data[i - 1];
 
