@@ -61,7 +61,7 @@ export class ServerHost implements ts.server.ServerHost {
         path = pathFs.relative(this.getCurrentDirectory(), path);
         let flag = false;
         try {
-            // wrap in try-catch, as Tree.exists throws on failure
+            // Tree.exists throws on invalid paths instead of returning false
             flag = this.host.exists(path);
         } finally {
             // eslint-disable-next-line no-unsafe-finally
@@ -85,12 +85,13 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public getCurrentDirectory(): string {
+        // both TS and NG lang serves work with absolute paths
+        // we provide cwd instead of tree root so paths can be resolved to absolute ones
         return process.cwd();
     }
 
     /**
-     * Get all subdirs of a directory from the Tree (w/ relative paths)
-     * Map returned paths to be absolute
+     * Get all subdirs of a directory from the Tree mapped to absolute paths
      */
     public getDirectories(path: string): string[] {
         // check directory contents in Tree (w/ relative paths)
@@ -100,8 +101,7 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     /**
-     * Get all files of a directory from the Tree (w/ relative paths)
-     * Map returned paths to be absolute
+     * Get all files of a directory from the Tree mapped to absolute paths
      */
     public readDirectory(path: string): string[] {
         // check directory contents in Tree (w/ relative paths)
