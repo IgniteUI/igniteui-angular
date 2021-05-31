@@ -882,71 +882,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public onChipRemoved(event: IBaseChipEventArgs) {
-        this.clearGrouping(event.owner.id);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newGrouping = [];
-        for (const chip of event.chipsArray) {
-            const expr = this.groupingExpressions.filter((item) => item.fieldName === chip.id)[0];
-
-            if (!this.getColumnByName(expr.fieldName).groupable) {
-                // disallow changing order if there are columns with groupable: false
-                return;
-            }
-            newGrouping.push(expr);
-        }
-        this.groupingExpansionState = [];
-        this.chipsGroupingExpressions = newGrouping;
-
-        if (event.originalEvent instanceof KeyboardEvent) {
-            // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
-            this.groupingExpressions = this.chipsGroupingExpressions;
-        }
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public chipsMovingEnded() {
-        this.groupingExpressions = this.chipsGroupingExpressions;
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onChipClicked(event: IChipClickEventArgs) {
-        const sortingExpr = this.sortingExpressions;
-        const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
-        const groupExpr = this.groupingExpressions.find((expr) => expr.fieldName === event.owner.id);
-        columnExpr.dir = 3 - columnExpr.dir;
-        groupExpr.dir = columnExpr.dir;
-        this.sort(columnExpr);
-        this.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public onChipKeyDown(event: IChipKeyDownEventArgs) {
-        if (event.originalEvent.key === ' ' || event.originalEvent.key === 'Spacebar' || event.originalEvent.key === 'Enter') {
-            const sortingExpr = this.sortingExpressions;
-            const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
-            columnExpr.dir = 3 - columnExpr.dir;
-            this.sort(columnExpr);
-            this.notifyChanges();
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get dropAreaTemplateResolved(): TemplateRef<any> {
         if (this.dropAreaTemplate) {
             return this.dropAreaTemplate;
@@ -958,27 +893,12 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public getGroupByChipTitle(expression: IGroupingExpression): string {
-        const column = this.getColumnByName(expression.fieldName);
-        return (column && column.header) || expression.fieldName;
-    }
-    /**
-     * @hidden @internal
-     */
     public get iconTemplate() {
         if (this.groupsExpanded) {
             return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
         } else {
             return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
         }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public getColumnGroupable(fieldName: string): boolean {
-        const column = this.getColumnByName(fieldName);
-        return column && column.groupable;
     }
 
     /**
