@@ -768,18 +768,13 @@
 
         z-index: 2;
 
-        %grid__group-indentation {
-            &::after {
-                display: none;
-            }
-        }
 
         %grid__cbx-selection--push {
             align-items: flex-start;
             padding-top: (map-get($grid-header-height, 'comfortable') - rem(20px)) / 2;
         }
 
-        %grid-row:last-of-type {
+        %grid-row {
             border-bottom: none;
         }
     }
