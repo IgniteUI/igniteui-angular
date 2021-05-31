@@ -11,7 +11,8 @@ import {
     HostBinding,
     ChangeDetectionStrategy,
     ViewRef,
-    HostListener
+    HostListener,
+    OnDestroy
 } from '@angular/core';
 import { GridColumnDataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -29,6 +30,8 @@ import { DisplayDensity } from '../../../core/displayDensity';
 import { IgxDatePickerComponent } from '../../../date-picker/date-picker.component';
 import { IgxTimePickerComponent } from '../../../time-picker/time-picker.component';
 import { PlatformUtil } from '../../../core/utils';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -38,7 +41,7 @@ import { PlatformUtil } from '../../../core/utils';
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit {
+export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @Input()
     public get column(): IgxColumnComponent {
         return this._column;
@@ -167,6 +170,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private $destroyer = new Subject<boolean>();
 
     constructor(
         public filteringService: IgxFilteringService,
@@ -192,6 +196,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (selectedItem) {
             this.expression = selectedItem.expression;
         }
+
+        this.filteringService.grid.selectedLocale
+            .pipe(takeUntil(this.$destroyer))
+            .subscribe(() => {
+                this.cdr.markForCheck();
+            });
 
         this.focusEditElement();
     }
@@ -829,5 +839,9 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     public get isNarrowWidth(): boolean {
         return this.element.nativeElement.offsetWidth < 432;
+    }
+
+    public ngOnDestroy() {
+        this.$destroyer.next();
     }
 }

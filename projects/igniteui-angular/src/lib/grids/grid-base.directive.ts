@@ -1403,6 +1403,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
+            this.selectedLocale.next();
         }
     }
 
@@ -2738,6 +2739,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public summaryPipeTrigger = 0;
+    /**
+     * @hidden @internal
+     */
+    public selectedLocale = new Subject<boolean>();
     /**
      * @hidden
      */
