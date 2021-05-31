@@ -248,17 +248,17 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
      * An accessor that sets the resource strings.
      * By default it uses EN resources.
      */
-     @Input()
-     public set resourceStrings(value: IDateRangePickerResourceStrings) {
-         this._resourceStrings = Object.assign({}, this._resourceStrings, value);
-     }
+    @Input()
+    public set resourceStrings(value: IDateRangePickerResourceStrings) {
+        this._resourceStrings = Object.assign({}, this._resourceStrings, value);
+    }
 
-     /**
-      * An accessor that returns the resource strings.
-      */
-     public get resourceStrings(): IDateRangePickerResourceStrings {
-         return this._resourceStrings;
-     }
+    /**
+     * An accessor that returns the resource strings.
+     */
+    public get resourceStrings(): IDateRangePickerResourceStrings {
+        return this._resourceStrings;
+    }
 
     /**
      * Sets the `placeholder` for single-input `IgxDateRangePickerComponent`.
@@ -667,19 +667,25 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     protected onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            if (this.inputGroup) {
-                this.inputDirective.valid = this.getInputState(this.inputGroup.isFocused);
-            } else if (this.hasProjectedInputs) {
-                this.projectedInputs
-                    .forEach(i => {
-                        i.inputDirective.valid = this.getInputState(i.isFocused);
-                    });
-            }
+        if (this.inputGroup) {
+            this.inputDirective.valid = this.isTouchedOrDirty
+                ? this.getInputState(this.inputGroup.isFocused)
+                : IgxInputState.INITIAL;
+        } else if (this.hasProjectedInputs) {
+            this.projectedInputs
+                .forEach(i => {
+                    i.inputDirective.valid = this.isTouchedOrDirty
+                        ? this.getInputState(i.isFocused)
+                        : IgxInputState.INITIAL;;
+                });
         }
         this.setRequiredToInputs();
     };
+
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+    }
 
     private handleSelection(selectionData: Date[]): void {
         let newValue = this.extractRange(selectionData);
@@ -704,6 +710,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             // outside click
             this.updateValidityOnBlur();
         } else {
+            this.onTouchCallback();
             // input click
             if (this.hasProjectedInputs && this._focusedInput) {
                 this._focusedInput.setFocus();
@@ -716,7 +723,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             const args = { owner: this, cancel: false, event: eventArgs.event };
             const overlayEvent = eventArgs as OverlayCancelableEventArgs;
             this.opening.emit(args);
@@ -731,16 +738,16 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.updateCalendar();
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
             this.calendar?.daysView?.focusActiveDate();
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
             this.handleClosing(eventArgs as OverlayCancelableEventArgs);
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe(() => {
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe(() => {
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;
