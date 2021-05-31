@@ -780,6 +780,20 @@ describe('igxSelect', () => {
             fix.detectChanges();
             expect(selectComp.collapsed).toBeTruthy();
         }));
+
+        it('should set validity to initial when the form is reset', fakeAsync(() => {
+            const fix = TestBed.createComponent(IgxSelectTemplateFormComponent);
+            fix.detectChanges();
+            tick();
+
+            const selectComp = fix.componentInstance.select;
+            selectComp.onBlur();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INVALID);
+
+            fix.componentInstance.ngForm.resetForm();
+            tick();
+            expect(selectComp.input.valid).toEqual(IgxInputState.INITIAL);
+        }));
     });
     describe('Selection tests: ', () => {
         describe('Using simple select component', () => {
