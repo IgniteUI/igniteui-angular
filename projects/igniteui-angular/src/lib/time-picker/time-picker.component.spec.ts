@@ -1,7 +1,7 @@
 import { IgxLabelDirective } from './../directives/label/label.directive';
 import { Component, ViewChild, NgModule, ElementRef, EventEmitter, DebugElement } from '@angular/core';
 import { async, TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
@@ -1750,6 +1750,25 @@ describe('IgxTimePicker', () => {
             // Testing 11:10:00 AM
             expect(timePicker.applyDisabledStyleForItem('ampm', 'AM')).toBe(false);
         }));
+
+        it('should set validity to initial when the form is reset', fakeAsync(() => {
+            fixture.componentInstance.date = null;
+            fixture.detectChanges();
+
+            const tpInput = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
+            tpInput.focus();
+            tick();
+            fixture.detectChanges();
+
+            tpInput.blur();
+            tick();
+            fixture.detectChanges();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INVALID);
+
+            fixture.componentInstance.form.resetForm();
+            tick();
+            expect((timePicker as any)._inputDirective.valid).toEqual(IgxInputState.INITIAL);
+        }));
     });
 
     describe('Timepicker with outlet', () => {
@@ -2368,24 +2387,29 @@ export class IgxTimePickerCustomLabelComponent {
 
 @Component({
     template: `
-    <input class="dummyInput" #dummyInput/>
-    <igx-time-picker mode="dropdown"
-            [isSpinLoop]="isSpinLoop"
-            [(ngModel)]="date"
-            [itemsDelta]="itemsDelta"
-            [format]="format" >
-    </igx-time-picker>
+    <form #form="ngForm">
+        <input class="dummyInput" #dummyInput/>
+        <igx-time-picker required mode="dropdown"
+                name="tp"
+                [isSpinLoop]="isSpinLoop"
+                [(ngModel)]="date"
+                [itemsDelta]="itemsDelta"
+                [format]="format" >
+        </igx-time-picker>
+    </form>
     `
 })
 export class IgxTimePickerDropDownComponent {
+    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
+    @ViewChild('dummyInput') public dummyInput: ElementRef;
+    @ViewChild(NgForm) public form: NgForm;
+
     itemsDelta = { hours: 1, minutes: 5, seconds: 1 };
     format = 'hh:mm tt';
     isSpinLoop = true;
     isVertical = true;
     date = new Date(2018, 10, 27, 17, 45, 0, 0);
 
-    @ViewChild(IgxTimePickerComponent, { static: true }) public timePicker: IgxTimePickerComponent;
-    @ViewChild('dummyInput') public dummyInput: ElementRef;
 }
 @Component({
     template: `
