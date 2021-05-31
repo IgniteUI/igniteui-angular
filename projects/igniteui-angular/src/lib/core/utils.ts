@@ -33,7 +33,7 @@ export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T)
  *
  * @hidden @internal
  */
-export const getResizeObserver = () => window.ResizeObserver || Polyfill;
+export const getResizeObserver = () => window?.ResizeObserver || Polyfill;
 
 /**
  * @hidden
