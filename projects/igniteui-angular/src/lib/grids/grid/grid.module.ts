@@ -1,6 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
-    IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective
 } from './grid.directives';
@@ -27,7 +26,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
@@ -43,7 +41,6 @@ import { IgxGridExpandableCellComponent } from './expandable-cell.component';
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,

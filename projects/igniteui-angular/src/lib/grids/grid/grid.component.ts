@@ -31,6 +31,7 @@ import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
+import { IgxGridGroupingComponent } from '../grid-grouping.component';
 
 let NEXT_ID = 0;
 
@@ -166,7 +167,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     @ViewChild('groupArea')
-    public groupArea: ElementRef;
+    public groupArea: IgxGridGroupingComponent;
 
     /**
      * @hidden @internal
@@ -371,7 +372,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.groupingExpressionsChange.emit(this._groupingExpressions);
-        this.chipsGoupingExpressions = cloneArray(value);
+        this.chipsGroupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
@@ -812,7 +813,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public get dropAreaVisible(): boolean {
         return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGoupingExpressions.length;
+            !this.chipsGroupingExpressions.length;
     }
 
     /**
@@ -900,11 +901,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             newGrouping.push(expr);
         }
         this.groupingExpansionState = [];
-        this.chipsGoupingExpressions = newGrouping;
+        this.chipsGroupingExpressions = newGrouping;
 
         if (event.originalEvent instanceof KeyboardEvent) {
             // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
-            this.groupingExpressions = this.chipsGoupingExpressions;
+            this.groupingExpressions = this.chipsGroupingExpressions;
         }
         this.notifyChanges();
     }
@@ -913,7 +914,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public chipsMovingEnded() {
-        this.groupingExpressions = this.chipsGoupingExpressions;
+        this.groupingExpressions = this.chipsGroupingExpressions;
         this.notifyChanges();
     }
 
@@ -1139,7 +1140,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected getGroupAreaHeight(): number {
-        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
+        return this.groupArea.getGroupAreaHeight();
     }
 
     /**

@@ -1,29 +1,9 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
-<div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
-    *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>
-    <igx-chips-area (reorder)="chipsOrderChanged($event)" (moveEnd)="chipsMovingEnded()">
-        <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [title]="getGroupByChipTitle(expr)"
-                [removable]="getColumnGroupable(expr.fieldName)"
-                [draggable]="getColumnGroupable(expr.fieldName)" [displayDensity]="displayDensity"
-                (keyDown)="onChipKeyDown($event)" (remove)="onChipRemoved($event)"
-                (chipClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"
-                [disabled]='!getColumnGroupable(expr.fieldName)'>
-                <span>{{ getGroupByChipTitle(expr) }}</span>
-                <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-            </igx-chip>
-            <span class="igx-grid__grouparea-connector">
-                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
-                </igx-icon>
-            </span>
-        </ng-container>
-        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass"
-            [attr.gridId]='this.id'>
-            <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
-        </div>
-    </igx-chips-area>
-</div>
+<ng-container *ngIf="showGroupArea">
+    <igx-grid-grouping [grid]="this" #groupArea></igx-grid-grouping>
+</ng-container>
+
 
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)"

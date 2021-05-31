@@ -11,7 +11,10 @@ import {
     AfterContentInit,
     ViewChild,
     DoCheck,
-    AfterViewInit
+    AfterViewInit,
+    Output,
+    EventEmitter,
+    ElementRef
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -29,7 +32,7 @@ import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { mergeObjects } from '../../core/utils';
+import { cloneArray, mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
@@ -41,6 +44,12 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { IGroupingDoneEventArgs } from '../grid/public_api';
+import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
+import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
+import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
+import { IgxGridGroupingComponent } from '../grid-grouping.component';
 
 let NEXT_ID = 0;
 
@@ -697,6 +706,347 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public isTreeRow(record: any): boolean {
         return record.rowID !== undefined && record.data;
     }
+
+// ----------------------------------------------------------------------- GROUPING START
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
+    public defaultDropAreaTemplate: TemplateRef<any>;
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('groupArea')
+    public groupArea: IgxGridGroupingComponent;
+
+    private _dropAreaMessage = null;
+    private _showGroupArea = true;
+
+
+    /** @hidden */
+    @Output()
+    public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
+
+    /** @hidden @internal */
+    protected _applyGrouping() {
+        this._gridAPI.sort_multiple(this._groupingExpressions);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getGroupAreaHeight(): number {
+        return this.groupArea.getGroupAreaHeight();
+    }
+
+    /**
+     * Emitted when columns are grouped/ungrouped.
+     *
+     * @remarks
+     * The `onGroupingDone` event would be raised only once if several columns get grouped at once by calling
+     * the `groupBy()` or `clearGrouping()` API methods and passing an array as an argument.
+     * The event arguments provide the `expressions`, `groupedColumns` and `ungroupedColumns` properties, which contain
+     * the `ISortingExpression` and the `IgxColumnComponent` related to the grouping/ungrouping operation.
+     * Please note that `groupedColumns` and `ungroupedColumns` show only the **newly** changed columns (affected by the **last**
+     * grouping/ungrouping operation), not all columns which are currently grouped/ungrouped.
+     * columns.
+     * @example
+     * ```html
+     * <igx-tree-grid #grid [data]="localData" (onGroupingDone)="groupingDone($event)" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+     */
+    @Output()
+    public onGroupingDone = new EventEmitter<IGroupingDoneEventArgs>();
+
+    /**
+     * Gets/Sets the group by state.
+     *
+     * @example
+     * ```typescript
+     * let groupByState = this.grid.groupingExpressions;
+     * this.grid.groupingExpressions = [...];
+     * ```
+     * @remarks
+     * Supports two-way data binding.
+     * @example
+     * ```html
+     * <igx-tree-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpressions)]="model.groupingExpressions"></igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public get groupingExpressions(): IGroupingExpression[] {
+        return this._groupingExpressions;
+    }
+    public set groupingExpressions(value: IGroupingExpression[]) {
+        if (this.groupingExpressions === value) {
+            return;
+        }
+        if (value && value.length > 10) {
+            throw Error('Maximum amount of grouped columns is 10.');
+        }
+        const oldExpressions: IGroupingExpression[] = this.groupingExpressions;
+        const newExpressions: IGroupingExpression[] = value;
+        this._groupingExpressions = cloneArray(value);
+        this.groupingExpressionsChange.emit(this._groupingExpressions);
+        this.chipsGroupingExpressions = cloneArray(value);
+        if (this._gridAPI.grid) {
+            /* grouping should work in conjunction with sorting
+            and without overriding separate sorting expressions */
+            this._applyGrouping();
+            this._gridAPI.arrange_sorting_expressions();
+            this.notifyChanges();
+        } else {
+            // setter called before grid is registered in grid API service
+            this.sortingExpressions.unshift.apply(this.sortingExpressions, this._groupingExpressions);
+        }
+        if (!this._init && JSON.stringify(oldExpressions) !== JSON.stringify(newExpressions) && this.columnList) {
+            const groupedCols: IgxColumnComponent[] = [];
+            const ungroupedCols: IgxColumnComponent[] = [];
+            const groupedColsArr = newExpressions.filter((obj) => !oldExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
+            groupedColsArr.forEach((elem) => {
+                groupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            const ungroupedColsArr = oldExpressions.filter((obj) => !newExpressions.some((obj2) => obj.fieldName === obj2.fieldName));
+            ungroupedColsArr.forEach((elem) => {
+                ungroupedCols.push(this.getColumnByName(elem.fieldName));
+            }, this);
+            this.notifyChanges();
+            const groupingDoneArgs: IGroupingDoneEventArgs = {
+                expressions: newExpressions,
+                groupedColumns: groupedCols,
+                ungroupedColumns: ungroupedCols
+            };
+            this.onGroupingDone.emit(groupingDoneArgs);
+        }
+    }
+
+    /**
+     * Returns if the `IgxTreeGridComponent` has groupable columns.
+     *
+     * @example
+     * ```typescript
+     * const groupableGrid = this.grid.hasGroupableColumns;
+     * ```
+     */
+    public get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
+    /**
+     * Returns whether the `IgxTreeGridComponent` has group area.
+     *
+     * @example
+     * ```typescript
+     * let isGroupAreaVisible = this.grid.showGroupArea;
+     * ```
+     *
+     * @example
+     * ```html
+     * <igx-tree-grid #grid [data]="Data" [showGroupArea]="false"></igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public get showGroupArea(): boolean {
+        return this._showGroupArea;
+    }
+    public set showGroupArea(value: boolean) {
+        this._showGroupArea = value;
+        this.notifyChanges(true);
+    }
+
+    /**
+     * Gets if the grid's group by drop area is visible.
+     *
+     * @example
+     * ```typescript
+     * const dropVisible = this.grid.dropAreaVisible;
+     * ```
+     */
+    public get dropAreaVisible(): boolean {
+        return (this.draggedColumn && this.draggedColumn.groupable) ||
+            !this.chipsGroupingExpressions.length;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public isColumnGrouped(fieldName: string): boolean {
+        return this.groupingExpressions.find(exp => exp.fieldName === fieldName) ? true : false;
+    }
+
+    /**
+     * Groups by a new `IgxColumnComponent` based on the provided expression, or modifies an existing one.
+     *
+     * @remarks
+     * Also allows for multiple columns to be grouped at once if an array of `ISortingExpression` is passed.
+     * The onGroupingDone event would get raised only **once** if this method gets called multiple times with the same arguments.
+     * @example
+     * ```typescript
+     * this.grid.groupBy({ fieldName: name, dir: SortingDirection.Asc, ignoreCase: false });
+     * this.grid.groupBy([
+     *     { fieldName: name1, dir: SortingDirection.Asc, ignoreCase: false },
+     *     { fieldName: name2, dir: SortingDirection.Desc, ignoreCase: true },
+     *     { fieldName: name3, dir: SortingDirection.Desc, ignoreCase: false }
+     * ]);
+     * ```
+     */
+    public groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void {
+        if (this.checkIfNoColumnField(expression)) {
+            return;
+        }
+        this.crudService.endEdit(false);
+        if (expression instanceof Array) {
+            this._gridAPI.groupBy_multiple(expression);
+        } else {
+            this._gridAPI.groupBy(expression);
+        }
+        this.notifyChanges(true);
+    }
+
+    private checkIfNoColumnField(expression: IGroupingExpression | Array<IGroupingExpression> | any): boolean {
+        if (expression instanceof Array) {
+            for (const singleExpression of expression) {
+                if (!singleExpression.fieldName) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !expression.fieldName;
+    }
+
+    /**
+     * Clears grouping for particular column, array of columns or all columns.
+     *
+     * @remarks
+     * Clears all grouping in the tree grid, if no parameter is passed.
+     * If a parameter is provided, clears grouping for a particular column or an array of columns.
+     * @example
+     * ```typescript
+     * this.grid.clearGrouping(); //clears all grouping
+     * this.grid.clearGrouping("ID"); //ungroups a single column
+     * this.grid.clearGrouping(["ID", "Column1", "Column2"]); //ungroups multiple columns
+     * ```
+     * @param name Name of column or array of column names to be ungrouped.
+     */
+    public clearGrouping(name?: string | Array<string>): void {
+        this._gridAPI.clear_groupby(name);
+        this.notifyChanges(true);
+    }
+
+    /**
+     * Gets/Sets whether created groups are rendered expanded or collapsed.
+     *
+     * @remarks
+     * The default rendered state is expanded.
+     * @example
+     * ```html
+     * <igx-tree-grid #grid [data]="Data" [groupsExpanded]="false" [autoGenerate]="true"></igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public groupsExpanded = true;
+
+    /**
+     * Gets/Sets the template that will be rendered as a GroupBy drop area.
+     *
+     * @remarks
+     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * @example
+     * ```html
+     * <igx-tree-grid [dropAreaTemplate]="dropAreaRef">
+     * </igx-tree-grid>
+     * <ng-template #myDropArea>
+     *      <span> Custom drop area! </span>
+     * </ng-template>
+     * ```
+     */
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    /** @hidden */
+    protected _groupingExpressions: IGroupingExpression[] = [];
+
+    /**
+     * @hidden
+     */
+    protected _groupingExpandState: IGroupByExpandState[] = [];
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public groupingExpansionStateChange = new EventEmitter<IGroupByExpandState[]>();
+
+    /**
+     * Gets/Sets a list of expansion states for group rows.
+     *
+     * @remarks
+     * Includes only states that differ from the default one (controlled through groupsExpanded and states that the user has changed.
+     * Contains the expansion state (expanded: boolean) and the unique identifier for the group row (Array).
+     * Supports two-way data binding.
+     * @example
+     * ```html
+     * <igx-tree-grid #grid [data]="Data" [autoGenerate]="true" [(groupingExpansionState)]="model.groupingExpansionState"></igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public get groupingExpansionState() {
+        return this._groupingExpandState;
+    }
+    public set groupingExpansionState(value) {
+        if (value !== this._groupingExpandState) {
+            this.groupingExpansionStateChange.emit(value);
+        }
+        this._groupingExpandState = value;
+        if (this.gridAPI.grid) {
+            this.cdr.detectChanges();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get iconTemplate() {
+        if (this.groupsExpanded) {
+            return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
+        } else {
+            return this.headerCollapseIndicatorTemplate || this.defaultCollapsedTemplate;
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupAreaHostClass(): string {
+        return this.getComponentDensityClass('igx-drop-area');
+    }
+
+
+
+    /**
+     * Gets/Sets the message displayed inside the GroupBy drop area where columns can be dragged on.
+     *
+     * @remarks
+     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * @example
+     * ```html
+     * <igx-tree-grid dropAreaMessage="Drop here to group!">
+     *      <igx-column [groupable]="true" field="ID"></igx-column>
+     * </igx-tree-grid>
+     * ```
+     */
+    @Input()
+    public set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+        this.notifyChanges();
+    }
+    public get dropAreaMessage(): string {
+        return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
+
+// ----------------------------------------------------------------------- GROUPING END
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);

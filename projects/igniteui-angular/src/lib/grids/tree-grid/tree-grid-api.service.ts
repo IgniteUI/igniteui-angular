@@ -8,6 +8,7 @@ import { ColumnType } from '../common/column.interface';
 import { cloneArray, mergeObjects } from '../../core/utils';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { TreeGridFilteringStrategy } from './tree-grid.filtering.strategy';
+import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 
 @Injectable()
 export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridComponent> {
@@ -227,6 +228,79 @@ export class IgxTreeGridAPIService extends GridBaseAPIService<IgxTreeGridCompone
         this.getFlatDataFromFilteredRecords(records, data);
 
         return data;
+    }
+
+    public arrange_sorting_expressions() {
+        const groupingState = this.grid.groupingExpressions;
+        this.grid.sortingExpressions.sort((a, b) => {
+            const groupExprA = groupingState.find((expr) => expr.fieldName === a.fieldName);
+            const groupExprB = groupingState.find((expr) => expr.fieldName === b.fieldName);
+            if (groupExprA && groupExprB) {
+                return groupingState.indexOf(groupExprA) > groupingState.indexOf(groupExprB) ? 1 : -1;
+            } else if (groupExprA) {
+                return -1;
+            } else if (groupExprB) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
+    }
+
+    public groupBy(expression: IGroupingExpression): void {
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
+        this.prepare_sorting_expression([sortingState, groupingState], expression);
+        this.grid.groupingExpressions = groupingState;
+        this.arrange_sorting_expressions();
+    }
+
+    public groupBy_multiple(expressions: IGroupingExpression[]): void {
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
+
+        for (const each of expressions) {
+            this.prepare_sorting_expression([sortingState, groupingState], each);
+        }
+
+        this.grid.groupingExpressions = groupingState;
+        this.arrange_sorting_expressions();
+    }
+
+    public clear_groupby(name?: string | Array<string>) {
+        const groupingState = cloneArray(this.grid.groupingExpressions);
+        const sortingState = cloneArray(this.grid.sortingExpressions);
+
+        if (name) {
+            const names = typeof name === 'string' ? [name] : name;
+            const groupedCols = groupingState.filter((state) => names.indexOf(state.fieldName) < 0);
+            const newSortingExpr = sortingState.filter((state) => names.indexOf(state.fieldName) < 0);
+            this.grid.groupingExpressions = groupedCols;
+            this.grid.sortingExpressions = newSortingExpr;
+            names.forEach((colName) => {
+                const grExprIndex = groupingState.findIndex((exp) => exp.fieldName === colName);
+                const grpExpandState = this.grid.groupingExpansionState;
+                /* remove expansion states related to the cleared group
+                   and all with deeper hierarchy than the cleared group */
+                const newExpandState = grpExpandState.filter((val) => val.hierarchy && val.hierarchy.length <= grExprIndex);
+                /* Do not set the new instance produced by filter
+                    when there are no differences between expansion states */
+                if (newExpandState.length !== grpExpandState.length) {
+                    this.grid.groupingExpansionState = newExpandState;
+                }
+            });
+        } else {
+            // clear all
+            this.grid.groupingExpressions = [];
+            this.grid.groupingExpansionState = [];
+            for (const grExpr of groupingState) {
+                const sortExprIndex = sortingState.findIndex((exp) => exp.fieldName === grExpr.fieldName);
+                if (sortExprIndex > -1) {
+                    sortingState.splice(sortExprIndex, 1);
+                }
+            }
+            this.grid.sortingExpressions = sortingState;
+        }
     }
 
     protected update_row_in_array(value: any, rowID: any, index: number) {
