@@ -1183,6 +1183,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             } else {
                 this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
             }
+        } else {
+            this.valid = IgxComboState.INITIAL;
         }
         this.manageRequiredAsterisk();
     }
