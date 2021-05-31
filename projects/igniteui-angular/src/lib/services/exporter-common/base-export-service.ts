@@ -59,6 +59,7 @@ export interface IColumnInfo {
     startIndex?: number;
     columnSpans?: number;
     level?: number;
+    pinned?: boolean;
 }
 
 /**
@@ -175,8 +176,10 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
-
+        this.options.ignoreColumnsVisibility = true;
+        //this.options.ignoreColumnsOrder = true;
         const columns = grid.columnList.toArray();
+        //const columns = grid.pinnedColumns.concat(grid.unpinnedColumns);
         //const columnList = this.getColumns(columns);
         const columnList = this.getMultiCols(columns);
 
@@ -732,7 +735,7 @@ export abstract class IgxBaseExporter {
     }
 
     private getMultiCols(columns: any[]): IColumnList {
-        const colList = [];
+        let colList = [];
         const colWidthList = [];
         const hiddenColumns = [];
         let indexOfLastPinnedColumn = -1;
@@ -764,7 +767,8 @@ export abstract class IgxBaseExporter {
                 type: isMultiColHeader ? ColumnType.MultiColumnHeader : ColumnType.ColumnHeader,
                 columnSpans: colSpan,
                 level: column.level,
-                startIndex: column.visibleIndex
+                startIndex: index,
+                pinned: column.pinned
             };
 
             if (column.level > maxLevel) {
@@ -779,8 +783,9 @@ export abstract class IgxBaseExporter {
                 hiddenColumns.push(columnInfo);
             }
 
-            if (column.pinned && exportColumn) {
+            if (column.pinned && exportColumn && columnInfo.type === ColumnType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
+                //lastColIndex = column.visibleIndex;
             }
         });
 
@@ -788,6 +793,10 @@ export abstract class IgxBaseExporter {
         hiddenColumns.forEach((hiddenColumn) => {
             colList[++lastVisibleColumnIndex] = hiddenColumn;
         });
+
+        if (this.options.ignoreColumnsOrder) {
+            colList = colList.sort((a,b) => a.index - b.index);
+        }
 
         const result: IColumnList = {
             columns: colList,
