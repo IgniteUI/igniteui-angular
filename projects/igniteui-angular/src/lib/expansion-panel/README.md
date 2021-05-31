@@ -49,15 +49,15 @@ The following inputs are available in the **igx-expansion-panel** component:
 | :--- | :--- | :--- |
 | `animationSettings` | `AnimationSettings` | Specifies the settings for the open and close animations of the panel |
 | `id` | `string` | The id of the panel's host component |
-| `collapsed` | `boolean` | Whether the component is collapsed (body is hidden) or not |
+| `collapsed` | `boolean` | Whether the component is collapsed (body is hidden) or not. Does not trigger animation. |
 
 ### Outputs
 The following outputs are available in the **igx-expansion-panel** component:
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onCollapsed` | `false` | Emitted when the panel is collapsed | `IExpansionPanelEventArgs` |
-| `onExpanded` | `false` | Emitted when the panel is expanded | `IExpansionPanelEventArgs` |
+| `contentCollapsed` | `false` | Emitted when the panel is collapsed | `IExpansionPanelEventArgs` |
+| `contentExpanded` | `false` | Emitted when the panel is expanded | `IExpansionPanelEventArgs` |
 
 
 ### Methods
@@ -65,8 +65,8 @@ The following methods are available in the **igx-expansion-panel** component:
 
 | Name | Signature | Description |
 | :--- | :--- | :--- |
-| `collapse` | `(event?: Event ): void` | Collapses the panel |
-| `expand` | `(event?: Event ): void` | Expands the panel |
+| `collapse` | `(event?: Event ): void` | Collapses the panel, triggering animations |
+| `expand` | `(event?: Event ): void` | Expands the panel, triggering animation |
 | `toggle` | `(event?: Event ): void` | Toggles the panel (calls `collapse(event)` or `expand(event)` depending on `collapsed`) |
 
 
@@ -89,7 +89,7 @@ The following outputs are available in the **igx-expansion-panel-header** compon
 
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
-| `onInteraction` | `true` | Emitted when a user interacts with the header host | `IExpansionPanelCancelableEventArgs` |
+| `interaction` | `true` | Emitted when a user interacts with the header host | `IExpansionPanelCancelableEventArgs` |
 
 ## IgxExpansionPanelBodyComponent
 ### Inputs

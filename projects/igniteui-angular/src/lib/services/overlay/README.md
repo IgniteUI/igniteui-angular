@@ -128,11 +128,11 @@ this.overlay.show(component, overlaySettings);
 ##### Events
 
 ###### IgxOverlayService
-| Name        | Description                                   | Cancelable | Parameters |
-|-------------|-----------------------------------------------|------------|------------|
-|onAppended   | Emitted after overlay's content is appended   | false      |            |
-|onOpening    | Emitted before overlay shows                  | true       |            |
-|onOpened     | Emitted after overlay shows                   | false      |            |
-|onClosing    | Emitted before overlay hides                  | true       |            |
-|onClosed     | Emitted after overlay hides                   | false      |            |
-|onAnimation  | Emitted before animation is started           | false      |            |
+| Name              | Description                                   | Cancelable | Parameters |
+|-------------------|-----------------------------------------------|------------|------------|
+| opening           | Emitted before overlay shows                  | true       |            |
+| opened            | Emitted after overlay shows                   | false      |            |
+| closing           | Emitted before overlay hides                  | true       |            |
+| closed            | Emitted after overlay hides                   | false      |            |
+| contentAppended   | Emitted after overlay's content is appended   | false      |            |
+| animationStarting | Emitted before animation is started           | false      |            |
