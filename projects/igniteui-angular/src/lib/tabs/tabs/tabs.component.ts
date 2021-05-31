@@ -1,9 +1,8 @@
 import { AnimationBuilder } from '@angular/animations';
 import { AfterViewInit, Component, ElementRef, HostBinding, Input, NgZone, OnDestroy, ViewChild } from '@angular/core';
-import { mkenum } from '../../core/utils';
+import { getResizeObserver, mkenum } from '../../core/utils';
 import { IgxTabsBase } from '../tabs.base';
 import { IgxTabsDirective } from '../tabs.directive';
-import { ResizeObserver } from '@juggle/resize-observer';
 
 export const IgxTabsAlignment = mkenum({
     start: 'start',
@@ -125,7 +124,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         super.ngAfterViewInit();
 
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver = new ResizeObserver(() => {
+            this._resizeObserver = new (getResizeObserver())(() => {
                 this.updateScrollButtons();
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
