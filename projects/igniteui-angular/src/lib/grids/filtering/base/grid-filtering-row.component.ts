@@ -694,6 +694,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         }
     }
 
+    public ngOnDestroy() {
+        this.$destroyer.next();
+    }
+
     private showHideArrowButtons() {
         requestAnimationFrame(() => {
             if (this.filteringService.isFilterRowVisible) {
@@ -839,9 +843,5 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
     public get isNarrowWidth(): boolean {
         return this.element.nativeElement.offsetWidth < 432;
-    }
-
-    public ngOnDestroy() {
-        this.$destroyer.next();
     }
 }
