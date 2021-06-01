@@ -1241,20 +1241,20 @@ describe('IgxTabs', () => {
             expect(Math.abs(104 - widths[2])).toBeLessThan(3);
         });
 
-        it('should hide scroll buttons if visible when alignment is set to "justify".', fakeAsync (() => {
+        it('should hide scroll buttons if visible when alignment is set to "justify".', async () => {
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
-            tick(200);
+            await wait(200);
 
             const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
             expect(rightScrollButton.clientWidth).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
             fixture.detectChanges();
-            tick(200);
+            await wait(500);
 
             expect(rightScrollButton.clientWidth).toBeFalsy();
-        }));
+        });
     });
 
 
