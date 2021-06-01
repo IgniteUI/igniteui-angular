@@ -1,4 +1,4 @@
-<igx-expansion-panel #expansionPanel [animationSettings]="animationSettings" (contentCollapsed)="onExpansionPanelClose()" (contentExpanded)="onExpansionPanelOpen()"
+<igx-expansion-panel #expansionPanel [animationSettings]="animationSettings" (onCollapsed)="onExpansionPanelClose()" (onExpanded)="onExpansionPanelOpen()"
     [collapsed]="collapsed" aria-live="polite" [attr.aria-hidden]="collapsed">
     <igx-expansion-panel-body>
         <div class="igx-banner">
