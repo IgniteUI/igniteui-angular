@@ -268,6 +268,42 @@ describe('UpdateChanges', () => {
         done();
     });
 
+    it('should replace multiple class identifier with the same value', done => {
+        const classJson: ClassChanges = {
+            changes: [
+                {
+                    name: 'igxClass', replaceWith: 'igxReplace'
+                },
+                {
+                    name: 'igxClass2', replaceWith: 'igxReplace'
+                }
+            ]
+        };
+        const jsonPath = path.join(__dirname, 'changes', 'classes.json');
+        spyOn(fs, 'existsSync').and.callFake((filePath: string) => {
+            if (filePath === jsonPath) {
+                return true;
+            }
+            return false;
+        });
+        spyOn<any>(fs, 'readFileSync').and.callFake(() => JSON.stringify(classJson));
+
+        const fileContent =
+            `import { igxClass, igxClass2 } from "igniteui-angular"; export class Test { prop: igxClass; prop2: igxClass2; }`;
+        appTree.create('test.component.ts', fileContent);
+
+        const update = new UnitUpdateChanges(__dirname, appTree);
+        expect(fs.existsSync).toHaveBeenCalledWith(jsonPath);
+        expect(fs.readFileSync).toHaveBeenCalledWith(jsonPath, 'utf-8');
+        expect(update.getClassChanges()).toEqual(classJson);
+
+        update.applyChanges();
+        expect(appTree.readContent('test.component.ts')).toEqual(
+            `import { igxReplace } from "igniteui-angular"; export class Test { prop: igxReplace; prop2: igxReplace; }`);
+
+        done();
+    });
+
     it('should replace class identifiers (complex file)', done => {
         const classJson: ClassChanges = {
             changes: [
