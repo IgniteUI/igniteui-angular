@@ -232,6 +232,22 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(row1.expanded).toBe(true);
     });
 
+    it('should correctly expand children on init if parents have hasChild key', () => {
+        hierarchicalGrid.expandChildren = true;
+        hierarchicalGrid.hasChildrenKey = 'hasChild';
+        fixture.componentInstance.data = [
+            { ID: 1, ProductName: 'Product: A1', hasChild: false, childData: fixture.componentInstance.generateDataUneven(1, 1) },
+            { ID: 2, ProductName: 'Product: A2', hasChild: true, childData: fixture.componentInstance.generateDataUneven(1, 1) }
+        ];
+        fixture.detectChanges();
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(0)).toBeInstanceOf(IgxHierarchicalRowComponent);
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(1)).toBeInstanceOf(IgxHierarchicalRowComponent);
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(2)).toBeInstanceOf(IgxChildGridRowComponent);
+        const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
+    });
+
     it('should allow setting expandChildren after bound to data to rowIsland', () => {
         // set first row as expanded.
         const state = new Map<any, boolean>();
