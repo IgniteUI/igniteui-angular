@@ -4,6 +4,26 @@
         {
             "name": "DataType",
             "replaceWith": "GridColumnDataType"
+        },
+        {
+            "name": "IgxHierarchicalRowComponent",
+            "replaceWith": "RowType"
+        },
+        {
+            "name": "IgxGridRowComponent",
+            "replaceWith": "RowType"
+        },
+        {
+            "name": "IgxTreeGridRowComponent",
+            "replaceWith": "RowType"
+        },
+        {
+            "name": "IgxGridGroupByRowComponent",
+            "replaceWith": "RowType"
+        },
+        {
+            "name": "InteractionMode",
+            "replaceWith": "PickerInteractionMode"
         }
     ]
 }
