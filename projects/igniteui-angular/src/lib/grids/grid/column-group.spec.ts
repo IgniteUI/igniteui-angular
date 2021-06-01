@@ -22,9 +22,9 @@ import { OneGroupOneColGridComponent, OneGroupThreeColsGridComponent,
     DynamicGridComponent, NestedColGroupsWithTemplatesGridComponent,
     DynamicColGroupsGridComponent } from '../../test-utils/grid-mch-sample.spec';
 
-const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid__th-title';
-const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid__thead-title';
-const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid__thead-group';
+const GRID_COL_THEAD_TITLE_CLASS = 'igx-grid-th__title';
+const GRID_COL_GROUP_THEAD_TITLE_CLASS = 'igx-grid-thead__title';
+const GRID_COL_GROUP_THEAD_GROUP_CLASS = 'igx-grid-thead__group';
 
 /* eslint-disable max-len */
 describe('IgxGrid - multi-column headers #grid', () => {

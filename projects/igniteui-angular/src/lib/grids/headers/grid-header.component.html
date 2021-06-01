@@ -6,12 +6,12 @@
     <igx-icon>more_vert</igx-icon>
 </ng-template>
 
-<span class="igx-grid__th-title">
+<span class="igx-grid-th__title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
 </span>
 <ng-container *ngIf="!column.columnGroup">
-    <div class="igx-grid__th-icons">
+    <div class="igx-grid-th__icons">
         <ng-container *ngIf="column.sortable">
             <igx-icon class="sort-icon"
                 [attr.draggable]="false"

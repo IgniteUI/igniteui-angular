@@ -15,7 +15,7 @@
             <igx-icon igxSuffix>{{ expression.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
         </igx-chip>
 
-        <span class="igx-grid__grouparea-connector">
+        <span class="igx-grid-grouparea__connector">
             <igx-icon [hidden]="(last && !visible)">arrow_forward</igx-icon>
         </span>
     </ng-container>
@@ -26,7 +26,6 @@
         <ng-container *ngTemplateOutlet="dropAreaTemplate || default"></ng-container>
     </div>
 </igx-chips-area>
-
 
 <ng-template #default>
     <igx-icon class="igx-drop-area__icon">group_work</igx-icon>

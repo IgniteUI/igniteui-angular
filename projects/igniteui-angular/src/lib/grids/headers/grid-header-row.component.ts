@@ -4,12 +4,14 @@ import {
     Component,
     DoCheck,
     ElementRef,
+    HostBinding,
     Input,
     QueryList,
     TemplateRef,
     ViewChild,
     ViewChildren
 } from '@angular/core';
+import { DisplayDensity } from '../../core/displayDensity';
 import { flatten } from '../../core/utils';
 import { IgxGridForOfDirective } from '../../directives/for-of/for_of.directive';
 import { GridType } from '../common/grid.interface';
@@ -53,7 +55,6 @@ export class IgxGridHeaderRowComponent implements DoCheck {
     @Input()
     public unpinnedColumnCollection: IgxColumnComponent[] = [];
 
-
     @Input()
     public activeDescendant: string;
 
@@ -62,6 +63,27 @@ export class IgxGridHeaderRowComponent implements DoCheck {
 
     @Input()
     public width: number;
+
+    @Input()
+    public density: DisplayDensity;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-thead--cosy')
+    public get cosyStyle() {
+        return this.density === 'cosy';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-thead--compact')
+    public get compactStyle() {
+        return this.density === 'compact';
+    }
 
     /**
      * Header groups inside the header row.

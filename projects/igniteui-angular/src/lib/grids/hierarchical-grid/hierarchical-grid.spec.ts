@@ -915,7 +915,7 @@ describe('IgxHierarchicalGrid Children Sizing #hGrid', () => {
 describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
     let fixture: ComponentFixture<IgxHGridRemoteOnDemandComponent>;
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    const THEAD_CLASS = '.igx-grid__thead';
+    const THEAD_CLASS = '.igx-grid-thead';
     configureTestSuite((() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -989,7 +989,7 @@ describe('IgxHierarchicalGrid Remote Scenarios #hGrid', () => {
 
 describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    const THEAD_CLASS = '.igx-grid__thead';
+    const THEAD_CLASS = '.igx-grid-thead';
     let fixture: ComponentFixture<IgxHierarchicalGridColumnsUpdateComponent>;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
     configureTestSuite((() => {

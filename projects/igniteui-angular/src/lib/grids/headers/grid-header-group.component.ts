@@ -81,7 +81,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     @Input()
     public column: IgxColumnComponent;
 
-    @HostBinding('class.igx-grid__th--active')
+    @HostBinding('class.igx-grid-th--active')
     public get active() {
         const node = this.grid.navigation.activeNode;
         return node && !this.column.columnGroup ?
@@ -120,7 +120,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.grid.getHeaderGroupWidth(this.column);
     }
 
-    @HostBinding('class.igx-grid__thead-item')
+    @HostBinding('class.igx-grid-thead__item')
     public defaultCss = true;
 
     constructor(private cdr: ChangeDetectorRef,
@@ -130,17 +130,17 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         public filteringService: IgxFilteringService,
         protected platform: PlatformUtil) { }
 
-    @HostBinding('class.igx-grid__th--pinned')
+    @HostBinding('class.igx-grid-th--pinned')
     public get pinnedCss() {
         return this.isPinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-last')
+    @HostBinding('class.igx-grid-th--pinned-last')
     public get pinnedLastCss() {
         return this.isLastPinned;
     }
 
-    @HostBinding('class.igx-grid__th--pinned-first')
+    @HostBinding('class.igx-grid-th--pinned-first')
     public get pinnedFirstCSS() {
         return this.isFirstPinned;
     }
@@ -150,7 +150,7 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
         return this.isHeaderDragged;
     }
 
-    @HostBinding('class.igx-grid__th--filtering')
+    @HostBinding('class.igx-grid-th--filtering')
     public filteringCss() {
         return this.isFiltered;
     }

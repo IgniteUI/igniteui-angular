@@ -15,7 +15,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
         TestBed.configureTestingModule({
@@ -244,7 +244,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
         it('should recalculate grid heights after resizing so the horizontal scrollbar appears.', fakeAsync(() => {
             let expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
 
@@ -269,7 +269,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
             expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
+                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
                 grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
             expect(grid.calcHeight).toEqual(expectedHeight);

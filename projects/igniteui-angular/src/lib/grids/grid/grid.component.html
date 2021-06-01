@@ -3,7 +3,7 @@
 
 <!-- Group-by area -->
 <ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
-    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
+    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth' class="igx-grid-grouparea"
         [grid]="this"
         [expressions]="groupingExpressions"
         [sortingExpressions]="sortingExpressions"
@@ -16,9 +16,10 @@
 </ng-container>
 
 <!-- Grid table head row area -->
-<igx-grid-header-row class="igx-grid__thead" tabindex="0"
+<igx-grid-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
+    [density]="displayDensity"
     [activeDescendant]="activeDescendant"
     [width]="calcWidth"
     [pinnedColumnCollection]="pinnedColumns"

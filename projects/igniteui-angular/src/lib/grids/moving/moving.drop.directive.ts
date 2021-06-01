@@ -48,7 +48,7 @@ export class IgxColumnMovingDropDirective extends IgxDropDirective implements On
     private _column: IgxColumnComponent;
     private _displayContainer: IgxGridForOfDirective<IgxGridHeaderGroupComponent>;
     private _dragLeave = new Subject<boolean>();
-    private _dropIndicatorClass = 'igx-grid__th-drop-indicator--active';
+    private _dropIndicatorClass = 'igx-grid-th__drop-indicator--active';
 
     constructor(
         private ref: ElementRef<HTMLElement>,

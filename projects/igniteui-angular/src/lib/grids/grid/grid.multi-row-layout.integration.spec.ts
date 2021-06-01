@@ -917,7 +917,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     describe('Resizing', () => {
         const DEBOUNCE_TIME = 200;
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
-        const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
+        const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);

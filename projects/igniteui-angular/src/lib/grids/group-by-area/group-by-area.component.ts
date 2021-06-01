@@ -2,6 +2,7 @@ import {
     ChangeDetectionStrategy,
     Component,
     ElementRef,
+    HostBinding,
     Input,
     Pipe,
     PipeTransform,
@@ -59,6 +60,24 @@ export class IgxGridGroupByAreaComponent {
     @Input()
     public density: DisplayDensity;
 
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-grouparea--cosy')
+    public get cosyStyle() {
+        return this.density === 'cosy';
+    }
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @HostBinding('class.igx-grid-grouparea--compact')
+    public get compactStyle() {
+        return this.density === 'compact';
+    }
+
     /** The parent grid containing the component. */
     @Input()
     public grid: FlatGridType;
@@ -73,7 +92,6 @@ export class IgxGridGroupByAreaComponent {
     }
 
     constructor(private ref: ElementRef<HTMLElement>) { }
-
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const newExpressions = [];
