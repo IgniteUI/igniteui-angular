@@ -120,7 +120,11 @@ export class IgxGridGroupByAreaComponent {
 
     protected updateSorting(id: string) {
         const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
+        const groupExpr = this.grid.groupingExpressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
+        if (groupExpr) {
+            groupExpr.dir = expr.dir;
+        }
         this.grid.sort(expr);
     }
 }
