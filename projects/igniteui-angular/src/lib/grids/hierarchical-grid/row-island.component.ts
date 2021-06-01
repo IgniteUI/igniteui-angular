@@ -142,7 +142,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public rootGrid = null;
-    public readonly data: any[];
+    public readonly data: any[] | null;
     public readonly filteredData: any[];
 
     private ri_columnListDiffer;
