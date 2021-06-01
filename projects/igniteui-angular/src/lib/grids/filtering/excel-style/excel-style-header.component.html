@@ -6,18 +6,21 @@
             igxButton="icon"
             (click)="esf.onSelect()"
             [ngClass]="esf.selectedClass()"
+            aria-label="done"
         >
             <igx-icon>done</igx-icon>
         </button>
         <button *ngIf="showPinning"
             igxButton="icon"
             (click)="esf.onPin()"
+            [attr.aria-label]="esf.column.pinned ? 'unpin' : 'pin'"
         >
             <igx-icon family="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
             igxButton="icon"
             (click)="esf.onHideToggle()"
+            [attr.aria-label]="esf.column.hidden ? 'show' : 'hide'"
         >
             <igx-icon>{{ esf.column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
         </button>
