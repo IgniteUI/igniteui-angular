@@ -962,7 +962,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
-            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css('.igx-grid__thead-item'));
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css('.igx-grid-thead__item'));
             const headerResArea = headers[2].children[3].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 400, 0);
             await wait(200);

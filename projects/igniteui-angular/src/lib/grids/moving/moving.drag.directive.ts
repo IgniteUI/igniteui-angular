@@ -28,7 +28,7 @@ export class IgxColumnMovingDragDirective extends IgxDragDirective implements On
     private _ghostClass = 'igx-grid__drag-ghost-image';
     private ghostImgIconClass = 'igx-grid__drag-ghost-image-icon';
     private ghostImgIconGroupClass = 'igx-grid__drag-ghost-image-icon-group';
-    private columnSelectedClass = 'igx-grid__th--selected';
+    private columnSelectedClass = 'igx-grid-th--selected';
 
     constructor(
         public element: ElementRef<HTMLElement>,
