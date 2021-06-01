@@ -1,3 +1,7 @@
+@use 'node_modules/sass-true' as *;
+@import '../base/index';
+@import '../themes/index';
+
 @include describe('Unit conversions') {
     @include it('should convert pixel numbers to rem') {
         @include assert-equal(rem(16px, 16px), 1rem);
