@@ -1,8 +1,6 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
-<ng-container *ngIf="showGroupArea">
-    <igx-grid-grouping [grid]="this" #groupArea></igx-grid-grouping>
-</ng-container>
+<ng-content select="igx-grid-grouping"></ng-content>
 
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)"
