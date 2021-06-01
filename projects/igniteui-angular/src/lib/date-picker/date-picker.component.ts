@@ -736,6 +736,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
+        this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
@@ -774,13 +776,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
-    /** @hidden @internal */
-    public subscribeToClick() {
+    private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (!this.isDropdown) {
-                    this.open();
+                    this.toggle();
                 }
             });
     }
@@ -790,7 +791,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private updateValidity() {
-        if (this._ngControl) {
+        // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+        if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
             if (this.inputGroup.isFocused) {
                 this.inputDirective.valid = this._ngControl.valid
                     ? IgxInputState.VALID
@@ -800,14 +802,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                     ? IgxInputState.INITIAL
                     : IgxInputState.INVALID;
             }
+        } else {
+            this.inputDirective.valid = IgxInputState.INITIAL;
         }
     }
 
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+    }
+
     private onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            this.updateValidity();
-        }
+        this.updateValidity();
         this.inputGroup.isRequired = this.required;
     };
 
@@ -839,7 +845,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.onOpening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
             const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.opening.emit(args);
             eventArgs.cancel = args.cancel;
@@ -852,7 +858,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             this._collapsed = false;
         });
 
-        this._overlayService.onOpened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
             const args: IBaseEventArgs = { owner: this };
             this.opened.emit(args);
             if (this._calendar?.daysView?.selectedDates) {
@@ -866,7 +872,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.onClosing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
             const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
             this.closing.emit(args);
             eventArgs.cancel = args.cancel;
@@ -876,10 +882,13 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // do not focus the input if clicking outside in dropdown mode
             if (this.getEditElement() && !(args.event && this.isDropdown)) {
                 this.inputDirective.focus();
+            } else {
+                this._onTouchedCallback();
+                this.updateValidity();
             }
         });
 
-        this._overlayService.onClosed.pipe(...this._overlaySubFilter).subscribe((_event) => {
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe((_event) => {
             const args: IBaseEventArgs = { owner: this };
             this.closed.emit(args);
             this._overlayService.detach(this._overlayId);
