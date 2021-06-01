@@ -8,6 +8,7 @@ import { IgxTreeGridCellComponent } from './tree-cell.component';
 import { IgxTreeGridFilteringPipe } from './tree-grid.filtering.pipe';
 import { IgxTreeGridSummaryPipe } from './tree-grid.summary.pipe';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
+import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
 /**
  * @hidden
  */
@@ -24,14 +25,16 @@ import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives'
     IgxTreeGridTransactionPipe,
     IgxTreeGridSummaryPipe,
     IgxRowLoadingIndicatorTemplateDirective,
-    IgxTreeGridNormalizeRecordsPipe
+    IgxTreeGridNormalizeRecordsPipe,
+    IgxTreeGridGroupingPipe
   ],
   exports: [
     IgxTreeGridComponent,
     IgxTreeGridRowComponent,
     IgxTreeGridCellComponent,
     IgxRowLoadingIndicatorTemplateDirective,
-    IgxGridCommonModule
+    IgxGridCommonModule,
+    IgxTreeGridGroupingPipe
   ],
   imports: [
     IgxGridCommonModule,
