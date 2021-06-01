@@ -1,5 +1,5 @@
 <igx-input-group [displayDensity]="displayDensity" [type]="type" [suppressInputAutofocus]="this.isDropdown"
-    (click)="!this.isDropdown && this.open()">
+    (click)="!this.isDropdown && this.toggle()">
     <input [displayValuePipe]="this.formatter ? displayValue : null" igxInput [igxDateTimeEditor]="this.inputFormat"
         type="text" [readonly]="!this.isDropdown || this.readOnly" [minValue]="this.minValue" [maxValue]="this.maxValue"
         [locale]="this.locale" [spinDelta]="this.itemsDelta" [spinLoop]="this.spinLoop" [placeholder]="this.placeholder"
