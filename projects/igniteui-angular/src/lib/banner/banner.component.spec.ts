@@ -250,8 +250,8 @@ describe('igxBanner', () => {
             const banner = fixture.componentInstance.banner;
             expect(banner.collapsed).toBeTruthy();
 
-            spyOn(banner.onOpened, 'emit');
-            spyOn(banner.onClosed, 'emit');
+            spyOn(banner.opened, 'emit');
+            spyOn(banner.closed, 'emit');
             spyOn(banner, 'onExpansionPanelClose').and.callThrough();
             spyOn(banner, 'onExpansionPanelOpen').and.callThrough();
             spyOn(banner, 'open').and.callThrough();
@@ -262,7 +262,7 @@ describe('igxBanner', () => {
             fixture.detectChanges();
 
             expect(banner.open).toHaveBeenCalledTimes(1);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(1);
             expect(banner.onExpansionPanelOpen).toHaveBeenCalledTimes(1);
             expect(banner.collapsed).toBeFalsy();
 
@@ -284,7 +284,7 @@ describe('igxBanner', () => {
             getBaseClassElements(fixture);
 
             expect(banner.close).toHaveBeenCalledTimes(1);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(1);
             expect(banner.onExpansionPanelClose).toHaveBeenCalledTimes(1);
             expect(banner.collapsed).toBeTruthy();
             expect(bannerMessageElement).toBeNull();
@@ -297,7 +297,7 @@ describe('igxBanner', () => {
             getBaseClassElements(fixture);
 
             expect(banner.open).toHaveBeenCalledTimes(2);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(2);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(2);
             expect(banner.onExpansionPanelOpen).toHaveBeenCalledTimes(2);
             expect(banner.collapsed).toBeFalsy();
             expect(bannerMessageElement).not.toBeNull();
@@ -313,7 +313,7 @@ describe('igxBanner', () => {
 
             getBaseClassElements(fixture);
             expect(banner.close).toHaveBeenCalledTimes(2);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(2);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(2);
             expect(banner.onExpansionPanelClose).toHaveBeenCalledTimes(2);
             expect(banner.collapsed).toBeTruthy();
             expect(bannerMessageElement).toBeNull();
@@ -356,62 +356,62 @@ describe('igxBanner', () => {
             const fixture = TestBed.createComponent(IgxBannerSampleComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.onClosed, 'emit');
-            spyOn(banner.onClosing, 'emit');
-            spyOn(banner.onOpened, 'emit');
-            spyOn(banner.onOpening, 'emit');
+            spyOn(banner.closed, 'emit');
+            spyOn(banner.closing, 'emit');
+            spyOn(banner.opened, 'emit');
+            spyOn(banner.opening, 'emit');
             expect(banner.collapsed).toEqual(true);
-            expect(banner.onOpening.emit).toHaveBeenCalledTimes(0);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(0);
-            expect(banner.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(banner.opening.emit).toHaveBeenCalledTimes(0);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(0);
+            expect(banner.closing.emit).toHaveBeenCalledTimes(0);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             banner.toggle();
             tick();
-            expect(banner.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onClosing.emit).toHaveBeenCalledTimes(0);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(banner.opening.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closing.emit).toHaveBeenCalledTimes(0);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             banner.toggle();
             tick();
-            expect(banner.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opening.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closing.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should properly cancel onOpening and onClosing', fakeAsync(() => {
+        it('Should properly cancel opening and closing', fakeAsync(() => {
             const fixture = TestBed.createComponent(SimpleBannerEventsComponent);
             fixture.detectChanges();
             const banner = fixture.componentInstance.banner;
-            spyOn(banner.onClosing, 'emit').and.callThrough();
-            spyOn(banner.onOpening, 'emit').and.callThrough();
-            spyOn(banner.onClosed, 'emit').and.callThrough();
-            spyOn(banner.onOpened, 'emit').and.callThrough();
+            spyOn(banner.closing, 'emit').and.callThrough();
+            spyOn(banner.opening, 'emit').and.callThrough();
+            spyOn(banner.closed, 'emit').and.callThrough();
+            spyOn(banner.opened, 'emit').and.callThrough();
             expect(banner.collapsed).toEqual(true);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();
             tick();
             expect(banner.collapsed).toEqual(true);
-            expect(banner.onOpening.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(0);
+            expect(banner.opening.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(0);
             fixture.componentInstance.cancelFlag = false;
             banner.toggle();
             tick();
             expect(banner.collapsed).toEqual(false);
-            expect(banner.onOpening.emit).toHaveBeenCalledTimes(2);
-            expect(banner.onOpened.emit).toHaveBeenCalledTimes(1);
+            expect(banner.opening.emit).toHaveBeenCalledTimes(2);
+            expect(banner.opened.emit).toHaveBeenCalledTimes(1);
             fixture.componentInstance.cancelFlag = true;
             banner.toggle();
             tick();
             expect(banner.collapsed).toEqual(false);
-            expect(banner.onClosing.emit).toHaveBeenCalledTimes(1);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(0);
+            expect(banner.closing.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(0);
             fixture.componentInstance.cancelFlag = false;
             banner.toggle();
             tick();
             expect(banner.collapsed).toEqual(true);
-            expect(banner.onClosing.emit).toHaveBeenCalledTimes(2);
-            expect(banner.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(banner.closing.emit).toHaveBeenCalledTimes(2);
+            expect(banner.closed.emit).toHaveBeenCalledTimes(1);
         }));
     });
 
@@ -593,7 +593,7 @@ export class IgxBannerCustomTemplateComponent {
 @Component({
     template: `
         <div id="wrapper" style = "width:900px">
-            <igx-banner (onOpening)="handleOpening($event)" (onClosing)="handleClosing($event)">Simple message</igx-banner>
+            <igx-banner (opening)="handleOpening($event)" (closing)="handleClosing($event)">Simple message</igx-banner>
         </div>
         <div id="content" style="height:200px; border: 1px solid red;"> SOME PAGE CONTENT</div>`
 })
