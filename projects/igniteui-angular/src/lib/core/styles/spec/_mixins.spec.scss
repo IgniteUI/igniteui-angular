@@ -1,3 +1,7 @@
+@use 'node_modules/sass-true' as *;
+@import '../base/index';
+@import '../themes/index';
+
 @include describe('Register Component') {
     $components: () !default;
 
