@@ -1532,7 +1532,8 @@ export class PickerModeComponent {
     it('Should update row component types with RowType', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/rows.component.ts', `
-import { IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, IgxGridRowComponent, IgxHierarchicalRowComponent,
+    IgxTreeGridRowComponent, IgxGridGroupByRowComponent, RowPinningPosition } from 'igniteui-angular';
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: IgxHierarchicalRowComponent = args.dragData;
@@ -1555,7 +1556,8 @@ export class HGridMultiRowDragComponent {
 
         expect(tree.readContent('/testSrc/appPrefix/component/rows.component.ts'))
             .toEqual(`
-import { IgxGridComponent, RowType, RowPinningPosition } from 'igniteui-angular';
+import { IgxGridComponent, RowType,
+    RowPinningPosition } from 'igniteui-angular';
 export class HGridMultiRowDragComponent {
     public onDropAllowed(args: IDropDroppedEventArgs)
         const hierRow: RowType = args.dragData;
@@ -1876,6 +1878,31 @@ export class SimpleComponent {
         <textarea igxInput [(ngModel)]="name" [disabled]="true">Some Text</textarea>
     </igx-input-group>
     `
+        );
+    });
+
+    it('Should properly rename InteractionMode to PickerInteractionMode',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { InteractionMode } from 'igniteui-angular';
+        export class MyClass {
+            public interactionMode: InteractionMode = InteractionMode.Dialog;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { PickerInteractionMode } from 'igniteui-angular';
+        export class MyClass {
+            public interactionMode: PickerInteractionMode = PickerInteractionMode.Dialog;
+        }
+        `
         );
     });
 });
