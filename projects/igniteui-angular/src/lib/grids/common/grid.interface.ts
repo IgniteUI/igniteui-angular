@@ -10,7 +10,7 @@ import { ITreeGridRecord } from '../tree-grid/public_api';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 
 export interface IGridDataBindable {
-    data: any[];
+    data: any[] | null;
     filteredData: any[];
 }
 
