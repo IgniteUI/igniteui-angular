@@ -359,7 +359,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
             const myExpr = collection.find((expr) => expr.fieldName === expression.fieldName);
             if (!myExpr && !maxExpr) {
                 // Expression with this fieldName is missing from the current and the max collection.
-                collection.push(expression);
+                collection.push({...expression});
             } else if (!myExpr && maxExpr) {
                 // Expression with this fieldName is missing from the current and but the max collection has.
                 collection.push(maxExpr);

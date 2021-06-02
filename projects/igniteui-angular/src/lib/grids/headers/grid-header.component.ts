@@ -202,9 +202,6 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
             this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.Asc : SortingDirection.Desc
             : this.sortDirection + 1 > SortingDirection.Desc ? SortingDirection.None : this.sortDirection + 1;
         this.sortDirection = sortDir;
-        if (groupingExpr) {
-            this.grid.groupingExpressions.find((expr) => expr.fieldName === this.column.field).dir = sortDir;
-        }
         this.grid.sort({
             fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
             strategy: this.column.sortStrategy
