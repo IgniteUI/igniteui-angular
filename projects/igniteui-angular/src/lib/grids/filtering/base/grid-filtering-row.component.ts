@@ -400,7 +400,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 indexToDeselect = index;
             }
         }
-        console.log({ ...this.expressionsList });
         if (indexToDeselect !== -1) {
             this.removeExpression(indexToDeselect, this.expression);
         }
@@ -472,7 +471,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             if (!(focusedElement && this.editorsContain(focusedElement))
                 && this.dropDownConditions.collapsed) {
-                    console.log('Focus out commitInput()');
                 this.commitInput();
             }
         });
