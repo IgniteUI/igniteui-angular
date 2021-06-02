@@ -738,10 +738,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get data(): any[] {
+    get data(): any[] | null {
         return this._data;
     }
-    set data(val: any[]) {
+    set data(val: any[] | null) {
         this._data = (val) ? val : [];
     }
 
@@ -983,14 +983,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public get filteredData(): any[] {
+    public get filteredData(): any[] | null {
         return this.filterable ? this._filteredData : this.data;
     }
 
     /**
      * @hidden @internal
      */
-    public set filteredData(val: any[]) {
+    public set filteredData(val: any[] | null) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
         this.checkMatch();
     }

@@ -108,11 +108,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get data(): any[] {
+    public get data(): any[] | null {
         return this._data;
     }
 
-    public set data(value: any[]) {
+    public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -156,12 +156,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public flatData: any[];
+    public flatData: any[] | null;
 
     /**
      * @hidden
      */
-    public processedExpandedFlatData: any[];
+    public processedExpandedFlatData: any[] | null;
 
     /**
      * Returns an array of the root level `ITreeGridRecord`s.
