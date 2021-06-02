@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -67,8 +68,8 @@
     $name: 'igx-slider';
     $slider-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $slider-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $slider-schema: map.get($schema, $name);
     } @else {
         $slider-schema: $schema;
     }
@@ -110,21 +111,21 @@
 @mixin igx-slider($theme) {
     @include igx-css-vars($theme);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
     $slider-height: 48px;
 
-    $slider-track-height: map-get((
+    $slider-track-height: map.get((
         material: 2px,
         fluent: 4px,
         bootstrap: 5px,
         indigo-design: 2px
     ), $variant);
 
-    $slider-outline-width: map-get((
+    $slider-outline-width: map.get((
         material: 3px,
         fluent: 0,
         bootstrap: 3px,
@@ -138,7 +139,7 @@
     $tick-height--tall: $base-tick-height * 2;
     $tick-width: rem(2px);
 
-    $thumb-border-width: map-get((
+    $thumb-border-width: map.get((
         material: 0,
         fluent: 2px,
         bootstrap: 1px,
@@ -156,14 +157,14 @@
     $slider-label-radius: $slider-label-width / 2;
     $slider-label-padding: 0 rem(2px);
 
-    $switch-display: map-get((
+    $switch-display: map.get((
         material: block,
         fluent: none,
         bootstrap: none,
         indigo-design: none,
     ), $variant);
 
-    $dot-size: map-get((
+    $dot-size: map.get((
         material: 12px,
         fluent: 16px,
         bootstrap: 14px,
@@ -598,8 +599,8 @@
         thumb-label: 'caption',
     )
 ) {
-    $ticks-label: map-get($categories, 'ticks-label');
-    $thumb-label: map-get($categories, 'thumb-label');
+    $ticks-label: map.get($categories, 'ticks-label');
+    $thumb-label: map.get($categories, 'thumb-label');
 
     %igx-slider-thumb-label__container {
         @include igx-type-style($type-scale, $thumb-label)

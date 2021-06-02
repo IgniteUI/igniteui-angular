@@ -3,6 +3,7 @@
 @use '../../themes/schemas/dark' as *;
 @use '../button-group/button-group-component' as *;
 @use '../button-group/button-group-theme' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -19,7 +20,7 @@
 @mixin excel-filtering($theme, $palette) {
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
-    $variant: map-get($theme, 'variant');
+    $variant: map.get($theme, 'variant');
 
     %grid-excel-filter {
         display: block;
@@ -449,8 +450,8 @@
     header-comfortable: 'overline',
     header-compact: 'subtitle-1')
 ) {
-    $header-comfortable: map-get($categories, 'header-comfortable');
-    $header-compact: map-get($categories, 'header-compact');
+    $header-comfortable: map.get($categories, 'header-comfortable');
+    $header-compact: map.get($categories, 'header-compact');
 
 
     %grid-excel-menu {

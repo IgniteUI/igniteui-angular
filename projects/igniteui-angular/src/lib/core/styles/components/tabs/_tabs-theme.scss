@@ -3,6 +3,8 @@
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -85,26 +87,26 @@
     $name: 'igx-tabs';
     $tabs-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $tabs-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $tabs-schema: map.get($schema, $name);
     } @else {
         $tabs-schema: $schema;
     }
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($tabs-schema, 'border-radius')), 0, 6px
+        if($border-radius, $border-radius, map.get($tabs-schema, 'border-radius')), 0, 6px
     );
 
     $theme: apply-palette($tabs-schema, $palette);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'boostrap';
 
     $tab-area-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 1));
     $buttons-shadow: if($disable-shadow == true, none, igx-elevation($elevation: 4));
 
     @if not($item-text-color) and $item-background {
-        @if type-of($item-background) == 'color' {
+        @if meta.type-of($item-background) == 'color' {
             $item-text-color: rgba(text-contrast($item-background), .54);
         }
     }
@@ -155,7 +157,7 @@
     }
 
     @if not($button-background) and $item-background {
-        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
+        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-background: transparent;
         } @else {
             $button-background: rgba(255, 255, 255 , .1);
@@ -163,7 +165,7 @@
     }
 
     @if not($button-hover-background) and $item-background {
-        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
+        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-hover-background: rgba(0, 0, 0, .05);
         } @else {
             $button-hover-background: rgba(255, 255, 255 , .14);
@@ -171,7 +173,7 @@
     }
 
     @if not($button-ripple-color) and $button-background {
-        @if type-of($item-background) == 'color' and lightness($item-background) > 50 {
+        @if meta.type-of($item-background) == 'color' and lightness($item-background) > 50 {
             $button-ripple-color: rgba(0, 0, 0, .4);
         } @else {
             $button-ripple-color: rgba(255, 255, 255, .4);
@@ -222,7 +224,7 @@
 @mixin igx-tabs($theme) {
     @include igx-css-vars($theme);
 
-    $variant: map-get($theme, 'variant');
+    $variant: map.get($theme, 'variant');
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
@@ -347,7 +349,7 @@
     }
 
     %tabs-header-item {
-        @include icon-w-margin(map-get($icon-space, 'comfortable'), $left);
+        @include icon-w-margin(map.get($icon-space, 'comfortable'), $left);
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -580,7 +582,7 @@
 /// @param {Map} $categories [(label: 'button')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-tabs-typography($type-scale, $categories: (label: 'button')) {
-    $label: map-get($categories, 'label');
+    $label: map.get($categories, 'label');
 
     %tabs-header-item-inner > [igxtabheaderlabel]{
         @include igx-type-style($type-scale, $label) {

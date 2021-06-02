@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -50,8 +52,8 @@
     $name: 'igx-tree';
     $tree-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $tree-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $tree-schema: map.get($schema, $name);
     } @else {
         $tree-schema: $schema;
     }
@@ -101,7 +103,7 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
     $node-indent: (
@@ -120,9 +122,9 @@
     $icon-space: rem(8px);
 
     $drop-indicator-width: (
-        comfortable: calc(100% - ((#{map-get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space}))),
-        cosy: calc(100% - ((#{map-get($node-indent, 'cosy')} * 2) + (#{$icon-size} + #{$icon-space}))),
-        compact: calc(100% - ((#{map-get($node-indent, 'compact')} * 2) + (#{$icon-size} + #{$icon-space})))
+        comfortable: calc(100% - ((#{map.get($node-indent, 'comfortable')} * 2) + (#{$icon-size} + #{$icon-space}))),
+        cosy: calc(100% - ((#{map.get($node-indent, 'cosy')} * 2) + (#{$icon-size} + #{$icon-space}))),
+        compact: calc(100% - ((#{map.get($node-indent, 'compact')} * 2) + (#{$icon-size} + #{$icon-space})))
     );
 
     %tree-display {
@@ -164,8 +166,8 @@
     }
 
     %node-wrapper {
-        min-height: map-get($node-height, 'comfortable');
-        padding: 0 map-get($node-indent, 'comfortable');
+        min-height: map.get($node-height, 'comfortable');
+        padding: 0 map.get($node-indent, 'comfortable');
         position: relative;
         background: var-get($theme, 'background');
         color: var-get($theme, 'foreground');
@@ -204,16 +206,16 @@
         }
 
         &--cosy {
-            min-height: map-get($node-height, 'cosy');
-            padding: 0 map-get($node-indent, 'cosy');
+            min-height: map.get($node-height, 'cosy');
+            padding: 0 map.get($node-indent, 'cosy');
 
             %node-spacer {
-                width: map-get($node-indent, 'cosy')
+                width: map.get($node-indent, 'cosy')
             }
 
             %node-drop-indicator {
-                #{$right}: map-get($node-indent, 'cosy');
-                width: map-get($drop-indicator-width, 'cosy');
+                #{$right}: map.get($node-indent, 'cosy');
+                width: map.get($drop-indicator-width, 'cosy');
             }
 
             igx-circular-bar {
@@ -223,16 +225,16 @@
         }
 
         &--compact {
-            min-height: map-get($node-height, 'compact');
-            padding: 0 map-get($node-indent, 'compact');
+            min-height: map.get($node-height, 'compact');
+            padding: 0 map.get($node-indent, 'compact');
 
             %node-spacer {
-                width: map-get($node-indent, 'compact')
+                width: map.get($node-indent, 'compact')
             }
 
             %node-drop-indicator {
-                #{$right}: map-get($node-indent, 'compact');
-                width: map-get($drop-indicator-width, 'compact');
+                #{$right}: map.get($node-indent, 'compact');
+                width: map.get($drop-indicator-width, 'compact');
             }
 
             igx-circular-bar {
@@ -253,10 +255,10 @@
     }
 
     %indigo-opacity {
-        $bg-active: map-get($theme, 'background-active');
+        $bg-active: map.get($theme, 'background-active');
 
         @if ($indigo-theme) {
-            @if type-of($bg-active) == 'color' and lightness($bg-active) < 50 {
+            @if meta.type-of($bg-active) == 'color' and lightness($bg-active) < 50 {
                 opacity: .8;
             } @else {
                 opacity: .3;
@@ -292,7 +294,7 @@
 
     %node-spacer {
         display: inline-block;
-        width: map-get($node-indent, 'comfortable');
+        width: map.get($node-indent, 'comfortable');
     }
 
     %node-content {
@@ -313,9 +315,9 @@
         display: flex;
         visibility: hidden;
         position: absolute;
-        #{$right}: map-get($node-indent, 'comfortable');
+        #{$right}: map.get($node-indent, 'comfortable');
         bottom: 0;
-        width: map-get($drop-indicator-width, 'comfortable');
+        width: map.get($drop-indicator-width, 'comfortable');
 
         > div {
             flex: 1;
@@ -339,7 +341,7 @@
     $type-scale,
     $categories: (label: 'body-2')
 ) {
-    $text: map-get($categories, 'label');
+    $text: map.get($categories, 'label');
 
     %node-content {
         @include igx-type-style($type-scale, $text)

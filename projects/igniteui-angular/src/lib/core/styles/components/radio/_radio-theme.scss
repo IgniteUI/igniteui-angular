@@ -3,6 +3,7 @@
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -49,8 +50,8 @@
     $name: 'igx-radio';
     $radio-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $radio-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $radio-schema: map.get($schema, $name);
     } @else {
         $radio-schema: $schema;
     }
@@ -86,18 +87,18 @@
 
     $label-margin: em(8px);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    $size: map-get((
+    $size: map.get((
         material: em(20px),
         fluent: em(20px),
         bootstrap: em(14px),
         indigo-design: em(20px),
     ), $variant);
 
-    $scale: map-get((
+    $scale: map.get((
         material: scale(.5),
         fluent: scale(.5),
         bootstrap: scale(.3),
@@ -107,19 +108,19 @@
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    $border-width: map-get((
+    $border-width: map.get((
         material: rem(2px),
         fluent: rem(1px),
         bootstrap: rem(1px),
         indigo-design: rem(2px),
     ), $variant);
 
-    $radio-hover-scale: map-get((
+    $radio-hover-scale: map.get((
         material: null,
         fluent: scale(.5),
     ), $variant);
 
-    $ripple-display: map-get((
+    $ripple-display: map.get((
         material: block,
         fluent: none,
         indigo-design: none,
@@ -396,7 +397,7 @@
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
-    $label: map-get($categories, 'label');
+    $label: map.get($categories, 'label');
 
     %radio-label {
         @include igx-type-style($type-scale, $label) {

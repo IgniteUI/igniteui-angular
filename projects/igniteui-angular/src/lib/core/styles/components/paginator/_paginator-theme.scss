@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -37,8 +38,8 @@
     $name: 'igx-paginator';
     $grid-paginator-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $grid-paginator-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $grid-paginator-schema: map.get($schema, $name);
     } @else {
         $grid-paginator-schema: $schema;
     }
@@ -91,8 +92,8 @@
         font-size: 12px;
         border-top: 1px solid var-get($theme, 'border-color');
         z-index: 1;
-        padding: map-get($paginator-padding, 'comfortable');
-        height: map-get($paginator-height, 'comfortable');
+        padding: map.get($paginator-padding, 'comfortable');
+        height: map.get($paginator-height, 'comfortable');
         width: 100%;
 
         &:empty {
@@ -101,13 +102,13 @@
     }
 
     %igx-paginator--cosy {
-        padding: map-get($paginator-padding, 'cosy');
-        height: map-get($paginator-height, 'cosy');
+        padding: map.get($paginator-padding, 'cosy');
+        height: map.get($paginator-height, 'cosy');
     }
 
     %igx-paginator--compact {
-        padding: map-get($paginator-padding, 'compact');
-        height: map-get($paginator-height, 'compact');
+        padding: map.get($paginator-padding, 'compact');
+        height: map.get($paginator-height, 'compact');
     }
 
 

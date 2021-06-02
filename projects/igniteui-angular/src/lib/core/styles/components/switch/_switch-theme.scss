@@ -3,6 +3,7 @@
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -80,8 +81,8 @@
     $name: 'igx-switch';
     $switch-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $switch-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $switch-schema: map.get($schema, $name);
     } @else {
         $switch-schema: $schema;
     }
@@ -89,29 +90,29 @@
     $theme: apply-palette($switch-schema, $palette);
 
     $border-radius-track: round-borders(
-        if($border-radius-track, $border-radius-track, map-get($switch-schema, 'border-radius-track')), 0, 7px
+        if($border-radius-track, $border-radius-track, map.get($switch-schema, 'border-radius-track')), 0, 7px
     );
 
     $border-radius-thumb: round-borders(
-        if($border-radius-thumb, $border-radius-thumb, map-get($switch-schema, 'border-radius-thumb')), 0, 10px
+        if($border-radius-thumb, $border-radius-thumb, map.get($switch-schema, 'border-radius-thumb')), 0, 10px
     );
 
     $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map-get($switch-schema, 'border-radius-ripple')), 0, 24px
+        if($border-radius-ripple, $border-radius-ripple, map.get($switch-schema, 'border-radius-ripple')), 0, 24px
     );
 
     @if not($resting-shadow) {
-        $resting-elevation: map-get($switch-schema, 'resting-elevation');
+        $resting-elevation: map.get($switch-schema, 'resting-elevation');
         $resting-shadow: igx-elevation($elevation: $resting-elevation);
     }
 
     @if not($hover-shadow) {
-        $hover-elevation: map-get($switch-schema, 'hover-elevation');
+        $hover-elevation: map.get($switch-schema, 'hover-elevation');
         $hover-shadow: igx-elevation($elevation: $hover-elevation);
     }
 
     @if not($disabled-shadow) {
-        $disabled-elevation: map-get($switch-schema, 'disabled-elevation');
+        $disabled-elevation: map.get($switch-schema, 'disabled-elevation');
         $disabled-shadow: igx-elevation($elevation: $disabled-elevation);
     }
 
@@ -162,65 +163,65 @@
     @include igx-css-vars($theme);
     @include scale-in-out($start-scale: .9);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
 
-    $switch-width: map-get((
+    $switch-width: map.get((
         material: 36px,
         fluent: 40px,
         bootstrap: 32px,
         indigo-design: 34px
     ), $variant);
 
-    $switch-height: map-get((
+    $switch-height: map.get((
         material: 14px,
         fluent: 20px,
         bootstrap: 16px,
         indigo-design: 16px
     ), $variant);
 
-    $switch-thumb-width: map-get((
+    $switch-thumb-width: map.get((
         material: 20px,
         fluent: 12px,
         bootstrap: 8px,
         indigo-design: 8px
     ), $variant);
 
-    $switch-on-offset: map-get((
+    $switch-on-offset: map.get((
         material: 1px,
         fluent: $switch-thumb-width / 2,
         bootstrap: $switch-thumb-width / 2,
         indigo-design: 7px
     ), $variant);
 
-    $switch-off-offset: map-get((
+    $switch-off-offset: map.get((
         material: -1px,
         fluent: $switch-thumb-width / 3,
         bootstrap: $switch-thumb-width / 3,
         indigo-design: $switch-thumb-width / 3,
     ), $variant);
 
-    $ripple-display: map-get((
+    $ripple-display: map.get((
         material: block,
         fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
-    $thumb-resting-shadow: map-get((
+    $thumb-resting-shadow: map.get((
         material: var-get($theme, 'resting-shadow'),
         fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
-    $thumb-hover-shadow: map-get((
+    $thumb-hover-shadow: map.get((
         material: var-get($theme, 'hover-shadow'),
         fluent: none,
         bootstrap: none,
         indigo-design: none
     ), $variant);
 
-    $thumb-disabled-shadow: map-get((
+    $thumb-disabled-shadow: map.get((
         material: var-get($theme, 'disabled-shadow'),
         fluent: none,
         bootstrap: none,
@@ -477,7 +478,7 @@
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
-    $label: map-get($categories, 'label');
+    $label: map.get($categories, 'label');
 
     %switch-label {
         @include igx-type-style($type-scale, $label) {

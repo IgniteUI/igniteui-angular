@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -131,8 +133,8 @@
     $selector: 'igx-input-group, igx-date-range-start, igx-date-range-end';
     $input-group-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $input-group-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $input-group-schema: map.get($schema, $name);
     } @else {
         $input-group-schema: $schema;
     }
@@ -141,36 +143,36 @@
 
     $box-border-radius: round-borders(
         if($box-border-radius, $box-border-radius,
-        map-get($input-group-schema, 'box-border-radius')
+        map.get($input-group-schema, 'box-border-radius')
     ), 0, 20px);
 
     $border-border-radius: round-borders(
         if($border-border-radius, $border-border-radius,
-        map-get($input-group-schema, 'border-border-radius')
+        map.get($input-group-schema, 'border-border-radius')
     ), 0, 20px);
 
     $search-border-radius: round-borders(
         if($search-border-radius, $search-border-radius,
-        map-get($input-group-schema, 'search-border-radius')
+        map.get($input-group-schema, 'search-border-radius')
     ), 0, 20px);
 
-    $search-resting-elevation: map-get($input-group-schema, 'search-resting-elevation');
-    $search-hover-elevation: map-get($input-group-schema, 'search-hover-elevation');
-    $search-disabled-elevation: map-get($input-group-schema, 'search-disabled-elevation');
+    $search-resting-elevation: map.get($input-group-schema, 'search-resting-elevation');
+    $search-hover-elevation: map.get($input-group-schema, 'search-hover-elevation');
+    $search-disabled-elevation: map.get($input-group-schema, 'search-disabled-elevation');
 
-    $focused-shadow-color: rgba(map-get($theme, 'focused-secondary-color'), .5);
-    $success-shadow-color: rgba(map-get($theme, 'success-secondary-color'), .5);
-    $error-shadow-color: rgba(map-get($theme, 'error-secondary-color'), .5);
+    $focused-shadow-color: rgba(map.get($theme, 'focused-secondary-color'), .5);
+    $success-shadow-color: rgba(map.get($theme, 'success-secondary-color'), .5);
+    $error-shadow-color: rgba(map.get($theme, 'error-secondary-color'), .5);
 
-    @if $focused-secondary-color and type-of($focused-secondary-color) == 'color' {
+    @if $focused-secondary-color and meta.type-of($focused-secondary-color) == 'color' {
         $focused-shadow-color: rgba($focused-secondary-color, .5);
     }
 
-    @if $success-secondary-color and type-of($success-secondary-color) == 'color' {
+    @if $success-secondary-color and meta.type-of($success-secondary-color) == 'color' {
         $success-shadow-color: rgba($success-secondary-color, .5);
     }
 
-    @if $error-secondary-color and type-of($error-secondary-color) == 'color' {
+    @if $error-secondary-color and meta.type-of($error-secondary-color) == 'color' {
         $error-shadow-color: rgba($error-secondary-color, .5);
     }
 
@@ -265,11 +267,11 @@
 @mixin igx-input-group($theme) {
     @include igx-css-vars($theme);
 
-    $palette: map-get($theme, 'palette');
+    $palette: map.get($theme, 'palette');
 
     $transition-timing: .25s $ease-out-cubic;
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $indigo-theme: $variant == 'indigo-design';
 
     $required-symbol: '*';
@@ -298,14 +300,14 @@
         'compact': rem(14px),
     );
 
-    $hint-padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
-    $hint--box-margin: rem(12px, map-get($base-scale-size, 'comfortable'));
+    $hint-padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
+    $hint--box-margin: rem(12px, map.get($base-scale-size, 'comfortable'));
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
     igx-input-group {
-        --theme: #{map-get($theme, 'variant')};
+        --theme: #{map.get($theme, 'variant')};
     }
 
     %form-group-display {
@@ -446,27 +448,27 @@
         align-items: center;
         flex-flow: row nowrap;
         max-width: 100%;
-        padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
+        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
         transition: box-shadow $transition-timing, color $transition-timing;
     }
 
     %form-group-bundle--cosy {
-        padding-top: rem(18px, map-get($base-scale-size, 'cosy'));
+        padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-bundle--compact {
-        padding-top: rem(18px, map-get($base-scale-size, 'compact'));
+        padding-top: rem(18px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-bundle--box {
-        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'box-background');
         box-shadow: inset 0 -2px 0 0 var-get($theme, 'idle-bottom-line-color');
     }
 
     %form-group-bundle--indigo {
-        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         background: transparent;
         transition: background $transition-timing, box-shadow $transition-timing;
         box-shadow: inset 0 -1px 0 0 var-get($theme, 'idle-bottom-line-color');
@@ -494,11 +496,11 @@
     }
 
     %form-group-bundle--box-cosy {
-        padding: 0 rem(16px, map-get($base-scale-size, 'cosy'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-bundle--box-compact {
-        padding: 0 rem(16px, map-get($base-scale-size, 'compact'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-bundle--hover {
@@ -550,18 +552,18 @@
     }
 
     %form-group-bundle--border {
-        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         box-shadow: inset 0 0 0 1px var-get($theme, 'border-color');
         border-radius: var-get($theme, 'border-border-radius');
         background: var-get($theme, 'border-background');
     }
 
     %form-group-bundle--border-cosy {
-        padding: 0 rem(16px, map-get($base-scale-size, 'cosy'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-bundle--border-compact {
-        padding: 0 rem(16px, map-get($base-scale-size, 'compact'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-bundle-border--hover {
@@ -802,7 +804,7 @@
         transform-origin: top #{$left};
         margin-top: 0 !important;
         height: auto;
-        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
+        color: igx-color(map.get($theme, 'palette'), 'grays', 800);
     }
 
     %fluent-label-success {
@@ -814,7 +816,7 @@
     }
 
     %fluent-label-disabled {
-        color: igx-color(map-get($theme, 'palette'), 'grays', 500);
+        color: igx-color(map.get($theme, 'palette'), 'grays', 500);
     }
 
     %fluent-label-filled {
@@ -822,7 +824,7 @@
     }
 
     %fluent-label-focused {
-        color: igx-color(map-get($theme, 'palette'), 'grays', 800);
+        color: igx-color(map.get($theme, 'palette'), 'grays', 800);
         transform: translateY(0) scale(1);
     }
 
@@ -831,18 +833,18 @@
     }
 
     %form-group-bundle--search {
-        padding: 0 rem(16px, map-get($base-scale-size, 'comfortable'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'comfortable'));
         border-radius: var-get($theme, 'search-border-radius');
         background: var-get($theme, 'search-background');
         box-shadow: var-get($theme, 'search-resting-shadow');
     }
 
     %form-group-bundle--search-cosy {
-        padding: 0 rem(16px, map-get($base-scale-size, 'cosy'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-bundle--search-compact {
-        padding: 0 rem(16px, map-get($base-scale-size, 'compact'));
+        padding: 0 rem(16px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-bundle-search--hover {
@@ -878,15 +880,15 @@
     }
 
     %form-group-bundle-main--box {
-        padding-top: rem(18px, map-get($base-scale-size, 'comfortable'));
+        padding-top: rem(18px, map.get($base-scale-size, 'comfortable'));
     }
 
     %form-group-bundle-main--box-cosy {
-        padding-top: rem(18px, map-get($base-scale-size, 'cosy'));
+        padding-top: rem(18px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-bundle-main--box-compact {
-        padding-top: rem(18px, map-get($base-scale-size, 'compact'));
+        padding-top: rem(18px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-label {
@@ -989,7 +991,7 @@
         position: relative;
         display: block;
         border: none;
-        height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        height: rem(32px, map.get($base-scale-size, 'comfortable'));
         width: 100%;
         min-width: 0;
         overflow: visible;
@@ -1020,7 +1022,7 @@
         width: 100%;
         max-width: 100%;
         overflow: hidden;
-        height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        height: rem(32px, map.get($base-scale-size, 'comfortable'));
         color: var-get($theme, 'filled-text-color');
         line-height: 1;
 
@@ -1036,20 +1038,20 @@
     }
 
     %form-group-input--cosy {
-        height: rem(32px, map-get($base-scale-size, 'cosy'));
+        height: rem(32px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-file-input--cosy {
-        height: rem(32px, map-get($base-scale-size, 'cosy'));
+        height: rem(32px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-input--compact {
-        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
-        height: rem(32px, map-get($base-scale-size, 'compact'));
+        font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
+        height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-file-input--compact {
-        height: rem(32px, map-get($base-scale-size, 'compact'));
+        height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-upload-button {
@@ -1122,10 +1124,10 @@
 
     %form-group-textarea {
         // 3 lines * 22px + 8px bottom padding + 8px top padding
-        min-height: rem(82px, map-get($base-scale-size, 'comfortable'));
+        min-height: rem(82px, map.get($base-scale-size, 'comfortable'));
 
         // this fixes resizing in chrome !?!?
-        margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'comfortable'))};
+        margin-#{$right}: -#{rem(16px, map.get($base-scale-size, 'comfortable'))};
 
         height: auto;
         resize: vertical;
@@ -1148,25 +1150,25 @@
     }
 
     %form-group-textarea--cosy {
-        min-height: rem(82px, map-get($base-scale-size, 'cosy'));
-        margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'cosy'))};
+        min-height: rem(82px, map.get($base-scale-size, 'cosy'));
+        margin-#{$right}: -#{rem(16px, map.get($base-scale-size, 'cosy'))};
     }
 
     %form-group-textarea--compact {
-        min-height: rem(82px, map-get($base-scale-size, 'compact'));
-        margin-#{$right}: -#{rem(16px, map-get($base-scale-size, 'compact'))};
+        min-height: rem(82px, map.get($base-scale-size, 'compact'));
+        margin-#{$right}: -#{rem(16px, map.get($base-scale-size, 'compact'))};
     }
 
     %form-group-textarea--indigo {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'comfortable'))} !important;
+        margin-top: -#{rem(18px, map.get($base-scale-size, 'comfortable'))} !important;
     }
 
     %form-group-textarea--indigo-cosy {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'cosy'))} !important;
+        margin-top: -#{rem(18px, map.get($base-scale-size, 'cosy'))} !important;
     }
 
     %form-group-textarea--indigo-compact {
-        margin-top: -#{rem(18px, map-get($base-scale-size, 'compact'))} !important;
+        margin-top: -#{rem(18px, map.get($base-scale-size, 'compact'))} !important;
     }
 
     %form-group-prefix,
@@ -1174,85 +1176,85 @@
         position: relative;
         display: inline-flex;
         align-items: center;
-        height: rem(32px, map-get($base-scale-size, 'comfortable'));
+        height: rem(32px, map.get($base-scale-size, 'comfortable'));
         transition: color $transition-timing;
     }
 
     %form-group-prefix {
         @include if-ltr() {
-            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
-                rem(8px, map-get($base-scale-size, 'comfortable'))
-                rem(8px, map-get($base-scale-size, 'comfortable'))
+            padding: rem(8px, map.get($base-scale-size, 'comfortable'))
+                rem(8px, map.get($base-scale-size, 'comfortable'))
+                rem(8px, map.get($base-scale-size, 'comfortable'))
                 0;
         }
 
         @include if-rtl() {
-            padding: rem(8px, map-get($base-scale-size, 'comfortable'))
+            padding: rem(8px, map.get($base-scale-size, 'comfortable'))
                 0
-                rem(8px, map-get($base-scale-size, 'comfortable'))
-                rem(8px, map-get($base-scale-size, 'comfortable'));
+                rem(8px, map.get($base-scale-size, 'comfortable'))
+                rem(8px, map.get($base-scale-size, 'comfortable'));
         }
     }
 
     %form-group-suffix {
-        padding: rem(8px, map-get($base-scale-size, 'comfortable')) 0;
+        padding: rem(8px, map.get($base-scale-size, 'comfortable')) 0;
     }
 
     %form-group-prefix--cosy,
     %form-group-suffix--cosy {
-        height: rem(32px, map-get($base-scale-size, 'cosy'));
+        height: rem(32px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-prefix--compact,
     %form-group-suffix--compact {
-        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
-        height: rem(32px, map-get($base-scale-size, 'compact'));
+        font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
+        height: rem(32px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-prefix--cosy {
         @include if-ltr() {
-            padding: rem(8px, map-get($base-scale-size, 'cosy'))
-                rem(8px, map-get($base-scale-size, 'cosy'))
-                rem(8px, map-get($base-scale-size, 'cosy'))
+            padding: rem(8px, map.get($base-scale-size, 'cosy'))
+                rem(8px, map.get($base-scale-size, 'cosy'))
+                rem(8px, map.get($base-scale-size, 'cosy'))
                 0;
         }
 
         @include if-rtl() {
-            padding: rem(8px, map-get($base-scale-size, 'cosy'))
+            padding: rem(8px, map.get($base-scale-size, 'cosy'))
                 0
-                rem(8px, map-get($base-scale-size, 'cosy'))
-                rem(8px, map-get($base-scale-size, 'cosy'));
+                rem(8px, map.get($base-scale-size, 'cosy'))
+                rem(8px, map.get($base-scale-size, 'cosy'));
         }
     }
 
     %form-group-prefix--compact {
         @include if-ltr() {
-            padding: rem(8px, map-get($base-scale-size, 'compact'))
-                rem(8px, map-get($base-scale-size, 'compact'))
-                rem(8px, map-get($base-scale-size, 'compact'))
+            padding: rem(8px, map.get($base-scale-size, 'compact'))
+                rem(8px, map.get($base-scale-size, 'compact'))
+                rem(8px, map.get($base-scale-size, 'compact'))
                 0;
         }
 
         @include if-rtl() {
-            padding: rem(8px, map-get($base-scale-size, 'compact'))
+            padding: rem(8px, map.get($base-scale-size, 'compact'))
                 0
-                rem(8px, map-get($base-scale-size, 'compact'))
-                rem(8px, map-get($base-scale-size, 'compact'));
+                rem(8px, map.get($base-scale-size, 'compact'))
+                rem(8px, map.get($base-scale-size, 'compact'));
         }
     }
 
     %form-group-suffix--cosy {
-        padding: rem(8px, map-get($base-scale-size, 'cosy')) 0;
+        padding: rem(8px, map.get($base-scale-size, 'cosy')) 0;
     }
 
     %form-group-suffix--compact {
-        padding: rem(8px, map-get($base-scale-size, 'compact')) 0;
+        padding: rem(8px, map.get($base-scale-size, 'compact')) 0;
     }
 
     %form-group-prefix-fluent {
         color: var-get($theme, 'input-prefix-color');
         background: var-get($theme, 'input-prefix-background');
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
         width: auto;
         height: auto;
         line-height: normal;
@@ -1270,7 +1272,7 @@
     }
 
     %form-group-prefix-fluent-search {
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
 
         igx-icon {
             width: rem(18px);
@@ -1285,7 +1287,7 @@
 
     %form-group-suffix-fluent {
         color: var-get($theme, 'input-suffix-color');
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
         background: var-get($theme, 'input-suffix-background');
         width: auto;
         height: auto;
@@ -1305,7 +1307,7 @@
     %form-group-suffix-fluent-search {
         width: auto;
         height: auto;
-        padding: rem(8px, map-get($base-scale-size, 'comfortable'));
+        padding: rem(8px, map.get($base-scale-size, 'comfortable'));
         line-height: normal;
 
         igx-icon {
@@ -1331,59 +1333,59 @@
     %form-group-suffix-fluent-search--compact,
     %form-group-prefix-fluent--compact,
     %form-group-suffix-fluent--compact {
-        font-size: rem(map-get($base-scale-size, 'compact') - 1px, map-get($base-scale-size, 'compact'));
+        font-size: rem(map.get($base-scale-size, 'compact') - 1px, map.get($base-scale-size, 'compact'));
         height: auto;
         line-height: normal;
     }
 
     %form-group-prefix-fluent-search--cosy,
     %form-group-prefix-fluent--cosy {
-        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+        padding: rem(8px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-prefix-fluent-search--compact,
     %form-group-prefix-fluent--compact {
-        padding: rem(8px, map-get($base-scale-size, 'compact'));
+        padding: rem(8px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-suffix-fluent-search--cosy,
     %form-group-suffix-fluent--cosy {
-        padding: rem(8px, map-get($base-scale-size, 'cosy'));
+        padding: rem(8px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-suffix-fluent-search--compact,
     %form-group-suffix-fluent--compact {
-        padding: rem(8px, map-get($base-scale-size, 'compact'));
+        padding: rem(8px, map.get($base-scale-size, 'compact'));
     }
     // FLUENT END
 
     %form-group-prefix--box {
         @include if-ltr() {
-            padding: 0 rem(8px, map-get($base-scale-size, 'comfortable')) 0 0;
+            padding: 0 rem(8px, map.get($base-scale-size, 'comfortable')) 0 0;
         }
 
         @include if-rtl() {
-            padding: 0 0 0 rem(8px, map-get($base-scale-size, 'comfortable')); /* 8px, base is 16px */
+            padding: 0 0 0 rem(8px, map.get($base-scale-size, 'comfortable')); /* 8px, base is 16px */
         }
     }
 
     %form-group-prefix--box-cosy {
         @include if-ltr() {
-            padding: 0 rem(8px, map-get($base-scale-size, 'cosy')) 0 0;
+            padding: 0 rem(8px, map.get($base-scale-size, 'cosy')) 0 0;
         }
 
         @include if-rtl() {
-            padding: 0 0 0 rem(8px, map-get($base-scale-size, 'cosy')); /* 8px, base is 16px */
+            padding: 0 0 0 rem(8px, map.get($base-scale-size, 'cosy')); /* 8px, base is 16px */
         }
     }
 
     %form-group-prefix--box-compact {
         @include if-ltr() {
-            padding: 0 rem(8px, map-get($base-scale-size, 'compact')) 0 0;
+            padding: 0 rem(8px, map.get($base-scale-size, 'compact')) 0 0;
         }
 
         @include if-rtl() {
-            padding: 0 0 0 rem(8px, map-get($base-scale-size, 'compact')); /* 8px, base is 16px */
+            padding: 0 0 0 rem(8px, map.get($base-scale-size, 'compact')); /* 8px, base is 16px */
         }
     }
 
@@ -1428,7 +1430,7 @@
     %form-group-helper {
         position: relative;
         display: flex;
-        padding-top: rem(6px, map-get($base-scale-size, 'comfortable'));
+        padding-top: rem(6px, map.get($base-scale-size, 'comfortable'));
         justify-content: space-between;
 
         > * {
@@ -1445,11 +1447,11 @@
     }
 
     %form-group-help--cosy {
-        padding-top: rem(6px, map-get($base-scale-size, 'cosy'));
+        padding-top: rem(6px, map.get($base-scale-size, 'cosy'));
     }
 
     %form-group-help--compact {
-        padding-top: rem(6px, map-get($base-scale-size, 'compact'));
+        padding-top: rem(6px, map.get($base-scale-size, 'compact'));
     }
 
     %form-group-helper--box {
@@ -1577,18 +1579,18 @@
     %form-group-prefix--bootstrap,
     %form-group-suffix--bootstrap {
         border: 1px solid var-get($theme, 'border-color');
-        padding: map-get($bootstrap-padding, 'comfortable');
+        padding: map.get($bootstrap-padding, 'comfortable');
         z-index: -1;
         width: auto;
         height: auto;
-        font-size: map-get($bootstrap-font-size, 'comfortable');
+        font-size: map.get($bootstrap-font-size, 'comfortable');
         line-height: 1.5;
         white-space: nowrap;
 
         igx-icon {
-            width: map-get($bootstrap-font-size, 'comfortable');
-            height: map-get($bootstrap-font-size, 'comfortable');
-            font-size: map-get($bootstrap-font-size, 'comfortable');
+            width: map.get($bootstrap-font-size, 'comfortable');
+            height: map.get($bootstrap-font-size, 'comfortable');
+            font-size: map.get($bootstrap-font-size, 'comfortable');
             font-weight: 400;
         }
     }
@@ -1613,27 +1615,27 @@
 
     %form-group-prefix--cosy-bootstrap,
     %form-group-suffix--cosy-bootstrap {
-        padding: map-get($bootstrap-padding, 'cosy');
+        padding: map.get($bootstrap-padding, 'cosy');
         width: auto;
         height: auto;
 
         igx-icon {
-            width: map-get($bootstrap-font-size, 'cosy');
-            height: map-get($bootstrap-font-size, 'cosy');
-            font-size: map-get($bootstrap-font-size, 'cosy');
+            width: map.get($bootstrap-font-size, 'cosy');
+            height: map.get($bootstrap-font-size, 'cosy');
+            font-size: map.get($bootstrap-font-size, 'cosy');
         }
     }
 
     %form-group-prefix--compact-bootstrap,
     %form-group-suffix--compact-bootstrap {
-        padding: map-get($bootstrap-padding, 'compact');
+        padding: map.get($bootstrap-padding, 'compact');
         width: auto;
         height: auto;
 
         igx-icon {
-            width: map-get($bootstrap-font-size, 'compact');
-            height: map-get($bootstrap-font-size, 'compact');
-            font-size: map-get($bootstrap-font-size, 'compact');
+            width: map.get($bootstrap-font-size, 'compact');
+            height: map.get($bootstrap-font-size, 'compact');
+            font-size: map.get($bootstrap-font-size, 'compact');
         }
     }
 
@@ -1667,16 +1669,16 @@
         margin: 0;
         border-radius: var-get($theme, 'box-border-radius');
         border: 1px solid var-get($theme, 'border-color');
-        font-size: map-get($bootstrap-font-size, 'comfortable');
-        padding: map-get($bootstrap-padding, 'comfortable');
+        font-size: map.get($bootstrap-font-size, 'comfortable');
+        padding: map.get($bootstrap-padding, 'comfortable');
     }
 
     %bootstrap-file-input {
-        width: calc(100% - #{2 * nth(map-get($bootstrap-padding, 'comfortable'), 2)});
+        width: calc(100% - #{2 * nth(map.get($bootstrap-padding, 'comfortable'), 2)});
         height: inherit;
         border-radius: var-get($theme, 'box-border-radius');
         border: 1px solid var-get($theme, 'border-color');
-        padding: map-get($bootstrap-padding, 'comfortable');
+        padding: map.get($bootstrap-padding, 'comfortable');
     }
 
     %bootstrap-input--focus {
@@ -1705,13 +1707,13 @@
     }
 
     %bootstrap-input--cosy {
-        font-size: map-get($bootstrap-font-size, 'cosy');
-        padding: map-get($bootstrap-padding, 'cosy');
+        font-size: map.get($bootstrap-font-size, 'cosy');
+        padding: map.get($bootstrap-padding, 'cosy');
     }
 
     %bootstrap-input--compact {
-        font-size: map-get($bootstrap-font-size, 'compact');
-        padding: map-get($bootstrap-padding, 'compact');
+        font-size: map.get($bootstrap-font-size, 'compact');
+        padding: map.get($bootstrap-padding, 'compact');
     }
 }
 
@@ -1726,8 +1728,8 @@
     helper-text: 'caption',
     input-text: 'subtitle-1')
 ) {
-    $helper-text: map-get($categories, 'helper-text');
-    $input-text: map-get($categories, 'input-text');
+    $helper-text: map.get($categories, 'helper-text');
+    $input-text: map.get($categories, 'input-text');
     $input-text-props: igx-type-scale-category($type-scale, $input-text);
 
     %form-group-input {

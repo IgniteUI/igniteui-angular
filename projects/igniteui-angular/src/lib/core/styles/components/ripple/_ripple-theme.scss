@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -32,8 +33,8 @@
 
     $ripple-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $ripple-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $ripple-schema: map.get($schema, $name);
     } @else {
         $ripple-schema: $schema;
     }

@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -32,8 +33,8 @@
     $selector: '.igx-overlay__wrapper--modal, .igx-overlay__content--modal';
     $overlay-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $overlay-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $overlay-schema: map.get($schema, $name);
     } @else {
         $overlay-schema: $schema;
     }

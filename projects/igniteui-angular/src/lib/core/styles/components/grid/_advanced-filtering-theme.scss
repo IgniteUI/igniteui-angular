@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -13,7 +14,7 @@
 /// @requires rem
 /// @requires var-get
 @mixin advanced-filtering($theme, $palette) {
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
 

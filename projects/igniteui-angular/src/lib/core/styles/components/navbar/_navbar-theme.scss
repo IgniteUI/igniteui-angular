@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -46,8 +47,8 @@
     $name: 'igx-navbar';
     $navbar-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $navbar-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $navbar-schema: map.get($schema, $name);
     } @else {
         $navbar-schema: $schema;
     }
@@ -67,7 +68,7 @@
     }
 
     @if not($shadow) {
-        $elevation: map-get($navbar-schema, 'elevation');
+        $elevation: map.get($navbar-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
     }
 
@@ -180,7 +181,7 @@
 /// @param {Map} $categories [(title: 'h6')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-navbar-typography($type-scale, $categories: (title: 'h6')) {
-    $title: map-get($categories, 'title');
+    $title: map.get($categories, 'title');
 
     %igx-navbar-title {
         @include igx-type-style($type-scale, $title);

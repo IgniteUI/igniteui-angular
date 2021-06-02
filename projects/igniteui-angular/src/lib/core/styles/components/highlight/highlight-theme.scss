@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -36,8 +37,8 @@
     $selector: '.igx-highlight';
     $highlight-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $highlight-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $highlight-schema: map.get($schema, $name);
     } @else {
         $highlight-schema: $schema;
     }

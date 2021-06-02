@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -34,8 +35,8 @@
     $selector: '.igx-scrollbar';
     $scrollbar-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $scrollbar-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $scrollbar-schema: map.get($schema, $name);
     } @else {
         $scrollbar-schema: $schema;
     }
@@ -60,7 +61,7 @@
     @include igx-css-vars($theme);
 
     %scrollbar-display {
-        @if type-of(map-get($theme, 'size') == 'string') {
+        @if type-of(map.get($theme, 'size') == 'string') {
             scrollbar-width: var-get($theme, 'size');
         }
 

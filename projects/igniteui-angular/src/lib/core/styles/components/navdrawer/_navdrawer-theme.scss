@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -71,8 +73,8 @@
     $name: 'igx-nav-drawer';
     $navdrawer-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $navdrawer-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $navdrawer-schema: map.get($schema, $name);
     } @else {
         $navdrawer-schema: $schema;
     }
@@ -80,11 +82,11 @@
     $theme: apply-palette($navdrawer-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($navdrawer-schema, 'border-radius')), 0, 36px
+        if($border-radius, $border-radius, map.get($navdrawer-schema, 'border-radius')), 0, 36px
     );
 
     $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map-get($navdrawer-schema, 'item-border-radius')), 0, 24px
+        if($item-border-radius, $item-border-radius, map.get($navdrawer-schema, 'item-border-radius')), 0, 24px
     );
 
     @if not($item-header-text-color) and $background {
@@ -100,7 +102,7 @@
     }
 
     @if not($item-active-background) and $background {
-        @if type-of($background) == 'color' {
+        @if meta.type-of($background) == 'color' {
             $item-active-background: rgba(text-contrast($background), .24);
         }
     }
@@ -114,7 +116,7 @@
     }
 
     @if not($item-hover-background) and $background {
-        @if type-of($background) == 'color' {
+        @if meta.type-of($background) == 'color' {
             $item-hover-background: rgba(text-contrast($background), .08);
         }
     }
@@ -124,7 +126,7 @@
     }
 
     @if not($shadow) {
-        $elevation: map-get($navdrawer-schema, 'elevation');
+        $elevation: map.get($navdrawer-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
     }
 
@@ -166,7 +168,7 @@
     $drawer-item-max-h: rem(48px);
     $drawer-item-min-w: rem(32px);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
 
 
     %navdrawer-display {
@@ -264,7 +266,7 @@
 
     %overlay {
         opacity: 1;
-        background: igx-color(map-get($theme, 'palette'), 'grays');
+        background: igx-color(map.get($theme, 'palette'), 'grays');
         transition: opacity, visibility;
         transition-duration: .25s, .25s;
         transition-timing-function: ease-in, step-start;
@@ -457,8 +459,8 @@
         header: 'subtitle-1'
     )
 ) {
-    $item: map-get($categories, 'item');
-    $header: map-get($categories, 'header');
+    $item: map.get($categories, 'item');
+    $header: map.get($categories, 'header');
 
     %item {
         @include igx-type-style($type-scale, $item);

@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -39,8 +40,8 @@
     $name: 'igx-watermark';
     $watermark-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $watermark-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $watermark-schema: map.get($schema, $name);
     } @else {
         $watermark-schema: $schema;
     }
@@ -48,7 +49,7 @@
     $theme: apply-palette($watermark-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($watermark-schema, 'border-radius')), 0, 16px
+        if($border-radius, $border-radius, map.get($watermark-schema, 'border-radius')), 0, 16px
     );
 
     @if not($color) and $link-background {

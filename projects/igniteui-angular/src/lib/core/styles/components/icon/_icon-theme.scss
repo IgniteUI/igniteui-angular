@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -35,8 +36,8 @@
     $name: 'igx-icon';
     $icon-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $icon-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $icon-schema: map.get($schema, $name);
     } @else {
         $icon-schema: $schema;
     }
@@ -79,11 +80,11 @@
     }
 
     %igx-icon--success {
-        color: igx-color(map-get($theme, 'palette'), 'success');
+        color: igx-color(map.get($theme, 'palette'), 'success');
     }
 
     %igx-icon--error {
-        color: igx-color(map-get($theme, 'palette'), 'error');
+        color: igx-color(map.get($theme, 'palette'), 'error');
     }
 
     %igx-icon--inactive {
