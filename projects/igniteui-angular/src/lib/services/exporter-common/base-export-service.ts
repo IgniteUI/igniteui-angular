@@ -60,6 +60,7 @@ export interface IColumnInfo {
     columnSpans?: number;
     level?: number;
     pinned?: boolean;
+    pinnedIndex?: number;
 }
 
 /**
@@ -763,12 +764,11 @@ export abstract class IgxBaseExporter {
                 formatter: column.formatter,
                 skipFormatter: false,
 
-
                 type: isMultiColHeader ? ColumnType.MultiColumnHeader : ColumnType.ColumnHeader,
                 columnSpans: colSpan,
                 level: column.level,
                 startIndex: index,
-                pinned: column.pinned
+                pinnedIndex: !column.pinned ? Number.MAX_VALUE : !column.hidden ? column.grid.pinnedColumns.indexOf(column) : NaN
             };
 
             if (column.level > maxLevel) {
