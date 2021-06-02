@@ -5,9 +5,9 @@
         <button igxButton class="igx-button--flat" (click)="toggleLeftRight()">Current Position: {{ iconPosition }}</button>
     </div>
     <div class="game-board">
-        <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible" (contentCollapsed)="handleCollapsed($event)"
-            (contentExpanded)="handleExpanded($event)" #collapsibleComponent [collapsed]="false">
-            <igx-expansion-panel-header [iconPosition]="iconPosition" (interaction)="onInteraction($event)"
+        <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible" (onCollapsed)="handleCollapsed($event)"
+            (onExpanded)="handleExpanded($event)" #collapsibleComponent [collapsed]="false">
+            <igx-expansion-panel-header [iconPosition]="iconPosition" (onInteraction)="onInteraction($event)"
                 [disabled]="false">
                 <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
                 <igx-expansion-panel-description>{{ getWinningPlayer }}</igx-expansion-panel-description>

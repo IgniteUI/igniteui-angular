@@ -187,7 +187,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     private _overlayOpenedSub: Subscription;
     private _overlayClosingSub: Subscription;
     private _overlayClosedSub: Subscription;
-    private _overlayContentAppendedSub: Subscription;
+    private _overlayAppendedSub: Subscription;
 
     /**
      * @hidden
@@ -341,16 +341,14 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
     };
 
     private subscribe() {
-        this._overlayContentAppendedSub = this.overlayService
-            .contentAppended
+        this._overlayAppendedSub = this.overlayService.onAppended
             .pipe(first(), takeUntil(this.destroy$))
             .subscribe(() => {
                 const appendedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
                 this.onAppended.emit(appendedEventArgs);
             });
 
-        this._overlayOpenedSub = this.overlayService
-            .opened
+        this._overlayOpenedSub = this.overlayService.onOpened
             .pipe(...this._overlaySubFilter)
             .subscribe(() => {
                 const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
@@ -358,7 +356,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
             });
 
         this._overlayClosingSub = this.overlayService
-            .closing
+            .onClosing
             .pipe(...this._overlaySubFilter)
             .subscribe((e: OverlayClosingEventArgs) => {
                 const eventArgs: ToggleViewCancelableEventArgs = { cancel: false, event: e.event, owner: this, id: this._overlayId };
@@ -373,8 +371,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
                 }
             });
 
-        this._overlayClosedSub = this.overlayService
-            .closed
+        this._overlayClosedSub = this.overlayService.onClosed
             .pipe(...this._overlaySubFilter)
             .subscribe(this.overlayClosed);
     }
@@ -383,7 +380,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
         this.clearSubscription(this._overlayOpenedSub);
         this.clearSubscription(this._overlayClosingSub);
         this.clearSubscription(this._overlayClosedSub);
-        this.clearSubscription(this._overlayContentAppendedSub);
+        this.clearSubscription(this._overlayAppendedSub);
     }
 
     private clearSubscription(subscription: Subscription) {

@@ -26,10 +26,10 @@ A list of the events emitted by the **IgxBanner**:
 
 | Name                | Description                                                              | Cancelable |
 |---------------------|--------------------------------------------------------------------------|------------|
-| `opening`            | Fires before the banner is opened                                         | `true` |
-| `opened`            | Fires after the banner is opened                                          | `false` |
-| `closing`            | Fire before the banner is closed                                          | `true` |
-| `closed`            | Fires after the banner is closed                                          | `false`|
+| `onOpening`            | Fires before the banner is opened                                         | `true` |
+| `onOpened`            | Fires after the banner is opened                                          | `false` |
+| `onClosing`            | Fire before the banner is closed                                          | `true` |
+| `onClosed`            | Fires after the banner is closed                                          | `false`|
 
 ### Getters
 

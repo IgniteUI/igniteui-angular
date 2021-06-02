@@ -2,30 +2,6 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 12.0.1
-
-### General
-- **Breaking Change** - `IgxOverlayService` events are renamed as follows:
-    - `onOpening` -> `opening`
-    - `onOpened` -> `opened`
-    - `onClosing` -> `closing`
-    - `onClosed` -> `closed`
-    - `onAppended` -> `contentAppended`
-    - `onAnimation` -> `animationStarting`
-
-- **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
-    - `onCollapsed` -> `contentCollapsed`
-    - `onExpanded` -> `contentExpanded`
-
-- **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
-    - `onInteraction` -> `interaction`
-
-- **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
-    - `onOpening` -> `opening`
-    - `onOpened` -> `opened`
-    - `onClosing` -> `closing`
-    - `onClosed` -> `closed`
-
 ## 12.0.0
 
 ### General
