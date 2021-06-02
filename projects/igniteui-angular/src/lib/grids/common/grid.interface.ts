@@ -9,7 +9,7 @@ import { TransactionService, Transaction, State } from '../../services/public_ap
 import { ITreeGridRecord } from '../tree-grid/public_api';
 
 export interface IGridDataBindable {
-    data: any[];
+    data: any[] | null;
     filteredData: any[];
 }
 
