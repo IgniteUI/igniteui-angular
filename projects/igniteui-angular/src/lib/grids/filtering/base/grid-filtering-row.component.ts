@@ -383,6 +383,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
                 indexToDeselect = index;
             }
         }
+        console.log({ ...this.expressionsList });
         if (indexToDeselect !== -1) {
             this.removeExpression(indexToDeselect, this.expression);
         }
@@ -452,6 +453,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
             if (!(focusedElement && this.inputGroup.nativeElement.contains(focusedElement))
                 && this.dropDownConditions.collapsed) {
+                    console.log('Focus out commitInput()');
                 this.commitInput();
             }
         });
@@ -734,13 +736,14 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             return;
         }
 
-        const containerRectRight = Math.ceil(this.container.nativeElement.getBoundingClientRect().right);
-
-        const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);
-        if (lastChipRectRight >= containerRectRight) {
-            this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
-            this.transform(this.chipAreaScrollOffset);
+        const chipsContainerWidth = this.container.nativeElement.offsetWidth;        
+        const chipsAreaWidth = this.chipsArea.element.nativeElement.offsetWidth;
+    
+        if (chipsAreaWidth > chipsContainerWidth) {
+            this.chipAreaScrollOffset = chipsContainerWidth - chipsAreaWidth;            
+            this.transform(this.chipAreaScrollOffset);        
         }
+        
     }
 
     private transform(offset: number) {
