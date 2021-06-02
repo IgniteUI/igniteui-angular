@@ -734,14 +734,13 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             return;
         }
 
-        const chipsContainerWidth = this.container.nativeElement.offsetWidth;        
+        const chipsContainerWidth = this.container.nativeElement.offsetWidth;     
         const chipsAreaWidth = this.chipsArea.element.nativeElement.offsetWidth;
-    
+
         if (chipsAreaWidth > chipsContainerWidth) {
-            this.chipAreaScrollOffset = chipsContainerWidth - chipsAreaWidth;            
-            this.transform(this.chipAreaScrollOffset);        
-        }
-        
+            this.chipAreaScrollOffset = chipsContainerWidth - chipsAreaWidth;   
+            this.transform(this.chipAreaScrollOffset);    
+        } 
     }
 
     private transform(offset: number) {
