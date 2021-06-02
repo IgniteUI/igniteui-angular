@@ -146,12 +146,12 @@ export class IgxGridHeaderGroupComponent implements DoCheck {
     }
 
     @HostBinding('class.igx-grid__drag-col-header')
-    public headerDragCss() {
+    public get headerDragCss() {
         return this.isHeaderDragged;
     }
 
     @HostBinding('class.igx-grid-th--filtering')
-    public filteringCss() {
+    public get filteringCss() {
         return this.isFiltered;
     }
 
