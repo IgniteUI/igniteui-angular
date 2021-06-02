@@ -18,6 +18,8 @@ import {
 } from './util';
 import { ServerHost } from './ServerHost';
 
+const TSCONFIG_PATH = 'tsconfig.json';
+
 export enum InputPropertyType {
     EVAL = 'eval',
     STRING = 'string'
@@ -39,11 +41,15 @@ export class UpdateChanges {
             // and no actual angular metadata will be resolved for the rest of the migration
             const wsProject = this.workspace.projects[this.workspace.defaultProject] || this.workspace.projects[0];
             const mainRelPath = wsProject.architect?.build?.options['main'] ?
-                path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
-                `src/main.ts`;
+            path.join(wsProject.root, wsProject.architect?.build?.options['main']) :
+            `src/main.ts`;
+            // patch TSConfig so it includes angularOptions.strictTemplates
+            // ivy ls requires this in order to function properly on templates
+            this.patchTsConfig();
             const mainAbsPath = path.resolve(this._projectService.currentDirectory, mainRelPath);
             const scriptInfo = this._projectService.getOrCreateScriptInfoForNormalizedPath(tss.server.toNormalizedPath(mainAbsPath), false);
             this._projectService.openClientFile(scriptInfo.fileName);
+
 
             const project = this._projectService.findProject(scriptInfo.containingProjects[0].projectName);
             project.getLanguageService().getSemanticDiagnostics(mainAbsPath);
@@ -65,6 +71,8 @@ export class UpdateChanges {
     protected valueTransforms: Map<string, TransformFunction> = new Map<string, TransformFunction>();
 
     private _templateFiles: string[] = [];
+    private _initialTsConfig = '';
+
     public get templateFiles(): string[] {
         if (!this._templateFiles.length) {
             // https://github.com/angular/devkit/blob/master/packages/angular_devkit/schematics/src/tree/filesystem.ts
@@ -170,6 +178,12 @@ export class UpdateChanges {
             this.context.logger.info(`Cleaning up temporary migration dependencies.`);
             tryUninstallPackage(this.context, this.packageManager, NG_LANG_SERVICE_PACKAGE_NAME);
         }
+
+        // if tsconfig.json was patched, restore it
+        if (this._initialTsConfig !== '') {
+            this.host.overwrite(TSCONFIG_PATH, this._initialTsConfig);
+        }
+
     }
 
     /** Add condition function. */
@@ -465,6 +479,39 @@ export class UpdateChanges {
             this.host.overwrite(entryPath, content);
         }
     }
+
+    private patchTsConfig(): void {
+        if (this.serverHost.fileExists(TSCONFIG_PATH)) {
+            let originalContent = '';
+            try {
+                originalContent = this.serverHost.readFile(TSCONFIG_PATH);
+            } catch {
+                this.context?.logger
+                .warn(`Could not read ${TSCONFIG_PATH}. Some Angular Ivy features might be unavailable during migrations.`);
+            }
+            let content;
+            try {
+                // there could be comments in the json file and JSON.parse would fail
+                // TODO: use some 3rd party parser or write our own.
+                // @angular-devkit/core.parseJson is deprecated
+                content = JSON.parse(originalContent);
+            } catch {
+                this.context?.logger
+                .warn(`Could not parse ${TSCONFIG_PATH}. Angular Ivy language service might be unavailable during migrations.`);
+            }
+            if (!content.angularCompilerOptions) {
+                content.angularCompilerOptions = {};
+            }
+            if (!content.angularCompilerOptions.strictTemplates) {
+                this.context?.logger
+                .info(`Adding 'angularCompilerOptions.strictTemplates' to ${TSCONFIG_PATH} for migration run.`);
+                content.angularCompilerOptions.strictTemplates = true;
+                this.host.overwrite(TSCONFIG_PATH, JSON.stringify(content));
+                // store initial state and restore it once migrations are finished
+                this._initialTsConfig = originalContent;
+            }
+        }
+    };
 
     private loadConfig(configJson: string) {
         const filePath = path.join(this.rootPath, 'changes', configJson);
