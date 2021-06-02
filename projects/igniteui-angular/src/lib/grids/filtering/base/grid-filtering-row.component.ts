@@ -734,7 +734,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
             return;
         }
 
-        const chipsContainerWidth = this.container.nativeElement.offsetWidth;   
+        const chipsContainerWidth = this.container.nativeElement.offsetWidth; 
         const chipsAreaWidth = this.chipsArea.element.nativeElement.offsetWidth;
 
         if (chipsAreaWidth > chipsContainerWidth) {
