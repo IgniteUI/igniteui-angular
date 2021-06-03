@@ -3163,10 +3163,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID)?.visible) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay?.visible && !overlay.closeAnimationPlayer?.hasStarted()) {
                 this.overlayService.hide(overlayID);
+
+                this.nativeElement.focus();
             }
-            this.nativeElement.focus();
         });
     }
 
@@ -3646,10 +3649,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID) && !this.overlayService.getOverlayById(overlayID).detached) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay && !overlay.detached) {
                 this.overlayService.detach(overlayID);
             }
-            this.nativeElement.focus();
         });
 
         this.zone.runOutsideAngular(() => {
