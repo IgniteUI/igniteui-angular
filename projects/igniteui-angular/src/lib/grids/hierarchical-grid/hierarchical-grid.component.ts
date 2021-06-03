@@ -166,7 +166,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @memberof IgxHierarchicalGridComponent
      */
     @Input()
-    public set data(value: any[]) {
+    public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -188,7 +188,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      *
      * @memberof IgxHierarchicalGridComponent
      */
-    public get data(): any[] {
+    public get data(): any[] | null {
         return this._data;
     }
 

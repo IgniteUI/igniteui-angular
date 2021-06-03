@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/schema",
-    "id": "igniteui-angular-ng-add",
+    "$id": "igniteui-angular-ng-add",
     "title": "IgniteUI for Angular ng-add schematic",
     "type": "object",
     "properties": {
