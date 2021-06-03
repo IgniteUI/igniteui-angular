@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -36,8 +37,8 @@
     $name: 'igx-avatar';
     $avatar-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $avatar-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $avatar-schema: map.get($schema, $name);
     } @else {
         $avatar-schema: $schema;
     }
@@ -45,7 +46,7 @@
     $theme: apply-palette($avatar-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($avatar-schema, 'border-radius')), 0, 16px
+        if($border-radius, $border-radius, map.get($avatar-schema, 'border-radius')), 0, 16px
     );
 
     @if not($color) and $background {
@@ -69,15 +70,15 @@
 @mixin igx-avatar($theme) {
     @include igx-css-vars($theme);
 
-    $size: map-get($theme, 'size');
+    $size: map.get($theme, 'size');
     $small-size: rem(40px);
     $medium-size: rem(64px);
     $large-size: rem(88px);
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $box-shadow: map-get((
+    $box-shadow: map.get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) var-get($theme, 'background'),

@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -88,8 +90,8 @@
 
     $drop-down-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $drop-down-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $drop-down-schema: map.get($schema, $name);
     } @else {
         $drop-down-schema: $schema;
     }
@@ -97,11 +99,11 @@
     $theme: apply-palette($drop-down-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($drop-down-schema, 'border-radius')), 0, 20px
+        if($border-radius, $border-radius, map.get($drop-down-schema, 'border-radius')), 0, 20px
     );
 
     $item-border-radius: round-borders(
-        if($item-border-radius, $item-border-radius, map-get($drop-down-schema, 'item-border-radius')), 0, 20px
+        if($item-border-radius, $item-border-radius, map.get($drop-down-schema, 'item-border-radius')), 0, 20px
     );
 
     @if not($item-text-color) and $background-color {
@@ -111,7 +113,7 @@
     @if not($hover-item-background) and $background-color {
         $hover-item-text-color: text-contrast($background-color);
 
-        @if type-of($background-color) == 'color' {
+        @if meta.type-of($background-color) == 'color' {
             $hover-item-background: rgba(text-contrast($background-color), .12);
         }
     }
@@ -123,7 +125,7 @@
     @if not($focused-item-background) and $background-color {
         $focused-item-text-color: text-contrast($background-color);
 
-        @if type-of($background-color) == 'color' {
+        @if meta.type-of($background-color) == 'color' {
             $focused-item-background: rgba(text-contrast($background-color), .12);
         }
     }
@@ -140,7 +142,6 @@
         $selected-hover-item-text-color: text-contrast($selected-hover-item-background);
     }
 
-
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
         $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
     }
@@ -148,28 +149,27 @@
     @if not($selected-focus-item-text-color) and $selected-focus-item-background {
         $selected-focus-item-text-color: text-contrast($selected-focus-item-background);
     }
-
 
     @if not($disabled-item-text-color) and $background-color {
-        @if type-of($background-color) == 'color' {
+        @if meta.type-of($background-color) == 'color' {
             $disabled-item-text-color: rgba(text-contrast($background-color), .36);
         }
     }
 
     @if not($disabled-item-text-color) and $disabled-item-background {
-        @if type-of($disabled-item-background) == 'color' {
+        @if meta.type-of($disabled-item-background) == 'color' {
             $disabled-item-text-color: rgba(text-contrast($disabled-item-background), .36);
         }
     }
 
     @if not($header-text-color) and $background-color {
-        @if type-of($background-color) == 'color' {
+        @if meta.type-of($background-color) == 'color' {
             $header-text-color: rgba(text-contrast($background-color), .7);
         }
     }
 
     @if not($shadow) {
-        $elevation: map-get($drop-down-schema, 'elevation');
+        $elevation: map.get($drop-down-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
     }
 
@@ -283,7 +283,7 @@
         align-items: center;
         width: 100%;
         white-space: nowrap;
-        height: map-get($item-height, 'comfortable');
+        height: map.get($item-height, 'comfortable');
         position: relative;
 
         igx-prefix,
@@ -307,7 +307,7 @@
     %igx-drop-down__item {
         color: var-get($theme, 'item-text-color');
         cursor: pointer;
-        padding: map-get($item-padding, 'comfortable');
+        padding: map.get($item-padding, 'comfortable');
         border-radius: var-get($theme, 'item-border-radius');
 
         &:focus {
@@ -336,8 +336,8 @@
     }
 
     %igx-drop-down__item--cosy {
-        height: map-get($item-height, 'cosy');
-        padding: map-get($item-padding, 'cosy');
+        height: map.get($item-height, 'cosy');
+        padding: map.get($item-padding, 'cosy');
 
         igx-prefix,
         [igxPrefix] {
@@ -351,8 +351,8 @@
     }
 
     %igx-drop-down__item--compact {
-        height: map-get($item-height, 'compact');
-        padding: map-get($item-padding, 'compact');
+        height: map.get($item-height, 'compact');
+        padding: map.get($item-padding, 'compact');
 
         igx-prefix,
         [igxPrefix] {
@@ -366,47 +366,47 @@
     }
 
     %igx-drop-down__prefix {
-        margin-#{$right}: map-get($prefix-margin, 'comfortable');
+        margin-#{$right}: map.get($prefix-margin, 'comfortable');
     }
 
     %igx-drop-down__suffix {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map-get($suffix-margin, 'comfortable');
+            margin-#{$left}: map.get($suffix-margin, 'comfortable');
         }
     }
 
     %igx-drop-down__prefix--cosy {
-        margin-#{$right}: map-get($prefix-margin, 'cosy');
+        margin-#{$right}: map.get($prefix-margin, 'cosy');
     }
 
     %igx-drop-down__suffix--cosy {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map-get($suffix-margin, 'cosy');
+            margin-#{$left}: map.get($suffix-margin, 'cosy');
         }
     }
 
     %igx-drop-down__prefix--compact {
-        margin-#{$right}: map-get($prefix-margin, 'compact');
+        margin-#{$right}: map.get($prefix-margin, 'compact');
     }
 
     %igx-drop-down__suffix--compact {
         + igx-suffix,
         + [igxSuffix] {
-            margin-#{$left}: map-get($suffix-margin, 'compact');
+            margin-#{$left}: map.get($suffix-margin, 'compact');
         }
     }
 
     %igx-drop-down__header {
         color: var-get($theme, 'header-text-color');
         pointer-events: none;
-        padding: map-get($header-item-padding, 'comfortable');
+        padding: map.get($header-item-padding, 'comfortable');
     }
 
     %igx-drop-down__header--cosy {
-        height: map-get($item-height, 'cosy');
-        padding: map-get($header-item-padding, 'cosy');
+        height: map.get($item-height, 'cosy');
+        padding: map.get($header-item-padding, 'cosy');
 
         igx-prefix,
         [igxPrefix] {
@@ -420,8 +420,8 @@
     }
 
     %igx-drop-down__header--compact {
-        height: map-get($item-height, 'compact');
-        padding: map-get($header-item-padding, 'compact');
+        height: map.get($item-height, 'compact');
+        padding: map.get($header-item-padding, 'compact');
 
         igx-prefix,
         [igxPrefix] {
@@ -442,7 +442,7 @@
         }
 
         %igx-drop-down__item {
-            text-indent: map-get($item-padding, 'comfortable');
+            text-indent: map.get($item-padding, 'comfortable');
         }
     }
 
@@ -498,9 +498,9 @@
         select-item: 'subtitle-1'
     )
 ) {
-    $header: map-get($categories, 'header');
-    $item: map-get($categories, 'item');
-    $select-item: map-get($categories, 'select-item');
+    $header: map.get($categories, 'header');
+    $item: map.get($categories, 'item');
+    $select-item: map.get($categories, 'select-item');
 
     %igx-drop-down__header,
     %igx-drop-down__group > label {

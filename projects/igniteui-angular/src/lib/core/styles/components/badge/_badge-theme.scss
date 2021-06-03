@@ -1,5 +1,6 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -56,8 +57,8 @@
     $name: 'igx-badge';
     $badge-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $badge-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $badge-schema: map.get($schema, $name);
     } @else {
         $badge-schema: $schema;
     }
@@ -65,7 +66,7 @@
     $theme: apply-palette($badge-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($badge-schema, 'border-radius')), 0, 11px
+        if($border-radius, $border-radius, map.get($badge-schema, 'border-radius')), 0, 11px
     );
 
     @if not($icon-color) and $background-color {
@@ -77,7 +78,7 @@
     }
 
     @if not($shadow) {
-        $elevation: map-get($badge-schema, 'elevation');
+        $elevation: map.get($badge-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
     }
 
@@ -102,7 +103,7 @@
 @mixin igx-badge($theme) {
     @include igx-css-vars($theme);
 
-    $palette: map-get($theme, 'palette');
+    $palette: map.get($theme, 'palette');
 
     $badge-width: 22px;
     $badge-height: $badge-width;

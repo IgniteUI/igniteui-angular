@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -50,8 +52,8 @@
     $name: 'igx-expansion-panel';
     $expansion-panel-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $expansion-panel-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $expansion-panel-schema: map.get($schema, $name);
     } @else {
         $expansion-panel-schema: $schema;
     }
@@ -59,16 +61,15 @@
     $theme: apply-palette($expansion-panel-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($expansion-panel-schema, 'border-radius')), 0, 16px
+        if($border-radius, $border-radius, map.get($expansion-panel-schema, 'border-radius')), 0, 16px
     );
-
 
     @if not($header-title-color) and $header-background {
         $header-title-color: text-contrast($header-background);
     }
 
     @if not($header-description-color) and $header-background {
-        @if type-of($header-background) == 'color' {
+        @if meta.type-of($header-background) == 'color' {
             $header-description-color: rgba(text-contrast($header-background), .8);
         }
     }
@@ -95,7 +96,6 @@
         disabled-color: $disabled-color,
     ));
 }
-
 
 /// @param {Map} $theme - The theme used to style the component.
 /// @requires {mixin} igx-css-vars
@@ -216,9 +216,9 @@
     description: 'subtitle-2',
     body: 'body-2')
 ) {
-    $title: map-get($categories, 'title');
-    $description: map-get($categories, 'description');
-    $body: map-get($categories, '$body');
+    $title: map.get($categories, 'title');
+    $description: map.get($categories, 'description');
+    $body: map.get($categories, '$body');
 
     %igx-expansion-panel__header-title {
         @include igx-type-style($type-scale, $title) {

@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -13,12 +14,12 @@
 /// @requires var-get
 /// @requires rem
 @mixin igx-date-picker($theme) {
-    $palette: map-get($theme, 'palette');
-    $selected-hover-color: text-contrast(map-get($theme, 'date-selected-background'), $palette: $palette);
+    $palette: map.get($theme, 'palette');
+    $selected-hover-color: text-contrast(map.get($theme, 'date-selected-background'), $palette: $palette);
 
     @include igx-css-vars($theme, '.igx-date-picker');
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
     %date-picker {

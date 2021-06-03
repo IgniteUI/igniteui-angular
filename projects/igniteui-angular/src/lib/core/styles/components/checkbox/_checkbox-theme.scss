@@ -3,6 +3,7 @@
 @use '../../themes/schemas' as *;
 @use '../ripple/ripple-component' as *;
 @use '../ripple/ripple-theme' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -51,8 +52,8 @@
     $name: 'igx-checkbox';
     $checkbox-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $checkbox-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $checkbox-schema: map.get($schema, $name);
     } @else {
         $checkbox-schema: $schema;
     }
@@ -60,11 +61,11 @@
     $theme: apply-palette($checkbox-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($checkbox-schema, 'border-radius')), 0, 10px
+        if($border-radius, $border-radius, map.get($checkbox-schema, 'border-radius')), 0, 10px
     );
 
     $border-radius-ripple: round-borders(
-        if($border-radius-ripple, $border-radius-ripple, map-get($checkbox-schema, 'border-radius-ripple')), 0, 24px
+        if($border-radius-ripple, $border-radius-ripple, map.get($checkbox-schema, 'border-radius-ripple')), 0, 24px
     );
 
     @return extend($theme, (
@@ -104,24 +105,24 @@
     $size-bs: em(14px);
     $checkbox-radius: $size / 2;
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
-    $size: map-get((
+    $size: map.get((
         material: $size,
         fluent: $size,
         bootstrap: $size-bs,
         indigo-design: $size,
     ), $variant);
 
-    $border-width: map-get((
+    $border-width: map.get((
         material: 2px,
         fluent: 1px,
         bootstrap: 1px,
         indigo-design: 2px,
     ), $variant);
 
-    $ripple-display: map-get((
+    $ripple-display: map.get((
         material: block,
         fluent: none,
         bootstrap: none,
@@ -130,14 +131,14 @@
 
     $label-margin: em(8px);
 
-    $mark-stroke: map-get((
+    $mark-stroke: map.get((
         material: 3,
         fluent: 1,
         bootstrap: 2,
         indigo-design: 3,
     ), $variant);
 
-    $mark-offset: map-get((
+    $mark-offset: map.get((
         material: 0,
         fluent: -1px,
         bootstrap: 0,
@@ -439,7 +440,7 @@
     $type-scale,
     $categories: (label: 'subtitle-1')
 ) {
-    $label: map-get($categories, 'label');
+    $label: map.get($categories, 'label');
 
     %cbx-label {
         @include igx-type-style($type-scale, $label) {

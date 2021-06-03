@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -45,8 +46,8 @@
     $selector: 'igx-doughnut-chart';
     $chart-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chart-schema: map.get($schema, $name);
     } @else {
         $chart-schema: $schema;
     }

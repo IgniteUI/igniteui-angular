@@ -1,5 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -80,24 +82,24 @@
 
     $button-group-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $button-group-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $button-group-schema: map.get($schema, $name);
     } @else {
         $button-group-schema: $schema;
     }
 
     $theme: apply-palette($button-group-schema, $palette);
 
-    $border: 1px solid map-get($theme, 'item-selected-border-color');
+    $border: 1px solid map.get($theme, 'item-selected-border-color');
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($button-group-schema, 'border-radius')), 0, 20px
+        if($border-radius, $border-radius, map.get($button-group-schema, 'border-radius')), 0, 20px
     );
 
     $shadow-color: null;
 
-    @if map-get($theme, 'variant') == 'bootstrap' {
-        $shadow-color: rgba(map-get($theme, 'item-background'), .5);
+    @if map.get($theme, 'variant') == 'bootstrap' {
+        $shadow-color: rgba(map.get($theme, 'item-background'), .5);
 
         @if $item-background {
             $shadow-color: rgba($item-background, .5);
@@ -109,41 +111,41 @@
     }
 
     @if not($item-text-color) and $item-background {
-        @if type-of($item-background) == 'color' {
+        @if meta.type-of($item-background) == 'color' {
             $item-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-hover-text-color) and $item-hover-background {
-        @if type-of($item-hover-background) == 'color' {
+        @if meta.type-of($item-hover-background) == 'color' {
             $item-hover-text-color: text-contrast($item-hover-background);
         }
     }
 
     @if not($item-selected-background) and $item-background {
-        @if type-of($item-background) == 'color' {
+        @if meta.type-of($item-background) == 'color' {
             $item-selected-text-color: text-contrast($item-background);
         }
     }
 
     @if not($item-selected-text-color) and $item-selected-background {
-        @if type-of($item-selected-background) == 'color' {
+        @if meta.type-of($item-selected-background) == 'color' {
             $item-selected-text-color: text-contrast($item-selected-background);
         }
     }
 
     @if not($disabled-text-color) and $disabled-background-color {
-        @if type-of($disabled-background-color) == 'color' {
+        @if meta.type-of($disabled-background-color) == 'color' {
             $disabled-text-color: rgba(text-contrast($item-background), .3);
         }
     }
 
-    @if map-get($button-group-schema, 'elevation') > 0 {
+    @if map.get($button-group-schema, 'elevation') > 0 {
         $border: none;
     }
 
     @if not($shadow) {
-        $elevation: map-get($button-group-schema, 'elevation');
+        $elevation: map.get($button-group-schema, 'elevation');
         $shadow: igx-elevation($elevations, $elevation);
     }
 
@@ -182,12 +184,12 @@
     $group-item-border-thickness: 1px;
     $group-items-margin: rem(10px, 16px);
     $transition: all 140ms $ease-in-out-quad;
-    $palette: map-get($theme, 'palette');
+    $palette: map.get($theme, 'palette');
 
     $left: if-ltr(left, right);
     $right: if-ltr(right, left);
 
-    $variant: map-get($theme, 'variant');
+    $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $indigo-theme: $variant == 'indigo-design';
 

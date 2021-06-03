@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -65,8 +66,8 @@
     $name: 'igc-dockmanager';
     $dock-manager-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $dock-manager-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $dock-manager-schema: map.get($schema, $name);
     } @else {
         $dock-manager-schema: $schema;
     }

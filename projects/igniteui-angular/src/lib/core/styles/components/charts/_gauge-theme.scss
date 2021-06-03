@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -48,8 +49,8 @@
     $selector: 'igx-linear-gauge';
     $chart-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chart-schema: map.get($schema, $name);
     } @else {
         $chart-schema: $schema;
     }
@@ -102,8 +103,8 @@
     $selector: 'igx-radial-gauge';
     $chart-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chart-schema: map.get($schema, $name);
     } @else {
         $chart-schema: $schema;
     }

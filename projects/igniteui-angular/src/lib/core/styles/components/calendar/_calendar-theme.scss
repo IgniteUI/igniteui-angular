@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -135,49 +137,49 @@
     $selector: 'igx-calendar, igx-days-view, igx-months-view, igx-years-view';
     $calendar-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $calendar-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $calendar-schema: map.get($schema, $name);
     } @else {
         $calendar-schema: $schema;
     }
 
     $theme: apply-palette($calendar-schema, $palette);
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $not-bootstrap-theme: $variant != 'bootstrap';
     $bootstrap-theme: $variant == 'bootstrap';
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($calendar-schema, 'border-radius')), 0, 20px
+        if($border-radius, $border-radius, map.get($calendar-schema, 'border-radius')), 0, 20px
     );
 
     $date-border-radius: round-borders(
-        if($date-border-radius, $date-border-radius, map-get($calendar-schema, 'date-border-radius')), 0, 20px
+        if($date-border-radius, $date-border-radius, map.get($calendar-schema, 'date-border-radius')), 0, 20px
     );
 
     $month-border-radius: round-borders(
-        if($month-border-radius, $month-border-radius, map-get($calendar-schema, 'month-border-radius')), 0, 20px
+        if($month-border-radius, $month-border-radius, map.get($calendar-schema, 'month-border-radius')), 0, 20px
     );
 
     @if not($content-text-color) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $content-text-color: text-contrast($content-background);
         }
     }
 
     @if not($weekend-text-color) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $weekend-text-color: rgba($content-text-color, .7);
         }
     }
 
     @if not($inactive-text-color) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $inactive-text-color: rgba($content-text-color, .5);
         }
     }
 
     @if not($label-color) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $label-color: rgba($content-text-color, .5);
         }
     }
@@ -187,7 +189,7 @@
     }
 
     @if not($picker-arrow-hover-color) and $header-background {
-        @if type-of($header-background) == 'color' {
+        @if meta.type-of($header-background) == 'color' {
             $picker-arrow-hover-color: $header-background;
         }
     }
@@ -201,7 +203,7 @@
     }
 
     @if not($date-hover-background) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $date-hover-background: rgba(text-contrast($content-background), .12);
         }
     }
@@ -243,7 +245,7 @@
     }
 
     @if not($date-special-background) and $content-background {
-        @if type-of($content-background) == 'color' {
+        @if meta.type-of($content-background) == 'color' {
             $date-special-background: rgba(text-contrast($content-background), .04);
         }
     }
@@ -253,19 +255,19 @@
     }
 
     @if not($month-hover-text-color) and $month-hover-background {
-        @if type-of($month-hover-background) == 'color' {
+        @if meta.type-of($month-hover-background) == 'color' {
             $month-hover-text-color: text-contrast($month-hover-background);
         }
     }
 
     @if not($month-hover-current-text-color) and $month-hover-background {
-        @if type-of($month-hover-background) == 'color' {
+        @if meta.type-of($month-hover-background) == 'color' {
             $month-hover-current-text-color: text-contrast($month-hover-background);
         }
     }
 
     @if not($date-disabled-text-color) and $date-disabled-background {
-        @if type-of($date-disabled-background) == 'color' {
+        @if meta.type-of($date-disabled-background) == 'color' {
             $date-disabled-color: rgba(text-contrast($date-disabled-background), .38);
         }
     }
@@ -338,37 +340,37 @@
 @mixin igx-calendar($theme) {
     @include igx-css-vars($theme);
 
-    $palette: map-get($theme, 'palette');
+    $palette: map.get($theme, 'palette');
     $cal-header-year-margin: 0;
     $cal-header-date-margin: 0;
     $cal-header-padding: em(16px);
 
-    $variant: map-get($theme, 'variant');
+    $variant: map.get($theme, 'variant');
     $bootstrap-theme: $variant == 'bootstrap';
     $not-bootstrap-theme: $variant != 'bootstrap';
 
-    $cal-picker-padding: map-get((
+    $cal-picker-padding: map.get((
         material: em(16px),
         fluent: em(16px),
         bootstrap: em(8px),
         indigo-design: em(16px),
     ), $variant);
 
-    $cal-value-w: map-get((
+    $cal-value-w: map.get((
         material: em(40px),
         fluent: em(40px),
         bootstrap: em(32px),
         indigo-design: em(40px),
     ), $variant);
 
-    $border-width: map-get((
+    $border-width: map.get((
         material: 0,
         fluent: 0,
         bootstrap: 1px,
         indigo-design: 0
     ), $variant);
 
-    $border-radius: map-get((
+    $border-radius: map.get((
         material: 4px,
         fluent: 0,
         bootstrap: 0,
@@ -385,18 +387,18 @@
     $cal-row-padding: rem(8px);
     $cal-row-margin: rem(2px) 0;
     $selected-hover-color: text-contrast(
-        map-get($theme, 'date-selected-background'),
+        map.get($theme, 'date-selected-background'),
         $palette: $palette
     );
 
-    $current-color-variant: map-get((
+    $current-color-variant: map.get((
         material: var-get($theme, 'date-selected-background'),
         fluent: var-get($theme, 'date-current-bg-color'),
         bootstrap: var-get($theme, 'date-current-bg-color'),
         indigo-design: var-get($theme, 'date-selected-background'),
     ), $variant);
 
-    $current-text-color-variant: map-get((
+    $current-text-color-variant: map.get((
         material: var-get($theme, 'date-selected-text-color'),
         fluent: var-get($theme, 'date-current-text-color'),
         bootstrap: var-get($theme, 'date-current-text-color'),
@@ -717,7 +719,7 @@
     %cal-value--selected--hover {
         %cal-value-content {
             ::after {
-                @if type-of($selected-hover-color) == 'color' {
+                @if meta.type-of($selected-hover-color) == 'color' {
                     background: rgba($selected-hover-color, .18);
                 } @else {
                     background: $selected-hover-color;
@@ -1125,11 +1127,11 @@
     picker-date: 'subtitle-1',
     content: 'body-1')
 ) {
-    $header-year: map-get($categories, 'header-year');
-    $header-date: map-get($categories, 'header-date');
-    $weekday-label: map-get($categories, 'weekday-labels');
-    $picker-date: map-get($categories, 'picker-date');
-    $content: map-get($categories, 'content');
+    $header-year: map.get($categories, 'header-year');
+    $header-date: map.get($categories, 'header-date');
+    $weekday-label: map.get($categories, 'weekday-labels');
+    $picker-date: map.get($categories, 'picker-date');
+    $content: map.get($categories, 'content');
 
     %cal-header-year {
         @include igx-type-style($type-scale, $header-year) {

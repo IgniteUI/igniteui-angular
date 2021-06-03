@@ -1,6 +1,8 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
+@use 'sass:meta';
 
 ////
 /// @group themes
@@ -95,8 +97,8 @@
     $selector: 'igx-chip, .igx-chip__ghost';
     $chip-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chip-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chip-schema: map.get($schema, $name);
     } @else {
         $chip-schema: $schema;
     }
@@ -104,7 +106,7 @@
     $theme: apply-palette($chip-schema, $palette);
 
     $border-radius: round-borders(
-        if($border-radius, $border-radius, map-get($chip-schema, 'border-radius')), 0, 16px
+        if($border-radius, $border-radius, map.get($chip-schema, 'border-radius')), 0, 16px
     );
 
     @if not($text-color) and $background {
@@ -114,7 +116,7 @@
     @if not($hover-background) and $background {
         $luminance: luminance($background);
 
-        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
             $hover-background: lighten-color($background, 14%);
         } @else {
             $hover-background: darken-color($background, 4%);
@@ -128,7 +130,7 @@
     @if not($focus-background) and $background {
         $luminance: luminance($background);
 
-        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
             $focus-background: lighten-color($background, 22%);
         } @else {
             $focus-background: darken-color($background, 8%);
@@ -142,7 +144,7 @@
     @if not($selected-background) and $background {
         $luminance: luminance($background);
 
-        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
             $selected-background: lighten-color($background, 22%);
         } @else {
             $selected-background: darken-color($background, 8%);
@@ -164,7 +166,7 @@
     @if not($focus-selected-background) and $selected-background {
         $luminance: luminance($selected-background);
 
-        @if type-of($luminance) == 'color' and $luminance + .05 < .5 {
+        @if meta.type-of($luminance) == 'color' and $luminance + .05 < .5 {
             $focus-selected-background: lighten-color($background, 32%);
         } @else {
             $focus-selected-background: darken-color($background, 16%);
@@ -196,7 +198,7 @@
     }
 
     @if not($ghost-shadow) {
-        $ghost-elevation: map-get($chip-schema, 'ghost-elevation');
+        $ghost-elevation: map.get($chip-schema, 'ghost-elevation');
         $ghost-shadow: igx-elevation($elevations, $ghost-elevation);
     }
 
@@ -249,7 +251,7 @@
     $transition: all 120ms $ease-in-out-quad;
     $chip-max-width: 32ch;
 
-    $variant: map-get($theme, variant);
+    $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
 
     $chip-height-material: (
@@ -264,7 +266,7 @@
         compact: rem(18px)
     );
 
-    $chip-height: map-get((
+    $chip-height: map.get((
         material: $chip-height-material,
         fluent: $chip-height-fluent,
         bootstrap: $chip-height-material,
@@ -277,7 +279,7 @@
         compact: 0 rem(2px)
     );
 
-    $box-shadow: map-get((
+    $box-shadow: map.get((
         material: null,
         fluent: null,
         bootstrap: 0 0 0 rem(3px) var-get($theme, 'hover-background'),
@@ -287,7 +289,7 @@
     $item-padding: 4px;
     $chip-item-padding: 0 rem($item-padding);
 
-    $chip-avatar-inset: map-get((
+    $chip-avatar-inset: map.get((
         material: 0,
         fluent: -$item-padding,
         bootstrap: 0,
@@ -378,27 +380,27 @@
 
     %igx-chip-custom-icon {
         igx-icon {
-            width: map-get($chip-icon-size, 'comfortable');
-            height: map-get($chip-icon-size, 'comfortable');
-            font-size: map-get($chip-icon-size, 'comfortable');
+            width: map.get($chip-icon-size, 'comfortable');
+            height: map.get($chip-icon-size, 'comfortable');
+            font-size: map.get($chip-icon-size, 'comfortable');
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--cosy {
         igx-icon {
-            width: map-get($chip-icon-size, 'cosy');
-            height: map-get($chip-icon-size, 'cosy');
-            font-size: map-get($chip-icon-size, 'cosy');
+            width: map.get($chip-icon-size, 'cosy');
+            height: map.get($chip-icon-size, 'cosy');
+            font-size: map.get($chip-icon-size, 'cosy');
             outline-style: none;
         }
     }
 
     %igx-chip-custom-icon--compact {
         igx-icon {
-            width: map-get($chip-icon-size, 'compact');
-            height: map-get($chip-icon-size, 'compact');
-            font-size: map-get($chip-icon-size, 'compact');
+            width: map.get($chip-icon-size, 'compact');
+            height: map.get($chip-icon-size, 'compact');
+            font-size: map.get($chip-icon-size, 'compact');
             outline-style: none;
         }
     }
@@ -434,7 +436,7 @@
 
     %igx-chip__content {
         @include ellipsis();
-        padding: map-get($chip-padding, 'comfortable');
+        padding: map.get($chip-padding, 'comfortable');
         max-width: $chip-max-width;
 
         &:empty {
@@ -443,11 +445,11 @@
     }
 
     %igx-chip__content--cosy {
-        padding: map-get($chip-padding, 'cosy');
+        padding: map.get($chip-padding, 'cosy');
     }
 
     %igx-chip__content--compact {
-        padding: map-get($chip-padding, 'compact');
+        padding: map.get($chip-padding, 'compact');
     }
 
     %igx-chip__remove {
@@ -511,7 +513,7 @@
         align-items: center;
         justify-content: center;
         flex: 1 1 auto;
-        height: map-get($chip-height, 'comfortable');
+        height: map.get($chip-height, 'comfortable');
         padding: $chip-item-padding;
         color: var-get($theme, 'text-color');
         background: var-get($theme, 'background');
@@ -571,13 +573,13 @@
     }
 
     %igx-chip__item--cosy {
-        height: map-get($chip-height, 'cosy');
-        padding: map-get($chip-padding, 'cosy');
+        height: map.get($chip-height, 'cosy');
+        padding: map.get($chip-padding, 'cosy');
     }
 
     %igx-chip__item--compact {
-        height: map-get($chip-height, 'compact');
-        padding: map-get($chip-padding, 'compact');
+        height: map.get($chip-height, 'compact');
+        padding: map.get($chip-padding, 'compact');
     }
 
     %igx-chip__ghost {
@@ -595,19 +597,19 @@
     }
 
     %igx-chip__ghost--cosy {
-        height: map-get($chip-height, 'cosy');
+        height: map.get($chip-height, 'cosy');
 
         %igx-chip__content {
-            padding: map-get($chip-padding, 'cosy');
+            padding: map.get($chip-padding, 'cosy');
         }
     }
 
     %igx-chip__ghost--compact {
         @extend  %igx-chip-custom-icon--compact;
-        height: map-get($chip-height, 'compact');
+        height: map.get($chip-height, 'compact');
 
         %igx-chip__content {
-            padding: map-get($chip-padding, 'compact');
+            padding: map.get($chip-padding, 'compact');
         }
     }
 }
@@ -623,7 +625,7 @@
     $type-scale,
     $categories: (text: 'body-2'))
 {
-    $text: map-get($categories, 'text');
+    $text: map.get($categories, 'text');
 
     %igx-chip {
         @include igx-type-style($type-scale, $text) {

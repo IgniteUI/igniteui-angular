@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -104,20 +105,20 @@
     $selector: 'igx-shape-chart';
     $chart-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chart-schema: map.get($schema, $name);
     } @else {
         $chart-schema: $schema;
     }
 
     $theme: apply-palette($chart-schema, $palette);
-    $margin-default: map-get($theme, 'margin');
-    $title-margin-default: map-get($theme, 'title-margin');
-    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
-    $x-axis-label-margin-default: map-get($theme, 'x-axis-label-margin');
-    $y-axis-label-margin-default: map-get($theme, 'y-axis-label-margin');
-    $x-axis-title-margin-default: map-get($theme, 'x-axis-title-margin');
-    $y-axis-title-margin-default: map-get($theme, 'y-axis-title-margin');
+    $margin-default: map.get($theme, 'margin');
+    $title-margin-default: map.get($theme, 'title-margin');
+    $subtitle-margin-default: map.get($theme, 'subtitle-margin');
+    $x-axis-label-margin-default: map.get($theme, 'x-axis-label-margin');
+    $y-axis-label-margin-default: map.get($theme, 'y-axis-label-margin');
+    $x-axis-title-margin-default: map.get($theme, 'x-axis-title-margin');
+    $y-axis-title-margin-default: map.get($theme, 'y-axis-title-margin');
 
     @if not($margin) {
         $margin: $margin-default;
@@ -229,12 +230,12 @@
     'y-axis-title-text-style': 'h3',
 )) {
     $name: 'shape-chart';
-    $title: map-get($categories, 'title');
-    $subtitle: map-get($categories, 'subtitle');
-    $x-axis-title-text-style: map-get($categories, 'x-axis-title-text-style');
-    $x-axis-label-text-style: map-get($categories, 'x-axis-label-text-style');
-    $y-axis-title-text-style: map-get($categories, 'y-axis-title-text-style');
-    $y-axis-label-text-style: map-get($categories, 'y-axis-label-text-style');
+    $title: map.get($categories, 'title');
+    $subtitle: map.get($categories, 'subtitle');
+    $x-axis-title-text-style: map.get($categories, 'x-axis-title-text-style');
+    $x-axis-label-text-style: map.get($categories, 'x-axis-label-text-style');
+    $y-axis-title-text-style: map.get($categories, 'y-axis-title-text-style');
+    $y-axis-label-text-style: map.get($categories, 'y-axis-label-text-style');
 
     $title-styles: igx-type-scale-category($type-scale, $title);
     $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);

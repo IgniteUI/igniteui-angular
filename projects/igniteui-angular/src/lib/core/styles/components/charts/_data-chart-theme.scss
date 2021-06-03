@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -51,16 +52,16 @@
     $selector: 'igx-data-chart';
     $chart-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $chart-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $chart-schema: map.get($schema, $name);
     } @else {
         $chart-schema: $schema;
     }
 
     $theme: apply-palette($chart-schema, $palette);
-    $margin-default: map-get($theme, 'margin');
-    $title-margin-default: map-get($theme, 'title-margin');
-    $subtitle-margin-default: map-get($theme, 'subtitle-margin');
+    $margin-default: map.get($theme, 'margin');
+    $title-margin-default: map.get($theme, 'title-margin');
+    $subtitle-margin-default: map.get($theme, 'subtitle-margin');
 
     @if not($margin) {
         $margin: $margin-default;
@@ -113,8 +114,8 @@
     subtitle: 'subtitle-1',
 )) {
     $name: 'data-chart';
-    $title: map-get($categories, 'title');
-    $subtitle: map-get($categories, 'subtitle');
+    $title: map.get($categories, 'title');
+    $subtitle: map.get($categories, 'subtitle');
 
     $title-styles: igx-type-scale-category($type-scale, $title);
     $subtitle-styles: igx-type-scale-category($type-scale, $subtitle);

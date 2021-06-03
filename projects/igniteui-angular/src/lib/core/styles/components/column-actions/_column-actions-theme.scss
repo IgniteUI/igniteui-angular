@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -39,8 +40,8 @@
     $name: 'igx-column-actions';
     $column-actions-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $column-actions-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $column-actions-schema: map.get($schema, $name);
     } @else {
         $column-actions-schema: $schema;
     }
@@ -71,7 +72,7 @@
         display: flex;
         flex-flow: column nowrap;
         background: var-get($theme, 'background-color');
-        box-shadow: igx-elevation(map-get($theme, 'elevations'), 8);
+        box-shadow: igx-elevation(map.get($theme, 'elevations'), 8);
         width: 100%;
         flex: 1 1 auto;
         min-width: rem(180px);
@@ -116,7 +117,7 @@
 /// @param {Map} $categories [(title: 'subtitle-1')] - The categories from the typographic scale used for type styles.
 /// @requires {mixin} igx-type-style
 @mixin igx-column-actions-typography($type-scale, $categories: (title: 'subtitle-1')) {
-    $title: map-get($categories, 'title');
+    $title: map.get($categories, 'title');
 
     %column-actions-title {
         @include igx-type-style($type-scale, $title) {

@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
+@use 'sass:map';
 
 ////
 /// @group themes
@@ -68,8 +69,8 @@
     $selector: 'igx-sparkline';
     $sparkline-schema: ();
 
-    @if map-has-key($schema, $name) {
-        $sparkline-schema: map-get($schema, $name);
+    @if map.has-key($schema, $name) {
+        $sparkline-schema: map.get($schema, $name);
     } @else {
         $sparkline-schema: $schema;
     }

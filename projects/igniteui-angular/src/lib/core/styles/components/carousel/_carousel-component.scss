@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:string';
 
 //// Carousel
 /// @access private
@@ -68,7 +69,7 @@
 @mixin component {
     @include b(igx-carousel) {
         $this: bem--selector-to-string(&);
-        @include register-component(str-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %igx-carousel-display !optional;
 
