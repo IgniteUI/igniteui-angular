@@ -2930,7 +2930,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public abstract id: string;
-    abstract data: any[];
+    abstract data: any[] | null;
     abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
