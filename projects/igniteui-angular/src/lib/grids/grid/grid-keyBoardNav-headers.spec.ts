@@ -294,9 +294,14 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             expect(grid.sortingExpressions[0].fieldName).toEqual('ID');
             expect(grid.sortingExpressions[0].dir).toEqual(SortingDirection.Asc);
 
+            const expression = {
+                fieldName: grid.sortingExpressions[0].fieldName,
+                dir: grid.sortingExpressions[0].dir,
+                ignoreCase: false};
+
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
-                sortingExpressions: grid.sortingExpressions,
+                sortingExpressions: [expression],
                 owner: grid
             });
 
