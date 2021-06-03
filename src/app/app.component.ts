@@ -30,6 +30,11 @@ export class AppComponent implements OnInit {
 
     public componentLinks = [
         {
+            link: '/accordion',
+            icon: 'horizontal_split',
+            name: 'Accordion'
+        },
+        {
             link: '/action-strip',
             icon: 'view_list',
             name: 'Action Strip'
