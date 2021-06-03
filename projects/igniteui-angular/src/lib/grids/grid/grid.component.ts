@@ -270,7 +270,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden
      */
     protected groupingDiffer;
-    private _data;
+    private _data?: any[] | null;
     private _hideGroupedColumns = false;
     private _dropAreaMessage = null;
     private _showGroupArea = true;
@@ -284,11 +284,11 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     @Input()
-    public get data(): any[] {
+    public get data(): any[] | null {
         return this._data;
     }
 
-    public set data(value: any[]) {
+    public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
