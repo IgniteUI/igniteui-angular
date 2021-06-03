@@ -1,6 +1,13 @@
 # Ignite UI for Angular Change Log
 
 All notable changes for each version of this project will be documented in this file.
+
+## 11.1.13
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
 ## 11.1.1
 
 ### New Features
