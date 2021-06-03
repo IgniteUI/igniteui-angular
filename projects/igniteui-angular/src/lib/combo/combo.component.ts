@@ -738,10 +738,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Input()
-    get data(): any[] {
+    get data(): any[] | null {
         return this._data;
     }
-    set data(val: any[]) {
+    set data(val: any[] | null) {
         this._data = (val) ? val : [];
     }
 
@@ -983,14 +983,14 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     /**
      * @hidden @internal
      */
-    public get filteredData(): any[] {
+    public get filteredData(): any[] | null {
         return this.filterable ? this._filteredData : this.data;
     }
 
     /**
      * @hidden @internal
      */
-    public set filteredData(val: any[]) {
+    public set filteredData(val: any[] | null) {
         this._filteredData = this.groupKey ? (val || []).filter((e) => e.isHeader !== true) : val;
         this.checkMatch();
     }
@@ -1183,6 +1183,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             } else {
                 this.valid = this.ngControl.invalid ? IgxComboState.INVALID : IgxComboState.INITIAL;
             }
+        } else {
+            this.valid = IgxComboState.INITIAL;
         }
         this.manageRequiredAsterisk();
     }
@@ -1261,6 +1263,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const selection = Array.isArray(value) ? value : [];
         const oldSelection = this.selectedItems();
         this.selection.select_items(this.id, selection, true);
+        this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selectedItems(), oldSelection);
     }
 

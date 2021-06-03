@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { async, TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel } from '@angular/forms';
+import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule, FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
 import { IgxComboComponent, IgxComboModule, IComboSelectionChangeEventArgs, IgxComboState, IComboSearchInputEventArgs } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -2800,6 +2800,17 @@ describe('igxCombo', () => {
                 expect(combo.onBlur).toHaveBeenCalled();
                 expect(combo.onBlur).toHaveBeenCalledWith();
             });
+            it('should set validity to initial when the form is reset', fakeAsync(() => {
+                combo.onBlur();
+                fixture.detectChanges();
+                expect(combo.valid).toEqual(IgxComboState.INVALID);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INVALID);
+
+                fixture.componentInstance.form.resetForm();
+                tick();
+                expect(combo.valid).toEqual(IgxComboState.INITIAL);
+                expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            }));
         });
     });
     describe('Display density', () => {
@@ -3018,7 +3029,7 @@ class IgxComboFormComponent {
 
 @Component({
     template: `
-    <form>
+    <form #form="ngForm">
         <igx-combo #testCombo class="input-container" [placeholder]="'Locations'"
             name="anyName" required [(ngModel)]="values"
             [data]="items" [filterable]="filterableFlag"
@@ -3031,6 +3042,8 @@ class IgxComboFormComponent {
 })
 class IgxComboInTemplatedFormComponent {
     @ViewChild('testCombo', { read: IgxComboComponent, static: true }) testCombo: IgxComboComponent;
+    @ViewChild('form')
+    public form: NgForm;
     public items: any[] = [];
     public values: Array<any>;
 

@@ -760,16 +760,24 @@ export class IgxDateRangePickerComponent extends DisplayDensityBase
     }
 
     protected onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            if (this.inputGroup) {
-                this.inputDirective.valid = this.getInputState(this.inputGroup.isFocused);
-            } else if (this.hasProjectedInputs) {
-                this.projectedInputs
-                    .forEach(i => { i.inputDirective.valid = this.getInputState(i.isFocused); });
-            }
+        if (this.inputGroup) {
+            this.inputDirective.valid = this.isTouchedOrDirty
+                ? this.getInputState(this.inputGroup.isFocused)
+                : IgxInputState.INITIAL;
+        } else if (this.hasProjectedInputs) {
+            this.projectedInputs
+                .forEach(i => {
+                    i.inputDirective.valid = this.isTouchedOrDirty
+                        ? this.getInputState(i.isFocused)
+                        : IgxInputState.INITIAL;
+                });
         }
         this.setRequiredToInputs();
+    }
+
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
     }
 
     private updateDisabledState() {

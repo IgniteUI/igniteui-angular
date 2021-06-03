@@ -1,6 +1,6 @@
 import { Component, ViewChild, ElementRef, EventEmitter, QueryList, Renderer2, DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick, flush, ComponentFixture, waitForAsync } from '@angular/core/testing';
-import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
+import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl, NgForm } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxDatePickerComponent, IgxDatePickerModule } from './date-picker.component';
@@ -39,7 +39,8 @@ describe('IgxDatePicker', () => {
                 IgxDropDownDatePickerRetemplatedComponent,
                 IgxDatePickerOpeningComponent,
                 IgxDatePickerReactiveFormComponent,
-                IgxDatePickerDropdownButtonsComponent
+                IgxDatePickerDropdownButtonsComponent,
+                IgxDatePickerInFormComponent
             ],
             imports: [IgxDatePickerModule, FormsModule, ReactiveFormsModule, NoopAnimationsModule, IgxInputGroupModule, IgxCalendarModule,
                 IgxButtonModule, IgxTextSelectionModule, IgxIconModule]
@@ -715,6 +716,24 @@ describe('IgxDatePicker', () => {
 
         month = document.getElementsByClassName('igx-calendar-picker__date')[0];
         expect((month as HTMLElement).innerText.trim()).toBe(expectedResult.trim());
+    }));
+
+    it('should set validity to initial when the form is reset', fakeAsync(() => {
+        const fixture = TestBed.createComponent(IgxDatePickerInFormComponent);
+        fixture.detectChanges();
+        const datePicker = fixture.componentInstance.datePicker;
+
+        const input = document.getElementsByClassName('igx-input-group__input')[0] as HTMLInputElement;
+        input.focus();
+        tick();
+        fixture.detectChanges();
+
+        datePicker.clear();
+        expect((datePicker as any).inputDirective.valid).toEqual(IgxInputState.INVALID);
+
+        (fixture.componentInstance as IgxDatePickerInFormComponent).form.resetForm();
+        tick();
+        expect((datePicker as any).inputDirective.valid).toEqual(IgxInputState.INITIAL);
     }));
 
     describe('Drop-down opening', () => {
@@ -1557,7 +1576,6 @@ describe('IgxDatePicker', () => {
 
             expect(datePicker).toBeDefined();
             expect(inputGroup.isRequired).toBeFalsy();
-
             ngModel.control.validator = () => ({ required: true });
             ngModel.statusChanges.emit();
             expect(inputGroup.isRequired).toBeTruthy();
@@ -1568,6 +1586,23 @@ describe('IgxDatePicker', () => {
         });
     });
 });
+
+@Component({
+    template: `
+    <form #form="ngForm">
+        <igx-date-picker name="datePicker" [(ngModel)]="date" [required]="true"></igx-date-picker>
+    </form>
+    `
+})
+export class IgxDatePickerInFormComponent {
+    @ViewChild('form')
+    public form: NgForm;
+
+    @ViewChild(IgxDatePickerComponent)
+    public datePicker: IgxDatePickerComponent;
+
+    public date: Date = new Date(2012, 5, 3);
+}
 
 @Component({
     template: `
