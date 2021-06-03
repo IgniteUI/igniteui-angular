@@ -72,8 +72,8 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;
         requestAnimationFrame(() => {
-            this.realignSelectedIndicator();
             this.updateScrollButtons();
+            this.realignSelectedIndicator();
         });
     }
 
@@ -126,6 +126,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver = new (getResizeObserver())(() => {
                 this.updateScrollButtons();
+                this.realignSelectedIndicator();
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
@@ -280,18 +281,17 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
 
         if (offset === 0) {
             // Fix for IE 11, a difference is accumulated from the widths calculations.
-            if (itemsContainerWidth - headerContainerWidth <= 1) {
+            if (itemsContainerWidth - headerContainerWidth <= 1 && this.tabAlignment !== 'end') {
                 return TabScrollButtonStyle.NotDisplayed;
             }
-
-            if (itemsContainerWidth > total && (this.tabAlignment === 'center' || this.tabAlignment === 'end')) {
-                return TabScrollButtonStyle.Visible;
+            if (this.tabAlignment === 'end' || this.tabAlignment === 'center') {
+                if (itemsContainerWidth - headerContainerWidth < 0 || itemsContainerWidth > total) {
+                    return TabScrollButtonStyle.Visible;
+                }
+                return TabScrollButtonStyle.NotDisplayed;
             }
             return TabScrollButtonStyle.Hidden;
         } else {
-            if (offset < 0 && this.tabAlignment !== 'end' ) {
-                return TabScrollButtonStyle.Hidden;
-            }
             return TabScrollButtonStyle.Visible;
         }
     }

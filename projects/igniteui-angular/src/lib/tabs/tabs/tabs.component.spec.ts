@@ -1255,6 +1255,25 @@ describe('IgxTabs', () => {
 
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
+
+        it('should show scroll buttons if needed when alignment is set to "center".', async () => {
+            fixture.componentInstance.wrapperDiv.nativeElement.style.width = '500px';
+            fixture.detectChanges();
+            await wait(200);
+
+            const leftScrollButton = tabs.headerContainer.nativeElement.children[0];
+            const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
+            expect(leftScrollButton.clientWidth).toBeFalsy();
+            expect(rightScrollButton.clientWidth).toBeFalsy();
+
+            fixture.componentInstance.wrapperDiv.nativeElement.style.width = '260px';
+            tabs.tabAlignment = IgxTabsAlignment.center;
+            fixture.detectChanges();
+            await wait(200);
+
+            expect(leftScrollButton.clientWidth).toBeTruthy();
+            expect(rightScrollButton.clientWidth).toBeTruthy();
+        });
     });
 
 
