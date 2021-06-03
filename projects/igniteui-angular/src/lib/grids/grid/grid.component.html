@@ -1,7 +1,9 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
 <ng-container *ngIf="showGroupArea">
-    <igx-grid-grouping [grid]="this" #groupArea></igx-grid-grouping>
+    <igx-grid-group-area #groupArea
+        [grid]="this"
+        [groupingExpressions]="this.groupingExpressions"></igx-grid-group-area>
 </ng-container>
 
 <div class="igx-grid__thead" role="rowgroup">

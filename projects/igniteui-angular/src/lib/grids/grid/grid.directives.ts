@@ -94,7 +94,9 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             return;
         }
         const grid = column.grid as IgxGridComponent;
-        const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
+        const isGrouped = grid.groupingExpressions
+            ? grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+            : false;
         if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
             drag.icon.innerText = 'group_work';
             this.hovered = true;
@@ -121,11 +123,14 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             if (!this.columnBelongsToGrid(column)) {
                 return;
             }
+
             const grid = column.grid as IgxGridComponent;
-            const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
-            if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
-                grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
-                    strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
+            if (grid.groupingExpressions) {
+                const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+                if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
+                    grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
+                        strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
+                }
             }
         }
     }

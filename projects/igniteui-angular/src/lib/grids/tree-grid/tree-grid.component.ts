@@ -699,6 +699,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
 // ----------------------------------------------------------------------- GROUPING START
+
     /**
      * @hidden @internal
      */
@@ -756,6 +757,25 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
     public get dropAreaMessage(): string {
         return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
+
+    /**
+     * Returns if the `IgxTreeGridComponent` has groupable columns.
+     *
+     * @example
+     * ```typescript
+     * const groupableGrid = this.grid.hasGroupableColumns;
+     * ```
+     */
+    public get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public get groupAreaHostClass(): string {
+        return this.getComponentDensityClass('igx-drop-area');
     }
 
 // ----------------------------------------------------------------------- GROUPING END

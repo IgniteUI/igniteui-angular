@@ -38,7 +38,7 @@ import {
     IgxRowExpandedIndicatorDirective
 } from './grid/grid.directives';
 import { IgxChipsModule } from '../chips/chips.module';
-import { IgxGridGroupingComponent } from './grid-grouping.component';
+import { IgxGroupAreaComponent } from './group-area.component';
 /**
  * @hidden
  */
@@ -60,7 +60,7 @@ import { IgxGridGroupingComponent } from './grid-grouping.component';
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
         IgxGroupAreaDropDirective,
-        IgxGridGroupingComponent
+        IgxGroupAreaComponent
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -95,7 +95,7 @@ import { IgxGridGroupingComponent } from './grid-grouping.component';
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
         IgxGroupAreaDropDirective,
-        IgxGridGroupingComponent
+        IgxGroupAreaComponent
     ],
     imports: [
         IgxGridColumnModule,

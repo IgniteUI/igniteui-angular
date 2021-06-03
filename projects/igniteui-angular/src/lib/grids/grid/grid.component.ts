@@ -1,6 +1,6 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
-    QueryList, ViewChild, ElementRef, TemplateRef, DoCheck, AfterContentInit, HostBinding,
+    QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
     forwardRef, OnInit, AfterViewInit, ContentChildren
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
@@ -14,8 +14,6 @@ import { IgxGroupByRowTemplateDirective, IgxGridDetailTemplateDirective } from '
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../../chips/chip.component';
-import { IChipsAreaReorderEventArgs } from '../../chips/chips-area.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { takeUntil } from 'rxjs/operators';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
@@ -25,13 +23,13 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode, RowPinningPosition } from '../common/enums';
+import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxGridGroupingComponent } from '../grid-grouping.component';
+import { IgxGridGroupAreaComponent } from '../grid-group-area.component';
 
 let NEXT_ID = 0;
 
@@ -167,7 +165,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     @ViewChild('groupArea')
-    public groupArea: IgxGridGroupingComponent;
+    public groupArea: IgxGridGroupAreaComponent;
 
     /**
      * @hidden @internal
@@ -573,6 +571,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public isDetailActive(rowIndex) {
         return this.navigation.activeNode ? this.navigation.activeNode.row === rowIndex : false;
     }
+
     /**
      * @hidden @internal
      */
