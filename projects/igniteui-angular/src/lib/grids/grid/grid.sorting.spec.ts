@@ -42,13 +42,14 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             spyOn(grid.sortingDone, 'emit').and.callThrough();
             const currentColumn = 'Name';
             const lastNameColumn = 'LastName';
-            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false });
+            let expression = { fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: false };
+            grid.sort(expression);
             tick(30);
             fixture.detectChanges();
 
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
-                sortingExpressions: grid.sortingExpressions,
+                sortingExpressions: [expression],
                 owner: grid
             });
 
@@ -57,17 +58,16 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             expect(grid.getCellByColumn(grid.data.length - 1, currentColumn).value).toEqual('Rick');
             expect(grid.getCellByColumn(grid.data.length - 1, lastNameColumn).value).toEqual('BRown');
 
+            expression = { fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true };
             // Ignore case on sorting set to true
-            grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
+            grid.sort(expression);
             tick(30);
             fixture.detectChanges();
-
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
-                sortingExpressions: grid.sortingExpressions,
+                sortingExpressions: [expression],
                 owner: grid
             });
-
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.sortingDone.emit).toHaveBeenCalledTimes(2);

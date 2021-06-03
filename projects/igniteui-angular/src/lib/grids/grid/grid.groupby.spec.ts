@@ -3355,8 +3355,8 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             // check sorting expressions order - grouping should be applied first
             expect(grid.sortingExpressions.length).toBe(2);
-            expect(grid.sortingExpressions[0]).toBe(grExprs[0]);
-            expect(grid.sortingExpressions[1]).toBe(sExprs[0]);
+            expect(grid.sortingExpressions[0]).toEqual({...grExprs[0], strategy: DefaultSortingStrategy.instance()});
+            expect(grid.sortingExpressions[1]).toEqual({...sExprs[0], strategy: DefaultSortingStrategy.instance()});
 
             dataRows = grid.dataRowList.toArray();
             const expectedReleaseRecsOrder = [true, false, true, false, false, null, true, true];
