@@ -133,6 +133,8 @@ All notable changes for each version of this project will be documented in this 
 - `IgxSnackbar`
     - **Breaking Change** - The following deprecated methods have been removed
         - `show`, `hide`. Use `open`, `close` instead.
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 
 ### New Features
