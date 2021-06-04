@@ -55,11 +55,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (opened)="handleOpened($event)"></igx-banner>
+     * <igx-banner (onOpened)="handleOpened($event)"></igx-banner>
      * ```
      */
     @Output()
-    public opened = new EventEmitter<BannerEventArgs>();
+    public onOpened = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner shows up
@@ -69,11 +69,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (opening)="handleOpening($event)"></igx-banner>
+     * <igx-banner (onOpening)="handleOpening($event)"></igx-banner>
      * ```
      */
     @Output()
-    public opening = new EventEmitter<BannerCancelEventArgs>();
+    public onOpening = new EventEmitter<BannerCancelEventArgs>();
 
     /**
      * Fires after the banner hides
@@ -83,11 +83,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (closed)="handleClosed($event)"></igx-banner>
+     * <igx-banner (onClosed)="handleClosed($event)"></igx-banner>
      * ```
      */
     @Output()
-    public closed = new EventEmitter<BannerEventArgs>();
+    public onClosed = new EventEmitter<BannerEventArgs>();
 
     /**
      * Fires before the banner hides
@@ -97,11 +97,11 @@ export class IgxBannerComponent implements IToggleView {
      * }
      * ```
      * ```html
-     * <igx-banner (closing)="handleClosing($event)"></igx-banner>
+     * <igx-banner (onClosing)="handleClosing($event)"></igx-banner>
      * ```
      */
     @Output()
-    public closing = new EventEmitter<BannerCancelEventArgs>();
+    public onClosing = new EventEmitter<BannerCancelEventArgs>();
 
     /** @hidden */
     public get useDefaultTemplate(): boolean {
@@ -191,7 +191,7 @@ export class IgxBannerComponent implements IToggleView {
             event,
             cancel: false
         };
-        this.opening.emit(openingArgs);
+        this.onOpening.emit(openingArgs);
         if (openingArgs.cancel) {
             return;
         }
@@ -219,7 +219,7 @@ export class IgxBannerComponent implements IToggleView {
             event,
             cancel: false
         };
-        this.closing.emit(closingArgs);
+        this.onClosing.emit(closingArgs);
         if (closingArgs.cancel) {
             return;
         }
@@ -240,7 +240,7 @@ export class IgxBannerComponent implements IToggleView {
      * <button (click)="banner.toggle()">Toggle Banner</button>
      * ```
      */
-    public toggle(event?: Event) {
+    toggle(event?: Event) {
         if (this.collapsed) {
             this.open(event);
         } else {
@@ -250,12 +250,12 @@ export class IgxBannerComponent implements IToggleView {
 
     /** @hidden */
     public onExpansionPanelOpen() {
-        this.opened.emit(this._bannerEvent);
+        this.onOpened.emit(this._bannerEvent);
     }
 
     /** @hidden */
     public onExpansionPanelClose() {
-        this.closed.emit(this._bannerEvent);
+        this.onClosed.emit(this._bannerEvent);
     }
 }
 

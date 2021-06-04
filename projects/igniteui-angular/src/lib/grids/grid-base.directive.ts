@@ -2937,7 +2937,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public abstract id: string;
-    abstract data: any[];
+    abstract data: any[] | null;
     abstract filteredData: any[];
     /**
      * Returns an array containing the filtered sorted data.
@@ -3319,7 +3319,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
 
-        this.overlayService.opening.pipe(destructor).subscribe((event) => {
+        this.overlayService.onOpening.pipe(destructor).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 const instance = event.componentRef.instance as IgxAdvancedFilteringDialogComponent;
                 if (instance) {
@@ -3328,7 +3328,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.opened.pipe(destructor).subscribe((event) => {
+        this.overlayService.onOpened.pipe(destructor).subscribe((event) => {
             const overlaySettings = this.overlayService.getOverlayById(event.id)?.settings;
 
             // do not hide the advanced filtering overlay on scroll
@@ -3351,7 +3351,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             }
         });
 
-        this.overlayService.closed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
+        this.overlayService.onClosed.pipe(destructor, filter(() => !this._init)).subscribe((event) => {
             if (this._advancedFilteringOverlayId === event.id) {
                 this.overlayService.detach(this._advancedFilteringOverlayId);
                 this._advancedFilteringOverlayId = null;

@@ -772,11 +772,11 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        const containerRectRight = Math.ceil(this.container.nativeElement.getBoundingClientRect().right);
+        const chipsContainerWidth = this.container.nativeElement.offsetWidth;
+        const chipsAreaWidth = this.chipsArea.element.nativeElement.offsetWidth;
 
-        const lastChipRectRight = Math.ceil(chipAraeChildren[chipAraeChildren.length - 1].getBoundingClientRect().right);
-        if (lastChipRectRight >= containerRectRight) {
-            this.chipAreaScrollOffset -= lastChipRectRight - containerRectRight;
+        if (chipsAreaWidth > chipsContainerWidth) {
+            this.chipAreaScrollOffset = chipsContainerWidth - chipsAreaWidth;
             this.transform(this.chipAreaScrollOffset);
         }
     }
