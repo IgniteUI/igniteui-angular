@@ -93,18 +93,17 @@ export class WorksheetFile implements IExcelFile {
             const owner = worksheetData.owner;
             const height =  worksheetData.options.rowHeight;
 
+            this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount + owner.maxLevel);
+
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
             sheetData += `<sheetData>`;
-            debugger
 
-            //const headers = []
-            // EXPORT MULTI COL HEADERS\
             for (let i = 0; i <= owner.maxLevel; i++) {
                 sheetData += `<row r="${i + 1}"${this.rowHeight}>`;
 
                 const headersForLevel = owner.columns
                     .filter(c => (c.level < i && c.type !== ColumnType.MultiColumnHeader || c.level === i) && c.columnSpans > 0 && !c.skip)
-                    .sort((a, b) => a.startIndex-b.startIndex)
+                    .sort((a, b) => a.startIndex - b.startIndex)
                     .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
                 let startValue = 0;

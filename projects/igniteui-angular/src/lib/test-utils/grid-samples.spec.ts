@@ -2400,3 +2400,10 @@ export class IgxAddRowComponent implements OnInit {
 export class GridExportGroupedDataComponent extends BasicGridComponent {
     public data = SampleTestData.exportGroupedDataColumns();
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
+})
+export class MultiColumnHeadersExportComponent extends BasicGridComponent {
+    public data = SampleTestData.contactInfoDataFull();
+}

@@ -59,7 +59,6 @@ export interface IColumnInfo {
     startIndex?: number;
     columnSpans?: number;
     level?: number;
-    pinned?: boolean;
     pinnedIndex?: number;
 }
 
@@ -177,10 +176,7 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
-        this.options.ignoreColumnsVisibility = true;
-        //this.options.ignoreColumnsOrder = true;
         const columns = grid.columnList.toArray();
-        //const columns = grid.pinnedColumns.concat(grid.unpinnedColumns);
         //const columnList = this.getColumns(columns);
         const columnList = this.getMultiCols(columns);
 
@@ -785,7 +781,6 @@ export abstract class IgxBaseExporter {
 
             if (column.pinned && exportColumn && columnInfo.type === ColumnType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
-                //lastColIndex = column.visibleIndex;
             }
         });
 
