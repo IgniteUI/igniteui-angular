@@ -62,13 +62,11 @@ describe('IgxGrid - Grid Sorting #grid', () => {
             grid.sort({ fieldName: currentColumn, dir: SortingDirection.Asc, ignoreCase: true });
             tick(30);
             fixture.detectChanges();
-
             expect(grid.sorting.emit).toHaveBeenCalledWith({
                 cancel: false,
                 sortingExpressions: grid.sortingExpressions,
                 owner: grid
             });
-
             expect(grid.getCellByColumn(0, currentColumn).value).toEqual('ALex');
             expect(grid.sorting.emit).toHaveBeenCalledTimes(2);
             expect(grid.onSortingDone.emit).toHaveBeenCalledTimes(2);
