@@ -1207,6 +1207,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const selection = Array.isArray(value) ? value : [];
         const oldSelection = this.selectedItems();
         this.selection.select_items(this.id, selection, true);
+        this.cdr.markForCheck();
         this._value = this.createDisplayText(this.selectedItems(), oldSelection);
     }
 
