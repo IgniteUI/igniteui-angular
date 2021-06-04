@@ -1,7 +1,12 @@
 import { Tree } from '@angular-devkit/schematics';
+import * as pathFs from 'path';
 import * as ts from 'typescript/lib/tsserverlibrary';
 import { CUSTOM_TS_PLUGIN_NAME, CUSTOM_TS_PLUGIN_PATH } from './tsUtils';
 
+/**
+ * Langauge server host is responsible for **most** of the FS operations / checks
+ * Angular's Ivy LS sometimes bypasses these, calling path methods instead of tsLsHost operations
+ */
 export class ServerHost implements ts.server.ServerHost {
     public readonly args: string[];
     public readonly newLine: string;
@@ -13,8 +18,14 @@ export class ServerHost implements ts.server.ServerHost {
         this.useCaseSensitiveFileNames = ts.sys.useCaseSensitiveFileNames;
     }
 
+    /**
+     * Read a file's content from the Virtual Tree
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public readFile(path: string, encoding?: string): string | undefined {
         let content;
+        // ensure the path is relative, so it can be found in the Tree, reflecting latest state
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             content = this.host.read(path).toString(encoding);
         } finally {
@@ -41,17 +52,31 @@ export class ServerHost implements ts.server.ServerHost {
         return ts.sys.resolvePath(path);
     }
 
+    /**
+     * Checks for file in Virtual Tree w/ relative path
+     * If file does not exist in virtual tree, check in physical FS
+     */
     public fileExists(path: string): boolean {
-        return this.host.exists(path);
+        // check for file in Tree, as schematics might need for check
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        let flag = false;
+        try {
+            // Tree.exists throws on invalid paths instead of returning false
+            flag = this.host.exists(path);
+        } finally {
+            // eslint-disable-next-line no-unsafe-finally
+            return flag || ts.sys.fileExists(path);
+        }
     }
 
     public directoryExists(path: string): boolean {
         let exists: boolean;
+        path = pathFs.relative(this.getCurrentDirectory(), path);
         try {
             exists = this.host.getDir(path) !== void 0;
         } finally {
             // eslint-disable-next-line no-unsafe-finally
-            return exists || this.fileExists(path);
+            return exists || ts.sys.directoryExists(path);
         }
     }
 
@@ -60,15 +85,29 @@ export class ServerHost implements ts.server.ServerHost {
     }
 
     public getCurrentDirectory(): string {
-        return this.host.root.path;
+        // both TS and NG lang serves work with absolute paths
+        // we provide cwd instead of tree root so paths can be resolved to absolute ones
+        return process.cwd();
     }
 
+    /**
+     * Get all subdirs of a directory from the Tree mapped to absolute paths
+     */
     public getDirectories(path: string): string[] {
-        return this.host.getDir(path).subdirs;
+        // check directory contents in Tree (w/ relative paths)
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
+        return this.host.getDir(path).subdirs.map(e => pathFs.resolve(e));
     }
 
+    /**
+     * Get all files of a directory from the Tree mapped to absolute paths
+     */
     public readDirectory(path: string): string[] {
-        return this.host.getDir(path).subfiles;
+        // check directory contents in Tree (w/ relative paths)
+        path = pathFs.relative(this.getCurrentDirectory(), path);
+        // return directory contents w/ absolute paths for LS
+        return this.host.getDir(path).subfiles.map(e => pathFs.resolve(e));
     }
 
     public require(initialPath: string, moduleName: string) {
