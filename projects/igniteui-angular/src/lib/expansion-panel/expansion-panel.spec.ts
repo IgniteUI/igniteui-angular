@@ -190,6 +190,27 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should set header tabIndex to -1 when header is disabled', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panelHeader = fixture.componentInstance.header;
+            expect(panelHeader).toBeDefined();
+            expect(panelHeader.disabled).toBeFalsy();
+            let innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('0');
+            panelHeader.disabled = true;
+            fixture.detectChanges();
+            innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('-1');
+            panelHeader.disabled = false;
+            fixture.detectChanges();
+            innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('0');
+        });
     });
 
     describe('Expansion tests: ', () => {
