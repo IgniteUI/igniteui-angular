@@ -40,12 +40,16 @@ let DIALOG_ID = 0;
  * <button (click)="form.open()">Show Dialog</button>
  * <igx-dialog #form title="Sign In" rightButtonLabel="OK">
  *   <div>
- *     <input type="text" igxInput/>
- *     <label igxLabel>Username</label>
+ *     <igx-input-group>
+ *       <input type="text" igxInput/>
+ *       <label igxLabel>Username</label>
+ *     </igx-input-group>
  *   </div>
  *   <div>
- *     <input type="password" igxInput/>
- *     <label igxLabel>Password</label>
+ *     <igx-input-group>
+ *       <input type="password" igxInput/>
+ *       <label igxLabel>Password</label>
+ *     </igx-input-group>
  *   </div>
  * </igx-dialog>
  * ```
