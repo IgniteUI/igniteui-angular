@@ -11,7 +11,8 @@ import {
     HostBinding,
     ChangeDetectionStrategy,
     ViewRef,
-    HostListener
+    HostListener,
+    OnDestroy
 } from '@angular/core';
 import { DataType, DataUtil } from '../../../data-operations/data-util';
 import { IgxColumnComponent } from '../../columns/column.component';
@@ -27,6 +28,8 @@ import { IgxFilteringService } from '../grid-filtering.service';
 import { KEYS, isEdge, isIE } from '../../../core/utils';
 import { AbsoluteScrollStrategy } from '../../../services/overlay/scroll';
 import { DisplayDensity } from '../../../core/displayDensity';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @hidden
@@ -37,7 +40,7 @@ import { DisplayDensity } from '../../../core/displayDensity';
     selector: 'igx-grid-filtering-row',
     templateUrl: './grid-filtering-row.component.html'
 })
-export class IgxGridFilteringRowComponent implements AfterViewInit {
+export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     @Input()
     public get column(): IgxColumnComponent {
         return this._column;
@@ -157,6 +160,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+    private $destroyer = new Subject<boolean>();
 
     constructor(public filteringService: IgxFilteringService, public element: ElementRef, public cdr: ChangeDetectorRef) { }
 
@@ -178,6 +182,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         if (selectedItem) {
             this.expression = selectedItem.expression;
         }
+
+        this.filteringService.grid.localeChange
+            .pipe(takeUntil(this.$destroyer))
+            .subscribe(() => {
+                this.cdr.markForCheck();
+            });
 
         this.input.nativeElement.focus();
     }
@@ -658,6 +668,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
         this.chipAreaScrollOffset = 0;
         this.transform(this.chipAreaScrollOffset);
         this.showHideArrowButtons();
+    }
+
+    public ngOnDestroy() {
+        this.$destroyer.next();
     }
 
     private showHideArrowButtons() {
