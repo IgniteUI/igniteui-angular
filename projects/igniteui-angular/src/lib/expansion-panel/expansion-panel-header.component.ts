@@ -35,6 +35,12 @@ export type ICON_POSITION = (typeof ICON_POSITION)[keyof typeof ICON_POSITION];
 export class IgxExpansionPanelHeaderComponent {
      // properties section
     private _iconTemplate = false;
+
+    private _disabled = false;
+
+    /** @hidden @internal */
+    public tabIndex = 0;
+
     /**
      * Sets/gets the `id` of the expansion panel header.
      * ```typescript
@@ -185,7 +191,18 @@ export class IgxExpansionPanelHeaderComponent {
      */
     @Input()
     @HostBinding('class.igx-expansion-panel--disabled')
-    public disabled = false;
+    public get disabled(): boolean {
+        return this._disabled;
+    }
+
+    public set disabled(val: boolean) {
+        this._disabled = val;
+        if (val) {
+            this.tabIndex = -1;
+        } else {
+            this.tabIndex = 0;
+        }
+    }
 
     constructor(@Host() @Inject(IGX_EXPANSION_PANEL_COMPONENT) public panel: IgxExpansionPanelBase, public cdr: ChangeDetectorRef,
      public elementRef: ElementRef) {

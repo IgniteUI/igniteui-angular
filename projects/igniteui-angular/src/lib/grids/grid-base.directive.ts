@@ -2592,7 +2592,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public unpinnedRecords: any[];
 
-    abstract data: any[];
+    abstract data: any[] | null;
     abstract filteredData: any[];
 
     /**
