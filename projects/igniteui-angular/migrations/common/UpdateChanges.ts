@@ -488,6 +488,7 @@ export class UpdateChanges {
             } catch {
                 this.context?.logger
                 .warn(`Could not read ${TSCONFIG_PATH}. Some Angular Ivy features might be unavailable during migrations.`);
+                return;
             }
             let content;
             try {
@@ -495,9 +496,12 @@ export class UpdateChanges {
                 // TODO: use some 3rd party parser or write our own.
                 // @angular-devkit/core.parseJson is deprecated
                 content = JSON.parse(originalContent);
-            } catch {
+            } catch (e: any) {
                 this.context?.logger
                 .warn(`Could not parse ${TSCONFIG_PATH}. Angular Ivy language service might be unavailable during migrations.`);
+                this.context?.logger
+                .warn(`Error:\n${e}`);
+                return;
             }
             if (!content.angularCompilerOptions) {
                 content.angularCompilerOptions = {};
