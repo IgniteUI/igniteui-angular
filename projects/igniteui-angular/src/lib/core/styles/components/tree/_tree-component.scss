@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:string';
 
 ////
 /// @group components
@@ -15,7 +16,7 @@
 
     @include b(igx-tree-node) {
         $this: bem--selector-to-string(&);
-        @include register-component(str-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %tree-node !optional;
 

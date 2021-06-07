@@ -1,6 +1,7 @@
 @use '../../base' as *;
 @use './excel-filtering-component' as *;
 @use './advanced-filtering-component' as *;
+@use 'sass:string';
 
 ////
 /// @group components
@@ -15,7 +16,7 @@
 @mixin component {
     @include b(igx-grid) {
         $this: bem--selector-to-string(&);
-        @include register-component(str-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %grid-display !optional;
 
@@ -139,7 +140,7 @@
 
         @include e(tr-action) {
             @extend %igx-grid__tr-action !optional
-    }
+        }
 
         @include e(tr, $m: 'drag') {
             @extend %igx-grid__tr--drag !optional;

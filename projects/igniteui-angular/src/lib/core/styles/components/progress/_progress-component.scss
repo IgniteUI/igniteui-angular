@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:string';
 
 ////
 /// @group components
@@ -12,7 +13,7 @@
     /// Linear Progress
     @include b(igx-linear-bar) {
         $this: bem--selector-to-string(&);
-        @include register-component(str-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %linear-display !optional;
 
@@ -100,7 +101,7 @@
     /// Circular Progress
     @include b(igx-circular-bar) {
         $this: bem--selector-to-string(&);
-        @include register-component(str-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %circular-display !optional;
 
