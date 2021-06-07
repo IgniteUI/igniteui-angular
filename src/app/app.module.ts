@@ -151,6 +151,7 @@ import { TestInterceptorClass } from './interceptor.service';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
+import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -282,7 +283,8 @@ const components = [
     GridVirtualizationScrollSampleComponent,
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
-    GridColumnTypesSampleComponent
+    GridColumnTypesSampleComponent,
+    GridLocalizationSampleComponent
 ];
 
 @NgModule({
