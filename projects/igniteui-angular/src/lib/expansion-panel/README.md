@@ -57,7 +57,9 @@ The following outputs are available in the **igx-expansion-panel** component:
 | Name | Cancelable | Description | Parameters
 | :--- | :--- | :--- | :--- |
 | `contentCollapsed` | `false` | Emitted when the panel is collapsed | `IExpansionPanelEventArgs` |
+| `contentCollapsing` | `true` | Emitted when the panel begins collapsing | `IExpansionPanelCancelableEventArgs` |
 | `contentExpanded` | `false` | Emitted when the panel is expanded | `IExpansionPanelEventArgs` |
+| `contentExpanding` | `true` | Emitted when the panel begins expanding | `IExpansionPanelCancelableEventArgs` |
 
 
 ### Methods

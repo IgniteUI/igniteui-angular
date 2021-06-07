@@ -12,20 +12,29 @@ All notable changes for each version of this project will be documented in this 
     - `onAppended` -> `contentAppended`
     - `onAnimation` -> `animationStarting`
 
-- **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
-    - `onCollapsed` -> `contentCollapsed`
-    - `onExpanded` -> `contentExpanded`
-
-- **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
-    - `onInteraction` -> `interaction`
-
-- **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
-
 - **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
     - `onClosing` -> `closing`
     - `onClosed` -> `closed`
+
+- `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
+        - `onCollapsed` -> `contentCollapsed`
+        - `onExpanded` -> `contentExpanded`
+
+    - **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
+        - `onInteraction` -> `interaction`
+
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
+    - **Feature** - Added `contentExpanding` and `contentCollapsing` events, fired when the panel's content starts expanding or collapsing, resp.
+    Both events can be canceled, preventing the toggle animation from firing and the `collapsed` property from changing:
+    ```html
+        <igx-expansion-panel (contentExpanding)="handleExpandStart($event)" (contentCollapsing)="handleCollapseStart($event)">
+            ...
+        </igx-expansion-panel>
+    ```
 
 ## 12.0.3
 
