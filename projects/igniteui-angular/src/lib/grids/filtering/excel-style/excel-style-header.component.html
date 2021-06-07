@@ -6,21 +6,21 @@
             igxButton="icon"
             (click)="esf.onSelect()"
             [ngClass]="esf.selectedClass()"
-            aria-label="done"
+            [attr.aria-label]="esf.column.selected ? esf.grid.resourceStrings.igx_grid_excel_deselect : esf.grid.resourceStrings.igx_grid_excel_select"
         >
             <igx-icon fontSet="material">done</igx-icon>
         </button>
         <button *ngIf="showPinning"
             igxButton="icon"
             (click)="esf.onPin()"
-            [attr.aria-label]="esf.column.pinned ? 'unpin' : 'pin'"
+            [attr.aria-label]="esf.column.pinned ? esf.grid.resourceStrings.igx_grid_excel_unpin : esf.grid.resourceStrings.igx_grid_excel_pin"
         >
             <igx-icon fontSet="imx-icons" [name]="esf.column.pinned ? 'unpin-left' : 'pin-left'"></igx-icon>
         </button>
         <button *ngIf="showHiding"
             igxButton="icon"
             (click)="esf.onHideToggle()"
-            [attr.aria-label]="esf.column.hidden ? 'show' : 'hide'"
+            [attr.aria-label]="esf.column.hidden ? esf.grid.resourceStrings.igx_grid_excel_show : esf.grid.resourceStrings.igx_grid_excel_hide"
         >
             <igx-icon>{{ esf.column.hidden ? 'visibility' : 'visibility_off' }}</igx-icon>
         </button>
