@@ -1,0 +1,9 @@
+.sample-column {
+    display: flex;
+    flex-flow: row wrap !important;
+    width: 100%;
+}
+
+.grid-wrapper {
+    width: 70%;
+}
