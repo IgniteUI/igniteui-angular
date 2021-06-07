@@ -115,11 +115,10 @@
     <ng-container *ngIf="grid.hasMovableColumns && grid.columnInDrag">
         <span id="right" class="igx-grid__scroll-on-drag-right" droppable="true" [igxColumnMovingDrop]="headerContainer"></span>
     </ng-container>
-
-    <!-- Header thumb area -->
-    <div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
 </div>
 
+<!-- Header thumb area -->
+<div class="igx-grid-thead__thumb" [hidden]="!grid.hasVerticalScroll()" [style.width.px]="grid.scrollSize"></div>
 
 <!-- Default row selection header checkbox template -->
 <ng-template #headSelectorBaseTemplate igxHeadSelector let-context>
