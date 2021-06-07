@@ -270,10 +270,11 @@
 
     %tabs-header-scroll {
         position: relative;
-        flex-wrap: nowrap;
+        flex-grow: 1;
+        // flex-wrap: nowrap;
         transition: transform .2s $tabs-animation-function;
-        display: inline-flex;
-        min-width: 100%;
+        // display: inline-flex;
+        // min-width: 100%;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
