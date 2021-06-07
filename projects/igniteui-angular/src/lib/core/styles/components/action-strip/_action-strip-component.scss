@@ -13,7 +13,7 @@
     @include b(igx-action-strip) {
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
-        @include register-component(string-slice($this, 2, -1));
+        @include register-component(string.slice($this, 2, -1));
 
         @extend %igx-action-strip-display !optional;
 
