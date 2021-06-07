@@ -177,6 +177,7 @@ export abstract class IgxBaseExporter {
 
         this.options = options;
         const columns = grid.columnList.toArray();
+
         //const columnList = this.getColumns(columns);
         const columnList = this.getMultiCols(columns);
 
@@ -759,7 +760,6 @@ export abstract class IgxBaseExporter {
                 skip: !exportColumn,
                 formatter: column.formatter,
                 skipFormatter: false,
-
                 type: isMultiColHeader ? ColumnType.MultiColumnHeader : ColumnType.ColumnHeader,
                 columnSpans: colSpan,
                 level: column.level,

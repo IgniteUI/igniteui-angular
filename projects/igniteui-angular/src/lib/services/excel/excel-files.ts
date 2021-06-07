@@ -247,7 +247,7 @@ export class WorksheetFile implements IExcelFile {
         const headersForLevel = worksheetData.owner.columns
             .filter(c => c.type !== ColumnType.MultiColumnHeader && !c.skip)
             .sort((a, b) => a.startIndex-b.startIndex)
-            .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
+            .sort((a, b) => a.pinnedIndex-b.pinnedIndex);
 
         const record = worksheetData.data[i - 1];
 

@@ -2407,3 +2407,10 @@ export class GridExportGroupedDataComponent extends BasicGridComponent {
 export class MultiColumnHeadersExportComponent extends BasicGridComponent {
     public data = SampleTestData.contactInfoDataFull();
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
+})
+export class CollapsibleMultiColumnHeadersExportComponent extends BasicGridComponent {
+    public data = SampleTestData.contactInfoDataFull();
+}

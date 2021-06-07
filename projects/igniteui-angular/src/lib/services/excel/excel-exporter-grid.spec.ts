@@ -16,7 +16,8 @@ import {
     GridIDNameJobTitleHireDataPerformanceComponent,
     GridHireDateComponent,
     GridExportGroupedDataComponent,
-    MultiColumnHeadersExportComponent
+    MultiColumnHeadersExportComponent,
+    CollapsibleMultiColumnHeadersExportComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -911,21 +912,25 @@ describe('Excel Exporter', () => {
     });
 
     describe('', () => {
-        let fix;
-        let grid: IgxGridComponent;
         beforeEach(waitForAsync(() => {
             options = createExportOptions('GridMultiColumnHeadersExcelExport');
-            fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
-            fix.detectChanges();
-
-            grid = fix.componentInstance.grid;
         }));
 
         it('should export grid with multi column headers', async () => {
+            const fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersData);
         });
 
         it('should export grid with multi column headers and moved column', async () => {
+            const fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
+
             grid.columns[0].move(3);
             fix.detectChanges();
 
@@ -933,15 +938,22 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with hidden column', async () => {
+            const fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
             grid.columns[0].hidden = true;
             fix.detectChanges();
 
             expect(grid.visibleColumns.length).toEqual(15, 'Invalid number of visible columns!');
-
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithHiddenColumn);
         });
 
         it('should export grid with hidden column and ignoreColumnVisibility set to true', async () => {
+            const fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
+            fix.detectChanges();
+
+            const grid = fix.componentInstance.grid;
             grid.columns[0].hidden = true;
             options.ignoreColumnsVisibility = true;
             fix.detectChanges();
@@ -950,12 +962,28 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with pinned column group', async () => {
+            const fix = TestBed.createComponent(MultiColumnHeadersExportComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
             grid.columns[1].pinned = true;
             fix.detectChanges();
 
             expect(grid.pinnedColumns.length).toEqual(5, 'Invalid number of pinned columns!');
 
             await exportAndVerify(grid, options, actualData.exportMultiColumnHeadersDataWithPinnedColumn);
+        });
+
+        it('should export grid with collapsed and expanded multi column headers', async () => {
+            const fix = TestBed.createComponent(CollapsibleMultiColumnHeadersExportComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            fix.detectChanges();
+
+            await exportAndVerify(grid, options, actualData.exportCollapsedAndExpandedMultiColumnHeadersData);
         });
     });
 
