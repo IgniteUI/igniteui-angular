@@ -120,13 +120,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  handleCollapsed(event: IExpansionPanelEventArgs)
      * ```
      * ```html
-     *  <igx-expansion-panel (onCollapsed)="handleCollapsed($event)">
+     *  <igx-expansion-panel (contentCollapsed)="handleCollapsed($event)">
      *      ...
      *  </igx-expansion-panel>
      * ```
      */
     @Output()
-    public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
+    public contentCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding
@@ -134,13 +134,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  handleExpanded(event: IExpansionPanelEventArgs)
      * ```
      * ```html
-     *  <igx-expansion-panel (onExpanded)="handleExpanded($event)">
+     *  <igx-expansion-panel (contentExpanded)="handleExpanded($event)">
      *      ...
      *  </igx-expansion-panel>
      * ```
      */
     @Output()
-    public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
+    public contentExpanded = new EventEmitter<IExpansionPanelEventArgs>();
 
     /**
      * @hidden
@@ -195,7 +195,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         this.playCloseAnimation(
             this.body?.element,
             () => {
-                this.onCollapsed.emit({ event: evt, panel: this, owner: this });
+                this.contentCollapsed.emit({ event: evt, panel: this, owner: this });
                 this.collapsed = true;
                 this.cdr.markForCheck();
             }
@@ -221,7 +221,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         this.playOpenAnimation(
             this.body?.element,
             () => {
-                this.onExpanded.emit({ event: evt, panel: this, owner: this });
+                this.contentExpanded.emit({ event: evt, panel: this, owner: this });
             }
         );
     }
