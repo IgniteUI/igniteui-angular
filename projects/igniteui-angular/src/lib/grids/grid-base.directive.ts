@@ -939,6 +939,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    @Output()
+    public localeChange = new EventEmitter<boolean>();
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild(IgxSnackbarComponent)
     public addRowSnackbar: IgxSnackbarComponent;
 
@@ -1403,6 +1409,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
+            this.localeChange.next();
         }
     }
 
