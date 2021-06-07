@@ -1,6 +1,6 @@
 import { CommonModule, DOCUMENT } from '@angular/common';
 import {
-    AfterViewInit,
+    AfterViewChecked,
     Component,
     ContentChild,
     ContentChildren,
@@ -56,7 +56,7 @@ export type IgxInputGroupTheme = (typeof IgxInputGroupTheme)[keyof typeof IgxInp
     templateUrl: 'input-group.component.html',
     providers: [{ provide: IgxInputGroupBase, useExisting: IgxInputGroupComponent }],
 })
-export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewInit, OnDestroy {
+export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInputGroupBase, AfterViewChecked, OnDestroy {
     /**
      * Sets the resource strings.
      * By default it uses EN resources.
@@ -447,7 +447,7 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
     }
 
     /** @hidden @internal */
-    public ngAfterViewInit() {
+    public ngAfterViewChecked() {
         if (!this._theme) {
             if(this.platform.isIE) {
                 Promise.resolve().then(() => {
@@ -459,9 +459,11 @@ export class IgxInputGroupComponent extends DisplayDensityBase implements IgxInp
                     .getPropertyValue('--theme')
                     .trim();
 
-                Promise.resolve().then(() => {
-                    this._theme$.next(cssProp);
-                });
+                if(cssProp !== '') {
+                    Promise.resolve().then(() => {
+                        this._theme$.next(cssProp);
+                    });
+                }
             }
         }
     }
