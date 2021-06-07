@@ -61,6 +61,7 @@
     "classlist.js": "^1.1.20150312",
     "core-js": "^2.6.11",
     "hammerjs": "^2.0.8",
+    "igniteui-angular-i18n": "^12.0.3",
     "igniteui-trial-watermark": "^1.0.3",
     "jszip": "^3.6.0",
     "karma-parallel": "^0.3.1",
