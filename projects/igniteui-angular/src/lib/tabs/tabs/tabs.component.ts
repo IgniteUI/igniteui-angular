@@ -72,6 +72,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;
         requestAnimationFrame(() => {
+            this.updateScrollButtons();
             this.realignSelectedIndicator();
         });
     }
@@ -125,6 +126,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver = new (getResizeObserver())(() => {
                 this.updateScrollButtons();
+                this.realignSelectedIndicator();
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
@@ -161,7 +163,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
-            'igx-tabs__header-scroll': true,
+            // 'igx-tabs__header-scroll': true,
             'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
             'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
             'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
