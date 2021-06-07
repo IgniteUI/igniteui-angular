@@ -12,41 +12,6 @@ import { IgxGroupAreaComponent } from './group-area.component';
     templateUrl: './group-area.component.html'
 })
 export class IgxGridGroupAreaComponent extends IgxGroupAreaComponent {
-    /**
-     * @hidden @internal
-     */
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
-        const newGrouping = [];
-        for (const chip of event.chipsArray) {
-            const expr = this.groupingExpressions.filter((item) => item.fieldName === chip.id)[0];
-
-            if (!this.grid.getColumnByName(expr.fieldName).groupable) {
-                // disallow changing order if there are columns with groupable: false
-                return;
-            }
-            newGrouping.push(expr);
-        }
-
-        // if (this.grid instanceof IgxGridComponent) {
-            // this.grid.groupingExpansionState = [];
-        // }
-
-        this.grid.chipsGroupingExpressions = newGrouping;
-
-        if (event.originalEvent instanceof KeyboardEvent) {
-            // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
-            this.groupingExpressions = this.grid.chipsGroupingExpressions;
-        }
-        this.grid.notifyChanges();
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public chipsMovingEnded() {
-        this.groupingExpressions = this.grid.chipsGroupingExpressions;
-        this.grid.notifyChanges();
-    }
 
     /**
      * @hidden @internal
@@ -66,7 +31,8 @@ export class IgxGridGroupAreaComponent extends IgxGroupAreaComponent {
      */
     public onChipRemoved(event: IBaseChipEventArgs) {
         if (this.grid instanceof IgxGridComponent) {
-            this.grid.clearGrouping(event.owner.id);
+            const fieldName = event.owner.id;
+            this.grid.clearGrouping(fieldName);
         }
     }
 

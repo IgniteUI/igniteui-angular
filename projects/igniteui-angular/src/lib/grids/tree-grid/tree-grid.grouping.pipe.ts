@@ -20,12 +20,14 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                      groupingExpressions: IGroupingExpression[],
                      groupKey: string,
                      primaryKey: string,
-                     childDataKey: string, _: number): any[] {
+                     childDataKey: string,
+                    //   _: number
+                    ): any[] {
         if (groupingExpressions.length === 0) {
             return collection;
         }
 
-        const result: ITreeGridRecord[] = [];
+        const result = [];
         const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey, primaryKey,
             childDataKey, '', result);
@@ -38,18 +40,13 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                             primaryKey: string,
                             childDataKey: string,
                             parentID: any,
-                            data: ITreeGridRecord[]) {
+                            data: any[]) {
         for (const groupRecord of groupRecords) {
-            const parent: ITreeGridRecord = {
-                rowID: parentID + groupRecord.key,
-                data: { ID: groupRecord.key + ` (${groupRecord.records.length})` }
-            };
+            const parent = {};
             const children = groupRecord.records;
 
-            parent.rowID = parentID + groupRecord.key;
             parent[primaryKey] = parentID + groupRecord.key;
             parent[childDataKey] = [];
-
             parent[groupKey] = groupRecord.key + ` (${groupRecord.records.length})`;
             data.push(parent);
 
@@ -58,7 +55,6 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                     parent[primaryKey], parent[childDataKey]);
             } else {
                 parent[childDataKey] = children;
-                parent.children = children;
             }
         }
     }
@@ -79,7 +75,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
 
         for (const record of array) {
-            const key = record.data[groupingExpression.fieldName];
+            const key = record[groupingExpression.fieldName];
             let groupByRecord: GroupByRecord;
 
             if (map.has(key)) {

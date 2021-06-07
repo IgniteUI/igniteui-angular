@@ -1,5 +1,5 @@
-<div [style.flex-basis.px]='grid.outerWidth' class="igx-grid__grouparea"
-    *ngIf="groupingExpressions.length > 0 || grid.hasGroupableColumns" #groupArea1>
+<div [style.flex-basis.px]='grid.outerWidth' class="igx-grid__grouparea" #groupArea1>
+    <!-- *ngIf="groupingExpressions.length > 0 || grid.hasGroupableColumns"> -->
     <igx-chips-area (reorder)="chipsOrderChanged($event)" (moveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of grid.chipsGroupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName"
@@ -20,6 +20,7 @@
             </span>
         </ng-container>
         <div igxGroupAreaDrop
+            (igxDrop)="onDragDrop($event)"
             [style.visibility]="grid.dropAreaVisible ? 'visible' : 'hidden'"
             [class]="grid.groupAreaHostClass"
             [attr.gridId]='this.grid.id'>

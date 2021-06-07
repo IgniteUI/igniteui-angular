@@ -94,8 +94,8 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
             return;
         }
         const grid = column.grid as IgxGridComponent;
-        const isGrouped = grid.groupingExpressions
-            ? grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+        const isGrouped = grid.chipsGroupingExpressions
+            ? grid.chipsGroupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
             : false;
         if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
             drag.icon.innerText = 'group_work';
@@ -114,25 +114,6 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         }
         event.detail.owner.icon.innerText = 'block';
         this.hovered = false;
-    }
-
-    public onDragDrop(event) {
-        const drag: IgxColumnMovingDragDirective = event.detail.owner;
-        if (drag instanceof IgxColumnMovingDragDirective) {
-            const column: IgxColumnComponent = drag.column;
-            if (!this.columnBelongsToGrid(column)) {
-                return;
-            }
-
-            const grid = column.grid as IgxGridComponent;
-            if (grid.groupingExpressions) {
-                const isGrouped = grid.groupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
-                if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
-                    grid.groupBy({ fieldName: column.field, dir: SortingDirection.Asc, ignoreCase: column.sortingIgnoreCase,
-                        strategy: column.sortStrategy, groupingComparer: column.groupingComparer });
-                }
-            }
-        }
     }
 
     private closestParentByAttr(elem, attr) {

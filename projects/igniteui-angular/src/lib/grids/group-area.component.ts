@@ -1,8 +1,12 @@
 import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
+import { cloneArray } from '../core/utils';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
+import { SortingDirection } from '../data-operations/sorting-expression.interface';
+import { IgxColumnComponent } from './columns/column.component';
 import { IgxGridComponent } from './grid/grid.component';
+import { IgxColumnMovingDragDirective } from './moving/moving.drag.directive';
 import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 
 /**
@@ -18,7 +22,7 @@ import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
     templateUrl: './group-area.component.html'
 })
 export class IgxGroupAreaComponent {
-    private _groupingExpressions: IGroupingExpression[];
+    private _groupingExpressions: IGroupingExpression[] = [];
 
     @Input()
     public grid: IgxGridComponent | IgxTreeGridComponent;
@@ -47,27 +51,95 @@ export class IgxGroupAreaComponent {
     /**
      * @hidden @internal
      */
-    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) { }
+    public onDragDrop(event) {
+        const drag: IgxColumnMovingDragDirective = event.detail.owner;
+        if (drag instanceof IgxColumnMovingDragDirective) {
+            const column: IgxColumnComponent = drag.column;
+            if (this.grid.columns.indexOf(column) < 0) {
+                return;
+            }
+
+            if (this.groupingExpressions) {
+                const isGrouped = this.grid.chipsGroupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+                if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
+                    const groupingExpression = {
+                        fieldName: column.field,
+                        dir: SortingDirection.Asc,
+                        ignoreCase: column.sortingIgnoreCase,
+                        strategy: column.sortStrategy,
+                        groupingComparer: column.groupingComparer
+                    };
+
+                    // TODO: refactor (?)
+                    if (this.grid instanceof IgxGridComponent) {
+                        this.grid.groupBy(groupingExpression);
+                    } else {
+                        this.grid.chipsGroupingExpressions.push(groupingExpression);
+                        this.groupingExpressions = [...this.grid.chipsGroupingExpressions];
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * @hidden @internal
      */
-    public chipsMovingEnded() { }
+    public chipsOrderChanged(event: IChipsAreaReorderEventArgs) {
+        const newGrouping = [];
+        for (const chip of event.chipsArray) {
+            const expr = this.groupingExpressions.filter((item) => item.fieldName === chip.id)[0];
+
+            if (!this.grid.getColumnByName(expr.fieldName).groupable) {
+                // disallow changing order if there are columns with groupable: false
+                return;
+            }
+            newGrouping.push(expr);
+        }
+
+        // if (this.grid instanceof IgxGridComponent) {
+            // this.grid.groupingExpansionState = [];
+        // }
+
+        this.grid.chipsGroupingExpressions = newGrouping;
+
+        if (event.originalEvent instanceof KeyboardEvent) {
+            // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
+            this.groupingExpressions = this.grid.chipsGroupingExpressions;
+        }
+        this.grid.notifyChanges();
+    }
 
     /**
      * @hidden @internal
      */
-    public onChipKeyDown(event: IChipKeyDownEventArgs) { }
+    public chipsMovingEnded() {
+        this.groupingExpressions = this.grid.chipsGroupingExpressions;
+        this.grid.notifyChanges();
+    }
 
     /**
      * @hidden @internal
      */
-    public onChipRemoved(event: IBaseChipEventArgs) { }
+    public onChipKeyDown(event: IChipKeyDownEventArgs) {
+     }
 
     /**
      * @hidden @internal
      */
-    public onChipClicked(event: IChipClickEventArgs) { }
+    public onChipRemoved(event: IBaseChipEventArgs) {
+        const fieldName = event.owner.id;
+        this.grid.chipsGroupingExpressions = this.grid.chipsGroupingExpressions.filter(item => item.fieldName !== fieldName);
+        this.groupingExpressions = [...this.grid.chipsGroupingExpressions];
+        this.grid.notifyChanges();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public onChipClicked(event: IChipClickEventArgs) {
+        // TODO: Change sort direction
+    }
 
     /**
      * @hidden @internal
