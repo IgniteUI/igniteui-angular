@@ -141,6 +141,7 @@ import { GridFinJSComponent } from './grid-finjs/grid-finjs.component';
 import { MainComponent } from './grid-finjs/main.component';
 import { ControllerComponent } from './grid-finjs/controllers.component';
 import { CommonModule } from '@angular/common';
+import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 
 const components = [
     ActionStripSampleComponent,
@@ -265,7 +266,8 @@ const components = [
     GridRemotePagingSampleComponent,
     GridVirtualizationScrollSampleComponent,
     GridNestedPropsSampleComponent,
-    IgxColumnGroupingDirective
+    IgxColumnGroupingDirective,
+    GridLocalizationSampleComponent
 ];
 
 @NgModule({

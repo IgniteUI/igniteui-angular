@@ -284,6 +284,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Editing'
         },
         {
+            link: '/gridLocalization',
+            icon: 'view_column',
+            name: 'Grid Localization'
+        },
+        {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'

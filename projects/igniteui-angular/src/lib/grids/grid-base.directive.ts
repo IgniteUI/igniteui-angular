@@ -455,6 +455,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this._pipeTrigger++;
             this.notifyChanges();
+            this.localeChange.next();
         }
     }
 
@@ -1256,6 +1257,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     @Output()
     public cellEditDone = new EventEmitter<IGridEditDoneEventArgs>();
+
+    /**
+     * @hidden @internal
+     */
+    @Output()
+    public localeChange = new EventEmitter<boolean>();
 
     /**
      * Emitted when a row enters edit mode.
