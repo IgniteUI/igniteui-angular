@@ -87,12 +87,12 @@ export class IgxGridFilteringRowComponent implements AfterViewInit {
 
     @HostBinding('class.igx-grid__filtering-row--compact')
     public get compactCSSClass() {
-        return this.displayDensity === DisplayDensity.compact;
+        return this.column.grid.displayDensity === DisplayDensity.compact;
     }
 
     @HostBinding('class.igx-grid__filtering-row--cosy')
     public get cosyCSSClass() {
-        return this.displayDensity === DisplayDensity.cosy;
+        return this.column.grid.displayDensity === DisplayDensity.cosy;
     }
 
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
