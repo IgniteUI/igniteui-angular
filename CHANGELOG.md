@@ -36,6 +36,15 @@ All notable changes for each version of this project will be documented in this 
         </igx-expansion-panel>
     ```
 
+- **Feature** - `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
+    ```typescript
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Index') {
+                col.columnIndex = 0;
+            }
+        });
+    ```
+
 ## 12.0.3
 
 ### General
