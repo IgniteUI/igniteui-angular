@@ -2,7 +2,9 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode,
     FormattedValuesFilteringStrategy,
-    DisplayDensity} from 'igniteui-angular';
+    DisplayDensity,
+    IgxExcelExporterService,
+    IgxExcelExporterOptions } from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -26,6 +28,7 @@ export class GridFilteringComponent implements OnInit {
     public selectionMode;
     public filterStrategy = new FormattedValuesFilteringStrategy();
 
+    constructor(private excelExporterService: IgxExcelExporterService) {}
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
@@ -572,5 +575,56 @@ export class GridFilteringComponent implements OnInit {
 
     public formatEvenOdd(value: number) {
         return value ? value % 2 ? 'even' : 'odd' : value;
+    }
+
+    public exportGrid1() {
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Employees') {
+                col.cancel = true;
+            }
+            if (col.field === 'DateCreated' || col.field === 'Index') {
+                col.columnIndex = 0;
+            } else if (col.field === 'Region' || col.field === 'PostalCode') {
+                col.columnIndex = 1;
+            } else if (col.field === 'ContactTitle') {
+                col.columnIndex = 28;
+            }
+        });
+        const options = new IgxExcelExporterOptions('Report');
+        options.ignoreColumnsVisibility = true;
+        // let testVar = new Test(0);
+        // testVar.name = 'Test';
+        const testVar = {
+            name: 'Test',
+            index: 0
+        };
+        console.log(testVar);
+
+        const newTestVar: Test = testVar;
+        newTestVar.index = 1;
+        console.log(newTestVar);
+
+        this.excelExporterService.export(this.grid1, options);
+    }
+
+}
+
+interface ITest {
+    name: string;
+    index: number;
+    // setIndex(value: number): void;
+}
+
+class Test implements ITest {
+    public name: string;
+    private _index?: number;
+    public set index(value: number) {
+        // if (!isNaN(value)) {
+            console.log('set Index ' + value);
+            this._index = value;
+        // }
+    }
+    public get index() {
+        return this._index;
     }
 }
