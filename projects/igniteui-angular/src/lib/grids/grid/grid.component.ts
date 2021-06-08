@@ -913,6 +913,20 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                 }
             }
         });
+
+        this.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe((sortingExpressions: ISortingExpression[]) => {
+            if (!this.groupingExpressions || !this.groupingExpressions.length) {
+                return;
+            }
+
+            sortingExpressions.forEach((sortExpr: ISortingExpression) => {
+                const fieldName = sortExpr.fieldName;
+                const groupingExpr = this.groupingExpressions.find(ex => ex.fieldName === fieldName);
+                if (groupingExpr) {
+                    groupingExpr.dir = sortExpr.dir;
+                }
+            });
+        });
     }
 
     /**
