@@ -100,10 +100,11 @@ describe('Update 8.2.0', () => {
 
         const tree = await schematicRunner.runSchematicAsync('migration-10', {}, appTree)
             .toPromise();
+            // V.S. 18th May 2021: No longer leave duplicate imports in post-migration file
         expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
             .toEqual(
             `import { IgxDragDirective, IgxDropDirective, IDropBaseEventArgs,
-                IDropBaseEventArgs, IDropDroppedEventArgs } from 'igniteui-angular';
+                IDropDroppedEventArgs } from 'igniteui-angular';
 
             export class DragDropSampleComponent {
                 public onEnterHandler(event: IDropBaseEventArgs) {}
