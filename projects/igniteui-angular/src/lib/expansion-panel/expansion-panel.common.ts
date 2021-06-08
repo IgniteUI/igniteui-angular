@@ -10,7 +10,9 @@ export interface IgxExpansionPanelBase {
     collapsed: boolean;
     animationSettings: { openAnimation: AnimationReferenceMetadata; closeAnimation: AnimationReferenceMetadata };
     contentCollapsed: EventEmitter<any>;
+    contentCollapsing: EventEmitter<any>;
     contentExpanded: EventEmitter<any>;
+    contentExpanding: EventEmitter<any>;
     collapse(evt?: Event);
     expand(evt?: Event);
     toggle(evt?: Event);
