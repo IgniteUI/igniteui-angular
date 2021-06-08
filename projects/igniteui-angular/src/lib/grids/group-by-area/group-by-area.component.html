@@ -7,7 +7,7 @@
             [removable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
             [draggable]="(expression.fieldName | igxGroupByMeta:grid).groupable"
             [disabled]="!(expression.fieldName | igxGroupByMeta:grid).groupable"
-            (keyDown)="handleKeyDown($event.owner.id, $event.originalEvent.key)"
+            (keyDown)="handleKeyDown($event.owner.id, $event.originalEvent)"
             (remove)="grid.clearGrouping($event.owner.id)"
             (chipClick)="handleClick(expression.fieldName)"
         >

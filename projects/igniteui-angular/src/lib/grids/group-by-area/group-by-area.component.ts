@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { IChipsAreaReorderEventArgs, IgxChipComponent } from '../../chips/public_api';
 import { DisplayDensity } from '../../core/displayDensity';
+import { PlatformUtil } from '../../core/utils';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { FlatGridType } from '../common/grid.interface';
@@ -91,7 +92,7 @@ export class IgxGridGroupByAreaComponent {
         return this.ref.nativeElement;
     }
 
-    constructor(private ref: ElementRef<HTMLElement>) { }
+    constructor(private ref: ElementRef<HTMLElement>, private platform: PlatformUtil) { }
 
     public handleReorder(event: IChipsAreaReorderEventArgs) {
         const newExpressions = [];
@@ -121,12 +122,10 @@ export class IgxGridGroupByAreaComponent {
         this.grid.groupingExpressions = this.expressions;
     }
 
-    public handleKeyDown(id: string, key: string) {
-        // Use the refactored KEYMAP enum later
-        if (![' ', 'Spacebar', 'Enter'].includes(key)) {
-            return;
+    public handleKeyDown(id: string, event: KeyboardEvent) {
+        if (this.platform.isActivationKey(event)) {
+            this.updateSorting(id);
         }
-        this.updateSorting(id);
     }
 
     public handleClick(id: string) {
@@ -138,11 +137,7 @@ export class IgxGridGroupByAreaComponent {
 
     protected updateSorting(id: string) {
         const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
-        const groupExpr = this.grid.groupingExpressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
-        if (groupExpr) {
-            groupExpr.dir = expr.dir;
-        }
         this.grid.sort(expr);
     }
 }
