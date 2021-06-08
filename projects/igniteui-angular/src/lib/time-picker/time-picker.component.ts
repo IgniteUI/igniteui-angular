@@ -737,11 +737,12 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this.subscribeToDateEditorEvents();
         this.subscribeToToggleDirectiveEvents();
 
+        this._defaultDropDownOverlaySettings.excludeFromOutsideClick = [this._inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (this.collapsed) {
-                    this._onTouchedCallback();
                     this.updateValidityOnBlur();
                 }
             });
@@ -1076,12 +1077,14 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     protected onStatusChanged() {
         if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
             (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            const input = this.inputDirective;
             if (this._inputGroup.isFocused) {
-                input.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.VALID : IgxInputState.INVALID;
             } else {
-                input.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
+                this.inputDirective.valid = this._ngControl.valid ? IgxInputState.INITIAL : IgxInputState.INVALID;
             }
+        } else {
+            // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+            this.inputDirective.valid = IgxInputState.INITIAL;
         }
 
         if (this._inputGroup && this._inputGroup.isRequired !== this.required) {

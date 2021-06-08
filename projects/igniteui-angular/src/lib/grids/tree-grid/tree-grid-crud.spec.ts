@@ -830,6 +830,21 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 editTemplate = cellDomNumber.query(By.css('input'));
                 expect(editTemplate).toBeNull();
             });
+
+            it('should allow changing the row edit mode runtime.', () => {
+                const cell = treeGrid.getCellByColumn(0, 'Name');
+                cell.column.editable = true;
+                treeGrid.rowEditable = true;
+                fix.detectChanges();
+                cell.setEditMode(true);
+                fix.detectChanges();
+                expect(cell.row.inEditMode).toBeTrue();
+                treeGrid.rowEditable = false;
+                fix.detectChanges();
+                cell.setEditMode(true);
+                fix.detectChanges();
+                expect(cell.row.inEditMode).toBeFalse();
+            });
         });
 
     });
