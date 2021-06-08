@@ -292,7 +292,7 @@ export abstract class IgxBaseExporter {
 
                     if (newColumnExportArgs.userSetIndex) {
                         column.exportIndex = newColumnExportArgs.columnIndex;
-                        shouldReorderColumns = !shouldReorderColumns ? true : false;
+                        shouldReorderColumns = true;
                     }
 
                     if (column.skip && index <= indexOfLastPinnedColumn) {
@@ -311,7 +311,7 @@ export abstract class IgxBaseExporter {
 
             indexOfLastPinnedColumn -= skippedPinnedColumnsCount;
 
-            // Reorder columns only if a column has been assigned a specific exportedIndex during columnExporting event
+            // Reorder columns only if a column has been assigned a specific columnIndex during columnExporting event
             if (shouldReorderColumns) {
                 mapRecord.columns = this.reorderColumns(mapRecord.columns);
             }
@@ -389,11 +389,11 @@ export abstract class IgxBaseExporter {
             return specificIndicesColumns.concat(filteredColumns);
         } else {
             indices.forEach((i, index) => {
-                if (i >= length) {
+                if (i < 0 || i >= length) {
                     filteredColumns.push(specificIndicesColumns[index]);
                 } else {
                     let k = i;
-                    while (reorderedColumns[k] !== undefined && k < length) {
+                    while (k < length && reorderedColumns[k] !== undefined) {
                         ++k;
                     }
                     reorderedColumns[k] = specificIndicesColumns[index];
