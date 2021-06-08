@@ -1,14 +1,31 @@
-<igx-accordion>
+<igx-accordion #accordion [animationSettings]="animationSettingsCustom">
     <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="true">
         <igx-expansion-panel-header [disabled]="false">
             <igx-expansion-panel-title class="sample-title">HTML5</igx-expansion-panel-title>
         </igx-expansion-panel-header>
         <igx-expansion-panel-body>
-            <div class="example-content">
-                HTML5 is a software solution stack that defines the properties and
-                behaviors of web page content by implementing a markup-based pattern to
-                it.
-            </div>
+            <igx-accordion>
+                <igx-expansion-panel>
+                    <igx-expansion-panel-header [disabled]="false">
+                        <igx-expansion-panel-title>First</igx-expansion-panel-title>
+                    </igx-expansion-panel-header>
+                    <igx-expansion-panel-body>
+                        <div>
+                            Content1
+                        </div>
+                    </igx-expansion-panel-body>
+                </igx-expansion-panel>
+                <igx-expansion-panel>
+                    <igx-expansion-panel-header [disabled]="false">
+                        <igx-expansion-panel-title>Second</igx-expansion-panel-title>
+                    </igx-expansion-panel-header>
+                    <igx-expansion-panel-body>
+                        <div>
+                            Content2
+                        </div>
+                    </igx-expansion-panel-body>
+                </igx-expansion-panel>
+            </igx-accordion>
         </igx-expansion-panel-body>
     </igx-expansion-panel>
     <igx-expansion-panel class="my-expansion-panel" id="css" [collapsed]="true">

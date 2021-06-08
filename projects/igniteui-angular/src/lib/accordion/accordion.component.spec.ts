@@ -38,12 +38,12 @@ describe('Rendering Tests', () => {
     });
 
     describe('General', () => {
-        fit('Should render accordion with expansion panels', () => {
+        it('Should render accordion with expansion panels', () => {
             const accordionElement: HTMLElement = fix.debugElement.queryAll(By.css(`.${ACCORDION_CLASS}`))[0].nativeElement;
             const childPanels = accordionElement.children;
             expect(childPanels.length).toBe(3);
             for (let i = 0; i < childPanels.length; i++) {
-                expect(childPanels.item(i).tagName === PANEL_TAG);
+                expect(childPanels.item(i).tagName === PANEL_TAG).toBeTruthy();
             }
         });
 
@@ -74,8 +74,8 @@ describe('Rendering Tests', () => {
         });
 
         it('Should be able to render nested accordions', () => {
-            const panelBody = accordion.panels[0].nativeElement.querySelector('.' + CSS_CLASS_EXPANSION_PANEL).children[1];
-            expect(panelBody.children[0].tagName == ACCORDION_TAG);
+            const panelBody = accordion.panels[0].body?.element.nativeElement;
+            expect(panelBody.children[0].tagName === ACCORDION_TAG).toBeTruthy();
         });
     });
 });
