@@ -2,9 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { IgxGridComponent, FilteringExpressionsTree, IgxStringFilteringOperand,
     FilteringLogic, IgxCheckboxComponent, IChangeCheckboxEventArgs, FilterMode, GridSelectionMode,
     FormattedValuesFilteringStrategy,
-    DisplayDensity,
-    IgxExcelExporterService,
-    IgxExcelExporterOptions } from 'igniteui-angular';
+    DisplayDensity} from 'igniteui-angular';
 
 @Component({
     providers: [],
@@ -28,7 +26,6 @@ export class GridFilteringComponent implements OnInit {
     public selectionMode;
     public filterStrategy = new FormattedValuesFilteringStrategy();
 
-    constructor(private excelExporterService: IgxExcelExporterService) {}
     public ngOnInit(): void {
         this.displayDensities = [
             { label: 'comfortable', selected: this.density === 'comfortable', togglable: true },
