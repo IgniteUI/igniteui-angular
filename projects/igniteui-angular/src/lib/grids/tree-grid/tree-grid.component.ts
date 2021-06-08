@@ -192,12 +192,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public flatData: any[];
+    public flatData: any[] | null;
 
     /**
      * @hidden
      */
-    public processedExpandedFlatData: any[];
+    public processedExpandedFlatData: any[] | null;
 
     /**
      * Returns an array of the root level `ITreeGridRecord`s.
@@ -263,11 +263,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get data(): any[] {
+    public get data(): any[] | null {
         return this._data;
     }
 
-    public set data(value: any[]) {
+    public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -520,7 +520,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public refreshGridState(args?) {
         super.refreshGridState();
-        if (this.primaryKey && this.foreignKey) {
+        if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
@@ -661,8 +661,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param index
      */
     public getRowByKey(key: any): RowType {
-        const rec = this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
-            this.filteredSortedData.find(r => r === key);
+        const rec = this.filteredSortedData ? this.primaryKey ? this.filteredSortedData.find(r => r[this.primaryKey] === key) :
+            this.filteredSortedData.find(r => r === key) : undefined;
         const index = this.dataView.findIndex(r => r.data && r.data === rec);
         if (index < 0 || index >= this.filteredSortedData.length) {
             return undefined;

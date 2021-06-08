@@ -23,7 +23,6 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
@@ -269,6 +268,33 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(headerHight.offsetHeight).toBe(grid.defaultRowHeight);
             expect(rowHeight.offsetHeight).toBe(33);
             expect(summaryItemHeigh.offsetHeight).toBe(grid.defaultSummaryHeight - 1);
+        }));
+
+        it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+            const fixture = TestBed.createComponent(IgxGridTestComponent);
+            const grid = fixture.componentInstance.grid;
+
+            fixture.componentInstance.generateData(30);
+            fixture.detectChanges();
+            tick(100);
+            // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+            const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+            expect(container.getAttribute('role')).toBe(null);
+
+            //Filter grid so no results are available and grid is empty
+            grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+            grid.markForCheck();
+            fixture.detectChanges();
+            expect(container.getAttribute('role')).toMatch('row');
+
+            // clear grid data and check if attribute is now 'row'
+            grid.clearFilter();
+            fixture.componentInstance.clearData();
+            fixture.detectChanges();
+            tick(100);
+
+            expect(container.getAttribute('role')).toMatch('row');
+
         }));
 
         it('should render empty message', fakeAsync(() => {
@@ -2797,7 +2823,7 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
-    nullData() {
+    public nullData() {
         this._records.next(null);
     }
 
@@ -2838,7 +2864,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         this.data = this.localService.records;
     }
 
-    nullData() {
+    public nullData() {
         this.localService.nullData();
     }
 
@@ -2849,7 +2875,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
@@ -2883,7 +2909,7 @@ export class IgxGridRemoteOnDemandComponent {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
