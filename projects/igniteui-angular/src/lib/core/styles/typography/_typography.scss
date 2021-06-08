@@ -1,3 +1,5 @@
+@use 'sass:map';
+@use 'sass:string';
 @use '../base' as *;
 @use 'base' as *;
 
@@ -45,9 +47,10 @@
 
 /// @access private
 @mixin _igx-typography-styles($font-family, $type-scale) {
-    $_variant: map-get(map-get($type-scale, '_meta'), 'variant');
+    $_variant: map.get(map.get($type-scale, '_meta'), 'variant');
 
-    font-family: unquote($font-family);
+    // TODO: Replace string.unquote with meta.inspect
+    font-family: string.unquote($font-family);
     font-size: $browser-context;
     line-height: $browser-line-height;
     font-size-adjust: 100%;
@@ -93,7 +96,7 @@
     }
 
     @if ($_variant == 'bootstrap') {
-        $calendar-labels: map-get($type-scale, 'calendar-labels');
+        $calendar-labels: map.get($type-scale, 'calendar-labels');
 
         @include igx-calendar-typography($type-scale, $categories: (
             header-year: 'subtitle-1',
@@ -183,7 +186,7 @@
                 @if $category != _meta {
                     // Get the native element that uses typographic styles directly
                     // as mapped in the $category-element-map
-                    $e: map-get($category-element-map, $category);
+                    $e: map.get($category-element-map, $category);
 
                     // Create a placeholder selector with styles for each
                     // typographic style to be able to easily extend it
