@@ -939,6 +939,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    @Output()
+    public localeChange = new EventEmitter<boolean>();
+
+    /**
+     * @hidden @internal
+     */
     @ViewChild(IgxSnackbarComponent)
     public addRowSnackbar: IgxSnackbarComponent;
 
@@ -1403,6 +1409,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache();
             this.pipeTrigger++;
             this.notifyChanges();
+            this.localeChange.next();
         }
     }
 
@@ -3163,10 +3170,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public hideOverlays() {
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID)?.visible) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay?.visible && !overlay.closeAnimationPlayer?.hasStarted()) {
                 this.overlayService.hide(overlayID);
+
+                this.nativeElement.focus();
             }
-            this.nativeElement.focus();
         });
     }
 
@@ -3646,10 +3656,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
 
         this.overlayIDs.forEach(overlayID => {
-            if (this.overlayService.getOverlayById(overlayID) && !this.overlayService.getOverlayById(overlayID).detached) {
+            const overlay = this.overlayService.getOverlayById(overlayID);
+
+            if (overlay && !overlay.detached) {
                 this.overlayService.detach(overlayID);
             }
-            this.nativeElement.focus();
         });
 
         this.zone.runOutsideAngular(() => {

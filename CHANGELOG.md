@@ -2,8 +2,7 @@
 
 All notable changes for each version of this project will be documented in this file.
 
-## 12.0.1
-
+## 12.1.0
 ### General
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
@@ -13,18 +12,35 @@ All notable changes for each version of this project will be documented in this 
     - `onAppended` -> `contentAppended`
     - `onAnimation` -> `animationStarting`
 
-- **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
-    - `onCollapsed` -> `contentCollapsed`
-    - `onExpanded` -> `contentExpanded`
-
-- **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
-    - `onInteraction` -> `interaction`
-
 - **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
     - `onClosing` -> `closing`
     - `onClosed` -> `closed`
+
+- `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
+        - `onCollapsed` -> `contentCollapsed`
+        - `onExpanded` -> `contentExpanded`
+
+    - **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
+        - `onInteraction` -> `interaction`
+
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
+    - **Feature** - Added `contentExpanding` and `contentCollapsing` events, fired when the panel's content starts expanding or collapsing, resp.
+    Both events can be canceled, preventing the toggle animation from firing and the `collapsed` property from changing:
+    ```html
+        <igx-expansion-panel (contentExpanding)="handleExpandStart($event)" (contentCollapsing)="handleCollapseStart($event)">
+            ...
+        </igx-expansion-panel>
+    ```
+
+## 12.0.3
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 12.0.0
 
@@ -102,7 +118,7 @@ All notable changes for each version of this project will be documented in this 
                 </igx-picker-clear>
             </igx-date-picker>
         ```
-    - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `mask` and `format` are replaced by `inputFormat`.
     - **Breaking Change** - `placeholder` defaults to the `inputFormat`
     - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
@@ -291,6 +307,11 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
+## 11.1.13
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 11.1.1
 
@@ -478,6 +499,10 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.25
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 10.2.15
 
