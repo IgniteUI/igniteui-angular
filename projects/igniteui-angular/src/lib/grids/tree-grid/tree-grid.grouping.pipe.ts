@@ -1,5 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DataUtil } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { ISortingExpression } from './../../data-operations/sorting-expression.interface';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 /** @hidden */
@@ -12,7 +14,7 @@ class GroupByRecord {
 /** @hidden */
 @Pipe({
     name: 'treeGridGrouping',
-    pure: true
+    pure: false
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
 
@@ -26,6 +28,17 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         if (groupingExpressions.length === 0) {
             return collection;
         }
+
+        const sortingExpressions: ISortingExpression[] = [];
+        groupingExpressions.forEach(expr => {
+            sortingExpressions.push({
+                fieldName: expr.fieldName,
+                dir: expr.dir,
+                ignoreCase: expr.ignoreCase,
+                strategy: expr.strategy
+            });
+        });
+        DataUtil.sort(collection, sortingExpressions);
 
         const result = [];
         const groupedRecords = this.groupByMultiple(collection, groupingExpressions);

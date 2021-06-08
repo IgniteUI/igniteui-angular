@@ -3058,7 +3058,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Inject(DOCUMENT) public document,
         public cdr: ChangeDetectorRef,
         protected resolver: ComponentFactoryResolver,
-        protected differs: IterableDiffers,
+        public differs: IterableDiffers,
         protected viewRef: ViewContainerRef,
         public navigation: IgxGridNavigationService,
         public filteringService: IgxFilteringService,

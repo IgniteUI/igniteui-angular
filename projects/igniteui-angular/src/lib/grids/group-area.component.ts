@@ -1,7 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild, AfterContentInit } from '@angular/core';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
-import { cloneArray } from '../core/utils';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -21,8 +20,10 @@ import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
     selector: 'igx-group-area',
     templateUrl: './group-area.component.html'
 })
-export class IgxGroupAreaComponent {
+export class IgxGroupAreaComponent implements AfterContentInit {
     private _groupingExpressions: IGroupingExpression[] = [];
+    private _hideGroupedColumns = false;
+    private _groupingDiffer;
 
     @Input()
     public grid: IgxGridComponent | IgxTreeGridComponent;
@@ -33,20 +34,43 @@ export class IgxGroupAreaComponent {
     }
     public set groupingExpressions(value: IGroupingExpression[]) {
         this._groupingExpressions = value;
+
+        if (this.hideGroupedColumns && this.grid.columnList && this.groupingExpressions) {
+            this.applyGroupColsVisibility();
+        }
+
+        this.grid.sortingExpressions = value;
         this.groupingExpressionsChange.emit(value);
     }
-
-    /**
-     * @hidden
-     */
     @Output()
     public groupingExpressionsChange = new EventEmitter<IGroupingExpression[]>();
+
+    @Input()
+    public get hideGroupedColumns() {
+        return this._hideGroupedColumns;
+    }
+    public set hideGroupedColumns(value: boolean) {
+        if (value) {
+            this._groupingDiffer = this.grid.differs.find(this.groupingExpressions).create();
+        } else {
+            this._groupingDiffer = null;
+        }
+        if (this.grid.columnList && this.groupingExpressions) {
+            this.setGroupColsVisibility(value);
+        }
+
+        this._hideGroupedColumns = value;
+    }
 
     /**
      * @hidden @internal
      */
     @ViewChild('groupArea')
     public groupArea: ElementRef;
+
+    ngAfterContentInit() {
+        this.grid.chipsGroupingExpressions = this.groupingExpressions;
+    }
 
     /**
      * @hidden @internal
@@ -138,7 +162,12 @@ export class IgxGroupAreaComponent {
      * @hidden @internal
      */
     public onChipClicked(event: IChipClickEventArgs) {
-        // TODO: Change sort direction
+        const sortingExpr = this.grid.sortingExpressions;
+        const columnExpr = sortingExpr.find((expr) => expr.fieldName === event.owner.id);
+        const groupExpr = this.groupingExpressions.find((expr) => expr.fieldName === event.owner.id);
+        columnExpr.dir = 3 - columnExpr.dir;
+        groupExpr.dir = columnExpr.dir;
+        this.groupingExpressions = [...this.grid.chipsGroupingExpressions];
     }
 
     /**
@@ -173,5 +202,31 @@ export class IgxGroupAreaComponent {
      */
     public getGroupAreaHeight(): number {
         return this.groupArea ? this.grid.getComputedHeight(this.groupArea.nativeElement) : 0;
+    }
+
+    private setGroupColsVisibility(value) {
+        if (this.grid.columnList.length > 0 && !this.grid.hasColumnLayouts) {
+            this.groupingExpressions.forEach((expr) => {
+                const col = this.grid.getColumnByName(expr.fieldName);
+                col.hidden = value;
+            });
+        }
+    }
+
+    private applyGroupColsVisibility() {
+        if (this._groupingDiffer && this.grid.columnList && !this.grid.hasColumnLayouts) {
+            const changes = this._groupingDiffer.diff(this.groupingExpressions);
+            if (changes && this.grid.columnList.length > 0) {
+                changes.forEachAddedItem((rec) => {
+                    const col = this.grid.getColumnByName(rec.item.fieldName);
+                    col.hidden = true;
+                });
+                changes.forEachRemovedItem((rec) => {
+                    const col = this.grid.getColumnByName(rec.item.fieldName);
+                    col.hidden = false;
+                });
+            }
+        }
+        this.grid.ngDoCheck();
     }
 }

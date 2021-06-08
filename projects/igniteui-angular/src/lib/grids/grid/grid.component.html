@@ -3,7 +3,8 @@
 <ng-container *ngIf="showGroupArea">
     <igx-grid-group-area #groupArea
         [grid]="this"
-        [groupingExpressions]="this.groupingExpressions"></igx-grid-group-area>
+        [groupingExpressions]="this.groupingExpressions"
+        [hideGroupedColumns]="this.hideGroupedColumns"></igx-grid-group-area>
 </ng-container>
 
 <div class="igx-grid__thead" role="rowgroup">

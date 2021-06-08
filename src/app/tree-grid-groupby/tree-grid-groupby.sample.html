@@ -1,0 +1,38 @@
+<div class="sample-column">
+    <div class="density-chooser">
+        <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+    </div>
+
+    <igx-tree-grid #grid1
+        [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey"
+        selectionType='multi'
+        [primaryKey]="primaryKey"
+        [childDataKey]="childDataKey"
+        [expansionDepth]="1"
+        [rowSelection]="selectionMode"
+        [paging]="false"
+        [displayDensity]="density"
+        [width]="'900px'"
+        [height]="'700px'"
+        [allowFiltering]="true"
+        [filterMode]="'excelStyleFilter'">
+        <!-- <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
+            <igx-grid-toolbar-actions>
+                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
+            </igx-grid-toolbar-actions>
+        </igx-grid-toolbar> -->
+
+        <igx-group-area [grid]='grid1'
+            [(groupingExpressions)]='groupingExpressions'
+            [hideGroupedColumns]='false'>
+        </igx-group-area>
+
+        <igx-column [field]='groupKey' [resizable]='true' [width]="'200px'" [hidden]='groupingExpressions.length === 0'></igx-column>
+
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
+            [movable]="c.movable" [groupable]="true" [resizable]="c.resizable" [width]="c.width"
+            [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
+            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+        </igx-column>
+    </igx-tree-grid>
+</div>

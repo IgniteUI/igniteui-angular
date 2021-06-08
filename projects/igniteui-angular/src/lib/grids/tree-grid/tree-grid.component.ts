@@ -41,7 +41,6 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
-import { IGroupingExpression } from './../../data-operations/grouping-expression.interface';
 
 let NEXT_ID = 0;
 
@@ -778,11 +777,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public get groupAreaHostClass(): string {
         return this.getComponentDensityClass('igx-drop-area');
     }
-
-    // /**
-    //  * @hidden @internal
-    //  */
-    // public groupingExpressions: IGroupingExpression[] = [];
 
 // ----------------------------------------------------------------------- GROUPING END
 

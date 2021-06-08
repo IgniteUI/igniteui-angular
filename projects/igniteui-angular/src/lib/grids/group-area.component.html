@@ -1,5 +1,5 @@
-<div [style.flex-basis.px]='grid.outerWidth' class="igx-grid__grouparea" #groupArea1>
-    <!-- *ngIf="groupingExpressions.length > 0 || grid.hasGroupableColumns"> -->
+<div class="igx-grid__grouparea" #groupArea1
+    *ngIf="groupingExpressions.length > 0 || grid.hasGroupableColumns">
     <igx-chips-area (reorder)="chipsOrderChanged($event)" (moveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of grid.chipsGroupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName"
