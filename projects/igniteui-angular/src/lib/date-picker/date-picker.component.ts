@@ -736,6 +736,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         this.clearComponents.changes.pipe(takeUntil(this._destroy$))
             .subscribe(() => this.subToIconsClicked(this.clearComponents, () => this.clear()));
 
+        this._dropDownOverlaySettings.excludeFromOutsideClick = [this.inputGroup.element.nativeElement];
+
         fromEvent(this.inputDirective.nativeElement, 'blur')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
@@ -774,13 +776,12 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
         return this.inputDirective.nativeElement;
     }
 
-    /** @hidden @internal */
-    public subscribeToClick() {
+    private subscribeToClick() {
         fromEvent(this.getEditElement(), 'click')
             .pipe(takeUntil(this._destroy$))
             .subscribe(() => {
                 if (!this.isDropdown) {
-                    this.open();
+                    this.toggle();
                 }
             });
     }
@@ -790,7 +791,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private updateValidity() {
-        if (this._ngControl) {
+        // B.P. 18 May 2021: IgxDatePicker does not reset its state upon resetForm #9526
+        if (this._ngControl && !this.disabled && this.isTouchedOrDirty) {
             if (this.inputGroup.isFocused) {
                 this.inputDirective.valid = this._ngControl.valid
                     ? IgxInputState.VALID
@@ -800,14 +802,18 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
                     ? IgxInputState.INITIAL
                     : IgxInputState.INVALID;
             }
+        } else {
+            this.inputDirective.valid = IgxInputState.INITIAL;
         }
     }
 
+    private get isTouchedOrDirty(): boolean {
+        return (this._ngControl.control.touched || this._ngControl.control.dirty)
+            && (!!this._ngControl.control.validator || !!this._ngControl.control.asyncValidator);
+    }
+
     private onStatusChanged = () => {
-        if ((this._ngControl.control.touched || this._ngControl.control.dirty) &&
-            (this._ngControl.control.validator || this._ngControl.control.asyncValidator)) {
-            this.updateValidity();
-        }
+        this.updateValidity();
         this.inputGroup.isRequired = this.required;
     };
 
@@ -876,6 +882,9 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             // do not focus the input if clicking outside in dropdown mode
             if (this.getEditElement() && !(args.event && this.isDropdown)) {
                 this.inputDirective.focus();
+            } else {
+                this._onTouchedCallback();
+                this.updateValidity();
             }
         });
 
