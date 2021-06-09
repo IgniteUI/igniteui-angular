@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding, TemplateRef } from '@angular/core';
+import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -12,89 +12,14 @@ import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
+import { IgxPagerComponent } from './pager.component';
+import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
 })
 export class IgxPaginatorComponent extends DisplayDensityBase {
-    /**
-     * An @Input property that sets if the pager in the paginator should be enabled.
-     * ```html
-     * <igx-paginator [pagerEnabled]="true"></igx-paginator>
-     * ```
-     *
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public pagerEnabled = true;
-
-    /**
-     * An @Input property that sets if the pager in the paginator should be hidden.
-     * ```html
-     * <igx-paginator [pagerHidden]="true"></igx-paginator>
-     * ```
-     *
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public pagerHidden = false;
-
-    /**
-     * An @Input property that sets if the dropdown in the paginator should be enabled.
-     * ```html
-     * <igx-paginator [dropdownEnabled]="true"></igx-paginator>
-     * ```
-     *
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public dropdownEnabled = true;
-
-    /**
-     * An @Input property that sets if the dropdown in the paginator should be hidden.
-     * ```html
-     * <igx-paginator [dropdownHidden]="true"></igx-paginator>
-     * ```
-     *
-     * @memberof IgxPaginatorComponent
-     */
-    @Input()
-    public dropdownHidden = false;
-
-    /**
-     * Gets/Sets a custom `ng-template` for the pagination UI.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
-     * ```
-     */
-    @Input()
-    public paginationTemplate: TemplateRef<any>;
-
-    /**
-     * @deprecated Use 'resourceStrings' instead.
-     * An @Input property, sets number of label of the select.
-     * The default is 'Items per page' localized string.
-     * ```html
-     * <igx-paginator label="My custom label"></igx-paginator>
-     * ```
-     * @memberof IgxPaginatorComponent
-     */
-    @DeprecateProperty(`'selectLabel' property is deprecated. Use 'resourceStrings' instead.`)
-    @Input()
-    public selectLabel;
-
-    /**
-     * @deprecated Use 'resourceStrings' instead.
-     * An @Input property, sets a preposition between the current page and total pages.
-     * The default is 'of' localized string.
-     * @memberof IgxPaginatorComponent
-     */
-    @DeprecateProperty(`'prepositionPage' property is deprecated. Use 'resourceStrings' instead.`)
-    @Input()
-    public prepositionPage;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
@@ -138,8 +63,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * <igx-paginator (paging)="pagingHandler($event)"></igx-paginator>
      * ```
      */
-       @Output()
-       public paging = new EventEmitter<IPageCancellableEventArgs>();
+    @Output()
+    public paging = new EventEmitter<IPageCancellableEventArgs>();
 
     /**
      * Emitted after paging is performed.
@@ -338,14 +263,14 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      * Returns if the first pager buttons should be disabled
      */
     public get isFirstPageDisabled(): boolean {
-        return this.isFirstPage || !this.pagerEnabled;
+        return this.isFirstPage;
     }
 
     /**
      * Returns if the last pager buttons should be disabled
      */
     public get isLastPageDisabled(): boolean {
-        return this.isLastPage || !this.pagerEnabled;
+        return this.isLastPage;
     }
 
     /**
@@ -407,8 +332,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 }
 
 @NgModule({
-    declarations: [IgxPaginatorComponent],
-    exports: [IgxPaginatorComponent],
+    declarations: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent],
+    exports: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent],
     imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
 })
 export class IgxPaginatorModule { }
