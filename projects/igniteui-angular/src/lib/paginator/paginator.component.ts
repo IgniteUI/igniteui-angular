@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter, HostBinding } from '@angular/core';
+import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter,
+    HostBinding, Directive, ContentChild } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -15,11 +16,23 @@ import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interface
 import { IgxPagerComponent } from './pager.component';
 import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 
+
+@Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
+export class IgxPaginatorTemplateDirective {
+
+}
 @Component({
     selector: 'igx-paginator',
     templateUrl: 'paginator.component.html',
 })
 export class IgxPaginatorComponent extends DisplayDensityBase {
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(IgxPaginatorTemplateDirective)
+    public customContent: IgxPaginatorTemplateDirective;
 
     /**
      * Emitted when `perPage` property value of the paginator is changed.
@@ -332,8 +345,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 }
 
 @NgModule({
-    declarations: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent],
-    exports: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent],
+    declarations: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
+    exports: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
     imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
 })
 export class IgxPaginatorModule { }

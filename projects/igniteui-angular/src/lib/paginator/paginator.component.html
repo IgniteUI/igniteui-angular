@@ -1,5 +1,4 @@
-<span #customContent>
-    <ng-content></ng-content>
-</span>
-<igx-page-size-selector *ngIf="!customContent.children.length"></igx-page-size-selector>
-<igx-pager *ngIf="!customContent.children.length"></igx-pager>
+<ng-content select="[igxPaginatorContent],igx-paginator-content"></ng-content>
+
+<igx-page-size-selector *ngIf="!customContent"></igx-page-size-selector>
+<igx-pager *ngIf="!customContent"></igx-pager>
