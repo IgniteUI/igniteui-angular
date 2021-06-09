@@ -5988,6 +5988,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(commit, event);
     }
 
+    /**
+     * @hidden
+     */
+     public getComputedHeight(elem) {
+        return elem.offsetHeight ? parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height')) : 0;
+    }
+
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
     }
@@ -6413,12 +6420,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return 0;
     }
 
-    /**
-     * @hidden
-     */
-    public getComputedHeight(elem) {
-        return elem.offsetHeight ? parseFloat(this.document.defaultView.getComputedStyle(elem).getPropertyValue('height')) : 0;
-    }
     /**
      * @hidden
      */

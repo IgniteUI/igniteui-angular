@@ -21,10 +21,6 @@ import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
     templateUrl: './group-area.component.html'
 })
 export class IgxGroupAreaComponent implements AfterContentInit {
-    private _groupingExpressions: IGroupingExpression[] = [];
-    private _hideGroupedColumns = false;
-    private _groupingDiffer;
-
     @Input()
     public grid: IgxGridComponent | IgxTreeGridComponent;
 
@@ -68,6 +64,68 @@ export class IgxGroupAreaComponent implements AfterContentInit {
     @ViewChild('groupArea')
     public groupArea: ElementRef;
 
+
+    /**
+     * @hidden @internal
+     */
+    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
+    public defaultDropAreaTemplate: TemplateRef<any>;
+
+    /**
+     * Gets/Sets the template that will be rendered as a GroupBy drop area.
+     *
+     * @remarks
+     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * @example
+     * ```html
+     * <igx-group-area [dropAreaTemplate]="dropAreaRef">
+     * </igx-group-area>
+     * <ng-template #myDropArea>
+     *      <span> Custom drop area! </span>
+     * </ng-template>
+     * ```
+     */
+    @Input()
+    public dropAreaTemplate: TemplateRef<any>;
+
+    /**
+     * Gets/Sets the message displayed inside the GroupBy drop area where columns can be dragged on.
+     *
+     * @remarks
+     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
+     * @example
+     * ```html
+     * <igx-group-area dropAreaMessage="Drop here to group!">
+     * </igx-group-area>
+     * ```
+     */
+    @Input()
+    public set dropAreaMessage(value: string) {
+        this._dropAreaMessage = value;
+        this.grid.notifyChanges();
+    }
+    public get dropAreaMessage(): string {
+        return this._dropAreaMessage || this.grid.resourceStrings.igx_grid_groupByArea_message;
+    }
+
+    /**
+     * Gets if the grid's group by drop area is visible.
+     *
+     * @example
+     * ```typescript
+     * const dropVisible = this.groupArea.dropAreaVisible;
+     * ```
+     */
+    public get dropAreaVisible(): boolean {
+        return (this.grid.draggedColumn && this.grid.draggedColumn.groupable) ||
+            !this.grid.chipsGroupingExpressions.length;
+    }
+
+    private _groupingExpressions: IGroupingExpression[] = [];
+    private _hideGroupedColumns = false;
+    private _groupingDiffer;
+    private _dropAreaMessage = null;
+
     ngAfterContentInit() {
         this.grid.chipsGroupingExpressions = this.groupingExpressions;
     }
@@ -84,7 +142,7 @@ export class IgxGroupAreaComponent implements AfterContentInit {
             }
 
             if (this.groupingExpressions) {
-                const isGrouped = this.grid.chipsGroupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+                const isGrouped = this.grid.chipsGroupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1;
                 if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
                     const groupingExpression = {
                         fieldName: column.field,
@@ -121,9 +179,9 @@ export class IgxGroupAreaComponent implements AfterContentInit {
             newGrouping.push(expr);
         }
 
-        // if (this.grid instanceof IgxGridComponent) {
-            // this.grid.groupingExpansionState = [];
-        // }
+        if (this.grid instanceof IgxGridComponent) {
+            this.grid.groupingExpansionState = [];
+        }
 
         this.grid.chipsGroupingExpressions = newGrouping;
 
@@ -190,10 +248,10 @@ export class IgxGroupAreaComponent implements AfterContentInit {
      * @hidden @internal
      */
     public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.grid.dropAreaTemplate) {
-            return this.grid.dropAreaTemplate;
+        if (this.dropAreaTemplate) {
+            return this.dropAreaTemplate;
         } else {
-            return this.grid.defaultDropAreaTemplate;
+            return this.defaultDropAreaTemplate;
         }
     }
 

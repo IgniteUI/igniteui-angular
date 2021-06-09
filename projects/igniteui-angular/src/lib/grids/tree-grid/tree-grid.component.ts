@@ -698,67 +698,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return record.rowID !== undefined && record.data;
     }
 
-// ----------------------------------------------------------------------- GROUPING START
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
-    public defaultDropAreaTemplate: TemplateRef<any>;
-
-    private _dropAreaMessage = null;
-
-    /**
-     * Gets if the grid's group by drop area is visible.
-     *
-     * @example
-     * ```typescript
-     * const dropVisible = this.grid.dropAreaVisible;
-     * ```
-     */
-    public get dropAreaVisible(): boolean {
-        return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGroupingExpressions.length;
-    }
-
-    /**
-     * Gets/Sets the template that will be rendered as a GroupBy drop area.
-     *
-     * @remarks
-     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * @example
-     * ```html
-     * <igx-tree-grid [dropAreaTemplate]="dropAreaRef">
-     * </igx-tree-grid>
-     * <ng-template #myDropArea>
-     *      <span> Custom drop area! </span>
-     * </ng-template>
-     * ```
-     */
-    @Input()
-    public dropAreaTemplate: TemplateRef<any>;
-
-    /**
-     * Gets/Sets the message displayed inside the GroupBy drop area where columns can be dragged on.
-     *
-     * @remarks
-     * The tree grid needs to have at least one groupable column in order the GroupBy area to be displayed.
-     * @example
-     * ```html
-     * <igx-tree-grid dropAreaMessage="Drop here to group!">
-     *      <igx-column [groupable]="true" field="ID"></igx-column>
-     * </igx-tree-grid>
-     * ```
-     */
-    @Input()
-    public set dropAreaMessage(value: string) {
-        this._dropAreaMessage = value;
-        this.notifyChanges();
-    }
-    public get dropAreaMessage(): string {
-        return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
-    }
-
     /**
      * Returns if the `IgxTreeGridComponent` has groupable columns.
      *
@@ -777,8 +716,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public get groupAreaHostClass(): string {
         return this.getComponentDensityClass('igx-drop-area');
     }
-
-// ----------------------------------------------------------------------- GROUPING END
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);

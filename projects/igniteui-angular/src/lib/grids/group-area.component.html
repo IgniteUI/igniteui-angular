@@ -15,16 +15,20 @@
                 <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
-                <igx-icon [style.visibility]="(!last || grid.dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
+                <igx-icon [style.visibility]="(!last || this.dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
                 </igx-icon>
             </span>
         </ng-container>
         <div igxGroupAreaDrop
             (igxDrop)="onDragDrop($event)"
-            [style.visibility]="grid.dropAreaVisible ? 'visible' : 'hidden'"
+            [style.visibility]="this.dropAreaVisible ? 'visible' : 'hidden'"
             [class]="grid.groupAreaHostClass"
             [attr.gridId]='this.grid.id'>
             <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
         </div>
     </igx-chips-area>
 </div>
+<ng-template #defaultDropArea>
+    <igx-icon class="igx-drop-area__icon">group_work</igx-icon>
+    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
+</ng-template>
