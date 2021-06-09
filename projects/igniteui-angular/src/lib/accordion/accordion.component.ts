@@ -79,9 +79,9 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     }
     public set expansionMode(expansionMode: IgxAccordionExpansionMode) {
         if (expansionMode === IgxAccordionExpansionMode.Single && this.expansionMode === IgxAccordionExpansionMode.Multiple) {
-            const firstExpanded = this.panels.find(p => !p.collapsed);
+            const lastExpanded = this.panels.filter(p => !p.collapsed).pop();
             this.accordionService.expandedPanels.forEach(panel => {
-                if (panel !== firstExpanded) {
+                if (panel !== lastExpanded) {
                     panel.collapse();
                 }
             });
@@ -175,12 +175,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     }
 
     public ngAfterViewInit() {
-        const initiallyExpandedPanels: IgxExpansionPanelComponent[] = [];
-        this._panels.forEach(panel => {
-            if (!panel.collapsed) {
-                initiallyExpandedPanels.push(panel);
-            }
-        });
+        const initiallyExpandedPanels: IgxExpansionPanelComponent[] = this._panels.filter(panel => !panel.collapsed);
         if (this.expansionMode === IgxAccordionExpansionMode.Single) {
             for (let i = 0; i < initiallyExpandedPanels.length - 1; i++) {
                 initiallyExpandedPanels[i].collapse();

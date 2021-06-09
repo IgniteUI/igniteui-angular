@@ -240,7 +240,7 @@ describe('Rendering Tests', () => {
             tick();
             fix.detectChanges();
             expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(2);
-            expect(accordion.panels[0].collapsed).toBeFalse();
+            expect(accordion.panels[2].collapsed).toBeFalse();
         }));
     });
 });
