@@ -99,7 +99,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     protected _page = 0;
     protected _totalRecords: number;
-    protected _selectOptions;
+    protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
     protected _perPage = 15;
 
     private _resourceStrings = CurrentResourceStrings.PaginatorResStrings;
