@@ -118,9 +118,9 @@ export const getRenamePositions = (sourcePath: string, name: string, service: ts
     return positions;
 };
 
-export const findMatches = (content: string, change: MemberChange): number[] => {
+export const findMatches = (content: string, toFind: string): number[] => {
     let matches: RegExpExecArray;
-    const regex = new RegExp(escapeRegExp(change.member), 'g');
+    const regex = new RegExp(escapeRegExp(toFind), 'g');
     const matchesPositions = [];
     do {
         matches = regex.exec(content);
@@ -216,6 +216,7 @@ export const createProjectService = (serverHost: tss.server.ServerHost): tss.ser
     projectService.configurePlugin({
         pluginName: NG_LANG_SERVICE_PACKAGE_NAME,
         configuration: {
+            ivy: true,
             angularOnly: false,
         },
     });
