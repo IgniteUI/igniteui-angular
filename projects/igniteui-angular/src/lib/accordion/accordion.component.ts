@@ -250,13 +250,17 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this.unsubChildren$.next();
         this._panels.forEach(panel => {
             panel.contentExpanded.pipe(takeUntil(this.unsubChildren$)).subscribe((args: IExpansionPanelEventArgs) => {
-                if (this.expansionMode === IgxAccordionExpansionMode.Single) {
-                    this.accordionService.expandedPanels.forEach(p => p.collapse());
-                }
                 this.accordionService.expandedPanels.add(args.owner);
                 this.panelExpanded.emit(args);
             });
             panel.contentExpanding.pipe(takeUntil(this.unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
+                if (args.cancel) {
+                    return;
+                }
+
+                if (this.expansionMode === IgxAccordionExpansionMode.Single) {
+                    this.accordionService.expandedPanels.forEach(p => p.collapse());
+                }
                 this.panelExpanding.emit(args);
             });
             panel.contentCollapsed.pipe(takeUntil(this.unsubChildren$)).subscribe((args: IExpansionPanelEventArgs) => {
