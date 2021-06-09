@@ -229,14 +229,14 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  private get hasDateParts() {
+  private get hasDateParts(): boolean {
     return this._inputDateParts.some(
       p => p.type === DatePart.Date
         || p.type === DatePart.Month
         || p.type === DatePart.Year);
   }
 
-  private get hasTimeParts() {
+  private get hasTimeParts(): boolean {
     return this._inputDateParts.some(
       p => p.type === DatePart.Hours
         || p.type === DatePart.Minutes
