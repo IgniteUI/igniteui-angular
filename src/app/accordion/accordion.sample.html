@@ -1,5 +1,9 @@
-<igx-accordion #accordion [animationSettings]="animationSettingsCustom">
-    <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="true">
+<button igxButton (buttonClick)="changeExpMode()">Toggle Expansion Mode</button>
+<button igxButton (buttonClick)="accordion.expandAll()">Expand All</button>
+<button igxButton (buttonClick)="accordion.collapseAll()">Collspse All</button>
+<igx-accordion #accordion (panelExpanding)="panelExpanding($event)" (panelExpanded)="panelExpanded($event)">
+    <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="false"
+        (contentExpanding)="contentExpanding($event)">
         <igx-expansion-panel-header [disabled]="false">
             <igx-expansion-panel-title class="sample-title">HTML5</igx-expansion-panel-title>
         </igx-expansion-panel-header>
