@@ -43,6 +43,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
     @Input()
     public id = `igx-drop-down-item-${NEXT_ID++}`;
 
+    @HostBinding('attr.aria-label')
+    @Input()
+    public get ariaLabel(): string {
+        return this.value ? this.value : this.id;
+    }
+
     /**
      * @hidden @internal
      */
