@@ -77,6 +77,131 @@ describe('Rendering Tests', () => {
             const panelBody = accordion.panels[0].body?.element.nativeElement;
             expect(panelBody.children[0].tagName === ACCORDION_TAG).toBeTruthy();
         });
+
+        it('Should be able to expand only one panel when expansionMode is set to `single` and expandAll/collapseAll should not update the current expansion state ', () => {
+            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
+            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            accordion.expansionMode = IgxExpansionType.Single;
+            fix.detectChanges();
+
+            accordion.expandAll();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(0);
+            expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(0);
+
+            accordion.panels[0].expand();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(1);
+            expect(accordion.panels[0].collapsed).toBeFalse();
+            expect(accordion.panels[1].collapsed).toBeTrue();
+
+            accordion.collapseAll();
+            fix.detectChanges();
+
+            expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(0);
+
+            accordion.panels[1].expand();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(1);
+            expect(accordion.panels[0].collapsed).toBeTrue();
+            expect(accordion.panels[1].collapsed).toBeFalse();
+
+        });
+
+        it('Should be able to expand only one panel when expansionMode is set to `multiple`', () => {
+            accordion.expansionMode = IgxExpansionType.Multiple;
+            fix.detectChanges();
+
+            accordion.panels[0].expand();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(1);
+            expect(accordion.panels[0].collapsed).toBeFalse();
+            expect(accordion.panels[1].collapsed).toBeTrue();
+
+            accordion.panels[1].expand();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(2);
+            expect(accordion.panels[0].collapsed).toBeFalse();
+            expect(accordion.panels[1].collapsed).toBeFalse();
+        });
+
+        it('Should update the current expansion state when expandAll/collapseAll is invoked and expansionMode is set to `multiple`', () => {
+            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
+            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            accordion.expansionMode = IgxExpansionType.Multiple;
+            fix.detectChanges();
+
+            accordion.expandAll();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => panel.collapsed).length).toEqual(0);
+            expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(3);
+
+            accordion.collapseAll();
+            fix.detectChanges();
+
+            expect(accordion.panels.map(panel => !panel.collapsed).length).toEqual(0);
+            expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(3);
+        });
+
+        it('Should emit ing and ed events when expand panel state is toggled', () => {
+            spyOn(accordion.panelExpanded, 'emit').and.callThrough();
+            spyOn(accordion.panelExpanding, 'emit').and.callThrough();
+            spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
+            spyOn(accordion.panelCollapsing, 'emit').and.callThrough();
+
+            spyOn(accordion.panels[0].contentCollapsing, 'emit').and.callThrough();
+            spyOn(accordion.panels[0].contentCollapsed, 'emit').and.callThrough();
+            spyOn(accordion.panels[0].contentExpanding, 'emit').and.callThrough();
+            spyOn(accordion.panels[0].contentExpanded, 'emit').and.callThrough();
+
+            accordion.expansionMode = IgxExpansionType.Multiple;
+            fix.detectChanges();
+
+            accordion.panels[0].expand();
+            fix.detectChanges();
+
+            let argsEd, argsIng;
+            const subsExpanded = accordion.panels[0].contentExpanded.subscribe(evt => {
+                argsEd = evt;
+            });
+
+            const subsExpanding = accordion.panels[0].contentExpanding.subscribe(evt => {
+                argsIng = evt;
+            });
+
+            expect(accordion.panelExpanding.emit).toHaveBeenCalledTimes(1);
+            expect(accordion.panelExpanding.emit).toHaveBeenCalledWith(argsIng);
+            expect(accordion.panelExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(accordion.panelExpanded.emit).toHaveBeenCalledWith(argsEd);
+
+            subsExpanded.unsubscribe();
+            subsExpanding.unsubscribe();
+
+            accordion.panels[0].collapse();
+            fix.detectChanges();
+
+            const subsCollapsed = accordion.panels[0].contentCollapsed.subscribe(evt => {
+                argsEd = evt;
+            });
+
+            const subsCollapsing = accordion.panels[0].contentCollapsing.subscribe(evt => {
+                argsIng = evt;
+            });
+
+            expect(accordion.panelCollapsing.emit).toHaveBeenCalledTimes(1);
+            expect(accordion.panelCollapsing.emit).toHaveBeenCalledWith(argsIng);
+            expect(accordion.panelCollapsed.emit).toHaveBeenCalledTimes(1);
+            expect(accordion.panelCollapsed.emit).toHaveBeenCalledWith(argsEd);
+
+            subsCollapsed.unsubscribe();
+            subsCollapsing.unsubscribe();
+        });
     });
 });
 
