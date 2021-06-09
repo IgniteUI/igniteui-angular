@@ -256,7 +256,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
         const event: IChipClickEventArgs = { owner: chips[0], cancel: false, originalEvent: null };
-        grid.onChipClicked(event);
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstChipComp = chipComponents[0].componentInstance;
+        firstChipComp.chipClick.emit(event);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -2355,8 +2357,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
         const event: IChipClickEventArgs = { owner: chips[0], originalEvent: null, cancel: false };
-        grid.onChipClicked(event);
-        tick();
+        let chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstChipComp = chipComponents[0].componentInstance;
+        firstChipComp.chipClick.emit(event);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         tick();
