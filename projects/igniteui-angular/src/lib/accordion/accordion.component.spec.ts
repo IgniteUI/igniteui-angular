@@ -6,6 +6,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { slideInLeft, slideOutRight } from '../animations/slide';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
+import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxAccordionExpansionMode } from './accordion.common';
 import { IgxAccordionComponent } from './accordion.component';
 import { IgxAccordionModule } from './accordion.module';
@@ -242,6 +243,113 @@ describe('Rendering Tests', () => {
             expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(2);
             expect(accordion.panels[2].collapsed).toBeFalse();
         }));
+
+        it('Should focus the first/last panel on Home/End key press', () => {
+            accordion.panels[2].header.disabled = true;
+            fix.detectChanges();
+            accordion.panels[1].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+        });
+
+        it('Should focus the first/last panel on Home/End key press', () => {
+            accordion.panels[2].header.disabled = true;
+            fix.detectChanges();
+
+            accordion.panels[1].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+
+            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+        });
+
+        it('Should focus the correct panel on ArrowDown/ArrowUp key pressed', () => {
+            accordion.panels[1].header.disabled = true;
+            fix.detectChanges();
+            accordion.panels[0].header.elementRef.nativeElement.children[0].dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            // ArrowDown
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', accordion.panels[0].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[2].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+
+            // ArrowUp
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', accordion.panels[2].header.elementRef.nativeElement);
+            fix.detectChanges();
+
+            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+        });
+
+        it(`Should expand/collapse all panels on SHIFT + ALT + ArrowDown/ArrowUp key pressed
+                when expansionMode is 'multiple'`, fakeAsync(() => {
+            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
+            fix.detectChanges();
+            accordion.panels[1].header.disabled = true;
+            fix.detectChanges();
+
+            accordion.panels[0].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            //  SHIFT + ALT + ArrowDown
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
+                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+            fix.detectChanges();
+
+            expect(accordion.panels.filter(p => p.collapsed && !p.header.disabled).length).toEqual(0);
+
+            //  SHIFT + ALT + ArrowUp
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup',
+                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+            fix.detectChanges();
+            tick();
+            fix.detectChanges();
+
+            expect(accordion.panels.filter(p => p.collapsed && !p.header.disabled).length).toEqual(2);
+        }));
+
+        it(`Should do nothing on SHIFT + ALT + ArrowDown/ArrowUp key pressed
+                when expansionMode is 'single'`, () => {
+            accordion.expansionMode = IgxAccordionExpansionMode.Single;
+            fix.detectChanges();
+
+            accordion.panels[0].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
+            fix.detectChanges();
+
+            const collapsedCount = accordion.panels.filter(p => p.collapsed).length;
+
+            //  SHIFT + ALT + ArrowDown
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
+                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+            fix.detectChanges();
+
+            expect(accordion.panels.filter(p => p.collapsed).length).toEqual(collapsedCount);
+
+            //  SHIFT + ALT + ArrowUp
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup',
+                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+            fix.detectChanges();
+
+            expect(accordion.panels.filter(p => p.collapsed).length).toEqual(collapsedCount);
+        });
+
     });
 });
 

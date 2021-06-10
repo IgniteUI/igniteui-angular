@@ -1,6 +1,8 @@
 <button igxButton (buttonClick)="changeExpMode()">Toggle Expansion Mode</button>
 <button igxButton (buttonClick)="accordion.expandAll()">Expand All</button>
 <button igxButton (buttonClick)="accordion.collapseAll()">Collspse All</button>
+<button igxButton (buttonClick)="accordion.panels[1].header.disabled = !accordion.panels[1].header.disabled">Disable
+    second</button>
 <igx-accordion #accordion (panelExpanding)="panelExpanding($event)" (panelExpanded)="panelExpanded($event)">
     <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="false"
         (contentExpanding)="contentExpanding($event)">
