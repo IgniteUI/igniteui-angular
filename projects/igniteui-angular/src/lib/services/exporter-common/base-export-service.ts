@@ -116,7 +116,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
  * A helper class used to identify whether the user has set a specific columnIndex
  * during columnExporting, so we can honor it at the exported file.
 */
-class IgxColumnExportingEventArgsHelper implements IColumnExportingEventArgs {
+class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
     public header: string;
     public field: string;
     public cancel: boolean;
@@ -283,7 +283,7 @@ export abstract class IgxBaseExporter {
                         grid: key === DEFAULT_OWNER ? grid : key
                     };
 
-                    const newColumnExportArgs = new IgxColumnExportingEventArgsHelper(columnExportArgs);
+                    const newColumnExportArgs = new IgxColumnExportingEventArgs(columnExportArgs);
                     this.columnExporting.emit(newColumnExportArgs);
 
                     column.header = newColumnExportArgs.header;
