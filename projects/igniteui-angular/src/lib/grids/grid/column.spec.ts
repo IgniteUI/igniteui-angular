@@ -35,6 +35,7 @@ describe('IgxGrid - Column properties #grid', () => {
                 ColumnsFromIterableComponent,
                 TemplatedColumnsComponent,
                 TemplatedInputColumnsComponent,
+                TemplatedContextInputColumnsComponent,
                 ColumnCellFormatterComponent,
                 ColumnHaederClassesComponent,
                 ColumnHiddenFromMarkupComponent,
@@ -308,6 +309,20 @@ describe('IgxGrid - Column properties #grid', () => {
 
         expect(cell.nativeElement.querySelector('.customEditorTemplate')).toBeDefined();
 
+    });
+
+    it('should support passing properties through the templateContext input property', () => {
+        const fixture = TestBed.createComponent(TemplatedContextInputColumnsComponent);
+        fixture.detectChanges();
+
+        const grid = fixture.componentInstance.instance;
+        const contextObject = {property1: 'cellContent', property2: 'header'};
+        const firstColumn = grid.columns[0];
+        const secondColumn = grid.getColumnByName('LastName');
+
+        expect(firstColumn.contextObject).toEqual(contextObject);
+        expect(firstColumn.cells[0].nativeElement.innerText).toEqual(contextObject.property1);
+        expect(secondColumn.headerCell.elementRef.nativeElement.innerText).toEqual(contextObject.property2);
     });
 
     it('should apply column\'s formatter programmatically', () => {
@@ -826,6 +841,31 @@ export class TemplatedInputColumnsComponent {
 
     data = SampleTestData.personIDNameRegionData();
     columns = Object.keys(this.data[0]);
+}
+
+
+@Component({
+    template: `
+        <igx-grid [data]="data">
+            <igx-column [templateContext]="contextObject" field="FirstName">
+                <ng-template igxCell let-cell="cell">
+                    {{ cell.column.contextObject.property1 }}
+                </ng-template>
+            </igx-column>
+            <igx-column [templateContext]="contextObject" field="LastName">
+                <ng-template igxHeader let-column>
+                    {{ column.contextObject.property2 }}
+                </ng-template>
+            </igx-column>
+        </igx-grid>
+    `
+})
+export class TemplatedContextInputColumnsComponent {
+    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
+    public instance: IgxGridComponent;
+    public contextObject = {property1: 'cellContent', property2: 'header'};
+
+    public data = SampleTestData.personNameAgeData();
 }
 
 @Component({
