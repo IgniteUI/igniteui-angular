@@ -198,7 +198,7 @@ export class IgxExpansionPanelHeaderComponent {
     public set disabled(val: boolean) {
         this._disabled = val;
         if (val) {
-            this.tabIndex = -1;
+            this.tabIndex = null;
         } else {
             this.tabIndex = 0;
         }
