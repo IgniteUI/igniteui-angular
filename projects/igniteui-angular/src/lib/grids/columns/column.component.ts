@@ -916,6 +916,37 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     }
 
     /**
+     * Sets custom properties provided in additional template context.
+     *
+     * ```html
+     * <igx-column [templateContext]="contextObject">
+     *   <ng-template igxCell let-cell="cell">
+     *      {{ cell.column.contextObject.prop }}
+     *   </ng-template>
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public set templateContext(value: any){
+        this._contextObject = value;
+    }
+
+    /**
+     * Gets the column `contextObject`.
+     * ```typescript
+     * let columncontextObject = this.column.contextObject;
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    public get contextObject(): any {
+        return this._contextObject;
+    }
+
+
+    /**
      * Gets the column `summaries`.
      * ```typescript
      * let columnSummaries = this.column.summaries;
@@ -1567,6 +1598,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
+    private _contextObject: any;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
