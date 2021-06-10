@@ -55,9 +55,9 @@
         $excluded: is-component($exclude);
     }
 
-    @if list.length($excluded) > 0 {
-        @warn string.unquote('You have excluded the following components from the theme: "#{$excluded}". You can now add your own themes for the excluded components.');
-    }
+    // @if list.length($excluded) > 0 {
+    //     @warn string.unquote('You have excluded the following components from the theme: "#{$excluded}". You can now add your own themes for the excluded components.');
+    // }
 
     @if not(list.index($exclude, 'igx-ripple')) {
         @include igx-ripple(igx-ripple-theme(
@@ -221,7 +221,7 @@
         ));
     }
 
-    @if not(list.index($exclude, 'igx-checkbox')) {
+    @if is-used('igx-checkbox', $exclude) {
         @include igx-checkbox(igx-checkbox-theme(
             $schema: $schema,
             $border-radius: $roundness,

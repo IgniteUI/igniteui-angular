@@ -225,3 +225,33 @@ $theme-palette: $_palette;
         @include assert-equal($actual, $expected);
     }
 }
+
+@include describe('Theme Module System') {
+    $components: (
+        igx-checkbox: (
+            'usedBy': (
+                igx-combo,
+                igx-grid
+            )
+        )
+    ) !global;
+
+    @include it('should include theme if other themes depend on it') {
+        $excluded: (igx-checkbox, igx-combo);
+        $test: is-used(
+            $name: 'igx-checkbox',
+            $checklist: $excluded,
+        );
+        @include assert-equal($test, true);
+    }
+
+    @include it('should exclude theme if no themes depend on it') {
+        $excluded: (igx-checkbox, igx-grid, igx-combo);
+        $test: is-used(
+            $name: 'igx-checkbox',
+            $checklist: $excluded,
+        );
+
+        @include assert-equal($test, false);
+    }
+}

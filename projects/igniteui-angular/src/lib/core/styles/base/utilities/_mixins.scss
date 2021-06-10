@@ -82,11 +82,30 @@
 /// Registers a component to the list of known components.
 /// @access private
 /// @param {String} $name - The component name to register.
-@mixin register-component($name) {
+@mixin register-component($name, $deps: ()) {
     $component: map.get($components, $name);
+
     @if $component == null {
-        $component: string.unique-id();
-        $components: map.merge($components, (#{$name}: $component)) !global;
+        $components: map.merge($components, (
+            #{$name}: (
+                usedBy: ( )
+            ),
+        )) !global;
+    }
+
+    @each $dep in $deps {
+        @include register-component($dep);
+
+        @if map.has-key($components, $dep) {
+            $component: map.get($components, $dep);
+            $usedBy: map.get($component, 'usedBy');
+
+            $components: map.merge($components, (
+                #{$dep}: map.merge($component, (
+                    usedBy: list.append($usedBy, $name, $separator: comma)
+                ))
+            )) !global;
+        }
     }
 }
 
@@ -393,4 +412,8 @@
     -webkit-line-clamp: if($lines, $lines, initial);
     -webkit-box-orient: if($vertical, vertical, initial);
     overflow: hidden;
+}
+
+@mixin warn($message) {
+    @warn $message;
 }

@@ -970,3 +970,27 @@ $p-test: igx-palette(#fff, #000);
     @return $string;
 }
 
+@function is-used($name, $checklist) {
+    $result: true;
+
+    @if list.index($checklist, $name) {
+        $deps: map.get($components, $name, 'usedBy');
+        $excluded: ();
+
+        @each $item in $checklist {
+            @if list.index($deps, $item) {
+                $excluded: list.append($excluded, $item);
+            }
+        }
+
+        $result: list.length($deps) != list.length($excluded);
+
+        @if $result {
+            @warn 'You\'ve opted to exclude the "#{$name}" theme, but it was held back as it\'s used by the following themes: #{$deps}.';
+        } @else {
+            @warn 'You have excluded the following themes: "#{$excluded}".'
+        }
+    }
+
+    @return $result;
+}
