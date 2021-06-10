@@ -64,7 +64,6 @@ export class IgxGroupAreaComponent implements AfterContentInit {
     @ViewChild('groupArea')
     public groupArea: ElementRef;
 
-
     /**
      * @hidden @internal
      */
