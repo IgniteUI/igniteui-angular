@@ -1,6 +1,6 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
-<ng-container *ngIf="showGroupArea">
+<ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
     <igx-grid-group-area #groupArea
         [grid]="this"
         [groupingExpressions]="this.groupingExpressions"

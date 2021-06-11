@@ -29,13 +29,21 @@ export class IgxGroupAreaComponent implements AfterContentInit {
         return this._groupingExpressions;
     }
     public set groupingExpressions(value: IGroupingExpression[]) {
+        if (this.grid instanceof IgxTreeGridComponent) {
+            const groupingExpressionsCount = this._groupingExpressions.length;
+            this.grid.sortingExpressions.splice(0, groupingExpressionsCount);
+            const updatedSortingExpressions = this.grid.sortingExpressions.filter(expr => !value.some(v => v.fieldName === expr.fieldName));
+            updatedSortingExpressions.unshift(...value);
+            this.grid.sortingExpressions = [...updatedSortingExpressions];
+        }
+
         this._groupingExpressions = value;
 
         if (this.hideGroupedColumns && this.grid.columnList && this.groupingExpressions) {
             this.applyGroupColsVisibility();
         }
 
-        this.grid.sortingExpressions = value;
+
         this.groupingExpressionsChange.emit(value);
     }
     @Output()
