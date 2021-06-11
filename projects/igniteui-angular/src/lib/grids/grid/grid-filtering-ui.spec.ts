@@ -3492,26 +3492,28 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
         });
 
-        it('Should allow to input commas in excel search component input field of column with dataType number.', async () => {
+        it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
             fix.detectChanges();
             await wait(100);
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
-            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
             // Type 1,000 in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
             fix.detectChanges();
             await wait(1000);
-
+            
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(1, 'incorrect rendered list items count');
 
             // Type non-numerical symbol in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
             fix.detectChanges();
             await wait(1000);
-
+            
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
             expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         });
