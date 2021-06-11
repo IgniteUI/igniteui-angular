@@ -1,7 +1,7 @@
 import {
     Component, ChangeDetectionStrategy, Input, Output, EventEmitter, ContentChild, ViewChildren,
     QueryList, ViewChild, TemplateRef, DoCheck, AfterContentInit, HostBinding,
-    forwardRef, OnInit, AfterViewInit, ContentChildren
+    forwardRef, OnInit, AfterViewInit, ContentChildren, OnChanges, SimpleChanges
 } from '@angular/core';
 import { GridBaseAPIService } from '../api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -76,7 +76,7 @@ export interface IGroupingDoneEventArgs extends IBaseEventArgs {
     selector: 'igx-grid',
     templateUrl: './grid.component.html'
 })
-export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit {
+export class IgxGridComponent extends IgxGridBaseDirective implements GridType, OnInit, DoCheck, AfterContentInit, AfterViewInit, OnChanges {
     /**
      * Emitted when a new chunk of data is loaded from virtualization.
      *
@@ -881,17 +881,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get iconTemplate() {
         if (this.groupsExpanded) {
             return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
@@ -979,6 +968,15 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         super.ngDoCheck();
+    }
+
+    /**
+     * @hidden @internal
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (this.groupArea && changes["dropAreaTemplate"]) {
+            this.groupArea.dropAreaTemplate = this.dropAreaTemplate;
+        }
     }
 
     /**
