@@ -75,7 +75,7 @@ describe('Excel Exporter', () => {
         exporter.rowExporting.unsubscribe();
     }));
 
-    fdescribe('', () => {
+    describe('', () => {
         beforeEach(waitForAsync(() => {
             options = createExportOptions('GridExcelExport', 50);
         }));
@@ -640,7 +640,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    fdescribe('', () => {
+    describe('', () => {
         let fix;
         let hGrid: IgxHierarchicalGridComponent;
 
@@ -735,7 +735,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    fdescribe('', () => {
+    describe('', () => {
         let fix;
         let treeGrid: IgxTreeGridComponent;
         beforeEach(waitForAsync(() => {

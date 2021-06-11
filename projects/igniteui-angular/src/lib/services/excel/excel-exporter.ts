@@ -112,6 +112,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                     .sort((a,b) => b - a)[0];
 
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.header);
+                defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
                 const columns = defaultOwner.columns.filter(col => !col.skip && col.type === HeaderType.ColumnHeader);

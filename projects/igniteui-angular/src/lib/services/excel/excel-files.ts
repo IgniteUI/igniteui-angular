@@ -92,7 +92,7 @@ export class WorksheetFile implements IExcelFile {
         } else {
             const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
-            const isMultiColumnHeader = owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
+            const hasMultiColumnHeader = owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
 
             const height =  worksheetData.options.rowHeight;
             const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
@@ -100,56 +100,56 @@ export class WorksheetFile implements IExcelFile {
 
             sheetData += `<sheetData>`;
 
+            for (let i = 0; i <= owner.maxLevel; i++) {
+                sheetData += `<row r="${i + 1}"${this.rowHeight}>`;
+
+                const headersForLevel = hasMultiColumnHeader ?
+                    owner.columns
+                        .filter(c => (c.level < i &&
+                            c.type !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
+                        .sort((a, b) => a.startIndex - b.startIndex)
+                        .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
+                    owner.columns.filter(c => !c.skip);
+
+                let startValue = 0;
+
+                for (const currentCol of headersForLevel) {
+                    if (currentCol.level === i) {
+                        let columnCoordinate;
+                        columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (i + 1);
+                        const columnValue = dictionary.saveValue(currentCol.header, true);
+                        sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
+
+                        if (i !== owner.maxLevel) {
+                            mergeCellsCounter++;
+                            mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
+
+                            if (currentCol.type === HeaderType.ColumnHeader) {
+                                columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (owner.maxLevel + 1);
+                            } else {
+                                for (let k = 1; k < currentCol.columnSpan; k++) {
+                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + (i + 1);
+                                    sheetData += `<c r="${columnCoordinate}" />`;
+                                }
+                            }
+
+                            mergeCellStr += `${columnCoordinate}" />`;
+                        }
+                    }
+
+                    startValue += currentCol.columnSpan;
+                }
+
+                sheetData += `</row>`;
+            }
+
             if (!isHierarchicalGrid) {
                 this.dimension =
                     'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount + owner.maxLevel);
 
-                for (let i = 0; i <= owner.maxLevel; i++) {
-                    sheetData += `<row r="${i + 1}"${this.rowHeight}>`;
-
-                    const headersForLevel = isMultiColumnHeader ?
-                        owner.columns
-                            .filter(c => (c.level < i &&
-                                c.type !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
-                            .sort((a, b) => a.startIndex - b.startIndex)
-                            .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
-                        owner.columns.filter(c => !c.skip);
-
-                    let startValue = 0;
-
-                    for (const currentCol of headersForLevel) {
-                        if (currentCol.level === i) {
-                            let columnCoordinate;
-                            columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (i + 1);
-                            const columnValue = dictionary.saveValue(currentCol.header, true);
-                            sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
-
-                            if (i !== owner.maxLevel) {
-                                mergeCellsCounter++;
-                                mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
-
-                                if (currentCol.type === HeaderType.ColumnHeader) {
-                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (owner.maxLevel + 1);
-                                } else {
-                                    for (let k = 1; k < currentCol.columnSpan; k++) {
-                                        columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + (i + 1);
-                                        sheetData += `<c r="${columnCoordinate}" />`;
-                                    }
-                                }
-
-                                mergeCellStr += `${columnCoordinate}" />`;
-                            }
-                        }
-
-                        startValue += currentCol.columnSpan;
-                    }
-
-                    sheetData += `</row>`;
-                }
-
                 cols += '<cols>';
 
-                if (!isMultiColumnHeader) {
+                if (!hasMultiColumnHeader) {
                     for (let j = 0; j < worksheetData.columnCount; j++) {
                         const width = dictionary.columnWidths[j];
                         // Use the width provided in the options if it exists
@@ -187,7 +187,7 @@ export class WorksheetFile implements IExcelFile {
                 sheetData += rows;
                 sheetData += '</sheetData>';
 
-                if (isMultiColumnHeader) {
+                if (hasMultiColumnHeader) {
                     sheetData += `<mergeCells count="${mergeCellsCounter}">${mergeCellStr}</mergeCells>`;
                 }
 
@@ -195,73 +195,6 @@ export class WorksheetFile implements IExcelFile {
             });
         }
     }
-
-    // private prepareDataAsync(worksheetData: WorksheetData, done: (cols: string, sheetData: string) => void) {
-    //     let sheetData = '';
-    //     let cols = '';
-    //     const dictionary = worksheetData.dataDictionary;
-
-    //     if (worksheetData.isEmpty) {
-    //         sheetData += '<sheetData/>';
-    //         this.dimension = 'A1';
-    //         done('', sheetData);
-    //     } else {
-    //         const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
-
-    //         const height =  worksheetData.options.rowHeight;
-    //         const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
-    //         this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
-
-    //         sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
-
-    //         for (let i = 0; i < worksheetData.rootKeys.length; i++) {
-    //             const column = ExcelStrings.getExcelColumn(i) + 1;
-    //             const value = dictionary.saveValue(worksheetData.rootKeys[i], true);
-    //             sheetData += `<c r="${column}"${rowStyle} t="s"><v>${value}</v></c>`;
-    //         }
-    //         sheetData += '</row>';
-
-    //         if (!isHierarchicalGrid) {
-    //             this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
-    //             cols += '<cols>';
-
-    //             for (let i = 0; i < worksheetData.columnCount; i++) {
-    //                 const width = dictionary.columnWidths[i];
-    //                 // Use the width provided in the options if it exists
-    //                 let widthInTwips = worksheetData.options.columnWidth !== undefined ?
-    //                                         worksheetData.options.columnWidth :
-    //                                         Math.max(((width / 96) * 14.4), WorksheetFile.MIN_WIDTH);
-    //                 if (!(widthInTwips > 0)) {
-    //                     widthInTwips = WorksheetFile.MIN_WIDTH;
-    //                 }
-
-    //                 cols += `<col min="${(i + 1)}" max="${(i + 1)}" width="${widthInTwips}" customWidth="1"/>`;
-    //             }
-
-    //             cols += '</cols>';
-
-    //             const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
-
-    //             if (indexOfLastPinnedColumn !== -1 &&
-    //                 !worksheetData.options.ignorePinning &&
-    //                 !worksheetData.options.ignoreColumnsOrder) {
-    //                 const frozenColumnCount = indexOfLastPinnedColumn + 1;
-    //                 const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
-    //                 this.freezePane =
-    //                     `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
-    //             }
-    //         } else {
-    //             const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
-    //             cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
-    //         }
-
-    //         this.processDataRecordsAsync(worksheetData, (rows) => {
-    //             sheetData += rows;
-    //             sheetData += '</sheetData>';
-    //             done(cols, sheetData);
-    //         });
-    //     }
-    // }
 
     private processDataRecordsAsync(worksheetData: WorksheetData, done: (rows: string) => void) {
         const rowDataArr = new Array(worksheetData.rowCount - 1);
@@ -278,11 +211,15 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processRow(worksheetData: WorksheetData, i: number) {
+        const hasMultiColumnHeader = worksheetData.owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
+        let headersForLevel = [];
 
-        const headersForLevel = worksheetData.owner.columns
-            .filter(c => c.type !== HeaderType.MultiColumnHeader && !c.skip)
-            .sort((a, b) => a.startIndex-b.startIndex)
-            .sort((a, b) => a.pinnedIndex-b.pinnedIndex);
+        if (hasMultiColumnHeader) {
+            headersForLevel = worksheetData.owner.columns
+                .filter(c => c.type !== HeaderType.MultiColumnHeader && !c.skip)
+                .sort((a, b) => a.startIndex-b.startIndex)
+                .sort((a, b) => a.pinnedIndex-b.pinnedIndex);
+        }
 
         const record = worksheetData.data[i - 1];
 
@@ -300,9 +237,10 @@ export class WorksheetFile implements IExcelFile {
         const keys = worksheetData.isSpecialData ? [record.data] : Object.keys(record.data);
 
         for (let j = 0; j < keys.length; j++) {
+            const key = hasMultiColumnHeader ? headersForLevel[j].field : keys[j];
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
 
-            const cellData = WorksheetFile.getCellData(worksheetData, i, col, headersForLevel[j].field);
+            const cellData = WorksheetFile.getCellData(worksheetData, i, col, key);
 
             rowData[j + 1] = cellData;
         }
