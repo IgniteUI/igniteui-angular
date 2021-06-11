@@ -11,7 +11,13 @@
 @mixin component {
     @include b(igx-tabs) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-button,
+                igx-icon,
+            )
+        );
 
         @extend %tabs-display !optional;
 

@@ -13,7 +13,10 @@
     @include b(igx-splitter) {
         // Register the component in the component registry
         $this: string.slice(bem--selector-to-string(&), 2, -1);
-        @include register-component($this);
+        @include register-component(
+            $name: $this,
+            $deps: ()
+        );
 
         @include b(#{$this}-bar-host) {
             &:focus {

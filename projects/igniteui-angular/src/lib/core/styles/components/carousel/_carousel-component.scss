@@ -69,7 +69,12 @@
 @mixin component {
     @include b(igx-carousel) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-icon,
+            )
+        );
 
         @extend %igx-carousel-display !optional;
 

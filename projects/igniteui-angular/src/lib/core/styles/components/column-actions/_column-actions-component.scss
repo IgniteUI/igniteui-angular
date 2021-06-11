@@ -1,4 +1,5 @@
 @use '../../base' as *;
+@use 'sass:string';
 
 ////
 /// @group components
@@ -11,8 +12,11 @@
 
 @mixin component {
     @include b(igx-column-actions) {
-        $block: bem--selector-to-string(&);
-        @include register-component('igx-column-actions');
+        $this: bem--selector-to-string(&);
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
 
         @extend %column-actions-display !optional;
 

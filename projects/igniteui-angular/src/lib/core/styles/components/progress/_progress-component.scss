@@ -13,7 +13,10 @@
     /// Linear Progress
     @include b(igx-linear-bar) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
 
         @extend %linear-display !optional;
 
@@ -101,7 +104,10 @@
     /// Circular Progress
     @include b(igx-circular-bar) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
 
         @extend %circular-display !optional;
 

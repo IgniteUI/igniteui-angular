@@ -12,7 +12,15 @@
 @mixin component {
     @include b(igx-grid-toolbar) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-button,
+                igx-column-actions,
+                igx-icon,
+                igx-progress-linear,
+            )
+        );
 
         @extend %igx-grid-toolbar !optional;
 

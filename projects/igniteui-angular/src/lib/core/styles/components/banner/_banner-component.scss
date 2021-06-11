@@ -12,7 +12,14 @@
 @mixin component {
     @include b(igx-banner) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-button,
+                igx-expansion-panel,
+                igx-icon,
+            )
+        );
 
         @extend %igx-banner !optional;
 

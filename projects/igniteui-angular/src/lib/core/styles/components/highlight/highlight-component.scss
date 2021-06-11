@@ -13,7 +13,10 @@
     @include b(igx-highlight) {
         // Register the component in the component registry
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: ()
+        );
 
         @extend %igx-highlight !optional;
 

@@ -16,7 +16,13 @@
 
     @include b(igx-tree-node) {
         $this: bem--selector-to-string(&);
-        @include register-component(string.slice($this, 2, -1));
+        @include register-component(
+            $name: string.slice($this, 2, -1),
+            $deps: (
+                igx-checkbox,
+                igx-icon,
+            )
+        );
 
         @extend %tree-node !optional;
 
