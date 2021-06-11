@@ -92,11 +92,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
-    /**
-     * Total pages calculated from totalRecords and perPage
-     */
-    public totalPages: number;
-
+    protected _totalPages: number;
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
@@ -174,10 +170,21 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._perPage = Number(value);
         this.perPageChange.emit(this._perPage);
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
-        this.totalPages = Math.ceil(this.totalRecords / this._perPage);
-        if (this.totalPages !== 0 && this.page >= this.totalPages) {
-            this.page = this.totalPages - 1;
+        if (this.totalRecords) {
+            this.totalPages = Math.ceil(this.totalRecords / this._perPage);
+            if (this.totalPages !== 0 && this.page >= this.totalPages) {
+                this.page = this.totalPages - 1;
+            }
         }
+    }
+
+    @Input()
+    public get totalPages() {
+        return this._totalPages;
+    }
+
+    public set totalPages(value: number) {
+        this._totalPages = value;
     }
 
     /**
@@ -188,6 +195,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      *
      * @memberof IgxPaginatorComponent
      */
+    @DeprecateProperty('`totalRecords` is deprecated. Set totalPages property instead.')
     @Input()
     public get totalRecords() {
         return this._totalRecords;
@@ -195,7 +203,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     public set totalRecords(value: number) {
         this._totalRecords = value;
-        this.totalPages = Math.ceil(this.totalRecords / this.perPage);
+        this.totalPages = this.totalPages ? this.totalPages : Math.ceil(this.totalRecords / this.perPage);
     }
 
     /**
