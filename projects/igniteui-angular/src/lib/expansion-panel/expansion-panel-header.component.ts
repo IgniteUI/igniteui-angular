@@ -173,7 +173,8 @@ export class IgxExpansionPanelHeaderComponent {
     public set disabled(val: boolean) {
         this._disabled = val;
         if (val) {
-            this.tabIndex = null;
+            // V.S. June 11th, 2021: #9696 TabIndex should be removed when panel is disabled
+            delete this.tabIndex;
         } else {
             this.tabIndex = 0;
         }
