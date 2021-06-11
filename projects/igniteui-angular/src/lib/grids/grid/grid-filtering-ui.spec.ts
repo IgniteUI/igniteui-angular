@@ -3504,7 +3504,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
             fix.detectChanges();
             await wait(1000);
-            
+
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(listItems.length).toBe(1, 'incorrect rendered list items count');
 
@@ -3512,7 +3512,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
             fix.detectChanges();
             await wait(1000);
-            
+
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
             expect(listItems.length).toBe(9, 'incorrect rendered list items count');
@@ -5191,15 +5191,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             for (const checkbox of listItemsCheckboxes) {
                 ControlsFunction.verifyCheckboxState(checkbox.parentElement);
             }
-        }));
-
-        it('Should have input type number when column dataType is number.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
-            flush();
-
-            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            expect(inputNativeElement.type).toBe('number', 'input type of number column is not number');
-
         }));
 
         it('Should filter cell by its formatted data when using FormattedValueFilteringStrategy', async () => {
