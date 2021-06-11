@@ -124,6 +124,6 @@ describe('Icon Service', () => {
         iconService.addSvgIconFromText(name, svgText, family);
 
         const svgContainer = document.body.querySelector('.igx-svg-container');
-        expect(svgContainer).toHaveClass('igx-svg-container');
+        expect(svgContainer).not.toBeNull();
     });
 });
