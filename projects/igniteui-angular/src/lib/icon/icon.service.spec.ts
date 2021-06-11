@@ -113,4 +113,17 @@ describe('Icon Service', () => {
 
         iconService.addSvgIcon(name, 'test.svg', family);
     });
+
+    it('should create svg container inside the body', () => {
+        const iconService = TestBed.inject(IgxIconService) as IgxIconService;
+        const document = TestBed.inject(DOCUMENT);
+
+        const name = 'test';
+        const family = 'svg-icons';
+
+        iconService.addSvgIconFromText(name, svgText, family);
+
+        const svgContainer = document.body.querySelector('.igx-svg-container');
+        expect(svgContainer).toHaveClass('igx-svg-container');
+    });
 });
