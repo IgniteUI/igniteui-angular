@@ -1,4 +1,4 @@
-import { ColumnType, ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -45,10 +45,10 @@ export class WorksheetData {
             return;
         }
 
-        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.type === ColumnType.MultiColumnHeader);
+        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
         const hasHierarchicalGridRecord = this._data[0].type === ExportRecordType.HierarchicalGridRecord;
 
-        if (hasHierarchicalGridRecord || isMultiColumnHeader)  {
+        if (hasHierarchicalGridRecord || (isMultiColumnHeader && !this.options.ignoreMultiColumnHeaders))  {
             this.options.exportAsTable = false;
         }
 

@@ -462,30 +462,6 @@ export class ColumnDefinitions {
 
     public static multiColHeadersExportColumns = `
         <igx-column [movable]="true" [resizable]="true" field="ID" [filterable]="false"></igx-column>
-        <igx-column-group [movable]="true" header="General Information">
-            <igx-column [movable]="true" field="CompanyName"></igx-column>
-            <igx-column-group [movable]="true" header="Personal Details">
-                <igx-column [movable]="true" field="ContactName"></igx-column>
-                <igx-column [movable]="true" field="ContactTitle"></igx-column>
-            </igx-column-group>
-        </igx-column-group>
-        <igx-column-group header="Address Information">
-            <igx-column-group header="Location">
-                <igx-column field="Country"></igx-column>
-                <igx-column field="Region"></igx-column>
-                <igx-column field="City"></igx-column>
-                <igx-column field="Address"></igx-column>
-            </igx-column-group>
-            <igx-column-group header="Contact Information">
-                <igx-column field="Phone"></igx-column>
-                <igx-column field="Fax"></igx-column>
-                <igx-column field="PostalCode"></igx-column>
-            </igx-column-group>
-        </igx-column-group>
-  `;
-
-  public static collapsibleMultiColHeadersExportColumns = `
-        <igx-column [movable]="true" [resizable]="true" field="ID" [filterable]="false"></igx-column>
         <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expanded]="true">
             <igx-column [movable]="true" field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
             <igx-column-group [movable]="true" header="Personal Details" [collapsible]="true" [expanded]="false"

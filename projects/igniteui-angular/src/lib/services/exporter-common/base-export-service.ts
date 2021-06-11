@@ -27,7 +27,7 @@ export enum ExportRecordType {
     HeaderRecord = 5,
 }
 
-export enum ColumnType {
+export enum HeaderType {
     ColumnHeader = 1,
     MultiColumnHeader = 2
 }
@@ -55,9 +55,9 @@ export interface IColumnInfo {
     skipFormatter?: boolean;
     formatter?: any;
 
-    type?: ColumnType;
+    type?: HeaderType;
     startIndex?: number;
-    columnSpans?: number;
+    columnSpan?: number;
     level?: number;
     pinnedIndex?: number;
 }
@@ -176,10 +176,14 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
-        const columns = grid.columnList.toArray();
+        //this.options.ignoreMultiColumnHeaders = true;
+        let columns = grid.columnList.toArray();
 
-        //const columnList = this.getColumns(columns);
-        const columnList = this.getMultiCols(columns);
+        if (this.options.ignoreMultiColumnHeaders) {
+            columns = columns.filter(col => col.children === undefined);
+        }
+
+        const columnList = this.getColumns(columns);
 
         const tagName = grid.nativeElement.tagName.toLowerCase();
 
@@ -299,7 +303,7 @@ export abstract class IgxBaseExporter {
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
             const columns = record.owner === undefined ?
-                this._ownersMap.get(DEFAULT_OWNER).columns.filter(c => c.type !== ColumnType.MultiColumnHeader) :
+                this._ownersMap.get(DEFAULT_OWNER).columns.filter(c => c.type !== HeaderType.MultiColumnHeader) :
                 this._ownersMap.get(record.owner).columns;
 
             record.data = columns.reduce((a, e) => {
@@ -732,19 +736,21 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private getMultiCols(columns: any[]): IColumnList {
-        let colList = [];
+    private getColumns(columns: any[]): IColumnList {
+        const colList = [];
         const colWidthList = [];
         const hiddenColumns = [];
         let indexOfLastPinnedColumn = -1;
         let lastVisibleColumnIndex = -1;
         let maxLevel = 0;
 
+
         columns.forEach((column) => {
             const columnHeader = !ExportUtilities.isNullOrWhitespaces(column.header) ? column.header : column.field;
             const exportColumn = !column.hidden || this.options.ignoreColumnsVisibility;
             const index = this.options.ignoreColumnsOrder || this.options.ignoreColumnsVisibility ? column.index : column.visibleIndex;
             const columnWidth = Number(column.width?.slice(0, -2)) || DEFAULT_COLUMN_WIDTH;
+            const columnLevel = !this.options.ignoreMultiColumnHeaders ? column.level : 0;
 
             const isMultiColHeader = column instanceof IgxColumnGroupComponent;
             const colSpan = isMultiColHeader ?
@@ -760,14 +766,15 @@ export abstract class IgxBaseExporter {
                 skip: !exportColumn,
                 formatter: column.formatter,
                 skipFormatter: false,
-                type: isMultiColHeader ? ColumnType.MultiColumnHeader : ColumnType.ColumnHeader,
-                columnSpans: colSpan,
-                level: column.level,
+
+                type: isMultiColHeader ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
+                columnSpan: colSpan,
+                level: columnLevel,
                 startIndex: index,
                 pinnedIndex: !column.pinned ? Number.MAX_VALUE : !column.hidden ? column.grid.pinnedColumns.indexOf(column) : NaN
             };
 
-            if (column.level > maxLevel) {
+            if (column.level > maxLevel && !this.options.ignoreMultiColumnHeaders) {
                 maxLevel = column.level;
             }
 
@@ -779,9 +786,10 @@ export abstract class IgxBaseExporter {
                 hiddenColumns.push(columnInfo);
             }
 
-            if (column.pinned && exportColumn && columnInfo.type === ColumnType.ColumnHeader) {
+            if (column.pinned && exportColumn && columnInfo.type === HeaderType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
             }
+
         });
 
         //Append the hidden columns to the end of the list
@@ -789,64 +797,11 @@ export abstract class IgxBaseExporter {
             colList[++lastVisibleColumnIndex] = hiddenColumn;
         });
 
-        if (this.options.ignoreColumnsOrder) {
-            colList = colList.sort((a,b) => a.index - b.index);
-        }
-
         const result: IColumnList = {
             columns: colList,
             columnWidths: colWidthList,
             indexOfLastPinnedColumn,
             maxLevel
-        };
-
-        return result;
-    }
-
-    private getColumns(columns: any[]): IColumnList {
-        const colList = [];
-        const colWidthList = [];
-        const hiddenColumns = [];
-        let indexOfLastPinnedColumn = -1;
-        let lastVisibleColumnIndex = -1;
-
-        columns.forEach((column) => {
-            const columnHeader = !ExportUtilities.isNullOrWhitespaces(column.header) ? column.header : column.field;
-            const exportColumn = !column.hidden || this.options.ignoreColumnsVisibility;
-            const index = this.options.ignoreColumnsOrder || this.options.ignoreColumnsVisibility ? column.index : column.visibleIndex;
-            const columnWidth = Number(column.width?.slice(0, -2)) || DEFAULT_COLUMN_WIDTH;
-
-            const columnInfo: IColumnInfo = {
-                header: columnHeader,
-                dataType: column.dataType,
-                field: column.field,
-                skip: !exportColumn,
-                formatter: column.formatter,
-                skipFormatter: false
-            };
-
-            if (index !== -1) {
-                colList[index] = columnInfo;
-                colWidthList[index] = columnWidth;
-                lastVisibleColumnIndex = Math.max(lastVisibleColumnIndex, index);
-            } else {
-                hiddenColumns.push(columnInfo);
-            }
-
-            if (column.pinned && exportColumn) {
-                indexOfLastPinnedColumn++;
-            }
-        });
-
-        // Append the hidden columns to the end of the list
-        hiddenColumns.forEach((hiddenColumn) => {
-            colList[++lastVisibleColumnIndex] = hiddenColumn;
-        });
-
-        const result: IColumnList = {
-            columns: colList,
-            columnWidths: colWidthList,
-            indexOfLastPinnedColumn
         };
 
         return result;
