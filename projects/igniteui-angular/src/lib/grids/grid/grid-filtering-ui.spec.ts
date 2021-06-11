@@ -3492,7 +3492,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
         });
 
-        fit('Should allow to input commas in excel search component input field.', async () => {
+        it('Should allow to input commas in excel search component input field.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ID');
             fix.detectChanges();
             await wait(100);
