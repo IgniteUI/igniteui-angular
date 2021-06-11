@@ -3492,6 +3492,30 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
         });
 
+        fit('Should allow to input commas in excel search component input field.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ID');
+            fix.detectChanges();
+            await wait(100);
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 2,514 in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '2,514', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(listItems.length).toBe(1, 'incorrect rendered list items count');
+
+            // Type non-numerical symbol in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            expect(inputNativeElement.value).toBeUndefined('incorrect rendered list items count');
+            expect(listItems.length).toBe(6, 'incorrect rendered list items count');
+        });
+
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
@@ -3810,6 +3834,8 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = displayContainer.querySelectorAll('igx-list-item');
             expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         }));
+
+
 
         it('should correctly display all items in search list after filtering it', (async () => {
             // Add additional rows as prerequisite for the test
