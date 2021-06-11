@@ -350,6 +350,7 @@ export const NAVIGATION_KEYS = new Set([
     'spacebar',
     ' '
 ]);
+export const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.split(' '));
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);

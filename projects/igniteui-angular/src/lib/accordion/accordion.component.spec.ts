@@ -253,12 +253,12 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.elementRef.nativeElement);
             fix.detectChanges();
 
-            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
 
             UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.elementRef.nativeElement);
             fix.detectChanges();
 
-            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
         });
 
         it('Should focus the first/last panel on Home/End key press', () => {

@@ -10,8 +10,9 @@ import {
     Output,
     QueryList
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { fromEvent, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { ACCORDION_NAVIGATION_KEYS } from '../core/utils';
 import { IExpansionPanelCancelableEventArgs, IExpansionPanelEventArgs } from '../expansion-panel/expansion-panel.common';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
@@ -30,10 +31,10 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * Sets/gets the `id` of the accordion component.
      * If not set, `id` will have value `"igx-accordion-0"`;
      * ```html
-     * <igx-accordion id = "my-first-accordion"></igx-expansion-panel>
+     * <igx-accordion id="my-first-accordion"></igx-expansion-panel>
      * ```
      * ```typescript
-     * const accordionId =  this.accordion.id;
+     * const accordionId=this.accordion.id;
      * ```
      *
      * @memberof IgxAccordionComponent
@@ -74,7 +75,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * @param expansionMode: IgxAccordionExpansionMode
      */
     @Input()
-    public get expansionMode() {
+    public get expansionMode(): IgxAccordionExpansionMode {
         return this._expansionMode;
     }
     public set expansionMode(expansionMode: IgxAccordionExpansionMode) {
@@ -89,7 +90,8 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this._expansionMode = expansionMode;
     }
 
-    /** Emitted when a panel is expanding, before it finishes
+    /**
+     * Emitted when a panel is expanding, before it finishes
      *
      * ```html
      * <igx-accordion (panelExpanding)="handlePanelExpanding($event)">
@@ -97,7 +99,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      *
      *```typescript
-     * public handlePanelExpanding(event) {
+     * public handlePanelExpanding(event: IExpansionPanelCancelableEventArgs){
      *  const expandedPanel: IgxExpansionPanelComponent = event.panel;
      *  if (expandedPanel.disabled) {
      *      event.cancel = true;
@@ -116,7 +118,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      *
      *```typescript
-     * public handlePanelExpanded(event) {
+     * public handlePanelExpanded(event: IExpansionPanelCancelableEventArgs) {
      *  const expandedPanel: IgxExpansionPanelComponent = event.panel;
      *  console.log("Panel is expanded: ", expandedPanel.id);
      * }
@@ -165,6 +167,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     private _expansionMode: IgxAccordionExpansionMode = IgxAccordionExpansionMode.Single;
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
+    private enabledPanels: IgxExpansionPanelComponent[];
 
     constructor(private accordionService: IgxAccordionService) {
         this.accordionService.register(this);
@@ -212,7 +215,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         }
 
         this.panels.forEach(panel => {
-            if (panel.collapsed) {
+            if (panel.collapsed && !panel.header.disabled) {
                 panel.expand();
             }
         });
@@ -231,14 +234,68 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         }
 
         this.panels.forEach(panel => {
-            if (!panel.collapsed) {
+            if (!panel.collapsed && !panel.header.disabled) {
                 panel.collapse();
             }
         });
     }
 
-    public handleKeydown(ev) {
+    public handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent) {
+        const key = event.key.toLowerCase();
+        if (!(ACCORDION_NAVIGATION_KEYS.has(key))) {
+            return;
+        }
+        this.enabledPanels = this._panels.filter(p => !p.header.disabled);
+        event.preventDefault();
+        if (event.repeat) {
+            setTimeout(() => this.handleNavigation(event, panel), 1);
+        } else {
+            this.handleNavigation(event, panel);
+        }
+    }
 
+    private handleNavigation(event: KeyboardEvent, panel: IgxExpansionPanelComponent) {
+        switch (event.key.toLowerCase()) {
+            case 'home':
+                this.enabledPanels[0].header.elementRef.nativeElement.children[0].focus();
+                break;
+            case 'end':
+                this.enabledPanels[this.enabledPanels.length - 1].header.elementRef.nativeElement.children[0].focus();
+                break;
+            case 'arrowup':
+            case 'up':
+                this.handleUpDownArrow(true, event, panel);
+                break;
+            case 'arrowdown':
+            case 'down':
+                this.handleUpDownArrow(false, event, panel);
+                break;
+            default:
+                return;
+        }
+    }
+
+    private handleUpDownArrow(isUp: boolean, event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
+        if (!event.altKey) {
+            const focusedPanel = panel;
+            const next = this.getNextPanel(focusedPanel, isUp ? -1 : 1);
+            if (next === focusedPanel) {
+                return;
+            }
+            next.header.elementRef.nativeElement.children[0].focus();
+        }
+        if (event.altKey && event.shiftKey) {
+            if (isUp) {
+                this.collapseAll();
+            } else {
+                this.expandAll();
+            }
+        }
+    }
+
+    private getNextPanel(panel: IgxExpansionPanelComponent, dir: 1 | -1 = 1): IgxExpansionPanelComponent {
+        const panelIndex = this.enabledPanels.indexOf(panel);
+        return this.enabledPanels[panelIndex + dir] || panel;
     }
 
     private subToChanges() {
@@ -265,6 +322,11 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
             panel.contentCollapsing.pipe(takeUntil(this.unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
                 this.panelCollapsing.emit(args);
             });
+            fromEvent(panel.header.elementRef.nativeElement, 'keydown')
+                .pipe(takeUntil(this.unsubChildren$))
+                .subscribe((e: KeyboardEvent) => {
+                    this.handleKeydown(e, panel);
+                });
         });
     }
 
