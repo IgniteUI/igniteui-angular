@@ -528,7 +528,7 @@ $p-test: igx-palette(#fff, #000);
     $register: map.keys($components);
     @each $item in $items {
         @if not(list.index($register, $item)) {
-            @error unquote('Can\'t exclude "#{$item}" because it is not in the list of known components.');
+            @warn unquote('Can\'t exclude "#{$item}" because it is not in the list of known components.');
         }
     }
     @return $items;
@@ -970,8 +970,9 @@ $p-test: igx-palette(#fff, #000);
     @return $string;
 }
 
+/// @access private
 @function is-used($name, $checklist) {
-    $result: true;
+    $used: true;
 
     @if list.index($checklist, $name) {
         $deps: map.get($components, $name, 'usedBy');
@@ -983,14 +984,14 @@ $p-test: igx-palette(#fff, #000);
             }
         }
 
-        $result: list.length($deps) != list.length($excluded);
+        $used: list.length($deps) != list.length($excluded);
 
-        @if $result {
-            @warn 'You\'ve opted to exclude the "#{$name}" theme, but it was held back as it\'s used by the following themes: #{$deps}.';
+        @if not($used) {
+            $dropped-themes: list.append($dropped-themes, $name) !global;
         } @else {
-            @warn 'You have excluded the following themes: "#{$excluded}".'
+            @warn 'You\'ve opted to exclude the "#{$name}" theme but it was held back as the following themes depend on it: "#{$deps}".';
         }
     }
 
-    @return $result;
+    @return $used;
 }

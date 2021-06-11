@@ -88,7 +88,7 @@
     @if $component == null {
         $components: map.merge($components, (
             #{$name}: (
-                usedBy: ( )
+                usedBy: ()
             ),
         )) !global;
     }
@@ -412,8 +412,4 @@
     -webkit-line-clamp: if($lines, $lines, initial);
     -webkit-box-orient: if($vertical, vertical, initial);
     overflow: hidden;
-}
-
-@mixin warn($message) {
-    @warn $message;
 }

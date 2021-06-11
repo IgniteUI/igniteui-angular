@@ -20,10 +20,10 @@ $keyframes: () !default;
 /// @type List
 $components: () !default;
 
-/// The palette as passed to the igx-theme mixin
+/// The palette as passed to the igx-theme mixin.
 $theme-palette: null !default;
 
-/// Determines if IE11 is enabled
+/// Determines if IE11 is enabled.
 $igx-legacy-support: false !default;
 
 /// Determines the content direction.
@@ -31,3 +31,6 @@ $direction: ltr !default;
 
 /// Determines whether color-blind palettes are enabled.
 $enhanced-accessibility: false !default;
+
+/// Stores a list of dropped component themes.
+$dropped-themes: () !default;

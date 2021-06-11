@@ -1,9 +1,9 @@
 @use '../../projects/igniteui-angular/src/lib/core/styles/themes' as *;
 
-$palette: $light-material-palette;
-$schema: $light-material-schema;
-$typeface: $material-typeface;
-$type-scale: $material-type-scale;
+$palette: $dark-indigo-palette;
+$schema: $dark-indigo-schema;
+$typeface: $indigo-typeface;
+$type-scale: $indigo-type-scale;
 
 $legacy-support: false;
 $direction: ltr;
