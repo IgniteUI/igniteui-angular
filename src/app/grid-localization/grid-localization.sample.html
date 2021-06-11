@@ -1,0 +1,23 @@
+<div class="sample-column">
+    <div class="grid-wrapper">
+        <igx-grid #grid [data]="data" [autoGenerate]="false" height="520px" width="100%"
+            [allowFiltering]="true" [locale]="locale" displayDensity="compact">
+            <igx-column field="Category" header="Category" [dataType]="'string'" [groupable]="true">
+            </igx-column>
+            <igx-column field="Type" header="Type" [sortable]="true" [hasSummary]="true" [editable]="true"
+                [dataType]="'string'" [groupable]="true">
+            </igx-column>
+            <igx-column field="Price" header="Price" [dataType]="'number'" [groupable]="true">
+            </igx-column>
+            <igx-column field="Sell" header="Sell" [dataType]="'number'" [groupable]="true">
+            </igx-column>
+            <igx-column field="Buy" header="Buy" [dataType]="'number'" [groupable]="true">
+            </igx-column>
+        </igx-grid>
+        <igx-select [(ngModel)]="locale" (ngModelChange)="updateLocale()">
+            <igx-select-item *ngFor="let locale of selectLocales" [value]="locale">
+                {{ locale }}
+            </igx-select-item>
+        </igx-select>
+    </div>
+</div>
