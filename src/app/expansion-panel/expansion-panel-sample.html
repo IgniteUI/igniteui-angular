@@ -6,7 +6,7 @@
     </div>
     <div class="game-board">
         <igx-expansion-panel [animationSettings]="animationSettings" class="game-board__collapsible" (contentCollapsed)="handleCollapsed($event)"
-            (contentExpanded)="handleExpanded($event)" #collapsibleComponent [collapsed]="false">
+            (contentExpanded)="handleExpanded($event)" #collapsibleComponent [collapsed]="true">
             <igx-expansion-panel-header [iconPosition]="iconPosition" (interaction)="onInteraction($event)"
                 [disabled]="false">
                 <igx-expansion-panel-title>Current Winning Player:</igx-expansion-panel-title>
@@ -17,7 +17,12 @@
                 </igx-expansion-panel-icon>
             </igx-expansion-panel-header>
             <igx-expansion-panel-body>
-                <div style='width: 100%; height: 100%'>
+                <div style='width: 100%; height: 100%; padding: 24px'>
+                    <igx-input-group type="box">
+                        <label igxLabel>Test Input Type</label>
+                        <input igxInput placeholder="This input tests if the type works in expansion panels"/>
+                    </igx-input-group>
+                    <br>
                     <igx-grid class="game-board__grid" [data]="data">
                         <igx-column [sortable]="true" [field]="'Game'" [header]="'Game'" [pinned]="true">
                             <ng-template igxCell let-value>
