@@ -3500,10 +3500,10 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             const listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
 
-            // Type 2,514 in search box.
+            // Type 1,000 in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
             fix.detectChanges();
-            await wait(100);
+            await wait(1000);
 
             expect(listItems.length).toBe(1, 'incorrect rendered list items count');
 
@@ -3512,7 +3512,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             fix.detectChanges();
             await wait(1000);
 
-            expect(inputNativeElement.value).toBeUndefined('incorrect rendered list items count');
+            expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
             expect(listItems.length).toBe(9, 'incorrect rendered list items count');
         });
 
