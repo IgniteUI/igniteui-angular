@@ -218,6 +218,8 @@
     }
 
     %igx-expansion-panel--disabled {
+        pointer-events: none;
+
         %igx-expansion-panel__header-title,
         %igx-expansion-panel__header-description {
             color: --var($theme, 'disabled-color')
