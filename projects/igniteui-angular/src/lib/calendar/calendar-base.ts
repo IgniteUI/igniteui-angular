@@ -7,7 +7,6 @@ import { isDate, mkenum } from '../core/utils';
 import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
-import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 
 /**
@@ -748,6 +747,10 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
     }
 
     private validateDate(value: Date) {
-        return DateTimeUtil.isValidDate(value) ? value : new Date();
+        if (isDate(value) && !isNaN(value.getTime())) {
+            return value;
+        }
+
+        return new Date();
     }
 }
