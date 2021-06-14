@@ -120,6 +120,8 @@ import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
+import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const appRoutes = [
     {
@@ -481,6 +483,10 @@ const appRoutes = [
         component: GridMasterDetailSampleComponent
     },
     {
+        path: 'gridLocalization',
+        component: GridLocalizationSampleComponent
+    },
+    {
         path: 'gridRowEdit',
         component: GridRowEditSampleComponent
     },
@@ -574,6 +580,9 @@ const appRoutes = [
     {
         path: 'gridEvents',
         component: GridEventsComponent
+    },{
+        path: 'pagination',
+        component: PaginationSampleComponent
     }
 ];
 

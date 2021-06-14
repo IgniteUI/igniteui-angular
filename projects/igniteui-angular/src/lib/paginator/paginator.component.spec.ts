@@ -1,6 +1,6 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ViewChild, Component, TemplateRef } from '@angular/core';
+import { ViewChild, Component } from '@angular/core';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxPaginatorComponent, IgxPaginatorModule } from './paginator.component';
 import { configureTestSuite } from '../test-utils/configure-suite';
@@ -224,9 +224,7 @@ describe('IgxPaginator with custom settings', () => {
     beforeAll(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [
-                CustomizedPaginatorComponent,
-                DisabledPaginatorComponent,
-                HiddenPaginatorComponent
+                CustomizedPaginatorComponent
             ],
             imports: [IgxPaginatorModule, NoopAnimationsModule]
         }).compileComponents();
@@ -269,59 +267,29 @@ describe('IgxPaginator with custom settings', () => {
         expect(paginator.resourceStrings.igx_paginator_label).toEqual('Per page');
     });
 
-    it('should disable the dropdown and pager buttons if set to false through input', () => {
-        const fix = TestBed.createComponent(DisabledPaginatorComponent);
-        fix.detectChanges();
-
-        const select = fix.debugElement.query(By.css('igx-select')).nativeElement;
-        const selectDisabled = select.getAttribute('ng-reflect-is-disabled');
-
-        const pagingButtons = GridFunctions.getPagingButtons(fix.nativeElement);
-        pagingButtons.forEach(element => {
-            expect(element.className.includes('igx-button--disabled')).toBe(true);
-        });
-
-        expect(selectDisabled).toBeTruthy();
-    });
-
-    it('should hide the dropdown and pager if set to false through input', () => {
-        const fix = TestBed.createComponent(HiddenPaginatorComponent);
-        fix.detectChanges();
-
-        const select = fix.debugElement.query(By.css('.igx-paginator__select')).nativeElement;
-        const selectHidden = select.hasAttribute('hidden');
-
-        const pager = fix.debugElement.query(By.css('.igx-paginator__pager')).nativeElement;
-        const pagerHidden = pager.hasAttribute('hidden');
-
-        expect(selectHidden).toBeTruthy();
-        expect(pagerHidden).toBeTruthy();
-    });
-
 });
 @Component({
     template: `
-        <igx-paginator [totalRecords]="42"></igx-paginator>
-        <ng-template #customPager let-api>
-            <div class="igx-grid__footer">
+        <igx-paginator #pg [totalRecords]="42">
+            <igx-paginator-content *ngIf="customContent">
                 <div id="numberPager" class="igx-paginator" style="justify-content: center;">
-                    <button class="customPrev" [disabled]="api.isFirstPageDisabled" (click)="api.previousPage()" igxButton="flat">
+                    <button class="customPrev" [disabled]="pg.isFirstPageDisabled" (click)="pg.previousPage()" igxButton="flat">
                         PREV
                     </button>
-                    <span class="currPage" style="margin-left:10px; margin-right: 10px"> {{api.page}} </span>
-                    <button class="customNext" [disabled]="api.isLastPageDisabled" (click)="api.nextPage()" igxButton="flat">
+                    <span class="currPage" style="margin-left:10px; margin-right: 10px"> {{pg.page}} </span>
+                    <button class="customNext" [disabled]="pg.isLastPageDisabled" (click)="pg.nextPage()" igxButton="flat">
                         NEXT
                     </button>
                 </div>
-            </div>
-        </ng-template>`
+            </igx-paginator-content>
+        </igx-paginator>`
 })
 export class DefaultPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
-    @ViewChild('customPager', { read: TemplateRef, static: true }) public customPager: TemplateRef<any>;
+    public customContent = false;
 
     public setCustomPager() {
-        this.paginator.paginationTemplate = this.customPager;
+        this.customContent = true;
     }
 }
 @Component({
@@ -336,24 +304,3 @@ export class CustomizedPaginatorComponent {
     @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
 }
 
-@Component({
-    template: `<igx-paginator
-        [pagerEnabled]="false"
-        [dropdownEnabled]="false"
-        >
-        </igx-paginator>`
-})
-export class DisabledPaginatorComponent {
-    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
-}
-
-@Component({
-    template: `<igx-paginator
-        [pagerHidden]="true"
-        [dropdownHidden]="true"
-        >
-        </igx-paginator>`
-})
-export class HiddenPaginatorComponent {
-    @ViewChild(IgxPaginatorComponent, { static: true }) public paginator: IgxPaginatorComponent;
-}

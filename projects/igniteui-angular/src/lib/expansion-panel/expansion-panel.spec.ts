@@ -114,6 +114,8 @@ describe('igxExpansionPanel', () => {
 
             spyOn(panel.contentCollapsed, 'emit');
             spyOn(panel.contentExpanded, 'emit');
+            spyOn(panel.contentCollapsing, 'emit');
+            spyOn(panel.contentExpanding, 'emit');
             spyOn(header.interaction, 'emit').and.callThrough();
             spyOn(panel, 'toggle').and.callThrough();
             spyOn(panel, 'expand').and.callThrough();
@@ -123,6 +125,7 @@ describe('igxExpansionPanel', () => {
             tick();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(0);
             expect(header.interaction.emit).toHaveBeenCalledTimes(1);
             expect(panel.toggle).toHaveBeenCalledTimes(1);
             expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
@@ -130,6 +133,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.expand).toHaveBeenCalledWith(mockEvent);
             expect(panel.collapse).toHaveBeenCalledTimes(0);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
             expect(header.interaction.emit).toHaveBeenCalledWith({
                 event: mockEvent, panel: header.panel, owner: header.panel, cancel: false
             });
@@ -138,13 +142,13 @@ describe('igxExpansionPanel', () => {
             tick();
             fixture.detectChanges();
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1); // First Collapse
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
             expect(panel.toggle).toHaveBeenCalledTimes(2);
             expect(panel.toggle).toHaveBeenCalledWith(mockEvent);
             expect(panel.expand).toHaveBeenCalledTimes(1);
             expect(panel.collapse).toHaveBeenCalledTimes(1);
             expect(panel.collapse).toHaveBeenCalledWith(mockEvent);
-            expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
 
             header.disabled = true;
             header.onAction(mockEvent);
@@ -153,8 +157,10 @@ describe('igxExpansionPanel', () => {
 
             // No additional calls, because panel.disabled === true
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
             expect(header.interaction.emit).toHaveBeenCalledTimes(2);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
 
             // cancel event
             header.disabled = false;
@@ -172,6 +178,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.collapsed).toBeTruthy();
             expect(header.interaction.emit).toHaveBeenCalledTimes(3);
             expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
 
             // expand via API
             panel.expand();
@@ -190,6 +197,63 @@ describe('igxExpansionPanel', () => {
             expect(header.interaction.emit).toHaveBeenCalledTimes(4);
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
+
+        it('Should allow expanding and collapsing events to be cancelled', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            spyOn(panel.contentExpanded, 'emit').and.callThrough();
+            spyOn(panel.contentCollapsed, 'emit').and.callThrough();
+            expect(panel).toBeDefined();
+            expect(panel.collapsed).toBeTruthy();
+            expect(panel.contentExpanded.emit).not.toHaveBeenCalled();
+            expect(panel.contentCollapsed.emit).not.toHaveBeenCalled();
+            let sub = panel.contentExpanding.subscribe((e) => e.cancel = true);
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            expect(panel.collapsed).toBeTruthy();
+            expect(panel.contentExpanded.emit).not.toHaveBeenCalled();
+            sub.unsubscribe();
+            panel.expand();
+            tick();
+            fixture.detectChanges();
+            expect(panel.collapsed).toBeFalsy();
+            expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            sub = panel.contentCollapsing.subscribe((e) => e.cancel = true);
+            panel.collapse();
+            tick();
+            fixture.detectChanges();
+            expect(panel.collapsed).toBeFalsy();
+            expect(panel.contentCollapsed.emit).not.toHaveBeenCalled();
+            sub.unsubscribe();
+            panel.collapse();
+            tick();
+            fixture.detectChanges();
+            expect(panel.collapsed).toBeTruthy();
+            expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
+        }));
+
+        it('Should NOT assign tabIndex to header when disabled', () => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panelHeader = fixture.componentInstance.header;
+            expect(panelHeader).toBeDefined();
+            expect(panelHeader.disabled).toBeFalsy();
+            let innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('0');
+            panelHeader.disabled = true;
+            fixture.detectChanges();
+            innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex']).toBeUndefined();
+            panelHeader.disabled = false;
+            fixture.detectChanges();
+            innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
+            expect(innerElement).toBeDefined();
+            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('0');
+        });
     });
 
     describe('Expansion tests: ', () => {

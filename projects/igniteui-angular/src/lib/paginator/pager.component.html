@@ -1,0 +1,20 @@
+<div class="igx-paginator__pager" role="navigation">
+    <button [title]="paginator.resourceStrings.igx_paginator_first_page_button_text" [disabled]="paginator.isFirstPageDisabled" [attr.aria-disabled]="paginator.isFirstPageDisabled" (click)="paginator.paginate(0)" igxButton="icon" igxRipple [igxRippleCentered]="true">
+        <igx-icon>first_page</igx-icon>
+    </button>
+    <button [title]="paginator.resourceStrings.igx_paginator_previous_page_button_text" [disabled]="paginator.isFirstPageDisabled" [attr.aria-disabled]="paginator.isFirstPageDisabled" (click)="paginator.previousPage()" igxButton="icon" igxRipple [igxRippleCentered]="true">
+        <igx-icon>chevron_left</igx-icon>
+    </button>
+    <div class='igx-paginator__pager-text' aria-current="page">
+        <span>{{ paginator.page + 1 }}</span>
+        <span>&nbsp;{{ paginator.resourceStrings.igx_paginator_pager_text }}&nbsp;</span>
+        <span>{{ paginator.totalPages }}</span>
+    </div>
+    <button [title]="paginator.resourceStrings.igx_paginator_next_page_button_text" [disabled]="paginator.isLastPageDisabled" [attr.aria-disabled]="paginator.isLastPageDisabled" (click)="paginator.nextPage()" igxRipple [igxRippleCentered]="true" igxButton="icon">
+        <igx-icon>chevron_right</igx-icon>
+    </button>
+    <button [title]="paginator.resourceStrings.igx_paginator_last_page_button_text" [disabled]="paginator.isLastPageDisabled" [attr.aria-disabled]="paginator.isLastPageDisabled" (click)="paginator.paginate(paginator.totalPages - 1)" igxButton="icon" igxRipple
+        [igxRippleCentered]="true">
+        <igx-icon>last_page</igx-icon>
+    </button>
+</div>

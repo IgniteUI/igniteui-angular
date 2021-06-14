@@ -19,7 +19,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         const ls = update.getDefaultLanguageService(entryPath);
         let content = host.read(entryPath).toString();
         for (const change of changes) {
-            const matches = findMatches(content, change);
+            const matches = findMatches(content, change.member);
             for (const position of matches) {
                 const definition = ls.getDefinitionAndBoundSpan(entryPath, position - 1)?.definitions[0];
                 if (definition
