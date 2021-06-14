@@ -77,7 +77,7 @@ const css = (element) => {
     return ret;
 };
 
-const addScrollDivToElement = (parent) => {
+export const addScrollDivToElement = (parent) => {
     const scrollDiv = document.createElement('div');
     scrollDiv.style.width = '100px';
     scrollDiv.style.height = '100px';
