@@ -14,6 +14,7 @@ import { IgxToggleModule } from '../directives/toggle/toggle.directive';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { HorizontalAlignment, VerticalAlignment, ConnectedPositioningStrategy, AbsoluteScrollStrategy } from '../services/public_api';
 import { IgxSelectModule } from './select.module';
+import { addScrollDivToElement } from '../services/overlay/overlay.spec';
 
 const CSS_CLASS_INPUT_GROUP = 'igx-input-group';
 const CSS_CLASS_INPUT = 'igx-input-group__input';
@@ -2224,6 +2225,7 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+                addScrollDivToElement(fixture.nativeElement);
             }));
             it('should display selected item over input and all other items without scroll', fakeAsync(() => {
                 hasScroll = false;
@@ -2356,7 +2358,7 @@ describe('igxSelect', () => {
                     (select.element as HTMLElement).parentElement.style.marginTop = '10px';
                     fixture.detectChanges();
                 }));
-            it('should display selected item and all possible items above when last item is selected',
+           it('should display selected item and all possible items above when last item is selected',
             // there is NO enough scroll left in scroll container so the dropdown is REPOSITIONED below the input
                 fakeAsync(() => {
                     selectedItemIndex = 9;
@@ -2471,6 +2473,7 @@ describe('igxSelect', () => {
                 tick();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
+                addScrollDivToElement(fixture.nativeElement);
             }));
             it('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
                 hasScroll = false;
@@ -2820,7 +2823,8 @@ class IgxSelectMiddleComponent {
     public items: string[] = [
         'Option 1',
         'Option 2',
-        'Option 3'];
+        'Option 3'
+    ];
 }
 @Component({
     template: `
