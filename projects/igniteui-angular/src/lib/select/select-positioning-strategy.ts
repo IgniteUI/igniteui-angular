@@ -2,7 +2,6 @@ import { VerticalAlignment, HorizontalAlignment, PositionSettings, Size, Util, C
 import { IPositionStrategy } from '../services/overlay/position';
 import { fadeOut, fadeIn } from '../animations/main';
 import { IgxSelectBase } from './select.common';
-import { isIE } from '../core/utils';
 import { BaseFitPositionStrategy } from '../services/overlay/position/base-fit-position-strategy';
 
 /** @hidden @internal */
@@ -31,8 +30,8 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_styles: SelectStyles = {};
 
     /** @inheritdoc */
-    position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
-        this.select.scrollContainer.scrollTop = 0;
+    // eslint-disable-next-line max-len
+    public position(contentElement: HTMLElement, size: Size, document?: Document, initialCall?: boolean, target?: Point | HTMLElement): void {
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
@@ -47,6 +46,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         };
 
         if (initialCall) {
+            this.select.scrollContainer.scrollTop = 0;
             // Fill in the required selectFit object properties.
             selectFit.viewPortRect = Util.getViewportRect(document);
             selectFit.itemElement = this.getInteractionItemElement();
@@ -62,9 +62,11 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
             super.updateViewPortFit(selectFit);
             // container does not fit in viewPort and is out on Top or Bottom
-            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0 ) {
+            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0) {
                 this.fitInViewport(contentElement, selectFit);
             }
+            // Calculate scrollTop independently of the dropdown, as we cover all `igsSelect` specific positioning and
+            // scrolling to selected item scenarios here.
             this.select.scrollContainer.scrollTop = selectFit.scrollAmount;
         }
         this.setStyles(contentElement, selectFit);
@@ -168,14 +170,10 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Obtain the selected item if there is such one or otherwise use the first one
      */
-    public getInteractionItemElement(): HTMLElement {
+     public getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
-            // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
-            if (isIE()) {
-                this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
-            }
         } else {
             itemElement = this.select.getFirstItemElement();
         }

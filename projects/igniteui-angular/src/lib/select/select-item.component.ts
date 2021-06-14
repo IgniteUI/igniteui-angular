@@ -62,6 +62,6 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
     /** @hidden @internal */
     public isHeader: boolean;
 
-    ngDoCheck(): void {
+    public ngDoCheck(): void {
     }
 }

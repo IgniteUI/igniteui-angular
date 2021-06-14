@@ -97,6 +97,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     private ngControl: NgControl = null;
     private _overlayDefaults: OverlaySettings;
+    // Overlay settings can be passed & overridden both as @Input or when using open method. Ensure using the latest by caching it.
+    private _overlayCached: OverlaySettings;
     private _value: any;
     private _type = null;
     protected destroy$ = new Subject<boolean>();
@@ -409,7 +411,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.navigateFirst();
         }
 
-        super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        this._overlayCached = this.cacheOverlaySettings(overlaySettings);
+        super.open(this._overlayCached);
     }
 
     public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
@@ -418,7 +421,8 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
             return;
         }
-        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
+        this._overlayCached = this.cacheOverlaySettings(overlaySettings);
+        this.toggle(this._overlayCached);
 }
 
     /** @hidden @internal */
@@ -473,6 +477,10 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
     }
 
+    private cacheOverlaySettings(overlaySettings: OverlaySettings): OverlaySettings {
+        return Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings);
+    }
+
     /**
      * Event handlers
      * @hidden @internal
@@ -485,7 +493,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (args.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+    }
+
+    /** @hidden @internal */
+    public onToggleContentAppended() {
+        if (this.selectedItem && !(this._overlayCached.positionStrategy instanceof SelectPositioningStrategy)) {
+            // SelectPositioningStrategy manages scrolling to selected item on it's own. For all other strategies,
+            // scrolling is handled by the dropdown scroll implementation.
+            super.scrollToItem(this.selectedItem);
+        }
     }
 
     /** @hidden @internal */
