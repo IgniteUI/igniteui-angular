@@ -7,6 +7,7 @@ import { isDate, mkenum } from '../core/utils';
 import { IgxCalendarView } from './month-picker-base';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { ICalendarResourceStrings } from '../core/i18n/calendar-resources';
+import { DateTimeUtil } from '../date-common/util/date-time.util';
 
 
 /**
@@ -375,10 +376,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (Array.isArray(value)) {
             return;
         }
+
+        const validDate = this.validateDate(value);
         if (this._viewDate) {
-            this.selectedDatesWithoutFocus = value;
+            this.selectedDatesWithoutFocus = validDate;
         }
-        const date = this.getDateOnly(value).setDate(1);
+        const date = this.getDateOnly(validDate).setDate(1);
         this._viewDate = new Date(date);
     }
 
@@ -570,7 +573,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     protected getDateOnly(date: Date) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const validDate = this.validateDate(date);
+        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
     }
 
     /**
@@ -741,5 +745,9 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
+    }
+
+    private validateDate(value: Date) {
+        return DateTimeUtil.isValidDate(value) ? value : new Date();
     }
 }
