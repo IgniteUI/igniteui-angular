@@ -3503,15 +3503,15 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             // Type 1,000 in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
             fix.detectChanges();
-            await wait(1000);
+            await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
-            expect(listItems.length).toBe(1, 'incorrect rendered list items count');
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
 
             // Type non-numerical symbol in search box.
             UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
             fix.detectChanges();
-            await wait(1000);
+            await wait(100);
 
             listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
             expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
