@@ -250,15 +250,15 @@ describe('Rendering Tests', () => {
             accordion.panels[1].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[0].header.innerElement).toBe(document.activeElement);
 
-            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[1].header.innerElement).toBe(document.activeElement);
         });
 
         it('Should focus the first/last panel on Home/End key press', () => {
@@ -268,15 +268,15 @@ describe('Rendering Tests', () => {
             accordion.panels[1].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
             fix.detectChanges();
 
-            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('home', accordion.panels[1].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[0].header.innerElement).toBe(document.activeElement);
 
-            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('end', accordion.panels[0].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[1].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[1].header.innerElement).toBe(document.activeElement);
         });
 
         it('Should focus the correct panel on ArrowDown/ArrowUp key pressed', () => {
@@ -286,16 +286,16 @@ describe('Rendering Tests', () => {
             fix.detectChanges();
 
             // ArrowDown
-            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', accordion.panels[0].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowdown', accordion.panels[0].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[2].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[2].header.innerElement).toBe(document.activeElement);
 
             // ArrowUp
-            UIInteractions.triggerKeyDownEvtUponElem('arrowup', accordion.panels[2].header.elementRef.nativeElement);
+            UIInteractions.triggerKeyDownEvtUponElem('arrowup', accordion.panels[2].header.innerElement);
             fix.detectChanges();
 
-            expect(accordion.panels[0].header.elementRef.nativeElement.children[0]).toBe(document.activeElement);
+            expect(accordion.panels[0].header.innerElement).toBe(document.activeElement);
         });
 
         it(`Should expand/collapse all panels on SHIFT + ALT + ArrowDown/ArrowUp key pressed
@@ -310,14 +310,14 @@ describe('Rendering Tests', () => {
 
             //  SHIFT + ALT + ArrowDown
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
-                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+                accordion.panels[0].header.innerElement, true, true, true, false);
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => p.collapsed && !p.header.disabled).length).toEqual(0);
 
             //  SHIFT + ALT + ArrowUp
             UIInteractions.triggerKeyDownEvtUponElem('arrowup',
-                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+                accordion.panels[0].header.innerElement, true, true, true, false);
             fix.detectChanges();
             tick();
             fix.detectChanges();
@@ -337,14 +337,14 @@ describe('Rendering Tests', () => {
 
             //  SHIFT + ALT + ArrowDown
             UIInteractions.triggerKeyDownEvtUponElem('arrowdown',
-                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+                accordion.panels[0].header.innerElement, true, true, true, false);
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => p.collapsed).length).toEqual(collapsedCount);
 
             //  SHIFT + ALT + ArrowUp
             UIInteractions.triggerKeyDownEvtUponElem('arrowup',
-                accordion.panels[0].header.elementRef.nativeElement, true, true, true, false);
+                accordion.panels[0].header.innerElement, true, true, true, false);
             fix.detectChanges();
 
             expect(accordion.panels.filter(p => p.collapsed).length).toEqual(collapsedCount);
