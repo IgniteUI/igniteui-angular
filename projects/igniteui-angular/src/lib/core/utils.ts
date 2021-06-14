@@ -229,15 +229,29 @@ export class PlatformUtil {
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      *
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     *
+     * @remarks
+     * The last parameter is useful when the size of the element to measure is modified by a
+     * parent element that has explicit size. In such cases the calculated size is never lower
+     * and the function may instead remove the parent size while measuring to get the correct value.
      * ```
      */
-    public getNodeSizeViaRange(range: Range, node: HTMLElement) {
+     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
+        let nodeStyles;
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = 'visible';
+        }
+
+        if (sizeHoldingNode) {
+            const style = sizeHoldingNode.style;
+            nodeStyles = [ style.width, style.minWidth, style.flexBasis ];
+            style.width = '';
+            style.minWidth = '';
+            style.flexBasis = '';
         }
 
         range.selectNodeContents(node);
@@ -246,6 +260,12 @@ export class PlatformUtil {
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = overflow;
+        }
+
+        if (sizeHoldingNode) {
+            sizeHoldingNode.style.width = nodeStyles[0];
+            sizeHoldingNode.style.minWidth = nodeStyles[1];
+            sizeHoldingNode.style.flexBasis = nodeStyles[2];
         }
 
         return width;
