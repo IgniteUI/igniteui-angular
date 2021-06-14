@@ -17,6 +17,9 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-s
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
+import { ComponentRef } from '@angular/core';
+import { ComponentFactory } from '@angular/core';
+import { ComponentFactoryResolver, ApplicationRef, Injector } from '@angular/core';
 
 /**
  * @hidden
@@ -53,14 +56,25 @@ export class IgxFilteringService implements OnDestroy {
     private column;
     private lastActiveNode;
 
-    constructor(private _moduleRef: NgModuleRef<any>, private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
+    private get componentInstance() {
+        return this.grid.excelStyleFilteringComponent ??
+            this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
+    }
+
+    constructor(
+        private _moduleRef: NgModuleRef<any>,
+        private iconService: IgxIconService,
+        private _overlayService: IgxOverlayService,
+        private _factoryResolver: ComponentFactoryResolver,
+        private _appRef: ApplicationRef,
+        private _injector: Injector) {}
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    public toggleFilterDropdown(element, column, classRef) {
+    public toggleFilterDropdown(element, column) {
         if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
             this.initFilteringSettings();
             this.column = column;
@@ -70,13 +84,10 @@ export class IgxFilteringService implements OnDestroy {
             this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-            if (this.grid.excelStyleFilteringComponent) {
-                this._componentOverlayId =
-                    this._overlayService.attach(this.grid.excelStyleFilteringComponent.element, this._filterMenuOverlaySettings);
-            } else {
-                this._componentOverlayId =
-                    this._overlayService.attach(classRef, this._filterMenuOverlaySettings, this._moduleRef);
-            }
+            const instance = this.componentInstance;
+            instance.initialize(this.column, this._overlayService, this._componentOverlayId);
+
+            this._componentOverlayId = this._overlayService.attach(instance.element, this._filterMenuOverlaySettings);
 
             this._overlayService.show(this._componentOverlayId);
         }
@@ -98,22 +109,14 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.opening.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const instance = this.grid.excelStyleFilteringComponent ?
-                    this.grid.excelStyleFilteringComponent :
-                    eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
-
-                if (instance) {
-                    this.lastActiveNode = this.grid.navigation.activeNode;
-                    instance.initialize(this.column, this._overlayService, eventArgs.id);
-                }
+                this._componentOverlayId = eventArgs.id;
+                this.lastActiveNode = this.grid.navigation.activeNode;
             });
 
         this._overlayService.closed.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const instance = this.grid.excelStyleFilteringComponent ?
-                    this.grid.excelStyleFilteringComponent :
-                    eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
+            takeUntil(this.destroy$)).subscribe((   ) => {
+                const instance = this.componentInstance;
 
                 if (instance) {
                     instance.column = null;
@@ -680,5 +683,28 @@ export class IgxFilteringService implements OnDestroy {
 
             expressionsUIs.push(exprUI);
         }
+    }
+
+    private createComponentInstance(component: any) {
+        let dynamicFactory: ComponentFactory<any>;
+        const factoryResolver = this._moduleRef
+            ? this._moduleRef.componentFactoryResolver
+            : this._factoryResolver;
+        try {
+            dynamicFactory = factoryResolver.resolveComponentFactory(component);
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+
+        const injector = this._moduleRef
+            ? this._moduleRef.injector
+            : this._injector;
+        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
+            injector
+        );
+        this._appRef.attachView(dynamicComponent.hostView);
+
+        return dynamicComponent.instance;
     }
 }
