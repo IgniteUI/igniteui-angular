@@ -381,7 +381,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             column.autosize();
             fixture.detectChanges();
 
-            expect(column.width).toEqual('63px');
+            expect(column.width).toEqual('67px');
         }));
 
         it('should autosize column programmatically based only on header.', fakeAsync(() => {
@@ -554,7 +554,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             expect(grid.columns[0].width).toBe('25%');
             grid.columns[0].autosize();
             fixture.detectChanges();
-            expect(grid.columns[0].width).toBe('21%');
+            expect(grid.columns[0].width).toBe('30%');
         }));
 
         it('should autosize column with % width on double click.', fakeAsync(() => {
@@ -566,7 +566,7 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             UIInteractions.simulateMouseEvent('dblclick', headerResArea, 0, 0);
             tick(200);
             fixture.detectChanges();
-            expect(grid.columns[0].width).toBe('21%');
+            expect(grid.columns[0].width).toBe('30%');
         }));
     });
 
