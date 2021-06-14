@@ -2548,14 +2548,14 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             const filteringCells = GridFunctions.getFilteringCells(fix);
             const cellElem = filteringCells[0].nativeElement;
-            expect(cellElem.offsetParent.offsetHeight + cellElem.offsetHeight).toBeCloseTo(thead.clientHeight, 10);
+            expect(cellElem.offsetParent.offsetHeight + cellElem.offsetHeight + 1).toBeCloseTo(thead.clientHeight, 10);
 
             GridFunctions.clickFilterCellChip(fix, 'ID');
 
             // check if it is positioned at the bottom of the thead.
             const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
             const frElem = filteringRow.nativeElement;
-            expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
+            expect(frElem.offsetTop + frElem.clientHeight + 1).toEqual(thead.clientHeight);
         }));
 
         it('should position filter row and chips correctly when grid has column groups and one is hidden.',
