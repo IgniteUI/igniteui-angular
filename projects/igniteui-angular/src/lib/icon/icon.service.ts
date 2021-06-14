@@ -226,7 +226,7 @@ export class IgxIconService {
             if (!this._svgContainer) {
                 this._svgContainer = this._document.createElement('DIV');
                 this._svgContainer.classList.add('igx-svg-container');
-                this._document.documentElement.appendChild(this._svgContainer);
+                this._document.body.appendChild(this._svgContainer);
             }
         }
     }
