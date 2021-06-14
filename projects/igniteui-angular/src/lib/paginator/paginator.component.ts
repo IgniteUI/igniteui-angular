@@ -203,7 +203,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 
     public set totalRecords(value: number) {
         this._totalRecords = value;
-        this.totalPages = this.totalPages ? this.totalPages : Math.ceil(this.totalRecords / this.perPage);
+        this.totalPages = Math.ceil(this.totalRecords / this.perPage);
     }
 
     /**
