@@ -796,7 +796,7 @@ describe('IgxGrid - Column Moving #grid', () => {
 
             const list = grid.columnList;
             expect(list.get(0).field).toEqual('ID');
-            expect(list.get(7).field).toEqual('Phone');
+            expect(list.get(7).field).toEqual('Region');
         }));
 
         it('Should be able to scroll/reorder columns that are out of view - with pinned columns.', (async () => {
