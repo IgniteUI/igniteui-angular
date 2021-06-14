@@ -6,9 +6,18 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - `IgxPaginatorComponent`
-    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable;
 
 ### General
+- `IgxPaginatorComponent`
+    - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
+    -  **Breaking Change** - the following properties are removed
+        - `pagerEnabled`
+        - `pagerHidden `
+        - `dropdownEnabled`
+        - `dropdownHidden`
+
+
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
