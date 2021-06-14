@@ -881,17 +881,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public get dropAreaTemplateResolved(): TemplateRef<any> {
-        if (this.dropAreaTemplate) {
-            return this.dropAreaTemplate;
-        } else {
-            return this.defaultDropAreaTemplate;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
     public get iconTemplate() {
         if (this.groupsExpanded) {
             return this.headerExpandIndicatorTemplate || this.defaultExpandedTemplate;
@@ -977,6 +966,9 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     col.hidden = false;
                 });
             }
+        }
+        if (this.groupArea && this.dropAreaTemplate && this.groupArea.dropAreaTemplate !== this.dropAreaTemplate) {
+            this.groupArea.dropAreaTemplate = this.dropAreaTemplate;
         }
         super.ngDoCheck();
     }

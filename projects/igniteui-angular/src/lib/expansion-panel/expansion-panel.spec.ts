@@ -234,7 +234,7 @@ describe('igxExpansionPanel', () => {
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
 
-        it('Should set header tabIndex to -1 when header is disabled', () => {
+        it('Should NOT assign tabIndex to header when disabled', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();
             const panelHeader = fixture.componentInstance.header;
@@ -247,7 +247,7 @@ describe('igxExpansionPanel', () => {
             fixture.detectChanges();
             innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
             expect(innerElement).toBeDefined();
-            expect(innerElement.nativeElement.attributes['tabindex'].value).toBe('-1');
+            expect(innerElement.nativeElement.attributes['tabindex']).toBeUndefined();
             panelHeader.disabled = false;
             fixture.detectChanges();
             innerElement = fixture.debugElement.queryAll(By.css('.igx-expansion-panel__header-inner'))[0];
