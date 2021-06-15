@@ -54,14 +54,13 @@ export interface IColumnInfo {
     dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
-
     headerType?: HeaderType;
     startIndex?: number;
     columnSpan?: number;
     level?: number;
+    exportIndex?: number;  
     pinnedIndex?: number;
 }
-
 /**
  * rowExporting event arguments
  * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
@@ -123,6 +122,41 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
      * A reference to the grid owner.
      */
     grid?: IgxGridBaseDirective;
+}
+
+/**hidden
+ * A helper class used to identify whether the user has set a specific columnIndex
+ * during columnExporting, so we can honor it at the exported file.
+*/
+class IgxColumnExportingEventArgs implements IColumnExportingEventArgs {
+    public header: string;
+    public field: string;
+    public cancel: boolean;
+    public skipFormatter: boolean;
+    public grid?: IgxGridBaseDirective;
+    public owner?: any;
+    public userSetIndex? = false;
+
+    private _columnIndex?: number;
+
+    public get columnIndex(): number {
+        return this._columnIndex;
+    }
+
+    public set columnIndex(value: number) {
+        this._columnIndex = value;
+        this.userSetIndex = true;
+    }
+
+    constructor(original: IColumnExportingEventArgs) {
+        this.header = original.header;
+        this.field = original.field;
+        this.cancel = original.cancel;
+        this.skipFormatter = original.skipFormatter;
+        this.grid = original.grid;
+        this.owner = original.owner;
+        this._columnIndex = original.columnIndex;
+    }
 }
 
 export const DEFAULT_OWNER = 'default';
@@ -247,6 +281,7 @@ export abstract class IgxBaseExporter {
             this._ownersMap.set(DEFAULT_OWNER, mapRecord);
         }
 
+        let shouldReorderColumns = false;
         for (const [key, mapRecord] of this._ownersMap) {
             let skippedPinnedColumnsCount = 0;
             let columnsWithoutHeaderCount = 1;
@@ -264,11 +299,18 @@ export abstract class IgxBaseExporter {
                         skipFormatter: false,
                         grid: key === DEFAULT_OWNER ? grid : key
                     };
-                    this.columnExporting.emit(columnExportArgs);
 
-                    column.header = columnExportArgs.header;
-                    column.skip = columnExportArgs.cancel;
-                    column.skipFormatter = columnExportArgs.skipFormatter;
+                    const newColumnExportArgs = new IgxColumnExportingEventArgs(columnExportArgs);
+                    this.columnExporting.emit(newColumnExportArgs);
+
+                    column.header = newColumnExportArgs.header;
+                    column.skip = newColumnExportArgs.cancel;
+                    column.skipFormatter = newColumnExportArgs.skipFormatter;
+
+                    if (newColumnExportArgs.userSetIndex) {
+                        column.exportIndex = newColumnExportArgs.columnIndex;
+                        shouldReorderColumns = true;
+                    }
 
                     if (column.skip && index <= indexOfLastPinnedColumn) {
                         skippedPinnedColumnsCount++;
@@ -285,7 +327,13 @@ export abstract class IgxBaseExporter {
             });
 
             indexOfLastPinnedColumn -= skippedPinnedColumnsCount;
+
+            // Reorder columns only if a column has been assigned a specific columnIndex during columnExporting event
+            if (shouldReorderColumns) {
+                mapRecord.columns = this.reorderColumns(mapRecord.columns);
+            }
         }
+
 
         const dataToExport = new Array<IExportRecord>();
         const actualData = records[0]?.data;
@@ -339,6 +387,44 @@ export abstract class IgxBaseExporter {
         if (!rowArgs.cancel) {
             data.push(record);
         }
+    }
+
+    private reorderColumns(columns: IColumnInfo[]): IColumnInfo[] {
+        const filteredColumns = columns.filter(c => !c.skip);
+        const length = filteredColumns.length;
+        const specificIndicesColumns = filteredColumns.filter((col) => !isNaN(col.exportIndex))
+                                                      .sort((a,b) => a.exportIndex - b.exportIndex);
+        const indices = specificIndicesColumns.map(col => col.exportIndex);
+
+        specificIndicesColumns.forEach(col => {
+            filteredColumns.splice(filteredColumns.indexOf(col), 1);
+        });
+
+        const reorderedColumns = new Array(length);
+
+        if (specificIndicesColumns.length > Math.max(...indices)) {
+            return specificIndicesColumns.concat(filteredColumns);
+        } else {
+            indices.forEach((i, index) => {
+                if (i < 0 || i >= length) {
+                    filteredColumns.push(specificIndicesColumns[index]);
+                } else {
+                    let k = i;
+                    while (k < length && reorderedColumns[k] !== undefined) {
+                        ++k;
+                    }
+                    reorderedColumns[k] = specificIndicesColumns[index];
+                }
+            });
+
+            for (let i = 0; i < length; i++) {
+                if (reorderedColumns[i] === undefined) {
+                    reorderedColumns[i] = filteredColumns.splice(0, 1)[0];
+                }
+            }
+
+        }
+        return reorderedColumns;
     }
 
     private prepareData(grid: IgxGridBaseDirective) {

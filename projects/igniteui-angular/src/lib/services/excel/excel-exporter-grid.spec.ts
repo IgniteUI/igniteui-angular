@@ -371,6 +371,56 @@ describe('Excel Exporter', () => {
             await wrapper.verifyTemplateFilesContent();
         });
 
+        it('should export the column at the specified index when \'columnIndex\' is set during \'columnExporting\' event.', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
+                if (value.columnIndex === 0) {
+                    value.columnIndex = 2;
+                }
+            });
+
+            await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleID);
+        });
+
+        it('should export the column at the specified index when \'columnIndex\' is set during \'columnExporting\' (2).', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
+                if (value.columnIndex === 2) {
+                    value.columnIndex = 0;
+                }
+            });
+
+            await exportAndVerify(grid, options, actualData.simpleGridJobTitleIDName);
+        });
+
+        it('should handle gracefully setting \'columnIndex\' to an invalid value.', async () => {
+            const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+
+            exporter.columnExporting.subscribe((value: IColumnExportingEventArgs) => {
+                if (value.columnIndex === 0) {
+                    value.columnIndex = 4;
+                } else if (value.columnIndex === 2) {
+                    value.columnIndex = -1;
+                }
+            });
+
+            await exportAndVerify(grid, options, actualData.simpleGridNameJobTitleID);
+        });
+
         it('should fire \'rowExporting\' for each grid row.', async () => {
             const fix = TestBed.createComponent(GridIDNameJobTitleComponent);
             fix.detectChanges();
