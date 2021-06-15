@@ -217,11 +217,11 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             default:
                 const startIndex = this._composing ? this._compositionStartIndex : this._start;
                 valueToParse = this.inputValue.substring(startIndex, this.selectionEnd);
-                valueToParse = valueToParse.replace(/[０１２３４５６７８９]/g, function (val) {
+                valueToParse = valueToParse.replace(/[０１２３４５６７８９]/g, (value) => {
                     return {
-                        "１": "1", "２": "2", "３": "3", "４": "4", "５": "5",
-                        "６": "6", "７": "7", "８": "8", "９": "9", "０": "0"
-                    }[val]
+                        '１': '1', '２': '2', '３': '3', '４': '4', '５': '5',
+                        '６': '6', '７': '7', '８': '8', '９': '9', '０': '0'
+                    }[value]
                 });
                 this._composing = false;
                 break;
@@ -231,7 +231,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
-        }
+        };
 
         this.setSelectionRange(replacedData.end);
 
