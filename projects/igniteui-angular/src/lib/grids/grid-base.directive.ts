@@ -86,11 +86,7 @@ import {
     GridSelectionRange,
     isChromium
 } from './selection/selection.service';
-import {
-    IgxRow,
-    IgxCell
-}
-    from './common/crud.service';
+import { IgxRow, IgxCell } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -682,7 +678,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
     /**
-     * Emitted when a row added through the API.
+     * Emitted when a row is added.
      *
      * @remarks
      * Returns the data for the new `IgxGridRowComponent` object.
@@ -695,7 +691,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public rowAdded = new EventEmitter<IRowDataEventArgs>();
 
     /**
-     * Emitted when a row is deleted through API.
+     * Emitted when a row is deleted.
      *
      * @remarks
      * Returns an `IRowDataEventArgs` object.
@@ -2673,6 +2669,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public resizeNotify = new Subject();
 
     /** @hidden @internal */
+    public rowAddedNotifier = new Subject<IRowDataEventArgs>();
+
+    /** @hidden @internal */
+    public rowDeletedNotifier = new Subject<IRowDataEventArgs>();
+
+    /** @hidden @internal */
     public pipeTriggerNotifier = new Subject();
 
     /**
@@ -3258,16 +3260,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 ((event.target === this.tbody.nativeElement && this.navigation.activeNode.row >= 0 &&
                     this.navigation.activeNode.row < this.dataView.length)
                     || (event.target === this.theadRow.nativeElement && this.navigation.activeNode.row === -1)
-                    || (event.target === this.tfoot.nativeElement.children[0] &&
-                        this.navigation.activeNode.row === this.dataView.length)) &&
+                    || (event.target === this.tfoot.nativeElement && this.navigation.activeNode.row === this.dataView.length)) &&
                 !(this.rowEditable && this.crudService.rowEditingBlocked && this.crudService.rowInEditMode)) {
                 this.navigation.lastActiveNode = this.navigation.activeNode;
                 this.navigation.activeNode = {} as IActiveNode;
                 this.notifyChanges();
             }
         });
-        this.rowAdded.pipe(destructor).subscribe(args => this.refreshGridState(args));
-        this.rowDeleted.pipe(destructor).subscribe(args => {
+        this.rowAddedNotifier.pipe(destructor).subscribe(args => this.refreshGridState(args));
+        this.rowDeletedNotifier.pipe(destructor).subscribe(args => {
             this.summaryService.deleteOperation = true;
             this.summaryService.clearSummaryCache(args);
         });
@@ -4367,7 +4368,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             row.animateAdd = false;
             const cell = row.cells.find(c => c.editable);
             if (cell) {
-                this.gridAPI.submit_value(event);
+                this.gridAPI.update_cell(this.crudService.cell);
                 this.crudService.enterEditMode(cell, event);
                 cell.activate();
             }
@@ -4388,7 +4389,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data);
 
-        this.rowAdded.emit({ data });
+        this.rowAddedNotifier.next({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -4405,15 +4406,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param rowSelector
      */
-    public deleteRow(rowSelector: any): void {
+    public deleteRow(rowSelector: any): any {
         if (this.primaryKey !== undefined && this.primaryKey !== null) {
-            this.deleteRowById(rowSelector);
+            return this.deleteRowById(rowSelector);
         }
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any) {
-        this.gridAPI.deleteRowById(rowId);
+    public deleteRowById(rowId: any): any {
+        return this.gridAPI.deleteRowById(rowId);
     }
 
     /**
@@ -4440,21 +4441,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 if (index < 0) {
                     return;
                 }
+
                 const id = {
                     rowID: rowSelector,
                     columnID: col.index,
                     rowIndex: index
                 };
 
-                const cell = new IgxCell(id, index, col, rowData[col.field], rowData[col.field], rowData, this);
-                const args = this.gridAPI.update_cell(cell, value);
-
-                if (this.crudService.cell && this.crudService.sameCell(cell)) {
-                    if (args.cancel) {
-                        return;
-                    }
-                    this.crudService.exitCellEdit();
-                }
+                const cell = new IgxCell(id, index, col, rowData[col.field], value, rowData, this);
+                this.gridAPI.update_cell(cell);
                 this.cdr.detectChanges();
             }
         }
@@ -4473,14 +4468,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      *       ProductID: 1, ProductName: 'Spearmint', InStock: true, UnitsInStock: 1, OrderDate: new Date('2005-03-21')
      *   }, 1);
      * ```
-     * @param value
+     * @param value–
      * @param rowSelector correspond to rowID
      */
+    // TODO: prevent event invocation
     public updateRow(value: any, rowSelector: any): void {
         if (this.isDefined(this.primaryKey)) {
             const editableCell = this.crudService.cell;
             if (editableCell && editableCell.id.rowID === rowSelector) {
-                this.crudService.exitCellEdit();
+                this.crudService.endCellEdit();
             }
             const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
@@ -5765,6 +5761,23 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
+     * @hidden
+     * @internal
+     */
+    public endRowEditTabStop(commit = true, event?: Event) {
+        const canceled = this.crudService.endEdit(commit, event);
+
+        if (canceled) {
+            return true;
+        }
+
+        const activeCell = this.gridAPI.grid.navigation.activeNode;
+        if (activeCell && activeCell.row !== -1) {
+            this.tbody.nativeElement.focus();
+        }
+    }
+
+    /**
      * @hidden @internal
      */
     public trackColumnChanges(index, col) {
@@ -5792,7 +5805,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public closeRowEditingOverlay() {
+        public closeRowEditingOverlay() {
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
@@ -5916,7 +5929,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    public rowEditingWheelHandler(event: WheelEvent) {
+     public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
