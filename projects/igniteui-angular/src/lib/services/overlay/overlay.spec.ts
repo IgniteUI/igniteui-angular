@@ -78,7 +78,7 @@ export const addScrollDivToElement = (parent) => {
     scrollDiv.style.left = '10000px';
     scrollDiv.style.position = 'absolute';
     parent.appendChild(scrollDiv);
-}
+};
 
 /**
  * Returns the top left location of the shown element
