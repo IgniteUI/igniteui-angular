@@ -86,9 +86,10 @@ export class IgxFilteringService implements OnDestroy {
 
             const instance = this.componentInstance;
             instance.initialize(this.column, this._overlayService, this._componentOverlayId);
-
+            
             this._componentOverlayId = this._overlayService.attach(instance.element, this._filterMenuOverlaySettings);
-
+            instance.overlayComponentId = this._componentOverlayId;
+            
             this._overlayService.show(this._componentOverlayId);
         }
     }
@@ -109,7 +110,6 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.opening.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                this._componentOverlayId = eventArgs.id;
                 this.lastActiveNode = this.grid.navigation.activeNode;
             });
 
