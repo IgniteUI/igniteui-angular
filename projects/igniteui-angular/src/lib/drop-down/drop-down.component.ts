@@ -355,8 +355,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-     // onAppended event, there will be an existing element in the overlay to scroll to
-    public onToggleContentAppended() {
+    public onToggleContentAppended(event) {
         if (!this.virtDir && this.selectedItem) {
            this.scrollToItem(this.selectedItem);
         }

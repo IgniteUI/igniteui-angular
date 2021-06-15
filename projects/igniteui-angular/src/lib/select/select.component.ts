@@ -34,6 +34,7 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/d
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxOverlayService } from '../services/public_api';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
@@ -327,6 +328,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
@@ -405,8 +407,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.navigateFirst();
         }
 
-        this._overlayCached = this.cacheOverlaySettings(overlaySettings);
-        super.open(this._overlayCached);
+        super.open(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
     }
 
     public inputGroupClick(event: MouseEvent, overlaySettings?: OverlaySettings) {
@@ -415,8 +416,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (this.hintElement && targetElement.contains(this.hintElement.nativeElement)) {
             return;
         }
-        this._overlayCached = this.cacheOverlaySettings(overlaySettings);
-        this.toggle(this._overlayCached);
+        this.toggle(Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings));
 }
 
     /** @hidden @internal */
@@ -455,12 +455,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public onToggleContentAppended() {
-        if (this.selectedItem && !(this._overlayCached.positionStrategy instanceof SelectPositioningStrategy)) {
-            // SelectPositioningStrategy manages scrolling to selected item on it's own. For all other strategies,
-            // scrolling is handled by the dropdown scroll implementation.
-            super.scrollToItem(this.selectedItem);
+    public onToggleContentAppended(event) {
+        const info = this.overlayService.getOverlayById(event.id);
+        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+            return;
         }
+        super.onToggleContentAppended(event);
     }
 
     /** @hidden @internal */
@@ -577,10 +577,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         } else {
             this.selection.clear(this.id);
         }
-    }
-
-    private cacheOverlaySettings(overlaySettings: OverlaySettings): OverlaySettings {
-        return Object.assign({}, this._overlayDefaults, this.overlaySettings, overlaySettings);
     }
 }
 
