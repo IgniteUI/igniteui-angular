@@ -351,7 +351,10 @@ export abstract class IgxBaseExporter {
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
             const columns = record.owner === undefined ?
-                this._ownersMap.get(DEFAULT_OWNER).columns.filter(c => c.headerType !== HeaderType.MultiColumnHeader) :
+                this._ownersMap.get(DEFAULT_OWNER).columns
+                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
+                    .sort((a, b) => a.startIndex - b.startIndex)
+                    .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
                 this._ownersMap.get(record.owner).columns;
 
             record.data = columns.reduce((a, e) => {

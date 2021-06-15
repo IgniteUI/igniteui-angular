@@ -213,17 +213,20 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processRow(worksheetData: WorksheetData, i: number) {
-        let headersForLevel = [];
-
-        headersForLevel = worksheetData.owner.columns
-            .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
-            .sort((a, b) => a.startIndex-b.startIndex)
-            .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
-            .map(c => c.field);
-
         const record = worksheetData.data[i - 1];
-
         const isHierarchicalGrid = record.type === ExportRecordType.HeaderRecord || record.type === ExportRecordType.HierarchicalGridRecord;
+
+        let headersForLevel = [];
+        if (!isHierarchicalGrid) {
+            headersForLevel = worksheetData.owner.columns
+                .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+                .sort((a, b) => a.startIndex-b.startIndex)
+                .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
+                .map(c => c.field);
+        } else {
+            headersForLevel = Object.keys(record.data);
+        }
+
         const rowData = new Array(worksheetData.columnCount + 2);
 
         const rowLevel = record.level;
