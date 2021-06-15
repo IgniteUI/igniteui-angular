@@ -248,9 +248,7 @@ $_light-grid: extend(
             igx-color: ('grays', 400)
         ),
 
-        cell-new-color: (
-            igx-color: inherit
-        ),
+        cell-new-color: inherit,
 
         cell-edited-value-color: (
             igx-color: ('grays', 600)
