@@ -92,7 +92,7 @@ export class WorksheetFile implements IExcelFile {
         } else {
             const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
-            const hasMultiColumnHeader = owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
+            const hasMultiColumnHeader = owner.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
 
             const height =  worksheetData.options.rowHeight;
             const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
@@ -106,10 +106,12 @@ export class WorksheetFile implements IExcelFile {
                 const headersForLevel = hasMultiColumnHeader ?
                     owner.columns
                         .filter(c => (c.level < i &&
-                            c.type !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
+                            c.headerType !== HeaderType.MultiColumnHeader || c.level === i) && c.columnSpan > 0 && !c.skip)
                         .sort((a, b) => a.startIndex - b.startIndex)
                         .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
-                    owner.columns.filter(c => !c.skip);
+                    owner.columns.filter(c => !c.skip)
+                        .sort((a, b) => a.startIndex - b.startIndex)
+                        .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
                 let startValue = 0;
 
@@ -124,7 +126,7 @@ export class WorksheetFile implements IExcelFile {
                             mergeCellsCounter++;
                             mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
-                            if (currentCol.type === HeaderType.ColumnHeader) {
+                            if (currentCol.headerType === HeaderType.ColumnHeader) {
                                 columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (owner.maxLevel + 1);
                             } else {
                                 for (let k = 1; k < currentCol.columnSpan; k++) {
@@ -211,15 +213,13 @@ export class WorksheetFile implements IExcelFile {
     }
 
     private processRow(worksheetData: WorksheetData, i: number) {
-        const hasMultiColumnHeader = worksheetData.owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
         let headersForLevel = [];
 
-        if (hasMultiColumnHeader) {
-            headersForLevel = worksheetData.owner.columns
-                .filter(c => c.type !== HeaderType.MultiColumnHeader && !c.skip)
-                .sort((a, b) => a.startIndex-b.startIndex)
-                .sort((a, b) => a.pinnedIndex-b.pinnedIndex);
-        }
+        headersForLevel = worksheetData.owner.columns
+            .filter(c => c.headerType !== HeaderType.MultiColumnHeader && !c.skip)
+            .sort((a, b) => a.startIndex-b.startIndex)
+            .sort((a, b) => a.pinnedIndex-b.pinnedIndex)
+            .map(c => c.field);
 
         const record = worksheetData.data[i - 1];
 
@@ -234,13 +234,12 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1 + worksheetData.owner.maxLevel)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        const keys = worksheetData.isSpecialData ? [record.data] : Object.keys(record.data);
+        const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
 
         for (let j = 0; j < keys.length; j++) {
-            const key = hasMultiColumnHeader ? headersForLevel[j].field : keys[j];
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
 
-            const cellData = WorksheetFile.getCellData(worksheetData, i, col, key);
+            const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j]);
 
             rowData[j + 1] = cellData;
         }
@@ -347,7 +346,11 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.rootKeys;
+        const values = worksheetData.owner.columns
+            .sort((a, b) => a.startIndex - b.startIndex)
+            .sort((a, b) => a.pinnedIndex - b.pinnedIndex)
+            .map(c => c.header);
+
         let sortString = '';
 
         let tableColumns = '<tableColumns count="' + columnCount + '">';

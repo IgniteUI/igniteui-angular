@@ -45,7 +45,7 @@ export class WorksheetData {
             return;
         }
 
-        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.type === HeaderType.MultiColumnHeader);
+        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
         const hasHierarchicalGridRecord = this._data[0].type === ExportRecordType.HierarchicalGridRecord;
 
         if (hasHierarchicalGridRecord || (isMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {

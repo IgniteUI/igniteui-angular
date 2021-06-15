@@ -55,7 +55,7 @@ export interface IColumnInfo {
     skipFormatter?: boolean;
     formatter?: any;
 
-    type?: HeaderType;
+    headerType?: HeaderType;
     startIndex?: number;
     columnSpan?: number;
     level?: number;
@@ -303,7 +303,7 @@ export abstract class IgxBaseExporter {
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
             const columns = record.owner === undefined ?
-                this._ownersMap.get(DEFAULT_OWNER).columns.filter(c => c.type !== HeaderType.MultiColumnHeader) :
+                this._ownersMap.get(DEFAULT_OWNER).columns.filter(c => c.headerType !== HeaderType.MultiColumnHeader) :
                 this._ownersMap.get(record.owner).columns;
 
             record.data = columns.reduce((a, e) => {
@@ -767,7 +767,7 @@ export abstract class IgxBaseExporter {
                 formatter: column.formatter,
                 skipFormatter: false,
 
-                type: isMultiColHeader ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
+                headerType: isMultiColHeader ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
                 columnSpan: colSpan,
                 level: columnLevel,
                 startIndex: index,
@@ -786,7 +786,7 @@ export abstract class IgxBaseExporter {
                 hiddenColumns.push(columnInfo);
             }
 
-            if (column.pinned && exportColumn && columnInfo.type === HeaderType.ColumnHeader) {
+            if (column.pinned && exportColumn && columnInfo.headerType === HeaderType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
             }
 
