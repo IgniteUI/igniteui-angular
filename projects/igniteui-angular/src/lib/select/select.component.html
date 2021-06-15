@@ -33,7 +33,7 @@
     </ng-container>
 </igx-input-group>
 <div igxToggle class="igx-drop-down__list" (mousedown)="mousedownHandler($event);"
-    (onAppended)="onToggleContentAppended()"
+    (onAppended)="onToggleContentAppended($event)"
     (onOpening)="handleOpening($event)"
     (onOpened)="handleOpened()"
     (onClosing)="handleClosing($event)"

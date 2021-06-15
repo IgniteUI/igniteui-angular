@@ -2705,7 +2705,8 @@ describe('igxSelect ControlValueAccessor Unit', () => {
         });
 
         // init
-        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, mockInjector);
+        select = new IgxSelectComponent(null, mockCdr, mockSelection, null, null, null, mockInjector);
+
         select.ngOnInit();
         select.registerOnChange(mockNgControl.registerOnChangeCb);
         select.registerOnTouched(mockNgControl.registerOnTouchedCb);
