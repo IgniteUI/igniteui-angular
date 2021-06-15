@@ -58,7 +58,7 @@ export interface IColumnInfo {
     startIndex?: number;
     columnSpan?: number;
     level?: number;
-    exportIndex?: number;  
+    exportIndex?: number;
     pinnedIndex?: number;
 }
 /**
