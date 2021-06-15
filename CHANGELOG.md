@@ -7,7 +7,14 @@ All notable changes for each version of this project will be documented in this 
 ### New Features
 - `IgxPaginatorComponent`
     - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable;
-
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
+    ```typescript
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Index') {
+                col.columnIndex = 0;
+            }
+        });
+    ```
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
