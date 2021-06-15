@@ -145,6 +145,27 @@ describe('igxMask', () => {
         expect(comp.value).toEqual('7777');
     }));
 
+    it('Should be able to type full-width numbers', fakeAsync(() => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.componentInstance.mask = '00/00/0000';
+        fixture.detectChanges();
+        tick();
+
+        const input = fixture.debugElement.query(By.css('input'));
+        input.triggerEventHandler('focus', {});
+        fixture.detectChanges();
+
+        UIInteractions.simulateTyping('０９０６２０２１', input);
+        tick();
+        fixture.detectChanges();
+
+        input.triggerEventHandler('blur', {});
+        tick();
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('09/06/2021');
+    }));
+
     it('Should handle the input of invalid values', fakeAsync(() => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();

@@ -141,6 +141,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _droppedData: string;
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
+    private _compositionStartIndex: number;
+    private _composing: boolean;
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -183,6 +185,18 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
+        if (isComposing) {
+            if (this.inputValue.length < this._oldText.length) {
+                // software keyboard input delete
+                this._key = this.platform.KEYMAP.BACKSPACE;
+            }
+            if (!this._composing) {
+                this._compositionStartIndex = this._start;
+                this._composing = true;
+            }
+            return;
+        }
+
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -190,10 +204,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         if (this._hasDropAction) {
             this._start = this.selectionStart;
-        }
-        if (this.inputValue.length < this._oldText.length && isComposing) {
-            // software keyboard input delete
-            this._key = this.platform.KEYMAP.BACKSPACE;
         }
 
         let valueToParse = '';
@@ -205,7 +215,15 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 this._start = this.selectionStart;
                 break;
             default:
-                valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
+                const startIndex = this._composing ? this._compositionStartIndex : this._start;
+                valueToParse = this.inputValue.substring(startIndex, this.selectionEnd);
+                valueToParse = valueToParse.replace(/[０１２３４５６７８９]/g, function (val) {
+                    return {
+                        "１": "1", "２": "2", "３": "3", "４": "4", "５": "5",
+                        "６": "6", "７": "7", "８": "8", "９": "9", "０": "0"
+                    }[val]
+                });
+                this._composing = false;
                 break;
         }
 
@@ -214,6 +232,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
             replacedData.end = this._start;
         }
+
         this.setSelectionRange(replacedData.end);
 
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
@@ -342,6 +361,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._start = 0;
         this._end = 0;
         this._key = null;
+        this._composing = false;
     }
 
     private showDisplayValue(value: string) {
