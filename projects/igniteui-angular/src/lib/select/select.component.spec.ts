@@ -1248,6 +1248,8 @@ describe('igxSelect', () => {
             });
             it('should properly emit onSelection/Close events on key interaction', fakeAsync(() => {
                 let selectedItem = select.items[3];
+                spyOn(select.onOpening, 'emit');
+                spyOn(select.onOpened, 'emit');
                 spyOn(select.onClosing, 'emit');
                 spyOn(select.onClosed, 'emit');
                 spyOn(select, 'close').and.callThrough();
@@ -1272,6 +1274,8 @@ describe('igxSelect', () => {
                 };
 
                 navigateDropdownItems(enterKeyEvent);
+                expect(select.onOpening.emit).toHaveBeenCalledTimes(1);
+                expect(select.onOpened.emit).toHaveBeenCalledTimes(1);
                 expect(select.onSelection.emit).toHaveBeenCalledTimes(1);
                 expect(select.selectItem).toHaveBeenCalledTimes(1);
                 expect(select.onSelection.emit).toHaveBeenCalledWith(args);
@@ -1279,13 +1283,20 @@ describe('igxSelect', () => {
                 expect(select.onClosed.emit).toHaveBeenCalledTimes(1);
                 expect(select.close).toHaveBeenCalledTimes(1);
 
+                // Correct event order
+                expect(select.onOpening.emit).toHaveBeenCalledBefore(select.onOpened.emit);
+                expect(select.onOpened.emit).toHaveBeenCalledBefore(select.onSelection.emit);
+                expect(select.onSelection.emit).toHaveBeenCalledBefore(select.onClosing.emit);
+                expect(select.onClosing.emit).toHaveBeenCalledBefore(select.onClosed.emit);
+
                 args.oldSelection = selectedItem;
                 selectedItem = select.items[9];
                 args.newSelection = selectedItem;
                 navigateDropdownItems(spaceKeyEvent);
+                expect(select.onOpening.emit).toHaveBeenCalledTimes(2);
+                expect(select.onOpened.emit).toHaveBeenCalledTimes(2);
                 expect(select.onSelection.emit).toHaveBeenCalledTimes(2);
                 expect(select.selectItem).toHaveBeenCalledTimes(2);
-                // expect(select.onSelection.emit).toHaveBeenCalledWith(args);
                 expect(select.onClosing.emit).toHaveBeenCalledTimes(2);
                 expect(select.onClosed.emit).toHaveBeenCalledTimes(2);
                 expect(select.close).toHaveBeenCalledTimes(2);
