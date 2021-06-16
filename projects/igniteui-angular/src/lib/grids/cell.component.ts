@@ -813,6 +813,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public pointerdown = (event: PointerEvent) => {
+        event.preventDefault();
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;
