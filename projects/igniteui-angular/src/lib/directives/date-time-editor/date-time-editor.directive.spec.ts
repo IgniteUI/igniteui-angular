@@ -1018,7 +1018,7 @@ describe('IgxDateTimeEditor', () => {
             it('should convert correctly full-width characters on paste', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
-                const inputDate = '０７０５２０'
+                const inputDate = '０７０５２０';
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 8);
