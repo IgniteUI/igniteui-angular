@@ -260,9 +260,6 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
     private ngControl: NgControl = null;
     private _overlayDefaults: OverlaySettings;
-
-    // Overlay settings can be passed & overridden both as @Input or when using open method. Ensure using the latest by caching it.
-    private _overlayCached: OverlaySettings;
     private _value: any;
     private _type = null;
 
