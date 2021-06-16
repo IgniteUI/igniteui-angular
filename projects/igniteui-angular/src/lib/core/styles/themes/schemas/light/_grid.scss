@@ -47,7 +47,7 @@
 /// @prop {Color} cell-editing-background [#fff] - The editing background color of a cell.
 /// @prop {Map} edit-mode-color [igx-color: ('secondary', 500)] - The text color in edit mode.
 /// @prop {Map} edited-row-indicator [igx-color: ('grays', 400)] - The indicator's color of edited row.
-/// @prop {Map} cell-new-color [igx-color: ('grays', 500)] - The text color of a new, unedited cell. Used when adding new row in a grid.
+/// @prop {String} cell-new-color [inherit] - The text color of a new, unedited cell. Used when adding new row in a grid.
 /// @prop {Map} cell-edited-value-color [igx-color: ('grays', 600)] - The color of cell edited value.
 /// @prop {Map} cell-disabled-color [igx-color: ('grays', 500)] - The text color of a disabled cell.
 /// @prop {Map} cell-selected-within-background [igx-color: ('secondary', 100), darken-color: 2%] - The background of the selected cell inside a selected row/column.
@@ -248,9 +248,7 @@ $_light-grid: extend(
             igx-color: ('grays', 400)
         ),
 
-        cell-new-color: (
-            igx-color: ('grays', 500)
-        ),
+        cell-new-color: inherit,
 
         cell-edited-value-color: (
             igx-color: ('grays', 600)
