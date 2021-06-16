@@ -1011,7 +1011,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
                 UIInteractions.simulateTyping('１９１２０８', inputElement);
-                inputElement.triggerEventHandler('blur', {});
+                inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('19/12/08');
             });
@@ -1024,7 +1024,7 @@ describe('IgxDateTimeEditor', () => {
                 UIInteractions.simulatePaste(inputDate, inputElement, 0, 8);
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
-                expect(inputElement.nativeElement.value).toEqual(inputDate);
+                expect(inputElement.nativeElement.value).toEqual('07/05/20');
             });
         });
 
