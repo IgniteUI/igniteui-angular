@@ -860,7 +860,11 @@ export abstract class IgxBaseExporter {
                 columnSpan: colSpan,
                 level: columnLevel,
                 startIndex: index,
-                pinnedIndex: !column.pinned ? Number.MAX_VALUE : !column.hidden ? column.grid.pinnedColumns.indexOf(column) : NaN
+                pinnedIndex: !column.pinned || this.options.ignoreColumnsOrder ?
+                    Number.MAX_VALUE :
+                    !column.hidden ?
+                        column.grid.pinnedColumns.indexOf(column)
+                        : NaN
             };
 
             if (column.level > maxLevel && !this.options.ignoreMultiColumnHeaders) {
