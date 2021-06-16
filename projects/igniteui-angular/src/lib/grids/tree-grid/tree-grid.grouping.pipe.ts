@@ -11,6 +11,11 @@ class GroupByRecord {
     public records: any[];
 }
 
+export class ITreeGridAggregation {
+    public field: string;
+    public aggregate: (parent: any, children: any[]) => any;
+}
+
 /** @hidden */
 @Pipe({
     name: 'treeGridGrouping',
@@ -23,6 +28,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                      groupKey: string,
                      primaryKey: string,
                      childDataKey: string,
+                     aggregations?: ITreeGridAggregation[]
                     //   _: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
@@ -43,7 +49,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
         const result = [];
         const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey, primaryKey,
-            childDataKey, '', result);
+            childDataKey, '', result, aggregations);
 
         return result;
     }
@@ -53,19 +59,25 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                             primaryKey: string,
                             childDataKey: string,
                             parentID: any,
-                            data: any[]) {
+                            data: any[],
+                            aggregations: ITreeGridAggregation[] = []) {
         for (const groupRecord of groupRecords) {
             const parent = {};
             const children = groupRecord.records;
 
             parent[primaryKey] = parentID + groupRecord.key;
             parent[childDataKey] = [];
+
+            for (const aggregation of aggregations) {
+                parent[aggregation.field] = aggregation.aggregate(parent, children);
+            }
+
             parent[groupKey] = groupRecord.key + ` (${groupRecord.records.length})`;
             data.push(parent);
 
             if (groupRecord.groups) {
                 this.flattenGrouping(groupRecord.groups, groupKey, primaryKey, childDataKey,
-                    parent[primaryKey], parent[childDataKey]);
+                    parent[primaryKey], parent[childDataKey], aggregations);
             } else {
                 parent[childDataKey] = children;
             }
