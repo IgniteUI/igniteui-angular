@@ -1,20 +1,22 @@
 import {
     AnimationEvent,
-    transition,
-    trigger,
     useAnimation
 } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
     NgModule,
     Output
 } from '@angular/core';
-import { fadeIn, fadeOut, slideInBottom, slideOutBottom } from '../animations/main';
+import { slideInBottom, slideOutBottom } from '../animations/main';
 import { DeprecateProperty } from '../core/deprecateDecorators';
+import { IToggleView } from '../core/navigation';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { GlobalPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/public_api';
 
 let NEXT_ID = 0;
 /**
@@ -34,49 +36,6 @@ let NEXT_ID = 0;
  * ```
  */
 @Component({
-    animations: [
-        trigger('slideInOut', [
-            transition('void => *', [
-                useAnimation(slideInBottom, {
-                    params: {
-                        duration: '.35s',
-                        easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-                        fromPosition: 'translateY(100%)',
-                        toPosition: 'translateY(0)'
-                    }
-                })
-            ]),
-            transition('* => void', [
-                useAnimation(slideOutBottom, {
-                    params: {
-                        duration: '.2s',
-                        easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
-                        fromPosition: 'translateY(0)',
-                        toOpacity: 1,
-                        toPosition: 'translateY(100%)'
-                    }
-                })
-            ])
-        ]),
-        trigger('fadeInOut', [
-            transition('void => *', [
-                useAnimation(fadeIn, {
-                    params: {
-                        duration: '.35s',
-                        easing: 'ease-out'
-                    }
-                })
-            ]),
-            transition('* => void', [
-                useAnimation(fadeOut, {
-                    params: {
-                        duration: '.2s',
-                        easing: 'ease-out'
-                    }
-                })
-            ])
-        ])
-    ],
     selector: 'igx-snackbar',
     templateUrl: 'snackbar.component.html',
     styles: [`
@@ -85,7 +44,8 @@ let NEXT_ID = 0;
         }
     `]
 })
-export class IgxSnackbarComponent {
+export class IgxSnackbarComponent extends IgxToggleDirective
+    implements IToggleView {
 
     /**
      * Sets/gets the `id` of the snackbar.
@@ -131,7 +91,7 @@ export class IgxSnackbarComponent {
     @DeprecateProperty(`'message' property is deprecated.
     You can use place the message in the snackbar content or pass a message parameter to the show method instead.`)
     @Input()
-    public set message(value: string) {
+    public set message(value: string | OverlaySettings) {
         this.snackbarMessage = value;
     }
     public get message() {
@@ -183,6 +143,22 @@ export class IgxSnackbarComponent {
     @Input() public actionText?: string;
 
     /**
+     * Gets/Sets the container used for the snackbar element.
+     *
+     * @remarks
+     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
+     * @example
+     * ```html
+     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
+     * //..
+     * <igx-snackbar [outlet]="outlet"></igx-snackbar>
+     * //..
+     * ```
+     */
+    @Input()
+    public outlet: IgxOverlayOutletDirective | ElementRef;
+
+    /**
      * An event that will be emitted when the action button is clicked.
      * Provides reference to the `IgxSnackbarComponent` as an argument.
      * ```html
@@ -214,14 +190,12 @@ export class IgxSnackbarComponent {
      * @hidden
      * @internal
      */
-    public snackbarMessage = '';
+    public snackbarMessage: string | OverlaySettings = '';
 
     /**
      * @hidden
      */
     private timeoutId;
-
-    constructor() { }
 
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
@@ -229,13 +203,43 @@ export class IgxSnackbarComponent {
      * this.snackbar.open();
      * ```
      */
-    public open(message?: string): void {
+    public open(message?: string | OverlaySettings) {
         clearTimeout(this.timeoutId);
+
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: new GlobalPositionStrategy({
+                horizontalDirection: HorizontalAlignment.Center,
+                verticalDirection: VerticalAlignment.Bottom,
+                openAnimation: useAnimation(slideInBottom, {
+                    params: {
+                        duration: '.35s',
+                        easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+                        fromPosition: 'translateY(100%)',
+                        toPosition: 'translateY(0)'
+                    }
+                }),
+                closeAnimation: useAnimation(slideOutBottom, {
+                    params: {
+                        duration: '.2s',
+                        easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
+                        fromPosition: 'translateY(0)',
+                        toOpacity: 1,
+                        toPosition: 'translateY(100%)'
+                    }
+                })
+            }),
+            closeOnEscape: false,
+            closeOnOutsideClick: false,
+            modal: false,
+            outlet: this.outlet,
+        };
+
         if (message !== undefined) {
             this.snackbarMessage = message;
         }
         setTimeout(this.timeoutId);
         this.isVisible = true;
+        super.open(overlaySettings);
 
         if (this.autoHide) {
             this.timeoutId = setTimeout(() => {
@@ -250,16 +254,19 @@ export class IgxSnackbarComponent {
      * this.snackbar.close();
      * ```
      */
-    public close(): void {
+    public close() {
         this.isVisible = false;
         clearTimeout(this.timeoutId);
+        super.close();
     }
+
     /**
      * @hidden
      */
     public triggerAction(): void {
         this.clicked.emit(this);
     }
+
     /**
      * @hidden
      * @memberof IgxSnackbarComponent
@@ -269,6 +276,7 @@ export class IgxSnackbarComponent {
             this.animationStarted.emit(evt);
         }
     }
+
     /**
      * @hidden
      * @memberof IgxSnackbarComponent

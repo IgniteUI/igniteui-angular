@@ -1,10 +1,9 @@
-<div class="igx-snackbar" *ngIf="isVisible" (@slideInOut.start)="snackbarAnimationStarted($event)" (@slideInOut.done)="snackbarAnimationDone($event)"
-    [@slideInOut]="isVisible">
-    <div class="igx-snackbar__message" [@fadeInOut]="isVisible">
+<div class="igx-snackbar">
+    <div class="igx-snackbar__message">
         {{ snackbarMessage }}
         <ng-content></ng-content>
     </div>
-    <button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" [@fadeInOut] (click)="triggerAction()">
+    <button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" (click)="triggerAction()">
         {{ actionText }}
     </button>
 </div>
