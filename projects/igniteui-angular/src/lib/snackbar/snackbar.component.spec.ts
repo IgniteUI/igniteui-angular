@@ -142,15 +142,14 @@ describe('IgxSnackbar with custom content', () => {
         snackbar.open('The message was not send. Would you like to retry?');
         fixture.detectChanges();
 
-        expect(fixture.nativeElement.querySelector('.igx-snackbar__message').innerText)
-        .toBe('The message was not send. Would you like to retry? Custom content');
+        const messageEl = fixture.debugElement.query(By.css('.igx-snackbar__message'));
+        expect(messageEl.nativeElement.innerText).toBe('The message was not send. Would you like to retry? Custom content');
 
         snackbar.open('Another Message?!');
         fixture.detectChanges();
 
         expect(snackbar.isVisible).toBe(true);
-        expect(fixture.nativeElement.querySelector('.igx-snackbar__message').innerText)
-        .toBe('Another Message?! Custom content');
+        expect(messageEl.nativeElement.innerText).toBe('Another Message?! Custom content');
     });
 });
 
