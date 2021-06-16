@@ -41,6 +41,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -459,7 +460,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     }
 
     /** @hidden @internal */
-    public onToggleContentAppended(event) {
+    public onToggleContentAppended(event: ToggleViewEventArgs) {
         const info = this.overlayService.getOverlayById(event.id);
         if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
             return;
