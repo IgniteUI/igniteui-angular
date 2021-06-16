@@ -6,7 +6,8 @@ import {
     Input,
     Output,
     ContentChild,
-    AfterContentInit
+    AfterContentInit,
+    ElementRef
 } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
@@ -181,6 +182,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     /**
      * @hidden
      */
+    public get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+
+    /**
+     * @hidden
+     */
     @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent })
     public body: IgxExpansionPanelBodyComponent;
 
@@ -192,7 +200,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     private _collapsed = true;
 
-    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder) {
+    constructor(private cdr: ChangeDetectorRef, private elementRef: ElementRef, protected builder: AnimationBuilder) {
         super(builder);
     }
 

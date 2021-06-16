@@ -1,9 +1,10 @@
-<button igxButton (buttonClick)="changeExpMode()">Toggle Expansion Mode</button>
+<igx-switch [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
 <button igxButton (buttonClick)="accordion.expandAll()">Expand All</button>
-<button igxButton (buttonClick)="accordion.collapseAll()">Collspse All</button>
+<button igxButton (buttonClick)="accordion.collapseAll()">Collapse All</button>
 <button igxButton (buttonClick)="accordion.panels[1].header.disabled = !accordion.panels[1].header.disabled">Disable
     second</button>
-<igx-accordion #accordion (panelExpanding)="panelExpanding($event)" (panelExpanded)="panelExpanded($event)">
+<igx-accordion #accordion [singleBranchExpand]="singleBranchExpand" (panelExpanding)="panelExpanding($event)"
+    (panelExpanded)="panelExpanded($event)">
     <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="false"
         (contentExpanding)="contentExpanding($event)">
         <igx-expansion-panel-header [disabled]="false">

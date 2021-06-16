@@ -7,13 +7,11 @@ import { slideInLeft, slideOutRight } from '../animations/slide';
 import { IgxExpansionPanelModule } from '../expansion-panel/expansion-panel.module';
 import { configureTestSuite } from '../test-utils/configure-suite';
 import { UIInteractions } from '../test-utils/ui-interactions.spec';
-import { IgxAccordionExpansionMode } from './accordion.common';
 import { IgxAccordionComponent } from './accordion.component';
 import { IgxAccordionModule } from './accordion.module';
 
 const ACCORDION_CLASS = 'igx-accordion__root';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
-const CSS_CLASS_EXPANSION_PANEL = 'igx-expansion-panel';
 const ACCORDION_TAG = 'IGX-ACCORDION';
 
 describe('Rendering Tests', () => {
@@ -80,11 +78,11 @@ describe('Rendering Tests', () => {
             expect(panelBody.children[0].tagName === ACCORDION_TAG).toBeTruthy();
         });
 
-        it(`Should be able to expand only one panel when expansionMode is set to 'single'
+        it(`Should be able to expand only one panel when singleBranchExpanded is set to true
         and expandAll/collapseAll should not update the current expansion state `, fakeAsync(() => {
             spyOn(accordion.panelExpanded, 'emit').and.callThrough();
             spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
-            accordion.expansionMode = IgxAccordionExpansionMode.Single;
+            accordion.singleBranchExpand = true;
             fix.detectChanges();
 
             accordion.expandAll();
@@ -119,8 +117,8 @@ describe('Rendering Tests', () => {
 
         }));
 
-        it('Should be able to expand only one panel when expansionMode is set to `multiple`', fakeAsync(() => {
-            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
+        it('Should be able to expand only one panel when singleBranchExpanded is set to false', fakeAsync(() => {
+            accordion.singleBranchExpand = false;
             fix.detectChanges();
 
             accordion.panels[0].expand();
@@ -143,10 +141,10 @@ describe('Rendering Tests', () => {
         }));
 
         it(`Should update the current expansion state when expandAll/collapseAll is invoked and
-        expansionMode is set to 'multiple'`, fakeAsync(() => {
+        singleBranchExpaned is set to false`, fakeAsync(() => {
             spyOn(accordion.panelExpanded, 'emit').and.callThrough();
             spyOn(accordion.panelCollapsed, 'emit').and.callThrough();
-            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
+            accordion.singleBranchExpand = false;
             fix.detectChanges();
 
             accordion.expandAll();
@@ -177,7 +175,7 @@ describe('Rendering Tests', () => {
             spyOn(accordion.panels[0].contentExpanding, 'emit').and.callThrough();
             spyOn(accordion.panels[0].contentExpanded, 'emit').and.callThrough();
 
-            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
+            accordion.singleBranchExpand = false;
             fix.detectChanges();
 
             let argsEd;
@@ -223,26 +221,6 @@ describe('Rendering Tests', () => {
             subsCollapsing.unsubscribe();
         }));
 
-        it(`Should collapse all expanded panels except for the first one (if any)
-        when expansionMode is changed from 'multiple' to 'single''`, fakeAsync(() => {
-            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
-            fix.detectChanges();
-            expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(2);
-
-            accordion.expandAll();
-            fix.detectChanges();
-            tick();
-            fix.detectChanges();
-
-            expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(0);
-
-            accordion.expansionMode = IgxAccordionExpansionMode.Single;
-            fix.detectChanges();
-            tick();
-            fix.detectChanges();
-            expect(accordion.panels.filter(panel => panel.collapsed).length).toEqual(2);
-            expect(accordion.panels[2].collapsed).toBeFalse();
-        }));
 
         it('Should focus the first/last panel on Home/End key press', () => {
             accordion.panels[2].header.disabled = true;
@@ -299,8 +277,8 @@ describe('Rendering Tests', () => {
         });
 
         it(`Should expand/collapse all panels on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when expansionMode is 'multiple'`, fakeAsync(() => {
-            accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
+                when singleBranchExpanded is false`, fakeAsync(() => {
+            accordion.singleBranchExpand = false;
             fix.detectChanges();
             accordion.panels[1].header.disabled = true;
             fix.detectChanges();
@@ -325,9 +303,9 @@ describe('Rendering Tests', () => {
             expect(accordion.panels.filter(p => p.collapsed && !p.header.disabled).length).toEqual(2);
         }));
 
-        it(`Should do nothing on SHIFT + ALT + ArrowDown/ArrowUp key pressed
-                when expansionMode is 'single'`, () => {
-            accordion.expansionMode = IgxAccordionExpansionMode.Single;
+        it(`Should do nothing/collapse the only panel on SHIFT + ALT + ArrowDown/ArrowUp key pressed
+                when singleBranchExpanded is true`, fakeAsync(() => {
+            accordion.singleBranchExpand = true;
             fix.detectChanges();
 
             accordion.panels[0].header.elementRef.nativeElement.dispatchEvent(new Event('pointerdown'));
@@ -346,9 +324,11 @@ describe('Rendering Tests', () => {
             UIInteractions.triggerKeyDownEvtUponElem('arrowup',
                 accordion.panels[0].header.innerElement, true, true, true, false);
             fix.detectChanges();
+            tick();
+            fix.detectChanges();
 
-            expect(accordion.panels.filter(p => p.collapsed).length).toEqual(collapsedCount);
-        });
+            expect(accordion.panels.filter(p => p.collapsed).length).toEqual(3);
+        }));
 
     });
 });

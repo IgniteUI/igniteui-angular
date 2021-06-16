@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
 import { slideInLeft, slideOutRight } from 'igniteui-angular';
-import { IgxAccordionExpansionMode } from 'projects/igniteui-angular/src/lib/accordion/accordion.common';
 import { IgxAccordionComponent } from 'projects/igniteui-angular/src/lib/accordion/accordion.component';
 
 @Component({
@@ -15,13 +14,7 @@ export class AccordionSampleComponent {
         openAnimation: slideInLeft
     };
 
-    public changeExpMode() {
-        if (this.accordion.expansionMode === IgxAccordionExpansionMode.Single) {
-            this.accordion.expansionMode = IgxAccordionExpansionMode.Multiple;
-        } else {
-            this.accordion.expansionMode = IgxAccordionExpansionMode.Single;
-        }
-    }
+    public singleBranchExpand = false;
 
     public panelExpanding(event) {
         console.log(event);

@@ -41,6 +41,16 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     @Input()
     public id = `igx-accordion-${NEXT_ID++}`;
 
+    /**
+     * The role attribute of the accordion.
+     **/
+    @HostBinding('attr.role')
+    public role = 'accordion';
+
+    /** @hidden @internal **/
+    @HostBinding('class.igx-accordion__root')
+    public cssClass = 'igx-accordion__root';
+
     /** Get/Set the animation settings that panels should use when expanding/collpasing.
      *
      * ```html
@@ -65,28 +75,24 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this.updatePanelsAnimation();
     }
 
-    /**
-     * Gets/Sets accordion expansion mode
+
+
+    /** Get/Set how the accordion should handle IgxExpansionPanels expansion.
+     * If set to `true`, only a single panel can be expanded at a time, collapsing all others
      *
-     * @remarks
-     * By default the accordion expansion mode is 'Single'
-     * @param expansionMode: IgxAccordionExpansionMode
+     * ```html
+     * <igx-accordion [singleBranchExpand]="true">
+     * ...
+     * </igx-accordion>
+     * ```
+     *
+     * ```typescript
+     * this.accordion.singleBranchExpand = false;
+     * ```
      */
     @Input()
-    public get expansionMode(): IgxAccordionExpansionMode {
-        return this._expansionMode;
-    }
-    public set expansionMode(expansionMode: IgxAccordionExpansionMode) {
-        if (expansionMode === IgxAccordionExpansionMode.Single && this.expansionMode === IgxAccordionExpansionMode.Multiple) {
-            const lastExpanded = this.panels.filter(p => !p.collapsed).pop();
-            this.expandedPanels.forEach(panel => {
-                if (panel !== lastExpanded) {
-                    panel.collapse();
-                }
-            });
-        }
-        this._expansionMode = expansionMode;
-    }
+    public singleBranchExpand = false;
+
 
     /**
      * Emitted when a panel is expanding, before it finishes
@@ -175,16 +181,8 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     }
 
     public ngAfterViewInit() {
-        const initiallyExpandedPanels: IgxExpansionPanelComponent[] = this._panels.filter(panel => !panel.collapsed);
-        if (this.expansionMode === IgxAccordionExpansionMode.Single) {
-            for (let i = 0; i < initiallyExpandedPanels.length - 1; i++) {
-                initiallyExpandedPanels[i].collapse();
-            }
-            this.expandedPanels.add(initiallyExpandedPanels.pop());
-        } else {
-            this.expandedPanels = new Set<IgxExpansionPanelComponent>(initiallyExpandedPanels);
-        }
-
+        this.expandedPanels = new Set<IgxExpansionPanelComponent>(this._panels.filter(panel => !panel.collapsed));
+        this.expandedPanels.forEach(panel => panel.nativeElement.classList.add('igx-expansion-panel--expanded'));
         this._panels.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
             this.subToChanges();
         });
@@ -207,7 +205,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      */
     public expandAll() {
-        if (this.expansionMode === IgxAccordionExpansionMode.Single) {
+        if (this.singleBranchExpand) {
             return;
         }
 
@@ -226,10 +224,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * ```
      */
     public collapseAll() {
-        if (this.expansionMode === IgxAccordionExpansionMode.Single) {
-            return;
-        }
-
         this.panels.forEach(panel => {
             if (!panel.collapsed && !panel.header.disabled) {
                 panel.collapse();
@@ -308,8 +302,8 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 if (args.cancel) {
                     return;
                 }
-
-                if (this.expansionMode === IgxAccordionExpansionMode.Single) {
+                args.owner.nativeElement.classList.add('igx-expansion-panel--expanded');
+                if (this.singleBranchExpand) {
                     this.expandedPanels.forEach(p => p.collapse());
                 }
                 this.panelExpanding.emit(args);
@@ -319,6 +313,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 this.panelCollapsed.emit(args);
             });
             panel.contentCollapsing.pipe(takeUntil(this.unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
+                args.owner.nativeElement.classList.remove('igx-expansion-panel--expanded');
                 this.panelCollapsing.emit(args);
             });
             fromEvent(panel.header.innerElement, 'keydown')
