@@ -16,7 +16,7 @@
 } from '@angular/core';
 import { IgxTextHighlightDirective } from '../directives/text-highlight/text-highlight.directive';
 import { GridBaseAPIService } from './api.service';
-import { getNodeSizeViaRange, isIE, isLeftClick, PlatformUtil } from '../core/utils';
+import { getNodeSizeViaRange, isFirefox, isIE, isLeftClick, PlatformUtil } from '../core/utils';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService, ISelectionNode, IgxGridCRUDService } from './selection/selection.service';
 import { DeprecateMethod } from '../core/deprecateDecorators';
@@ -860,7 +860,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public pointerdown = (event: PointerEvent) => {
-        event.preventDefault();
+        if(isFirefox()) {
+            event.preventDefault();
+        }
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;
