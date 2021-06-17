@@ -16,7 +16,6 @@ import { ACCORDION_NAVIGATION_KEYS } from '../core/utils';
 import { IExpansionPanelCancelableEventArgs, IExpansionPanelEventArgs } from '../expansion-panel/expansion-panel.common';
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
-import { IgxAccordionExpansionMode } from './accordion.common';
 
 let NEXT_ID = 0;
 
@@ -168,7 +167,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     }
 
     private _animationSettings: ToggleAnimationSettings;
-    private _expansionMode: IgxAccordionExpansionMode = IgxAccordionExpansionMode.Single;
     private expandedPanels: Set<IgxExpansionPanelComponent> = new Set<IgxExpansionPanelComponent>();
     private destroy$ = new Subject<void>();
     private unsubChildren$ = new Subject<void>();
