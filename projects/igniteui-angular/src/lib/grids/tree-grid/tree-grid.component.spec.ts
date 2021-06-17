@@ -159,7 +159,7 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
         });
     });
 
-    fit ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
         const fixture = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
         grid = fixture.componentInstance.treeGrid;
 

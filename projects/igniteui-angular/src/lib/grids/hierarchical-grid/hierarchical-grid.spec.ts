@@ -108,11 +108,8 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(hierarchicalGrid.expansionStates.size).toEqual(0);
     }));
 
-    fit ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
 
-        fixture.componentInstance.generateData(30);
-        fixture.detectChanges();
-        tick(100);
         // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
         const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
         expect(container.getAttribute('role')).toBe(null);
@@ -130,7 +127,6 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         tick(100);
 
         expect(container.getAttribute('role')).toMatch('row');
-
     }));
 
     it('should allow applying initial expansions state for certain rows through expansionStates option', () => {
@@ -1509,6 +1505,10 @@ export class IgxHierarchicalGridTestBaseComponent {
                 Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
+    }
+
+    public clearData(){
+        this.data = [];
     }
 }
 
