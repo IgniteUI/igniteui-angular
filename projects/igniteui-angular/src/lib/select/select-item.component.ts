@@ -61,6 +61,7 @@ export class IgxSelectItemComponent extends IgxDropDownItemComponent implements 
         }
     }
 
-    ngDoCheck(): void {
+    /** @hidden @internal */
+    public ngDoCheck(): void {
     }
 }
