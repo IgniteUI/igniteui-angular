@@ -860,12 +860,12 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @internal
      */
     public pointerdown = (event: PointerEvent) => {
-        if(isFirefox()) {
-            event.preventDefault();
-        }
         if (this.cellSelectionMode !== GridSelectionMode.multiple) {
             this.activate(event);
             return;
+        }
+        if(isFirefox()) {
+            event.preventDefault();
         }
         if (!isLeftClick(event)) {
             event.preventDefault();
