@@ -817,6 +817,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.activate(event);
             return;
         }
+        if(this.platformUtil.isFirefox) {
+            event.preventDefault();
+        }
         if (!this.platformUtil.isLeftClick(event)) {
             event.preventDefault();
             this.grid.navigation.setActiveNode({ rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex });
