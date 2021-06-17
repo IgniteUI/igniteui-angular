@@ -1,4 +1,13 @@
-import { Injectable, OnDestroy, NgModuleRef } from '@angular/core';
+import {
+    Injectable,
+    OnDestroy,
+    NgModuleRef,
+    ComponentFactoryResolver,
+    ApplicationRef,
+    Injector,
+    ComponentRef,
+    ComponentFactory
+} from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -17,9 +26,6 @@ import { AbsoluteScrollStrategy } from '../../services/overlay/scroll/absolute-s
 import { IgxGridExcelStyleFilteringComponent } from './excel-style/grid.excel-style-filtering.component';
 import { IgxIconService } from '../../icon/icon.service';
 import { editor, pinLeft, unpinLeft } from '@igniteui/material-icons-extended';
-import { ComponentRef } from '@angular/core';
-import { ComponentFactory } from '@angular/core';
-import { ComponentFactoryResolver, ApplicationRef, Injector } from '@angular/core';
 
 /**
  * @hidden
@@ -53,13 +59,9 @@ export class IgxFilteringService implements OnDestroy {
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
+    private componentInstance: IgxGridExcelStyleFilteringComponent;
     private column;
     private lastActiveNode;
-
-    private get componentInstance() {
-        return this.grid.excelStyleFilteringComponent ??
-            this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
-    }
 
     constructor(
         private _moduleRef: NgModuleRef<any>,
@@ -84,11 +86,13 @@ export class IgxFilteringService implements OnDestroy {
             this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-            const instance = this.componentInstance;
-            instance.initialize(this.column, this._overlayService, this._componentOverlayId);
+            this.componentInstance =
+                this.grid.excelStyleFilteringComponent ??
+                this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
+            this.componentInstance.initialize(this.column, this._overlayService);
 
-            this._componentOverlayId = this._overlayService.attach(instance.element, this._filterMenuOverlaySettings);
-            instance.overlayComponentId = this._componentOverlayId;
+            this._componentOverlayId = this._overlayService.attach(this.componentInstance.element, this._filterMenuOverlaySettings);
+            this.componentInstance.overlayComponentId = this._componentOverlayId;
 
             this._overlayService.show(this._componentOverlayId);
         }
@@ -116,10 +120,8 @@ export class IgxFilteringService implements OnDestroy {
         this._overlayService.closed.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
             takeUntil(this.destroy$)).subscribe((   ) => {
-                const instance = this.componentInstance;
-
-                if (instance) {
-                    instance.column = null;
+                if (this.componentInstance) {
+                    this.componentInstance.column = null;
                 }
                 this._overlayService.detach(this._componentOverlayId);
                 this._componentOverlayId = null;
