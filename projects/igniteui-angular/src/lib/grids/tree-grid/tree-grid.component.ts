@@ -312,17 +312,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this._transactions;
     }
 
-    public get dataWithAddedInTransactionRows() {
-        console.log('TreeGrid dataWithAddedInTransactionRows');
-        const result = cloneArray(this.gridAPI.get_all_data());
-        if (this.transactions.enabled) {
-            result.push(...this.transactions.getAggregatedChanges(true)
-                .map(t => t.newValue));
-        }
-
-        return result;
-    }
-
     /**
      * An @Input property that sets the count of levels to be expanded in the `IgxTreeGridComponent`. By default it is
      * set to `Infinity` which means all levels would be expanded.
