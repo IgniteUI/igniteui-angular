@@ -29,7 +29,7 @@ import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { mergeObjects } from '../../core/utils';
+import { cloneArray, mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
@@ -310,6 +310,17 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      */
     public get transactions() {
         return this._transactions;
+    }
+
+    public get dataWithAddedInTransactionRows() {
+        console.log('TreeGrid dataWithAddedInTransactionRows');
+        const result = cloneArray(this.gridAPI.get_all_data());
+        if (this.transactions.enabled) {
+            result.push(...this.transactions.getAggregatedChanges(true)
+                .map(t => t.newValue));
+        }
+
+        return result;
     }
 
     /**
