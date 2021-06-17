@@ -1,5 +1,5 @@
 import { IgxDropDownItemNavigationDirective } from '../drop-down/drop-down-navigation.directive';
-import { Directive, Input, HostListener, OnDestroy } from '@angular/core';
+import { Directive, Input, OnDestroy } from '@angular/core';
 import { Subscription, timer } from 'rxjs';
 import { IgxSelectItemComponent } from './select-item.component';
 import { IgxSelectBase } from './select.common';
@@ -12,17 +12,17 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
     protected _target: IgxSelectBase = null;
 
     @Input('igxSelectItemNavigation')
-    get target(): IgxSelectBase {
+    public get target(): IgxSelectBase {
         return this._target;
     }
-    set target(target: IgxSelectBase) {
+    public set target(target: IgxSelectBase) {
         this._target = target ? target : this.dropdown as IgxSelectBase;
     }
 
     constructor() { super(null); }
 
     /** Captures keydown events and calls the appropriate handlers on the target component */
-    handleKeyDown(event: KeyboardEvent) {
+    public handleKeyDown(event: KeyboardEvent) {
         if (!event) {
             return;
         }
@@ -126,7 +126,7 @@ export class IgxSelectItemNavigationDirective extends IgxDropDownItemNavigationD
             items.slice(0, activeItemIndex).find(x => !x.disabled && (x.itemText.toLowerCase().startsWith(text.toLowerCase())));
     }
 
-    ngOnDestroy(): void {
+    public ngOnDestroy(): void {
         this.clearStream$.unsubscribe();
     }
 }

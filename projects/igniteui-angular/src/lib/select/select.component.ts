@@ -34,12 +34,14 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/d
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxOverlayService } from '../services/public_api';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -321,6 +323,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected elementRef: ElementRef,
         protected cdr: ChangeDetectorRef,
         protected selection: IgxSelectionAPIService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
@@ -485,7 +488,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (args.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+    }
+
+    /** @hidden @internal */
+    public onToggleContentAppended(event: ToggleViewEventArgs) {
+        const info = this.overlayService.getOverlayById(event.id);
+        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+            return;
+        }
+        super.onToggleContentAppended(event);
     }
 
     /** @hidden @internal */

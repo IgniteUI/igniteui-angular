@@ -17,7 +17,7 @@ import {
     Inject,
     SimpleChanges
 } from '@angular/core';
-import { IgxToggleDirective } from '../directives/toggle/toggle.directive';
+import { IgxToggleDirective, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 import { IgxDropDownItemComponent } from './drop-down-item.component';
 import { IgxDropDownBaseDirective } from './drop-down.base';
 import { DropDownActionKey, Navigate } from './drop-down.common';
@@ -391,7 +391,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     /**
      * @hidden @internal
      */
-    public onToggleContentAppended() {
+    public onToggleContentAppended(_event: ToggleViewEventArgs) {
         if (!this.virtDir && this.selectedItem) {
            this.scrollToItem(this.selectedItem);
         }
