@@ -30,7 +30,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     private global_styles: SelectStyles = {};
 
     /** @inheritdoc */
-    // eslint-disable-next-line max-len
     public position(contentElement: HTMLElement,
                     size: Size, document?: Document,
                     initialCall?: boolean,
@@ -173,7 +172,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
     /**
      * Obtain the selected item if there is such one or otherwise use the first one
      */
-     public getInteractionItemElement(): HTMLElement {
+    public getInteractionItemElement(): HTMLElement {
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
