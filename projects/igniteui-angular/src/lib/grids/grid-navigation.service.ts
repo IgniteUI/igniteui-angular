@@ -539,11 +539,16 @@ export class IgxGridNavigationService {
         if ((this.grid.crudService.rowInEditMode && this.grid.rowEditTabs.length) &&
             (this.activeNode.row !== next.rowIndex || this.isActiveNode(next.rowIndex, next.visibleColumnIndex))) {
             if (this.grid.crudService.row?.isAddRow) {
-                this.grid.gridAPI.submit_add_value(event);
+                const cancelable = this.grid.crudService.updateAddCell(false, event);
+                if (cancelable && cancelable.cancel) {
+                    this.grid.crudService.endAddRow();
+                } else {
+                    this.grid.crudService.exitCellEdit(event);
+                }
                 const row = this.grid.rowList.find(r => r.rowID === this.grid.crudService.row.id);
                 row.rowData = this.grid.crudService.row.data;
             } else {
-                this.grid.gridAPI.submit_value(event);
+                this.grid.crudService.updateCell(true, event);
             }
             if (shift) {
                 this.grid.rowEditTabs.last.element.nativeElement.focus();
