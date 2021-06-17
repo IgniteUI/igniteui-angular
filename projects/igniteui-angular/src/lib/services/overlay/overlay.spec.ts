@@ -70,7 +70,7 @@ function css(element) {
     return ret;
 }
 
-function addScrollDivToElement(parent) {
+export const addScrollDivToElement = (parent) => {
     const scrollDiv = document.createElement('div');
     scrollDiv.style.width = '100px';
     scrollDiv.style.height = '100px';
@@ -78,8 +78,7 @@ function addScrollDivToElement(parent) {
     scrollDiv.style.left = '10000px';
     scrollDiv.style.position = 'absolute';
     parent.appendChild(scrollDiv);
-
-}
+};
 
 /**
  * Returns the top left location of the shown element
