@@ -96,7 +96,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const worksheetData =
             new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort, this._isTreeGrid);
 
-        this._xlsx = new JSZip();
+        this._xlsx = typeof (<any>JSZip).default === 'function' ? new (<any>JSZip).default() : new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
 
