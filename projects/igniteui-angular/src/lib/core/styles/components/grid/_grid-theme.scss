@@ -1396,9 +1396,7 @@
     }
 
     %igx-grid__td--new {
-        %grid-cell-text {
-            color: --var($theme, 'cell-new-color');
-        }
+        color: --var($theme, 'cell-new-color');
     }
 
     %igx-grid__td--edited {
