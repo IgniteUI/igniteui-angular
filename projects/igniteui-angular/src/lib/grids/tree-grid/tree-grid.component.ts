@@ -29,7 +29,7 @@ import { HierarchicalTransactionService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { cloneArray, mergeObjects } from '../../core/utils';
+import { mergeObjects } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
