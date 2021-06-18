@@ -1,5 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-import { IgxTreeGridComponent, IGroupingExpression,  GridSelectionMode, DisplayDensity, DefaultSortingStrategy } from 'igniteui-angular';
+import { IgxTreeGridComponent, IGroupingExpression,  GridSelectionMode,
+        DisplayDensity, DefaultSortingStrategy, ITreeGridRecord } from 'igniteui-angular';
+import { ITreeGridAggregation } from 'projects/igniteui-angular/src/lib/grids/tree-grid/tree-grid.grouping.pipe';
 import { SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
@@ -24,6 +26,11 @@ export class TreeGridGroupBySampleComponent implements OnInit {
     public groupKey = 'Groups';
     public primaryKey = 'Groups';
     public childDataKey = 'ChildCompanies';
+
+    public employeeAggregations: ITreeGridAggregation[] = [{
+        field: 'Employees',
+        aggregate: (parent: ITreeGridRecord, children: any[]) => children.map((c) => c.Employees).reduce((sum, n) => sum + n, 0)
+    }];
 
     public ngOnInit(): void {
         this.selectionMode = GridSelectionMode.multiple;

@@ -7,6 +7,7 @@ import { IgxTransactionService } from '../services/transaction/igx-transaction';
 import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
+import { DefaultSortingStrategy } from 'igniteui-angular';
 
 @Component({
     template: `
@@ -901,4 +902,34 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
     @ViewChild('actionStrip', { read: IgxActionStripComponent, static: true })
     public actionStrip: IgxActionStripComponent;
     public data = SampleTestData.employeeSmallTreeData();
+}
+
+@Component({
+    template: `
+    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupKey:groupKey:childDataKey"
+        childDataKey="Employees" expansionDepth="0" width="900px" height="1000px">
+        <igx-group-area [grid]='treeGrid'
+            [groupingExpressions]="groupingExpressions"
+            [hideGroupedColumns]="false">
+        </igx-group-area>
+        <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
+        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'HireDate'" dataType="date"></igx-column>
+        <igx-column [field]="'Age'" dataType="number"></igx-column>
+        <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
+    </igx-tree-grid>
+    `
+})
+export class IgxTreeGridGroupingComponent extends IgxTreeGridSummariesComponent {
+    public groupedInitially = true;
+    public groupKey = 'Employees';
+    public childDataKey='Employees'
+    public groupingExpressions =
+            this.groupedInitially ?
+            [
+                { fieldName: 'OnPTO', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+                { fieldName: 'HireDate', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+            ] :
+            [];
 }
