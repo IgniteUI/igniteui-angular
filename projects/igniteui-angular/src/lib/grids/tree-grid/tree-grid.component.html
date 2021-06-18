@@ -188,7 +188,7 @@
 </ng-template>
 
 <ng-template #emptyFilteredGrid>
-    <span class="igx-grid__tbody-message">
+    <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyFilteredGridMessage}}</span>
         <span *ngIf='showAddButton'>
             <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
@@ -197,7 +197,7 @@
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
-    <span class="igx-grid__tbody-message">
+    <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyGridMessage}}</span>
         <span *ngIf='showAddButton'>
             <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
