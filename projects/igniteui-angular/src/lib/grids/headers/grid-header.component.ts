@@ -209,7 +209,7 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
 
     public onFilteringIconClick(event) {
         event.stopPropagation();
-        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column, IgxGridExcelStyleFilteringComponent);
+        this.grid.filteringService.toggleFilterDropdown(this.elementRef.nativeElement, this.column);
     }
 
     get grid(): any {
