@@ -3,6 +3,15 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 12.1.0
+### New Features
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
+    ```typescript
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Index') {
+                col.columnIndex = 0;
+            }
+        });
+    ```
 ### General
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
