@@ -669,7 +669,7 @@ export class IgxGridNavigationService {
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
             if (this.grid.filterMode === FilterMode.excelStyleFilter) {
                 const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
-                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column);
             } else {
                 this.performHorizontalScrollToCell(column.visibleIndex);
                 this.grid.filteringService.filteredColumn = column;
