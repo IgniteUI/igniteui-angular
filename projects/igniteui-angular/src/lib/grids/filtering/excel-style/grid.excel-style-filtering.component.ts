@@ -358,12 +358,10 @@ export class IgxGridExcelStyleFilteringComponent implements OnDestroy {
     /**
      * @hidden @internal
      */
-    public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService,
-        overlayComponentId: string) {
+    public initialize(column: IgxColumnComponent, overlayService: IgxOverlayService) {
         this.inline = false;
         this.column = column;
         this.overlayService = overlayService;
-        this.overlayComponentId = overlayComponentId;
         if (this._originalDisplay) {
             this.element.nativeElement.style.display = this._originalDisplay;
         }
