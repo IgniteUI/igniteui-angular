@@ -817,9 +817,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.activate(event);
             return;
         }
-        if(this.platformUtil.isFirefox) {
-            event.preventDefault();
-        }
         if (!this.platformUtil.isLeftClick(event)) {
             event.preventDefault();
             this.grid.navigation.setActiveNode({ rowIndex: this.rowIndex, colIndex: this.visibleColumnIndex });
@@ -831,6 +828,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 this.gridAPI.submit_value(event);
             }
             return;
+        }
+        if(this.platformUtil.isFirefox) {
+            event.preventDefault();
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
