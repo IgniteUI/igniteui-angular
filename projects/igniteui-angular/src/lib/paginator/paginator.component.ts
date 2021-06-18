@@ -11,7 +11,6 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
-import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
 import { IgxPagerComponent } from './pager.component';
 import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
@@ -92,7 +91,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
-    protected _totalPages: number;
+    /**
+     * Total pages calculated from totalRecords and perPage
+     */
+    public totalPages: number;
     protected _page = 0;
     protected _totalRecords: number;
     protected _selectOptions = [5, 10, 15, 25, 50, 100, 500];
@@ -170,21 +172,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         this._perPage = Number(value);
         this.perPageChange.emit(this._perPage);
         this._selectOptions = this.sortUniqueOptions(this.defaultSelectValues, this._perPage);
-        if (this.totalRecords) {
-            this.totalPages = Math.ceil(this.totalRecords / this._perPage);
-            if (this.totalPages !== 0 && this.page >= this.totalPages) {
-                this.page = this.totalPages - 1;
-            }
+        this.totalPages = Math.ceil(this.totalRecords / this._perPage);
+        if (this.totalPages !== 0 && this.page >= this.totalPages) {
+            this.page = this.totalPages - 1;
         }
-    }
-
-    @Input()
-    public get totalPages() {
-        return this._totalPages;
-    }
-
-    public set totalPages(value: number) {
-        this._totalPages = value;
     }
 
     /**
@@ -195,7 +186,6 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      *
      * @memberof IgxPaginatorComponent
      */
-    @DeprecateProperty('`totalRecords` is deprecated. Set totalPages property instead.')
     @Input()
     public get totalRecords() {
         return this._totalRecords;
