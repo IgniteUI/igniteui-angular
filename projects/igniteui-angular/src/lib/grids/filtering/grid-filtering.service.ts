@@ -1,4 +1,13 @@
-import { Injectable, OnDestroy, NgModuleRef } from '@angular/core';
+import {
+    Injectable,
+    OnDestroy,
+    NgModuleRef,
+    ComponentFactoryResolver,
+    ApplicationRef,
+    Injector,
+    ComponentRef,
+    ComponentFactory
+} from '@angular/core';
 import { FilteringExpressionsTree, IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { IFilteringExpression, FilteringLogic } from '../../data-operations/filtering-expression.interface';
@@ -50,17 +59,24 @@ export class IgxFilteringService implements OnDestroy {
     private _componentOverlayId: string;
     private _filterMenuPositionSettings: PositionSettings;
     private _filterMenuOverlaySettings: OverlaySettings;
+    private componentInstance: IgxGridExcelStyleFilteringComponent;
     private column;
     private lastActiveNode;
 
-    constructor(private _moduleRef: NgModuleRef<any>, private iconService: IgxIconService,  private _overlayService: IgxOverlayService) {}
+    constructor(
+        private _moduleRef: NgModuleRef<any>,
+        private iconService: IgxIconService,
+        private _overlayService: IgxOverlayService,
+        private _factoryResolver: ComponentFactoryResolver,
+        private _appRef: ApplicationRef,
+        private _injector: Injector) {}
 
     public ngOnDestroy(): void {
         this.destroy$.next(true);
         this.destroy$.complete();
     }
 
-    public toggleFilterDropdown(element, column, classRef) {
+    public toggleFilterDropdown(element, column) {
         if (!this._componentOverlayId || (this.column && this.column.field !== column.field)) {
             this.initFilteringSettings();
             this.column = column;
@@ -70,13 +86,13 @@ export class IgxFilteringService implements OnDestroy {
             this._filterMenuOverlaySettings.target = filterIconTarget;
             this._filterMenuOverlaySettings.outlet = (this.grid as any).outlet;
 
-            if (this.grid.excelStyleFilteringComponent) {
-                this._componentOverlayId =
-                    this._overlayService.attach(this.grid.excelStyleFilteringComponent.element, this._filterMenuOverlaySettings);
-            } else {
-                this._componentOverlayId =
-                    this._overlayService.attach(classRef, this._filterMenuOverlaySettings, this._moduleRef);
-            }
+            this.componentInstance =
+                this.grid.excelStyleFilteringComponent ??
+                this.createComponentInstance(IgxGridExcelStyleFilteringComponent);
+            this.componentInstance.initialize(this.column, this._overlayService);
+
+            this._componentOverlayId = this._overlayService.attach(this.componentInstance.element, this._filterMenuOverlaySettings);
+            this.componentInstance.overlayComponentId = this._componentOverlayId;
 
             this._overlayService.show(this._componentOverlayId);
         }
@@ -97,26 +113,15 @@ export class IgxFilteringService implements OnDestroy {
 
         this._overlayService.opening.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const instance = this.grid.excelStyleFilteringComponent ?
-                    this.grid.excelStyleFilteringComponent :
-                    eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
-
-                if (instance) {
-                    this.lastActiveNode = this.grid.navigation.activeNode;
-                    instance.initialize(this.column, this._overlayService, eventArgs.id);
-                }
+            takeUntil(this.destroy$)).subscribe(() => {
+                this.lastActiveNode = this.grid.navigation.activeNode;
             });
 
         this._overlayService.closed.pipe(
             first((overlay) => overlay.id === this._componentOverlayId),
-            takeUntil(this.destroy$)).subscribe((eventArgs) => {
-                const instance = this.grid.excelStyleFilteringComponent ?
-                    this.grid.excelStyleFilteringComponent :
-                    eventArgs.componentRef.instance as IgxGridExcelStyleFilteringComponent;
-
-                if (instance) {
-                    instance.column = null;
+            takeUntil(this.destroy$)).subscribe((   ) => {
+                if (this.componentInstance) {
+                    this.componentInstance.column = null;
                 }
                 this._overlayService.detach(this._componentOverlayId);
                 this._componentOverlayId = null;
@@ -680,5 +685,28 @@ export class IgxFilteringService implements OnDestroy {
 
             expressionsUIs.push(exprUI);
         }
+    }
+
+    private createComponentInstance(component: any) {
+        let dynamicFactory: ComponentFactory<any>;
+        const factoryResolver = this._moduleRef
+            ? this._moduleRef.componentFactoryResolver
+            : this._factoryResolver;
+        try {
+            dynamicFactory = factoryResolver.resolveComponentFactory(component);
+        } catch (error) {
+            console.error(error);
+            return null;
+        }
+
+        const injector = this._moduleRef
+            ? this._moduleRef.injector
+            : this._injector;
+        const dynamicComponent: ComponentRef<any> = dynamicFactory.create(
+            injector
+        );
+        this._appRef.attachView(dynamicComponent.hostView);
+
+        return dynamicComponent.instance;
     }
 }
