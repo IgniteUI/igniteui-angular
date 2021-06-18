@@ -81,6 +81,50 @@ $_fluent-flat-button-dark: extend(
     )
 );
 
+/// @prop {Color} foreground [igx-contrast-color: ('grays', 50)] - The idle text color of a raised button.
+/// @prop {Map} hover-foreground [igx-contrast-color: ('grays', 50)] - The text color of a flat button on hover.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('grays', 50)] - The focus text color of a raised button.
+/// @requires {Map} $_fluent-raised-button
+/// @requires {function} extend
+$_fluent-raised-button-dark: extend(
+    $_fluent-raised-button,
+    (
+        foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        hover-foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+    )
+);
+
+/// @prop {Color} foreground [igx-contrast-color: ('grays', 50)] - The idle text color of a raised button.
+/// @prop {Map} hover-foreground [igx-contrast-color: ('grays', 50)] - The text color of a flat button on hover.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('grays', 50)] - The focus text color of a raised button.
+/// @requires {Map} $_fluent-fab-button
+/// @requires {function} extend
+$_fluent-fab-button-dark: extend(
+    $_fluent-fab-button,
+    (
+        foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        hover-foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+    )
+);
+
 /// Generates a dark fluent button schema.
 /// @type {Map}
 /// @requires {Map} $_fluent-flat-button-dark
@@ -93,8 +137,8 @@ $_fluent-flat-button-dark: extend(
 $_dark-fluent-button: (
     flat: $_fluent-flat-button-dark,
     outlined: $_fluent-outlined-button,
-    raised: $_fluent-raised-button,
-    fab: $_fluent-fab-button,
+    raised: $_fluent-raised-button-dark,
+    fab: $_fluent-fab-button-dark,
     icon: $_fluent-icon-button,
 );
 
@@ -118,6 +162,27 @@ $_bootstrap-base-button-dark: extend(
 
 /// @type {Map}
 /// @prop {Map} disabled-border-color [igx-color: ('primary', 900)] - The disabled border color of the button.
+/// @prop {Map} hover-background [igx-color: (igx-contrast-color: ('grays', 50)] - The hover background color of an raised button.
+/// @prop {Map} focus-background [igx-color: (igx-contrast-color: ('grays', 50)] - The focus background color of an raised button.
+/// @requires {Map} $_bootstrap-base-button-dark
+/// @requires {Map} $_bootstrap-raised-button
+/// @requires {function} extend
+$_bootstrap-raised-button-dark: extend(
+    $_bootstrap-base-button-dark,
+    $_bootstrap-raised-button,
+    (
+        hover-foreground:  (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('grays', 50)
+        ),
+    )
+);
+
+/// @type {Map}
+/// @prop {Map} disabled-border-color [igx-color: ('primary', 900)] - The disabled border color of the button.
 /// @requires {Map} $_bootstrap-base-button-dark
 /// @requires {Map} $_bootstrap-outlined-button
 /// @requires {function} extend
@@ -127,6 +192,31 @@ $_bootstrap-outlined-button-dark: extend(
     (
         disabled-border-color: (
             igx-color: ('primary', 900)
+        ),
+    )
+);
+
+/// @type {Map}
+/// @prop {Map} disabled-border-color [igx-color: ('primary', 900)] - The disabled border color of the button.
+/// @prop {Map} hover-background [igx-color: (igx-contrast-color: ('grays', 50)] - The hover background color of an raised button.
+/// @prop {Map} focus-background [igx-color: (igx-contrast-color: ('grays', 50)] - The focus background color of an raised button.
+/// @requires {Map} $_bootstrap-base-button-dark
+/// @requires {Map} $_bootstrap-fab-button
+/// @requires {function} extend
+$_bootstrap-fab-button-dark: extend(
+    $_bootstrap-base-button-dark,
+    $_bootstrap-fab-button,
+    (
+        disabled-border-color: (
+            igx-color: ('primary', 900)
+        ),
+
+        hover-foreground:  (
+            igx-contrast-color: ('grays', 50)
+        ),
+
+        focus-foreground: (
+            igx-contrast-color: ('grays', 50)
         ),
     )
 );
@@ -142,8 +232,8 @@ $_bootstrap-outlined-button-dark: extend(
 $_dark-bootstrap-button: (
     flat: $_bootstrap-flat-button,
     outlined: $_bootstrap-outlined-button-dark,
-    raised: $_bootstrap-raised-button,
-    fab: $_bootstrap-fab-button,
+    raised: $_bootstrap-raised-button-dark,
+    fab: $_bootstrap-fab-button-dark,
     icon: $_bootstrap-icon-button,
 );
 

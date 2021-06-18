@@ -323,11 +323,11 @@ $_fluent-outlined-button: extend(
 
 /// @type {Map}
 /// @prop {Map} background [igx-color: ('primary', 500)] - The background color of an raised button.
-/// @prop {Color} foreground [igx-color: 'surface'] - The idle text color of a raised button.
+/// @prop {Color} foreground [igx-contrast-color: ('grays', 900)] - The idle text color of a raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background of a raised button.
-/// @prop {Color} hover-foreground [igx-color: 'surface'] - The hover text color of a raised button.
+/// @prop {Color} hover-foreground [igx-contrast-color: ('grays', 900)] - The hover text color of a raised button.
 /// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of a raised button.
-/// @prop {Color} focus-foreground [igx-color: 'surface'] - The focus text color of a raised button.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('grays', 900)] - The focus text color of a raised button.
 /// @prop {Number} resting-elevation [0] - The elevation level, between 0-24, to be used for the resting state.
 /// @prop {Number} hover-elevation [0] - The elevation level, between 0-24, to be used for the hover state.
 /// @prop {Number} focus-elevation [0] - The elevation level, between 0-24, to be used for the focus state.
@@ -346,7 +346,7 @@ $_fluent-raised-button: extend(
         ),
 
         foreground: (
-            igx-color: 'surface'
+            igx-contrast-color: ('grays', 900)
         ),
 
         hover-background: (
@@ -354,7 +354,7 @@ $_fluent-raised-button: extend(
         ),
 
         hover-foreground: (
-            igx-color: 'surface'
+            igx-contrast-color: ('grays', 900)
         ),
 
         focus-background: (
@@ -362,7 +362,7 @@ $_fluent-raised-button: extend(
         ),
 
         focus-foreground: (
-            igx-color: 'surface'
+            igx-contrast-color: ('grays', 900)
         ),
     )
 );
@@ -576,8 +576,8 @@ $_bootstrap-raised-button: extend(
 /// @type {Map}
 /// @requires {function} extend
 /// @prop {Map} background [igx-color: ('primary', 500)] - The background color of a raised button.
-/// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an raised button.
-/// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an raised button.
+/// @prop {Map} hover-background [igx-color: (igx-contrast-color: ('grays', 900)] - The hover background color of an raised button.
+/// @prop {Map} focus-background [igx-color: (igx-contrast-color: ('grays', 900)] - The focus background color of an raised button.
 /// @requires {Map} $_material-fab-button
 /// @requires {Map} $_bootstrap-base-button
 /// @requires {Map} $_bootstrap-raised-button
@@ -588,9 +588,13 @@ $_bootstrap-fab-button: extend(
     (
         selector: '[igxButton="fab"], .igx-button--fab',
 
-        hover-foreground:  #fff,
+        hover-foreground:  (
+            igx-contrast-color: ('grays', 900)
+        ),
 
-        focus-foreground: #fff,
+        focus-foreground: (
+            igx-contrast-color: ('grays', 900)
+        ),
 
         background: (
             igx-color: ('primary', 500)
