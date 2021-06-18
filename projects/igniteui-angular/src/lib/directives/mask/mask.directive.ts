@@ -31,8 +31,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     public set mask(val: string) {
         // B.P. 9th June 2021 #7490
         if (val !== this._mask) {
+            const cleanInputValue = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
             this.setPlaceholder(val);
             this._mask = val;
+            this.updateInputValue(cleanInputValue);
         }
     }
 
@@ -260,7 +262,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     @HostListener('focus')
     public onFocus(): void {
         this._focused = true;
-        this.showMask(this._dataValue);
+        this.showMask(this.inputValue);
     }
 
     /** @hidden */
@@ -303,7 +305,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             // TODO(D.P.): focusedValuePipe should be deprecated or force-checked to match mask format
             this.inputValue = this.focusedValuePipe.transform(value);
         } else {
-            this.inputValue = this.maskParser.applyMask(this.inputValue, this.maskOptions);
+            this.inputValue = this.maskParser.applyMask(value, this.maskOptions);
         }
 
         this._oldText = this.inputValue;
@@ -328,6 +330,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || placeholder === this.mask) {
             this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+        }
+    }
+
+    private updateInputValue(value: string) {
+        if (this._focused) {
+            this.showMask(value);
+        } else if (!this.displayValuePipe) {
+            this.inputValue = this.inputValue ? this.maskParser.applyMask(value, this.maskOptions) : '';
         }
     }
 
