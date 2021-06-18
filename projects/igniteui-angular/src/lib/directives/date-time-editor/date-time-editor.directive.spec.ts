@@ -15,7 +15,7 @@ describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
         const maskParsingService = jasmine.createSpyObj('MaskParsingService',
-            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
+            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
         const ngModel = {

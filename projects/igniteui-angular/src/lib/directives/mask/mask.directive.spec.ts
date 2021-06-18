@@ -234,7 +234,7 @@ describe('igxMask', () => {
         const comp = fixture.componentInstance;
         const input = comp.input;
 
-        expect(input.nativeElement.value).toEqual('3456');
+        expect(input.nativeElement.value).toEqual('3456____');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
