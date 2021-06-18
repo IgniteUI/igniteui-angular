@@ -375,10 +375,12 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
         if (Array.isArray(value)) {
             return;
         }
+
+        const validDate = this.validateDate(value);
         if (this._viewDate) {
-            this.selectedDatesWithoutFocus = value;
+            this.selectedDatesWithoutFocus = validDate;
         }
-        const date = this.getDateOnly(value).setDate(1);
+        const date = this.getDateOnly(validDate).setDate(1);
         this._viewDate = new Date(date);
     }
 
@@ -570,7 +572,8 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
      * @hidden
      */
     protected getDateOnly(date: Date) {
-        return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const validDate = this.validateDate(date);
+        return new Date(validDate.getFullYear(), validDate.getMonth(), validDate.getDate());
     }
 
     /**
@@ -741,5 +744,13 @@ export class IgxCalendarBaseDirective implements ControlValueAccessor {
             this.rangeStarted = false;
             this._onChangeCallback(this.selectedDates);
         }
+    }
+
+    private validateDate(value: Date) {
+        if (isDate(value) && !isNaN(value.getTime())) {
+            return value;
+        }
+
+        return new Date();
     }
 }
