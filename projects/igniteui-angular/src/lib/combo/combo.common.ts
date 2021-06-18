@@ -6,11 +6,11 @@ export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboCom
 /** @hidden @internal TODO: Evaluate */
 export interface IgxComboBase {
     id: string;
-    data: any[];
+    data: any[] | null;
     valueKey: string;
     groupKey: string;
     isRemote: boolean;
-    filteredData: any[];
+    filteredData: any[] | null;
     totalItemCount: number;
     itemsMaxHeight: number;
     itemHeight: number;
