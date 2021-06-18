@@ -371,7 +371,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
@@ -393,7 +393,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowDeletedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (args.data) {
                     const rec = this._gridAPI.get_rec_by_id(
@@ -545,10 +545,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param parentRowID
      * @memberof IgxTreeGridComponent
      */
+    // TODO: remove evt emission
     public addRow(data: any, parentRowID?: any) {
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
-        this.rowAdded.emit({ data });
+
+        this.rowAddedNotifier.next({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -627,11 +629,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any) {
+    public deleteRowById(rowId: any): any {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        this._gridAPI.deleteRowById(rowId);
+        return this._gridAPI.deleteRowById(rowId);
 
     }
 
@@ -904,4 +906,4 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
     }
-}
+ }
