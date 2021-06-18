@@ -90,6 +90,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
     public toolbarOutlet: ViewContainerRef;
+
+    @ViewChild('paginatorOutlet', { read: ViewContainerRef })
+    public paginatorOutlet: ViewContainerRef;
     /**
      * @hidden
      */
@@ -192,6 +195,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._data;
     }
 
+
+    public get paginatorCmp() {
+        return this.paginator || this.parentIsland?.paginator;
+    }
 
     /**
      * Sets an array of objects containing the filtered data in the `IgxHierarchicalGridComponent`.

@@ -124,7 +124,7 @@
         | visibleColumns:hasVisibleColumns
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
-        | gridHierarchicalPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
+        | gridHierarchicalPaging:paginatorCmp?.page:paginatorCmp?.perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger
         | gridAddRow:false:pipeTrigger"
@@ -204,9 +204,8 @@
 
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
-    <ng-container *ngIf="totalRecords">
-        <ng-content select="igx-paginator"></ng-content>
-    </ng-container>
+    <ng-content select="igx-paginator"></ng-content>
+    <ng-container #paginatorOutlet></ng-container>
 </div>
 
 <ng-template #emptyFilteredGrid>

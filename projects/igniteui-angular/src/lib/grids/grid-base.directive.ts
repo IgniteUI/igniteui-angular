@@ -1491,7 +1491,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set perPage(val: number) {
-        this.paginator.perPage = val;
+        if (this.paginator) {
+            this.paginator.perPage = val;
+        }
     }
 
     /**
@@ -4191,7 +4193,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set totalRecords(total: number) {
         if (total >= 0) {
-            this.paginator.totalRecords = total;
+            if (this.paginator) {
+                this.paginator.totalRecords = total;
+            }
             this._totalRecords = total;
             this.pipeTrigger++;
             this.notifyChanges();

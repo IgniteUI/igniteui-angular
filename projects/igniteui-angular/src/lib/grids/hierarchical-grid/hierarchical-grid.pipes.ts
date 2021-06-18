@@ -66,8 +66,9 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
     constructor(private gridAPI: GridBaseAPIService<IgxHierarchicalGridComponent>) { }
 
     public transform(collection: any[], page = 0, perPage = 15, _id: string, _pipeTrigger: number): any[] {
-
-        if (!this.gridAPI.grid.paginator || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
+        debugger;
+        const paginator = this.gridAPI.grid.paginator || this.gridAPI.grid.parentIsland?.paginator;
+        if (!paginator || this.gridAPI.grid.pagingMode !== GridPagingMode.Local) {
             return collection;
         }
 
@@ -79,6 +80,7 @@ export class IgxGridHierarchicalPagingPipe implements PipeTransform {
         const total = this.gridAPI.grid._totalRecords >= 0 ? this.gridAPI.grid._totalRecords : collection.length;
         const result: any[] = DataUtil.page(cloneArray(collection), state, total);
         this.gridAPI.grid.pagingState = state;
+        paginator.totalRecords = (state as any).metadata.countRecords;
         return result;
 
     }

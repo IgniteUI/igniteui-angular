@@ -1,5 +1,6 @@
 <div class="hgrid-sample">
     <h4 class="sample-title">Sample One</h4>
+    <button (click)="log()">Layout</button>
     <div class="density-chooser" style="margin-bottom: 16px">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"
             style="display: block; width: 500px"></igx-buttongroup>
@@ -7,7 +8,7 @@
     <button igxButton="raised" (click)="getState()">Get state</button>
     <igx-hierarchical-grid #grid1 [data]="localData" [showExpandAll]="true" [pinning]="{rows: 0}" [hasChildrenKey]='"hasChild"' class="hgrid"
         [displayDensity]="density" [rowSelection]="selectionMode" [autoGenerate]="false" [allowFiltering]="true"
-        [paging]="true" [rowDraggable]="true" [height]="'600px'" [width]="'800px'" [expandChildren]="rootExpanded"
+        [paging]="true" [rowDraggable]="true" [height]="'1000px'" [width]="'800px'" [expandChildren]="rootExpanded"
         #hGrid>
 
         <igx-grid-toolbar>
@@ -17,6 +18,9 @@
                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar>
+        <igx-grid-footer>Footer</igx-grid-footer>
+        <igx-paginator [totalRecords]="grid1.totalRecords">
+        </igx-paginator>
         <igx-column width="150px" [filterable]="false">
             <ng-template igxCell let-cell="cell" let-val>
                 <igx-icon class="pin-icon" (mouseup)="togglePining(cell.row, $event)"
@@ -41,10 +45,12 @@
         <ng-template igxRowCollapsedIndicator>
             <igx-icon role="button">add</igx-icon>
         </ng-template>
-        <igx-row-island [rowDraggable]="true" [height]='"1200px"' [showExpandAll]='true' [key]="'childData'"
-            [autoGenerate]="false" [allowFiltering]='false' [rowSelection]='selectionMode'
+        <igx-row-island [rowDraggable]="true" [height]='"400px"' [showExpandAll]='true' [key]="'childData'"
+            [autoGenerate]="false" [allowFiltering]='true' [rowSelection]='selectionMode'
             [expandChildren]="firstLevelExpanded" #layout1>
-            <igx-column field="ID" [hasSummary]='true' [dataType]="'number'"></igx-column>
+            <igx-paginator *igxPaginator>
+            </igx-paginator>
+            <igx-column field="ID" [hasSummary]='false' [dataType]="'number'"></igx-column>
             <igx-column-group header="Information2">
                 <igx-column field="ChildLevels" [resizable]="true" [groupable]="true"></igx-column>
                 <igx-column field="ProductName" [resizable]="true" [groupable]="true"></igx-column>

@@ -50,7 +50,7 @@
                                                     [hasSummary]="c.summary"
                                                     [dataType]="c.type">
                 </igx-column>
-                <igx-paginator *ngIf="pagingEnabled" [totalRecords]="grid1.totalRecords">
+                <igx-paginator *ngIf="pagingEnabled">
                 </igx-paginator>
             </igx-grid>
             Drag mode: {{ grid1.selectionService.dragMode }}
