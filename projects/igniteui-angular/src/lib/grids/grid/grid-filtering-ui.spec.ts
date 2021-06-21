@@ -3424,6 +3424,31 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             tick(100);
         }));
 
+        it('Should allow to insert commas in excel search component input field when column dataType is number.', fakeAsync(() => {
+            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
+
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 1,000 in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
+            fix.detectChanges();
+            tick(100);
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            // Type non-numerical symbol in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
+            fix.detectChanges();
+            tick(100);
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+        }));
+
         it('Should enable/disable the apply button correctly.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
