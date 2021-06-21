@@ -3467,7 +3467,7 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(downloadsCol.pinned).toBe(true);
         }));
 
-        fit('Should filter and clear the excel search component correctly', fakeAsync(() => {
+        it('Should filter and clear the excel search component correctly', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'ProductName');
 
             const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
