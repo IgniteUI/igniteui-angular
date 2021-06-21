@@ -29,8 +29,7 @@ export class SnackbarSampleComponent implements OnInit {
         this._colors.push(this.color);
         this.color = color;
 
-        this.message = 'Changed color to ' + this.color;
-        snackbar.open();
+        snackbar.open('Changed color to ' + this.color);
     }
 
     public undoColorChange(snackbar) {

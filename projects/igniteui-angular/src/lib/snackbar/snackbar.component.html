@@ -1,9 +1,7 @@
-<div class="igx-snackbar">
-    <div class="igx-snackbar__message">
-        {{ snackbarMessage }}
-        <ng-content></ng-content>
-    </div>
-    <button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" (click)="triggerAction()">
-        {{ actionText }}
-    </button>
+<div class="igx-snackbar__message">
+    {{ textMessage }}
+    <ng-content></ng-content>
 </div>
+<button class="igx-snackbar__button" igxRipple="white" *ngIf="actionText" (click)="triggerAction()">
+    {{ actionText }}
+</button>

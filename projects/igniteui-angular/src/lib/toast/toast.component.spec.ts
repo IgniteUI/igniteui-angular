@@ -120,17 +120,13 @@ describe('IgxToast', () => {
         toast.displayTime = 100;
         toast.autoHide = false;
 
-        toast.message = 'Message';
-        expect(toast.toastMessage).toBe('Message');
-        expect(toast.message).toBe('Message');
-
         toast.open('Custom Message');
         tick(100);
         fixture.detectChanges();
         expect(toast.isVisible).toBeTruthy();
 
         expect(toast.autoHide).toBeFalsy();
-        expect(toast.toastMessage).toBe('Custom Message');
+        expect(toast.textMessage).toBe('Custom Message');
     }));
 });
 

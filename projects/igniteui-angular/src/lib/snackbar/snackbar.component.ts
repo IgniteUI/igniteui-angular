@@ -1,22 +1,22 @@
-import {
-    AnimationEvent,
-    useAnimation
-} from '@angular/animations';
+import { useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
     Component,
-    ElementRef,
     EventEmitter,
     HostBinding,
     Input,
     NgModule,
+    OnInit,
     Output
 } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
 import { slideInBottom, slideOutBottom } from '../animations/main';
-import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IToggleView } from '../core/navigation';
-import { IgxOverlayOutletDirective, IgxToggleDirective } from '../directives/toggle/toggle.directive';
-import { GlobalPositionStrategy, HorizontalAlignment, OverlaySettings, VerticalAlignment } from '../services/public_api';
+import {
+    ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
+    OverlaySettings,
+    PositionSettings, VerticalAlignment
+} from '../services/public_api';
+import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 
 let NEXT_ID = 0;
 /**
@@ -37,15 +37,10 @@ let NEXT_ID = 0;
  */
 @Component({
     selector: 'igx-snackbar',
-    templateUrl: 'snackbar.component.html',
-    styles: [`
-        :host {
-            display: block;
-        }
-    `]
+    templateUrl: 'snackbar.component.html'
 })
-export class IgxSnackbarComponent extends IgxToggleDirective
-    implements IToggleView {
+export class IgxSnackbarComponent extends IgxNotificationsDirective
+    implements OnInit {
 
     /**
      * Sets/gets the `id` of the snackbar.
@@ -64,75 +59,13 @@ export class IgxSnackbarComponent extends IgxToggleDirective
     public id = `igx-snackbar-${NEXT_ID++}`;
 
     /**
-     * Sets/gets the `aria-live` attr of the snackbar message container.
-     * If not set, the `aria-live` will be `polite`;
-     * ```html
-     * <igx-snackbar [ariaLive]="'polite'"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let snackbarAriaLive = this.snackbar.ariaLive;
-     * ```
+     * The default css class applied to the component.
      *
-     * @memberof IgxSnackbarComponent
+     * @hidden
+     * @internal
      */
-    @Input()
-    @HostBinding('attr.aria-live')
-    public ariaLive = 'polite';
-
-    /**
-     * Sets/gets the `message` attribute.
-     * ```html
-     * <igx-snackbar [message] = "'Snackbar Component'"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let message =  this.snackbar.message;
-     * ```
-     */
-    @DeprecateProperty(`'message' property is deprecated.
-    You can use place the message in the snackbar content or pass a message parameter to the show method instead.`)
-    @Input()
-    public set message(value: string | OverlaySettings) {
-        this.snackbarMessage = value;
-    }
-    public get message() {
-        return this.snackbarMessage;
-    }
-
-    /**
-     * Enables/Disables the visibility of the snackbar.
-     * If not set, the `isVisible` attribute will have value `false`.
-     * ```html
-     * <igx-snackbar [isVisible] = "true"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let isVisible =  this.snackbar.isVisible;
-     * ```
-     */
-    @Input() public isVisible = false;
-
-    /**
-     * Sets/gets if the snackbar will be automatically hidden after the `displayTime` is over.
-     * Default value is `true`.
-     * ```html
-     * <igx-snackbar [autoHide] = "false"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let autoHide =  this.snackbar.autoHide;
-     * ```
-     */
-    @Input() public autoHide = true;
-
-    /**
-     * Sets/gets the duration of time(in milliseconds) in which the snackbar will be visible after it is being shown.
-     * Default value is 4000.
-     * ```html
-     * <igx-snackbar [displayTime] = "2000"></igx-snackbar>
-     * ```
-     * ```typescript
-     * let displayTime = this.snackbar.displayTime;
-     * ```
-     */
-    @Input() public displayTime = 4000;
+    @HostBinding('class.igx-snackbar')
+    public cssClass = 'igx-snackbar';
 
     /**
      * Sets/gets the `actionText` attribute.
@@ -141,22 +74,6 @@ export class IgxSnackbarComponent extends IgxToggleDirective
      * ```
      */
     @Input() public actionText?: string;
-
-    /**
-     * Gets/Sets the container used for the snackbar element.
-     *
-     * @remarks
-     *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
-     * @example
-     * ```html
-     * <div igxOverlayOutlet #outlet="overlay-outlet"></div>
-     * //..
-     * <igx-snackbar [outlet]="outlet"></igx-snackbar>
-     * //..
-     * ```
-     */
-    @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
 
     /**
      * An event that will be emitted when the action button is clicked.
@@ -175,7 +92,7 @@ export class IgxSnackbarComponent extends IgxToggleDirective
      * <igx-snackbar (animationStarted) = "animationStarted($event)"></igx-snackbar>
      * ```
      */
-    @Output() public animationStarted = new EventEmitter<AnimationEvent>();
+    @Output() public animationStarted = new EventEmitter<boolean>();
 
     /**
      * An event that will be emitted when the snackbar animation ends.
@@ -184,18 +101,7 @@ export class IgxSnackbarComponent extends IgxToggleDirective
      * <igx-snackbar (animationDone) = "animationDone($event)"></igx-snackbar>
      * ```
      */
-    @Output() public animationDone = new EventEmitter<AnimationEvent>();
-
-    /**
-     * @hidden
-     * @internal
-     */
-    public snackbarMessage: string | OverlaySettings = '';
-
-    /**
-     * @hidden
-     */
-    private timeoutId;
+    @Output() public animationDone = new EventEmitter<boolean>();
 
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
@@ -206,37 +112,43 @@ export class IgxSnackbarComponent extends IgxToggleDirective
     public open(message?: string | OverlaySettings) {
         clearTimeout(this.timeoutId);
 
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new GlobalPositionStrategy({
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection: VerticalAlignment.Bottom,
-                openAnimation: useAnimation(slideInBottom, {
-                    params: {
-                        duration: '.35s',
-                        easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
-                        fromPosition: 'translateY(100%)',
-                        toPosition: 'translateY(0)'
-                    }
-                }),
-                closeAnimation: useAnimation(slideOutBottom, {
-                    params: {
-                        duration: '.2s',
-                        easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
-                        fromPosition: 'translateY(0)',
-                        toOpacity: 1,
-                        toPosition: 'translateY(100%)'
-                    }
-                })
+        const positionSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection: VerticalAlignment.Bottom,
+            openAnimation: useAnimation(slideInBottom, {
+                params: {
+                    duration: '.35s',
+                    easing: 'cubic-bezier(0.0, 0.0, 0.2, 1)',
+                    fromPosition: 'translateY(100%)',
+                    toPosition: 'translateY(0)'
+                }
             }),
+            closeAnimation: useAnimation(slideOutBottom, {
+                params: {
+                    duration: '.2s',
+                    easing: 'cubic-bezier(0.4, 0.0, 1, 1)',
+                    fromPosition: 'translateY(0)',
+                    toOpacity: 1,
+                    toPosition: 'translateY(100%)'
+                }
+            })
+        };
+
+        const strategy = this.outlet ? new ContainerPositionStrategy(positionSettings)
+            : new GlobalPositionStrategy(positionSettings);
+
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: strategy,
             closeOnEscape: false,
             closeOnOutsideClick: false,
             modal: false,
-            outlet: this.outlet,
+            outlet: this.outlet
         };
 
         if (message !== undefined) {
-            this.snackbarMessage = message;
+            this.textMessage = message;
         }
+
         setTimeout(this.timeoutId);
         this.isVisible = true;
         super.open(overlaySettings);
@@ -249,18 +161,6 @@ export class IgxSnackbarComponent extends IgxToggleDirective
     }
 
     /**
-     * Hides the snackbar.
-     * ```typescript
-     * this.snackbar.close();
-     * ```
-     */
-    public close() {
-        this.isVisible = false;
-        clearTimeout(this.timeoutId);
-        super.close();
-    }
-
-    /**
      * @hidden
      */
     public triggerAction(): void {
@@ -269,22 +169,15 @@ export class IgxSnackbarComponent extends IgxToggleDirective
 
     /**
      * @hidden
-     * @memberof IgxSnackbarComponent
      */
-    public snackbarAnimationStarted(evt: AnimationEvent): void {
-        if (evt.phaseName === 'start') {
-            this.animationStarted.emit(evt);
-        }
-    }
+    public ngOnInit() {
+        this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.animationStarted.emit(true);
+        });
 
-    /**
-     * @hidden
-     * @memberof IgxSnackbarComponent
-     */
-    public snackbarAnimationDone(evt: AnimationEvent): void {
-        if (evt.phaseName === 'done') {
-            this.animationDone.emit(evt);
-        }
+        this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
+            this.animationDone.emit(true);
+        });
     }
 }
 
