@@ -6,6 +6,7 @@ import {
     AbsoluteScrollStrategy,
     ConnectedPositioningStrategy,
     HorizontalAlignment,
+    IPositionStrategy,
     OverlaySettings,
     PositionSettings,
     VerticalAlignment
@@ -42,6 +43,12 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public prompt: string;
 
     /**
+     * Position overlay strategy
+     */
+    @Input()
+    public positionStrategy: IPositionStrategy;
+
+    /**
      * Emits an event before the toggle container is opened.
      */
     @Output()
@@ -73,6 +80,23 @@ export abstract class BaseToolbarDirective implements OnDestroy {
 
     private $destroyer = new Subject<boolean>();
     private $sub: Subscription;
+    private _positionSettings: PositionSettings = {
+        horizontalDirection: HorizontalAlignment.Left,
+        horizontalStartPoint: HorizontalAlignment.Right,
+        verticalDirection: VerticalAlignment.Bottom,
+        verticalStartPoint: VerticalAlignment.Bottom
+    };
+
+    private get _overlaySettings() {
+        const positionStrategy = this.positionStrategy ? this.positionStrategy : new ConnectedPositioningStrategy(this._positionSettings);
+        return {
+            positionStrategy,
+            scrollStrategy: new AbsoluteScrollStrategy(),
+            modal: false,
+            closeOnEscape: true,
+            closeOnOutsideClick: true
+        };
+    }
 
     /**
      * Returns the grid containing this component.
@@ -94,7 +118,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
             toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ..._makeOverlaySettings(), ...{ target: anchorElement, outlet: this.grid.outlet,
+        toggleRef.toggle({ ...this.positionStrategy, ...{ target: anchorElement, outlet: this.grid.outlet,
             excludeFromOutsideClick: [anchorElement] }});
 
     }
@@ -160,19 +184,3 @@ export abstract class BaseToolbarColumnActionsDirective extends BaseToolbarDirec
         this.columnActionsUI.uncheckAllColumns();
     }
 }
-
-const _makeOverlaySettings = (): OverlaySettings => {
-    const positionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
-    return {
-        positionStrategy: new ConnectedPositioningStrategy(positionSettings),
-        scrollStrategy: new AbsoluteScrollStrategy(),
-        modal: false,
-        closeOnEscape: true,
-        closeOnOutsideClick: true
-    };
-};
