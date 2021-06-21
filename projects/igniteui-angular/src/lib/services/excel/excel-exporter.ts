@@ -115,7 +115,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => !col.skip && col.type === HeaderType.ColumnHeader);
+                const columns = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader);
 
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
