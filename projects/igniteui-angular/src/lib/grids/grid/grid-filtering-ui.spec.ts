@@ -3492,6 +3492,32 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             expect(listItems.length).toBe(6, 'incorrect rendered list items count');
         });
 
+        it('Should allow to input commas in excel search component input field when column dataType is number.', async () => {
+            GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'Downloads');
+            fix.detectChanges();
+            await wait(100);
+            const searchComponent = GridFunctions.getExcelStyleSearchComponent(fix);
+            let listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix, searchComponent);
+
+            // Type 1,000 in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, '1,000', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(listItems.length).toBe(3, 'incorrect rendered list items count');
+
+            // Type non-numerical symbol in search box.
+            UIInteractions.clickAndSendInputElementValue(inputNativeElement, 'a', fix);
+            fix.detectChanges();
+            await wait(100);
+
+            listItems = GridFunctions.getExcelStyleSearchComponentListItems(fix, searchComponent);
+            expect(inputNativeElement.value).toBe('', 'incorrect rendered list items count');
+            expect(listItems.length).toBe(9, 'incorrect rendered list items count');
+        });
+
         it('Should enable/disable the apply button correctly.', async () => {
             GridFunctions.clickExcelFilterIconFromCodeAsync(fix, grid, 'ProductName');
             fix.detectChanges();
@@ -5163,15 +5189,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             for (const checkbox of listItemsCheckboxes) {
                 ControlsFunction.verifyCheckboxState(checkbox.parentElement);
             }
-        }));
-
-        it('Should have input type number when column dataType is number.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
-            flush();
-
-            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            expect(inputNativeElement.type).toBe('number', 'input type of number column is not number');
-
         }));
 
         it('Should filter cell by its formatted data when using FormattedValueFilteringStrategy', async () => {
