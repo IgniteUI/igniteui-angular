@@ -78,6 +78,27 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(rowElem.query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
     }));
 
+    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+
+        // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+        const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+        expect(container.getAttribute('role')).toBe(null);
+
+        //Filter grid so no results are available and grid is empty
+        hierarchicalGrid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+        hierarchicalGrid.markForCheck();
+        fixture.detectChanges();
+        expect(container.getAttribute('role')).toMatch('row');
+
+        // clear grid data and check if attribute is now 'row'
+        hierarchicalGrid.clearFilter();
+        fixture.componentInstance.clearData();
+        fixture.detectChanges();
+        tick(100);
+
+        expect(container.getAttribute('role')).toMatch('row');
+    }));
+
     it('should collapse all rows that belongs to a grid via header collapse icon', fakeAsync(/** row toggle rAF */() => {
         const headerExpanderElem = fixture.debugElement.queryAll(By.css('.igx-grid__hierarchical-expander--header'))[0];
         let icon = headerExpanderElem.query(By.css('igx-icon')).componentInstance;
@@ -1484,6 +1505,10 @@ export class IgxHierarchicalGridTestBaseComponent {
                 Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
+    }
+
+    public clearData(){
+        this.data = [];
     }
 }
 
