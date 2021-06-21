@@ -360,11 +360,14 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.owner.columns
-            .filter(c => !c.skip)
-            .map(c => c.header);
-            // .sort((a, b) => a.startIndex - b.startIndex)
-            // .sort((a, b) => a.pinnedIndex - b.pinnedIndex)
+        const hasUserSetIndex = worksheetData.owner.columns.some(c => c.exportIndex !== undefined);
+        const values = hasUserSetIndex
+            ? worksheetData.rootKeys
+            : worksheetData.owner.columns
+                .filter(c => !c.skip)
+                .sort((a, b) => a.startIndex - b.startIndex)
+                .sort((a, b) => a.pinnedIndex - b.pinnedIndex)
+                .map(c => c.header);
 
         let sortString = '';
 
