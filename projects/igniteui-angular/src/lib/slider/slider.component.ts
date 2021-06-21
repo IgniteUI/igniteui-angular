@@ -866,14 +866,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the lower value of the `IgxSliderComponent`.
-     * ```typescript
-     *  @ViewChild("slider2")
-     * public slider: IgxSliderComponent;
-     * public lowValue(event){
-     *     this.slider.lowerValue = 120;
-     * }
-     * ```
+     * @hidden @internal
      */
     public set lowerValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
@@ -900,14 +893,7 @@ export class IgxSliderComponent implements
     }
 
     /**
-     * Sets the upper value of the `IgxSliderComponent`.
-     * ```typescript
-     *  @ViewChild("slider2")
-     * public slider: IgxSliderComponent;
-     * public upperValue(event){
-     *     this.slider.upperValue = 120;
-     * }
-     * ```
+     * @hidden @internal
      */
     public set upperValue(value: number) {
         value = this.valueInRange(value, this.lowerBound, this.upperBound);
