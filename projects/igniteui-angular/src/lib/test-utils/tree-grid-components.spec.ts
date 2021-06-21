@@ -924,7 +924,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 export class IgxTreeGridGroupingComponent extends IgxTreeGridSummariesComponent {
     public groupedInitially = true;
     public groupKey = 'Employees';
-    public childDataKey='Employees'
+    public childDataKey='Employees';
     public groupingExpressions =
             this.groupedInitially ?
             [
