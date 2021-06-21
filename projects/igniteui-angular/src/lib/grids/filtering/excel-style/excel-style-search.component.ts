@@ -259,7 +259,7 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public get containerSize() {
-        if (this.list) {
+        if (this.list && this.esf.listData.length) {
             return this.list.element.nativeElement.offsetHeight;
         }
     }
