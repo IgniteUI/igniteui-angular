@@ -5128,15 +5128,6 @@ describe('IgxGrid - Filtering actions - Excel style filtering #grid', () => {
             }
         }));
 
-        it('Should have input type number when column dataType is number.', fakeAsync(() => {
-            GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Downloads');
-            flush();
-
-            const inputNativeElement = GridFunctions.getExcelStyleSearchComponentInput(fix);
-            expect(inputNativeElement.type).toBe('number', 'input type of number column is not number');
-
-        }));
-
         it('Should display the default True and False resource strings in the search list for boolean column.', fakeAsync(() => {
             GridFunctions.clickExcelFilterIconFromCode(fix, grid, 'Released');
             flush();
