@@ -210,7 +210,6 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
-        //this.options.ignoreMultiColumnHeaders = true;
         let columns = grid.columnList.toArray();
 
         if (this.options.ignoreMultiColumnHeaders) {
@@ -860,12 +859,18 @@ export abstract class IgxBaseExporter {
                 columnSpan: colSpan,
                 level: columnLevel,
                 startIndex: index,
-                pinnedIndex: !column.pinned || this.options.ignoreColumnsOrder ?
+                pinnedIndex: !column.pinned ?
                     Number.MAX_VALUE :
                     !column.hidden ?
                         column.grid.pinnedColumns.indexOf(column)
                         : NaN
             };
+
+            if (this.options.ignoreColumnsOrder) {
+                if (columnInfo.startIndex !== columnInfo.pinnedIndex) {
+                    columnInfo.pinnedIndex = Number.MAX_VALUE;
+                }
+            }
 
             if (column.level > maxLevel && !this.options.ignoreMultiColumnHeaders) {
                 maxLevel = column.level;
