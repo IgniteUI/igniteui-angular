@@ -243,21 +243,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
     /**
      * @hidden @internal
      */
-    public get type(): string {
-        switch (this.esf.column?.dataType) {
-            case GridColumnDataType.Number:
-            case GridColumnDataType.Currency:
-            case GridColumnDataType.Percent:
-                return 'number';
-            default:
-                return 'text';
-        }
-    }
-
-
-    /**
-     * @hidden @internal
-     */
     public get containerSize() {
         if (this.list && this.esf.listData.length) {
             return this.list.element.nativeElement.offsetHeight;
@@ -296,6 +281,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public filterListData(): void {
+        if (this.esf.column?.dataType === GridColumnDataType.Number ||
+            this.esf.column?.dataType === GridColumnDataType.Currency ||
+            this.esf.column?.dataType === GridColumnDataType.Percent) {
+            this.rejectNonNumericalEntries();
+        }
+
         if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
 
@@ -388,8 +379,8 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                     searchVal: new Set(this.esf.column.dataType === GridColumnDataType.Date ||
                         this.esf.column.dataType === GridColumnDataType.DateTime ?
                         selectedItems.map(d => d.value.toISOString()) : this.esf.column.dataType === GridColumnDataType.Time ?
-                        selectedItems.map(e => e.value.toLocaleTimeString()) :
-                        selectedItems.map(e => e.value))
+                            selectedItems.map(e => e.value.toLocaleTimeString()) :
+                            selectedItems.map(e => e.value))
                 });
 
                 if (blanksItem) {
@@ -429,6 +420,17 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 return IgxDateTimeFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
+        }
+    }
+
+    /**
+     * @hidden @internal
+     */
+    private rejectNonNumericalEntries(): void {
+        const regExp = /[^0-9\.,eE\-]/g;
+        if (this.searchValue && regExp.test(this.searchValue)) {
+            this.searchInput.value = this.searchValue.replace(regExp, '');
+            this.searchValue = this.searchInput.value;
         }
     }
 }
