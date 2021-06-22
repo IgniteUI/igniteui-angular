@@ -206,7 +206,7 @@ abstract class BaseRow implements RowType {
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-		 * This method emits `onEditDone` event.
+     * This method emits `onEditDone` event.
      *
      * ```typescript
      * // update the second selected row's value
