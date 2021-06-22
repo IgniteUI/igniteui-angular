@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, waitForAsync, ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxSnackbarComponent, IgxSnackbarModule } from './snackbar.component';
-
 import { configureTestSuite } from '../test-utils/configure-suite';
 
 describe('IgxSnackbar', () => {
@@ -15,19 +14,21 @@ describe('IgxSnackbar', () => {
                 SnackbarCustomContentComponent
             ],
             imports: [
-                BrowserAnimationsModule,
+                NoopAnimationsModule,
                 IgxSnackbarModule
             ]
         }).compileComponents();
     }));
 
-    let fixture; let domSnackbar; let snackbar;
-    beforeEach(waitForAsync(() => {
+    let fixture: ComponentFixture<SnackbarInitializeTestComponent>;
+    let snackbar: IgxSnackbarComponent;
+    let domSnackbar;
+    beforeEach(() => {
         fixture = TestBed.createComponent(SnackbarInitializeTestComponent);
         fixture.detectChanges();
         snackbar = fixture.componentInstance.snackbar;
         domSnackbar = fixture.debugElement.query(By.css('igx-snackbar')).nativeElement;
-    }));
+    });
 
     it('should properly initialize properties', () => {
         expect(snackbar.id).toContain('igx-snackbar-');
@@ -44,7 +45,7 @@ describe('IgxSnackbar', () => {
         expect(domSnackbar.id).toBe('customId');
     });
 
-    it('should auto hide 1 seconds after is open', fakeAsync(() => {
+    it('should auto hide 1 second after is open', fakeAsync(() => {
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -59,7 +60,7 @@ describe('IgxSnackbar', () => {
         expect(snackbar.isVisible).toBeFalsy();
     }));
 
-    it('should not auto hide seconds after is open', fakeAsync(() => {
+    it('should not auto hide 1 second after is open', fakeAsync(() => {
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -88,6 +89,44 @@ describe('IgxSnackbar', () => {
 
         expect(snackbar.clicked.emit).toHaveBeenCalledWith(snackbar);
     });
+
+    it('should emit onOpened when snackbar is opened', fakeAsync(() => {
+        snackbar.displayTime = 100;
+        snackbar.autoHide = false;
+        spyOn(snackbar.onOpened, 'emit');
+        snackbar.open();
+        tick(100);
+        fixture.detectChanges();
+        expect(snackbar.onOpened.emit).toHaveBeenCalled();
+    }));
+
+    it('should emit onClosed when snackbar is closed', fakeAsync(() => {
+        snackbar.displayTime = 100;
+        snackbar.autoHide = false;
+        spyOn(snackbar.onClosed, 'emit');
+        snackbar.open();
+        snackbar.close();
+        tick(100);
+        fixture.detectChanges();
+        expect(snackbar.onClosed.emit).toHaveBeenCalled();
+    }));
+
+    it('should be opened and closed by the toggle method', fakeAsync(() => {
+        snackbar.displayTime = 100;
+        snackbar.autoHide = false;
+
+        expect(snackbar.isVisible).toBeFalse();
+        snackbar.toggle();
+        expect(snackbar.isVisible).toBeTrue();
+        snackbar.isVisible = false;
+        // Opening happens in a RAF
+        tick(100);
+        expect(snackbar.collapsed).toBeTrue();
+        snackbar.isVisible = true;
+        // Opening happens in a RAF
+        tick(100);
+        expect(snackbar.collapsed).toBeFalse();
+    }));
 });
 
 describe('IgxSnackbar with custom content', () => {

@@ -1,10 +1,12 @@
-import { Directive, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
-import { IgxOverlayOutletDirective, IgxToggleDirective, IToggleView, OverlaySettings } from 'igniteui-angular';
+import { Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
+import { IToggleView } from '../../core/navigation';
+import { OverlaySettings } from '../../services/public_api';
+import { IgxOverlayOutletDirective, IgxToggleDirective } from '../toggle/toggle.directive';
 
 @Directive()
 export abstract class IgxNotificationsDirective extends IgxToggleDirective
-    implements IToggleView, OnInit, OnDestroy {
+    implements IToggleView, OnDestroy {
     /**
      * Sets/gets the `aria-live` attribute.
      * If not set, `aria-live` will have value `"polite"`.
@@ -41,7 +43,22 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * Enables/Disables the visibility of the element.
      * If not set, the `isVisible` attribute will have value `false`.
      */
-    @Input() public isVisible = false;
+    @Input()
+    public get isVisible() {
+        return !this.collapsed;
+    }
+
+    public set isVisible(value) {
+        if (value !== this.isVisible) {
+            if (value) {
+                requestAnimationFrame(() => {
+                    this.open();
+                });
+            } else {
+                this.close();
+            }
+        }
+    }
 
     /**
      * @hidden
@@ -59,7 +76,6 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      * Hides the element.
      */
     public close() {
-        this.isVisible = false;
         clearTimeout(this.timeoutId);
         super.close();
     }

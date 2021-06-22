@@ -59,7 +59,7 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
  */
 @Component({
     selector: 'igx-toast',
-    templateUrl: 'toast.component.html',
+    templateUrl: 'toast.component.html'
 })
 export class IgxToastComponent extends IgxNotificationsDirective
     implements OnInit {
@@ -172,7 +172,6 @@ export class IgxToastComponent extends IgxNotificationsDirective
             this.textMessage = message;
         }
 
-        this.isVisible = true;
         super.open(overlaySettings);
 
         if (this.autoHide) {

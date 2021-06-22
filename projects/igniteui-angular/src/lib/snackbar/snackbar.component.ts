@@ -11,11 +11,8 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { slideInBottom, slideOutBottom } from '../animations/main';
-import {
-    ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
-    OverlaySettings,
-    PositionSettings, VerticalAlignment
-} from '../services/public_api';
+import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
+    OverlaySettings, PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
 
 let NEXT_ID = 0;
@@ -149,12 +146,10 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             this.textMessage = message;
         }
 
-        setTimeout(this.timeoutId);
-        this.isVisible = true;
         super.open(overlaySettings);
 
         if (this.autoHide) {
-            this.timeoutId = setTimeout(() => {
+            this.timeoutId = window.setTimeout(() => {
                 this.close();
             }, this.displayTime);
         }
