@@ -350,6 +350,28 @@ describe('IgxCalendar - ', () => {
                 expect(bodyWeekday.nativeElement.textContent.trim()).toMatch('Dim.');
             });
 
+            it('Should default to today date when invalid date is passed', () => {
+                fixture = TestBed.createComponent(IgxCalendarValueComponent);
+                fixture.detectChanges();
+                calendar = fixture.componentInstance.calendar;
+
+                const today = new Date().setHours(0, 0, 0, 0);
+                calendar.value = new Date(NaN);
+                fixture.detectChanges();
+
+                expect(calendar.value.getTime()).toEqual(today);
+
+                calendar.value = undefined;
+                fixture.detectChanges();
+
+                expect(calendar.value.getTime()).toEqual(today);
+
+                calendar.value = new Date('1989-5s-dd');
+                fixture.detectChanges();
+
+                expect(calendar.value.getTime()).toEqual(today);
+            });
+
             it('Should properly render calendar DOM structure', () => {
                 const today = new Date(Date.now());
                 calendar.viewDate = today;

@@ -829,6 +829,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             return;
         }
+        if(this.platformUtil.isFirefox) {
+            event.preventDefault();
+        }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
         this.activate(event);
     };
