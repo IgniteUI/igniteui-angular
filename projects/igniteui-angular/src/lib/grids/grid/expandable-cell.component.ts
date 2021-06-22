@@ -74,24 +74,20 @@ export class IgxGridExpandableCellComponent extends IgxGridCellComponent impleme
      * @hidden
      */
     public onIndicatorFocus(event) {
-        this.gridAPI.submit_value(event);
+        this.gridAPI.update_cell(this.grid.crudService.cell);
     }
 
     /**
      * @hidden
      */
     public calculateSizeToFit(range: any): number {
-        const indicatorWidth = this.indicator.nativeElement.getBoundingClientRect().width;
-        const indicatorStyle = this.document.defaultView.getComputedStyle(this.indicator.nativeElement);
-        const indicatorMargin = parseFloat(indicatorStyle.marginRight);
         let leftPadding = 0;
         if (this.indentationDiv) {
             const indentationStyle = this.document.defaultView.getComputedStyle(this.indentationDiv.nativeElement);
             leftPadding = parseFloat(indentationStyle.paddingLeft);
         }
-        const largestWidth = Math.max(...Array.from(this.nativeElement.children)
-            .map((child: HTMLElement) => this.platformUtil.getNodeSizeViaRange(range, child)));
-        return largestWidth + indicatorWidth + indicatorMargin + leftPadding;
+        const contentWidth = this.platformUtil.getNodeSizeViaRange(range, this.nativeElement);
+        return contentWidth + leftPadding;
     }
 
     /**

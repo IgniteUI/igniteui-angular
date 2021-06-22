@@ -1206,6 +1206,14 @@
                 background: --var($theme, 'edit-mode-color') !important;
             }
         }
+
+        [aria-readonly='true'] {
+            color: --var($theme, 'cell-disabled-color');
+
+            igx-icon {
+                color: --var($theme, 'cell-disabled-color');
+            }
+        }
     }
 
     %igx-grid__tr--inner {
@@ -1393,9 +1401,7 @@
     }
 
     %igx-grid__td--new {
-        %grid-cell-text {
-            color: --var($theme, 'cell-new-color');
-        }
+        color: --var($theme, 'cell-new-color');
     }
 
     %igx-grid__td--edited {
