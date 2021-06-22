@@ -9,7 +9,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxGridComponent } from './grid.component';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
-import { IgxGridModule, IgxGridRow, IgxGroupByRow } from './public_api';
+import { IgxGridModule, IgxGridRow, IgxGroupByRow, IgxSummaryRow } from './public_api';
 import { DisplayDensity } from '../../core/displayDensity';
 import { GridColumnDataType } from '../../data-operations/data-util';
 import { GridTemplateStrings } from '../../test-utils/template-strings.spec';
@@ -1986,7 +1986,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        fit(`Verify that getRowByIndex and RowType API returns correct data`, () => {
+        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2111,6 +2111,40 @@ describe('IgxGrid Component Tests #grid', () => {
             // Toggle selection
             thirdRow.selected = true;
             expect(thirdRow.selected).toBe(true);
+
+						grid.paging = true;
+						grid.perPage = 4;
+						grid.columnList.forEach(c => c.hasSummary = true);
+						fix.detectChanges();
+
+            firstRow = grid.getRowByIndex(0);
+            const fourthRow = grid.getRowByIndex(3);
+
+						expect(firstRow instanceof IgxGroupByRow).toBe(true);
+						expect(firstRow.index).toEqual(0);
+						expect(firstRow.viewIndex).toEqual(0);
+						expect(fourthRow instanceof IgxSummaryRow).toBe(true);
+            expect(fourthRow.index).toBe(3);
+            expect(fourthRow.viewIndex).toBe(3);
+
+						grid.page = 1;
+						grid.cdr.detectChanges();
+						fix.detectChanges();
+
+            firstRow = grid.getRowByIndex(0);
+            secondRow = grid.getRowByIndex(1);
+            thirdRow = grid.getRowByIndex(2);
+
+            // First row is IgxGroupByRow second row is igxGridRow
+            expect(firstRow instanceof IgxGroupByRow).toBe(true);
+						expect(firstRow.index).toEqual(0);
+						expect(firstRow.viewIndex).toEqual(6);
+            expect(secondRow instanceof IgxSummaryRow).toBe(true);
+            expect(secondRow.index).toBe(1);
+            expect(secondRow.viewIndex).toBe(7);
+						expect(thirdRow instanceof IgxGroupByRow).toBe(true);
+            expect(thirdRow.index).toBe(2);
+            expect(thirdRow.viewIndex).toBe(8);
         });
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {

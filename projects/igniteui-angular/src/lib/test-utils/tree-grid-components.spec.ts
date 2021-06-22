@@ -307,7 +307,7 @@ export class IgxTreeGridSummariesKeyScroliingComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
-        width="900px" height="1000px" summaryCalculationMode="calculationMode">
+        width="900px" height="1000px" [summaryCalculationMode]="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="true"></igx-column>
@@ -327,7 +327,7 @@ export class IgxTreeGridSummariesKeyComponent {
 @Component({
     template: `
     <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
-        width="800px" height="800px" summaryCalculationMode="calculationMode">
+        width="800px" height="800px" [summaryCalculationMode]="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date" [hasSummary]="false"></igx-column>
