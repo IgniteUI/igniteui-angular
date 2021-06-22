@@ -1129,7 +1129,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         });
 
-        this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.groupingExpressions.length) {
                 const recID = this.selectionService.getRowID(args.data);
                 let rec = this._gridAPI.get_rec_by_id(recID);
