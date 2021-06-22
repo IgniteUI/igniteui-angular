@@ -40,12 +40,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     @Input()
     public id = `igx-accordion-${NEXT_ID++}`;
 
-    /**
-     * The role attribute of the accordion.
-     **/
-    @HostBinding('attr.role')
-    public role = 'accordion';
-
     /** @hidden @internal **/
     @HostBinding('class.igx-accordion__root')
     public cssClass = 'igx-accordion__root';
