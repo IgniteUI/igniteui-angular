@@ -39,3 +39,7 @@
         @extend %igx-page-size__select !optional;
     }
 }
+
+@include b(igx-paginator-content) {
+    @extend %igx-paginator-content !optional;
+}

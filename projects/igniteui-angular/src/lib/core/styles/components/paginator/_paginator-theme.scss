@@ -107,6 +107,12 @@
         height: map-get($paginator-height, 'compact');
     }
 
+    %igx-paginator-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+    }
 
     %igx-page-size {
         display: flex;
