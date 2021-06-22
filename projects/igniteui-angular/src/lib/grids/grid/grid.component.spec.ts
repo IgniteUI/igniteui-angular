@@ -2028,8 +2028,8 @@ describe('IgxGrid Component Tests #grid', () => {
             // First row is IgxGroupByRow second row is igxGridRow
             expect(firstRow instanceof IgxGroupByRow).toBe(true);
             expect(secondRow instanceof IgxGridRow).toBe(true);
-            expect(secondRow.index).toBe(0);
-            expect(secondRow.viewIndex).toBe(0);
+            expect(secondRow.index).toBe(1);
+            expect(secondRow.viewIndex).toBe(1);
 
             // expand/collapse first group row
             firstRow.expanded = true;
@@ -2131,11 +2131,25 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             tick();
 
-            const firstRow = grid.getRowByIndex(0);
+            let firstRow = grid.getRowByIndex(0);
             // Return the first row after page change
             expect(firstRow instanceof IgxGridRow).toBe(true);
             expect(firstRow.index).toBe(0);
             expect(firstRow.viewIndex).toBe(5);
+
+						// Change page and check getRowByIndex
+						grid.page = 2;
+						fix.detectChanges();
+						tick();
+
+						firstRow = grid.getRowByIndex(0);
+						let secondRow = grid.getRowByIndex(1);
+						// Return the first row after page change
+						expect(firstRow instanceof IgxGridRow).toBe(true);
+						expect(firstRow.index).toBe(0);
+						expect(firstRow.viewIndex).toBe(10);
+						expect(secondRow.index).toBe(1);
+						expect(secondRow.viewIndex).toBe(11);
         }));
     });
 

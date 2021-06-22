@@ -48,7 +48,7 @@
                 </div>
             </ng-template>
         </igx-grid>
-
+<!-- 
         <igx-grid #targetGrid igxDrop [data]="data2" [height]="'480px'" [autoGenerate]="false"
         [emptyGridTemplate]="dragHereTemplate" (enter)="onEnter($event)" (leave)="onLeave($event)"
         (dropped)="onDropAllowed($event)" [primaryKey]="'ID'">
@@ -57,7 +57,7 @@
             <ng-template #dragHereTemplate>
                 <div class="empty-grid">Drop a row to add it to the grid</div>
             </ng-template>
-        </igx-grid>
+        </igx-grid> -->
     </div>
     <div class="log-wrapper">
         <div class="logContainer">
@@ -106,14 +106,17 @@
     </div>
     <div class="grid-wrapper">
         <igx-tree-grid #treeGridHier
+            id="testTreeGrid"
             [pinning]="pinningConfig"
+            [paging]="true"
+            [perPage]="5"
+            summaryPosition="top"
             [width]="'900px'" [height]="'500px'"
             [data]="treeGridHierData"
             childDataKey="ChildCompanies"
             primaryKey="ID"
             [expansionDepth]="1"
-            [rowSelection]="'multiple'"
-            [paging]="false">
+            [rowSelection]="'multiple'">
         <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
             [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
@@ -175,7 +178,7 @@
             [rowSelection]="'multiple'"
             [width]="'900px'" [height]="'800px'">
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
-                [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+                [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [hasSummary]="true">
             </igx-column>
         </igx-tree-grid>
     </div>
