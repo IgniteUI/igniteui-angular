@@ -17,7 +17,7 @@
 </div>
 
 <igx-paginator #pag [totalRecords]='20'>
-    <igx-paginator-content>
+    <igx-paginator-content class="custom-content">
         <igx-page-size></igx-page-size>
         <span style="margin: 0 20px 0 20px;">{{ (pag.page * pag.perPage) + 1}}-{{(pag.page * pag.perPage) + pag.perPage}} of {{ pag.totalRecords}}</span>
         <button [disabled]="pag.isFirstPageDisabled" (click)="pag.paginate(0)" igxButton="icon" >
@@ -35,7 +35,6 @@
     </igx-paginator-content>
 </igx-paginator>
 
-<div style="width: 100%; height: 100px;">
-</div>
+<div style="width: 100%; height: 100px;"></div>
 
 <igx-paginator [totalRecords]='totalRecords'></igx-paginator>
