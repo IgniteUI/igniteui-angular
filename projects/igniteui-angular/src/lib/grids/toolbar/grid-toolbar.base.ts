@@ -6,9 +6,7 @@ import {
     AbsoluteScrollStrategy,
     ConnectedPositioningStrategy,
     HorizontalAlignment,
-    IPositionStrategy,
     OverlaySettings,
-    PositionSettings,
     VerticalAlignment
 } from '../../services/public_api';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
@@ -43,11 +41,19 @@ export abstract class BaseToolbarDirective implements OnDestroy {
     public prompt: string;
 
     /**
-     * Position overlay strategy
+     * Sets overlay settings
      */
     @Input()
-    public positionStrategy: IPositionStrategy;
+    public set overlaySettings(overlaySettings: OverlaySettings) {
+        this._overlaySettings = overlaySettings;
+    };
 
+    /**
+     * Returns overlay settings
+     */
+    public get overlaySettings(): OverlaySettings {
+        return this._overlaySettings;
+    }
     /**
      * Emits an event before the toggle container is opened.
      */
@@ -80,23 +86,19 @@ export abstract class BaseToolbarDirective implements OnDestroy {
 
     private $destroyer = new Subject<boolean>();
     private $sub: Subscription;
-    private _positionSettings: PositionSettings = {
-        horizontalDirection: HorizontalAlignment.Left,
-        horizontalStartPoint: HorizontalAlignment.Right,
-        verticalDirection: VerticalAlignment.Bottom,
-        verticalStartPoint: VerticalAlignment.Bottom
-    };
 
-    private get _overlaySettings() {
-        const positionStrategy = this.positionStrategy ? this.positionStrategy : new ConnectedPositioningStrategy(this._positionSettings);
-        return {
-            positionStrategy,
-            scrollStrategy: new AbsoluteScrollStrategy(),
-            modal: false,
-            closeOnEscape: true,
-            closeOnOutsideClick: true
-        };
-    }
+    private _overlaySettings: OverlaySettings = {
+        positionStrategy: new ConnectedPositioningStrategy({
+            horizontalDirection: HorizontalAlignment.Left,
+            horizontalStartPoint: HorizontalAlignment.Right,
+            verticalDirection: VerticalAlignment.Bottom,
+            verticalStartPoint: VerticalAlignment.Bottom
+        }),
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: false,
+        closeOnEscape: true,
+        closeOnOutsideClick: true
+    };
 
     /**
      * Returns the grid containing this component.
@@ -118,7 +120,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
             toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ...this._overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
+        toggleRef.toggle({ ...this.overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
             excludeFromOutsideClick: [anchorElement] }});
 
     }
