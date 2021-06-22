@@ -118,7 +118,7 @@ export abstract class BaseToolbarDirective implements OnDestroy {
             const setHeight = () => actions.columnsAreaMaxHeight = this.columnListHeight ?? `${Math.max(this.grid.calcHeight, 200)}px`;
             toggleRef.onOpening.pipe(first()).subscribe(setHeight);
         }
-        toggleRef.toggle({ ...this.positionStrategy, ...{ target: anchorElement, outlet: this.grid.outlet,
+        toggleRef.toggle({ ...this._overlaySettings, ...{ target: anchorElement, outlet: this.grid.outlet,
             excludeFromOutsideClick: [anchorElement] }});
 
     }
