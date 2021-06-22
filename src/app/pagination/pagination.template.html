@@ -1,4 +1,4 @@
-<igx-paginator #paginator [totalPages]='20'>
+<igx-paginator #paginator [totalRecords]='20'>
     <igx-paginator-content>
         <div id="numberPager" style="justify-content: center;">
             <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()" igxButton="flat">
@@ -18,7 +18,7 @@
 
 <igx-paginator #pag [totalRecords]='20'>
     <igx-paginator-content>
-        <igx-page-size-selector></igx-page-size-selector>
+        <igx-page-size></igx-page-size>
         <span style="margin: 0 20px 0 20px;">{{ (pag.page * pag.perPage) + 1}}-{{(pag.page * pag.perPage) + pag.perPage}} of {{ pag.totalRecords}}</span>
         <button [disabled]="pag.isFirstPageDisabled" (click)="pag.paginate(0)" igxButton="icon" >
             <igx-icon>first_page</igx-icon>
@@ -38,4 +38,4 @@
 <div style="width: 100%; height: 100px;">
 </div>
 
-<igx-paginator [totalPages]='totalPages' (perPageChange)="recalcPages($event)"></igx-paginator>
+<igx-paginator [totalRecords]='totalRecords'></igx-paginator>

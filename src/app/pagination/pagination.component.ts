@@ -15,7 +15,4 @@ export class PaginationSampleComponent implements OnInit {
         this.totalRecords = this.totalPages * 15;
     }
 
-    public recalcPages(pageSize) {
-        this.totalPages = Math.ceil(this.totalRecords / pageSize);
-    }
 }
