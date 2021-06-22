@@ -2135,7 +2135,7 @@ describe('IgxGrid Component Tests #grid', () => {
             thirdRow = grid.getRowByIndex(2);
 
             // First row is IgxGroupByRow second row is igxGridRow
-            expect(firstRow instanceof IgxGroupByRow).toBe(true);
+            expect(firstRow instanceof IgxGridRow).toBe(true);
 						expect(firstRow.index).toEqual(0);
 						expect(firstRow.viewIndex).toEqual(6);
             expect(secondRow instanceof IgxSummaryRow).toBe(true);
