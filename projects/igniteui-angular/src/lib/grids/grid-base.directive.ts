@@ -1235,7 +1235,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     @ContentChild(IgxPaginatorComponent)
-    public paginator: IgxPaginatorComponent;
+    protected paginatorCmpt: IgxPaginatorComponent;
 
     /**
      * @hidden @internal
@@ -2849,6 +2849,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _init = true;
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
+
+    /** @hidden @internal */
+    public get paginator() {
+        return this.paginatorCmpt;
+    }
 
     /**
      * @hidden @internal

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter,
-    HostBinding, Directive, ContentChild } from '@angular/core';
+    HostBinding, Directive, ContentChild, ElementRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -11,7 +11,7 @@ import { IgxButtonModule } from '../directives/button/button.directive';
 import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
-import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
+import { IgxPaginatorDirective, IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
 import { IgxPageNavigationComponent } from './pager.component';
 import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 
@@ -245,7 +245,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return this._resourceStrings;
     }
 
-    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
+    constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+                private elementRef: ElementRef,) {
         super(_displayDensityOptions);
     }
 
@@ -282,6 +283,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
      */
     public get isLastPageDisabled(): boolean {
         return this.isLastPage;
+    }
+
+    public get nativeElement() {
+        return this.elementRef.nativeElement;
     }
 
     /**
@@ -343,8 +348,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 }
 
 @NgModule({
-    declarations: [IgxPaginatorComponent, IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
-    exports: [IgxPaginatorComponent, IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
+    declarations: [IgxPaginatorComponent, IgxPageNavigationComponent,
+        IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective, IgxPaginatorDirective],
+    exports: [IgxPaginatorComponent, IgxPageNavigationComponent,
+        IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective, IgxPaginatorDirective],
     imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
 })
 export class IgxPaginatorModule { }

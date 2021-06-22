@@ -39,6 +39,7 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IgxGridCRUDService } from '../common/crud.service';
 import { RowType } from '../common/row.interface';
 import { IgxHierarchicalGridRow } from '../grid-public-row';
+import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 
 let NEXT_ID = 0;
 
@@ -87,6 +88,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef, static: true })
     public toolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    /** @hidden @internal */
+    @ContentChildren(IgxPaginatorComponent, {descendants: true})
+    public paginatorList: QueryList<IgxPaginatorComponent>;
 
     @ViewChild('toolbarOutlet', { read: ViewContainerRef })
     public toolbarOutlet: ViewContainerRef;
@@ -195,9 +200,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this._data;
     }
 
-
-    public get paginatorCmp() {
-        return this.paginator || this.parentIsland?.paginator;
+    /** @hidden @internal */
+    public get paginator() {
+        return this.paginatorCmpt || this.rootGrid.paginatorList.find((pg) =>
+            pg.nativeElement.offsetParent.id === this.id);
     }
 
     /**
