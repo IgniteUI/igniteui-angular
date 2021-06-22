@@ -21,21 +21,21 @@
 }
 
 @include b(igx-page-nav) {
-    @extend %igx-paginator__pager !optional;
+    @extend %igx-page-nav !optional;
 
     @include e(text) {
-        @extend %igx-paginator__pager-text !optional;
+        @extend %igx-page-nav__text !optional;
     }
 }
 
 @include b(igx-page-size) {
-    @extend %igx-paginator__select !optional;
+    @extend %igx-page-size !optional;
 
     @include e(label) {
-        @extend %igx-paginator__label !optional;
+        @extend %igx-page-size__label !optional;
     }
 
     @include e(select) {
-        @extend %igx-paginator__select-input !optional;
+        @extend %igx-page-size__select !optional;
     }
 }
