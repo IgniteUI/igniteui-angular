@@ -16,7 +16,6 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IMultiRowLayoutNode } from './selection/selection.service';
 import { GridKeydownTargetType, GridSelectionMode, FilterMode } from './common/enums';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
-import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/grid.excel-style-filtering.component';
 import { IActiveNodeChangeEventArgs } from './common/events';
 import { IgxGridGroupByRowComponent } from './grid/groupby-row.component';
 export interface ColumnGroupsCache {
@@ -673,8 +672,8 @@ export class IgxGridNavigationService {
         }
         if (ctrl && shift && key === 'l' && this.grid.allowFiltering && !column.columnGroup && column.filterable) {
             if (this.grid.filterMode === FilterMode.excelStyleFilter) {
-                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid-th--active`);
-                this.grid.filteringService.toggleFilterDropdown(headerEl, column, IgxGridExcelStyleFilteringComponent);
+                const headerEl = this.grid.nativeElement.querySelector(`.igx-grid__th--active`);
+                this.grid.filteringService.toggleFilterDropdown(headerEl, column);
             } else {
                 this.performHorizontalScrollToCell(column.visibleIndex);
                 this.grid.filteringService.filteredColumn = column;

@@ -19,7 +19,7 @@
 <div igxGridBody (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)" class="igx-grid__tbody" role="rowgroup">
     <div class="igx-grid__tbody-content"  tabindex="0" (focus)="navigation.focusTbody($event)"
      (keydown)="navigation.handleNavigation($event)" (dragStop)="selectionService.dragMode = $event"
-        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant"
+        (dragScroll)="dragScroll($event)" [igxGridDragSelect]="selectionService.dragMode" [attr.aria-activedescendant]="activeDescendant" [attr.role]="dataView.length ? null : 'row'"
         [style.height.px]='totalHeight' [style.width.px]='calcWidth' #tbody (scroll)='preventContainerScroll($event)'>
         <span *ngIf="hasMovableColumns && columnInDrag && pinnedColumns.length <= 0"
             [igxColumnMovingDrop]="headerContainer" [attr.droppable]="true" id="left"
@@ -150,7 +150,7 @@
 </ng-template>
 
 <ng-template #emptyFilteredGrid>
-    <span class="igx-grid__tbody-message">
+    <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyFilteredGridMessage}}</span>
         <span *ngIf='showAddButton'>
             <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
@@ -159,7 +159,7 @@
 </ng-template>
 
 <ng-template #defaultEmptyGrid>
-    <span class="igx-grid__tbody-message">
+    <span class="igx-grid__tbody-message" role="cell">
         <span>{{emptyGridMessage}}</span>
         <span *ngIf='showAddButton'>
             <ng-container *ngTemplateOutlet='addRowEmptyTemplate || defaultAddRowEmptyTemplate'></ng-container>
