@@ -1986,7 +1986,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
+        fit(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2143,7 +2143,7 @@ describe('IgxGrid Component Tests #grid', () => {
 						tick();
 
 						firstRow = grid.getRowByIndex(0);
-						let secondRow = grid.getRowByIndex(1);
+						const secondRow = grid.getRowByIndex(1);
 						// Return the first row after page change
 						expect(firstRow instanceof IgxGridRow).toBe(true);
 						expect(firstRow.index).toBe(0);
