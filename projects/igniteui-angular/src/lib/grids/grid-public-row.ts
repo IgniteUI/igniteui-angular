@@ -1,6 +1,7 @@
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { IgxRow } from './common/crud.service';
+import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridAPIService } from './grid/grid-api.service';
 import { IgxGridComponent } from './grid/grid.component';
@@ -251,7 +252,10 @@ export class IgxGridRow extends BaseRow implements RowType {
      */
     public get viewIndex(): number {
         if (this.grid.groupingExpressions.length) {
-            return this.grid.filteredSortedData.indexOf(this.data);
+            const firstRowGroupInd = this.grid.groupingFlatResult.indexOf(this.grid.dataView[0]);
+            const precedingGroupedRecs = this.grid.groupingFlatResult.filter((r, ind) =>
+                this.grid.isGroupByRecord(r) && ind < firstRowGroupInd);
+                return firstRowGroupInd + precedingGroupedRecs.filter(gr => this.grid.isExpandedGroup(gr)).length + this.index;
         }
         return this.index + this.grid.page * this.grid.perPage;
     }
@@ -284,6 +288,24 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     constructor(public grid: IgxTreeGridComponent,
         public index: number, protected _data?: any, private _treeRow?: ITreeGridRecord) {
         super();
+    }
+
+    /**
+     * Returns the view index calculated per the grid page.
+     */
+    public get viewIndex(): number {
+        if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
+            if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
+                const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
+                // firstRowIndex is based on data result after all pipes triggered, excluding summary pipe
+                const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
+                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) :
+                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
+                // there is a summary row for each root record, so we calculate how many root records are rendered before the current row
+                return firstRowIndex + precedingSummaryRows + this.index;
+            }
+        }
+        return this.index + this.grid.page * this.grid.perPage;
     }
 
     /**
@@ -393,6 +415,13 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     public set expanded(val: boolean) {
         this.grid.gridAPI.set_row_expansion_state(this.key, val);
     }
+
+    private getRootParent(row: ITreeGridRecord): ITreeGridRecord {
+        while (row.parent) {
+            row = row.parent;
+        }
+        return row;
+    }
 }
 
 export class IgxHierarchicalGridRow extends BaseRow implements RowType {
@@ -455,9 +484,22 @@ export class IgxGroupByRow implements RowType {
     }
 
     /**
+     * Returns the view index calculated per the grid page.
+     */
+    public get viewIndex(): number {
+        if (this.grid.groupingExpressions.length) {
+            const firstRowGroupInd = this.grid.groupingFlatResult.indexOf(this.grid.dataView[0]);
+            const precedingGroupedRecs = this.grid.groupingFlatResult.filter((r, ind) =>
+                this.grid.isGroupByRecord(r) && ind < firstRowGroupInd);
+            return firstRowGroupInd + precedingGroupedRecs.filter(gr => this.grid.isExpandedGroup(gr)).length + this.index;
+        }
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
      * @hidden
      */
-     constructor(grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
+    constructor(grid: IgxGridComponent, index: number, private _groupRow?: IGroupByRecord) {
         this.grid = grid;
         this.index = index;
         this.isGroupByRow = true;
@@ -551,6 +593,34 @@ export class IgxSummaryRow implements RowType {
     }
 
     /**
+     * Returns the view index calculated per the grid page.
+     */
+     public get viewIndex(): number {
+        if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
+            if (this.grid instanceof IgxGridComponent) {
+                const grid = this.grid as IgxGridComponent;
+                if (grid.groupingExpressions.length) {
+                    const firstRowGroupInd = grid.groupingFlatResult.indexOf(this.grid.dataView[0]);
+                    const precedingGroupedRecs = grid.groupingFlatResult.filter((r, ind) =>
+                        this.grid.isGroupByRecord(r) && ind < firstRowGroupInd);
+                        return firstRowGroupInd + precedingGroupedRecs.filter(gr => this.grid.isExpandedGroup(gr)).length + this.index;
+                }
+            } else if (this.grid instanceof IgxTreeGridComponent) {
+                const grid = this.grid as IgxTreeGridComponent;
+                if (grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
+                    const firstRowIndex = grid.processedExpandedFlatData.indexOf(grid.dataView[0].data);
+                    const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
+                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) :
+                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) + 1;
+                    return firstRowIndex + precedingSummaryRows + this.index;
+                }
+            }
+        }
+
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
      * @hidden
      */
     constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
@@ -558,5 +628,12 @@ export class IgxSummaryRow implements RowType {
         this.grid = grid;
         this.index = index;
         this.isSummaryRow = true;
+    }
+
+    private getRootParent(row: ITreeGridRecord): ITreeGridRecord {
+        while (row.parent) {
+            row = row.parent;
+        }
+        return row;
     }
 }
