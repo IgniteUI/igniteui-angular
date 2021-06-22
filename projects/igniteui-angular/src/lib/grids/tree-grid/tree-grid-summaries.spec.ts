@@ -56,9 +56,9 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.toggleRow(treeGrid.getRowByIndex(1).key);
             fix.detectChanges();
 
-						let secondRow = treeGrid.getRowByIndex(1);
-						let thirdRow = treeGrid.getRowByIndex(2);
-						let summaryRow = treeGrid.getRowByIndex(4);
+						const secondRow = treeGrid.getRowByIndex(1);
+						const thirdRow = treeGrid.getRowByIndex(2);
+						const summaryRow = treeGrid.getRowByIndex(4);
 
 						// First row is IgxTreeRow 4thRow is IgxSummaryRow
 						expect(secondRow instanceof IgxTreeGridRow).toBe(true);
@@ -102,8 +102,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             verifySummaryForRow147(fix, 1);
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
 
-						let firstRow = treeGrid.getRowByIndex(0);
-						let summaryRow = treeGrid.getRowByIndex(1);
+						const firstRow = treeGrid.getRowByIndex(0);
+						const summaryRow = treeGrid.getRowByIndex(1);
 
 						// First row is IgxTreeRow 4thRow is IgxSummaryRow
 						expect(firstRow instanceof IgxTreeGridRow).toBe(true);
@@ -239,7 +239,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             treeGrid.toggleRow(treeGrid.getRowByIndex(3).key);
             fix.detectChanges();
 
-						let gridSummaryRow = treeGrid.getRowByIndex(4);
+						const gridSummaryRow = treeGrid.getRowByIndex(4);
 						expect(gridSummaryRow.index).toEqual(4);
 						expect(gridSummaryRow.viewIndex).toEqual(4);
 						expect(gridSummaryRow instanceof IgxSummaryRow).toBe(true);
@@ -571,7 +571,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
 
 						let summaryRow = treeGrid.getRowByIndex(4);
 						expect(summaryRow.index).toEqual(4);
-						expect(summaryRow.viewIndex).toEqual(4)
+						expect(summaryRow.viewIndex).toEqual(4);
 						expect(summaryRow instanceof IgxSummaryRow).toBe(true);
 
             expect(GridSummaryFunctions.getAllVisibleSummariesLength(fix)).toEqual(2);
@@ -589,7 +589,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             tick(16);
 
 						// TODO FIX
-						let firstRow = treeGrid.getRowByIndex(0);
+						const firstRow = treeGrid.getRowByIndex(0);
 						summaryRow = treeGrid.getRowByIndex(2);
 						expect(firstRow.index).toEqual(0);
 						expect(firstRow.viewIndex).toEqual(4);
@@ -631,7 +631,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
             tick(16);
 
-						let firstRow = treeGrid.getRowByIndex(0);
+						const firstRow = treeGrid.getRowByIndex(0);
 						expect(firstRow.index).toEqual(0);
 						expect(firstRow.viewIndex).toEqual(5);
 
