@@ -116,7 +116,7 @@ export class IgxTabHeaderComponent extends IgxTabHeaderDirective implements Afte
     /** @hidden @internal */
     public ngOnDestroy(): void {
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver.disconnect();
+            this._resizeObserver?.disconnect();
         });
     }
 }
