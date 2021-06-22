@@ -1088,7 +1088,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         });
 
-        this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowDeletedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.groupingExpressions.length) {
                 if (args.data) {
                     const rec = this.selectionService.getRowID(args.data);
