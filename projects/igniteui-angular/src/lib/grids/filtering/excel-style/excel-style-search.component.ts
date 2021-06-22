@@ -29,7 +29,7 @@ import { KEYS } from '../../../core/utils';
     selector: '[igxExcelStyleLoading]'
 })
 export class IgxExcelStyleLoadingValuesTemplateDirective {
-    constructor(public template: TemplateRef<any>) {}
+    constructor(public template: TemplateRef<any>) { }
 }
 
 /**
@@ -240,21 +240,6 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
         return itemSize;
     }
 
-     /**
-      * @hidden @internal
-      */
-    public get type(): string {
-        switch (this.esf.column?.dataType) {
-            case DataType.Number:
-            case DataType.Currency:
-            case DataType.Percent:
-                return 'number';
-            default:
-                return 'text';
-        }
-    }
-
-
     /**
      * @hidden @internal
      */
@@ -296,6 +281,12 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
      * @hidden @internal
      */
     public filterListData(): void {
+        if (this.esf.column?.dataType === DataType.Number ||
+            this.esf.column?.dataType === DataType.Currency ||
+            this.esf.column?.dataType === DataType.Percent) {
+            this.rejectNonNumericalEntries();
+        }
+
         if (!this.esf.listData || !this.esf.listData.length) {
             this.displayedListData = [];
 
@@ -424,6 +415,14 @@ export class IgxExcelStyleSearchComponent implements AfterViewInit, OnDestroy {
                 return IgxDateFilteringOperand.instance().condition(conditionName);
             default:
                 return IgxStringFilteringOperand.instance().condition(conditionName);
+        }
+    }
+
+    private rejectNonNumericalEntries(): void {
+        const regExp = /[^0-9\.,eE\-]/g;
+        if (this.searchValue && regExp.test(this.searchValue)) {
+            this.searchInput.value = this.searchValue.replace(regExp, '');
+            this.searchValue = this.searchInput.value;
         }
     }
 }
