@@ -19,6 +19,13 @@ abstract class BaseRow implements RowType {
     protected _data?: any;
 
     /**
+     * Returns the view index calculated per the grid page.
+     */
+    public get viewIndex(): number {
+        return this.index + this.grid.page * this.grid.perPage;
+    }
+
+    /**
      * Gets the row key.
      * A row in the grid is identified either by:
      * - primaryKey data value,
@@ -62,13 +69,6 @@ abstract class BaseRow implements RowType {
     @DeprecateProperty(`'rowID' property is deprecated. Use 'key' instead.`)
     public get rowID(): any {
         return this.key;
-    }
-
-    /**
-     * Returns the view index calculated per the grid page.
-     */
-    public get viewIndex(): number {
-        return this.index + this.grid.page * this.grid.perPage;
     }
 
     /**
@@ -206,7 +206,7 @@ abstract class BaseRow implements RowType {
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-     * This method emits `onEditDone` event.
+		 * This method emits `onEditDone` event.
      *
      * ```typescript
      * // update the second selected row's value
@@ -217,7 +217,7 @@ abstract class BaseRow implements RowType {
     public update(value: any): void {
         const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
-            this.grid.endEdit(false);
+					this.grid.endEdit(false);
         }
         const row = new IgxRow(this.key, this.index, this.data, this.grid);
         this.grid.gridAPI.update_row(row, value);
@@ -342,7 +342,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * Returns the parent row.
      */
     public get parent(): RowType {
-        const row = this.grid.getRowByKey(this.treeRow.parent.rowID);
+        const row = this.grid.getRowByKey(this.treeRow.parent?.rowID);
         return row;
     }
 
@@ -425,13 +425,6 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
 }
 
 export class IgxHierarchicalGridRow extends BaseRow implements RowType {
-    /**
-     * Returns the view index calculated per the grid page.
-     */
-    public get viewIndex(): number {
-            return this.index + this.grid.page * this.grid.perPage;
-    }
-
     /**
      * @hidden
      */
