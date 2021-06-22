@@ -12,10 +12,8 @@
 @mixin component {
     @include b(igx-tree) {
         @extend %tree-display !optional;
-    }
-
-    @include b(igx-tree-node) {
         $this: bem--selector-to-string(&);
+
         @include register-component(
             $name: string.slice($this, 2, -1),
             $deps: (
@@ -23,7 +21,9 @@
                 igx-icon,
             )
         );
+    }
 
+    @include b(igx-tree-node) {
         @extend %tree-node !optional;
 
         @include e(wrapper) {
