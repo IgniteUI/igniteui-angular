@@ -12,7 +12,7 @@ import { IgxRippleModule } from '../directives/ripple/ripple.directive';
 import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
 import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
-import { IgxPagerComponent } from './pager.component';
+import { IgxPageNavigationComponent } from './pager.component';
 import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 
 
@@ -343,8 +343,8 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
 }
 
 @NgModule({
-    declarations: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
-    exports: [IgxPaginatorComponent, IgxPagerComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
+    declarations: [IgxPaginatorComponent, IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
+    exports: [IgxPaginatorComponent, IgxPageNavigationComponent, IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective],
     imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
 })
 export class IgxPaginatorModule { }
