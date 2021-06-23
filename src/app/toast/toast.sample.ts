@@ -21,7 +21,6 @@ export class ToastSampleComponent {
 
     public handleShown(event) {
         console.log('toast shown', event);
-
     }
 
     public handleHiding(event) {

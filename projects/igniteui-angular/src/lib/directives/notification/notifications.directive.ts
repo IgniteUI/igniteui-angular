@@ -73,6 +73,34 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     public d$ = new Subject<boolean>();
 
     /**
+     * @hidden
+     */
+    protected strategy;
+
+    /**
+     * @hidden
+     */
+    public open() {
+        clearInterval(this.timeoutId);
+
+        const overlaySettings: OverlaySettings = {
+            positionStrategy: this.strategy,
+            closeOnEscape: false,
+            closeOnOutsideClick: false,
+            modal: false,
+            outlet: this.outlet
+        };
+
+        super.open(overlaySettings);
+
+        if (this.autoHide) {
+            this.timeoutId = window.setTimeout(() => {
+                this.close();
+            }, this.displayTime);
+        }
+    }
+
+    /**
      * Hides the element.
      */
     public close() {

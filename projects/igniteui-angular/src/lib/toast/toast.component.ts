@@ -19,7 +19,8 @@ import {
     HorizontalAlignment,
     VerticalAlignment,
     GlobalPositionStrategy,
-    OverlaySettings
+    OverlaySettings,
+    PositionSettings
 } from '../services/public_api';
 import { mkenum } from '../core/utils';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
@@ -150,35 +151,22 @@ export class IgxToastComponent extends IgxNotificationsDirective
      * ```
      */
     public open(message?: string | OverlaySettings) {
-        clearInterval(this.timeoutId);
-
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: new GlobalPositionStrategy({
-                horizontalDirection: HorizontalAlignment.Center,
-                verticalDirection:
-                    this.position === 'bottom'
-                        ? VerticalAlignment.Bottom
-                        : this.position === 'middle'
-                            ? VerticalAlignment.Middle
-                            : VerticalAlignment.Top,
-            }),
-            closeOnEscape: false,
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.outlet,
-        };
-
         if (message !== undefined) {
             this.textMessage = message;
         }
 
-        super.open(overlaySettings);
+        const toastSettings: PositionSettings = {
+            horizontalDirection: HorizontalAlignment.Center,
+            verticalDirection:
+                this.position === 'bottom'
+                    ? VerticalAlignment.Bottom
+                    : this.position === 'middle'
+                        ? VerticalAlignment.Middle
+                        : VerticalAlignment.Top
+        };
 
-        if (this.autoHide) {
-            this.timeoutId = window.setTimeout(() => {
-                this.close();
-            }, this.displayTime);
-        }
+        this.strategy = new GlobalPositionStrategy(toastSettings);
+        super.open();
     }
 
     /**

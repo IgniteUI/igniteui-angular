@@ -107,9 +107,11 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      * ```
      */
     public open(message?: string | OverlaySettings) {
-        clearTimeout(this.timeoutId);
+        if (message !== undefined) {
+            this.textMessage = message;
+        }
 
-        const positionSettings: PositionSettings = {
+        const snackbarSettings: PositionSettings = {
             horizontalDirection: HorizontalAlignment.Center,
             verticalDirection: VerticalAlignment.Bottom,
             openAnimation: useAnimation(slideInBottom, {
@@ -131,28 +133,9 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
             })
         };
 
-        const strategy = this.outlet ? new ContainerPositionStrategy(positionSettings)
-            : new GlobalPositionStrategy(positionSettings);
-
-        const overlaySettings: OverlaySettings = {
-            positionStrategy: strategy,
-            closeOnEscape: false,
-            closeOnOutsideClick: false,
-            modal: false,
-            outlet: this.outlet
-        };
-
-        if (message !== undefined) {
-            this.textMessage = message;
-        }
-
-        super.open(overlaySettings);
-
-        if (this.autoHide) {
-            this.timeoutId = window.setTimeout(() => {
-                this.close();
-            }, this.displayTime);
-        }
+        this.strategy = this.outlet ? new ContainerPositionStrategy(snackbarSettings)
+            : new GlobalPositionStrategy(snackbarSettings);
+        super.open();
     }
 
     /**
