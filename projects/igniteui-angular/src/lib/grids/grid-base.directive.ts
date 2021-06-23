@@ -112,7 +112,6 @@ import {
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
     IGridEditEventArgs,
-    IPageEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -153,6 +152,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
+import { IPageEventArgs } from '../paginator/paginator_interfaces';
 
 let FAKE_ROW_ID = -1;
 
