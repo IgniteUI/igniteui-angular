@@ -90,6 +90,7 @@ import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const appRoutes = [
     {
@@ -430,6 +431,10 @@ const appRoutes = [
         path: 'gridUpdates',
         component: GridUpdatesComponent
     },
+    {
+        path: 'pagination',
+        Comment: PaginationSampleComponent
+    }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

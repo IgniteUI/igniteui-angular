@@ -742,6 +742,10 @@ export class IgxTreeGridFKeySelectionWithTransactionComponent {
 export class IgxTreeGridAutoGenerateComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeePrimaryForeignKeyTreeData();
+
+    public clearData(){
+        this.data = [];
+    }
 }
 
 @Component({
