@@ -50,7 +50,7 @@ import {
     ConnectedPositioningStrategy,
     ContainerPositionStrategy,
     StateUpdateEvent,
-    TransactionEventOrigin,
+    TransactionEventOrigin
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
