@@ -1,7 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { DataUtil } from '../../data-operations/data-util';
+import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
+import { GridBaseAPIService } from '../api.service';
+import { GridType } from '../common/grid.interface';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ISortingExpression } from './../../data-operations/sorting-expression.interface';
+import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 /** @hidden */
@@ -22,6 +26,9 @@ export class ITreeGridAggregation {
     pure: false
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
+        this.gridAPI = gridAPI as IgxTreeGridAPIService;
+    }
 
     public transform(collection: ITreeGridRecord[],
                      groupingExpressions: IGroupingExpression[],
@@ -97,10 +104,15 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
     }
 
     private groupBy(array: any[], groupingExpression: IGroupingExpression): GroupByRecord[] {
+        const column = this.gridAPI.get_column_by_name(groupingExpression.fieldName);
+        const isDate = column?.dataType === GridColumnDataType.Date || column?.dataType === GridColumnDataType.DateTime;
+        const isTime = column?.dataType === GridColumnDataType.Time;
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
-
         for (const record of array) {
-            const key = record[groupingExpression.fieldName];
+            const key = isDate || isTime
+                ? this.gridAPI.grid.datePipe.transform(record[groupingExpression.fieldName])
+                : record[groupingExpression.fieldName];
+
             let groupByRecord: GroupByRecord;
 
             if (map.has(key)) {

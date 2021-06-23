@@ -1,16 +1,38 @@
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxTreeGridSimpleComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupingPipe } from './tree-grid.grouping.pipe';
+import { IgxTreeGridModule } from './public_api';
+
 
 describe('TreeGrid Grouping Pipe', () => {
     configureTestSuite();
-    const groupPipe = new IgxTreeGridGroupingPipe();
+    let groupPipe: any;
     let data: any[];
-    beforeEach(() => {
+
+    beforeAll(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            declarations: [
+                IgxTreeGridSimpleComponent
+            ],
+            imports: [IgxTreeGridModule, NoopAnimationsModule]
+        })
+            .compileComponents();
+    }));
+
+
+    beforeEach(fakeAsync(/** height/width setter rAF */() => {
+        const fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
+        fix.detectChanges();
+        tick(16);
+        const grid = fix.componentInstance.treeGrid;
+        groupPipe = new IgxTreeGridGroupingPipe(grid.gridAPI);
         data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
-    });
+    }));
 
     it('doesn\'t change the data when no groupingExpressions are passed.', () => {
         const result = groupPipe.transform(data, [], '', '', '');

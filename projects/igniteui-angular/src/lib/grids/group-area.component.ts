@@ -1,6 +1,7 @@
 import { Component, ElementRef, EventEmitter, Input, Output, TemplateRef, ViewChild, AfterContentInit } from '@angular/core';
 import { IBaseChipEventArgs, IChipClickEventArgs, IChipKeyDownEventArgs } from '../chips/chip.component';
 import { IChipsAreaReorderEventArgs } from '../chips/chips-area.component';
+import { DisplayDensity } from '../core/density';
 import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
 import { SortingDirection } from '../data-operations/sorting-expression.interface';
 import { IgxColumnComponent } from './columns/column.component';
@@ -23,6 +24,9 @@ import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 export class IgxGroupAreaComponent implements AfterContentInit {
     @Input()
     public grid: IgxGridComponent | IgxTreeGridComponent;
+
+    @Input()
+    public displayDensity: DisplayDensity;
 
     @Input()
     public get groupingExpressions(): IGroupingExpression[] {

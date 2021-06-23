@@ -1,12 +1,11 @@
-<div class="igx-grid__grouparea" #groupArea
-    *ngIf="groupingExpressions.length > 0 || grid.hasGroupableColumns">
+<div class="igx-grid__grouparea" #groupArea>
     <igx-chips-area (reorder)="chipsOrderChanged($event)" (moveEnd)="chipsMovingEnded()">
         <ng-container *ngFor="let expr of grid.chipsGroupingExpressions; let last = last;">
             <igx-chip [id]="expr.fieldName"
                 [title]="getGroupByChipTitle(expr)"
                 [removable]="getColumnGroupable(expr.fieldName)"
                 [draggable]="getColumnGroupable(expr.fieldName)"
-                [displayDensity]="grid.displayDensity"
+                [displayDensity]="displayDensity"
                 (keyDown)="onChipKeyDown($event)"
                 (remove)="onChipRemoved($event)"
                 (chipClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"

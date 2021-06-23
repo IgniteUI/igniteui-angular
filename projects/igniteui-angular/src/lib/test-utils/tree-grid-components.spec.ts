@@ -906,8 +906,8 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupKey:groupKey:childDataKey"
-        childDataKey="Employees" expansionDepth="0" width="900px" height="1000px">
+    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey"
+        childDataKey="childDataKey" expansionDepth="0" width="900px" height="1000px">
         <igx-group-area [grid]='treeGrid'
             [groupingExpressions]="groupingExpressions"
             [hideGroupedColumns]="false">
@@ -924,6 +924,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 export class IgxTreeGridGroupingComponent extends IgxTreeGridSummariesComponent {
     public groupedInitially = true;
     public groupKey = 'Employees';
+    public primaryKey = 'ID';
     public childDataKey='Employees';
     public groupingExpressions =
             this.groupedInitially ?

@@ -5,7 +5,7 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule } from './public_api';
 
-describe('IgxTreeGrid Grouping', () => {
+xdescribe('IgxTreeGrid Grouping', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
