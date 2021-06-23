@@ -159,23 +159,26 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect($('#csvEntry').textContent).toMatch(instance.customCSVText);
         });
 
-        it('Setting overlaySettings for each toolbar columns action', () => {
+        fit('Setting overlaySettings for each toolbar columns action', () => {
             const defaultSettings = instance.pinningAction.overlaySettings;
+            const defaultFiltSettings = instance.advancedFiltAction.overlaySettings;
+            const defaultExportSettings = instance.exporterAction.overlaySettings;
+
             instance.pinningAction.overlaySettings = instance.overlaySettings;
             instance.hidingAction.overlaySettings = instance.overlaySettings;
             fixture.detectChanges();
 
             expect(defaultSettings).not.toEqual(instance.pinningAction.overlaySettings);
             expect(defaultSettings).not.toEqual(instance.hidingAction.overlaySettings);
-            expect(defaultSettings).toEqual(instance.advancedFiltAction.overlaySettings);
-            expect(defaultSettings).toEqual(instance.exporterAction.overlaySettings);
+            expect(defaultFiltSettings).toEqual(instance.advancedFiltAction.overlaySettings);
+            expect(defaultExportSettings).toEqual(instance.exporterAction.overlaySettings);
 
             instance.advancedFiltAction.overlaySettings = instance.overlaySettings;
             instance.exporterAction.overlaySettings = instance.overlaySettings;
             fixture.detectChanges();
 
-            expect(defaultSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
-            expect(defaultSettings).not.toEqual(instance.exporterAction.overlaySettings);
+            expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
+            expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
         });
     });
 });
@@ -233,10 +236,10 @@ export class ToolbarActionsComponent {
     @ViewChild('hidingAction', {static: true})
     public hidingAction;
 
-    @ViewChild('advancedFiltAction', {read: BaseToolbarColumnActionsDirective, static: true})
+    @ViewChild('advancedFiltAction', {static: true})
     public advancedFiltAction;
 
-    @ViewChild('exporterAction', {read: BaseToolbarColumnActionsDirective, static: true})
+    @ViewChild('exporterAction', {static: true})
     public exporterAction;
 
     public data  = [];
