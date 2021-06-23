@@ -18,7 +18,12 @@ import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 
 @Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
 export class IgxPaginatorTemplateDirective {
-
+    /**
+     * @internal
+     * @hidden
+     */
+    @HostBinding('class.igx-paginator-content')
+    public cssClass = 'igx-paginator-content';
 }
 @Component({
     selector: 'igx-paginator',

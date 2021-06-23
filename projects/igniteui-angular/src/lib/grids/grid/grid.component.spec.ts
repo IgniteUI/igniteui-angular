@@ -2205,7 +2205,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('igx-page-nav'));
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
@@ -2230,7 +2230,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('igx-page-nav'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
