@@ -10,6 +10,7 @@ import { ISortingExpression } from '../../data-operations/sorting-expression.int
 import { GridType } from '../common/grid.interface';
 import { IGridSortingStrategy } from '../../data-operations/sorting-strategy';
 import { GridPagingMode } from '../common/enums';
+import { TransactionType } from '../../services/public_api';
 
 /**
  * @hidden
@@ -40,7 +41,10 @@ export class IgxTreeGridHierarchizingPipe implements PipeTransform {
         }
 
         grid.flatData = grid.transactions.enabled ?
-        flatData.filter(rec => !grid.transactions.getState(this.getRowID(primaryKey, rec))) : flatData;
+            flatData.filter(rec => {
+                const state = grid.transactions.getState(this.getRowID(primaryKey, rec));
+                return !state || state.type !== TransactionType.ADD;
+            }) : flatData;
         grid.records = treeGridRecordsMap;
         grid.rootRecords = hierarchicalRecords;
         return hierarchicalRecords;
