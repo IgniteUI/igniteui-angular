@@ -52,9 +52,8 @@ export type IgxToastPosition = (typeof IgxToastPosition)[keyof typeof IgxToastPo
  * Example:
  * ```html
  * <button (click)="toast.open()">Show notification</button>
- * <igx-toast #toast
- *           message="Notification displayed"
- *           displayTime="1000">
+ * <igx-toast #toast displayTime="1000">
+ *      Notification displayed
  * </igx-toast>
  * ```
  */

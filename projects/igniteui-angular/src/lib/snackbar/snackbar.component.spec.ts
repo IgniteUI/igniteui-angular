@@ -46,6 +46,7 @@ describe('IgxSnackbar', () => {
     });
 
     it('should auto hide 1 second after is open', fakeAsync(() => {
+        spyOn(snackbar.onClosing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         fixture.detectChanges();
@@ -58,9 +59,11 @@ describe('IgxSnackbar', () => {
         tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeFalsy();
+        expect(snackbar.onClosing.emit).toHaveBeenCalled();
     }));
 
     it('should not auto hide 1 second after is open', fakeAsync(() => {
+        spyOn(snackbar.onClosing, 'emit');
         const displayTime = 1000;
         snackbar.displayTime = displayTime;
         snackbar.autoHide = false;
@@ -74,6 +77,7 @@ describe('IgxSnackbar', () => {
         tick(1000);
         fixture.detectChanges();
         expect(snackbar.isVisible).toBeTruthy();
+        expect(snackbar.onClosing.emit).not.toHaveBeenCalled();
     }));
 
     it('should trigger on action', () => {
@@ -90,6 +94,12 @@ describe('IgxSnackbar', () => {
         expect(snackbar.clicked.emit).toHaveBeenCalledWith(snackbar);
     });
 
+    it('should emit onOpening when snackbar is shown', () => {
+        spyOn(snackbar.onOpening, 'emit');
+        snackbar.open();
+        expect(snackbar.onOpening.emit).toHaveBeenCalled();
+    });
+
     it('should emit onOpened when snackbar is opened', fakeAsync(() => {
         snackbar.displayTime = 100;
         snackbar.autoHide = false;
@@ -99,6 +109,13 @@ describe('IgxSnackbar', () => {
         fixture.detectChanges();
         expect(snackbar.onOpened.emit).toHaveBeenCalled();
     }));
+
+    it('should emit onClosing when snackbar is hidden', () => {
+        spyOn(snackbar.onClosing, 'emit');
+        snackbar.open();
+        snackbar.close();
+        expect(snackbar.onClosing.emit).toHaveBeenCalled();
+    });
 
     it('should emit onClosed when snackbar is closed', fakeAsync(() => {
         snackbar.displayTime = 100;
@@ -126,6 +143,19 @@ describe('IgxSnackbar', () => {
         // Opening happens in a RAF
         tick(100);
         expect(snackbar.collapsed).toBeFalse();
+    }));
+
+    it('can set snackbar message through open method', fakeAsync(() => {
+        snackbar.displayTime = 100;
+        snackbar.autoHide = false;
+
+        snackbar.open('Custom Message');
+        tick(100);
+        fixture.detectChanges();
+        expect(snackbar.isVisible).toBeTruthy();
+
+        expect(snackbar.autoHide).toBeFalsy();
+        expect(snackbar.textMessage).toBe('Custom Message');
     }));
 });
 
@@ -173,7 +203,7 @@ describe('IgxSnackbar with custom content', () => {
         expect(messageElRect.right <= buttonRect.left).toBe(true, 'The button is not on the right side of the snackbar content');
     });
 
-    it('should be able to set a message though show method', () => {
+    it('should be able to set a message though open method', () => {
         snackbar.autoHide = false;
         fixture.componentInstance.text = 'Retry';
         fixture.detectChanges();

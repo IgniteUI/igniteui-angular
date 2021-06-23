@@ -8,7 +8,6 @@ import { IgxSnackbarComponent } from 'igniteui-angular';
 })
 export class SnackbarSampleComponent implements OnInit {
     public color: string;
-    public message: string;
     public actionName: string;
     private _colors: string[];
 
