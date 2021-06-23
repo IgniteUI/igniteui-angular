@@ -2,6 +2,11 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 13.0.0
+### New Features
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`)
+
 ## 12.1.0
 ### New Features
 - `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
