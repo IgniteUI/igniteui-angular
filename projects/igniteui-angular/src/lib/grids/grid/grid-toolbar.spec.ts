@@ -156,7 +156,7 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect($('#csvEntry').textContent).toMatch(instance.customCSVText);
         });
 
-        fit('Setting overlaySettings for each toolbar columns action', () => {
+        it('Setting overlaySettings for each toolbar columns action', () => {
             const defaultSettings = instance.pinningAction.overlaySettings;
             const defaultFiltSettings = instance.advancedFiltAction.overlaySettings;
             const defaultExportSettings = instance.exporterAction.overlaySettings;
