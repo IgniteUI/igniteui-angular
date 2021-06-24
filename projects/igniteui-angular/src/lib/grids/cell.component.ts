@@ -988,7 +988,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                if (editableArgs.cancel) {
+                if (editableArgs && editableArgs.cancel) {
                     return true;
                 }
 
