@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IgxSnackbarComponent } from 'igniteui-angular';
 
 @Component({
@@ -7,6 +7,9 @@ import { IgxSnackbarComponent } from 'igniteui-angular';
     templateUrl: 'snackbar.sample.html'
 })
 export class SnackbarSampleComponent implements OnInit {
+    @ViewChild('snackbar')
+    private snackbar: IgxSnackbarComponent;
+
     public color: string;
     public actionName: string;
     private _colors: string[];
@@ -35,5 +38,17 @@ export class SnackbarSampleComponent implements OnInit {
         this.color = this._colors.pop();
 
         snackbar.close();
+    }
+
+    public onAnimationStarted() {
+        console.log('animation started');
+    }
+
+    public onAnimationDone() {
+        console.log('animation ended');
+    }
+
+    public toggleSnackbar() {
+        this.snackbar.toggle();
     }
 }

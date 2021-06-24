@@ -39,7 +39,6 @@ let NEXT_ID = 0;
 })
 export class IgxSnackbarComponent extends IgxNotificationsDirective
     implements OnInit {
-
     /**
      * Sets/gets the `id` of the snackbar.
      * If not set, the `id` of the first snackbar component  will be `"igx-snackbar-0"`;

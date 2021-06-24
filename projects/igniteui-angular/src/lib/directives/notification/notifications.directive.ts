@@ -1,7 +1,7 @@
 import { Directive, ElementRef, HostBinding, Input, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { IToggleView } from '../../core/navigation';
-import { OverlaySettings } from '../../services/public_api';
+import { IPositionStrategy, OverlaySettings } from '../../services/public_api';
 import { IgxOverlayOutletDirective, IgxToggleDirective } from '../toggle/toggle.directive';
 
 @Directive()
@@ -69,13 +69,13 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
     /**
      * @hidden
      */
-    public timeoutId;
+    public timeoutId: number;
     public d$ = new Subject<boolean>();
 
     /**
      * @hidden
      */
-    protected strategy;
+    protected strategy: IPositionStrategy;
 
     /**
      * @hidden
