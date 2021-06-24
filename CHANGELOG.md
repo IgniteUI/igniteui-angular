@@ -2,6 +2,12 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.0.6
+### New Features
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`)
+
+
 ## 12.0.3
 
 ### General
