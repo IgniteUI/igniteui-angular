@@ -976,7 +976,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (editableCell) {
                 if (this.intRow.addRow) {
                     editableArgs = this.grid.crudService.updateAddCell(false, event);
-                    this.intRow.rowData = editableCell.rowData;
                 } else {
                     editableArgs = this.grid.crudService.updateCell(false, event);
                 }
@@ -1011,7 +1010,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 } else {
                     this.grid.crudService.exitCellEdit(event);
                 }
-                this.intRow.rowData = editableCell.rowData;
             } else {
                 this.grid.crudService.updateCell(true, event);
             }
