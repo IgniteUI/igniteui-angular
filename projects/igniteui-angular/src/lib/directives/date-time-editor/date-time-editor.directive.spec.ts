@@ -1,6 +1,6 @@
 import { IgxDateTimeEditorDirective, IgxDateTimeEditorModule } from './date-time-editor.directive';
 import { DatePart } from './date-time-editor.common';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, formatDate } from '@angular/common';
 import { Component, ViewChild, DebugElement, EventEmitter, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule, FormGroup, FormBuilder, ReactiveFormsModule, Validators, NgControl } from '@angular/forms';
@@ -15,7 +15,7 @@ describe('IgxDateTimeEditor', () => {
     let dateTimeEditor: IgxDateTimeEditorDirective;
     describe('Unit tests', () => {
         const maskParsingService = jasmine.createSpyObj('MaskParsingService',
-            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask']);
+            ['parseMask', 'restoreValueFromMask', 'parseMaskValue', 'applyMask', 'parseValueFromMask']);
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
         const ngModel = {
@@ -614,11 +614,7 @@ describe('IgxDateTimeEditor', () => {
                 inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
                 fixture.detectChanges();
                 date = new Date(0, 0, 0, 2, 0, 0);
-                const longTimeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
-                result = ControlsFunction.formatDate(date, longTimeOptions);
-                const offset = date.getTimezoneOffset();
-                const tz = (offset > 0 ? '-' : '+') + (Math.abs(offset) / 60);
-                result = `${result} GMT${tz}`;
+                result = formatDate(date, 'longTime', 'en-US');
                 expect(inputElement.nativeElement.value).toEqual(result);
             });
             it('should be able to apply custom display format.', fakeAsync(() => {
