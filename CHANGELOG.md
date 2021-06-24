@@ -3,8 +3,32 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 12.1.0
+
 ### New Features
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
+
+    ```html
+    <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-pinning [overlaySettings]="overlaySettingsGlobal"></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
+    </igx-grid-toolbar-actions>
+    ```
 - `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
+- `IgxPaginatorComponent`
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
+    ```html
+    <igx-paginator #paginator>
+        <igx-paginator-content>
+            <igx-page-size></igx-page-size>
+            <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()">PREV</button>
+            <span>Page {{paginator.page}} of {{paginator.totalPages}}</span>
+            <button [disabled]="paginator.isLastPage" (click)="paginator.nextPage()">NEXT</button>
+        </igx-paginator-content>
+    </igx-paginator>
+    ```
+
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
     ```typescript
         this.excelExporterService.columnExporting.subscribe((col) => {
             if (col.field === 'Index') {
@@ -13,6 +37,15 @@ All notable changes for each version of this project will be documented in this 
         });
     ```
 ### General
+- `IgxPaginatorComponent`
+    - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
+    -  **Breaking Change** - the following properties are removed
+        - `pagerEnabled`
+        - `pagerHidden `
+        - `dropdownEnabled`
+        - `dropdownHidden`
+
+
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
