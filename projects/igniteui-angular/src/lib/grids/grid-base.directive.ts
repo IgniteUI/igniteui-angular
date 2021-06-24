@@ -2647,10 +2647,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public chipsGroupingExpressions = [];
-    /**
-     * @hidden @internal
-     */
     public summariesHeight: number;
 
     /**

@@ -22,10 +22,12 @@
             </igx-grid-toolbar-actions>
         </igx-grid-toolbar> -->
 
-        <igx-group-area [grid]='grid1'
-            [(groupingExpressions)]='groupingExpressions'
-            [hideGroupedColumns]='false'>
-        </igx-group-area>
+        <igx-tree-grid-group-by-area
+            [grid]='grid1'
+            [(expressions)]='groupingExpressions'
+            [hideGroupedColumns]='false'
+        >
+        </igx-tree-grid-group-by-area>
 
         <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
 

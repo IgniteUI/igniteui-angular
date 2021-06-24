@@ -1,12 +1,16 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
+<!-- Group-by area -->
 <ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
-    <igx-grid-group-area #groupArea
+    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth'
         [grid]="this"
-        [(groupingExpressions)]="this.groupingExpressions"
-        [hideGroupedColumns]="this.hideGroupedColumns"
-        [dropAreaMessage]="this.dropAreaMessage">
-    </igx-grid-group-area>
+        [expressions]="groupingExpressions"
+        [sortingExpressions]="sortingExpressions"
+        [density]="displayDensity"
+        [dropAreaTemplate]="dropAreaTemplate"
+        [dropAreaMessage]="dropAreaMessage"
+    >
+    </igx-grid-group-by-area>
 </ng-container>
 
 <div class="igx-grid__thead" role="rowgroup">

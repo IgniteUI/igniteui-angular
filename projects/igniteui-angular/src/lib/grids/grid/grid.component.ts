@@ -29,7 +29,7 @@ import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxGridGroupAreaComponent } from '../grid-group-area.component';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -165,7 +165,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     @ViewChild('groupArea')
-    public groupArea: IgxGridGroupAreaComponent;
+    public groupArea: IgxGridGroupByAreaComponent;
 
     /**
      * @hidden @internal
@@ -370,7 +370,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const newExpressions: IGroupingExpression[] = value;
         this._groupingExpressions = cloneArray(value);
         this.groupingExpressionsChange.emit(this._groupingExpressions);
-        this.chipsGroupingExpressions = cloneArray(value);
         if (this._gridAPI.grid) {
             /* grouping should work in conjunction with sorting
             and without overriding separate sorting expressions */
@@ -812,7 +811,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public get dropAreaVisible(): boolean {
         return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.chipsGroupingExpressions.length;
+            !this.groupingExpressions.length;
     }
 
     /**
@@ -1065,7 +1064,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     protected getGroupAreaHeight(): number {
-        return this.groupArea ? this.groupArea.getGroupAreaHeight() : 0;
+        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**

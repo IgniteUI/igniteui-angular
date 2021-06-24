@@ -104,9 +104,10 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
     }
 
     private groupBy(array: any[], groupingExpression: IGroupingExpression): GroupByRecord[] {
-        const column = this.gridAPI.get_column_by_name(groupingExpression.fieldName);
-        const isDate = column?.dataType === GridColumnDataType.Date || column?.dataType === GridColumnDataType.DateTime;
-        const isTime = column?.dataType === GridColumnDataType.Time;
+        // TODO this.gridAPI.grid is undefined
+        // const column = this.gridAPI.get_column_by_name(groupingExpression.fieldName);
+        const isDate = false; // column?.dataType === GridColumnDataType.Date || column?.dataType === GridColumnDataType.DateTime;
+        const isTime = false; // column?.dataType === GridColumnDataType.Time;
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
             const key = isDate || isTime

@@ -2,8 +2,8 @@ import { Directive, ElementRef, Renderer2, NgZone, HostBinding, TemplateRef } fr
 import { IgxDropDirective } from '../../directives/drag-drop/drag-drop.directive';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from './grid.component';
-import { SortingDirection } from '../../data-operations/sorting-expression.interface';
 import { IgxColumnMovingDragDirective } from '../moving/moving.drag.directive';
+import { IgxGroupByAreaDirective } from '../grouping/group-by-area.directive';
 
 /**
  * @hidden
@@ -83,7 +83,11 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
     @HostBinding('class.igx-drop-area--hover')
     public hovered = false;
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone) {
+    constructor(
+        private groupArea: IgxGroupByAreaDirective,
+        private elementRef: ElementRef,
+        renderer: Renderer2,
+        zone: NgZone) {
         super(elementRef, renderer, zone);
     }
 
@@ -93,9 +97,9 @@ export class IgxGroupAreaDropDirective extends IgxDropDirective {
         if (!this.columnBelongsToGrid(column)) {
             return;
         }
-        const grid = column.grid as IgxGridComponent;
-        const isGrouped = grid.chipsGroupingExpressions
-            ? grid.chipsGroupingExpressions.findIndex((item) => item.fieldName === column.field) !== -1
+
+        const isGrouped = this.groupArea.expressions
+            ? this.groupArea.expressions.findIndex((item) => item.fieldName === column.field) !== -1
             : false;
         if (column.groupable && !isGrouped && !column.columnGroup && !!column.field) {
             drag.icon.innerText = 'group_work';

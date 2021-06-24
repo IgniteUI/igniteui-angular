@@ -6,8 +6,9 @@ import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { TransactionService, Transaction, State } from '../../services/public_api';
-import { ITreeGridRecord } from '../tree-grid/public_api';
+import { IgxColumnComponent, ITreeGridRecord } from '../tree-grid/public_api';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
+import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 
 export interface IGridDataBindable {
     data: any[] | null;
@@ -30,6 +31,7 @@ export interface GridType extends IGridDataBindable {
     id: string;
     renderedRowHeight: number;
     summaryPipeTrigger: number;
+    draggedColumn: IgxColumnComponent;
 
     filterMode: FilterMode;
 
@@ -81,9 +83,12 @@ export interface GridType extends IGridDataBindable {
  * An interface describing a Flat Grid type
  */
 export interface FlatGridType extends GridType {
+    groupingExpansionState: IGroupByExpandState[];
     groupingExpressions: IGroupingExpression[];
     groupingExpressionsChange: EventEmitter<IGroupingExpression[]>;
     toggleGroup(groupRow: IGroupByRecord): void;
+    clearGrouping(field: string): void;
+    groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void;
 }
 
 /**
