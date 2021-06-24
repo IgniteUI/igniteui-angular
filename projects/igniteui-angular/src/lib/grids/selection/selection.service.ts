@@ -746,3 +746,4 @@ export class IgxGridSelectionService {
 
 export const isChromium = (): boolean => (/Chrom|e?ium/g.test(navigator.userAgent) ||
     /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
+export const isFireFox = (): boolean => (/Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent));

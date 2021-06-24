@@ -85,7 +85,8 @@ import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import {
     IgxGridSelectionService,
     GridSelectionRange,
-    isChromium
+    isChromium,
+    isFireFox
 } from './selection/selection.service';
 import {
     IgxRow,
@@ -6523,7 +6524,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
             this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!isChromium()) {
+        if (!isChromium() && !isFireFox()) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             res = this.checkContainerSizeChange();
