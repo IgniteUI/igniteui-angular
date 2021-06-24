@@ -5,6 +5,16 @@ All notable changes for each version of this project will be documented in this 
 ## 12.1.0
 
 ### New Features
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
+
+    ```html
+    <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-pinning [overlaySettings]="overlaySettingsGlobal"></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
+    </igx-grid-toolbar-actions>
+    ```
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
 - `IgxPaginatorComponent`
     - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
     ```html

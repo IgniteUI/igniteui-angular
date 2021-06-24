@@ -5863,7 +5863,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Opens the advanced filtering dialog.
      */
-    public openAdvancedFilteringDialog() {
+    public openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+        const settings = overlaySettings ? overlaySettings : this._advancedFilteringOverlaySettings;
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
@@ -5871,12 +5872,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                this._advancedFilteringOverlaySettings,
+                settings,
                 {
                     injector: this.viewRef.injector,
                     componentFactoryResolver: this.resolver
                 });
-            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+            this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
 
