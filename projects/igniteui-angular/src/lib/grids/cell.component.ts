@@ -972,7 +972,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (editableCell) {
                 if (this.intRow.addRow) {
                     this.gridAPI.update_add_cell(editableCell, editableCell.editValue, event);
-                    this.intRow.rowData = editableCell.rowData;
                 } else {
                     this.gridAPI.update_cell(editableCell, editableCell.editValue, event);
                 }
@@ -1002,7 +1001,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         if (editableCell && crud.sameRow(this.cellID.rowID)) {
             if (this.intRow.addRow) {
                 this.gridAPI.submit_add_value(event);
-                this.intRow.rowData = editableCell.rowData;
             } else {
                 this.gridAPI.submit_value(event);
             }
