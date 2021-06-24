@@ -405,6 +405,11 @@ export class AppComponent implements OnInit {
             name: 'Progress Indicators'
         },
         {
+            link: '/pagination',
+            icon: 'menu',
+            name: 'Paginator'
+        },
+        {
             link: '/radio',
             icon: 'radio_button_checked',
             name: 'Radio Group'
