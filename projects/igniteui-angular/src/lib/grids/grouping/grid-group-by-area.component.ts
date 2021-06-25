@@ -37,8 +37,7 @@ export class IgxGridGroupByAreaComponent extends IgxGroupByAreaDirective {
         const { chipsArray, originalEvent } = event;
         const newExpressions = this.getReorderedExpressions(chipsArray);
 
-        // TODO Not sure if we need to reset the expansion states here
-        // this.grid.groupingExpansionState = [];
+        this.grid.groupingExpansionState = [];
         this.expressions = newExpressions;
 
         // When reordered using keyboard navigation, we don't have `onMoveEnd` event.
