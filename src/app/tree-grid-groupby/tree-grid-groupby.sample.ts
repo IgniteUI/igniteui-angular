@@ -43,14 +43,14 @@ export class TreeGridGroupBySampleComponent implements OnInit {
         this.columns = [
             { dataType: 'string', field: 'ID', width: 100, hidden: true },
             { dataType: 'string', field: 'CompanyName', width: 200, groupable: true },
+            { dataType: 'date', field: 'DateCreated', width: 150, groupable: true },
             { dataType: 'number', field: 'Employees', width: 150 },
             { dataType: 'string', field: 'ContactTitle', width: 200, groupable: true },
             { dataType: 'string', field: 'Address', width: 300, groupable: true },
             { dataType: 'string', field: 'Country', width: 150, groupable: true },
             { dataType: 'string', field: 'City', width: 150, groupable: true },
             { dataType: 'string', field: 'PostalCode', width: 150, groupable: true },
-            { dataType: 'string', field: 'Phone', width: 150, groupable: true },
-            { dataType: 'string', field: 'Fax', width: 150, groupable: true }
+            { dataType: 'string', field: 'Phone', width: 150, groupable: true }
         ];
         this.data = SAMPLE_DATA.slice(0);
     }
