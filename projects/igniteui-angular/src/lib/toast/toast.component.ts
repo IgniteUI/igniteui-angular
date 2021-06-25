@@ -24,6 +24,7 @@ import {
 } from '../services/public_api';
 import { mkenum } from '../core/utils';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 let NEXT_ID = 0;
 
@@ -103,7 +104,7 @@ export class IgxToastComponent extends IgxNotificationsDirective
      * @hidden
      */
     @Output()
-    public isVisibleChange = new EventEmitter<boolean>();
+    public isVisibleChange = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Sets/gets the position of the toast.
@@ -173,11 +174,13 @@ export class IgxToastComponent extends IgxNotificationsDirective
      */
     public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.isVisibleChange.emit(true);
+            const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.isVisibleChange.emit(openedEventArgs);
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.isVisibleChange.emit(false);
+            const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.isVisibleChange.emit(closedEventArgs);
         });
     }
 }

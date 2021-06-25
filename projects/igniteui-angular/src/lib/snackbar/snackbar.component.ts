@@ -14,6 +14,7 @@ import { slideInBottom, slideOutBottom } from '../animations/main';
 import { ContainerPositionStrategy, GlobalPositionStrategy, HorizontalAlignment,
     OverlaySettings, PositionSettings, VerticalAlignment } from '../services/public_api';
 import { IgxNotificationsDirective } from '../directives/notification/notifications.directive';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 let NEXT_ID = 0;
 /**
@@ -84,21 +85,21 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
 
     /**
      * An event that will be emitted when the snackbar animation starts.
-     * Provides reference to the `AnimationEvent` interface as an argument.
+     * Provides reference to the `ToggleViewEventArgs` interface as an argument.
      * ```html
      * <igx-snackbar (animationStarted) = "animationStarted($event)"></igx-snackbar>
      * ```
      */
-    @Output() public animationStarted = new EventEmitter<boolean>();
+    @Output() public animationStarted = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * An event that will be emitted when the snackbar animation ends.
-     * Provides reference to the `AnimationEvent` interface as an argument.
+     * Provides reference to the `ToggleViewEventArgs` interface as an argument.
      * ```html
      * <igx-snackbar (animationDone) = "animationDone($event)"></igx-snackbar>
      * ```
      */
-    @Output() public animationDone = new EventEmitter<boolean>();
+    @Output() public animationDone = new EventEmitter<ToggleViewEventArgs>();
 
     /**
      * Shows the snackbar and hides it after the `displayTime` is over if `autoHide` is set to `true`.
@@ -150,11 +151,13 @@ export class IgxSnackbarComponent extends IgxNotificationsDirective
      */
     public ngOnInit() {
         this.onOpened.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.animationStarted.emit(true);
+            const openedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.animationStarted.emit(openedEventArgs);
         });
 
         this.onClosed.pipe(takeUntil(this.d$)).subscribe(() => {
-            this.animationDone.emit(true);
+            const closedEventArgs: ToggleViewEventArgs = { owner: this, id: this._overlayId };
+            this.animationDone.emit(closedEventArgs);
         });
     }
 }
