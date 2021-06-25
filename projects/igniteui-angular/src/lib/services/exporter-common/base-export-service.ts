@@ -349,12 +349,12 @@ export abstract class IgxBaseExporter {
 
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
-            const columns = record.owner === undefined ?
-                this._ownersMap.get(DEFAULT_OWNER).columns
-                    .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
-                    .sort((a, b) => a.startIndex - b.startIndex)
-                    .sort((a, b) => a.pinnedIndex - b.pinnedIndex) :
-                this._ownersMap.get(record.owner).columns;
+            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+
+            const columns = this._ownersMap.get(owner).columns
+                .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
+                .sort((a, b) => a.startIndex - b.startIndex)
+                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
             record.data = columns.reduce((a, e) => {
                 if (!e.skip) {
@@ -596,7 +596,9 @@ export abstract class IgxBaseExporter {
         childData: any[], expansionStateVal: boolean, grid: IgxHierarchicalGridComponent) {
         const islandColumnList = island.childColumns.toArray();
         const columnList = this.getColumns(islandColumnList);
-        const columnHeader = columnList.columns.map(col => col.header ? col.header : col.field);
+        const columnHeader = columnList.columns
+            .filter(col => col.headerType === HeaderType.ColumnHeader)
+            .map(col => col.header ? col.header : col.field);
 
         const headerRecord: IExportRecord = {
             data: columnHeader,
@@ -922,7 +924,8 @@ export abstract class IgxBaseExporter {
         this._sort = null;
         this.flatRecords = [];
         this.options = {} as IgxExporterOptionsBase;
-        this._ownersMap.clear();
+        // this._ownersMap.clear();
+        // TODO should be called on exportDataImplementation done
     }
 
     protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;

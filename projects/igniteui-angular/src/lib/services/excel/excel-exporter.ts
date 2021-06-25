@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType, IColumnList } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -84,7 +84,6 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         let indexOfLastPinnedColumn;
         let defaultOwner;
 
-
         const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
             isHierarchicalGrid ?
                 data.some(d =>  Object.keys(d.data).length > EXCEL_MAX_COLS) :
@@ -125,7 +124,8 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
 
         const worksheetData =
-            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths, defaultOwner);
+            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn,
+                columnWidths, defaultOwner, this._ownersMap);
 
         this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
 

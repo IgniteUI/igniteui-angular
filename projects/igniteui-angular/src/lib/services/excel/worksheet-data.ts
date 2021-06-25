@@ -16,7 +16,8 @@ export class WorksheetData {
                 public rootKeys: string[],
                 public indexOfLastPinnedColumn: number,
                 public columnWidths: number[],
-                public owner: IColumnList) {
+                public owner: IColumnList,
+                public owners: Map<any, IColumnList>) {
             this.initializeData();
     }
 
