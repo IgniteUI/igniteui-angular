@@ -35,7 +35,7 @@
         <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.field" [pinned]="c.pinned"
             [movable]="c.movable" [groupable]="true" [resizable]="c.resizable" [width]="c.width"
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden" [hasSummary]="c.summary"
-            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
+            [minWidth]="c.minWidth" [maxWidth]="c.maxWidth" [dataType]="c.dataType">
         </igx-column>
     </igx-tree-grid>
 </div>
