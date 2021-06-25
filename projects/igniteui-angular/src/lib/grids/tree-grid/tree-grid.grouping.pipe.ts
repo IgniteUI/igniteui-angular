@@ -2,13 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { cloneArray } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { GridBaseAPIService } from '../api.service';
-import { GridType } from '../common/grid.interface';
-import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ISortingExpression } from './../../data-operations/sorting-expression.interface';
-import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxTreeGridComponent } from './tree-grid.component';
-import { ITreeGridRecord } from './tree-grid.interfaces';
 
 /** @hidden */
 class GroupByRecord {
@@ -34,8 +29,8 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                      groupKey: string,
                      primaryKey: string,
                      childDataKey: string,
-                     aggregations?: ITreeGridAggregation[],
-                     grid?: IgxTreeGridComponent
+                     grid: IgxTreeGridComponent,
+                     aggregations?: ITreeGridAggregation[]
                     //   _: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
