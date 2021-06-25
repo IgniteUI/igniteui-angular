@@ -1,14 +1,5 @@
-import {
-    Component,
-    ChangeDetectorRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    ContentChild,
-    AfterContentInit,
-    ElementRef
-} from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output,
+    ContentChild, AfterContentInit, ElementRef } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
