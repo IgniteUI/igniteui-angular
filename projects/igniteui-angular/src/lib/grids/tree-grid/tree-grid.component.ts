@@ -720,13 +720,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
-    /**
-     * @hidden @internal
-     */
-    public get groupAreaHostClass(): string {
-        return this.getComponentDensityClass('igx-drop-area');
-    }
-
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }

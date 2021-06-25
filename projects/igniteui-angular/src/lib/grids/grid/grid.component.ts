@@ -158,12 +158,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
-    public defaultDropAreaTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
     @ViewChild('groupArea')
     public groupArea: IgxGridGroupByAreaComponent;
 
@@ -572,13 +566,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
-     * @hidden @internal
-     */
-    public get groupAreaHostClass(): string {
-        return this.getComponentDensityClass('igx-drop-area');
-    }
-
-    /**
      * Gets/Sets the template reference for the group row.
      *
      * @example
@@ -965,9 +952,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     col.hidden = false;
                 });
             }
-        }
-        if (this.groupArea && this.dropAreaTemplate && this.groupArea.dropAreaTemplate !== this.dropAreaTemplate) {
-            this.groupArea.dropAreaTemplate = this.dropAreaTemplate;
         }
         super.ngDoCheck();
     }

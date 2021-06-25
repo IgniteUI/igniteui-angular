@@ -238,6 +238,5 @@ export class IgxGridHeaderComponent implements DoCheck, OnDestroy {
             fieldName: this.column.field, dir: this.sortDirection, ignoreCase: this.column.sortingIgnoreCase,
             strategy: this.column.sortStrategy
         });
-        this.cdr.markForCheck();
     }
 }
