@@ -48,8 +48,8 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                      groupKey: string,
                      primaryKey: string,
                      childDataKey: string,
-                     aggregations?: ITreeGridAggregation[],
-                     grid?: IgxTreeGridComponent
+                     grid: IgxTreeGridComponent,
+                     aggregations?: ITreeGridAggregation[]
                     //   _: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
