@@ -94,7 +94,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForOf: any[];
+    public igxForOf: any[] | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
