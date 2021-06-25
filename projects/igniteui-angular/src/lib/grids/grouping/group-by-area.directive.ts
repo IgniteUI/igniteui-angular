@@ -73,6 +73,7 @@ export abstract class IgxGroupByAreaDirective {
     public set expressions(value: IGroupingExpression[]) {
         this._expressions = value;
         this.chipExpressions = this._expressions;
+        this.expressionsChanged();
         this.expressionsChange.emit(this._expressions);
     }
 
@@ -174,6 +175,9 @@ export abstract class IgxGroupByAreaDirective {
         const expr = this.grid.sortingExpressions.find(e => e.fieldName === id);
         expr.dir = 3 - expr.dir;
         this.grid.sort(expr);
+    }
+
+    protected expressionsChanged() {
     }
 
     public abstract handleReorder(event: IChipsAreaReorderEventArgs);

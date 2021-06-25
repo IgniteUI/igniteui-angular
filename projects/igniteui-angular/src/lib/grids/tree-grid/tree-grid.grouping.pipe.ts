@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { cloneArray } from '../../core/utils';
 import { DataUtil, GridColumnDataType } from '../../data-operations/data-util';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { GridBaseAPIService } from '../api.service';
@@ -6,6 +7,7 @@ import { GridType } from '../common/grid.interface';
 import { IgxGridBaseDirective } from '../grid-base.directive';
 import { ISortingExpression } from './../../data-operations/sorting-expression.interface';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
+import { IgxTreeGridComponent } from './tree-grid.component';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 
 /** @hidden */
@@ -22,25 +24,25 @@ export class ITreeGridAggregation {
 
 /** @hidden */
 @Pipe({
-    name: 'treeGridGrouping',
-    pure: false
+    name: 'treeGridGrouping'
 })
 export class IgxTreeGridGroupingPipe implements PipeTransform {
-    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) {
-        this.gridAPI = gridAPI as IgxTreeGridAPIService;
-    }
+    private grid: IgxTreeGridComponent;
 
-    public transform(collection: ITreeGridRecord[],
+    public transform(collection: any[],
                      groupingExpressions: IGroupingExpression[],
                      groupKey: string,
                      primaryKey: string,
                      childDataKey: string,
-                     aggregations?: ITreeGridAggregation[]
+                     aggregations?: ITreeGridAggregation[],
+                     grid?: IgxTreeGridComponent
                     //   _: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
             return collection;
         }
+
+        this.grid = grid;
 
         const sortingExpressions: ISortingExpression[] = [];
         groupingExpressions.forEach(expr => {
@@ -51,10 +53,10 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
                 strategy: expr.strategy
             });
         });
-        DataUtil.sort(collection, sortingExpressions);
+        const sortedCollection = DataUtil.sort(cloneArray(collection), sortingExpressions, this.grid.sortStrategy, this.grid);
 
         const result = [];
-        const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
+        const groupedRecords = this.groupByMultiple(sortedCollection, groupingExpressions);
         this.flattenGrouping(groupedRecords, groupKey, primaryKey,
             childDataKey, '', result, aggregations);
 
@@ -104,14 +106,14 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
     }
 
     private groupBy(array: any[], groupingExpression: IGroupingExpression): GroupByRecord[] {
-        // TODO this.gridAPI.grid is undefined
-        // const column = this.gridAPI.get_column_by_name(groupingExpression.fieldName);
-        const isDate = false; // column?.dataType === GridColumnDataType.Date || column?.dataType === GridColumnDataType.DateTime;
-        const isTime = false; // column?.dataType === GridColumnDataType.Time;
+        const column = this.grid?.getColumnByName(groupingExpression.fieldName);
+        const isDateTime = column?.dataType === GridColumnDataType.Date ||
+            column?.dataType === GridColumnDataType.DateTime ||
+            column?.dataType === GridColumnDataType.Time;
         const map: Map<any, GroupByRecord> = new Map<any, GroupByRecord>();
         for (const record of array) {
-            const key = isDate || isTime
-                ? this.gridAPI.grid.datePipe.transform(record[groupingExpression.fieldName])
+            const key = isDateTime
+                ? this.grid.datePipe.transform(record[groupingExpression.fieldName])
                 : record[groupingExpression.fieldName];
 
             let groupByRecord: GroupByRecord;

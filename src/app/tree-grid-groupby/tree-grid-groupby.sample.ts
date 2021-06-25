@@ -24,7 +24,7 @@ export class TreeGridGroupBySampleComponent implements OnInit {
         { fieldName: 'Country', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
     ];
     public groupKey = 'Groups';
-    public primaryKey = 'Groups';
+    public primaryKey = 'ID';
     public childDataKey = 'ChildCompanies';
 
     public employeeAggregations: ITreeGridAggregation[] = [{

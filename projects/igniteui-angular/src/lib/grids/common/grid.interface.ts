@@ -32,6 +32,7 @@ export interface GridType extends IGridDataBindable {
     renderedRowHeight: number;
     summaryPipeTrigger: number;
     draggedColumn: IgxColumnComponent;
+    hasColumnLayouts: boolean;
 
     filterMode: FilterMode;
 

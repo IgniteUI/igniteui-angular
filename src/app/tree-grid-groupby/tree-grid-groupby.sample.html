@@ -1,14 +1,14 @@
 <div class="sample-column">
     <div class="density-chooser">
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
+        <igx-switch *ngIf="groupArea" [(ngModel)]="groupArea.hideGroupedColumns">Hide Grouped Columns</igx-switch>
     </div>
 
     <igx-tree-grid #grid1
-        [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey:employeeAggregations"
+        [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey:employeeAggregations:grid1"
         selectionType='multi'
         [primaryKey]="primaryKey"
         [childDataKey]="childDataKey"
-        [expansionDepth]="1"
         [rowSelection]="selectionMode"
         [paging]="false"
         [displayDensity]="density"
@@ -23,9 +23,10 @@
         </igx-grid-toolbar> -->
 
         <igx-tree-grid-group-by-area
+            #groupArea
             [grid]='grid1'
             [(expressions)]='groupingExpressions'
-            [hideGroupedColumns]='false'
+            [hideGroupedColumns]='true'
         >
         </igx-tree-grid-group-by-area>
 
