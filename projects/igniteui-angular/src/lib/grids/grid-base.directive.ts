@@ -153,6 +153,7 @@ import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
+import { IgxGridGroupByAreaComponent } from './group-by-area/group-by-area.component';
 
 let FAKE_ROW_ID = -1;
 
@@ -1076,8 +1077,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.theadRow.filterRow;
     }
 
+    /** @hidden @internal */
     @ViewChild(IgxGridHeaderRowComponent, { static: true })
     public theadRow: IgxGridHeaderRowComponent;
+
+    /** @hidden @internal */
+    @ViewChild(IgxGridGroupByAreaComponent)
+    public groupByArea: IgxGridGroupByAreaComponent;
 
     /**
      * @hidden @internal
@@ -2913,6 +2919,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
+
+    private readonly DRAG_SCROLL_DELTA = 10;
 
     /**
      * @hidden @internal
@@ -5354,13 +5362,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public dragScroll(delta: { left: number; top: number }): void {
-        const scrollDelta = 10;
         const horizontal = this.headerContainer.getScroll();
         const vertical = this.verticalScrollContainer.getScroll();
         const { left, top } = delta;
 
-        horizontal.scrollLeft += left * scrollDelta;
-        vertical.scrollTop += top * scrollDelta;
+        horizontal.scrollLeft += left * this.DRAG_SCROLL_DELTA;
+        vertical.scrollTop += top * this.DRAG_SCROLL_DELTA;
     }
 
     /**

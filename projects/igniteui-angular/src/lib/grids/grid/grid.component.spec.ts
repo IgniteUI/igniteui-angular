@@ -1693,7 +1693,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
-            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid-thead').querySelector('.igx-grid__cbx-selection');
+            const rowSelectorHeader = grid.theadRow.nativeElement.querySelector('.igx-grid__cbx-selection') as HTMLElement;
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -2186,10 +2186,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
@@ -2209,11 +2209,11 @@ describe('IgxGrid Component Tests #grid', () => {
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - grid.footer.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2247,10 +2247,10 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid-thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);

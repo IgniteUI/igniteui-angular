@@ -54,6 +54,7 @@ import { IgxInputGroupComponent } from '../../input-group/public_api';
 const DEBOUNCETIME = 30;
 const FILTER_UI_ROW = 'igx-grid-filtering-row';
 const FILTER_UI_CELL = 'igx-grid-filtering-cell';
+const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
 describe('IgxGrid - Filtering Row UI actions #grid', () => {
     configureTestSuite((() => {
@@ -1251,7 +1252,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
         }));
 
         it('Should size grid correctly if enable/disable filtering in run time.', fakeAsync(() => {
-            const head = grid.nativeElement.querySelector('.igx-grid-thead');
+            const head = grid.theadRow.nativeElement;
             const body = grid.nativeElement.querySelector('.igx-grid__tbody');
 
             expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);
@@ -2001,8 +2002,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             expect(filterUIRow).toBeNull('filterRow is visible');
 
             // Verify the ESF icons are visible.
-            const gridNativeElement = fix.debugElement.query(By.css('igx-grid')).nativeElement;
-            const thead = gridNativeElement.querySelector('.igx-grid-thead__wrapper');
+            const thead = grid.theadRow.nativeElement;
             const filterIcons = thead.querySelectorAll('.igx-excel-filter__icon');
             expect(filterIcons.length).toEqual(6, 'incorrect esf filter icons count');
 
@@ -2399,7 +2399,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const headerResArea = headers[1].children[2].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
@@ -2441,7 +2441,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
 
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 100, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 100, 5);
@@ -2490,7 +2490,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             const headerResArea = headers[2].children[2].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);
@@ -2583,10 +2583,10 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
                 fix.detectChanges();
 
                 // check if it is positioned at the bottom of the thead.
-                const thead = fix.debugElement.query(By.css('.igx-grid-thead__wrapper')).nativeElement;
+                const theadWrapper = grid.theadRow.nativeElement.firstElementChild;
                 const filteringRow = fix.debugElement.query(By.directive(IgxGridFilteringRowComponent));
                 const frElem = filteringRow.nativeElement;
-                expect(frElem.offsetTop + frElem.clientHeight).toEqual(thead.clientHeight);
+                expect(frElem.offsetTop + frElem.clientHeight).toEqual(theadWrapper.clientHeight);
 
                 GridFunctions.closeFilterRow(fix);
 
@@ -2600,7 +2600,7 @@ describe('IgxGrid - Filtering Row UI actions #grid', () => {
             }));
 
         it('Should size grid correctly if enable/disable filtering in run time - MCH.', fakeAsync(() => {
-            const head = grid.nativeElement.querySelector('.igx-grid-thead');
+            const head = grid.theadRow.nativeElement;
             const body = grid.nativeElement.querySelector('.igx-grid__tbody');
 
             expect(head.getBoundingClientRect().bottom).toEqual(body.getBoundingClientRect().top);

@@ -20,12 +20,12 @@ import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-fun
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
-import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
+    const GRID_RESIZE_CLASS = '.igx-grid-th__resize-line';
     const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
     const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
     const DISABLED_CHIP = 'igx-chip--disabled';
@@ -1884,7 +1884,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         UIInteractions.simulateMouseEvent('mousedown', headerResArea, 200, 5);
         tick(200);
-        const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
+        const resizer = fix.debugElement.queryAll(By.css(GRID_RESIZE_CLASS))[0].nativeElement;
         expect(resizer).toBeDefined();
         UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 5);
         UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 5);
@@ -2170,23 +2170,22 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.componentInstance.enableSorting = true;
         tick();
         fix.detectChanges();
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
-
         grid.groupBy({
             fieldName: 'ProductName', dir: SortingDirection.Asc, ignoreCase: false
         });
         fix.detectChanges();
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(1);
+        expect(grid.groupArea).toBeDefined();
     }));
 
     it('should apply group area if a column is groupable.', fakeAsync(() => {
         const fix = TestBed.createComponent(GroupableGridComponent);
+        const grid = fix.componentInstance.instance;
         tick();
         fix.detectChanges();
         const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is rendered
-        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(1);
+        expect(grid.groupArea).toBeDefined();
         expect(gridElement.clientHeight).toEqual(700);
     }));
 
@@ -2864,9 +2863,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         tick();
         const grid = fix.componentInstance.instance;
         fix.detectChanges();
-        const groupArea = fix.debugElement.query(By.css('.igx-grid-grouparea'));
-        const gridHeader = fix.debugElement.query(By.css('.igx-grid-thead'));
-        const gridFooter = fix.debugElement.query(By.css('.igx-grid__tfoot'));
+        const groupArea = grid.groupArea;
+        const gridHeader = grid.theadRow;
+        const gridFooter = grid.tfoot;
         const gridScroll = fix.debugElement.query(By.css('.igx-grid__scroll'));
 
         let expectedHeight = parseInt(window.getComputedStyle(grid.nativeElement).height, 10)
@@ -3251,9 +3250,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait(30);
         fix.detectChanges();
 
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(0);
+        expect(grid.groupArea).not.toBeDefined();
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {
@@ -3302,9 +3300,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         await wait(30);
         fix.detectChanges();
 
-        const gridElement: HTMLElement = fix.nativeElement.querySelector('.igx-grid');
         // verify group area is not rendered
-        expect(gridElement.querySelectorAll('.igx-grid-grouparea').length).toEqual(0);
+        expect(grid.groupArea).not.toBeDefined();
     }));
 
     it('should add title attribute to chips when column is grouped', fakeAsync(/** height/width setter rAF */() => {

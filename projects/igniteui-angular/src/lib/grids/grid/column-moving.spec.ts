@@ -23,6 +23,7 @@ describe('IgxGrid - Column Moving #grid', () => {
     const CELL_CSS_CLASS = '.igx-grid__td';
     const COLUMN_HEADER_CLASS = '.igx-grid-th';
     const COLUMN_GROUP_HEADER_CLASS = '.igx-grid-thead__title';
+    const COLUMN_RESIZE_CLASS = '.igx-grid-th__resize-line';
 
     let fixture; let grid: IgxGridComponent;
     configureTestSuite((() => {
@@ -374,7 +375,7 @@ describe('IgxGrid - Column Moving #grid', () => {
             await wait(250);
             fixture.detectChanges();
 
-            const resizer = fixture.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
+            const resizer = fixture.debugElement.queryAll(By.css(COLUMN_RESIZE_CLASS))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 300, 5);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 300, 5);

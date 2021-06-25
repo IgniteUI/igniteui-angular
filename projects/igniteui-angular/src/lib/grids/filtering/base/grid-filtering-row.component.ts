@@ -172,6 +172,10 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+
+    /** switch to icon buttons when width is below 432px */
+    private readonly NARROW_WIDTH_THRESHOLD = 432;
+
     private $destroyer = new Subject<boolean>();
 
     constructor(
@@ -844,6 +848,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public get isNarrowWidth(): boolean {
-        return this.nativeElement.offsetWidth < 432;
+        return this.nativeElement.offsetWidth < this.NARROW_WIDTH_THRESHOLD;
     }
 }
