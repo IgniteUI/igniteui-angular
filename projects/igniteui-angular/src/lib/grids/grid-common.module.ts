@@ -13,7 +13,7 @@ import {
     IgxRowEditTextDirective,
     IgxRowEditTabStopDirective
 } from './grid.rowEdit.directive';
-import { IgxPaginatorModule } from '../paginator/paginator.component';
+import { IgxPaginatorModule } from '../paginator/public_api';
 import { IgxGridPipesModule } from './common/grid-pipes.module';
 import { IgxGridExcelStyleFilteringModule } from './filtering/excel-style/grid.excel-style-filtering.module';
 import { IgxRowDragModule } from './row-drag.directive';

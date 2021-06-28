@@ -783,9 +783,9 @@ describe('IgxGrid - Column Moving #grid', () => {
             UIInteractions.simulatePointerEvent('pointerdown', header, 350, 50);
             await wait();
             UIInteractions.simulatePointerEvent('pointermove', header, 356, 56);
-            await wait();
+            await wait(50);
             UIInteractions.simulatePointerEvent('pointermove', header, 10, 30);
-            await wait(250);
+            await wait(500);
             fixture.detectChanges();
 
             // step 3 - verify the column being moved can be reordered among new columns
