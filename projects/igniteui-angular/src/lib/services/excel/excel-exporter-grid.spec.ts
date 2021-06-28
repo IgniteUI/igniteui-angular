@@ -787,7 +787,7 @@ describe('Excel Exporter', () => {
         });
     });
 
-    fdescribe('', () => {
+    describe('', () => {
         it('should export hierarchical grid with multi column headers', async () => {
             const fix = TestBed.createComponent(IgxHierarchicalGridMultiColumnHeadersExportComponent);
             fix.detectChanges();
