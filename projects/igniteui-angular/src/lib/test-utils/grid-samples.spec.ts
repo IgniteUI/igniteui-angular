@@ -1001,10 +1001,11 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="grid.paging"></igx-paginator>')}`,
+        ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>')}`,
 })
 export class SelectionWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
+    public paging = false;
 }
 
 @Component({
