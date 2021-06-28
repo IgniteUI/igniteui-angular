@@ -152,6 +152,7 @@ import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const components = [
     AccordionSampleComponent,
@@ -191,6 +192,7 @@ const components = [
     OverlayAnimationSampleComponent,
     OverlayPresetsSampleComponent,
     PageHeaderComponent,
+    PaginationSampleComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
     SelectSampleComponent,

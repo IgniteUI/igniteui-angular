@@ -19,7 +19,7 @@ const verifyGridPager = (fix, rowsCount, firstCellValue, pagerText, buttonsVisib
     if (pagerText != null) {
         expect(grid.nativeElement.querySelector(PAGER_CLASS)).toBeDefined();
         expect(grid.nativeElement.querySelectorAll('igx-select').length).toEqual(1);
-        expect(grid.nativeElement.querySelector('.igx-paginator__pager > div').textContent).toMatch(pagerText);
+        expect(grid.nativeElement.querySelector('.igx-page-nav__text').textContent).toMatch(pagerText);
     }
     if (buttonsVisibility != null && buttonsVisibility.length === 4) {
         const pagingButtons = GridFunctions.getPagingButtons(grid.nativeElement);

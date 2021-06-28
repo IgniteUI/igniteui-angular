@@ -122,6 +122,7 @@ import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const appRoutes = [
     {
@@ -584,6 +585,9 @@ const appRoutes = [
     {
         path: 'gridEvents',
         component: GridEventsComponent
+    },{
+        path: 'pagination',
+        component: PaginationSampleComponent
     }
 ];
 
