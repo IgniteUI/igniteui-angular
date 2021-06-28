@@ -282,8 +282,7 @@ export class WorksheetFile implements IExcelFile {
                         this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
                         if (currentCol.headerType === HeaderType.ColumnHeader) {
-                            // TODO probably we should take into account maxLevel
-                            columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (this.rowIndex + 1);
+                            columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (this.rowIndex + owner.maxLevel);
                         } else {
                             for (let k = 1; k < currentCol.columnSpan; k++) {
                                 columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + this.rowIndex;
