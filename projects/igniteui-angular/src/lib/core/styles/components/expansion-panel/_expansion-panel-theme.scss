@@ -114,10 +114,6 @@
         overflow: hidden;
     }
 
-    %igx-expansion-panel--expanded {
-        margin: 8px 0;
-    }
-
     %igx-expansion-panel__header-title {
         color: --var($theme, 'header-title-color');
         margin-#{$right}: rem(16px, 16px);

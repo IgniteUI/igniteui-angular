@@ -19,7 +19,6 @@ interface IAccordionCancelableEventArgs extends IExpansionPanelCancelableEventAr
 }
 
 let NEXT_ID = 0;
-const EXPANDED_CLASS = 'igx-expansion-panel--expanded';
 
 @Component({
     selector: 'igx-accordion',
@@ -167,12 +166,12 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     }
 
     @ContentChildren(IgxExpansionPanelComponent)
-    private _panels: QueryList<IgxExpansionPanelComponent>;
-    private _animationSettings: ToggleAnimationSettings;
-    private _expandedPanels: Set<IgxExpansionPanelComponent>;
+    private _panels!: QueryList<IgxExpansionPanelComponent>;
+    private _animationSettings!: ToggleAnimationSettings;
+    private _expandedPanels!: Set<IgxExpansionPanelComponent>;
     private _destroy$ = new Subject<void>();
     private _unsubChildren$ = new Subject<void>();
-    private _enabledPanels: IgxExpansionPanelComponent[];
+    private _enabledPanels!: IgxExpansionPanelComponent[];
 
     constructor() { }
 
@@ -182,7 +181,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
 
     public ngAfterViewInit(): void {
         this._expandedPanels = new Set<IgxExpansionPanelComponent>(this._panels.filter(panel => !panel.collapsed));
-        this._expandedPanels.forEach(panel => panel.nativeElement.classList.add(EXPANDED_CLASS));
         this._panels.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
             this.subToChanges();
         });
@@ -300,7 +298,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 if (args.cancel) {
                     return;
                 }
-                args.owner.nativeElement.classList.add(EXPANDED_CLASS);
                 if (this.singleBranchExpand) {
                     this._expandedPanels.forEach(p => {
                         if (!p.header.disabled) {
@@ -320,7 +317,6 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
                 this.panelCollapsed.emit(evArgs);
             });
             panel.contentCollapsing.pipe(takeUntil(this._unsubChildren$)).subscribe((args: IExpansionPanelCancelableEventArgs) => {
-                args.owner.nativeElement.classList.remove(EXPANDED_CLASS);
                 const evArgs: IAccordionCancelableEventArgs = { ...args, owner: this, panel: args.owner };
                 this.panelCollapsing.emit(evArgs);
                 if (evArgs.cancel) {
