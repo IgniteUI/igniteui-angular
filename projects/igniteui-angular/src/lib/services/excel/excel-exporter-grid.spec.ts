@@ -1,5 +1,4 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
-import { Component, ViewChild } from '@angular/core';
 import { IgxGridModule } from '../../grids/grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/grid.component';
 import { IColumnExportingEventArgs, IRowExportingEventArgs } from '../exporter-common/base-export-service';
@@ -16,7 +15,8 @@ import {
     GridIDNameJobTitleHireDataPerformanceComponent,
     GridHireDateComponent,
     GridExportGroupedDataComponent,
-    MultiColumnHeadersExportComponent
+    MultiColumnHeadersExportComponent,
+    GridWithEmptyColumnsComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -1089,24 +1089,3 @@ describe('Excel Exporter', () => {
         await wrapper.verifyDataFilesContent(expectedData, '', shouldNotExportTable);
     };
 });
-
-@Component({
-    template: `
-    <igx-grid #grid1 [data]="data">
-        <igx-column>
-            <ng-template igxCell>
-                <button>SimpleBtn</button>
-            </ng-template>
-        </igx-column>
-        <igx-column header="" field="ID"></igx-column>
-        <igx-column header="  " field=""></igx-column>
-        <igx-column header="Name" field="Name"></igx-column>
-        <igx-column header="JobTitle" field="JobTitle"></igx-column>
-    </igx-grid>`
-})
-
-export class GridWithEmptyColumnsComponent {
-    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
-
-    public data = SampleTestData.personJobDataFull();
-}
