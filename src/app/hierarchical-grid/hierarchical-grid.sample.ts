@@ -1,354 +1,169 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import {
-    IgxGridComponent
+    IgxRowIslandComponent,
+    IgxHierarchicalGridComponent,
+    IGridCellEventArgs,
+    GridSelectionMode,
+    DisplayDensity,
+    RowType
 } from 'igniteui-angular';
-export const DATA = [
-    // tslint:disable:max-line-length
-    {
-        ID: 'ALFKI',
-        CompanyName: 'Alfreds Futterkiste',
-        ContactName: 'Maria Anders',
-        ContactTitle: 'Sales Representative',
-        Address: 'Obere Str. 57',
-        City: 'Berlin',
-        Region: null,
-        PostalCode: '12209',
-        Country: 'Germany',
-        Phone: '030-0074321',
-        Fax: '030-0076545'
-    }
-    // }, {
-    //     ID: 'ANATR',
-    //     CompanyName: 'Ana Trujillo Emparedados y helados',
-    //     ContactName: 'Ana Trujillo',
-    //     ContactTitle: 'Owner',
-    //     Address: 'Avda. de la Constitución 2222',
-    //     City: 'México D.F.',
-    //     Region: null,
-    //     PostalCode: '05021',
-    //     Country: 'Mexico',
-    //     Phone: '(5) 555-4729',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'ANTON',
-    //     CompanyName: 'Antonio Moreno Taquería',
-    //     ContactName: 'Antonio Moreno',
-    //     ContactTitle: 'Owner',
-    //     Address: 'Mataderos 2312',
-    //     City: 'México D.F.',
-    //     Region: null,
-    //     PostalCode: '05023',
-    //     Country: 'Mexico',
-    //     Phone: '(5) 555-3932',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'AROUT',
-    //     CompanyName: 'Around the Horn',
-    //     ContactName: 'Thomas Hardy',
-    //     ContactTitle: 'Sales Representative',
-    //     Address: '120 Hanover Sq.',
-    //     City: 'London',
-    //     Region: null,
-    //     PostalCode: 'WA1 1DP',
-    //     Country: 'UK',
-    //     Phone: '(171) 555-7788',
-    //     Fax: '(171) 555-6750'
-    // }, {
-    //     ID: 'BERGS',
-    //     CompanyName: 'Berglunds snabbköp',
-    //     ContactName: 'Christina Berglund',
-    //     ContactTitle: 'Order Administrator',
-    //     Address: 'Berguvsvägen 8',
-    //     City: 'Luleå',
-    //     Region: null,
-    //     PostalCode: 'S-958 22',
-    //     Country: 'Sweden',
-    //     Phone: '0921-12 34 65',
-    //     Fax: '0921-12 34 67'
-    // }, {
-    //     ID: 'BLAUS',
-    //     CompanyName: 'Blauer See Delikatessen',
-    //     ContactName: 'Hanna Moos',
-    //     ContactTitle: 'Sales Representative',
-    //     Address: 'Forsterstr. 57',
-    //     City: 'Mannheim',
-    //     Region: null,
-    //     PostalCode: '68306',
-    //     Country: 'Germany',
-    //     Phone: '0621-08460',
-    //     Fax: '0621-08924'
-    // }, {
-    //     ID: 'BLONP',
-    //     CompanyName: 'Blondesddsl père et fils',
-    //     ContactName: 'Frédérique Citeaux',
-    //     ContactTitle: 'Marketing Manager',
-    //     Address: '24, place Kléber',
-    //     City: 'Strasbourg',
-    //     Region: null,
-    //     PostalCode: '67000',
-    //     Country: 'France',
-    //     Phone: '88.60.15.31',
-    //     Fax: '88.60.15.32'
-    // }, {
-    //     ID: 'BOLID',
-    //     CompanyName: 'Bólido Comidas preparadas',
-    //     ContactName: 'Martín Sommer',
-    //     ContactTitle: 'Owner',
-    //     Address: 'C/ Araquil, 67',
-    //     City: 'Madrid',
-    //     Region: null,
-    //     PostalCode: '28023',
-    //     Country: 'Spain',
-    //     Phone: '(91) 555 22 82',
-    //     Fax: '(91) 555 91 99'
-    // }, {
-    //     ID: 'BONAP',
-    //     CompanyName: 'Bon app\'',
-    //     ContactName: 'Laurence Lebihan',
-    //     ContactTitle: 'Owner',
-    //     Address: '12, rue des Bouchers',
-    //     City: 'Marseille',
-    //     Region: null,
-    //     PostalCode: '13008',
-    //     Country: 'France',
-    //     Phone: '91.24.45.40',
-    //     Fax: '91.24.45.41'
-    // }, {
-    //     ID: 'BOTTM',
-    //     CompanyName: 'Bottom-Dollar Markets',
-    //     ContactName: 'Elizabeth Lincoln',
-    //     ContactTitle: 'Accounting Manager',
-    //     Address: '23 Tsawassen Blvd.',
-    //     City: 'Tsawassen',
-    //     Region: 'BC',
-    //     PostalCode: 'T2F 8M4',
-    //     Country: 'Canada',
-    //     Phone: '(604) 555-4729',
-    //     Fax: '(604) 555-3745'
-    // }, {
-    //     ID: 'BSBEV',
-    //     CompanyName: 'B\'s Beverages',
-    //     ContactName: 'Victoria Ashworth',
-    //     ContactTitle: 'Sales Representative',
-    //     Address: 'Fauntleroy Circus',
-    //     City: 'London',
-    //     Region: null,
-    //     PostalCode: 'EC2 5NT',
-    //     Country: 'UK',
-    //     Phone: '(171) 555-1212',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'CACTU',
-    //     CompanyName: 'Cactus Comidas para llevar',
-    //     ContactName: 'Patricio Simpson',
-    //     ContactTitle: 'Sales Agent',
-    //     Address: 'Cerrito 333',
-    //     City: 'Buenos Aires',
-    //     Region: null,
-    //     PostalCode: '1010',
-    //     Country: 'Argentina',
-    //     Phone: '(1) 135-5555',
-    //     Fax: '(1) 135-4892'
-    // }, {
-    //     ID: 'CENTC',
-    //     CompanyName: 'Centro comercial Moctezuma',
-    //     ContactName: 'Francisco Chang',
-    //     ContactTitle: 'Marketing Manager',
-    //     Address: 'Sierras de Granada 9993',
-    //     City: 'México D.F.',
-    //     Region: null,
-    //     PostalCode: '05022',
-    //     Country: 'Mexico',
-    //     Phone: '(5) 555-3392',
-    //     Fax: '(5) 555-7293'
-    // }, {
-    //     ID: 'CHOPS',
-    //     CompanyName: 'Chop-suey Chinese',
-    //     ContactName: 'Yang Wang',
-    //     ContactTitle: 'Owner',
-    //     Address: 'Hauptstr. 29',
-    //     City: 'Bern',
-    //     Region: null,
-    //     PostalCode: '3012',
-    //     Country: 'Switzerland',
-    //     Phone: '0452-076545',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'COMMI',
-    //     CompanyName: 'Comércio Mineiro',
-    //     ContactName: 'Pedro Afonso',
-    //     ContactTitle: 'Sales Associate',
-    //     Address: 'Av. dos Lusíadas, 23',
-    //     City: 'Sao Paulo',
-    //     Region: 'SP',
-    //     PostalCode: '05432-043',
-    //     Country: 'Brazil',
-    //     Phone: '(11) 555-7647',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'CONSH',
-    //     CompanyName: 'Consolidated Holdings',
-    //     ContactName: 'Elizabeth Brown',
-    //     ContactTitle: 'Sales Representative',
-    //     Address: 'Berkeley Gardens 12 Brewery',
-    //     City: 'London',
-    //     Region: null,
-    //     PostalCode: 'WX1 6LT',
-    //     Country: 'UK',
-    //     Phone: '(171) 555-2282',
-    //     Fax: '(171) 555-9199'
-    // }, {
-    //     ID: 'DRACD',
-    //     CompanyName: 'Drachenblut Delikatessen',
-    //     ContactName: 'Sven Ottlieb',
-    //     ContactTitle: 'Order Administrator',
-    //     Address: 'Walserweg 21',
-    //     City: 'Aachen',
-    //     Region: null,
-    //     PostalCode: '52066',
-    //     Country: 'Germany',
-    //     Phone: '0241-039123',
-    //     Fax: '0241-059428'
-    // }, {
-    //     ID: 'DUMON',
-    //     CompanyName: 'Du monde entier',
-    //     ContactName: 'Janine Labrune',
-    //     ContactTitle: 'Owner',
-    //     Address: '67, rue des Cinquante Otages',
-    //     City: 'Nantes',
-    //     Region: null,
-    //     PostalCode: '44000',
-    //     Country: 'France',
-    //     Phone: '40.67.88.88',
-    //     Fax: '40.67.89.89'
-    // }, {
-    //     ID: 'EASTC',
-    //     CompanyName: 'Eastern Connection',
-    //     ContactName: 'Ann Devon',
-    //     ContactTitle: 'Sales Agent',
-    //     Address: '35 King George',
-    //     City: 'London',
-    //     Region: null,
-    //     PostalCode: 'WX3 6FW',
-    //     Country: 'UK',
-    //     Phone: '(171) 555-0297',
-    //     Fax: '(171) 555-3373'
-    // }, {
-    //     ID: 'ERNSH',
-    //     CompanyName: 'Ernst Handel',
-    //     ContactName: 'Roland Mendel',
-    //     ContactTitle: 'Sales Manager',
-    //     Address: 'Kirchgasse 6',
-    //     City: 'Graz',
-    //     Region: null,
-    //     PostalCode: '8010',
-    //     Country: 'Austria',
-    //     Phone: '7675-3425',
-    //     Fax: '7675-3426'
-    // }, {
-    //     ID: 'FAMIA',
-    //     CompanyName: 'Familia Arquibaldo',
-    //     ContactName: 'Aria Cruz',
-    //     ContactTitle: 'Marketing Assistant',
-    //     Address: 'Rua Orós, 92',
-    //     City: 'Sao Paulo',
-    //     Region: 'SP',
-    //     PostalCode: '05442-030',
-    //     Country: 'Brazil',
-    //     Phone: '(11) 555-9857',
-    //     Fax: '(5) 555-3745'
-    // }, {
-    //     ID: 'FISSA',
-    //     CompanyName: 'FISSA Fabrica Inter. Salchichas S.A.',
-    //     ContactName: 'Diego Roel',
-    //     ContactTitle: 'Accounting Manager',
-    //     Address: 'C/ Moralzarzal, 86',
-    //     City: 'Madrid',
-    //     Region: null,
-    //     PostalCode: '28034',
-    //     Country: 'Spain',
-    //     Phone: '(91) 555 94 44',
-    //     Fax: '(91) 555 55 93'
-    // }, {
-    //     ID: 'FOLIG',
-    //     CompanyName: 'Folies gourmandes',
-    //     ContactName: 'Martine Rancé',
-    //     ContactTitle: 'Assistant Sales Agent',
-    //     Address: '184, chaussée de Tournai',
-    //     City: 'Lille',
-    //     Region: null,
-    //     PostalCode: '59000',
-    //     Country: 'France',
-    //     Phone: '20.16.10.16',
-    //     Fax: '20.16.10.17'
-    // }, {
-    //     ID: 'FOLKO',
-    //     CompanyName: 'Folk och fä HB',
-    //     ContactName: 'Maria Larsson',
-    //     ContactTitle: 'Owner',
-    //     Address: 'Åkergatan 24',
-    //     City: 'Bräcke',
-    //     Region: null,
-    //     PostalCode: 'S-844 67',
-    //     Country: 'Sweden',
-    //     Phone: '0695-34 67 21',
-    //     Fax: null
-    // }, {
-    //     ID: 'FRANK',
-    //     CompanyName: 'Frankenversand',
-    //     ContactName: 'Peter Franken',
-    //     ContactTitle: 'Marketing Manager',
-    //     Address: 'Berliner Platz 43',
-    //     City: 'München',
-    //     Region: null,
-    //     PostalCode: '80805',
-    //     Country: 'Germany',
-    //     Phone: '089-0877310',
-    //     Fax: '089-0877451'
-    // }, {
-    //     ID: 'FRANR',
-    //     CompanyName: 'France restauration',
-    //     ContactName: 'Carine Schmitt',
-    //     ContactTitle: 'Marketing Manager',
-    //     Address: '54, rue Royale',
-    //     City: 'Nantes',
-    //     Region: null,
-    //     PostalCode: '44000',
-    //     Country: 'France',
-    //     Phone: '40.32.21.21',
-    //     Fax: '40.32.21.20'
-    // }, {
-    //     ID: 'FRANS',
-    //     CompanyName: 'Franchi S.p.A.',
-    //     ContactName: 'Paolo Accorti',
-    //     ContactTitle: 'Sales Representative',
-    //     Address: 'Via Monte Bianco 34',
-    //     City: 'Torino',
-    //     Region: null,
-    //     PostalCode: '10100',
-    //     Country: 'Italy',
-    //     Phone: '011-4988260',
-    //     Fax: '011-4988261'
-    // }
-];
 
 @Component({
     selector: 'app-hierarchical-grid-sample',
     styleUrls: ['hierarchical-grid.sample.css'],
     templateUrl: 'hierarchical-grid.sample.html'
 })
-export class HierarchicalGridSampleComponent {
-    @ViewChild(IgxGridComponent, { read: IgxGridComponent, static: true })
-    public grid: IgxGridComponent;
-    public data = DATA;
-    public selectionMode = 'none';
-    public pinGroup() {
-        const firstColumnGroup = this.grid.columnList.filter((c) => c.header === 'General Information')[0];
-        firstColumnGroup.pinned = !firstColumnGroup.pinned;
+export class HierarchicalGridSampleComponent implements AfterViewInit {
+    @ViewChild('layout1', { static: true })
+    private layout1: IgxRowIslandComponent;
+
+    @ViewChild('hGrid2', { static: true })
+    private hGrid2: IgxHierarchicalGridComponent;
+
+    public localData = [];
+    public localData1 = [];
+    public data1 = [];
+    public data2 = [];
+    public selectionMode;
+    public firstLevelExpanded = false;
+    public rootExpanded = false;
+    public density: DisplayDensity = 'comfortable';
+    public displayDensities;
+    public riToggle = true;
+    public hgridState = [];
+    public columns;
+    public childColumns;
+
+    constructor(private cdr: ChangeDetectorRef) {
+        this.displayDensities = [
+            { label: 'compact', selected: this.density === 'compact', togglable: true },
+            { label: 'cosy', selected: this.density === 'cosy', togglable: true },
+            { label: 'comfortable', selected: this.density === 'comfortable', togglable: true }
+        ];
+        this.localData = this.generateDataUneven(10, 3);
+        this.data1 = this.localData.slice(0, 10);
+        this.data2 = this.localData.slice(10, 20);
+        this.localData1 = this.data1;
+        this.localData[0].hasChild = false;
+        this.localData[1].hasChild = false;
+        this.localData[2].childData[0].hasChild = false;
+        this.localData[2].childData[1].hasChild = false;
+        this.selectionMode = GridSelectionMode.none;
     }
 
-    public hideGroup() {
-        const firstColumnGroup = this.grid.columnList.filter((c) => c.header === 'General Information')[0];
-        firstColumnGroup.hidden = !firstColumnGroup.hidden;
+    public enableSummary() {
+        const childGrid = this.hGrid2.hgridAPI.getChildGrids(false)[0];
+        this.hGrid2.getColumnByName('ID').hasSummary = true;
+        if (childGrid) {
+            childGrid.getColumnByName('ID').hasSummary = true;
+        }
+    }
+
+    public ngAfterViewInit() {
+        this.cdr.detectChanges();
+    }
+
+    public generateData(count: number, level: number) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            if (level > 0) {
+                children = this.generateData(count / 2, currLevel - 1);
+            }
+            prods.push({
+                ID: i,
+                ChildLevels: currLevel,
+                ProductName: 'Product: A' + i,
+                Col1: i,
+                Col2: i,
+                Col3: i,
+                childData: children,
+                childData2: children
+            });
+        }
+        return prods;
+    }
+
+    public getState() {
+        console.log(this.hgridState);
+    }
+
+    public changeHeaderRI(ri, index) {
+        ri.childColumns.toArray()[index].header = 'New';
+    }
+
+    public generateDataUneven(count: number, level: number, parendID: string = null) {
+        const prods = [];
+        const currLevel = level;
+        let children;
+        for (let i = 0; i < count; i++) {
+            const rowID = parendID ? parendID + i : i.toString();
+            if (level > 0) {
+                // Have child grids for row with even id less rows by not multiplying by 2
+                children = this.generateDataUneven(((i % 2) + 1) * Math.round(count / 3), currLevel - 1, rowID);
+            }
+            prods.push({
+                ID: rowID,
+                ChildLevels: currLevel,
+                ProductName: 'Product: A' + i,
+                Col1: i,
+                Col2: i,
+                Col3: i,
+                childData: children,
+                childData2: i % 2 ? [] : children,
+                hasChild: true
+            });
+        }
+        return prods;
+    }
+
+    public setterChange() {
+        this.layout1.rowSelection = this.layout1.rowSelection === GridSelectionMode.multiple
+         ? GridSelectionMode.none : GridSelectionMode.multiple;
+    }
+
+    public setterBindingChange() {
+        this.selectionMode = this.selectionMode === GridSelectionMode.none ? GridSelectionMode.multiple : GridSelectionMode.none;
+    }
+
+    public toggleRootLevel() {
+        this.rootExpanded = !this.rootExpanded;
+    }
+
+    public toggleFirstIsland() {
+        this.firstLevelExpanded = !this.firstLevelExpanded;
+    }
+
+    public testApis() {}
+
+    public selectDensity(event) {
+        this.density = this.displayDensities[event.index].label;
+    }
+
+    public cellClick($evt: IGridCellEventArgs) {
+        console.log('Cell Click', $evt);
+    }
+
+    public LoadMoreColumns() {
+        this.columns = ['Col1', 'Col2', 'Col3'];
+        this.childColumns = ['ChildCol1', 'ChildCol2'];
+    }
+
+    public changeData() {
+        if (this.localData1 === this.data1) {
+            this.localData1 = this.data2;
+        } else {
+            this.localData1 = this.data1;
+        }
+    }
+
+    public togglePining(row: RowType, event) {
+        event.preventDefault();
+        if (row.pinned) {
+            row.unpin();
+        } else {
+            row.pin();
+        }
     }
 }
