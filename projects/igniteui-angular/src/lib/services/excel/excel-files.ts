@@ -64,7 +64,7 @@ export class WorksheetFile implements IExcelFile {
 
     private mergeCellStr = '';
     private mergeCellsCounter = 0;
-    private headersDisplayed = 0;
+    private rowIndex = 0;
 
     public writeElement() {}
 
@@ -85,6 +85,7 @@ export class WorksheetFile implements IExcelFile {
         let sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
+        this.rowIndex = 0;
 
         if (worksheetData.isEmpty) {
             sheetData += '<sheetData/>';
@@ -103,7 +104,8 @@ export class WorksheetFile implements IExcelFile {
             sheetData += `<sheetData>`;
 
             for (let i = 0; i <= owner.maxLevel; i++) {
-                sheetData += `<row r="${i + 1}"${this.rowHeight}>`;
+                this.rowIndex++;
+                sheetData += `<row r="${this.rowIndex}"${this.rowHeight}>`;
 
                 const headersForLevel = hasMultiColumnHeader ?
                     owner.columns
@@ -122,7 +124,7 @@ export class WorksheetFile implements IExcelFile {
                 for (const currentCol of headersForLevel) {
                     if (currentCol.level === i) {
                         let columnCoordinate;
-                        columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (i + 1);
+                        columnCoordinate = ExcelStrings.getExcelColumn(startValue) + this.rowIndex;
                         const columnValue = dictionary.saveValue(currentCol.header, true);
                         sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
 
@@ -134,7 +136,7 @@ export class WorksheetFile implements IExcelFile {
                                 columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (owner.maxLevel + 1);
                             } else {
                                 for (let k = 1; k < currentCol.columnSpan; k++) {
-                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + (i + 1);
+                                    columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + this.rowIndex;
                                     sheetData += `<c r="${columnCoordinate}"${rowStyle} />`;
                                 }
                             }
@@ -233,21 +235,21 @@ export class WorksheetFile implements IExcelFile {
                         const hasMultiColumnHeaders = recordOwner.columns.some(c => c.headerType === HeaderType.MultiColumnHeader);
 
                         if (hasMultiColumnHeaders) {
-                            this.hGridPrintMultiColHeaders(i, worksheetData, rowDataArr, record, recordOwner);
+                            this.hGridPrintMultiColHeaders(worksheetData, rowDataArr, record, recordOwner);
                         }
                     }
 
                     recordHeaders = Object.keys(worksheetData.data[i].data);
                 }
 
-                rowDataArr.push(this.processRow(worksheetData, i + 1, recordHeaders, isHierarchicalGrid));
+                rowDataArr.push(this.processRow(worksheetData, i, recordHeaders, isHierarchicalGrid));
             },
             () => {
                 done(rowDataArr.join(''));
         });
     }
 
-    private hGridPrintMultiColHeaders(i: number, worksheetData: WorksheetData, rowDataArr: any[], record: IExportRecord,
+    private hGridPrintMultiColHeaders(worksheetData: WorksheetData, rowDataArr: any[], record: IExportRecord,
         owner: IColumnList) {
         for (let j = 0; j < owner.maxLevel; j++) {
             const recordLevel = record.level;
@@ -255,9 +257,8 @@ export class WorksheetFile implements IExcelFile {
             this.maxOutlineLevel = this.maxOutlineLevel < recordLevel ? recordLevel : this.maxOutlineLevel;
             const sHidden = record.hidden ? ` hidden="1"` : '';
 
-            const rowLevel = i + j + worksheetData.owner.maxLevel + owner.maxLevel + this.headersDisplayed;
-
-            let row = `<row r="${rowLevel}"${this.rowHeight}${outlineLevel}${sHidden}>`;
+            this.rowIndex++;
+            let row = `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
             const headersForLevel = owner.columns
                 .filter(c => (c.level < j &&
@@ -271,7 +272,7 @@ export class WorksheetFile implements IExcelFile {
                 if (currentCol.level === j) {
                     let columnCoordinate;
                     columnCoordinate =
-                        ExcelStrings.getExcelColumn(startValue) + (rowLevel);
+                        ExcelStrings.getExcelColumn(startValue) + this.rowIndex;
 
                     const columnValue = worksheetData.dataDictionary.saveValue(currentCol.header, true);
                     row += `<c r="${columnCoordinate}" s="3" t="s"><v>${columnValue}</v></c>`;
@@ -281,10 +282,11 @@ export class WorksheetFile implements IExcelFile {
                         this.mergeCellStr += ` <mergeCell ref="${columnCoordinate}:`;
 
                         if (currentCol.headerType === HeaderType.ColumnHeader) {
-                            columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (rowLevel + 1);
+                            // TODO probably we should take into account maxLevel
+                            columnCoordinate = ExcelStrings.getExcelColumn(startValue) + (this.rowIndex + 1);
                         } else {
                             for (let k = 1; k < currentCol.columnSpan; k++) {
-                                columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + rowLevel;
+                                columnCoordinate = ExcelStrings.getExcelColumn(startValue + k) + this.rowIndex;
                                 row += `<c r="${columnCoordinate}" s="3" />`;
                             }
                         }
@@ -298,12 +300,10 @@ export class WorksheetFile implements IExcelFile {
             row += `</row>`;
             rowDataArr.push(row);
         }
-
-        this.headersDisplayed += owner.maxLevel;
     }
 
     private processRow(worksheetData: WorksheetData, i: number, headersForLevel: any[], isHierarchicalGrid: boolean) {
-        const record = worksheetData.data[i - 1];
+        const record = worksheetData.data[i];
 
         const rowData = new Array(worksheetData.columnCount + 2);
 
@@ -313,15 +313,16 @@ export class WorksheetFile implements IExcelFile {
 
         const sHidden = record.hidden ? ` hidden="1"` : '';
 
+        this.rowIndex++;
         rowData[0] =
-            `<row r="${(i + 1 + worksheetData.owner.maxLevel + this.headersDisplayed)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
+            `<row r="${this.rowIndex}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
         const keys = worksheetData.isSpecialData ? [record.data] : headersForLevel;
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
 
-            const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j], this.headersDisplayed);
+            const cellData = this.getCellData(worksheetData, i, col, keys[j]);
 
             rowData[j + 1] = cellData;
         }
@@ -331,11 +332,10 @@ export class WorksheetFile implements IExcelFile {
         return rowData.join('');
     }
 
-    /* eslint-disable  @typescript-eslint/member-ordering */
-    private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string, headersDisplayed: number): string {
+    private getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
-        const columnName = ExcelStrings.getExcelColumn(column) + (row + 1 + worksheetData.owner.maxLevel + headersDisplayed);
-        const fullRow = worksheetData.data[row - 1];
+        const columnName = ExcelStrings.getExcelColumn(column) + (this.rowIndex);
+        const fullRow = worksheetData.data[row];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
 
         const cellValue = worksheetData.isSpecialData ?
@@ -365,7 +365,6 @@ export class WorksheetFile implements IExcelFile {
             return `<c r="${columnName}"${type}${format}><v>${value}</v></c>`;
         }
     }
-    /* eslint-enable  @typescript-eslint/member-ordering */
 }
 
 /**

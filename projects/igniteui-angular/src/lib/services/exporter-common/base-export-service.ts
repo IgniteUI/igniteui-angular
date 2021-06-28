@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { IgxColumnComponent, IgxGridBaseDirective } from '../../grids/public_api';
+import { IgxGridBaseDirective } from '../../grids/public_api';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { DatePipe } from '@angular/common';
@@ -20,16 +20,16 @@ import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-
 import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
 
 export enum ExportRecordType {
-    GroupedRecord = 1,
-    TreeGridRecord = 2,
-    DataRecord = 3,
-    HierarchicalGridRecord = 4,
-    HeaderRecord = 5,
+    GroupedRecord = 'GroupedRecord',
+    TreeGridRecord = 'TreeGridRecord',
+    DataRecord = 'DataRecord',
+    HierarchicalGridRecord = 'HierarchicalGridRecord',
+    HeaderRecord = 'HeaderRecord',
 }
 
 export enum HeaderType {
-    ColumnHeader = 1,
-    MultiColumnHeader = 2
+    ColumnHeader = 'ColumnHeader',
+    MultiColumnHeader = 'MultiColumnHeader'
 }
 
 export interface IExportRecord {
