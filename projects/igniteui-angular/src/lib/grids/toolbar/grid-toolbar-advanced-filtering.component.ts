@@ -1,4 +1,5 @@
-import { Component, Host } from '@angular/core';
+import { Component, Host, Input } from '@angular/core';
+import { OverlaySettings } from '../../services/public_api';
 import { IgxGridToolbarComponent } from './grid-toolbar.component';
 
 
@@ -27,6 +28,9 @@ export class IgxGridToolbarAdvancedFilteringComponent {
     public get grid() {
         return this.toolbar.grid;
     }
+
+    @Input()
+    public overlaySettings: OverlaySettings;
 
     constructor(@Host() private toolbar: IgxGridToolbarComponent) { }
 }
