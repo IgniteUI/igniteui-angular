@@ -1001,7 +1001,7 @@ export class GridWithPrimaryKeyComponent extends BasicGridSearchComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="300px"  width="600px" [primaryKey]="'ID'"`, '',
-        ColumnDefinitions.selectionWithScrollsColumns)}`,
+        ColumnDefinitions.selectionWithScrollsColumns, '', '<igx-paginator *ngIf="grid.paging"></igx-paginator>')}`,
 })
 export class SelectionWithScrollsComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
@@ -1529,6 +1529,7 @@ export class IgxGridAdvancedFilteringColumnGroupComponent extends BasicGridCompo
         <igx-column width="100px" [field]="'Downloads'" [editable]="true" dataType="number" [header]="'Downloads'"></igx-column>
         <igx-column width="100px" [field]="'Released'" [editable]="true" dataType="boolean" [header]="'Released'"></igx-column>
         <igx-column width="100px" [field]="'ReleaseDate'" [header]="'ReleaseDate'" dataType="date"></igx-column>
+        <igx-paginator *ngIf='grid.paging'></igx-paginator>
     </igx-grid>`
 })
 export class IgxGridClipboardComponent extends BasicGridComponent {
@@ -1612,10 +1613,12 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" [editable]="true" [sortable]="true" width="200px">
         </igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" [editable]="true" width="200px"></igx-column>
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`
 })
 export class IgxGridRowEditingComponent extends BasicGridComponent {
     public showToolbar = false;
+    public paging = false;
     public data = SampleTestData.foodProductData();
 }
 
@@ -1743,13 +1746,13 @@ export class IgxGridEmptyRowEditTemplateComponent extends BasicGridComponent {
 
 @Component({
     template: `
-    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true"
-    [paging]="paging" [perPage]="7">
+    <igx-grid #grid [data]="data" [primaryKey]="'ProductID'" width="900px" height="900px" [rowEditable]="true" >
         <igx-column field="ProductID" header="Product ID" width="150px"></igx-column>
         <igx-column field="ProductName" header="Product Name" [dataType]="'string'" width="200px"></igx-column>
         <igx-column field="InStock" header="In Stock" [dataType]="'boolean'" width="100px"></igx-column>
         <igx-column field="UnitsInStock" header="Units in Stock" [dataType]="'number'" width="150px"></igx-column>
         <igx-column field="OrderDate" header="Order Date" [dataType]="'date'" width="200px"></igx-column>
+        <igx-paginator *ngIf='paging' [perPage]="7"></igx-paginator>
     </igx-grid>`,
     providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
 })
@@ -1951,7 +1954,7 @@ export class CellEditingScrollTestComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [paging]="'true'" [perPage]="perPage" [primaryKey]="'ProductID'"`,
-        '', ColumnDefinitions.productBasic)
+        '', ColumnDefinitions.productBasic, '', '<igx-paginator></igx-paginator>' )
 })
 export class GridWithUndefinedDataComponent implements OnInit {
     @ViewChild(IgxGridComponent, { static: true })
@@ -2331,6 +2334,7 @@ export class MRLTestComponent {
     <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field"
         [width]="c.width" [movable]='true' [resizable]='true'>
     </igx-column>
+    <igx-paginator *ngIf="paging"></igx-paginator>
 
     <igx-action-strip #actionStrip>
         <igx-grid-editing-actions [addRow]='true'></igx-grid-editing-actions>
@@ -2350,6 +2354,7 @@ export class IgxAddRowComponent implements OnInit {
 
     public data: any[];
     public columns: any[];
+    public paging = false;
 
     public ngOnInit() {
 

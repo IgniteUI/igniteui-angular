@@ -85,7 +85,7 @@ export class BasicGridSearchComponent extends GridWithSizeComponent {
 
 @Component({
     template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
-        '', ColumnDefinitions.idNameJobTitle)
+        '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator></igx-paginator>')
 })
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
@@ -120,7 +120,7 @@ export class GridWithToolbarComponent extends GridWithSizeComponent {
     template: `<div>
     <igx-column-actions igxColumnHiding [columns]="grid.columns" *ngIf="showInline" [hideFilter]="hideFilter"></igx-column-actions>
     ${ GridTemplateStrings.declareGrid('#grid [height]="height" [width]="width"', '', ColumnDefinitions.productHidable,
-        '<igx-grid-toolbar></igx-grid-toolbar>') }
+        '<igx-grid-toolbar></igx-grid-toolbar>', '<igx-paginator *ngIf="paging"></igx-paginator>') }
     </div>`
 })
 export class ColumnHidingTestComponent extends GridWithSizeComponent implements OnInit, AfterViewInit {
@@ -130,6 +130,7 @@ export class ColumnHidingTestComponent extends GridWithSizeComponent implements 
     public height = '500px';
     public showInline = true;
     public hideFilter = false;
+    public paging = false;
 
     constructor(private cdr: ChangeDetectorRef) {
         super();
