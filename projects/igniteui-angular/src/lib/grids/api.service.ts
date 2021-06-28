@@ -127,7 +127,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         } else {
             data[cell.column.field] = args.newValue;
         }
-        this.crudService.row.data = data;
+        mergeObjects(this.crudService.row.data, data);
         return args;
     }
 
