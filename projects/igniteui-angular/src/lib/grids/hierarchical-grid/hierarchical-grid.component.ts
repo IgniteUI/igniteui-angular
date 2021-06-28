@@ -202,7 +202,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
 
     /** @hidden @internal */
     public get paginator() {
-        return this.paginatorCmpt || this.rootGrid.paginatorList.find((pg) =>
+        return this.paginatorCmpts.first || this.rootGrid.paginatorList.find((pg) =>
             pg.nativeElement.offsetParent?.id === this.id);
     }
 

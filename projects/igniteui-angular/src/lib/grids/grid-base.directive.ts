@@ -32,7 +32,7 @@ import {
 import { getResizeObserver } from '../core/utils';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
+import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -1234,8 +1234,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
     /** @hidden @internal */
-    @ContentChild(IgxPaginatorComponent)
-    protected paginatorCmpt: IgxPaginatorComponent;
+    @ContentChildren(IgxPaginatorComponent)
+    protected paginatorCmpts: QueryList<IgxPaginatorComponent>;
 
     /**
      * @hidden @internal
@@ -1491,6 +1491,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     public set perPage(val: number) {
+        this._perPage = val;
         if (this.paginator) {
             this.paginator.perPage = val;
         }
@@ -2616,7 +2617,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public set pagingState(value) {
         this._pagingState = value;
-        if (this.paginator) {
+        if (this.paginator && !this._init) {
             this.paginator.totalRecords = value.metadata.countRecords;
         }
     }
@@ -2852,7 +2853,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /** @hidden @internal */
     public get paginator() {
-        return this.paginatorCmpt;
+        return this.paginatorCmpts?.first;
     }
 
     /**
@@ -3510,30 +3511,31 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public ngAfterContentInit() {
         this.setupColumns();
         this.toolbar.changes.pipe(takeUntil(this.destroy$), filter(() => !this._init)).subscribe(() => this.notifyChanges(true));
-        if (this.paginator) {
-            this.paginator.perPage = this.paginator.perPage || this._perPage;
-            this.paginator.pageChange.pipe(takeUntil(this.destroy$), filter(() => !this._init))
-            .subscribe((page: number) => {
-                this.pageChange.emit(page);
-            });
-            this.paginator.pagingDone.pipe(takeUntil(this.destroy$), filter(() => !this._init))
-            .subscribe((args: IPageEventArgs) => {
-                this.selectionService.clear(true);
-                this.pagingDone.emit({ previous: args.previous, current: args.current });
-                this.crudService.endEdit(false);
-                this.pipeTrigger++;
-                this.navigateTo(0);
-                this.notifyChanges();
-            });
-            this.paginator.perPageChange.pipe(takeUntil(this.destroy$), filter(() => !this._init))
-            .subscribe((perPage: number) => {
-                this.selectionService.clear(true);
-                this.perPageChange.emit(perPage);
-                this.page = 0;
-                this.crudService.endEdit(false);
-                this.notifyChanges();
-            });
-        }
+        this.paginatorCmpts.changes.pipe(takeUntil(this.destroy$), filter(() => !this._init)).subscribe(() => {
+            if (this.paginator) {
+                this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((page: number) => {
+                    this.pageChange.emit(page);
+                });
+                this.paginator.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((args: IPageEventArgs) => {
+                    this.selectionService.clear(true);
+                    this.pagingDone.emit({ previous: args.previous, current: args.current });
+                    this.crudService.endEdit(false);
+                    this.pipeTrigger++;
+                    this.navigateTo(0);
+                    this.notifyChanges();
+                });
+                this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+                .subscribe((perPage: number) => {
+                    this.selectionService.clear(true);
+                    this.perPageChange.emit(perPage);
+                    this.page = 0;
+                    this.crudService.endEdit(false);
+                    this.notifyChanges();
+                });
+            }
+        });
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
         }
@@ -3628,7 +3630,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         // Keep the stream open for future subscribers
-        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.paginator) {
+                this.paginator.perPage = this._perPage;
+                this.paginator.totalRecords = this.totalRecords;
+            }
+        });
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
@@ -6881,13 +6888,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof (row) !== 'number') {
+        if (this.paginator && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
             const page = Math.floor(rowIndex / this.perPage);
 
-            if (this.page !== page) {
+            if (this.paginator.page !== page) {
                 delayScrolling = true;
-                this.page = page;
+                this.paginator.page = page;
             }
         }
 
