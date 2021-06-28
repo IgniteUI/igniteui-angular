@@ -731,10 +731,10 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input()
-    public set templateContext(value: any){
+    public set templateContext(value: any) {
         this._contextObject = value;
     }
- 
+
     /**
      * Gets the column `contextObject`.
      * ```typescript
