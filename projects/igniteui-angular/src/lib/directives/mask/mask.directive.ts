@@ -33,7 +33,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             const cleanInputValue = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
             this.setPlaceholder(val);
             this._mask = val;
-            this.updateInputValue(cleanInputValue);
+            this.updateInput(cleanInputValue);
         }
     }
 
@@ -204,7 +204,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._start = this._compositionStartIndex;
         this._end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
-        this.updateInputValue(valueToParse);
+        this.updateInput(valueToParse);
     }
 
     /** @hidden @internal */
@@ -249,7 +249,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 break;
         }
 
-        this.updateInputValue(valueToParse);
+        this.updateInput(valueToParse);
     }
 
     /** @hidden */
@@ -373,7 +373,15 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._composing = false;
     }
 
-    private updateInputValue(valueToParse: string) {
+    /** @hidden */
+    protected setPlaceholder(value: string): void {
+        const placeholder = this.nativeElement.placeholder;
+        if (!placeholder || placeholder === this.mask) {
+            this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+        }
+    }
+
+    private updateInput(valueToParse: string) {
         const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
         this.inputValue = replacedData.value;
         if (this._key === this.platform.KEYMAP.BACKSPACE) {
