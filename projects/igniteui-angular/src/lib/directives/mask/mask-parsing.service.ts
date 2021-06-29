@@ -88,6 +88,10 @@ export class MaskParsingService {
 
     public replaceInMask(maskedValue: string, value: string, maskOptions: MaskOptions, start: number, end: number): Replaced {
         const literalsPositions: number[] = Array.from(this.getMaskLiterals(maskOptions.format).keys());
+        value = value.replace(/[０１２３４５６７８９]/g, (num) => ({
+            '１': '1', '２': '2', '３': '3', '４': '4', '５': '5',
+            '６': '6', '７': '7', '８': '8', '９': '9', '０': '0'
+        }[num]));
         const chars = Array.from(value);
         let cursor = start;
         end = Math.min(end, maskedValue.length);

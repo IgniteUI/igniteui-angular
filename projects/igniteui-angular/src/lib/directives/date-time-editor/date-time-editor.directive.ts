@@ -406,8 +406,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public setDisabledState?(_isDisabled: boolean): void { }
 
   /** @hidden @internal */
+  public onCompositionEnd(): void {
+    super.onCompositionEnd();
+
+    this.updateValue(this.parseDate(this.inputValue));
+    this.updateMask();
+  }
+
+  /** @hidden @internal */
   public onInputChanged(isComposing: boolean) {
     super.onInputChanged(isComposing);
+    if (this._composing) {
+      return;
+    }
+
     if (this.inputIsComplete()) {
       const parsedDate = this.parseDate(this.inputValue);
       if (DateTimeUtil.isValidDate(parsedDate)) {

@@ -132,6 +132,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return this._end;
     }
 
+    protected _composing: boolean;
     private _end = 0;
     private _start = 0;
     private _key: string;
@@ -142,7 +143,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
     private _compositionStartIndex: number;
-    private _composing: boolean;
 
     private _onTouchedCallback: () => void = noop;
     private _onChangeCallback: (_: any) => void = noop;
@@ -175,6 +175,38 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden @internal */
+    @HostListener('compositionstart')
+    public onCompositionStart(): void {
+        if (!this._composing) {
+            this._compositionStartIndex = this._start;
+            this._composing = true;
+        }
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionend')
+    public onCompositionEnd(): void {
+        this._start = this._compositionStartIndex;
+        this._end = this.selectionEnd;
+        let valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
+
+        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+        this.inputValue = replacedData.value;
+        if (this._key === this.platform.KEYMAP.BACKSPACE) {
+            replacedData.end = this._start;
+        };
+
+        this.setSelectionRange(replacedData.end);
+
+        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
+        this._onChangeCallback(this._dataValue);
+
+        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.afterInput();
+    }
+
+    /** @hidden @internal */
     @HostListener('input', ['$event.isComposing'])
     public onInputChanged(isComposing: boolean): void {
         /**
@@ -185,18 +217,15 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
-        if (isComposing) {
+        if (this._composing) {
             if (this.inputValue.length < this._oldText.length) {
                 // software keyboard input delete
                 this._key = this.platform.KEYMAP.BACKSPACE;
             }
-            if (!this._composing) {
-                this._compositionStartIndex = this._start;
-                this._composing = true;
-            }
             return;
         }
 
+        this.inputValue = this.inputValue.replace(/[０１２３４５６７８９]/g, '');
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -215,13 +244,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 this._start = this.selectionStart;
                 break;
             default:
-                const startIndex = this._composing ? this._compositionStartIndex : this._start;
-                valueToParse = this.inputValue.substring(startIndex, this.selectionEnd);
-                valueToParse = valueToParse.replace(/[０１２３４５６７８９]/g, (value) => ({
-                        '１': '1', '２': '2', '３': '3', '４': '4', '５': '5',
-                        '６': '6', '７': '7', '８': '8', '９': '9', '０': '0'
-                    }[value]));
-                this._composing = false;
+                valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
                 break;
         }
 
@@ -303,6 +326,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * @hidden
      */
     public ngAfterViewChecked(): void {
+        if (this._composing) {
+            return;
+        }
         this._oldText = this.inputValue;
     }
 
