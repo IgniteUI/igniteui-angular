@@ -33,7 +33,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             const cleanInputValue = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
             this.setPlaceholder(val);
             this._mask = val;
-            this.updateInput(cleanInputValue);
+            this.updateInputValue(cleanInputValue);
         }
     }
 
@@ -378,6 +378,14 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const placeholder = this.nativeElement.placeholder;
         if (!placeholder || placeholder === this.mask) {
             this.renderer.setAttribute(this.nativeElement, 'placeholder', value || this.defaultMask);
+        }
+    }
+
+    private updateInputValue(value: string) {
+        if (this._focused) {
+            this.showMask(value);
+        } else if (!this.displayValuePipe) {
+            this.inputValue = this.inputValue ? this.maskParser.applyMask(value, this.maskOptions) : '';
         }
     }
 
