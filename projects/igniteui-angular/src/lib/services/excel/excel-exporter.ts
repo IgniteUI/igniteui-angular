@@ -74,7 +74,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
 
@@ -136,6 +136,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
                 this.saveFile(result, options.fileName);
                 this.exportEnded.emit({ xlsx: this._xlsx });
+                done();
             });
         });
     }

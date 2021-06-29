@@ -9,7 +9,7 @@ import { IGroupingState } from '../../data-operations/groupby-state.interface';
 import { getHierarchy, isHierarchyMatch } from '../../data-operations/operations';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 import { IFilteringState } from '../../data-operations/filtering-state.interface';
-import { IgxGridBaseDirective } from '../../grids/public_api';
+import { IgxColumnComponent, IgxGridBaseDirective } from '../../grids/public_api';
 import { IgxTreeGridComponent } from '../../grids/tree-grid/public_api';
 import { IgxGridComponent } from '../../grids/grid/public_api';
 import { DatePipe } from '@angular/common';
@@ -342,8 +342,9 @@ export abstract class IgxBaseExporter {
             const row = records[i];
             this.exportRow(dataToExport, row, i, isSpecialData);
         }, () => {
-            this.exportDataImplementation(dataToExport, this.options);
-            this.resetDefaults();
+            this.exportDataImplementation(dataToExport, this.options, () => {
+                this.resetDefaults();
+            });
         });
     }
 
@@ -826,7 +827,7 @@ export abstract class IgxBaseExporter {
         }
     }
 
-    private getColumns(columns: any[]): IColumnList {
+    private getColumns(columns: IgxColumnComponent[]): IColumnList {
         const colList = [];
         const colWidthList = [];
         const hiddenColumns = [];
@@ -924,9 +925,8 @@ export abstract class IgxBaseExporter {
         this._sort = null;
         this.flatRecords = [];
         this.options = {} as IgxExporterOptionsBase;
-        // this._ownersMap.clear();
-        // TODO should be called on exportDataImplementation done
+        this._ownersMap.clear();
     }
 
-    protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;
+    protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase, done: () => void): void;
 }
