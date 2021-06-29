@@ -413,7 +413,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.updateMask();
   }
 
-  /** @hidden @internal */ 
+  /** @hidden @internal */
   public onInputChanged(isComposing: boolean): void {
     super.onInputChanged(isComposing);
     if (this._composing) {
