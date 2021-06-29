@@ -3,15 +3,28 @@
         <article class="sample-column">
             <h4 class="sample-title">Snackbar w/ action button</h4>
             <div class="snackbar-sample">
-                <div class="color-holder" [style.backgroundColor]="color" (click)="changeColor(snackbar)">
+                <div
+                    class="color-holder"
+                    [style.backgroundColor]="color"
+                    (click)="changeColor(snackbar)"
+                >
                     <span>Click me to change my color.</span>
                 </div>
-
                 <div class="snackbar-container">
-                    <igx-snackbar #snackbar [actionText]="actionName" [ariaLive]="'assertive'" [message]="message" (clicked)="undoColorChange(snackbar)">
+                    <igx-snackbar
+                        #snackbar
+                        [actionText]="actionName"
+                        [ariaLive]="'assertive'"
+                        (clicked)="undoColorChange(snackbar)"
+                        [outlet]="outlet"
+                        (animationStarted)="onAnimationStarted($event)"
+                        (animationDone)="onAnimationDone($event)"
+                    >
                     </igx-snackbar>
                 </div>
+                <div igxOverlayOutlet #outlet="overlay-outlet"></div>
             </div>
+            <button igxButton (click)="toggleSnackbar()">Toggle Snackbar</button>
         </article>
     </section>
 </div>

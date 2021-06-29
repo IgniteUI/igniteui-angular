@@ -63,10 +63,9 @@ export class DropDownVirtualComponent implements OnInit, AfterViewInit {
     if (this.prevRequest) {
         this.prevRequest.unsubscribe();
     }
-    this.loadingToast.message = 'Loading Remote Data...';
     this.loadingToast.position = 'middle';
     this.loadingToast.autoHide = false;
-    this.loadingToast.open();
+    this.loadingToast.open('Loading Remote Data...');
     this.cdr.detectChanges();
     this.prevRequest = this.remoteService.getData(
         evt,
