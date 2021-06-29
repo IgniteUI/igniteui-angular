@@ -156,7 +156,7 @@ export class GridBaseAPIService <T extends IgxGridBaseDirective & GridType> {
         } else {
             data[cell.column.field] = args.newValue;
         }
-        this.grid.crudService.row.data = data;
+        mergeObjects(this.grid.crudService.row.data, data);
         const doneArgs = cell.createDoneEditEventArgs(args.newValue, event);
         doneArgs.rowData = data;
         this.grid.cellEditDone.emit(doneArgs);
