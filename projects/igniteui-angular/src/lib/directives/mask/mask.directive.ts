@@ -188,22 +188,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     public onCompositionEnd(): void {
         this._start = this._compositionStartIndex;
         this._end = this.selectionEnd;
-        let valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
-
-        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
-        this.inputValue = replacedData.value;
-        if (this._key === this.platform.KEYMAP.BACKSPACE) {
-            replacedData.end = this._start;
-        };
-
-        this.setSelectionRange(replacedData.end);
-
-        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
-        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
-        this._onChangeCallback(this._dataValue);
-
-        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
-        this.afterInput();
+        const valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
+        this.updateInputValue(valueToParse);
     }
 
     /** @hidden @internal */
@@ -248,21 +234,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 break;
         }
 
-        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
-        this.inputValue = replacedData.value;
-        if (this._key === this.platform.KEYMAP.BACKSPACE) {
-            replacedData.end = this._start;
-        };
-
-        this.setSelectionRange(replacedData.end);
-
-        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
-        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
-        this._onChangeCallback(this._dataValue);
-
-        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
-
-        this.afterInput();
+        this.updateInputValue(valueToParse);
     }
 
     /** @hidden */
@@ -386,6 +358,23 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._end = 0;
         this._key = null;
         this._composing = false;
+    }
+
+    private updateInputValue(valueToParse: string) {
+        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+        this.inputValue = replacedData.value;
+        if (this._key === this.platform.KEYMAP.BACKSPACE) {
+            replacedData.end = this._start;
+        };
+
+        this.setSelectionRange(replacedData.end);
+
+        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
+        this._onChangeCallback(this._dataValue);
+
+        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.afterInput();
     }
 
     private showDisplayValue(value: string) {
