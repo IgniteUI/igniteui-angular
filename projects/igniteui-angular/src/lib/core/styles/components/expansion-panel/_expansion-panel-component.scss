@@ -44,12 +44,17 @@
         @extend %igx-expansion-panel__body !optional;
     }
 
-
-    @include  m(disabled) {
+    @include m(disabled) {
         @extend %igx-expansion-panel--disabled !optional;
     }
 
-    @include  m(expanded) {
+    @include m(expanded) {
         @extend %igx-expansion-panel--expanded !optional;
+    }
+}
+
+@include b(igx-accordion) {
+    @include e(root) {
+        @extend %igx-title--no-ellipsis !optional;
     }
 }

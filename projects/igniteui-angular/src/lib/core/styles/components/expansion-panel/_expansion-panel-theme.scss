@@ -130,6 +130,14 @@
         white-space: nowrap;
     }
 
+    %igx-title--no-ellipsis {
+        %igx-expansion-panel__header-title {
+            @include line-clamp(4, true, true);
+            white-space: initial;
+            word-wrap: break-word;
+        }
+    }
+
     %igx-expansion-panel__header-inner {
         display: flex;
         align-items: center;
