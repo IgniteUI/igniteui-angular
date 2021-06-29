@@ -254,21 +254,21 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  private get hasDateParts() {
+  private get hasDateParts(): boolean {
     return this._inputDateParts.some(
       p => p.type === DatePart.Date
         || p.type === DatePart.Month
         || p.type === DatePart.Year);
   }
 
-  private get hasTimeParts() {
+  private get hasTimeParts(): boolean {
     return this._inputDateParts.some(
       p => p.type === DatePart.Hours
         || p.type === DatePart.Minutes
         || p.type === DatePart.Seconds);
   }
 
-  private get dateValue() {
+  private get dateValue(): Date {
     return this._dateValue;
   }
 
@@ -285,7 +285,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   @HostListener('wheel', ['$event'])
-  public onWheel(event: WheelEvent) {
+  public onWheel(event: WheelEvent): void {
     if (!this._isFocused) {
       return;
     }
@@ -305,7 +305,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   }
 
   /** @hidden @internal */
-  public ngOnChanges(changes: SimpleChanges) {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes['locale'] && !changes['locale'].firstChange) {
       this.updateDefaultFormat();
       if (!this._inputFormat) {
@@ -413,8 +413,8 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     this.updateMask();
   }
 
-  /** @hidden @internal */
-  public onInputChanged(isComposing: boolean) {
+  /** @hidden @internal */ 
+  public onInputChanged(isComposing: boolean): void {
     super.onInputChanged(isComposing);
     if (this._composing) {
       return;
@@ -491,6 +491,10 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     super.onBlur(value);
   }
 
+  // the date editor sets its own inputFormat as its placeholder if none is provided
+  /** @hidden */
+  protected setPlaceholder(_value: string): void { }
+
   private updateDefaultFormat(): void {
     this._defaultInputFormat = DateTimeUtil.getDefaultInputFormat(this.locale);
   }
@@ -520,7 +524,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     }
   }
 
-  private setMask(inputFormat: string) {
+  private setMask(inputFormat: string): void {
     const oldFormat = this._inputDateParts?.map(p => p.format).join('');
     this._inputDateParts = DateTimeUtil.parseDateTimeFormat(inputFormat);
     inputFormat = this._inputDateParts.map(p => p.format).join('');
@@ -611,7 +615,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return newDate;
   }
 
-  private trySpinValue(datePart: DatePart, delta?: number, negative = false) {
+  private trySpinValue(datePart: DatePart, delta?: number, negative = false): Date {
     if (!delta) {
       // default to 1 if a delta is set to 0 or any other falsy value
       delta = this.datePartDeltas[datePart] || 1;
@@ -620,7 +624,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
     return this.spinValue(datePart, spinValue) || new Date();
   }
 
-  private setDateValue(value: Date | string) {
+  private setDateValue(value: Date | string): void {
     this._dateValue = DateTimeUtil.isValidDate(value)
       ? value
       : DateTimeUtil.parseIsoDate(value);
