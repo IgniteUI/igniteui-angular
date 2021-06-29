@@ -108,6 +108,27 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         expect(hierarchicalGrid.expansionStates.size).toEqual(0);
     }));
 
+    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+
+        // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+        const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+        expect(container.getAttribute('role')).toBe(null);
+
+        //Filter grid so no results are available and grid is empty
+        hierarchicalGrid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+        hierarchicalGrid.markForCheck();
+        fixture.detectChanges();
+        expect(container.getAttribute('role')).toMatch('row');
+
+        // clear grid data and check if attribute is now 'row'
+        hierarchicalGrid.clearFilter();
+        fixture.componentInstance.clearData();
+        fixture.detectChanges();
+        tick(100);
+
+        expect(container.getAttribute('role')).toMatch('row');
+    }));
+
     it('should allow applying initial expansions state for certain rows through expansionStates option', () => {
         // set first row as expanded.
         const state = new Map<any, boolean>();
@@ -229,6 +250,22 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
 
         row1 = hierarchicalGrid.hgridAPI.get_row_by_index(0);
         expect(row1.expanded).toBe(true);
+    });
+
+    it('should correctly expand children on init if parents have hasChild key', () => {
+        hierarchicalGrid.expandChildren = true;
+        hierarchicalGrid.hasChildrenKey = 'hasChild';
+        fixture.componentInstance.data = [
+            { ID: 1, ProductName: 'Product: A1', hasChild: false, childData: fixture.componentInstance.generateDataUneven(1, 1) },
+            { ID: 2, ProductName: 'Product: A2', hasChild: true, childData: fixture.componentInstance.generateDataUneven(1, 1) }
+        ];
+        fixture.detectChanges();
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(0)).toBeInstanceOf(IgxHierarchicalRowComponent);
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(1)).toBeInstanceOf(IgxHierarchicalRowComponent);
+        expect(hierarchicalGrid.hgridAPI.get_row_by_index(2)).toBeInstanceOf(IgxChildGridRowComponent);
+        const rowElems = fixture.debugElement.queryAll(By.directive(IgxHierarchicalRowComponent));
+        expect(rowElems[0].query(By.css('igx-icon')).nativeElement.innerText).toEqual('');
+        expect(rowElems[1].query(By.css('igx-icon')).nativeElement.innerText).toEqual('expand_more');
     });
 
     it('should allow setting expandChildren after bound to data to rowIsland', () => {
@@ -1468,6 +1505,10 @@ export class IgxHierarchicalGridTestBaseComponent {
                 Col2: i, Col3: i, childData: children, childData2: children });
         }
         return prods;
+    }
+
+    public clearData(){
+        this.data = [];
     }
 }
 

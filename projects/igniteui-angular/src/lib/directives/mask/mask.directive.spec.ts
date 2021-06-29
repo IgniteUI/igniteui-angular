@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Pipe, PipeTransform, Renderer2 } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { IgxInputGroupModule } from '../../input-group/input-group.component';
@@ -259,7 +259,7 @@ describe('igxMask', () => {
         const comp = fixture.componentInstance;
         const input = comp.input;
 
-        expect(input.nativeElement.value).toEqual('3456');
+        expect(input.nativeElement.value).toEqual('3456____');
 
         input.nativeElement.dispatchEvent(new Event('focus'));
         tick();
@@ -432,10 +432,45 @@ describe('igxMask', () => {
         expect((maskDirective as any).showMask).toHaveBeenCalledTimes(0);
         expect((maskDirective as any).inputValue).toEqual('');
     }));
+
+    it('should be able to update the mask dynamically', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.detectChanges();
+        const input = fixture.componentInstance.input;
+
+        expect(input.nativeElement.value).toEqual('');
+        expect(input.nativeElement.placeholder).toEqual('CCCCCCCCCC');
+
+        fixture.componentInstance.mask = '00-00-00';
+        fixture.detectChanges();
+        expect(fixture.componentInstance.maskDirective.mask).toEqual('00-00-00');
+        expect(input.nativeElement.placeholder).toEqual('00-00-00');
+
+        fixture.componentInstance.mask = '0';
+        fixture.detectChanges();
+        expect(fixture.componentInstance.maskDirective.mask).toEqual('0');
+        expect(input.nativeElement.placeholder).toEqual('0');
+
+        fixture.componentInstance.mask = undefined;
+        fixture.detectChanges();
+        expect(fixture.componentInstance.maskDirective.mask).toEqual('CCCCCCCCCC');
+        expect(input.nativeElement.placeholder).toEqual('CCCCCCCCCC');
+
+        fixture.componentInstance.mask = '';
+        fixture.detectChanges();
+        expect(fixture.componentInstance.maskDirective.mask).toEqual('CCCCCCCCCC');
+        expect(input.nativeElement.placeholder).toEqual('CCCCCCCCCC');
+
+        fixture.componentInstance.mask = '##.##';
+        fixture.detectChanges();
+        expect(fixture.componentInstance.maskDirective.mask).toEqual('##.##');
+        expect(input.nativeElement.placeholder).toEqual('##.##');
+    }));
 });
 
 describe('igxMaskDirective ControlValueAccessor Unit', () => {
     let mask: IgxMaskDirective;
+    let renderer2: Renderer2;
     it('Should correctly implement interface methods', () => {
         const mockNgControl = jasmine.createSpyObj('NgControl', ['registerOnChangeCb', 'registerOnTouchedCb']);
         const platformMock = {
@@ -457,7 +492,8 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         const format = 'CCCCCCCC';
 
         // init
-        mask = new IgxMaskDirective({ nativeElement: {} } as any, mockParser, null, platformMock as any);
+        renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
+        mask = new IgxMaskDirective({ nativeElement: {} } as any, mockParser, renderer2, platformMock as any);
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
@@ -496,9 +532,12 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
                             <input #input type="text" igxInput [(ngModel)]="value" [igxMask]="mask"/>
                         </igx-input-group>` })
 class DefMaskComponent {
-
     @ViewChild('input', { static: true })
     public input: ElementRef;
+
+    @ViewChild(IgxMaskDirective)
+    public maskDirective: IgxMaskDirective;
+
     public mask;
     public value;
 }

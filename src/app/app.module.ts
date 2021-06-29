@@ -150,6 +150,8 @@ import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component
 import { TestInterceptorClass } from './interceptor.service';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
+import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const components = [
     ActionStripSampleComponent,
@@ -188,6 +190,7 @@ const components = [
     OverlayAnimationSampleComponent,
     OverlayPresetsSampleComponent,
     PageHeaderComponent,
+    PaginationSampleComponent,
     ProgressbarSampleComponent,
     RippleSampleComponent,
     SelectSampleComponent,
@@ -280,7 +283,8 @@ const components = [
     GridVirtualizationScrollSampleComponent,
     GridNestedPropsSampleComponent,
     IgxColumnGroupingDirective,
-    GridColumnTypesSampleComponent
+    GridColumnTypesSampleComponent,
+    GridLocalizationSampleComponent
 ];
 
 @NgModule({

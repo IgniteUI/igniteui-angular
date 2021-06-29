@@ -11,7 +11,8 @@ import {
 import { AnimationBuilder } from '@angular/animations';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelEventArgs } from './expansion-panel.common';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase,
+    IExpansionPanelEventArgs, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
 
 let NEXT_ID = 0;
@@ -115,6 +116,20 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     public collapsedChange = new EventEmitter<boolean>();
 
     /**
+     * Emitted when the expansion panel starts collapsing
+     * ```typescript
+     *  handleCollapsing(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentCollapsing)="handleCollapsing($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
+     */
+     @Output()
+     public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+
+    /**
      * Emitted when the expansion panel finishes collapsing
      * ```typescript
      *  handleCollapsed(event: IExpansionPanelEventArgs)
@@ -127,6 +142,20 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     @Output()
     public contentCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
+
+    /**
+     * Emitted when the expansion panel starts expanding
+     * ```typescript
+     *  handleExpanding(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentExpanding)="handleExpanding($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
+     */
+     @Output()
+     public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding
@@ -192,6 +221,11 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (this.collapsed) { // If expansion panel is already collapsed, do nothing
             return;
         }
+        const args = { event: evt, panel: this, owner: this, cancel: false };
+        this.contentCollapsing.emit(args);
+        if (args.cancel === true) {
+            return;
+        }
         this.playCloseAnimation(
             this.body?.element,
             () => {
@@ -214,6 +248,11 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     public expand(evt?: Event) {
         if (!this.collapsed) { // If the panel is already opened, do nothing
+            return;
+        }
+        const args = { event: evt, panel: this, owner: this, cancel: false };
+        this.contentExpanding.emit(args);
+        if (args.cancel === true) {
             return;
         }
         this.collapsed = false;

@@ -36,7 +36,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
                     document?: Document,
                     initialCall?: boolean,
                     target?: Point | HTMLElement): void {
-        this.select.scrollContainer.scrollTop = 0;
         const targetElement = target || this.settings.target;
         const rects = super.calculateElementRectangles(contentElement, targetElement);
         // selectFit obj, to be used for both cases of initialCall and !initialCall(page scroll/overlay repositionAll)
@@ -51,6 +50,7 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         };
 
         if (initialCall) {
+            this.select.scrollContainer.scrollTop = 0;
             // Fill in the required selectFit object properties.
             selectFit.viewPortRect = Util.getViewportRect(document);
             selectFit.itemElement = this.getInteractionItemElement();
@@ -66,9 +66,11 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
 
             super.updateViewPortFit(selectFit);
             // container does not fit in viewPort and is out on Top or Bottom
-            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0 ) {
+            if (selectFit.fitVertical.back < 0 || selectFit.fitVertical.forward < 0) {
                 this.fitInViewport(contentElement, selectFit);
             }
+            // Calculate scrollTop independently of the dropdown, as we cover all `igsSelect` specific positioning and
+            // scrolling to selected item scenarios here.
             this.select.scrollContainer.scrollTop = selectFit.scrollAmount;
         }
         this.setStyles(contentElement, selectFit);
@@ -81,10 +83,6 @@ export class SelectPositioningStrategy extends BaseFitPositionStrategy implement
         let itemElement;
         if (this.select.selectedItem) {
             itemElement = this.select.selectedItem.element.nativeElement;
-            // D.P. Feb 22 2019, #3921 Force item scroll before measuring in IE11, due to base scrollToItem delay
-            if (this.platform?.isIE) {
-                this.select.scrollContainer.scrollTop = this.select.calculateScrollPosition(this.select.selectedItem);
-            }
         } else {
             itemElement = this.select.getFirstItemElement();
         }
