@@ -1589,7 +1589,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     private _field: string;
     private _calcWidth = null;
     private _columnPipeArgs: IColumnPipeArgs = { digitsInfo: DEFAULT_DIGITS_INFO };
-    private _contextObject: any;
 
     constructor(
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
