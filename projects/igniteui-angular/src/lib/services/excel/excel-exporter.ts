@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -74,7 +74,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
         const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
 
@@ -82,7 +82,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         let columnCount;
         let columnWidths;
         let indexOfLastPinnedColumn;
-
+        let defaultOwner;
 
         const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
             isHierarchicalGrid ?
@@ -111,9 +111,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                     .sort((a,b) => b - a)[0];
 
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.header);
+                defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
-                const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => !col.skip);
+                defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
+                const columns = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader);
+
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
                 columnCount = columns.length;
@@ -122,7 +124,8 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
 
         const worksheetData =
-            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths);
+            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn,
+                columnWidths, defaultOwner, this._ownersMap);
 
         this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
 
@@ -133,6 +136,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
                 this.saveFile(result, options.fileName);
                 this.exportEnded.emit({ xlsx: this._xlsx });
+                done();
             });
         });
     }
