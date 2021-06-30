@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { TestBed, fakeAsync, ComponentFixture } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
+import { AbsoluteScrollStrategy, GlobalPositionStrategy, IgxCsvExporterService, IgxExcelExporterService } from '../../services/public_api';
 import { IgxGridModule } from './public_api';
 import { configureTestSuite } from '../../test-utils/configure-suite';
+import { BaseToolbarColumnActionsDirective } from '../toolbar/grid-toolbar.base';
 
 
 const TOOLBAR_TAG = 'igx-grid-toolbar';
@@ -154,6 +155,28 @@ describe('IgxGrid - Grid Toolbar #grid - ', () => {
             expect($('#excelEntry').textContent).toMatch(instance.customExcelText);
             expect($('#csvEntry').textContent).toMatch(instance.customCSVText);
         });
+
+        it('Setting overlaySettings for each toolbar columns action', () => {
+            const defaultSettings = instance.pinningAction.overlaySettings;
+            const defaultFiltSettings = instance.advancedFiltAction.overlaySettings;
+            const defaultExportSettings = instance.exporterAction.overlaySettings;
+
+            instance.pinningAction.overlaySettings = instance.overlaySettings;
+            instance.hidingAction.overlaySettings = instance.overlaySettings;
+            fixture.detectChanges();
+
+            expect(defaultSettings).not.toEqual(instance.pinningAction.overlaySettings);
+            expect(defaultSettings).not.toEqual(instance.hidingAction.overlaySettings);
+            expect(defaultFiltSettings).toEqual(instance.advancedFiltAction.overlaySettings);
+            expect(defaultExportSettings).toEqual(instance.exporterAction.overlaySettings);
+
+            instance.advancedFiltAction.overlaySettings = instance.overlaySettings;
+            instance.exporterAction.overlaySettings = instance.overlaySettings;
+            fixture.detectChanges();
+
+            expect(defaultFiltSettings).not.toEqual(instance.advancedFiltAction.overlaySettings);
+            expect(defaultExportSettings).not.toEqual(instance.exporterAction.overlaySettings);
+        });
     });
 });
 
@@ -188,12 +211,12 @@ export class DefaultToolbarComponent {
     <igx-grid [data]="data" [autoGenerate]="true">
         <igx-grid-toolbar>
             <igx-grid-toolbar-actions>
-                <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
-                <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
-                <igx-grid-toolbar-advanced-filtering>
+                <igx-grid-toolbar-pinning #pinningAction></igx-grid-toolbar-pinning>
+                <igx-grid-toolbar-hiding #hidingAction ></igx-grid-toolbar-hiding>
+                <igx-grid-toolbar-advanced-filtering #advancedFiltAction>
                     {{ advancedFilteringTitle }}
                 </igx-grid-toolbar-advanced-filtering>
-                <igx-grid-toolbar-exporter [exportCSV]="exportCSV" [exportExcel]="exportExcel" [filename]="exportFilename">
+                <igx-grid-toolbar-exporter #exporterAction [exportCSV]="exportCSV" [exportExcel]="exportExcel" [filename]="exportFilename">
                     {{ exporterText }}
                     <span id="excelEntry" excelText>{{ customExcelText }}</span>
                     <span id="csvEntry" csvText>{{ customCSVText }}</span>
@@ -204,14 +227,32 @@ export class DefaultToolbarComponent {
     `
 })
 export class ToolbarActionsComponent {
-    data  = [];
-    advancedFilteringTitle = 'Custom button text';
-    exportCSV = true;
-    exportExcel = true;
-    exportFilename = '';
-    exporterText = 'Exporter Options';
-    customExcelText = '<< Excel export >>';
-    customCSVText = '<< CSV export >>';
+    @ViewChild('pinningAction', {static: true})
+    public pinningAction;
+
+    @ViewChild('hidingAction', {static: true})
+    public hidingAction;
+
+    @ViewChild('advancedFiltAction', {static: true})
+    public advancedFiltAction;
+
+    @ViewChild('exporterAction', {static: true})
+    public exporterAction;
+
+    public data  = [];
+    public advancedFilteringTitle = 'Custom button text';
+    public exportCSV = true;
+    public exportExcel = true;
+    public exportFilename = '';
+    public exporterText = 'Exporter Options';
+    public customExcelText = '<< Excel export >>';
+    public customCSVText = '<< CSV export >>';
+    public overlaySettings = {
+        positionStrategy: new GlobalPositionStrategy(),
+        scrollStrategy: new AbsoluteScrollStrategy(),
+        modal: true,
+        closeOnEscape: false
+    };
 
     constructor() {
         this.data = [...DATA];

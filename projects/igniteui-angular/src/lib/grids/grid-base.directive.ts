@@ -119,7 +119,6 @@ import {
     IRowSelectionEventArgs,
     IPinColumnEventArgs,
     IGridEditEventArgs,
-    IPageEventArgs,
     IRowDataEventArgs,
     IColumnResizeEventArgs,
     IColumnMovingStartEventArgs,
@@ -159,6 +158,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
+import { IPageEventArgs } from '../paginator/paginator_interfaces';
 
 let FAKE_ROW_ID = -1;
 
@@ -5914,7 +5914,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Opens the advanced filtering dialog.
      */
-    public openAdvancedFilteringDialog() {
+    public openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+        const settings = overlaySettings ? overlaySettings : this._advancedFilteringOverlaySettings;
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
@@ -5922,12 +5923,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                this._advancedFilteringOverlaySettings,
+                settings,
                 {
                     injector: this.viewRef.injector,
                     componentFactoryResolver: this.resolver
                 });
-            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+            this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
 
