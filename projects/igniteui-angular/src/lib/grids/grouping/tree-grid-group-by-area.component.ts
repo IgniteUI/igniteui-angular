@@ -21,7 +21,6 @@ import { IgxGroupByAreaDirective } from './group-by-area.directive';
  * @hidden @internal
  */
 @Component({
-    // changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-tree-grid-group-by-area',
     templateUrl: 'group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxTreeGridGroupByAreaComponent }]
@@ -33,11 +32,6 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     }
 
     public set hideGroupedColumns(value: boolean) {
-        if (value) {
-            this.groupingDiffer = this.differs.find(this.expressions).create();
-        } else {
-            this.groupingDiffer = null;
-        }
         if (this.grid.columnList && this.expressions) {
             this.setColumnsVisibility(value);
         }
@@ -55,7 +49,8 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
 
     public ngAfterContentInit(): void {
         if (this.grid.columnList && this.expressions) {
-            this.setColumnsVisibility(this.hideGroupedColumns);
+            this.groupingDiffer = this.differs.find(this.expressions).create();
+            this.updateColumnsVisibility();
         }
 
         this.grid.sortingExpressionsChange.pipe(takeUntil(this.destroy$)).subscribe((sortingExpressions: ISortingExpression[]) => {
@@ -109,6 +104,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
     public clearGrouping(name: string) {
         this.expressions = this.expressions.filter(item => item.fieldName !== name);
         this.grid.sortingExpressions = this.grid.sortingExpressions.filter(item => item.fieldName !== name);
+        this.grid.notifyChanges(true);
     }
 
     protected expressionsChanged() {
@@ -152,7 +148,7 @@ export class IgxTreeGridGroupByAreaComponent extends IgxGroupByAreaDirective imp
             if (changes && this.grid.columnList.length > 0) {
                 changes.forEachAddedItem((rec) => {
                     const col = this.grid.getColumnByName(rec.item.fieldName);
-                    col.hidden = true;
+                    col.hidden = this.hideGroupedColumns;
                 });
                 changes.forEachRemovedItem((rec) => {
                     const col = this.grid.getColumnByName(rec.item.fieldName);
