@@ -26,7 +26,7 @@ import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
-describe('IgxGrid Component Tests #grid', () => {
+fdescribe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
@@ -2114,9 +2114,13 @@ describe('IgxGrid Component Tests #grid', () => {
             const fix = TestBed.createComponent(IgxGridWrappedInContComponent);
             const grid = fix.componentInstance.grid;
             fix.componentInstance.data = fix.componentInstance.fullData;
+            fix.detectChanges();
+            tick(16);
             fix.componentInstance.paging = true;
             fix.detectChanges();
             tick(16);
+            grid.notifyChanges(true);
+            fix.detectChanges();
 
             // Compare the result returned by both get_row_by_index and getRowByIndex
             expect(grid.gridAPI.get_row_by_index(fix.componentInstance.pageSize + 1)).toBeUndefined();
@@ -2195,7 +2199,6 @@ describe('IgxGrid Component Tests #grid', () => {
         });
 
         it('IgxTabs: should initialize a grid with correct height when paging and summaries are enabled', async () => {
-
             const grid = fix.componentInstance.grid4;
             const tab = fix.componentInstance.tabs;
             tab.items.toArray()[3].selected = true;
@@ -2327,7 +2330,7 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         }));
 
-        it('should have access to grid context', () => {
+        fit('should have access to grid context', () => {
             const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
             fix.detectChanges();
 
@@ -2711,8 +2714,8 @@ export class IgxGridWithCustomFooterComponent extends IgxGridTestComponent {
 @Component({
     template:
         `<div [style.width.px]="outerWidth" [style.height.px]="outerHeight">
-            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true"
-                [paging]="paging" [perPage]="pageSize">
+            <igx-grid #grid [data]="data" [displayDensity]="density" [autoGenerate]="true">
+                <igx-paginator *ngIf="paging" [perPage]="pageSize"></igx-paginator>
             </igx-grid>
         </div>`
 })
@@ -2985,8 +2988,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                 <span igxTabHeaderLabel>Tab 4</span>
             </igx-tab-header>
             <igx-tab-content>
-                <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'"
-                    [paging]="true" [perPage]="3">
+                <igx-grid #grid4 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'300px'">
                     <igx-column
                         *ngFor="let column of columns"
                         [field]="column.field"
@@ -2994,6 +2996,7 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                         [hasSummary]="true"
                     >
                     </igx-column>
+                    <igx-paginator [perPage]="3"></igx-paginator>
                 </igx-grid>
             </igx-tab-content>
         </igx-tab-item>
@@ -3002,14 +3005,14 @@ export class IgxGridFormattingComponent extends BasicGridComponent {
                 <span igxTabHeaderLabel>Tab 5</span>
             </igx-tab-header>
             <igx-tab-content>
-                <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'"
-                    [paging]="true" [perPage]="4">
+                <igx-grid #grid5 [data]="data" [primaryKey]="'id'" [width]="'500px'" [height]="'100%'">
                 <igx-column
                     *ngFor="let column of columns"
                     [field]="column.field"
                     [header]="column.field"
                 >
                 </igx-column>
+                <igx-paginator [perPage]="4"></igx-paginator>
                 </igx-grid>
             </igx-tab-content>
         </igx-tab-item>
@@ -3074,12 +3077,13 @@ export class IgxGridInsideIgxTabsComponent {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data"
-        [paging]="true" [paginationTemplate]="pager" [autoGenerate]="true">
+        <igx-grid #grid [data]="data" [autoGenerate]="true">
+            <igx-paginator>
+                <igx-paginator-content *ngIf="grid.rendered">
+                    <h2>{{grid.totalRecords}}</h2>
+                </igx-paginator-content>
+            </igx-paginator>
         </igx-grid>
-        <ng-template #pager let-grid>
-            <h2>{{grid.totalRecords}}</h2>
-        </ng-template>
     `
 })
 export class IgxGridWithCustomPaginationTemplateComponent {
