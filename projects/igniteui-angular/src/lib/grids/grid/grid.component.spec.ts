@@ -26,7 +26,7 @@ import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
-fdescribe('IgxGrid Component Tests #grid', () => {
+describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
     const COLUMN_HEADER_CLASS = '.igx-grid__th';
 
@@ -2330,7 +2330,7 @@ fdescribe('IgxGrid Component Tests #grid', () => {
             });
         }));
 
-        fit('should have access to grid context', () => {
+        it('should have access to grid context', () => {
             const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
             fix.detectChanges();
 

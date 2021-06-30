@@ -1623,7 +1623,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid.pinRow(147);
             fix.detectChanges();
 
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 5;
             fix.detectChanges();
 
@@ -1636,7 +1637,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         });
 
         it('should correctly apply paging state for grid and paginator when there are pinned rows.', fakeAsync(() => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 3;
             treeGrid.height = '700px';
             fix.detectChanges();
@@ -1663,7 +1665,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
         }));
 
         it('should have the correct records shown for pages with pinned rows', () => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 6;
             treeGrid.height = '700px';
             fix.detectChanges();

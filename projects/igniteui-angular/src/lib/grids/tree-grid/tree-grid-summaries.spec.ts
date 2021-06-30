@@ -513,7 +513,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         }));
 
         it('Paging: should render correct summaries when paging is enable and position is bottom', fakeAsync(() => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -546,7 +547,8 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         }));
 
         it('Paging: should render correct summaries when paging is enable and position is top', fakeAsync(() => {
-            treeGrid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 4;
             treeGrid.summaryPosition = 'top';
             fix.detectChanges();
