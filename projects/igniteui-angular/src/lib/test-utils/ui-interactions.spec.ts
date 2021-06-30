@@ -218,7 +218,7 @@ export class UIInteractions {
             if (selectionStart > selectionEnd) {
                 return Error('Selection start should be less than selection end position');
             }
-            // target.triggerEventHandler('focus', {});
+
             const inputEl = target.nativeElement as HTMLInputElement;
             inputEl.setSelectionRange(selectionStart, selectionEnd);
             for (const char of characters) {
@@ -244,6 +244,28 @@ export class UIInteractions {
         pasteData.setData('text/plain', inputValue);
         const event = new ClipboardEvent('paste', { clipboardData: pasteData });
         inputElement.triggerEventHandler('paste', event);
+    }
+
+    public static simulateCompositionEvent(characters: string, target: DebugElement, selectionStart = 0, selectionEnd = 0, isBlur = true) {
+        if (characters) {
+            if (selectionStart > selectionEnd) {
+                return Error('Selection start should be less than selection end position');
+            }
+
+            const inputEl = target.nativeElement as HTMLInputElement;
+            inputEl.setSelectionRange(selectionStart, selectionEnd);
+            target.triggerEventHandler('compositionstart', { target: target.nativeElement });
+            for (const char of characters) {
+                this.triggerEventHandlerKeyDown(char, target);
+                this.triggerInputKeyInteraction(char, target);
+                this.triggerEventHandlerKeyUp(char, target);
+            }
+
+            target.triggerEventHandler('compositionend', { target: target.nativeElement });
+            if (isBlur) {
+                this.triggerInputKeyInteraction(characters, target);
+            }
+        }
     }
 
     public static triggerKeyDownEvtUponElem(key, elem, bubbles = true, altKey = false, shiftKey = false, ctrlKey = false) {

@@ -155,8 +155,7 @@ describe('igxMask', () => {
         input.triggerEventHandler('focus', {});
         fixture.detectChanges();
 
-        UIInteractions.simulateTyping('０９０６２０２１', input);
-        tick();
+        UIInteractions.simulateCompositionEvent('０９０６２０２１', input, 0, 10);
         fixture.detectChanges();
 
         input.triggerEventHandler('blur', {});

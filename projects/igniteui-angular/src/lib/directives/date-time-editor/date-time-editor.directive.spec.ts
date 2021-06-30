@@ -1001,15 +1001,25 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
             });
-            it('should convert correctly full-width characters when typing', () => {
+            it('should convert correctly full-width characters after blur', () => {
+                const fullWidthText = '１９１２０８';
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
                 fixture.detectChanges();
                 inputElement.triggerEventHandler('focus', {});
                 fixture.detectChanges();
-                UIInteractions.simulateTyping('１９１２０８', inputElement);
-                inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
+                UIInteractions.simulateCompositionEvent(fullWidthText, inputElement, 0, 8);
                 fixture.detectChanges();
                 expect(inputElement.nativeElement.value).toEqual('19/12/08');
+            });
+            it('should convert correctly full-width characters after enter', () => {
+                const fullWidthText = '１３０９４８';
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                UIInteractions.simulateCompositionEvent(fullWidthText, inputElement, 0, 8, false);
+                fixture.detectChanges();
+                expect(inputElement.nativeElement.value).toEqual('13/09/48');
             });
             it('should convert correctly full-width characters on paste', () => {
                 fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';

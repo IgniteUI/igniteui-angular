@@ -156,6 +156,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
     private _compositionStartIndex: number;
+    private _afterComposing: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -202,9 +203,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     @HostListener('compositionend')
     public onCompositionEnd(): void {
         this._start = this._compositionStartIndex;
-        this._end = this.selectionEnd;
-        const valueToParse = this.inputValue.substring(this._start, this.selectionEnd);
+        const end = this.selectionEnd;
+        const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
+        this._afterComposing = true;
     }
 
     /** @hidden @internal */
@@ -218,6 +220,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
+
         if (this._composing) {
             if (this.inputValue.length < this._oldText.length) {
                 // software keyboard input delete
@@ -226,7 +229,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        this.inputValue = this.inputValue.replace(/[０１２３４５６７８９]/g, '');
+        if (this._afterComposing) {
+            this.inputValue = this.inputValue.replace(/[０１２３４５６７８９]/g, '');
+        }
+
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -235,6 +241,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         if (this._hasDropAction) {
             this._start = this.selectionStart;
         }
+
+        console.log(this.inputValue);
 
         let valueToParse = '';
         switch (this._key) {
@@ -272,6 +280,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('blur', ['$event.target.value'])
     public onBlur(value: string): void {
+        this._afterComposing = false;
         this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
