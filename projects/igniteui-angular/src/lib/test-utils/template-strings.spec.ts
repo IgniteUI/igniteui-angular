@@ -461,6 +461,31 @@ export class ColumnDefinitions {
     <igx-column [field]="'Model'" dataType="string" [groupable]="true"></igx-column>
     <igx-column [field]="'Edition'" dataType="string" [groupable]="true"></igx-column>
     `;
+
+    public static multiColHeadersExportColumns = `
+        <igx-column [movable]="true" [resizable]="true" field="ID" [filterable]="false"></igx-column>
+        <igx-column-group [movable]="true" header="General Information" [collapsible]="true" [expanded]="true">
+            <igx-column [movable]="true" field="CompanyName" [visibleWhenCollapsed]="true"></igx-column>
+            <igx-column-group [movable]="true" header="Personal Details" [collapsible]="true" [expanded]="false"
+                [visibleWhenCollapsed]="false">
+                <igx-column [movable]="true" field="ContactName"></igx-column>
+                <igx-column [movable]="true" field="ContactTitle"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+        <igx-column-group header="Address Information">
+            <igx-column-group header="Location" [collapsible]="true" [expanded]="false" [visibleWhenCollapsed]="true">
+                <igx-column field="Country" [visibleWhenCollapsed]="true" [hidden]="true"></igx-column>
+                <igx-column field="Region" [visibleWhenCollapsed]="false" [hidden]="true"></igx-column>
+                <igx-column field="City" [visibleWhenCollapsed]="false" [hidden]="true"></igx-column>
+                <igx-column field="Address" [visibleWhenCollapsed]="false" [hidden]="true"></igx-column>
+            </igx-column-group>
+            <igx-column-group header="Contact Information">
+                <igx-column field="Phone"></igx-column>
+                <igx-column field="Fax"></igx-column>
+                <igx-column field="PostalCode"></igx-column>
+            </igx-column-group>
+        </igx-column-group>
+    `;
 }
 
 export class EventSubscriptions {

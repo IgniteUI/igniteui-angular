@@ -14,7 +14,6 @@ All notable changes for each version of this project will be documented in this 
         <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
     </igx-grid-toolbar-actions>
     ```
-- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
 - `IgxPaginatorComponent`
     - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
     ```html
@@ -27,7 +26,6 @@ All notable changes for each version of this project will be documented in this 
         </igx-paginator-content>
     </igx-paginator>
     ```
-
 - `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
     ```typescript
         this.excelExporterService.columnExporting.subscribe((col) => {
@@ -36,6 +34,9 @@ All notable changes for each version of this project will be documented in this 
             }
         });
     ```
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
+    
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
