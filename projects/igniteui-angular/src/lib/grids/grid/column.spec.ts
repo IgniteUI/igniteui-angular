@@ -849,7 +849,7 @@ export class TemplatedInputColumnsComponent {
         <igx-grid [data]="data">
             <igx-column [additionalTemplateContext]="contextObject" field="FirstName">
                 <ng-template igxCell let-cell="cell">
-                    {{ cell.column.contextObject.property1 }}
+                    {{ cell.column.additionalTemplateContext.property1 }}
                 </ng-template>
             </igx-column>
             <igx-column [additionalTemplateContext]="contextObject" field="LastName">
