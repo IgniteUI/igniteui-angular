@@ -29,8 +29,8 @@ describe('IgxTreeGrid Grouping', () => {
     }));
 
     it('should load the grid grouped by two fields.', fakeAsync(() => {
-        treeGrid.expandAll();
-        tick();
+        // treeGrid.expandAll();
+        // tick();
 
         const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
         expect(groupArea).toBeDefined();

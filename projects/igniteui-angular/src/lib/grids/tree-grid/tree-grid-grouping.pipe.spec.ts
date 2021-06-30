@@ -26,10 +26,6 @@ describe('TreeGrid Grouping Pipe', () => {
     }));
 
     beforeEach(fakeAsync(/** height/width setter rAF */() => {
-        const fix = TestBed.createComponent(IgxTreeGridSimpleComponent);
-        fix.detectChanges();
-        tick(16);
-        grid = fix.componentInstance.treeGrid;
         groupPipe = new IgxTreeGridGroupingPipe();
         data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
         data.forEach(element => {
@@ -38,12 +34,12 @@ describe('TreeGrid Grouping Pipe', () => {
     }));
 
     it('doesn\'t change the data when no groupingExpressions are passed.', () => {
-        const result = groupPipe.transform(data, [], '', '', '', grid);
+        const result = groupPipe.transform(data, [], '', '', '');
         expect(result).toEqual(data);
     });
 
     it('handles gracefully an empty input data', () => {
-        const result = groupPipe.transform([], [], '', '', '', grid);
+        const result = groupPipe.transform([], [], '', '', '');
         expect(result).toEqual([]);
     });
 
@@ -51,25 +47,25 @@ describe('TreeGrid Grouping Pipe', () => {
         const groupingExpressions: IGroupingExpression[] = [
             groupingExpression('OnPTO')
         ];
-        const result = groupPipe.transform([], groupingExpressions, '', '', '', grid);
+        const result = groupPipe.transform([], groupingExpressions, '', '', '');
         expect(result).toEqual([]);
     });
 
     it('groups the data properly by a single boolean field', () => {
         const groupingExpressions = [groupingExpression('OnPTO')];
-        transformAndVerify(data, groupedByPTO, groupingExpressions, 'Employees', '', '', grid);
+        transformAndVerify(data, groupedByPTO, groupingExpressions, 'Employees', '', '');
     });
 
     it('groups the data properly by a single number field', () => {
         const groupingExpressions =
             [groupingExpression('ParentID')];
-        transformAndVerify(data, groupedByParentID, groupingExpressions, 'Employees', '', '', grid);
+        transformAndVerify(data, groupedByParentID, groupingExpressions, 'Employees', '', '');
     });
 
     it('groups the data properly by a single string field', () => {
         const groupingExpressions =
             [groupingExpression('JobTitle')];
-        transformAndVerify(data, groupedByJobTitle, groupingExpressions, 'Employees', '', '', grid);
+        transformAndVerify(data, groupedByJobTitle, groupingExpressions, 'Employees', '', '');
     });
 
     it('groups the data properly by two fields.', () => {
@@ -78,7 +74,7 @@ describe('TreeGrid Grouping Pipe', () => {
                 groupingExpression('OnPTO', 2),
                 groupingExpression('JobTitle'),
             ];
-        transformAndVerify(data, groupedByPTODescJobTitle, groupingExpressions, 'Employees', '', '', grid);
+        transformAndVerify(data, groupedByPTODescJobTitle, groupingExpressions, 'Employees', '', '');
     });
 
     it('groups the data properly by three fields.', () => {
@@ -88,7 +84,7 @@ describe('TreeGrid Grouping Pipe', () => {
                 groupingExpression('JobTitle', 2),
                 groupingExpression('ParentID', 1)
             ];
-        transformAndVerify(data, groupedByPTOJobDescPID, groupingExpressions, 'Employees', '', '', grid);
+        transformAndVerify(data, groupedByPTOJobDescPID, groupingExpressions, 'Employees', '', '');
     });
 
     it('check result based on \'groupKey\' parameter.', () => {
@@ -96,7 +92,7 @@ describe('TreeGrid Grouping Pipe', () => {
         const groupKeys = [ null, undefined, 'OOF'];
 
         groupKeys.forEach((groupKey) => {
-            const result = groupPipe.transform(data, groupingExpressions, groupKey, '', '', grid);
+            const result = groupPipe.transform(data, groupingExpressions, groupKey, '', '');
 
             expect(result[0][groupKey]).toBe('false (13)');
             expect(result[1][groupKey]).toBe('true (5)');
@@ -109,7 +105,7 @@ describe('TreeGrid Grouping Pipe', () => {
         const groupKey = 'Group';
 
         primaryKeys.forEach((primaryKey) => {
-            const result = groupPipe.transform(data, groupingExpressions, groupKey, primaryKey, '', grid);
+            const result = groupPipe.transform(data, groupingExpressions, groupKey, primaryKey, '');
 
             expect(result[0][primaryKey]).toBe('false');
             expect(result[1][primaryKey]).toBe('true');
@@ -123,7 +119,7 @@ describe('TreeGrid Grouping Pipe', () => {
         const primaryKey = 'PK';
 
         childDataKeys.forEach((childDataKey) => {
-            const result = groupPipe.transform(data, groupingExpressions, groupKey, primaryKey, childDataKey, grid);
+            const result = groupPipe.transform(data, groupingExpressions, groupKey, primaryKey, childDataKey);
 
             expect(result[0][childDataKey]).toBeInstanceOf(Array);
             expect(result[0][childDataKey].length).toBe(13);
@@ -176,7 +172,7 @@ describe('TreeGrid Grouping Pipe', () => {
         groupKey: string,
         primaryKey: string,
         childDataKey: string,
-        treeGrid: any,
+        treeGrid = null,
         aggregations = []) => {
 
         const result = groupPipe.transform(inputData, groupingExpressions, groupKey, primaryKey, childDataKey, treeGrid, aggregations);

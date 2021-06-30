@@ -910,22 +910,25 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey"
+    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey:treeGrid"
         childDataKey="childDataKey" expansionDepth="0" width="900px" height="1000px">
-        <igx-tree-grid-group-by-area [grid]='treeGrid'
-            [groupingExpressions]="groupingExpressions"
+        <igx-tree-grid-group-by-area [grid]="treeGrid"
+            [(expressions)]="groupingExpressions"
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
-        <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
+        <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
+        <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>
     `
 })
-export class IgxTreeGridGroupingComponent extends IgxTreeGridSummariesComponent {
+export class IgxTreeGridGroupingComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    public data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
     public groupedInitially = true;
     public groupKey = 'Employees';
     public primaryKey = 'ID';
