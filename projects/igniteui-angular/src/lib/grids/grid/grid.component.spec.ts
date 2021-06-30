@@ -2112,36 +2112,36 @@ describe('IgxGrid Component Tests #grid', () => {
             thirdRow.selected = true;
             expect(thirdRow.selected).toBe(true);
 
-						grid.paging = true;
-						grid.perPage = 4;
-						grid.columnList.forEach(c => c.hasSummary = true);
-						fix.detectChanges();
+            grid.paging = true;
+            grid.perPage = 4;
+            grid.columnList.forEach(c => c.hasSummary = true);
+            fix.detectChanges();
 
             firstRow = grid.getRowByIndex(0);
             const fourthRow = grid.getRowByIndex(3);
 
-						expect(firstRow instanceof IgxGroupByRow).toBe(true);
-						expect(firstRow.index).toEqual(0);
-						expect(firstRow.viewIndex).toEqual(0);
-						expect(fourthRow instanceof IgxSummaryRow).toBe(true);
+            expect(firstRow instanceof IgxGroupByRow).toBe(true);
+            expect(firstRow.index).toEqual(0);
+            expect(firstRow.viewIndex).toEqual(0);
+            expect(fourthRow instanceof IgxSummaryRow).toBe(true);
             expect(fourthRow.index).toBe(3);
             expect(fourthRow.viewIndex).toBe(3);
 
-						grid.page = 1;
-						grid.cdr.detectChanges();
-						fix.detectChanges();
+            grid.page = 1;
+            grid.cdr.detectChanges();
+            fix.detectChanges();
 
             firstRow = grid.getRowByIndex(0);
             secondRow = grid.getRowByIndex(1);
             thirdRow = grid.getRowByIndex(2);
 
             expect(firstRow instanceof IgxGridRow).toBe(true);
-						expect(firstRow.index).toEqual(0);
-						expect(firstRow.viewIndex).toEqual(6);
+            expect(firstRow.index).toEqual(0);
+            expect(firstRow.viewIndex).toEqual(6);
             expect(secondRow instanceof IgxSummaryRow).toBe(true);
             expect(secondRow.index).toBe(1);
             expect(secondRow.viewIndex).toBe(7);
-						expect(thirdRow instanceof IgxGroupByRow).toBe(true);
+            expect(thirdRow instanceof IgxGroupByRow).toBe(true);
             expect(thirdRow.index).toBe(2);
             expect(thirdRow.viewIndex).toBe(8);
         });
@@ -2170,19 +2170,19 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(firstRow.index).toBe(0);
             expect(firstRow.viewIndex).toBe(5);
 
-						// Change page and check getRowByIndex
-						grid.page = 2;
-						fix.detectChanges();
-						tick();
+            // Change page and check getRowByIndex
+            grid.page = 2;
+            fix.detectChanges();
+            tick();
 
-						firstRow = grid.getRowByIndex(0);
-						const secondRow = grid.getRowByIndex(1);
-						// Return the first row after page change
-						expect(firstRow instanceof IgxGridRow).toBe(true);
-						expect(firstRow.index).toBe(0);
-						expect(firstRow.viewIndex).toBe(10);
-						expect(secondRow.index).toBe(1);
-						expect(secondRow.viewIndex).toBe(11);
+            firstRow = grid.getRowByIndex(0);
+            const secondRow = grid.getRowByIndex(1);
+            // Return the first row after page change
+            expect(firstRow instanceof IgxGridRow).toBe(true);
+            expect(firstRow.index).toBe(0);
+            expect(firstRow.viewIndex).toBe(10);
+            expect(secondRow.index).toBe(1);
+            expect(secondRow.viewIndex).toBe(11);
         }));
     });
 
