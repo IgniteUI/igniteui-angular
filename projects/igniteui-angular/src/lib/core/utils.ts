@@ -194,6 +194,8 @@ export class PlatformUtil {
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
+    public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
+    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
