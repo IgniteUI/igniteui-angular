@@ -753,7 +753,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      *
      * ```html
      * <igx-column [additionalTemplateContext]="contextObject">
-     *   <ng-template igxCell let-props="additionalTemplateContext">
+     *   <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
      *      {{ props }}
      *   </ng-template>
      * </igx-column>
