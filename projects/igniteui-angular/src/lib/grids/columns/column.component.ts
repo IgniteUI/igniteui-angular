@@ -450,7 +450,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
     private _field: string;
     private _calcWidth = null;
-    private _contextObject: any;
     public calcPixelWidth: number;
     /**
      * @hidden
@@ -715,36 +714,6 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             this._pinned = value;
             this.pinnedChange.emit(this._pinned);
         }
-    }
-
-    /**
-     * Sets custom properties provided in additional template context.
-     *
-     * ```html
-     * <igx-column [templateContext]="contextObject">
-     *   <ng-template igxCell let-cell="cell">
-     *      {{ cell.column.contextObject.prop }}
-     *   </ng-template>
-     * </igx-column>
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    @Input()
-    public set templateContext(value: any) {
-        this._contextObject = value;
-    }
-
-    /**
-     * Gets the column `contextObject`.
-     * ```typescript
-     * let columncontextObject = this.column.contextObject;
-     * ```
-     *
-     * @memberof IgxColumnComponent
-     */
-    public get contextObject(): any {
-        return this._contextObject;
     }
 
     /**
@@ -1206,6 +1175,28 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     @Input() colStart: number;
+
+    /**
+     * Sets/gets custom properties provided in additional template context.
+     *
+     * ```html
+     * <igx-column [additionalTemplateContext]="contextObject">
+     *   <ng-template igxCell let-cell="cell">
+     *      {{ cell.column.additionalTemplateContext.prop }}
+     *   </ng-template>
+     * </igx-column>
+     * ```
+     * Template binding.
+     * ```html
+     * <ng-template igxCell let-props="additionalTemplateContext">
+     *    {{ props }}
+     * </ng-template>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public additionalTemplateContext: any;
 
     /**
      * Indicates whether the column will be visible when its parent is collapsed.
