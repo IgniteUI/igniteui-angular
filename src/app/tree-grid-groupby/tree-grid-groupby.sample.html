@@ -16,7 +16,8 @@
         [height]="'700px'"
         [sortStrategy]="sorting"
         [allowFiltering]="true"
-        [filterMode]="'excelStyleFilter'">
+        [filterMode]="'excelStyleFilter'"
+        (cellEditDone)="cellEditDone($event)">
         <!-- <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
             <igx-grid-toolbar-actions>
                 <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
