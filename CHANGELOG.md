@@ -44,7 +44,12 @@ All notable changes for each version of this project will be documented in this 
         - `pagerHidden `
         - `dropdownEnabled`
         - `dropdownHidden`
-
+- `IgxSnackbarComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`. 
+- `IgxToastComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
 
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
@@ -77,6 +82,10 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
+### Themes
+- **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
+    - `$color` -> `$icon-color`
 
 ## 12.0.3
 
@@ -3222,7 +3231,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height: 50px;'>{{rowIndex}} : {{item.text}}</div>
         </ng-template>
     </div>
     ```

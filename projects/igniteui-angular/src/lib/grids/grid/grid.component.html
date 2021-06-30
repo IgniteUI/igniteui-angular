@@ -197,8 +197,10 @@
     </div>
 
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
+
+    <div #igxBodyOverlayOutlet igxOverlayOutlet></div>
 </div>
 
 
