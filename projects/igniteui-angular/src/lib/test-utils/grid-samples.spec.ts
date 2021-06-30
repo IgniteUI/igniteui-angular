@@ -2400,3 +2400,31 @@ export class IgxAddRowComponent implements OnInit {
 export class GridExportGroupedDataComponent extends BasicGridComponent {
     public data = SampleTestData.exportGroupedDataColumns();
 }
+
+@Component({
+    template: GridTemplateStrings.declareGrid(` height="1000px"`, '', ColumnDefinitions.multiColHeadersExportColumns)
+})
+export class MultiColumnHeadersExportComponent extends BasicGridComponent {
+    public data = SampleTestData.contactInfoDataFull();
+}
+
+@Component({
+    template: `
+    <igx-grid #grid1 [data]="data">
+        <igx-column>
+            <ng-template igxCell>
+                <button>SimpleBtn</button>
+            </ng-template>
+        </igx-column>
+        <igx-column header="" field="ID"></igx-column>
+        <igx-column header="  " field=""></igx-column>
+        <igx-column header="Name" field="Name"></igx-column>
+        <igx-column header="JobTitle" field="JobTitle"></igx-column>
+    </igx-grid>`
+})
+
+export class GridWithEmptyColumnsComponent {
+    @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
+
+    public data = SampleTestData.personJobDataFull();
+}
