@@ -297,6 +297,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after the current page is changed.
+     *
      * @deprecated
      * @example
      * ```html
@@ -314,6 +315,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted when `perPage` property value of the grid is changed.
+     *
      * @deprecated
      * @example
      * ```html
@@ -677,6 +679,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Emitted after paging is performed.
+     *
      * @deprecated
      * @remarks
      * Returns an object consisting of the previous and next pages.
@@ -1454,6 +1457,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets the current page index.
+     *
      * @deprecated
      * @example
      * ```html
@@ -4136,6 +4140,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets the total number of pages.
+     *
      * @deprecated
      * @example
      * ```typescript
@@ -4149,6 +4154,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets if the current page is the first page.
+     *
      * @deprecated
      * @example
      * ```typescript
@@ -4162,6 +4168,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the next page, if the grid is not already at the last page.
+     *
      * @deprecated
      * @example
      * ```typescript
@@ -4176,6 +4183,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Goes to the previous page, if the grid is not already at the first page.
+     *
      * @deprecated
      * @example
      * ```typescript
@@ -4216,6 +4224,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Returns if the current page is the last page.
+     *
      * @deprecated
      * @example
      * ```typescript
