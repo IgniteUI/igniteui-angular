@@ -129,6 +129,11 @@ export class IgxListItemComponent implements IListChild {
     private lastPanDir = IgxListPanState.NONE;
 
     /**
+     * @hidden
+     */
+    private allowedPanEvents = ['panleft', 'panright'];
+
+    /**
      * Gets the `panState` of a `list item`.
      * ```typescript
      * let itemPanState =  this.listItem.panState;
@@ -324,8 +329,21 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
+    @HostListener('pancancel')
+    public pancancel() {
+        this.setContentElementLeft(0);
+        this._panState = IgxListPanState.NONE;
+        this.hideLeftAndRightPanTemplates();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('panmove', ['$event'])
     public panMove(ev) {
+        if(!this.allowedPanEvents.includes(ev.additionalEvent)) {
+            return;
+        }
         if (this.isTrue(this.isHeader)) {
             return;
         }
