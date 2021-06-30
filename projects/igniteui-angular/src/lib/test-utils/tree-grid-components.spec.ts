@@ -912,10 +912,10 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
     template: `
     <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey"
         childDataKey="childDataKey" expansionDepth="0" width="900px" height="1000px">
-        <igx-group-area [grid]='treeGrid'
+        <igx-tree-grid-group-by-area [grid]='treeGrid'
             [groupingExpressions]="groupingExpressions"
             [hideGroupedColumns]="false">
-        </igx-group-area>
+        </igx-tree-grid-group-by-area>
         <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]='groupingExpressions.length === 0'></igx-column>
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>

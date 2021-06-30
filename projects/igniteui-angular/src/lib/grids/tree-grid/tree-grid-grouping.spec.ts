@@ -5,7 +5,7 @@ import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridModule } from './public_api';
 
-xdescribe('IgxTreeGrid Grouping', () => {
+describe('IgxTreeGrid Grouping', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -32,7 +32,7 @@ xdescribe('IgxTreeGrid Grouping', () => {
         treeGrid.expandAll();
         tick();
 
-        const groupArea = fix.debugElement.nativeElement.querySelector('igx-group-area');
+        const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
         expect(groupArea).toBeDefined();
         const chipsArea = fix.debugElement.nativeElement.querySelector('igx-chips-area');
         expect(chipsArea).toBeDefined();

@@ -16,7 +16,6 @@ import { IgxGroupByAreaDirective } from './group-by-area.directive';
  * @hidden @internal
  */
 @Component({
-    // changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'igx-grid-group-by-area',
     templateUrl: 'group-by-area.component.html',
     providers: [{ provide: IgxGroupByAreaDirective, useExisting: IgxGridGroupByAreaComponent }]

@@ -40,19 +40,11 @@ export abstract class IgxGroupByAreaDirective {
     @HostBinding('class.igx-grid__grouparea')
     public defaultClass =  true;
 
-    /**
-     * @hidden
-     * @internal
-     */
     @HostBinding('class.igx-grid__grouparea--cosy')
     public get cosyStyle() {
         return this.density === 'cosy';
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
     @HostBinding('class.igx-grid__grouparea--compact')
     public get compactStyle() {
         return this.density === 'compact';
@@ -93,7 +85,6 @@ export abstract class IgxGroupByAreaDirective {
     @Output()
     public expressionsChange = new EventEmitter<IGroupingExpression[]>();
 
-    /** @hidden @internal */
     @ViewChildren(IgxChipComponent)
     public chips: QueryList<IgxChipComponent>;
 
@@ -128,9 +119,6 @@ export abstract class IgxGroupByAreaDirective {
         this.updateSorting(id);
     }
 
-    /**
-     * @hidden @internal
-     */
      public onDragDrop(event) {
         const drag: IgxColumnMovingDragDirective = event.detail.owner;
         if (drag instanceof IgxColumnMovingDragDirective) {
