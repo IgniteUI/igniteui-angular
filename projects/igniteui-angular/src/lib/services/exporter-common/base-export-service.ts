@@ -17,13 +17,19 @@ import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxHierarchicalGridComponent } from '../../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../../grids/hierarchical-grid/row-island.component';
 import { IPathSegment } from './../../grids/hierarchical-grid/hierarchical-grid-base.directive';
+import { IgxColumnGroupComponent } from './../../grids/columns/column-group.component';
 
 export enum ExportRecordType {
-    GroupedRecord = 1,
-    TreeGridRecord = 2,
-    DataRecord = 3,
-    HierarchicalGridRecord = 4,
-    HeaderRecord = 5,
+    GroupedRecord = 'GroupedRecord',
+    TreeGridRecord = 'TreeGridRecord',
+    DataRecord = 'DataRecord',
+    HierarchicalGridRecord = 'HierarchicalGridRecord',
+    HeaderRecord = 'HeaderRecord',
+}
+
+export enum HeaderType {
+    ColumnHeader = 'ColumnHeader',
+    MultiColumnHeader = 'MultiColumnHeader'
 }
 
 export interface IExportRecord {
@@ -38,6 +44,7 @@ export interface IColumnList {
     columns: IColumnInfo[];
     columnWidths: number[];
     indexOfLastPinnedColumn: number;
+    maxLevel?: number;
 }
 
 export interface IColumnInfo {
@@ -47,7 +54,12 @@ export interface IColumnInfo {
     dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
+    headerType?: HeaderType;
+    startIndex?: number;
+    columnSpan?: number;
+    level?: number;
     exportIndex?: number;
+    pinnedIndex?: number;
 }
 /**
  * rowExporting event arguments
@@ -198,8 +210,12 @@ export abstract class IgxBaseExporter {
         }
 
         this.options = options;
+        let columns = grid.columnList.toArray();
 
-        const columns = grid.columnList.toArray();
+        if (this.options.ignoreMultiColumnHeaders) {
+            columns = columns.filter(col => col.children === undefined);
+        }
+
         const columnList = this.getColumns(columns);
 
         const tagName = grid.nativeElement.tagName.toLowerCase();
@@ -326,16 +342,20 @@ export abstract class IgxBaseExporter {
             const row = records[i];
             this.exportRow(dataToExport, row, i, isSpecialData);
         }, () => {
-            this.exportDataImplementation(dataToExport, this.options);
-            this.resetDefaults();
+            this.exportDataImplementation(dataToExport, this.options, () => {
+                this.resetDefaults();
+            });
         });
     }
 
     private exportRow(data: IExportRecord[], record: IExportRecord, index: number, isSpecialData: boolean) {
         if (!isSpecialData && record.type !== ExportRecordType.HeaderRecord) {
-            const columns = record.owner === undefined ?
-                this._ownersMap.get(DEFAULT_OWNER).columns :
-                this._ownersMap.get(record.owner).columns;
+            const owner = record.owner === undefined ? DEFAULT_OWNER : record.owner;
+
+            const columns = this._ownersMap.get(owner).columns
+                .filter(c => c.headerType !== HeaderType.MultiColumnHeader)
+                .sort((a, b) => a.startIndex - b.startIndex)
+                .sort((a, b) => a.pinnedIndex - b.pinnedIndex);
 
             record.data = columns.reduce((a, e) => {
                 if (!e.skip) {
@@ -577,7 +597,9 @@ export abstract class IgxBaseExporter {
         childData: any[], expansionStateVal: boolean, grid: IgxHierarchicalGridComponent) {
         const islandColumnList = island.childColumns.toArray();
         const columnList = this.getColumns(islandColumnList);
-        const columnHeader = columnList.columns.map(col => col.header ? col.header : col.field);
+        const columnHeader = columnList.columns
+            .filter(col => col.headerType === HeaderType.ColumnHeader)
+            .map(col => col.header ? col.header : col.field);
 
         const headerRecord: IExportRecord = {
             data: columnHeader,
@@ -811,12 +833,22 @@ export abstract class IgxBaseExporter {
         const hiddenColumns = [];
         let indexOfLastPinnedColumn = -1;
         let lastVisibleColumnIndex = -1;
+        let maxLevel = 0;
+
 
         columns.forEach((column) => {
             const columnHeader = !ExportUtilities.isNullOrWhitespaces(column.header) ? column.header : column.field;
             const exportColumn = !column.hidden || this.options.ignoreColumnsVisibility;
             const index = this.options.ignoreColumnsOrder || this.options.ignoreColumnsVisibility ? column.index : column.visibleIndex;
             const columnWidth = Number(column.width?.slice(0, -2)) || DEFAULT_COLUMN_WIDTH;
+            const columnLevel = !this.options.ignoreMultiColumnHeaders ? column.level : 0;
+
+            const isMultiColHeader = column instanceof IgxColumnGroupComponent;
+            const colSpan = isMultiColHeader ?
+                column.allChildren
+                    .filter(ch => !(ch instanceof IgxColumnGroupComponent) && (!this.options.ignoreColumnsVisibility ? !ch.hidden : true))
+                    .length :
+                1;
 
             const columnInfo: IColumnInfo = {
                 header: columnHeader,
@@ -824,23 +856,44 @@ export abstract class IgxBaseExporter {
                 field: column.field,
                 skip: !exportColumn,
                 formatter: column.formatter,
-                skipFormatter: false
+                skipFormatter: false,
+
+                headerType: isMultiColHeader ? HeaderType.MultiColumnHeader : HeaderType.ColumnHeader,
+                columnSpan: colSpan,
+                level: columnLevel,
+                startIndex: index,
+                pinnedIndex: !column.pinned ?
+                    Number.MAX_VALUE :
+                    !column.hidden ?
+                        column.grid.pinnedColumns.indexOf(column)
+                        : NaN
             };
 
+            if (this.options.ignoreColumnsOrder) {
+                if (columnInfo.startIndex !== columnInfo.pinnedIndex) {
+                    columnInfo.pinnedIndex = Number.MAX_VALUE;
+                }
+            }
+
+            if (column.level > maxLevel && !this.options.ignoreMultiColumnHeaders) {
+                maxLevel = column.level;
+            }
+
             if (index !== -1) {
-                colList[index] = columnInfo;
-                colWidthList[index] = columnWidth;
-                lastVisibleColumnIndex = Math.max(lastVisibleColumnIndex, index);
+                colList.push(columnInfo);
+                colWidthList.push(columnWidth);
+                lastVisibleColumnIndex = Math.max(lastVisibleColumnIndex, colList.indexOf(columnInfo));
             } else {
                 hiddenColumns.push(columnInfo);
             }
 
-            if (column.pinned && exportColumn) {
+            if (column.pinned && exportColumn && columnInfo.headerType === HeaderType.ColumnHeader) {
                 indexOfLastPinnedColumn++;
             }
+
         });
 
-        // Append the hidden columns to the end of the list
+        //Append the hidden columns to the end of the list
         hiddenColumns.forEach((hiddenColumn) => {
             colList[++lastVisibleColumnIndex] = hiddenColumn;
         });
@@ -848,7 +901,8 @@ export abstract class IgxBaseExporter {
         const result: IColumnList = {
             columns: colList,
             columnWidths: colWidthList,
-            indexOfLastPinnedColumn
+            indexOfLastPinnedColumn,
+            maxLevel
         };
 
         return result;
@@ -874,5 +928,5 @@ export abstract class IgxBaseExporter {
         this._ownersMap.clear();
     }
 
-    protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase): void;
+    protected abstract exportDataImplementation(data: any[], options: IgxExporterOptionsBase, done: () => void): void;
 }
