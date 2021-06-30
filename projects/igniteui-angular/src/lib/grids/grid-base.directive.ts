@@ -33,7 +33,7 @@ import ResizeObserver from 'resize-observer-polyfill';
 import 'igniteui-trial-watermark';
 import { Subject, pipe, fromEvent, noop } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
-import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject } from '../core/utils';
+import { cloneArray, flatten, mergeObjects, isIE, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { DataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
@@ -87,9 +87,7 @@ import {
     GridSelectionRange,
     IgxGridCRUDService,
     IgxRow,
-    IgxCell,
-    isChromium,
-    isFireFox
+    IgxCell
 } from './selection/selection.service';
 import { DragScrollDirection } from './selection/drag-select.directive';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
@@ -157,7 +155,6 @@ import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DeprecateProperty } from '../core/deprecateDecorators';
-
 let FAKE_ROW_ID = -1;
 
 const MINIMUM_COLUMN_WIDTH = 136;
@@ -3094,7 +3091,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-        @Inject(LOCALE_ID) private localeId: string) {
+        @Inject(LOCALE_ID) private localeId: string,
+        public platformUtil: PlatformUtil) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
@@ -6687,7 +6685,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
             this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!isChromium() && !isFireFox()) {
+        if (!this.platformUtil.isChromium && !this.platformUtil.isFirefox) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             res = this.checkContainerSizeChange();
