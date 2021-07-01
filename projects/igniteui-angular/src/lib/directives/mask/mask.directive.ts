@@ -238,8 +238,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             this._start = this.selectionStart;
         }
 
-        debugger;
-
         let valueToParse = '';
         switch (this._key) {
             case this.platform.KEYMAP.DELETE:
