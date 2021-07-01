@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter,
-    HostBinding, Directive, ContentChild, ElementRef } from '@angular/core';
+    HostBinding, Directive, ContentChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
@@ -202,6 +202,10 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     public set totalRecords(value: number) {
         this._totalRecords = value;
         this.totalPages = Math.ceil(this.totalRecords / this.perPage);
+        if (this.page > this.totalPages) {
+            this.page = 0;
+        }
+        this.cdr.detectChanges();
     }
 
     /**
@@ -254,7 +258,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     constructor(@Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
-                private elementRef: ElementRef,) {
+                private elementRef: ElementRef, private cdr: ChangeDetectorRef) {
         super(_displayDensityOptions);
     }
 

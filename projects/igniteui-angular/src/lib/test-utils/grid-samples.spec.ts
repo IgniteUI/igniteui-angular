@@ -183,13 +183,14 @@ export class SelectionComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` [width]="width" [height]="height" [rowSelection]="'multiple'" [primaryKey]="'ProductID'" [selectedRows]="selectedRows"`,
-        '', ColumnDefinitions.productBasicNumberID)
+        '', ColumnDefinitions.productBasicNumberID, '', '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class RowSelectionComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductDataExtended();
     public width = '800px';
     public height = '600px';
     public selectedRows = [];
+    public paging = false;
 }
 
 @Component({
@@ -870,13 +871,14 @@ export class GridWithAvatarComponent extends GridWithSizeComponent {
 
 @Component({
     template: `${GridTemplateStrings.declareGrid(`height="1000px"  width="900px" [primaryKey]="'ID'"`, '',
-        ColumnDefinitions.summariesGroupByColumns)}`
+        ColumnDefinitions.summariesGroupByColumns, '', '<igx-paginator *ngIf="paging"></igx-paginator>')}`
 })
 export class SummariesGroupByComponent extends BasicGridComponent {
     public data = SampleTestData.employeeGroupByData();
     public calculationMode = 'rootAndChildLevels';
     public ageSummary = AgeSummary;
     public ageSummaryTest = AgeSummaryTest;
+    public paging = false;
 }
 
 @Component({

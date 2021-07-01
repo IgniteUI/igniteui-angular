@@ -338,7 +338,7 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('should update current page when \'collapseAll\' ', fakeAsync(() => {
             // Test prerequisites
-            treeGrid.paging = true;
+            fix.detectChanges();
             treeGrid.perPage = 4;
             fix.detectChanges();
             tick(16);
@@ -458,7 +458,6 @@ describe('IgxTreeGrid - Expanding / Collapsing #tGrid', () => {
 
         it('Should update the paginator when navigating through pages', () => {
             // Test prerequisites
-            treeGrid.paging = true;
             fix.detectChanges();
 
             // Verify current page
