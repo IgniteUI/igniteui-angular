@@ -198,6 +198,39 @@ describe('igxExpansionPanel', () => {
             expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
 
+        it('Should expand/collapse without animation when animationSettings === null', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            panel.animationSettings = null;
+            expect(panel).toBeTruthy();
+
+            spyOn(panel.contentCollapsed, 'emit');
+            spyOn(panel.contentExpanded, 'emit');
+            spyOn(panel.contentCollapsing, 'emit');
+            spyOn(panel.contentExpanding, 'emit');
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(0);
+            expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledBefore(panel.contentExpanded.emit);
+            expect(panel.collapsed).toBeFalsy();
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(panel.contentCollapsed.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentExpanding.emit).toHaveBeenCalledTimes(1);
+            expect(panel.contentCollapsing.emit).toHaveBeenCalledBefore(panel.contentCollapsed.emit);
+            expect(panel.collapsed).toBeTruthy();
+        }));
+
         it('Should allow expanding and collapsing events to be cancelled', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();

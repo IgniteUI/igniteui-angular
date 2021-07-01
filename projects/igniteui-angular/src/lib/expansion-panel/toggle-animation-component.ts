@@ -99,19 +99,33 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             target = this.initializePlayer(type, targetElement, callback);
         }
 
-        if (target.hasStarted()) {
+        // V.S. Jun 28th, 2021 #9783: player will NOT be initialized w/ null settings
+        // events will already be emitted
+        if (!target || target.hasStarted()) {
             return;
         }
 
         const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationStart : this.closeAnimationStart;
         targetEmitter.emit();
-        target.play();
+        if (target) {
+            target.play();
+        }
     }
 
     private initializePlayer(type: ANIMATION_TYPE, targetElement: ElementRef, callback: () => void): AnimationPlayer {
         const oppositeType = type === ANIMATION_TYPE.OPEN ? ANIMATION_TYPE.CLOSE : ANIMATION_TYPE.OPEN;
+        // V.S. Jun 28th, 2021 #9783: Treat falsy animation settings as disabled animations
+        const targetAnimationSettings = this.animationSettings || { closeAnimation: null, openAnimation: null };
         const animationSettings = type === ANIMATION_TYPE.OPEN ?
-        this.animationSettings.openAnimation : this.animationSettings.closeAnimation;
+            targetAnimationSettings.openAnimation : targetAnimationSettings.closeAnimation;
+        // V.S. Jun 28th, 2021 #9783: When no animation in target direction, emit start and done events and return
+        if (!animationSettings) {
+            this.setCallback(type, callback);
+            const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationStart : this.closeAnimationStart;
+            targetEmitter.emit();
+            this.onDoneHandler(type);
+            return;
+        }
         const animation = useAnimation(animationSettings);
         const animationBuilder = this.builder.build(animation);
         const opposite = this.getPlayer(oppositeType);
@@ -132,6 +146,24 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
         const target = this.getPlayer(type);
         target.init();
         this.getPlayer(type).setPosition(1 - oppositePosition);
+        this.setCallback(type, callback);
+        target.onDone(() => {
+            this.onDoneHandler(type);
+        });
+        return target;
+    }
+
+    private onDoneHandler(type) {
+        const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationDone : this.closeAnimationDone;
+        const targetCallback = type === ANIMATION_TYPE.OPEN ? this.onOpenedCallback : this.onClosedCallback;
+        targetCallback();
+        if (!(type === ANIMATION_TYPE.OPEN ? this.openInterrupted : this.closeInterrupted)) {
+            targetEmitter.emit();
+        }
+        this.cleanUpPlayer(type);
+    }
+
+    private setCallback(type: ANIMATION_TYPE, callback: () => void) {
         if (type === ANIMATION_TYPE.OPEN) {
             this.onOpenedCallback = callback;
             this.openInterrupted = false;
@@ -139,16 +171,6 @@ export abstract class ToggleAnimationPlayer implements ToggleAnimationOwner, OnD
             this.onClosedCallback = callback;
             this.closeInterrupted = false;
         }
-        const targetEmitter = type === ANIMATION_TYPE.OPEN ? this.openAnimationDone : this.closeAnimationDone;
-        target.onDone(() => {
-            const targetCallback = type === ANIMATION_TYPE.OPEN ? this.onOpenedCallback : this.onClosedCallback;
-            targetCallback();
-            if (!(type === ANIMATION_TYPE.OPEN ? this.openInterrupted : this.closeInterrupted)) {
-                targetEmitter.emit();
-            }
-            this.cleanUpPlayer(type);
-        });
-        return target;
     }
 
 
