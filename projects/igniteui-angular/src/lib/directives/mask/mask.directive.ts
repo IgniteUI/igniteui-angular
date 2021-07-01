@@ -156,6 +156,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
     private _compositionStartIndex: number;
+    private _compositionEndIndex: number;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -206,7 +207,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
         this.nativeElement.selectionStart = this._compositionStartIndex;
-        this.nativeElement.selectionEnd = end;
+        this.nativeElement.selectionEnd = this._compositionEndIndex;
     }
 
     /** @hidden @internal */
@@ -399,6 +400,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         };
 
         this.setSelectionRange(replacedData.end);
+        this._compositionEndIndex = replacedData.end;
 
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
         this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
