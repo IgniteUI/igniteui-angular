@@ -119,9 +119,8 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
     }
 
     public process() {
-        this.toast.message = 'Loading remote data';
         this.toast.position = 'bottom';
-        this.toast.open();
+        this.toast.open('Loading remote data');
         this.remoteService.getData(this.grid3.data, () => {
             this.toast.close();
         });
@@ -183,8 +182,7 @@ export class GridSampleComponent implements OnInit, AfterViewInit {
         this.selectedRow = Object.assign({}, this.selectedCell.Row);
         this.grid1.deleteRow(this.selectedCell.rowIndex);
         this.selectedCell = {};
-        this.snax.message = `Row with ID ${this.selectedRow.record.ID} was deleted`;
-        this.snax.open();
+        this.snax.open(`Row with ID ${this.selectedRow.record.ID} was deleted`);
     }
 
     public restore() {

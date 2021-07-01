@@ -8,7 +8,7 @@
 
 /// Generates a light action-strip schema.
 /// @type {Map}
-/// @prop {Color} color ["'currentColor'"] - The color used for the actions icons.
+/// @prop {Color} icon-color ["'currentColor'"] - The color used for the actions icons.
 /// @prop {Map} background [igx-color: ('grays', 100] - The color used for the action strip component content background.
 /// @prop {Map} actions-background [igx-color: ('grays', 200), to-opaque: #fff, rgba: .9] - The color used for actions background.
 /// @prop {Map} delete-action [igx-color: ('error')] - The color used for the delete icon in action strip component.
@@ -31,7 +31,7 @@ $_light-action-strip: extend(
             igx-color: ('grays', 100)
         ),
 
-        color: "'currentColor'",
+        icon-color: "'currentColor'",
 
         delete-action: (
             igx-color: ('error')
@@ -85,7 +85,7 @@ $_indigo-action-strip: extend(
             igx-color: ('primary')
         ),
 
-        color: (
+        icon-color: (
             igx-contrast-color: 'primary'
         ),
     )
