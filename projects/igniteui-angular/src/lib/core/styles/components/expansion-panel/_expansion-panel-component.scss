@@ -54,7 +54,6 @@
 }
 
 @include b(igx-accordion) {
-    @include e(root) {
-        @extend %igx-title--no-ellipsis !optional;
-    }
+    @extend %igx-title--no-ellipsis !optional;
+    @extend %igx-expanded-panel-margin !optional;
 }

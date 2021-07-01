@@ -77,6 +77,14 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     public cssClass = 'igx-expansion-panel';
 
     /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-expanded')
+    public get panelExpanded() {
+        return this.header.isExpanded;
+    }
+
+    /**
      * Gets/sets whether the component is collapsed (its content is hidden)
      * Get
      * ```typescript

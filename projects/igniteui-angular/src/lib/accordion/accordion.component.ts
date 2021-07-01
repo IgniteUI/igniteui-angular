@@ -42,8 +42,8 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     public id = `igx-accordion-${NEXT_ID++}`;
 
     /** @hidden @internal **/
-    @HostBinding('class.igx-accordion__root')
-    public cssClass = 'igx-accordion__root';
+    @HostBinding('class.igx-accordion')
+    public cssClass = 'igx-accordion';
 
     /**
      * Get/Set the animation settings that panels should use when expanding/collpasing.

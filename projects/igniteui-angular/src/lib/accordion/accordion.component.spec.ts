@@ -10,7 +10,7 @@ import { UIInteractions } from '../test-utils/ui-interactions.spec';
 import { IgxAccordionComponent } from './accordion.component';
 import { IgxAccordionModule } from './accordion.module';
 
-const ACCORDION_CLASS = 'igx-accordion__root';
+const ACCORDION_CLASS = 'igx-accordion';
 const PANEL_TAG = 'IGX-EXPANSION-PANEL';
 const ACCORDION_TAG = 'IGX-ACCORDION';
 
