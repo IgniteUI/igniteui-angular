@@ -8,6 +8,8 @@ import { IgxHierarchicalTransactionService } from '../services/transaction/igx-h
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DefaultSortingStrategy } from 'igniteui-angular';
+import { IGroupingExpression } from '../data-operations/grouping-expression.interface';
+import { IgxTreeGridGroupByAreaComponent } from '../grids/grouping/tree-grid-group-by-area.component';
 
 @Component({
     template: `
@@ -917,7 +919,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
         <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
-        <igx-column [field]="'ID'" dataType="number"></igx-column>
+        <igx-column [field]="'ID'" dataType="string"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -927,17 +929,31 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
     `
 })
 export class IgxTreeGridGroupingComponent {
+    @ViewChild(IgxTreeGridGroupByAreaComponent, { static: true }) public groupByArea: IgxTreeGridGroupByAreaComponent;
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
-    public groupedInitially = true;
-    public groupKey = 'Employees';
+    public groupKey = 'GK_Employees';
     public primaryKey = 'ID';
     public childDataKey='Employees';
-    public groupingExpressions =
-            this.groupedInitially ?
-            [
-                { fieldName: 'OnPTO', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
-                { fieldName: 'HireDate', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
-            ] :
-            [];
+    public groupingExpressions: IGroupingExpression[] =
+        [
+            { fieldName: 'OnPTO', dir: 1, ignoreCase: true, strategy: DefaultSortingStrategy.instance() },
+            { fieldName: 'HireDate', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance() }
+        ];
 }
+
+@Component({
+    template: `
+    <div>
+        <igx-tree-grid-group-by-area #groupArea [grid]="treeGrid">
+        </igx-tree-grid-group-by-area>
+        <igx-tree-grid #treeGrid>
+        </igx-tree-grid>
+    </div>
+    `
+})
+export class IgxTreeGridGroupByAreaTestComponent {
+    @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
+    @ViewChild(IgxTreeGridGroupByAreaComponent, { static: true }) public groupByArea: IgxTreeGridGroupByAreaComponent;
+}
+
