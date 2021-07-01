@@ -268,7 +268,7 @@
         overflow: hidden;
     }
 
-    %tabs-header-scroll {
+    %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
         // flex-wrap: nowrap;
@@ -288,6 +288,17 @@
                 z-index: 0;
             }
         }
+    }
+
+    %tabs-header-scroll {
+        display: flex;         
+        height: 100%;
+            
+        // min-width: 100%;
+        // position: relative;
+        // flex-grow: 1;
+        // flex-wrap: nowrap;        
+        //margin-left: 0;
     }
 
     %tabs-header-button {
