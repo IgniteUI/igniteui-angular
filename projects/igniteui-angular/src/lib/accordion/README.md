@@ -10,41 +10,21 @@ A walkthrough of how to get started can be found [here](https://www.infragistics
 
 ```html
 <igx-accordion>
-  <igx-expansion-panel>
-        <igx-expansion-panel-header>
-            <igx-expansion-panel-title>
-                HTML5
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <div>
-                HTML5 is a software solution stack that defines the properties and behaviors of web page content by implementing a markup-based pattern to it.           
-            </div>
-        </igx-expansion-panel-body>
-    </igx-expansion-panel>
-    <igx-expansion-panel>
-        <igx-expansion-panel-header>
-            <igx-expansion-panel-title>
-                CSS3
-            </igx-expansion-panel-title>
-        </igx-expansion-panel-header>
-        <igx-expansion-panel-body>
-            <div>
-                Cascading Style Sheets (CSS) is a style sheet language used for describing the presentation of a document written in a markup language like HTML      
-            </div>
-        </igx-expansion-panel-body>
+    <igx-expansion-panel *ngFor="let panel of panels">
+        ...
     </igx-expansion-panel>
 </igx-accordion>
 ```
 
 # API Summary
-The following tables summarize the **igx-accordion** inputs, outputs and methods.
+The following tables summarize the **igx-accordion** accessors, inputs, outputs and methods.
 
 ### Accessors
 The following accessors are available in the **igx-accordion** component:
 | Name | Type | Description |
 | :--- | :--- | :--- |
 | `panels` | `IgxExpansionPanelComponent[]` | All IgxExpansionPanel children of the accordion |
+
 ### Inputs
 The following inputs are available in the **igx-accordion** component:
 

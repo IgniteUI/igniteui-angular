@@ -8,18 +8,43 @@ import { IExpansionPanelCancelableEventArgs,
 import { IgxExpansionPanelComponent } from '../expansion-panel/expansion-panel.component';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
-interface IAccordionEventArgs extends IExpansionPanelEventArgs {
+export interface IAccordionEventArgs extends IExpansionPanelEventArgs {
     owner: IgxAccordionComponent;
+    /** Provides a reference to the `IgxExpansionPanelComponent` which was expanded/collapsed. */
     panel: IgxExpansionPanelBase;
 }
 
-interface IAccordionCancelableEventArgs extends IExpansionPanelCancelableEventArgs {
+export interface IAccordionCancelableEventArgs extends IExpansionPanelCancelableEventArgs {
     owner: IgxAccordionComponent;
+    /** Provides a reference to the `IgxExpansionPanelComponent` which is currently expanding/collapsing. */
     panel: IgxExpansionPanelBase;
 }
 
 let NEXT_ID = 0;
 
+/**
+ * IgxAccordion is a container-based component that contains that can house multiple expansion panels.
+ *
+ * @igxModule IgxAccordionModule
+ *
+ * @igxKeywords accordion
+ *
+ * @igxGroup Layouts
+ *
+ * @remark
+ * The Ignite UI for Angular Accordion component enables the user to navigate among multiple collapsing panels
+ * displayed in a single container.
+ * The accordion offers keyboard navigation and API to control the underlying panels' expansion state.
+ *
+ * @example
+ * ```html
+ * <igx-accordion>
+ *   <igx-expansion-panel *ngFor="let panel of panels">
+ *       ...
+ *   </igx-expansion-panel>
+ * </igx-accordion>
+ * ```
+ */
 @Component({
     selector: 'igx-accordion',
     templateUrl: 'accordion.component.html'
@@ -29,13 +54,11 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
      * Get/Set the `id` of the accordion component.
      * Default value is `"igx-accordion-0"`;
      * ```html
-     * <igx-accordion id="my-first-accordion"></igx-expansion-panel>
+     * <igx-accordion id="my-first-accordion"></igx-accordion>
      * ```
      * ```typescript
      * const accordionId = this.accordion.id;
      * ```
-     *
-     * @memberof IgxAccordionComponent
      */
     @HostBinding('attr.id')
     @Input()
@@ -175,10 +198,12 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
 
     constructor() { }
 
+    /** @hidden @internal **/
     public ngAfterContentInit(): void {
         this.updatePanelsAnimation();
     }
 
+    /** @hidden @internal **/
     public ngAfterViewInit(): void {
         this._expandedPanels = new Set<IgxExpansionPanelComponent>(this._panels.filter(panel => !panel.collapsed));
         this._panels.changes.pipe(takeUntil(this._destroy$)).subscribe(() => {
@@ -225,7 +250,7 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
         this.panels.forEach(panel => panel.collapse());
     }
 
-    public handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
+    private handleKeydown(event: KeyboardEvent, panel: IgxExpansionPanelComponent): void {
         const key = event.key.toLowerCase();
         if (!(ACCORDION_NAVIGATION_KEYS.has(key))) {
             return;

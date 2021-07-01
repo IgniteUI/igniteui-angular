@@ -6,35 +6,14 @@ All notable changes for each version of this project will be documented in this 
 
 ### New Features
 - Added `IgxAccordion` component
-    - A collection of vertically collapsible igx-expansion panels that provide users with data and the ability to drill into it in a compact manner. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
-    - Exposed two expansion modes, templating, easy-to-use keyboard navigation, option for nested accordions and more.
+    - A collection of vertically collapsible igx-expansion-panels that provide users with data and the ability to navigate through it in a compact manner. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Exposed API to control the expansion state, easy-to-use keyboard navigation, option for nested accordions.
     - Code example below:
 
     ```html
     <igx-accordion>
-        <igx-expansion-panel>
-            <igx-expansion-panel-header>
-                <igx-expansion-panel-title>
-                    Title 1
-                </igx-expansion-panel-title>
-            </igx-expansion-panel-header>
-            <igx-expansion-panel-body>
-                <div>
-                    Description for Title 1          
-                </div>
-            </igx-expansion-panel-body>
-        </igx-expansion-panel>
-        <igx-expansion-panel>
-            <igx-expansion-panel-header>
-                <igx-expansion-panel-title>
-                    Title 2
-                </igx-expansion-panel-title>
-            </igx-expansion-panel-header>
-            <igx-expansion-panel-body>
-                <div>
-                    Description for Title 2    
-                </div>
-            </igx-expansion-panel-body>
+        <igx-expansion-panel *ngFor="let panel of panels">
+           ...
         </igx-expansion-panel>
     </igx-accordion>
     ```

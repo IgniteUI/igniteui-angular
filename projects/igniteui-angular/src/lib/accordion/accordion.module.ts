@@ -15,7 +15,8 @@ import { IgxAccordionComponent } from './accordion.component';
         CommonModule,
     ],
     exports: [
-        IgxAccordionComponent
+        IgxAccordionComponent,
+        IgxExpansionPanelModule
     ]
 })
 export class IgxAccordionModule {
