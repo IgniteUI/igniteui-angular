@@ -81,7 +81,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     @HostBinding('attr.aria-expanded')
     public get panelExpanded() {
-        return this.header.isExpanded;
+        return !this.collapsed;
     }
 
     /**
