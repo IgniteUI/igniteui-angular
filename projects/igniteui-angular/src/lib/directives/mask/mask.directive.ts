@@ -156,7 +156,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
     private _compositionStartIndex: number;
-    private _afterComposing: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -206,7 +205,8 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
-        this._afterComposing = true;
+        this.nativeElement.selectionStart = this._compositionStartIndex;
+        this.nativeElement.selectionEnd = end;
     }
 
     /** @hidden @internal */
@@ -229,10 +229,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        if (this._afterComposing) {
-            this.inputValue = this.inputValue.replace(/[０１２３４５６７８９]/g, '');
-        }
-
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -242,7 +238,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             this._start = this.selectionStart;
         }
 
-        console.log(this.inputValue);
+        debugger;
 
         let valueToParse = '';
         switch (this._key) {
@@ -280,7 +276,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('blur', ['$event.target.value'])
     public onBlur(value: string): void {
-        this._afterComposing = false;
         this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
