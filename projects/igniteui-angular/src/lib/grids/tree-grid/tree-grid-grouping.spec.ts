@@ -1,5 +1,4 @@
 import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
@@ -159,6 +158,25 @@ describe('IgxTreeGrid', () => {
             fix.detectChanges();
             tick(16);
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+        }));
+
+        it('shows aggregated values in parent records properly', fakeAsync(() => {
+            expect(treeGrid.getCellByColumn(0, 'HireDate').value).toBeUndefined();
+            expect(treeGrid.getCellByColumn(1, 'HireDate').value).toBeUndefined();
+
+            const aggregations = [{
+                field: 'HireDate',
+                aggregate: (parent: any, children: any[]) => children.map((c) => c.HireDate)
+                            .reduce((min, c) => min < c ? min : c, new Date())
+            }];
+
+            fix.componentInstance.aggregations = aggregations;
+            fix.detectChanges();
+            tick();
+
+            expect(treeGrid.rowList.length).toEqual(2);
+            expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
+            expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
         }));
 
     });
