@@ -56,6 +56,17 @@ export abstract class IgxExporterOptionsBase {
      */
     public ignoreGrouping = false;
 
+    /**
+     * Specifies whether the exported data should include multi column headers as in the provided IgxGrid.
+     * ```typescript
+     * let ignoreMultiColumnHeaders = this.exportOptions.ignoreMultiColumnHeaders;
+     * this.exportOptions.ignoreMultiColumnHeaders = true;
+     * ```
+     *
+     * @memberof IgxExporterOptionsBase
+     */
+     public ignoreMultiColumnHeaders = false;
+
     private _fileName: string;
 
     constructor(fileName: string, protected _fileExtension: string) {
