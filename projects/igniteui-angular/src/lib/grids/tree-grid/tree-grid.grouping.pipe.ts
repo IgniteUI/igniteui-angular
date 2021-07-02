@@ -46,38 +46,37 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
     public transform(collection: any[],
                      groupingExpressions: IGroupingExpression[],
                      groupKey: string,
-                     primaryKey: string,
                      childDataKey: string,
                      grid: IgxTreeGridComponent,
                      aggregations?: ITreeGridAggregation[]
-                    //   _: number
                     ): any[] {
         if (groupingExpressions.length === 0) {
             return collection;
+        }
+
+        if (groupKey.toLowerCase() === childDataKey.toLowerCase()) {
+            throw new Error('Group key and child data key cannot be the same.');
         }
 
         this.grid = grid;
 
         const result = [];
         const groupedRecords = this.groupByMultiple(collection, groupingExpressions);
-        this.flattenGrouping(groupedRecords, groupKey, primaryKey,
-            childDataKey, '', result, aggregations);
+        this.flattenGrouping(groupedRecords, groupKey,
+            childDataKey, result, aggregations);
 
         return result;
     }
 
     private flattenGrouping(groupRecords: GroupByRecord[],
                             groupKey: string,
-                            primaryKey: string,
                             childDataKey: string,
-                            parentID: any,
                             data: any[],
                             aggregations: ITreeGridAggregation[] = []) {
         for (const groupRecord of groupRecords) {
             const parent = {};
             const children = groupRecord.records;
 
-            parent[primaryKey] = parentID + groupRecord.value;
             parent[childDataKey] = [];
 
             for (const aggregation of aggregations) {
@@ -89,8 +88,8 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
             data.push(parent);
 
             if (groupRecord.groups) {
-                this.flattenGrouping(groupRecord.groups, groupKey, primaryKey, childDataKey,
-                    parent[primaryKey], parent[childDataKey], aggregations);
+                this.flattenGrouping(groupRecord.groups, groupKey, childDataKey,
+                    parent[childDataKey], aggregations);
             } else {
                 parent[childDataKey] = children;
             }
