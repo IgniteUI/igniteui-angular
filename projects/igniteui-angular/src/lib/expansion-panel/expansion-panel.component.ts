@@ -180,7 +180,13 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         if (!this.body) { // if not body element is passed, there is nothing to animate
             return;
         }
-        const animation = useAnimation(this.animationSettings.openAnimation);
+
+        const targetAnimationSettings = this.animationSettings || { openAnimation: null, closeAnimation: null };
+        if (!targetAnimationSettings.openAnimation) {
+            cb();
+            return;
+        }
+        const animation = useAnimation(targetAnimationSettings.openAnimation);
         const animationBuilder = this.builder.build(animation);
         const openAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
 
@@ -196,7 +202,12 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
         if (!this.body) { // if not body element is passed, there is nothing to animate
             return;
         }
-        const animation = useAnimation(this.animationSettings.closeAnimation);
+        const targetAnimationSettings = this.animationSettings || { openAnimation: null, closeAnimation: null };
+        if (!targetAnimationSettings.closeAnimation) {
+            cb();
+            return;
+        }
+        const animation = useAnimation(targetAnimationSettings.closeAnimation);
         const animationBuilder = this.builder.build(animation);
         const closeAnimationPlayer = animationBuilder.create(this.body.element.nativeElement);
         closeAnimationPlayer.onDone(() => {
@@ -277,5 +288,4 @@ export class IgxExpansionPanelComponent implements IgxExpansionPanelBase, AfterC
     close(evt?: Event) {
         this.collapse(evt);
     }
-
 }
