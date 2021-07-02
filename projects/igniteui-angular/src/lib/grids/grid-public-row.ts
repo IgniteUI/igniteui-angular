@@ -257,7 +257,7 @@ export class IgxGridRow extends BaseRow implements RowType {
 						const hasDetailRows = this.grid.expansionStates.size;
 						const hasGroupedRows = this.grid.groupingExpressions.length;
 						let precedingSummaryRows = 0;
-						let firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+						const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
 
 						// from groupingFlatResult, resolve two other collections:
 						// precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
@@ -527,7 +527,7 @@ export class IgxGroupByRow implements RowType {
 				const hasDetailRows = this.grid.expansionStates.size;
 				const hasGroupedRows = this.grid.groupingExpressions.length;
 				let precedingSummaryRows = 0;
-				let firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+				const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
 
 				// from groupingFlatResult, resolve two other collections:
 				// precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
@@ -671,7 +671,7 @@ export class IgxSummaryRow implements RowType {
 									const hasDetailRows = this.grid.expansionStates.size;
 									const hasGroupedRows = this.grid.groupingExpressions.length;
 									let precedingSummaryRows = 0;
-									let firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+									const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
 
 									// from groupingFlatResult, resolve two other collections:
 									// precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
