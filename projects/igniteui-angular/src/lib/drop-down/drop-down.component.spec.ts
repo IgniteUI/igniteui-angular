@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChild, OnInit, ElementRef, ViewChildren, QueryList, IterableChanges } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -762,6 +762,26 @@ describe('IgxDropDown ', () => {
                     ]
                 }).compileComponents();
             }));
+            it('should call preventDefault on a mousedown event when allowItemsFocus is disabled', () => {
+                fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
+                fixture.detectChanges();
+
+                dropdown = fixture.componentInstance.dropdown;
+                dropdown.allowItemsFocus = false;
+                fixture.detectChanges();
+
+                dropdown.open();
+                fixture.detectChanges();
+
+                const itemToClick = fixture.debugElement.queryAll(By.css(`.${CSS_CLASS_ITEM}`))[0];
+
+                const event = new Event('mousedown', { });
+                spyOn(event, 'preventDefault');
+                itemToClick.triggerEventHandler('mousedown', event);
+
+                fixture.detectChanges();
+                expect(event.preventDefault).toHaveBeenCalled();
+            });
             it('should properly handle OnEnterKeyDown when the dropdown is not visible', fakeAsync(() => {
                 fixture = TestBed.createComponent(InputWithDropDownDirectiveComponent);
                 fixture.detectChanges();
