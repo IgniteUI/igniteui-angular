@@ -47,5 +47,6 @@ export interface ColumnType {
     hasLastPinnedChildColumn: boolean;
     pipeArgs: IColumnPipeArgs;
     hasNestedPath: boolean;
+    additionalTemplateContext: any;
     getGridTemplate(isRow: boolean, isIE: boolean): string;
 }
