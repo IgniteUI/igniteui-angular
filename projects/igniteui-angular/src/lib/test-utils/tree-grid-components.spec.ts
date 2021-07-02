@@ -912,7 +912,7 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:treeGrid"
+    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:treeGrid:aggregations"
             [childDataKey]="childDataKey" expansionDepth="0" width="900px" height="1000px">
         <igx-tree-grid-group-by-area
             [grid]="treeGrid"

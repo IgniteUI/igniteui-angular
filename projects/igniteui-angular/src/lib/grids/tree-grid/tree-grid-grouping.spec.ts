@@ -9,7 +9,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
 
-describe('IgxTreeGrid', () => {
+fdescribe('IgxTreeGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
@@ -86,11 +86,13 @@ describe('IgxTreeGrid', () => {
     });
 
     describe('', () => {
+        let groupingExpressions;
         beforeEach(waitForAsync(/** height/width setter rAF */() => {
             fix = TestBed.createComponent(IgxTreeGridGroupingComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
             groupByArea = fix.componentInstance.groupByArea;
+            groupingExpressions = fix.componentInstance.groupingExpressions;
             setupGridScrollDetection(fix, treeGrid);
         }));
 
@@ -121,7 +123,6 @@ describe('IgxTreeGrid', () => {
         });
 
         it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
-            const groupingExpressions = fix.componentInstance.groupingExpressions;
             expect(groupByArea.expressions).toEqual(groupingExpressions);
             let chips = getChips(fix);
 
@@ -139,7 +140,6 @@ describe('IgxTreeGrid', () => {
         }));
 
         it('removes a group chip when removing a grouping expression', fakeAsync(() => {
-            const groupingExpressions = fix.componentInstance.groupingExpressions;
             groupingExpressions.pop();
             fix.detectChanges();
 
@@ -154,21 +154,32 @@ describe('IgxTreeGrid', () => {
 
         }));
 
-        it('hides/shows the grouped by column when manipulating the groupingExpression when hideGroupedColumns=true', fakeAsync(() => {
-            const groupingExpressions = fix.componentInstance.groupingExpressions;
-            groupByArea.hideGroupedColumns = false;
-            fix.detectChanges();
+        it('keeps the group columns visible by default', fakeAsync(() => {
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
 
+            groupingExpressions.pop();
+            groupByArea.expressions = [...groupingExpressions];
+            fix.detectChanges();
+            tick();
+
+            expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+        }));
+
+        it('hides/shows the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
+            groupByArea.hideGroupedColumns = true;
+            fix.detectChanges();
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
 
             groupingExpressions.pop();
+            groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
 
             groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            groupByArea.expressions = [...groupingExpressions];
             fix.detectChanges();
             tick();
 
