@@ -9,7 +9,7 @@ import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
 
-fdescribe('IgxTreeGrid', () => {
+describe('IgxTreeGrid', () => {
     configureTestSuite();
 
     beforeAll(waitForAsync(() => {
