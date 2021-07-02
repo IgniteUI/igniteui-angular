@@ -36,6 +36,10 @@ All notable changes for each version of this project will be documented in this 
             }
         });
     ```
+
+- `IgxDateTimeEditor`
+    - The `IgxDateTimeEditor` directive supports IME input. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
+
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
