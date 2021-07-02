@@ -156,7 +156,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
     private _compositionStartIndex: number;
-    private _compositionEndIndex: number;
+    private _afterComposition: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -206,8 +206,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
-        this.nativeElement.selectionStart = this._compositionStartIndex;
-        this.nativeElement.selectionEnd = this._compositionEndIndex;
+        this._afterComposition = true;
     }
 
     /** @hidden @internal */
@@ -227,6 +226,10 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 // software keyboard input delete
                 this._key = this.platform.KEYMAP.BACKSPACE;
             }
+            return;
+        }
+
+        if (this._afterComposition) {
             return;
         }
 
@@ -275,6 +278,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('blur', ['$event.target.value'])
     public onBlur(value: string): void {
+        this._afterComposition = false;
         this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
@@ -400,7 +404,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         };
 
         this.setSelectionRange(replacedData.end);
-        this._compositionEndIndex = replacedData.end;
 
         const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
         this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
