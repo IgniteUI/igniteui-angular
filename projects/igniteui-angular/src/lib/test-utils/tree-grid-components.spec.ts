@@ -912,10 +912,11 @@ export class IgxTreeGridCascadingSelectionTransactionComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:primaryKey:childDataKey:treeGrid:aggregations"
-        childDataKey="childDataKey" expansionDepth="0" width="900px" height="1000px">
-        <igx-tree-grid-group-by-area [grid]="treeGrid"
-            [(expressions)]="groupingExpressions"
+    <igx-tree-grid #treeGrid [data]="data | treeGridGrouping:groupingExpressions:groupKey:childDataKey:treeGrid"
+            [childDataKey]="childDataKey" expansionDepth="0" width="900px" height="1000px">
+        <igx-tree-grid-group-by-area
+            [grid]="treeGrid"
+            [(expressions)]='groupingExpressions'
             [hideGroupedColumns]="false">
         </igx-tree-grid-group-by-area>
         <igx-column [field]='groupKey' [resizable]='true' [width]="'250px'" [hidden]="groupingExpressions.length === 0"></igx-column>
@@ -933,7 +934,7 @@ export class IgxTreeGridGroupingComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
     public data = SampleTestData.employeeTreeDataPrimaryForeignKeyExt();
     public groupKey = 'GK_Employees';
-    public primaryKey = 'ID';
+    public groupedInitially = true;
     public childDataKey='Employees';
     public groupingExpressions: IGroupingExpression[] =
         [

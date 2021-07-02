@@ -1,10 +1,11 @@
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DefaultSortingStrategy } from 'igniteui-angular';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { IgxTreeGridGroupByAreaTestComponent, IgxTreeGridGroupingComponent } from '../../test-utils/tree-grid-components.spec';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
+import { TreeGridFunctions } from '../../test-utils/tree-grid-functions.spec';
 import { IgxTreeGridModule } from './public_api';
 import { IgxTreeGridComponent } from './tree-grid.component';
 
@@ -103,15 +104,21 @@ describe('IgxTreeGrid', () => {
             expect(groupByArea.dropAreaVisible).toBeFalse();
         }));
 
-        it('is loaded grouped by two fields.', fakeAsync(() => {
-            // treeGrid.expandAll();
-            // tick();
-
+        it('is loaded grouped by two fields.', () => {
             const groupArea = fix.debugElement.nativeElement.querySelector('igx-tree-grid-group-by-area');
             expect(groupArea).toBeDefined();
             const chips = fix.debugElement.nativeElement.querySelectorAll('igx-chip');
             expect(chips.length).toBe(2);
-        }));
+
+            let rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(2);
+
+            treeGrid.expandAll();
+            fix.detectChanges();
+
+            rows = TreeGridFunctions.getAllRows(fix);
+            expect(rows.length).toBe(19);
+        });
 
         it('shows a new group chip when adding a grouping expression', fakeAsync(() => {
             const groupingExpressions = fix.componentInstance.groupingExpressions;
@@ -186,7 +193,6 @@ describe('IgxTreeGrid', () => {
             expect(treeGrid.getCellByColumn(0, 'HireDate').value).toEqual(new Date(2009, 6, 19));
             expect(treeGrid.getCellByColumn(1, 'HireDate').value).toEqual(new Date(2007, 11, 18));
         }));
-
     });
 
     const getChips = (fixture) => {
