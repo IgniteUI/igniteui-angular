@@ -54,7 +54,7 @@ export class IgxTreeGridGroupingPipe implements PipeTransform {
             return collection;
         }
 
-        if (groupKey.toLowerCase() === childDataKey.toLowerCase()) {
+        if (groupKey?.toLowerCase() === childDataKey?.toLowerCase()) {
             throw new Error('Group key and child data key cannot be the same.');
         }
 
