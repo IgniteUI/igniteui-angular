@@ -70,6 +70,8 @@ export class GridRowEditSampleComponent {
     private cssBlue = `color: #2222aa;`;
     private cssBig = `font-size: 16px; font-weight: 800;`;
     private addProductId: number;
+    public customContext = { property1: 'test', property2: 'test2'};
+    @ViewChild('gridPerformance', { read: IgxGridComponent, static: true }) public gridPerformance: IgxGridComponent;
 
     constructor() {
         const enhancedData = data.map((e) => Object.assign(e, {
