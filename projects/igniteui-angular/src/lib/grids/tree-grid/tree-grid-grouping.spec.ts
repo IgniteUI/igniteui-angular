@@ -147,17 +147,25 @@ describe('IgxTreeGrid', () => {
 
         }));
 
-        it('hides the grouped by column when hideGroupedColumns=true', fakeAsync(() => {
+        it('hides/shows the grouped by column when manipulating the groupingExpression when hideGroupedColumns=true', fakeAsync(() => {
             const groupingExpressions = fix.componentInstance.groupingExpressions;
-            groupByArea.hideGroupedColumns = true;
+            groupByArea.hideGroupedColumns = false;
             fix.detectChanges();
+
 
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeTrue();
 
             groupingExpressions.pop();
             fix.detectChanges();
-            tick(16);
+            tick();
+
             expect(treeGrid.getColumnByName('HireDate').hidden).toBeFalse();
+
+            groupingExpressions.push({ fieldName: 'JobTitle', dir: 2, ignoreCase: true, strategy: DefaultSortingStrategy.instance()});
+            fix.detectChanges();
+            tick();
+
+            expect(treeGrid.getColumnByName('JobTitle').hidden).toBeTrue();
         }));
 
         it('shows aggregated values in parent records properly', fakeAsync(() => {
