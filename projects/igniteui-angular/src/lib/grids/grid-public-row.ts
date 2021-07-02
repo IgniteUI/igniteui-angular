@@ -470,6 +470,15 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     public get hasChildren(): boolean {
         return  !!this.grid.childLayoutKeys.length;
     }
+
+		public get viewIndex() {
+			const firstRowInd = this.grid.filteredSortedData.indexOf(this.grid.dataView[0]);
+			const expandedRows = this.grid.filteredSortedData.filter((rec, ind) => {
+				const rowID = this.grid.primaryKey ? rec[this.grid.primaryKey] : rec;
+				return this.grid.expansionStates.get(rowID) && ind < firstRowInd;
+			});
+			return firstRowInd + expandedRows.length + this.index;
+		}
 }
 
 export class IgxGroupByRow implements RowType {
