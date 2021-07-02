@@ -2,6 +2,17 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 10.2.29
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
 ## 10.2.25
 - `IgxExpansionPanelHeaderComponent`
     - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
