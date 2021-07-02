@@ -324,6 +324,16 @@ export class IgxListItemComponent implements IListChild {
     /**
      * @hidden
      */
+    @HostListener('pancancel')
+    public pancancel() {
+        this.setContentElementLeft(0);
+        this._panState = IgxListPanState.NONE;
+        this.hideLeftAndRightPanTemplates();
+    }
+
+    /**
+     * @hidden
+     */
     @HostListener('panmove', ['$event'])
     public panMove(ev) {
         if (this.isTrue(this.isHeader)) {
