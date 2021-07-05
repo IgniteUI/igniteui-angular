@@ -68,6 +68,10 @@ export class IgxAccordionComponent implements AfterContentInit, AfterViewInit, O
     @HostBinding('class.igx-accordion')
     public cssClass = 'igx-accordion';
 
+    /** @hidden @internal **/
+    @HostBinding('style.display')
+    public displayStyle = 'block';
+
     /**
      * Get/Set the animation settings that panels should use when expanding/collpasing.
      *
