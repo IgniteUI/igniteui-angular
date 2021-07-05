@@ -20,7 +20,7 @@
         {{sortingIcon}}
     </igx-icon>
 
-    <div *ngIf="grid.allowFiltering == true && column.filterable && grid.filterMode == 'excelStyleFilter'"
+    <div *ngIf="grid.allowFiltering === true && column.filterable && grid.filterMode === 'excelStyleFilter'"
          (click)="onFilteringIconClick($event)"
          (pointerdown)="$event.stopPropagation()"
          [ngClass]="filterIconClassName">
