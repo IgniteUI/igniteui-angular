@@ -27,9 +27,9 @@ import { FilterMode } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
-import { IgxGridGroupByAreaComponent } from '../group-by-area/group-by-area.component';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -158,13 +158,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ViewChild('defaultDropArea', { read: TemplateRef, static: true })
-    public defaultDropAreaTemplate: TemplateRef<any>;
-
-    /**
-     * @hidden @internal
-     */
-    @ViewChild(IgxGridGroupByAreaComponent)
+     @ViewChild(IgxGridGroupByAreaComponent)
     public groupArea: IgxGridGroupByAreaComponent;
 
     /**

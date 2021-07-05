@@ -31,11 +31,14 @@ import { IgxGridFilteringModule } from './filtering/base/filtering.module';
 import { IgxRowDirective } from './row.directive';
 import {
     IgxExcelStyleHeaderIconDirective,
+    IgxGroupAreaDropDirective,
     IgxHeaderCollapseIndicatorDirective,
     IgxHeaderExpandIndicatorDirective,
     IgxRowCollapsedIndicatorDirective,
     IgxRowExpandedIndicatorDirective
 } from './grid/grid.directives';
+import { IgxChipsModule } from '../chips/chips.module';
+import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
 /**
  * @hidden
  */
@@ -56,6 +59,8 @@ import {
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxGroupAreaDropDirective,
+        IgxGroupByMetaPipe
     ],
     entryComponents: [
         IgxAdvancedFilteringDialogComponent
@@ -89,6 +94,8 @@ import {
         IgxHeaderExpandIndicatorDirective,
         IgxHeaderCollapseIndicatorDirective,
         IgxExcelStyleHeaderIconDirective,
+        IgxGroupAreaDropDirective,
+        IgxGroupByMetaPipe
     ],
     imports: [
         IgxGridColumnModule,
@@ -104,7 +111,8 @@ import {
         IgxGridExcelStyleFilteringModule,
         IgxRowDragModule,
         IgxPaginatorModule,
-        IgxGridSharedModules
+        IgxGridSharedModules,
+        IgxChipsModule
     ],
     providers: [
         { provide: IgxGridTransaction, useClass: IgxBaseTransactionService }

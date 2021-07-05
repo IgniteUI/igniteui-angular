@@ -3,11 +3,10 @@
 
 <!-- Group-by area -->
 <ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
-    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth' class="igx-grid-grouparea"
+    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth'
         [grid]="this"
         [expressions]="groupingExpressions"
         [sortingExpressions]="sortingExpressions"
-        [visible]="dropAreaVisible"
         [density]="displayDensity"
         [dropAreaTemplate]="dropAreaTemplate"
         [dropAreaMessage]="dropAreaMessage"
@@ -150,7 +149,7 @@
         <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
 
-    <div #igxBodyOverlayOutlet igxOverlayOutlet></div>
+    <div #igxBodyOverlayOutlet="overlay-outlet" igxOverlayOutlet></div>
 </div>
 
 
@@ -218,11 +217,6 @@
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
     </div>
-</ng-template>
-
-<ng-template #defaultDropArea>
-    <igx-icon class="igx-drop-area__icon">group_work</igx-icon>
-    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>

@@ -1,6 +1,5 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import {
-    IgxGroupAreaDropDirective,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective
 } from './grid.directives';
@@ -17,7 +16,7 @@ import { IgxGridCommonModule } from '../grid-common.module';
 import { IgxGridSummaryPipe } from './grid.summary.pipe';
 import { IgxGridDetailsPipe } from './grid.details.pipe';
 import { IgxGridExpandableCellComponent } from './expandable-cell.component';
-import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-area/group-by-area.component';
+import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 /**
  * @hidden
  */
@@ -28,7 +27,6 @@ import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-are
     IgxGridGroupByRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
@@ -37,7 +35,6 @@ import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-are
     IgxGridDetailsPipe,
     IgxGridExpandableCellComponent,
     IgxGridGroupByAreaComponent,
-    IgxGroupByMetaPipe
   ],
   exports: [
     IgxGridComponent,
@@ -46,7 +43,6 @@ import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-are
     IgxGridRowComponent,
     IgxGroupByRowTemplateDirective,
     IgxGridDetailTemplateDirective,
-    IgxGroupAreaDropDirective,
     IgxGridGroupingPipe,
     IgxGridPagingPipe,
     IgxGridSortingPipe,
@@ -54,7 +50,6 @@ import { IgxGridGroupByAreaComponent, IgxGroupByMetaPipe } from '../group-by-are
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
     IgxGridGroupByAreaComponent,
-    IgxGroupByMetaPipe,
     IgxGridCommonModule
   ],
   imports: [

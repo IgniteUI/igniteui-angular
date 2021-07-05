@@ -1,5 +1,5 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
-
+<ng-content select="igx-tree-grid-group-by-area"></ng-content>
 <igx-grid-header-row class="igx-grid-thead" tabindex="0"
     [grid]="this"
     [hasMRL]="hasColumnLayouts"
@@ -104,7 +104,7 @@
         <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
 
-    <div igxOverlayOutlet #igxBodyOverlayOutlet></div>
+    <div igxOverlayOutlet #igxBodyOverlayOutlet="overlay-outlet"></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>
