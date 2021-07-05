@@ -1986,7 +1986,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
+        fit(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
@@ -2137,13 +2137,13 @@ describe('IgxGrid Component Tests #grid', () => {
 
             expect(firstRow instanceof IgxGridRow).toBe(true);
             expect(firstRow.index).toEqual(0);
-            expect(firstRow.viewIndex).toEqual(6);
+            expect(firstRow.viewIndex).toEqual(5);
             expect(secondRow instanceof IgxSummaryRow).toBe(true);
             expect(secondRow.index).toBe(1);
-            expect(secondRow.viewIndex).toBe(7);
+            expect(secondRow.viewIndex).toBe(6);
             expect(thirdRow instanceof IgxGroupByRow).toBe(true);
             expect(thirdRow.index).toBe(2);
-            expect(thirdRow.viewIndex).toBe(8);
+            expect(thirdRow.viewIndex).toBe(7);
         });
 
         it('Verify that getRowByIndex returns correct data when paging is enabled', fakeAsync(() => {
