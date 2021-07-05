@@ -694,6 +694,22 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     @Input() colStart: number;
 
     /**
+     * Sets/gets custom properties provided in additional template context.
+     *
+     * ```html
+     * <igx-column [additionalTemplateContext]="contextObject">
+     *   <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+     *      {{ props }}
+     *   </ng-template>
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public additionalTemplateContext: any;
+
+    /**
      * @hidden
      */
     @Output()
