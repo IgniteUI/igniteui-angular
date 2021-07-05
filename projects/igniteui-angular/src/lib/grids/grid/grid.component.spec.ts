@@ -1986,7 +1986,7 @@ describe('IgxGrid Component Tests #grid', () => {
             expect(grid.getRowData(7)).toEqual({});
         });
 
-        fit(`Verify that getRowByIndex and RowType API returns correct data`, () => {
+        it(`Verify that getRowByIndex and RowType API returns correct data`, () => {
             const fix = TestBed.createComponent(IgxGridDefaultRenderingComponent);
             fix.componentInstance.initColumnsRows(35, 5);
             fix.detectChanges();
