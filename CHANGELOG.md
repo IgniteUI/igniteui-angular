@@ -2,6 +2,18 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 11.1.17
+### New Features
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
 ## 11.1.16
 ### New Features
 - `Toolbar Actions`
