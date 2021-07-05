@@ -151,6 +151,7 @@ import { TestInterceptorClass } from './interceptor.service';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const components = [
@@ -244,6 +245,7 @@ const components = [
     TreeGridFlatDataSampleComponent,
     TreeGridWithTransactionsComponent,
     TreeGridLoadOnDemandSampleComponent,
+    TreeGridGroupBySampleComponent,
     CustomContentComponent,
     ColorsSampleComponent,
     AnimationsSampleComponent,
