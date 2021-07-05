@@ -4,6 +4,7 @@
 @use '../ripple/ripple-component' as *;
 @use '../ripple/ripple-theme' as *;
 @use 'sass:map';
+@use 'sass:math';
 
 ////
 /// @group themes
@@ -103,7 +104,7 @@
     // It is under the name of $cbx-size
     $size: em(20px);
     $size-bs: em(14px);
-    $checkbox-radius: $size / 2;
+    $checkbox-radius: math.div($size, 2);
 
     $variant: map.get($theme, variant);
     $bootstrap-theme: $variant == 'bootstrap';
@@ -146,10 +147,10 @@
     ), $variant);
 
     $mark-length: 24;
-    $mark-x-factor: $mark-stroke / $mark-length;
+    $mark-x-factor: math.div($mark-stroke, $mark-length);
 
     $ripple-size: em(48px);
-    $ripple-radius: $ripple-size / 2;
+    $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: igx-ripple-theme(
         $schema: $light-schema,

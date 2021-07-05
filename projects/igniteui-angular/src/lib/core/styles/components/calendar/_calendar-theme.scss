@@ -3,6 +3,7 @@
 @use '../../typography/base' as *;
 @use 'sass:map';
 @use 'sass:meta';
+@use 'sass:math';
 
 ////
 /// @group themes
@@ -378,7 +379,7 @@
     ), $variant);
 
     $cal-value-h: $cal-value-w;
-    $cal-value-br: $cal-value-w / 2;
+    $cal-value-br: math.div($cal-value-w, 2);
     $cal-value-fw: 600;
 
     $cal-value-month-margin: 0 em(12px);
@@ -446,7 +447,7 @@
             %cal-row-display {
                 &:first-of-type {
                     padding-top: 0;
-                    padding-bottom: $cal-picker-padding / 2;
+                    padding-bottom: math.div($cal-picker-padding, 2);
                 }
             }
 
@@ -553,7 +554,7 @@
         top: 0;
 
         @if $bootstrap-theme {
-            top: $cal-picker-padding / 2;
+            top: math.div($cal-picker-padding, 2);
         }
 
         &:focus,
@@ -812,7 +813,7 @@
             content: '';
             position: absolute;
             width: 100%;
-            height: $cal-row-padding / 2;
+            height: math.div($cal-row-padding, 2);
             #{$left}: 0;
             top: 100%;
             background: var-get($theme, 'week-number-background') !important;
@@ -839,7 +840,7 @@
 
             &::after {
                 top: 100%;
-                height: if($not-bootstrap-theme, ($cal-row-padding / 2) + rem(2px), $cal-row-padding + rem(5px));
+                height: if($not-bootstrap-theme, math.div($cal-row-padding, 2) + rem(2px), $cal-row-padding + rem(5px));
             }
 
             &::before {

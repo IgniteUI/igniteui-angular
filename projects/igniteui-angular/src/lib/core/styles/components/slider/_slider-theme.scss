@@ -2,6 +2,7 @@
 @use '../../themes/schemas' as *;
 @use '../../typography/base' as *;
 @use 'sass:map';
+@use 'sass:math';
 
 ////
 /// @group themes
@@ -149,12 +150,12 @@
     // Slider Thumb
     $slider-thumb-width: 40px;
     $slider-thumb-height: $slider-thumb-width;
-    $slider-thumb-radius: $slider-thumb-width / 2;
+    $slider-thumb-radius: math.div($slider-thumb-width, 2);
 
     // Slider Label
     $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
-    $slider-label-radius: $slider-label-width / 2;
+    $slider-label-radius: math.div($slider-label-width, 2);
     $slider-label-padding: 0 rem(2px);
 
     $switch-display: map.get((
@@ -301,11 +302,11 @@
     }
 
     %igx-slider__tick--disabled {
-        background: var-get($theme, 'disabled-base-track-color')!important;
+        background: var-get($theme, 'disabled-base-track-color') !important;
     }
 
     %igx-slider__ticks-labels--disabled {
-        color: var-get($theme, 'disabled-base-track-color')!important;
+        color: var-get($theme, 'disabled-base-track-color') !important;
     }
 
     %igx-slider__ticks-group--tall {
@@ -526,8 +527,8 @@
             content: '';
             width: rem($dot-size);
             height: rem($dot-size);
-            #{$left}: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
-            top: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
+            #{$left}: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
+            top: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
             background: var-get($theme, 'thumb-color');
             border: rem($thumb-border-width) solid var-get($theme, 'thumb-border-color');
             transform: rotate(45deg);

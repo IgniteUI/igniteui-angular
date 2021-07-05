@@ -5,6 +5,7 @@
 @use 'sass:map';
 @use 'sass:meta';
 @use 'sass:color';
+@use 'sass:math';
 
 ////
 /// @group themes
@@ -781,7 +782,7 @@
 
         %grid__cbx-selection--push {
             align-items: flex-start;
-            padding-top: (map.get($grid-header-height, 'comfortable') - rem(20px)) / 2;
+            padding-top: math.div(map.get($grid-header-height, 'comfortable') - rem(20px), 2);
         }
 
         %grid-row:last-of-type {
@@ -811,14 +812,14 @@
     %grid-thead--cosy {
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
-            padding-top: (map.get($grid-header-height, 'cosy') - rem(20px)) / 2;
+            padding-top: math.div(map.get($grid-header-height, 'cosy') - rem(20px), 2);
         }
     }
 
     %grid-thead--compact {
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
-            padding-top: (map.get($grid-header-height, 'compact') - rem(20px)) / 2;
+            padding-top: math.div(map.get($grid-header-height, 'compact') - rem(20px), 2);
         }
     }
 
@@ -1572,7 +1573,7 @@
         cursor: initial;
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
-        line-height: map.get($grid-header-height, 'comfortable') / $grid-head-fs;
+        line-height: math.div(map.get($grid-header-height, 'comfortable'), $grid-head-fs);
         transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
 
         @if $variant != 'indigo-design' {
@@ -1581,11 +1582,11 @@
     }
 
     %grid-cell-header-title--cosy {
-        line-height: map.get($grid-header-height, 'cosy') / $grid-head-fs;
+        line-height: math.div(map.get($grid-header-height, 'cosy'), $grid-head-fs);
     }
 
     %grid-cell-header-title--compact {
-        line-height: map.get($grid-header-height, 'compact') / $grid-head-fs;
+        line-height: math.div(map.get($grid-header-height, 'compact'), $grid-head-fs);
     }
 
     %grid-cell-header-icons {
@@ -2304,7 +2305,7 @@
         }
 
         &%igx-grid__group-expand-btn--push {
-            top: (map.get($grid-header-height, 'comfortable') - rem(24px)) / 2;
+            top: math.div(map.get($grid-header-height, 'comfortable') - rem(24px), 2);
         }
     }
 
@@ -2312,7 +2313,7 @@
         #{$left}: map.get($grid-grouping-indicator-padding, 'cosy');
 
         &%igx-grid__group-expand-btn--push {
-            top: (map.get($grid-header-height, 'cosy') - rem(24px)) / 2;
+            top: math.div(map.get($grid-header-height, 'cosy') - rem(24px), 2);
         }
     }
 
@@ -2320,7 +2321,7 @@
         #{$left}: map.get($grid-grouping-indicator-padding, 'compact');
 
         &%igx-grid__group-expand-btn--push {
-            top: (map.get($grid-header-height, 'compact') - rem(24px)) / 2;
+            top: math.div(map.get($grid-header-height, 'compact') - rem(24px), 2);
         }
     }
 

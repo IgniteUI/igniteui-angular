@@ -4,6 +4,7 @@
 @use '../ripple/ripple-theme' as *;
 @use '../ripple/ripple-component' as *;
 @use 'sass:map';
+@use 'sass:math';
 
 ////
 /// @group themes
@@ -132,7 +133,7 @@
     $transition: all .2s ease-in;
 
     $ripple-size: em(48px);
-    $ripple-radius: $ripple-size / 2;
+    $ripple-radius: math.div($ripple-size, 2);
 
     $ripple-theme: igx-ripple-theme(
         $schema: $light-schema,
