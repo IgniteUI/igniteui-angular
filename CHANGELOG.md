@@ -20,6 +20,16 @@ All notable changes for each version of this project will be documented in this 
 
     - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/accordion/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Accordion-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
 
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 

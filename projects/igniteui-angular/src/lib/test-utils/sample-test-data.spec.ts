@@ -1476,6 +1476,176 @@ export class SampleTestData {
         }
     ]);
 
+    public static employeeTreeDataPrimaryForeignKeyExt = () => ([
+        {
+            ID: 147,
+            ParentID: -1,
+            Name: 'John Winchester',
+            HireDate: new Date(2008, 3, 20),
+            Age: 55,
+            OnPTO: false,
+            JobTitle: 'Director'
+        },
+        {
+            ID: 475,
+            ParentID: 147,
+            Name: 'Michael Langdon',
+            HireDate: new Date(2011, 6, 3),
+            Age: 43,
+            OnPTO: false,
+            Employees: null,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 957,
+            ParentID: 147,
+            Name: 'Thomas Hardy',
+            HireDate: new Date(2009, 6, 19),
+            Age: 29,
+            OnPTO: true,
+            Employees: undefined,
+            JobTitle: 'Associate Software Developer'
+        },
+        {
+            ID: 317,
+            ParentID: 147,
+            Name: 'Monica Reyes',
+            HireDate: new Date(2014, 8, 18),
+            Age: 31,
+            OnPTO: false,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 711,
+            ParentID: 317,
+            Name: 'Roland Mendel',
+            HireDate: new Date(2015, 9, 17),
+            Age: 35,
+            OnPTO: true,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 998,
+            ParentID: 317,
+            Name: 'Sven Ottlieb',
+            HireDate: new Date(2009, 10, 11),
+            Age: 44,
+            OnPTO: false,
+            JobTitle: 'Senior Software Developer'
+        },
+        {
+            ID: 847,
+            ParentID: -1,
+            Name: 'Ana Sanders',
+            HireDate: new Date(2014, 1, 22),
+            Age: 42,
+            OnPTO: false,
+            JobTitle: 'Vice President'
+        },
+        {
+            ID: 225,
+            ParentID: 847,
+            Name: 'Laurence Johnson',
+            HireDate: new Date(2014, 4, 4),
+            OnPTO: true,
+            Age: 44,
+            JobTitle: 'Senior Software Developer'
+        },
+        {
+            ID: 663,
+            ParentID: 847,
+            Name: 'Elizabeth Richards',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25,
+            OnPTO: false,
+            JobTitle: 'Associate Software Developer'
+        },
+
+        {
+            ID: 141,
+            ParentID: 663,
+            Name: 'Trevor Ashworth',
+            HireDate: new Date(2010, 3, 22),
+            OnPTO: false,
+            Age: 39,
+            JobTitle: 'Software Developer'
+        },
+        {
+            ID: 19,
+            ParentID: -1,
+            Name: 'Victoria Lincoln',
+            HireDate: new Date(2014, 1, 22),
+            Age: 49,
+            OnPTO: false,
+            JobTitle: 'Director'
+        },
+        {
+            ID: 15,
+            ParentID: 19,
+            Name: 'Antonio Moreno',
+            HireDate: new Date(2014, 4, 4),
+            Age: 44,
+            OnPTO: true,
+            Employees: [],
+            JobTitle: 'Senior Software Developer, TL'
+        },
+        {
+            ID: 17,
+            ParentID: -1,
+            Name: 'Yang Wang',
+            HireDate: new Date(2010, 1, 1),
+            Age: 61,
+            OnPTO: false,
+            JobTitle: 'Director'
+        },
+        {
+            ID: 12,
+            ParentID: 17,
+            Name: 'Pedro Afonso',
+            HireDate: new Date(2007, 11, 18),
+            Age: 50,
+            OnPTO: false,
+            JobTitle: 'Director'
+        },
+        {
+            ID: 109,
+            ParentID: 12,
+            Name: 'Patricio Simpson',
+            HireDate: new Date(2017, 11, 9),
+            Age: 25,
+            OnPTO: false,
+            Employees: [],
+            JobTitle: 'Associate Software Developer'
+        },
+        {
+            ID: 99,
+            ParentID: 12,
+            Name: 'Francisco Chang',
+            HireDate: new Date(2010, 3, 22),
+            OnPTO: true,
+            Age: 39,
+            JobTitle: 'Senior Software Developer'
+        },
+        {
+            ID: 299,
+            ParentID: 12,
+            Name: 'Peter Lewis',
+            HireDate: new Date(2018, 3, 18),
+            OnPTO: false,
+            Age: 25,
+            JobTitle: 'Associate Software Developer'
+        },
+        {
+            ID: 101,
+            ParentID: 17,
+            Name: 'Casey Harper',
+            HireDate: new Date(2010, 3, 22),
+            OnPTO: false,
+            Age: 27,
+            JobTitle: 'Software Developer'
+        }
+    ]);
+
     public static employeeGroupByData = () => ([
         {
             ID: 475,

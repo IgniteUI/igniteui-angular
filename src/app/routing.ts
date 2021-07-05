@@ -122,6 +122,7 @@ import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const appRoutes = [
@@ -521,6 +522,10 @@ const appRoutes = [
     {
         path: 'treeGridFlatData',
         component: TreeGridFlatDataSampleComponent
+    },
+    {
+        path: 'treeGridGroupBy',
+        component: TreeGridGroupBySampleComponent
     },
     {
         path: 'treeGridLoadOnDemand',
