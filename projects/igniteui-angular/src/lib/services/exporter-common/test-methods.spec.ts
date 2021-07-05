@@ -47,6 +47,8 @@ export class TestMethods {
             myGrid.columns[i].pinned = true;
         });
 
+        await wait(16);
+
         return { fixture: fix, grid: myGrid };
     }
 

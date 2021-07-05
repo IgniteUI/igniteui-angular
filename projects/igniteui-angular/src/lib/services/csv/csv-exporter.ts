@@ -47,13 +47,14 @@ export class IgxCsvExporterService extends IgxBaseExporter {
 
     private _stringData: string;
 
-    protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions) {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxCsvExporterOptions, done: () => void) {
         data = data.map((item) => item.data);
         const csvData = new CharSeparatedValueData(data, options.valueDelimiter);
         csvData.prepareDataAsync((r) => {
             this._stringData = r;
             this.saveFile(options);
             this.exportEnded.emit({ csvData: this._stringData });
+            done();
         });
     }
 
