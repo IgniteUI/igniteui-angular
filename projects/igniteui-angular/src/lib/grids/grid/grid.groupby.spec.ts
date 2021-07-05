@@ -19,7 +19,6 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -256,7 +255,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
         const event: IChipClickEventArgs = { owner: chips[0], cancel: false, originalEvent: null };
-        grid.onChipClicked(event);
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstChipComp = chipComponents[0].componentInstance;
+        firstChipComp.chipClick.emit(event);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         expect(chips.length).toBe(1);
@@ -2355,8 +2356,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         let chips = fix.nativeElement.querySelectorAll('igx-chip');
         // click grouping direction arrow
         const event: IChipClickEventArgs = { owner: chips[0], originalEvent: null, cancel: false };
-        grid.onChipClicked(event);
-        tick();
+        const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
+        const firstChipComp = chipComponents[0].componentInstance;
+        firstChipComp.chipClick.emit(event);
         fix.detectChanges();
         chips = fix.nativeElement.querySelectorAll('igx-chip');
         tick();

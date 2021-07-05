@@ -111,20 +111,32 @@
         height: map.get($paginator-height, 'compact');
     }
 
-
-    %igx-paginator__label {
-        margin-#{$right}: 8px;
-        @include ellipsis();
+    %igx-paginator-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
     }
 
-    %igx-paginator__select {
+    %igx-page-size {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         flex: 1;
     }
 
-    %igx-paginator__pager {
+    %igx-page-size__label {
+        margin-#{$right}: 8px;
+        @include ellipsis();
+    }
+
+    %igx-page-size__select {
+        display: flex;
+        max-width: 90px;
+        min-width: 80px;
+    }
+
+    %igx-page-nav {
         display: flex;
         justify-content: flex-end;
         align-items: center;
@@ -141,13 +153,7 @@
         }
     }
 
-    %igx-paginator__pager-text {
+    %igx-page-nav__text {
         display: flex;
-    }
-
-    %igx-paginator__select-input {
-        display: flex;
-        max-width: 90px;
-        min-width: 80px;
     }
 }

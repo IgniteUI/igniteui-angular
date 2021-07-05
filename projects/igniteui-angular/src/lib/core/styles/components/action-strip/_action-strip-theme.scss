@@ -13,7 +13,7 @@
 /// @param {Map} $palette [null] - The palette used as basis for styling the component.
 /// @param {Map} $schema [$light-schema] - The schema used as basis for styling the component.
 ///
-/// @param {Color} $color [null] - The color used for the actions icons.
+/// @param {Color} $icon-color [null] - The color used for the actions icons.
 /// @param {Color} $background [null] - The color used for the action strip component content background.
 /// @param {Color} $actions-background [null] - The color used for the actions background.
 /// @param {Color} $delete-action [null] - The color used for the delete icon in action strip component.
@@ -34,7 +34,7 @@
 
     $background: null,
     $actions-background: null,
-    $color: null,
+    $icon-color: null,
     $delete-action: null,
     $actions-border-radius: null,
 ) {
@@ -53,8 +53,8 @@
         if($actions-border-radius, $actions-border-radius, map.get($action-strip-schema, 'actions-border-radius')), 0, 24px
     );
 
-    @if not($color) and $actions-background {
-        $color: text-contrast($actions-background);
+    @if not($icon-color) and $actions-background {
+        $icon-color: text-contrast($actions-background);
     }
 
     @return extend($theme, (
@@ -62,7 +62,7 @@
         palette: $palette,
         background: $background,
         actions-background: $actions-background,
-        color: $color,
+        icon-color: $icon-color,
         delete-action: $delete-action,
         actions-border-radius: $actions-border-radius,
     ));
@@ -179,7 +179,7 @@
         justify-content: center;
         pointer-events: all;
         position: relative;
-        color: var-get($theme, 'color');
+        color: var-get($theme, 'icon-color');
         border-radius: var-get($theme, 'actions-border-radius');
         background: var-get($theme, 'actions-background');
         max-height: 36px;
@@ -189,12 +189,12 @@
         }
 
         igx-icon {
-            color: var-get($theme, 'color');
+            color: var-get($theme, 'icon-color');
         }
 
         [igxButton='icon'] {
             igx-icon {
-                color: var-get($theme, 'color');
+                color: var-get($theme, 'icon-color');
             }
 
             @if $variant == 'indigo-design' {

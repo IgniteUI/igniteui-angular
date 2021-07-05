@@ -121,6 +121,8 @@ import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
+import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
+import { PaginationSampleComponent } from './pagination/pagination.component';
 
 const appRoutes = [
     {
@@ -517,6 +519,10 @@ const appRoutes = [
         component: TreeGridFlatDataSampleComponent
     },
     {
+        path: 'treeGridGroupBy',
+        component: TreeGridGroupBySampleComponent
+    },
+    {
         path: 'treeGridLoadOnDemand',
         component: TreeGridLoadOnDemandSampleComponent
     },
@@ -579,6 +585,9 @@ const appRoutes = [
     {
         path: 'gridEvents',
         component: GridEventsComponent
+    },{
+        path: 'pagination',
+        component: PaginationSampleComponent
     }
 ];
 
