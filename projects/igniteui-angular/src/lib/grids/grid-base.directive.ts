@@ -153,7 +153,7 @@ import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
-import { IgxGridGroupByAreaComponent } from './group-by-area/group-by-area.component';
+import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 
 let FAKE_ROW_ID = -1;
 
