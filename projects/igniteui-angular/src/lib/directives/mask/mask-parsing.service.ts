@@ -182,7 +182,7 @@ export class MaskParsingService {
 
         return isValid;
     }
-    private getMaskLiterals(mask: string): Map<number, string> {
+    public getMaskLiterals(mask: string): Map<number, string> {
         const literals = new Map<number, string>();
 
         for (let i = 0; i < mask.length; i++) {

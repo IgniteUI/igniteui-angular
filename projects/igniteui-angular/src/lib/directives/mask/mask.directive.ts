@@ -9,6 +9,7 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
+import { forEach } from 'jszip';
 
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
@@ -145,6 +146,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     protected _composing: boolean;
+    protected _compositionStartIndex: number;
     private _end = 0;
     private _start = 0;
     private _key: string;
@@ -155,8 +157,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     private _droppedData: string;
     private _hasDropAction: boolean;
     private _stopPropagation: boolean;
-    private _compositionStartIndex: number;
-    private _afterComposition: boolean;
 
     private readonly defaultMask = 'CCCCCCCCCC';
 
@@ -206,12 +206,12 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const end = this.selectionEnd;
         const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
-        this._afterComposition = true;
+        this._end = this.selectionEnd;
     }
 
     /** @hidden @internal */
-    @HostListener('input', ['$event.isComposing'])
-    public onInputChanged(isComposing: boolean): void {
+    @HostListener('input', ['$event'])
+    public onInputChanged(event): void {
         /**
          * '!this._focused' is a fix for #8165
          * On page load IE triggers input events before focus events and
@@ -229,8 +229,23 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        if (this._afterComposition) {
-            return;
+        // After the compositionend event IE triggers input events of type 'deleteContentBackward' and
+        // we need to adjust the start and end indexes to include mask literals
+        if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE ) {
+            let numberOfMaskLiterals = 0;
+            const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
+            for (const index of literalPos) {
+                if (index >= this.selectionEnd && index < this._end) {
+                    numberOfMaskLiterals++;
+                }
+            }
+            this._start = this.selectionStart;
+            this._end = this.selectionEnd;
+            this.inputValue = this.inputValue.substring(0, this._end - numberOfMaskLiterals) + this.inputValue.substring(this._end);
+            this.nativeElement.selectionStart = this._start - numberOfMaskLiterals;
+            this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+            this._start = this.selectionStart;
+            this._end = this.selectionEnd;
         }
 
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
@@ -278,7 +293,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     /** @hidden */
     @HostListener('blur', ['$event.target.value'])
     public onBlur(value: string): void {
-        this._afterComposition = false;
         this._focused = false;
         this.showDisplayValue(value);
         this._onTouchedCallback();
