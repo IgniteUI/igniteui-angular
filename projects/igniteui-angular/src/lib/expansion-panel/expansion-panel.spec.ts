@@ -191,6 +191,32 @@ describe('igxExpansionPanel', () => {
             expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
         }));
 
+        it('Should expand/collapse without animation when animationSettings === null', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
+            fixture.detectChanges();
+            const panel = fixture.componentInstance.panel;
+            panel.animationSettings = null;
+            expect(panel).toBeTruthy();
+
+            spyOn(panel.onCollapsed, 'emit');
+            spyOn(panel.onExpanded, 'emit');
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(0); // Initially collapsed
+            expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.collapsed).toBeFalsy();
+
+            panel.toggle();
+            tick();
+            fixture.detectChanges();
+            expect(panel.onCollapsed.emit).toHaveBeenCalledTimes(1);
+            expect(panel.onExpanded.emit).toHaveBeenCalledTimes(1);
+            expect(panel.collapsed).toBeTruthy();
+        }));
+
+
         it('Should NOT assign tabIndex to header when disabled', () => {
             const fixture = TestBed.createComponent(IgxExpansionPanelSampleComponent);
             fixture.detectChanges();

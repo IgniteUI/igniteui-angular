@@ -165,7 +165,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get context(): any {
         return {
             $implicit: this.value,
-            cell: this
+            cell: this,
+            additionalTemplateContext: this.column.additionalTemplateContext
         };
     }
 
