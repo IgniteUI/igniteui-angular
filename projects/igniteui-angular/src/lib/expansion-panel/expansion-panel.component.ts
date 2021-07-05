@@ -179,7 +179,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     }
 
     /**
-     * @hidden
+     * @hidden @internal
      */
     public get nativeElement() {
         return this.elementRef.nativeElement;
@@ -199,7 +199,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     private _collapsed = true;
 
-    constructor(private cdr: ChangeDetectorRef, private elementRef: ElementRef, protected builder: AnimationBuilder) {
+    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
         super(builder);
     }
 

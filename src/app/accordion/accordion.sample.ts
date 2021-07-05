@@ -1,6 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { slideInLeft, slideOutRight } from 'igniteui-angular';
-import { IgxAccordionComponent } from 'projects/igniteui-angular/src/lib/accordion/accordion.component';
+import { IgxAccordionComponent, slideInLeft, slideOutRight } from 'igniteui-angular';
 
 @Component({
     selector: 'app-accordion-sample',
@@ -21,10 +20,5 @@ export class AccordionSampleComponent {
     }
     public panelExpanded(event) {
         console.log(event);
-    }
-
-    public contentExpanding(event) {
-        // console.log('PANEL');
-        // console.log(event);
     }
 }
