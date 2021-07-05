@@ -1,5 +1,7 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
+<ng-content select="igx-tree-grid-group-by-area"></ng-content>
+
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)"
     (copy)="copyHandler($event)" [style.width.px]='calcWidth' tabindex="0" (focus)="navigation.focusFirstCell()"

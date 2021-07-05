@@ -1,29 +1,17 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
-<div [style.flex-basis.px]='outerWidth' class="igx-grid__grouparea"
-    *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)" #groupArea>
-    <igx-chips-area (reorder)="chipsOrderChanged($event)" (moveEnd)="chipsMovingEnded()">
-        <ng-container *ngFor="let expr of chipsGoupingExpressions; let last = last;">
-            <igx-chip [id]="expr.fieldName" [title]="getGroupByChipTitle(expr)"
-                [removable]="getColumnGroupable(expr.fieldName)"
-                [draggable]="getColumnGroupable(expr.fieldName)" [displayDensity]="displayDensity"
-                (keyDown)="onChipKeyDown($event)" (remove)="onChipRemoved($event)"
-                (chipClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"
-                [disabled]='!getColumnGroupable(expr.fieldName)'>
-                <span>{{ getGroupByChipTitle(expr) }}</span>
-                <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
-            </igx-chip>
-            <span class="igx-grid__grouparea-connector">
-                <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
-                </igx-icon>
-            </span>
-        </ng-container>
-        <div igxGroupAreaDrop [style.visibility]="dropAreaVisible ? 'visible' : 'hidden'" [class]="groupAreaHostClass"
-            [attr.gridId]='this.id'>
-            <ng-container *ngTemplateOutlet="dropAreaTemplateResolved"></ng-container>
-        </div>
-    </igx-chips-area>
-</div>
+<!-- Group-by area -->
+<ng-container *ngIf="showGroupArea && (groupingExpressions.length > 0 || hasGroupableColumns)">
+    <igx-grid-group-by-area #groupArea [style.flex-basis.px]='outerWidth'
+        [grid]="this"
+        [expressions]="groupingExpressions"
+        [sortingExpressions]="sortingExpressions"
+        [density]="displayDensity"
+        [dropAreaTemplate]="dropAreaTemplate"
+        [dropAreaMessage]="dropAreaMessage"
+    >
+    </igx-grid-group-by-area>
+</ng-container>
 
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)" (copy)="copyHandler($event)"
@@ -280,11 +268,6 @@
         <igx-circular-bar [indeterminate]="true">
         </igx-circular-bar>
     </div>
-</ng-template>
-
-<ng-template #defaultDropArea>
-    <igx-icon class="igx-drop-area__icon">group_work</igx-icon>
-    <span class="igx-drop-area__text">{{dropAreaMessage}}</span>
 </ng-template>
 
 <ng-template #defaultExpandedTemplate>
