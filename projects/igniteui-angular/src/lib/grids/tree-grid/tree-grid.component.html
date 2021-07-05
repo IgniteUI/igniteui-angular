@@ -1,5 +1,7 @@
 <ng-content select="igx-grid-toolbar"></ng-content>
 
+<ng-content select="igx-tree-grid-group-by-area"></ng-content>
+
 <div class="igx-grid__thead" role="rowgroup">
     <div class="igx-grid__thead-wrapper" (keydown.meta.c)="copyHandler($event)" (keydown.control.c)="copyHandler($event)"
     (copy)="copyHandler($event)" [style.width.px]='calcWidth' tabindex="0" (focus)="navigation.focusFirstCell()"
@@ -146,8 +148,10 @@
         <div class="igx-grid__tbody-scrollbar-end" [style.height.px]='!isRowPinningToTop ? pinnedRowHeight : 0'></div>
     </div>
     <div class="igx-grid__addrow-snackbar">
-        <igx-snackbar #addRowSnackbar [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
+        <igx-snackbar #addRowSnackbar [outlet]="igxBodyOverlayOutlet" [actionText]="snackbarActionText" [displayTime]='snackbarDisplayTime'>{{snackbarLabel}}</igx-snackbar>
     </div>
+
+    <div igxOverlayOutlet #igxBodyOverlayOutlet></div>
 </div>
 
 <div class="igx-grid__tfoot" role="rowgroup" [style.height.px]='summariesHeight' #tfoot>

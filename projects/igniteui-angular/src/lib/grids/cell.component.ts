@@ -165,7 +165,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get context(): any {
         return {
             $implicit: this.value,
-            cell: this
+            cell: this,
+            additionalTemplateContext: this.column.additionalTemplateContext
         };
     }
 
@@ -672,9 +673,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             // prevent double-tap to zoom on iOS
             (event as HammerInput).preventDefault();
         }
-        if (this.grid.rowEditable && this.intRow.addRow) {
-            this.grid.crudService.enterEditMode(this, event as Event);
-        }
         if (this.editable && !this.editMode && !this.intRow.deleted && !this.grid.crudService.rowEditingBlocked) {
             this.grid.crudService.enterEditMode(this, event as Event);
         }
@@ -976,7 +974,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             if (editableCell) {
                 if (this.intRow.addRow) {
                     editableArgs = this.grid.crudService.updateAddCell(false, event);
-                    this.intRow.rowData = editableCell.rowData;
                 } else {
                     editableArgs = this.grid.crudService.updateCell(false, event);
                 }
@@ -991,7 +988,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                     this.grid.cdr.detectChanges();
                 }
 
-                if (editableArgs.cancel) {
+                if (editableArgs && editableArgs.cancel) {
                     return true;
                 }
 
@@ -1011,7 +1008,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
                 } else {
                     this.grid.crudService.exitCellEdit(event);
                 }
-                this.intRow.rowData = editableCell.rowData;
             } else {
                 this.grid.crudService.updateCell(true, event);
             }
