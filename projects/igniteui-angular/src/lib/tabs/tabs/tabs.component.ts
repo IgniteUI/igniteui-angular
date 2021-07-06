@@ -136,7 +136,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         super.ngOnDestroy();
 
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver.disconnect();
+            this._resizeObserver?.disconnect();
         });
     }
 
