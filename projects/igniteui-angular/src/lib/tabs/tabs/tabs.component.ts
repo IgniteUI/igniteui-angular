@@ -90,6 +90,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public itemsContainer: ElementRef<HTMLElement>;
 
     /** @hidden */
+    @ViewChild('itemsCont', { static: true })
+    public itemsCont: ElementRef<HTMLElement>;
+
+    /** @hidden */
     @ViewChild('selectedIndicator')
     public selectedIndicator: ElementRef<HTMLElement>;
 
@@ -309,10 +313,12 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private getTabItemsContainerWidth() {
         // We use this hacky way to get the width of the itemsContainer,
         // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
+        //const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
+        const itemsContainerChildrenCount = this.itemsCont.nativeElement.children.length;
         let itemsContainerWidth = 0;
         if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+            //const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+            const lastTab = this.itemsCont.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
             itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
         }
 
