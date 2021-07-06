@@ -1,8 +1,8 @@
 import { Directive, Input, Output, EventEmitter, ElementRef, OnDestroy, NgZone, OnInit } from '@angular/core';
-import { interval, Observable, Subscription, Subject } from 'rxjs';
+import { interval, Observable, Subscription, Subject, animationFrameScheduler } from 'rxjs';
 import { filter, takeUntil } from 'rxjs/operators';
 
-export enum DragScrollDirection {
+enum DragScrollDirection {
     NONE,
     LEFT,
     TOP,
@@ -14,37 +14,34 @@ export enum DragScrollDirection {
     BOTTOMRIGHT
 }
 
-
-@Directive({
-    selector: '[igxGridDragSelect]'
-})
+/**
+ * An internal directive encapsulating the drag scroll behavior in the grid.
+ *
+ * @hidden @internal
+ */
+@Directive({ selector: '[igxGridDragSelect]' })
 export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
-    @Output()
-    onDragStop = new EventEmitter<boolean>();
 
     @Output()
-    onDragScroll = new EventEmitter<DragScrollDirection>();
+    public dragStop = new EventEmitter<boolean>();
 
-    _activeDrag: boolean;
+    @Output()
+    public dragScroll = new EventEmitter<{ left: number; top: number }>();
 
     @Input('igxGridDragSelect')
-    get activeDrag(): boolean {
+    public get activeDrag(): boolean {
         return this._activeDrag;
     }
 
-    set activeDrag(val: boolean) {
+    public set activeDrag(val: boolean) {
         if (val !== this._activeDrag) {
             this.unsubscribe();
             this._activeDrag = val;
         }
     }
 
-    get nativeElement(): HTMLElement {
+    public get nativeElement() {
         return this.ref.nativeElement;
-    }
-
-    get clientRect(): ClientRect {
-        return this.nativeElement.getBoundingClientRect();
     }
 
     protected end$ = new Subject<any>();
@@ -52,21 +49,23 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
     protected _interval$: Observable<any>;
     protected _sub: Subscription;
 
-    constructor(private ref: ElementRef, private zone: NgZone) {
-        this._interval$ = interval(100).pipe(
+    private _activeDrag: boolean;
+
+    constructor(private ref: ElementRef<HTMLElement>, private zone: NgZone) {
+        this._interval$ = interval(0, animationFrameScheduler).pipe(
             takeUntil(this.end$),
             filter(() => this.activeDrag)
         );
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.addEventListener('pointerover', this.startDragSelection);
             this.nativeElement.addEventListener('pointerleave', this.stopDragSelection);
         });
     }
 
-    ngOnDestroy() {
+    public ngOnDestroy() {
         this.zone.runOutsideAngular(() => {
             this.nativeElement.removeEventListener('pointerover', this.startDragSelection);
             this.nativeElement.removeEventListener('pointerleave', this.stopDragSelection);
@@ -76,64 +75,77 @@ export class IgxGridDragSelectDirective implements OnInit, OnDestroy {
     }
 
 
-    startDragSelection = (ev: PointerEvent) => {
+    protected startDragSelection = (ev: PointerEvent) => {
         if (!this.activeDrag) {
             return;
         }
+
         const x = ev.clientX;
         const y = ev.clientY;
-        const direction = this._measureDimensions(x, y);
+        const { direction, delta } = this._measureDimensions(x, y);
+
         if (direction === this.lastDirection) {
             return;
         }
+
         this.unsubscribe();
-        this._sub = this._interval$.subscribe(() => this.onDragScroll.emit(direction));
+        this._sub = this._interval$.subscribe(() => this.dragScroll.emit(delta));
         this.lastDirection = direction;
     };
 
-    stopDragSelection = () => {
+    protected stopDragSelection = () => {
         if (!this.activeDrag) {
             return;
         }
-        this.onDragStop.emit(false);
+
+        this.dragStop.emit(false);
         this.unsubscribe();
         this.lastDirection = DragScrollDirection.NONE;
     };
 
-    _measureDimensions(x: number, y: number): DragScrollDirection {
+    protected _measureDimensions(x: number, y: number): { direction: DragScrollDirection; delta: { left: number; top: number } } {
         let direction: DragScrollDirection;
-
-        const rect = this.clientRect;
+        let delta = { left: 0, top: 0 };
+        const { left, top, width, height } = this.nativeElement.getBoundingClientRect();
         const RATIO = 0.15;
-        const offsetX = Math.trunc(x - rect.left);
-        const offsetY = Math.trunc(y - rect.top);
 
-        const left = offsetX <= rect.width * RATIO;
-        const right = offsetX >= rect.width * (1 - RATIO);
-        const top = offsetY <= rect.height * RATIO;
-        const bottom = offsetY >= rect.height * (1 - RATIO);
+        const offsetX = Math.trunc(x - left);
+        const offsetY = Math.trunc(y - top);
 
-        if (top && left) {
+        const leftDirection = offsetX <= width * RATIO;
+        const rightDirection = offsetX >= width * (1 - RATIO);
+        const topDirection = offsetY <= height * RATIO;
+        const bottomDirection = offsetY >= height * (1 - RATIO);
+
+        if (topDirection && leftDirection) {
             direction = DragScrollDirection.TOPLEFT;
-        } else if (top && right) {
+            delta = { left: -1, top: -1 };
+        } else if (topDirection && rightDirection) {
             direction = DragScrollDirection.TOPRIGHT;
-        } else if (bottom && left) {
+            delta = { left: 1, top: -1 };
+        } else if (bottomDirection && leftDirection) {
             direction = DragScrollDirection.BOTTOMLEFT;
-        } else if (bottom && right) {
+            delta = { left: -1, top: 1 };
+        } else if (bottomDirection && rightDirection) {
             direction = DragScrollDirection.BOTTOMRIGHT;
-        } else if (top) {
+            delta = { top: 1, left: 1 };
+        } else if (topDirection) {
             direction = DragScrollDirection.TOP;
-        } else if (bottom) {
+            delta.top = -1;
+        } else if (bottomDirection) {
             direction = DragScrollDirection.BOTTOM;
-        } else if (left) {
+            delta.top = 1;
+        } else if (leftDirection) {
             direction = DragScrollDirection.LEFT;
-        } else if (right) {
+            delta.left = -1;
+        } else if (rightDirection) {
             direction = DragScrollDirection.RIGHT;
+            delta.left = 1;
         } else {
             direction = DragScrollDirection.NONE;
         }
 
-        return direction;
+        return { direction, delta };
 
     }
 

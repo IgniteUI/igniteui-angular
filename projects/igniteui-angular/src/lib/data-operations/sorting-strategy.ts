@@ -243,7 +243,7 @@ export class IgxSorting implements IGridSortingStrategy {
 
 export class IgxDataRecordSorting extends IgxSorting {
 
-    protected getFieldValue(obj: any, key: string, isDate: boolean = false): any {
-        return isDate ? parseDate(resolveNestedPath(obj.data, key)) : resolveNestedPath(obj.data, key);
+    protected getFieldValue(obj: any, key: string, isDate: boolean = false, isTime: boolean = false): any {
+        return super.getFieldValue(obj.data, key, isDate, isTime);
     }
 }

@@ -87,6 +87,7 @@
 /// @requires --var
 @mixin igx-snackbar($theme) {
     @include igx-css-vars($theme);
+    @include fade-in();
 
     // @debug $theme;
 
@@ -114,6 +115,10 @@
         backdrop-filter: blur(8px);
     }
 
+    %igx-snackbar-message {
+        @include animation('fade-in' .35s ease-out);
+    }
+
     %igx-snackbar-button {
         background: transparent;
         color: --var($theme, 'button-color');
@@ -129,6 +134,7 @@
         font-size: inherit;
         font-family: inherit;
         cursor: pointer;
+        @include animation('fade-in' .35s ease-out);
 
         &:hover {
             color: --var($theme, 'button-color');

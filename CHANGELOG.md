@@ -5,6 +5,16 @@ All notable changes for each version of this project will be documented in this 
 ## 12.1.0
 
 ### New Features
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 
@@ -14,7 +24,6 @@ All notable changes for each version of this project will be documented in this 
         <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
     </igx-grid-toolbar-actions>
     ```
-- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
 - `IgxPaginatorComponent`
     - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
     ```html
@@ -27,7 +36,6 @@ All notable changes for each version of this project will be documented in this 
         </igx-paginator-content>
     </igx-paginator>
     ```
-
 - `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
     ```typescript
         this.excelExporterService.columnExporting.subscribe((col) => {
@@ -36,6 +44,9 @@ All notable changes for each version of this project will be documented in this 
             }
         });
     ```
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
+    
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
@@ -44,7 +55,12 @@ All notable changes for each version of this project will be documented in this 
         - `pagerHidden `
         - `dropdownEnabled`
         - `dropdownHidden`
-
+- `IgxSnackbarComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`. 
+- `IgxToastComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
 
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
@@ -77,6 +93,10 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
+### Themes
+- **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
+    - `$color` -> `$icon-color`
 
 ## 12.0.3
 
@@ -3222,7 +3242,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height: 50px;'>{{rowIndex}} : {{item.text}}</div>
         </ng-template>
     </div>
     ```

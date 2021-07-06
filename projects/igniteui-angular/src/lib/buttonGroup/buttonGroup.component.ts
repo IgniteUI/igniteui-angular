@@ -212,7 +212,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      * ```html
      * <igx-buttongroup #MyChild [multiSelection]="!multi" (selected)="selectedHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast message="You have made a selection!"></igx-toast>
+     * <igx-toast #toast>You have made a selection!</igx-toast>
      * ```
      */
     @Output()
@@ -230,7 +230,7 @@ export class IgxButtonGroupComponent extends DisplayDensityBase implements After
      * ```
      * ```html
      * <igx-buttongroup> #MyChild [multiSelection]="multi" (deselected)="deselectedHandler($event)"></igx-buttongroup>
-     * <igx-toast #toast message="You have deselected a button!"></igx-toast>
+     * <igx-toast #toast>You have deselected a button!</igx-toast>
      * ```
      */
     @Output()
