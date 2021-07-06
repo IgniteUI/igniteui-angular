@@ -43,7 +43,7 @@ export class IgxColumnLayoutComponent extends IgxColumnGroupComponent implements
         let borderWidth = 0;
 
         if (this.headerGroup && this.headerGroup.hasLastPinnedChildColumn) {
-            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement.children[0]);
+            const headerStyles = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement.children[0]);
             borderWidth = parseInt(headerStyles.borderRightWidth, 10);
         }
 

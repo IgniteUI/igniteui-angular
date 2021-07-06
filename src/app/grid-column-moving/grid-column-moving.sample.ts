@@ -66,7 +66,7 @@ export class GridColumnMovingSampleComponent implements OnInit {
 
         this.columns = [
             { field: 'ID', width: 150, resizable: true, movable: true, sortable: false, filterable: true, groupable: true,
-                summary: true, type: 'string', pinned: true },
+                summary: true, type: 'string', pinned: false },
             { field: 'CompanyName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
                 summary: true, type: 'string'},
             { field: 'ContactName', width: 150, resizable: true, movable: true, sortable: true, filterable: true, groupable: true,
