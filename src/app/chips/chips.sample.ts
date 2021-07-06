@@ -93,7 +93,7 @@ export class ChipsSampleComponent {
     }
 
     public removeChip(chip: IgxChipComponent) {
-        chip.elementRef.nativeElement.remove();
+        chip.nativeElement.remove();
     }
 
     public selectChip(chipId) {
