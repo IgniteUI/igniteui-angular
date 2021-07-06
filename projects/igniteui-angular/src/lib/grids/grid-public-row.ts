@@ -329,15 +329,34 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
             if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                 const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
                 // firstRowIndex is based on data result after all pipes triggered, excluding summary pipe
-                const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
-                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) :
-                    this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
+								const rootIndex = this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0]));
+								const precedingSummaryRows =
+									this.getPrecedingSummaryRows(this.grid.rootRecords, firstRowIndex, 0, rootIndex);
                 // there is a summary row for each root record, so we calculate how many root records are rendered before the current row
-                return firstRowIndex + precedingSummaryRows + this.index;
+                return firstRowIndex + precedingSummaryRows.summaryRows + this.index;
             }
         }
         return this.index + this.grid.page * this.grid.perPage;
     }
+
+		private getPrecedingSummaryRows(records: ITreeGridRecord[], iterateUntil: number, counter = 0, rootIndex?: number):
+			{ summaryRows: number; counter: number } {
+				let summaryRows = 0;
+				const hasRootIndex = rootIndex !== undefined;
+				records.forEach((rec, ind) => {
+					counter++;
+					if ((hasRootIndex && ind < rootIndex && rec.expanded) ||
+					(!hasRootIndex && rec.expanded)) {
+						summaryRows++;
+						if (rec.children && counter < iterateUntil) {
+							const res = this.getPrecedingSummaryRows(rec.children, iterateUntil, counter);
+							summaryRows += res.summaryRows;
+							counter = res.counter;
+						}
+					}
+				});
+				return { summaryRows, counter };
+		}
 
     /**
      *  The data passed to the row component.
@@ -650,6 +669,16 @@ export class IgxSummaryRow implements RowType {
      */
     public isSummaryRow: boolean;
 
+		/**
+			* @hidden
+			*/
+		constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+				index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
+				this.grid = grid;
+				this.index = index;
+				this.isSummaryRow = true;
+		}
+
     /**
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
@@ -708,9 +737,9 @@ export class IgxSummaryRow implements RowType {
                 const grid = this.grid as IgxTreeGridComponent;
                 if (grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                     const firstRowIndex = grid.processedExpandedFlatData.indexOf(grid.dataView[0].data);
-                    const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
-                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) :
-                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) + 1;
+										const rootIndex = this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0]));
+										const precedingSummaryRows =
+											this.getPrecedingSummaryRows(this.grid.rootRecords, firstRowIndex, 0, rootIndex).summaryRows;
                     return firstRowIndex + precedingSummaryRows + this.index;
                 }
             }
@@ -719,15 +748,24 @@ export class IgxSummaryRow implements RowType {
         return this.index + this.grid.page * this.grid.perPage;
     }
 
-    /**
-     * @hidden
-     */
-    constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-        index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
-        this.grid = grid;
-        this.index = index;
-        this.isSummaryRow = true;
-    }
+		private getPrecedingSummaryRows(records: ITreeGridRecord[], iterateUntil: number, counter = 0, rootIndex?: number):
+			{ summaryRows: number; counter: number } {
+				let summaryRows = 0;
+				const hasRootIndex = rootIndex !== undefined;
+				records.forEach((rec, ind) => {
+					counter++;
+					if ((hasRootIndex && ind < rootIndex && rec.expanded) ||
+					(!hasRootIndex && rec.expanded)) {
+						summaryRows++;
+						if (rec.children && counter < iterateUntil) {
+							const res = this.getPrecedingSummaryRows(rec.children, iterateUntil, counter);
+							summaryRows += res.summaryRows;
+							counter = res.counter;
+						}
+					}
+				});
+				return { summaryRows, counter };
+		}
 
     private getRootParent(row: ITreeGridRecord): ITreeGridRecord {
         while (row.parent) {
