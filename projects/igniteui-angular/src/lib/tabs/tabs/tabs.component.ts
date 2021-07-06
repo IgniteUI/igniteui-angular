@@ -86,12 +86,12 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public viewPort: ElementRef<HTMLElement>;
 
     /** @hidden */
-    @ViewChild('itemsContainer', { static: true })
-    public itemsContainer: ElementRef<HTMLElement>;
+    @ViewChild('itemsWrapper', { static: true })
+    public itemsWrapper: ElementRef<HTMLElement>;
 
     /** @hidden */
-    @ViewChild('itemsCont', { static: true })
-    public itemsCont: ElementRef<HTMLElement>;
+    @ViewChild('itemsContainer', { static: true })
+    public itemsContainer: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('selectedIndicator')
@@ -252,7 +252,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.itemsWrapper.nativeElement.style.transform = `translate(${-this.offset}px)`;
         this.updateScrollButtons();
     }
 
@@ -313,12 +313,11 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     private getTabItemsContainerWidth() {
         // We use this hacky way to get the width of the itemsContainer,
         // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
-        //const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
-        const itemsContainerChildrenCount = this.itemsCont.nativeElement.children.length;
+        const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
         let itemsContainerWidth = 0;
+
         if (itemsContainerChildrenCount > 1) {
-            //const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
-            const lastTab = this.itemsCont.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
+            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
             itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
         }
 

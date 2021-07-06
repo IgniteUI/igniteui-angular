@@ -271,10 +271,7 @@
     %tabs-header-wrapper {
         position: relative;
         flex-grow: 1;
-        // flex-wrap: nowrap;
         transition: transform .2s $tabs-animation-function;
-        // display: inline-flex;
-        // min-width: 100%;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
@@ -291,14 +288,8 @@
     }
 
     %tabs-header-scroll {
-        display: flex;         
+        display: flex;       
         height: 100%;
-            
-        // min-width: 100%;
-        // position: relative;
-        // flex-grow: 1;
-        // flex-wrap: nowrap;        
-        //margin-left: 0;
     }
 
     %tabs-header-button {
