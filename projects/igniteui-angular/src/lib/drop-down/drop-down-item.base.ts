@@ -308,12 +308,12 @@ export class IgxDropDownItemBaseDirective implements DoCheck {
      * @hidden
      * @internal
      */
-     @HostListener('mousedown', ['$event'])
-     handleMousedown(event): void {
-         if (!this.dropDown.allowItemsFocus) {
-             event.preventDefault();
-         }
-     }
+    @HostListener('mousedown', ['$event'])
+    handleMousedown(event): void {
+        if (!this.dropDown.allowItemsFocus) {
+            event.preventDefault();
+        }
+    }
 
     ngDoCheck(): void {
         if (this._selected) {
