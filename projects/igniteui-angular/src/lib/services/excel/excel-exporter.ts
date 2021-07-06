@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER } from '../exporter-common/base-export-service';
+import { ExportRecordType, IExportRecord, IgxBaseExporter, DEFAULT_OWNER, HeaderType } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -14,6 +14,9 @@ import { WorksheetFile } from './excel-files';
 export interface IExcelExportEndedEventArgs extends IBaseEventArgs {
     xlsx?: JSZip;
 }
+
+const EXCEL_MAX_ROWS = 1048576;
+const EXCEL_MAX_COLS = 16384;
 
 /**
  * **Ignite UI for Angular Excel Exporter Service** -
@@ -71,12 +74,25 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
     }
 
-    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions): void {
+    protected exportDataImplementation(data: IExportRecord[], options: IgxExcelExporterOptions, done: () => void): void {
         const firstDataElement = data[0];
+        const isHierarchicalGrid = firstDataElement?.type === ExportRecordType.HierarchicalGridRecord;
+
         let rootKeys;
         let columnCount;
         let columnWidths;
         let indexOfLastPinnedColumn;
+        let defaultOwner;
+
+        const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
+            isHierarchicalGrid ?
+                data.some(d =>  Object.keys(d.data).length > EXCEL_MAX_COLS) :
+                Object.keys(firstDataElement.data).length > EXCEL_MAX_COLS :
+            false;
+
+        if(data.length > EXCEL_MAX_ROWS || columnsExceedLimit) {
+            throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
+        }
 
         if (typeof firstDataElement !== 'undefined') {
             let maxLevel = 0;
@@ -89,15 +105,17 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 throw Error('Can create an outline of up to eight levels!');
             }
 
-            if (firstDataElement.type === ExportRecordType.HierarchicalGridRecord) {
+            if (isHierarchicalGrid) {
                 columnCount = data
                     .map(a => this._ownersMap.get(a.owner).columns.length + a.level)
                     .sort((a,b) => b - a)[0];
 
                 rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.header);
+                defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
-                const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => !col.skip);
+                defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
+                const columns = defaultOwner.columns.filter(col => !col.skip && col.headerType === HeaderType.ColumnHeader);
+
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
                 columnCount = columns.length;
@@ -106,9 +124,10 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         }
 
         const worksheetData =
-            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths);
+            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn,
+                columnWidths, defaultOwner, this._ownersMap);
 
-        this._xlsx = new (JSZip as any).default();
+        this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
 
         const rootFolder = ExcelElementsFactory.getExcelFolder(ExcelFolderTypes.RootExcelFolder);
 
@@ -117,13 +136,14 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             this._xlsx.generateAsync(IgxExcelExporterService.ZIP_OPTIONS).then((result) => {
                 this.saveFile(result, options.fileName);
                 this.exportEnded.emit({ xlsx: this._xlsx });
+                done();
             });
         });
     }
 
     private saveFile(data: string, fileName: string): void {
         const blob = new Blob([ExportUtilities.stringToArrayBuffer(atob(data))], {
-            type: ''
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         });
 
         ExportUtilities.saveBlobToFile(blob, fileName);

@@ -19,7 +19,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './columns/column.component';
-import { TransactionType } from '../services/public_api';
+import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxRow } from './common/crud.service';
@@ -473,7 +473,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
 
     /**
      * Updates the specified row object and the data source record with the passed value.
-     * This method emits `onEditDone` event.
      *
      * ```typescript
      * // update the second selected row's value
@@ -484,7 +483,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     public update(value: any) {
         const crudService = this.grid.crudService;
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
-            this.grid.crudService.endEdit(false);
+            this.grid.transactions.endPending(false);
         }
         const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);

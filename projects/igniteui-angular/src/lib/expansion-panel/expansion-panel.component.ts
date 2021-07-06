@@ -11,7 +11,8 @@ import {
 import { AnimationBuilder } from '@angular/animations';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
-import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase, IExpansionPanelEventArgs } from './expansion-panel.common';
+import { IGX_EXPANSION_PANEL_COMPONENT, IgxExpansionPanelBase,
+    IExpansionPanelEventArgs, IExpansionPanelCancelableEventArgs } from './expansion-panel.common';
 import { ToggleAnimationPlayer, ToggleAnimationSettings } from './toggle-animation-component';
 
 let NEXT_ID = 0;
@@ -115,18 +116,46 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     public collapsedChange = new EventEmitter<boolean>();
 
     /**
+     * Emitted when the expansion panel starts collapsing
+     * ```typescript
+     *  handleCollapsing(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentCollapsing)="handleCollapsing($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
+     */
+     @Output()
+     public contentCollapsing = new EventEmitter<IExpansionPanelCancelableEventArgs>();
+
+    /**
      * Emitted when the expansion panel finishes collapsing
      * ```typescript
      *  handleCollapsed(event: IExpansionPanelEventArgs)
      * ```
      * ```html
-     *  <igx-expansion-panel (onCollapsed)="handleCollapsed($event)">
+     *  <igx-expansion-panel (contentCollapsed)="handleCollapsed($event)">
      *      ...
      *  </igx-expansion-panel>
      * ```
      */
     @Output()
-    public onCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
+    public contentCollapsed = new EventEmitter<IExpansionPanelEventArgs>();
+
+    /**
+     * Emitted when the expansion panel starts expanding
+     * ```typescript
+     *  handleExpanding(event: IExpansionPanelCancelableEventArgs)
+     * ```
+     * ```html
+     *  <igx-expansion-panel (contentExpanding)="handleExpanding($event)">
+     *      ...
+     *  </igx-expansion-panel>
+     * ```
+     */
+     @Output()
+     public contentExpanding = new EventEmitter<IExpansionPanelCancelableEventArgs>();
 
     /**
      * Emitted when the expansion panel finishes expanding
@@ -134,13 +163,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      *  handleExpanded(event: IExpansionPanelEventArgs)
      * ```
      * ```html
-     *  <igx-expansion-panel (onExpanded)="handleExpanded($event)">
+     *  <igx-expansion-panel (contentExpanded)="handleExpanded($event)">
      *      ...
      *  </igx-expansion-panel>
      * ```
      */
     @Output()
-    public onExpanded = new EventEmitter<IExpansionPanelEventArgs>();
+    public contentExpanded = new EventEmitter<IExpansionPanelEventArgs>();
 
     /**
      * @hidden
@@ -192,10 +221,15 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (this.collapsed) { // If expansion panel is already collapsed, do nothing
             return;
         }
+        const args = { event: evt, panel: this, owner: this, cancel: false };
+        this.contentCollapsing.emit(args);
+        if (args.cancel === true) {
+            return;
+        }
         this.playCloseAnimation(
             this.body?.element,
             () => {
-                this.onCollapsed.emit({ event: evt, panel: this, owner: this });
+                this.contentCollapsed.emit({ event: evt, panel: this, owner: this });
                 this.collapsed = true;
                 this.cdr.markForCheck();
             }
@@ -216,12 +250,17 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
         if (!this.collapsed) { // If the panel is already opened, do nothing
             return;
         }
+        const args = { event: evt, panel: this, owner: this, cancel: false };
+        this.contentExpanding.emit(args);
+        if (args.cancel === true) {
+            return;
+        }
         this.collapsed = false;
         this.cdr.detectChanges();
         this.playOpenAnimation(
             this.body?.element,
             () => {
-                this.onExpanded.emit({ event: evt, panel: this, owner: this });
+                this.contentExpanded.emit({ event: evt, panel: this, owner: this });
             }
         );
     }

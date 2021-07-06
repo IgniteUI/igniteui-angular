@@ -1,4 +1,4 @@
-import { ExportRecordType, IExportRecord } from '../exporter-common/base-export-service';
+import { HeaderType, ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -15,7 +15,9 @@ export class WorksheetData {
                 public columnCount: number,
                 public rootKeys: string[],
                 public indexOfLastPinnedColumn: number,
-                public columnWidths: number[]) {
+                public columnWidths: number[],
+                public owner: IColumnList,
+                public owners: Map<any, IColumnList>) {
             this.initializeData();
     }
 
@@ -44,7 +46,10 @@ export class WorksheetData {
             return;
         }
 
-        if (this._data[0].type === ExportRecordType.HierarchicalGridRecord) {
+        const isMultiColumnHeader = this.owner.columns.some(col => !col.skip && col.headerType === HeaderType.MultiColumnHeader);
+        const hasHierarchicalGridRecord = this._data[0].type === ExportRecordType.HierarchicalGridRecord;
+
+        if (hasHierarchicalGridRecord || (isMultiColumnHeader && !this.options.ignoreMultiColumnHeaders)) {
             this.options.exportAsTable = false;
         }
 

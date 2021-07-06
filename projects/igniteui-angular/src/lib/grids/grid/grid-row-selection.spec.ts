@@ -1414,12 +1414,10 @@ describe('IgxGrid - Row Selection #grid', () => {
         });
 
         it('Should be able to update row through primaryKey', () => {
-            spyOn(grid.rowEdit, 'emit').and.callThrough();
             expect(grid.primaryKey).toBeTruthy();
             expect(grid.rowList.length).toEqual(10, 'All 10 rows should initialized');
             expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(198);
             grid.updateRow({ ProductID: 2, ProductName: 'Aniseed Syrup', UnitsInStock: 300 }, 2);
-            expect(grid.rowEdit.emit).toHaveBeenCalledTimes(1);
             fix.detectChanges();
             expect(grid.gridAPI.get_row_by_index(1).rowData['UnitsInStock']).toEqual(300);
             expect(grid.getRowByKey(2).data['UnitsInStock']).toEqual(300);
@@ -2115,7 +2113,7 @@ describe('IgxGrid - Row Selection #grid', () => {
         it('Should have the correct properties in the custom row selector header template', () => {
             const context = { selectedCount: 0, totalCount: 27 };
             const contextUnselect = { selectedCount: 27, totalCount: 27 };
-            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            const headerCheckbox = grid.theadRow.nativeElement.querySelector('.igx-checkbox__composite');
             spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
             headerCheckbox.click();
             fix.detectChanges();

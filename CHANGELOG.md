@@ -2,6 +2,108 @@
 
 All notable changes for each version of this project will be documented in this file.
 
+## 12.1.0
+
+### New Features
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
+
+    ```html
+    <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-pinning [overlaySettings]="overlaySettingsGlobal"></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
+    </igx-grid-toolbar-actions>
+    ```
+- `IgxPaginatorComponent`
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
+    ```html
+    <igx-paginator #paginator>
+        <igx-paginator-content>
+            <igx-page-size></igx-page-size>
+            <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()">PREV</button>
+            <span>Page {{paginator.page}} of {{paginator.totalPages}}</span>
+            <button [disabled]="paginator.isLastPage" (click)="paginator.nextPage()">NEXT</button>
+        </igx-paginator-content>
+    </igx-paginator>
+    ```
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
+    ```typescript
+        this.excelExporterService.columnExporting.subscribe((col) => {
+            if (col.field === 'Index') {
+                col.columnIndex = 0;
+            }
+        });
+    ```
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
+    
+### General
+- `IgxPaginatorComponent`
+    - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
+    -  **Breaking Change** - the following properties are removed
+        - `pagerEnabled`
+        - `pagerHidden `
+        - `dropdownEnabled`
+        - `dropdownHidden`
+- `IgxSnackbarComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`. 
+- `IgxToastComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
+
+- **Breaking Change** - `IgxOverlayService` events are renamed as follows:
+    - `onOpening` -> `opening`
+    - `onOpened` -> `opened`
+    - `onClosing` -> `closing`
+    - `onClosed` -> `closed`
+    - `onAppended` -> `contentAppended`
+    - `onAnimation` -> `animationStarting`
+
+- **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
+    - `onOpening` -> `opening`
+    - `onOpened` -> `opened`
+    - `onClosing` -> `closing`
+    - `onClosed` -> `closed`
+
+- `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
+        - `onCollapsed` -> `contentCollapsed`
+        - `onExpanded` -> `contentExpanded`
+
+    - **Breaking Change** - `IgxExpansionPanelHeaderComponent` events are renamed as follows:
+        - `onInteraction` -> `interaction`
+
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
+    - **Feature** - Added `contentExpanding` and `contentCollapsing` events, fired when the panel's content starts expanding or collapsing, resp.
+    Both events can be canceled, preventing the toggle animation from firing and the `collapsed` property from changing:
+    ```html
+        <igx-expansion-panel (contentExpanding)="handleExpandStart($event)" (contentCollapsing)="handleCollapseStart($event)">
+            ...
+        </igx-expansion-panel>
+    ```
+
+### Themes
+- **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
+    - `$color` -> `$icon-color`
+
+## 12.0.3
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
+
 ## 12.0.0
 
 ### General
@@ -78,7 +180,7 @@ All notable changes for each version of this project will be documented in this 
                 </igx-picker-clear>
             </igx-date-picker>
         ```
-    - **Breaking Change** - `mode` and `format` are replaced by `inputFormat`.
+    - **Breaking Change** - `mask` and `format` are replaced by `inputFormat`.
     - **Breaking Change** - `placeholder` defaults to the `inputFormat`
     - **Breaking Change** - `editorTabIndex` is renamed to `tabIndex`.
     - **Breaking Change** - `monthsViewNumber` is renamed to `displayMonthsCount`.
@@ -267,6 +369,11 @@ All notable changes for each version of this project will be documented in this 
     @include igx-typography($font-family: $indigo-typeface, $type-scale: $indigo-type-scale);
     ```
 
+## 11.1.13
+
+### General
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 11.1.1
 
@@ -454,6 +561,10 @@ All notable changes for each version of this project will be documented in this 
 ### Improvements
 - `IgxOverlay`
     - New functionality to automatically determine the correct animation that is needed when showing an overlay content. This is used with Auto Position strategy, where the `IgxOverlay` content is flipped, depending on the available space.
+
+## 10.2.25
+- `IgxExpansionPanelHeaderComponent`
+    - **Behavioral Change** - Settings `disabled` property of `IgxExpansionPanelHeaderComponent` now makes the underlying header element not accessible via `Tab` navigation (via `tabindex="-1"`)
 
 ## 10.2.15
 
@@ -3131,7 +3242,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height: 50px;'>{{rowIndex}} : {{item.text}}</div>
         </ng-template>
     </div>
     ```

@@ -34,6 +34,7 @@ export class UIInteractions {
         });
         document.documentElement.scrollTop = 0;
         document.documentElement.scrollLeft = 0;
+        document.body.style.overflow = 'hidden';
     }
 
     /**
@@ -116,7 +117,7 @@ export class UIInteractions {
      * @param keyPressed - pressed key
      * @param elem - debug element
      */
-    public static triggerEventHandlerKeyDown(key: string, elem: DebugElement, altKey = false, shiftKey = false, ctrlKey = false) {
+    public static triggerEventHandlerKeyDown(key: string, elem: any, altKey = false, shiftKey = false, ctrlKey = false) {
         const event = {
             target: elem.nativeElement,
             key,
@@ -127,7 +128,11 @@ export class UIInteractions {
             stopImmediatePropagation: () => { },
             preventDefault: () => { }
         };
-        elem.triggerEventHandler('keydown', event);
+        if (elem.hasOwnProperty('triggerEventHandler')) {
+            elem.triggerEventHandler('keydown', event);
+        } else {
+            (elem.nativeElement as HTMLElement).dispatchEvent(new KeyboardEvent('keydown', { ...event }));
+        }
     }
 
     /**

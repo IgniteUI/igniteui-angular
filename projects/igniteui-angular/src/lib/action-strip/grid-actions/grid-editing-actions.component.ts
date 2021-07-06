@@ -127,7 +127,12 @@ export class IgxGridEditingActionsComponent extends IgxGridActionsBaseDirective 
         }
         const context = this.strip.context;
         const grid = context.grid;
-        grid.deleteRow(context.rowID);
+        const record = grid.deleteRow(context.rowID);
+        if (record !== null && record !== undefined) {
+            //  TODO: should we emit this when cascadeOnDelete is true for each row?!?!
+            grid.rowDeleted.emit({ data: record });
+        }
+
         this.strip.hide();
     }
 

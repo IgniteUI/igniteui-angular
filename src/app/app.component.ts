@@ -304,6 +304,11 @@ export class AppComponent implements OnInit {
             name: 'Grid Row Editing'
         },
         {
+            link: '/gridLocalization',
+            icon: 'view_column',
+            name: 'Grid Localization'
+        },
+        {
             link: '/gridSelection',
             icon: 'view_column',
             name: 'Grid Selection'
@@ -400,6 +405,11 @@ export class AppComponent implements OnInit {
             name: 'Progress Indicators'
         },
         {
+            link: '/pagination',
+            icon: 'menu',
+            name: 'Paginator'
+        },
+        {
             link: '/radio',
             icon: 'radio_button_checked',
             name: 'Radio Group'
@@ -484,6 +494,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridGroupBy',
+            icon: 'view_column',
+            name: 'Tree Grid GroupBy'
         },
         {
             link: '/treeGridLoadOnDemand',

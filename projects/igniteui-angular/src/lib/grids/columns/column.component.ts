@@ -749,6 +749,22 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public colStart: number;
 
     /**
+     * Sets/gets custom properties provided in additional template context.
+     *
+     * ```html
+     * <igx-column [additionalTemplateContext]="contextObject">
+     *   <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+     *      {{ props }}
+     *   </ng-template>
+     * </igx-column>
+     * ```
+     *
+     * @memberof IgxColumnComponent
+     */
+    @Input()
+    public additionalTemplateContext: any;
+
+    /**
      * @hidden
      */
     @Output()
@@ -1428,7 +1444,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @hidden
      * @internal
      */
-     public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
+    public defaultDateTimeFormat = 'dd/MM/yyyy HH:mm:ss tt';
 
 
     /**
@@ -2131,7 +2147,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
      * @memberof IgxColumnComponent
      */
     public get headerGroup(): IgxGridHeaderGroupComponent {
-        return this.grid.headerGroupsList.find((headerGroup) => headerGroup.column === this);
+        return this.grid.headerGroupsList.find(group => group.column === this);
     }
 
     /**
@@ -2201,18 +2217,16 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
 
         // We do not cover cases where there are children with width 100% and etc,
         // because then we try to get new column size, based on header content, which is sized based on column size...
-        let headerWidth = this.platform.getNodeSizeViaRange(range, this.headerCell.elementRef.nativeElement.children[0]);
+        const headerWidth = this.platform.getNodeSizeViaRange(range,
+            this.headerCell.nativeElement,
+            this.headerGroup.nativeElement);
 
-        if (this.sortable || this.filterable) {
-            headerWidth += this.headerCell.elementRef.nativeElement.children[1].getBoundingClientRect().width;
-        }
-
-        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.elementRef.nativeElement);
+        const headerStyle = this.grid.document.defaultView.getComputedStyle(this.headerCell.nativeElement);
         const headerPadding = parseFloat(headerStyle.paddingLeft) + parseFloat(headerStyle.paddingRight) +
             parseFloat(headerStyle.borderRightWidth);
 
         // Take into consideration the header group element, since column pinning applies borders to it if its not a columnGroup.
-        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.element.nativeElement);
+        const headerGroupStyle = this.grid.document.defaultView.getComputedStyle(this.headerGroup.nativeElement);
         const borderSize = !this.parent ? parseFloat(headerGroupStyle.borderRightWidth) + parseFloat(headerGroupStyle.borderLeftWidth) : 0;
 
         return { width: Math.ceil(headerWidth), padding: Math.ceil(headerPadding + borderSize) };
@@ -2234,12 +2248,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         const largest = new Map<number, number>();
 
         if (this.cells.length > 0) {
-            let cellsContentWidths = [];
-            if (this.cells[0].nativeElement.children.length > 0) {
-                this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
-            } else {
-                cellsContentWidths = this.cells.map((cell) => this.platform.getNodeSizeViaRange(range, cell.nativeElement));
-            }
+            const cellsContentWidths = [];
+            this.cells.forEach((cell) => cellsContentWidths.push(cell.calculateSizeToFit(range)));
 
             const index = cellsContentWidths.indexOf(Math.max(...cellsContentWidths));
             const cellStyle = this.grid.document.defaultView.getComputedStyle(this.cells[index].nativeElement);

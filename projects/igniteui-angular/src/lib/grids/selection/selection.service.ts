@@ -1,5 +1,6 @@
 import { EventEmitter, Injectable, NgZone } from '@angular/core';
 import { Subject } from 'rxjs';
+import { PlatformUtil } from '../../core/utils';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { IgxGridBaseDirective } from '../grid/public_api';
 
@@ -99,7 +100,7 @@ export class IgxGridSelectionService {
         this.pointerState.primaryButton = value;
     }
 
-    constructor(private zone: NgZone) {
+    constructor(private zone: NgZone, protected platform: PlatformUtil) {
         this.initPointerState();
         this.initKeyboardState();
         this.initColumnsState();
@@ -249,7 +250,7 @@ export class IgxGridSelectionService {
 
         // Focus triggered by keyboard navigation
         if (kbState.active) {
-            if (isChromium()) {
+            if (this.platform.isChromium) {
                 this._moveSelectionChrome(dom);
             }
             // Start generating a range if shift is hold
@@ -743,6 +744,3 @@ export class IgxGridSelectionService {
         document.body.removeEventListener('pointerup', this.pointerOriginHandler);
     };
 }
-
-export const isChromium = (): boolean => (/Chrom|e?ium/g.test(navigator.userAgent) ||
-    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);

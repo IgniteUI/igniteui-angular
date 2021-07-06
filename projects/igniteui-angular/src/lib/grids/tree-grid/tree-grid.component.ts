@@ -41,6 +41,7 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -168,6 +169,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden
      * @internal
      */
+    @ContentChild(IgxTreeGridGroupByAreaComponent, { read: IgxTreeGridGroupByAreaComponent })
+    public groupArea;
+
+    /**
+     * @hidden
+     * @internal
+     */
     @ViewChild('dragIndicatorIconBase', { read: TemplateRef, static: true })
     public dragIndicatorIconBase: TemplateRef<any>;
 
@@ -192,12 +200,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public flatData: any[];
+    public flatData: any[] | null;
 
     /**
      * @hidden
      */
-    public processedExpandedFlatData: any[];
+    public processedExpandedFlatData: any[] | null;
 
     /**
      * Returns an array of the root level `ITreeGridRecord`s.
@@ -263,11 +271,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @memberof IgxTreeGridComponent
      */
     @Input()
-    public get data(): any[] {
+    public get data(): any[] | null {
         return this._data;
     }
 
-    public set data(value: any[]) {
+    public set data(value: any[] | null) {
         this._data = value || [];
         this.summaryService.clearSummaryCache();
         if (this.shouldGenerate) {
@@ -371,7 +379,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        this.rowAdded.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
                 if (rec && rec.parent) {
@@ -393,7 +401,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
 
-        this.rowDeleted.pipe(takeUntil(this.destroy$)).subscribe(args => {
+        this.rowDeletedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 if (args.data) {
                     const rec = this._gridAPI.get_rec_by_id(
@@ -518,9 +526,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public refreshGridState(args?) {
+    public refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
-        if (this.primaryKey && this.foreignKey) {
+        if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
             this.summaryService.clearSummaryCache({ rowID });
             this.pipeTrigger++;
@@ -545,10 +553,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param parentRowID
      * @memberof IgxTreeGridComponent
      */
+    // TODO: remove evt emission
     public addRow(data: any, parentRowID?: any) {
         this.crudService.endEdit(true);
         this.gridAPI.addRowToData(data, parentRowID);
-        this.rowAdded.emit({ data });
+
+        this.rowAddedNotifier.next({ data });
         this.pipeTrigger++;
         this.notifyChanges();
     }
@@ -627,11 +637,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /** @hidden */
-    public deleteRowById(rowId: any) {
+    public deleteRowById(rowId: any): any {
         //  if this is flat self-referencing data, and CascadeOnDelete is set to true
         //  and if we have transactions we should start pending transaction. This allows
         //  us in case of delete action to delete all child rows as single undo action
-        this._gridAPI.deleteRowById(rowId);
+        return this._gridAPI.deleteRowById(rowId);
 
     }
 
@@ -696,6 +706,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /** @hidden */
     public isTreeRow(record: any): boolean {
         return record.rowID !== undefined && record.data;
+    }
+
+    /**
+     * Returns if the `IgxTreeGridComponent` has groupable columns.
+     *
+     * @example
+     * ```typescript
+     * const groupableGrid = this.grid.hasGroupableColumns;
+     * ```
+     */
+    public get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
     protected findRecordIndexInView(rec) {
@@ -787,6 +809,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return row;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getGroupAreaHeight(): number {
+        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**
@@ -885,4 +914,4 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             }
         });
     }
-}
+ }

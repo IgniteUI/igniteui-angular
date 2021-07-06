@@ -23,16 +23,15 @@ import { GridSelectionMode } from '../common/enums';
 import { FilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { FilteringLogic } from '../../data-operations/filtering-expression.interface';
 import { IgxTabsComponent, IgxTabsModule } from '../../tabs/tabs/public_api';
-import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { IgxGridRowComponent } from './grid-row.component';
 
 
 describe('IgxGrid Component Tests #grid', () => {
     const MIN_COL_WIDTH = '136px';
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
 
     const TBODY_CLASS = '.igx-grid__tbody-content';
-    const THEAD_CLASS = '.igx-grid__thead';
+    const THEAD_CLASS = '.igx-grid-thead';
 
     describe('IgxGrid - input properties', () => {
         configureTestSuite((() => {
@@ -1694,7 +1693,7 @@ describe('IgxGrid Component Tests #grid', () => {
             fix.detectChanges();
             await wait(16);
             // check UI
-            const rowSelectorHeader = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-grid__cbx-selection');
+            const rowSelectorHeader = grid.theadRow.nativeElement.querySelector('.igx-grid__cbx-selection') as HTMLElement;
             const header0 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[0];
             const header1 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[1];
             const header2 = fix.debugElement.queryAll(By.css('igx-grid-header-group'))[2];
@@ -2187,10 +2186,10 @@ describe('IgxGrid Component Tests #grid', () => {
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             expect(headers.length).toBe(4);
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).width, 10) + grid.scrollSize).toBe(500);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
         });
@@ -2206,15 +2205,15 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('igx-page-nav'));
             const summaries = fix.debugElement.queryAll(By.css('igx-grid-summary-cell'));
             expect(headers.length).toBe(4);
             expect(summaries.length).toBe(4);
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__footer').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - grid.footer.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);;
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
         });
@@ -2231,7 +2230,7 @@ describe('IgxGrid Component Tests #grid', () => {
             grid.cdr.detectChanges();
             const headers = fix.debugElement.queryAll(By.css(COLUMN_HEADER_CLASS));
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const paging = fix.debugElement.query(By.css('.igx-paginator__pager'));
+            const paging = fix.debugElement.query(By.css('igx-page-nav'));
             expect(headers.length).toBe(4);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(204);
             expect(parseInt(window.getComputedStyle(paging.nativeElement).height, 10)).toBe(36);
@@ -2248,10 +2247,10 @@ describe('IgxGrid Component Tests #grid', () => {
             await wait(100);
             grid.cdr.detectChanges();
             const gridBody = fix.debugElement.query(By.css(TBODY_CLASS));
-            const expectedHeight = fix.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            const expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
             expect(grid.calcHeight).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(gridBody.nativeElement).height, 10)).toBe(expectedHeight);
             expect(parseInt(window.getComputedStyle(grid.nativeElement).height, 10)).toBe(300);
@@ -2576,7 +2575,7 @@ export class IgxGridTestComponent {
     public isHorizontalScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
         if (scrollbar) {
-            return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
+            return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
         }
 
         return false;
@@ -2594,7 +2593,7 @@ export class IgxGridTestComponent {
     public isVerticalScrollbarVisible() {
         const scrollbar = this.grid.verticalScrollContainer.getScroll();
         if (scrollbar && scrollbar.offsetHeight > 0) {
-            return scrollbar.offsetHeight < (scrollbar.children[0] as HTMLElement).offsetHeight;
+            return scrollbar.offsetHeight < (scrollbar.children.item(0) as HTMLElement).offsetHeight;
         }
         return false;
     }
@@ -2652,7 +2651,7 @@ export class IgxGridDefaultRenderingComponent {
 
     public isHorizonatScrollbarVisible() {
         const scrollbar = this.grid.headerContainer.getScroll();
-        return scrollbar.offsetWidth < (scrollbar.children[0] as HTMLElement).offsetWidth;
+        return scrollbar.offsetWidth < (scrollbar.children.item(0) as HTMLElement).offsetWidth;
     }
 
     public initColumns(column) {
@@ -2821,7 +2820,7 @@ export class LocalService {
         this.records = this._records.asObservable();
     }
 
-    nullData() {
+    public nullData() {
         this._records.next(null);
     }
 
@@ -2862,7 +2861,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         this.data = this.localService.records;
     }
 
-    nullData() {
+    public nullData() {
         this.localService.nullData();
     }
 
@@ -2873,7 +2872,7 @@ export class IgxGridRemoteVirtualizationComponent implements OnInit, AfterViewIn
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });
@@ -2907,7 +2906,7 @@ export class IgxGridRemoteOnDemandComponent {
         });
     }
 
-    dataLoading(evt) {
+    public dataLoading(evt) {
         this.localService.getData(evt, () => {
             this.cdr.detectChanges();
         });

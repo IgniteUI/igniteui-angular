@@ -2,7 +2,7 @@ import { AnimationReferenceMetadata } from '@angular/animations';
 import { isPlatformBrowser } from '@angular/common';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import mergeWith from 'lodash.mergewith';
-import { ResizeObserver } from '@juggle/resize-observer';
+import { ResizeObserver as Polyfill } from '@juggle/resize-observer';
 import { Observable } from 'rxjs';
 import {
     blink, fadeIn, fadeOut, flipBottom, flipHorBck, flipHorFwd, flipLeft, flipRight, flipTop,
@@ -27,6 +27,13 @@ import {
 import { setImmediate } from './setImmediate';
 
 export const mkenum = <T extends { [index: string]: U }, U extends string>(x: T) => x;
+
+/**
+ * Returns the ResizeObserver type or the polyfilled version if not available.
+ *
+ * @hidden @internal
+ */
+export const getResizeObserver = () => window.ResizeObserver || Polyfill;
 
 /**
  * @hidden
@@ -187,6 +194,8 @@ export class PlatformUtil {
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
+    public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
+    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -222,15 +231,29 @@ export class PlatformUtil {
      * let column = this.grid.columnList.filter(c => c.field === 'ID')[0];
      *
      * let size = getNodeSizeViaRange(range, column.cells[0].nativeElement);
+     *
+     * @remarks
+     * The last parameter is useful when the size of the element to measure is modified by a
+     * parent element that has explicit size. In such cases the calculated size is never lower
+     * and the function may instead remove the parent size while measuring to get the correct value.
      * ```
      */
-    public getNodeSizeViaRange(range: Range, node: HTMLElement) {
+     public getNodeSizeViaRange(range: Range, node: HTMLElement, sizeHoldingNode?: HTMLElement) {
         let overflow = null;
+        let nodeStyles;
 
         if (!this.isFirefox) {
             overflow = node.style.overflow;
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = 'visible';
+        }
+
+        if (sizeHoldingNode) {
+            const style = sizeHoldingNode.style;
+            nodeStyles = [ style.width, style.minWidth, style.flexBasis ];
+            style.width = '';
+            style.minWidth = '';
+            style.flexBasis = '';
         }
 
         range.selectNodeContents(node);
@@ -239,6 +262,12 @@ export class PlatformUtil {
         if (!this.isFirefox) {
             // we need that hack - otherwise content won't be measured correctly in IE/Edge
             node.style.overflow = overflow;
+        }
+
+        if (sizeHoldingNode) {
+            sizeHoldingNode.style.width = nodeStyles[0];
+            sizeHoldingNode.style.minWidth = nodeStyles[1];
+            sizeHoldingNode.style.flexBasis = nodeStyles[2];
         }
 
         return width;
@@ -361,7 +390,7 @@ export const HEADER_KEYS = new Set([...Array.from(NAVIGATION_KEYS), 'escape', 'e
  * Related issue: https://github.com/angular/angular/issues/31712
  */
 export const resizeObservable = (target: HTMLElement): Observable<ResizeObserverEntry[]> => new Observable((observer) => {
-    const instance = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+    const instance = new (getResizeObserver())((entries: ResizeObserverEntry[]) => {
         observer.next(entries);
     });
     instance.observe(target);

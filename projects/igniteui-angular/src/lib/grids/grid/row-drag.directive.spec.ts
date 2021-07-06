@@ -35,7 +35,7 @@ const CSS_CLASS_GHOST_ROW = 'igx-grid__tr--ghost';
 const CSS_CLASS_SELECTED_ROW = 'igx-grid__tr--selected';
 const CSS_CLASS_SELECTION_CHECKBOX = '.igx-grid__cbx-selection';
 const CSS_CLASS_VIRTUAL_HSCROLLBAR = '.igx-vhelper--horizontal';
-const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid__th--pinned-last';
+const CSS_CLASS_LAST_PINNED_HEADER = 'igx-grid-th--pinned-last';
 const CSS_CLASS_DROPPABLE_AREA = '.droppable-area';
 const CSS_CLASS_NON_DROPPABLE_AREA = '.non-droppable-area';
 
