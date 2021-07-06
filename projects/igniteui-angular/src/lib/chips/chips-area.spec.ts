@@ -23,10 +23,10 @@ import { wait, UIInteractions } from '../test-utils/ui-interactions.spec';
     `
 })
 class TestChipComponent {
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren('chipElem', { read: IgxChipComponent})
+    @ViewChildren('chipElem', { read: IgxChipComponent })
     public chips: QueryList<IgxChipComponent>;
 
     public chipList = [
@@ -34,7 +34,7 @@ class TestChipComponent {
         { id: 'City', text: 'City', removable: true, selectable: true, draggable: true }
     ];
 
-    constructor(public cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) { }
 }
 
 @Component({
@@ -56,8 +56,7 @@ class TestChipSelectComponent extends TestChipComponent {
 }
 
 @Component({
-    template:
-    `
+    template: `
         <igx-chips-area #chipsArea (reorder)="chipsOrderChanged($event)">
             <igx-chip #chipElem *ngFor="let chip of chipList" [id]="chip.id" [draggable]="true"
                 [removable]="true" [selectable]="true" (remove)="chipRemoved($event)">
@@ -68,10 +67,10 @@ class TestChipSelectComponent extends TestChipComponent {
     `
 })
 class TestChipReorderComponent {
-    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true  })
+    @ViewChild('chipsArea', { read: IgxChipsAreaComponent, static: true })
     public chipsArea: IgxChipsAreaComponent;
 
-    @ViewChildren('chipElem', { read: IgxChipComponent})
+    @ViewChildren('chipElem', { read: IgxChipComponent })
     public chips: QueryList<IgxChipComponent>;
 
     public chipList = [
@@ -81,7 +80,7 @@ class TestChipReorderComponent {
         { id: 'FirstName', text: 'First Name' },
     ];
 
-    constructor(public cdr: ChangeDetectorRef) {}
+    constructor(public cdr: ChangeDetectorRef) { }
 
     public chipsOrderChanged(event) {
         const newChipList = [];
@@ -197,11 +196,11 @@ describe('IgxChipsArea ', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            firstChipComp.elementRef.nativeElement.focus();
-            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
+            firstChipComp.nativeElement.focus();
+            expect(document.activeElement).toBe(firstChipComp.nativeElement);
 
-            secondChipComp.elementRef.nativeElement.focus();
-            expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
+            secondChipComp.nativeElement.focus();
+            expect(document.activeElement).toBe(secondChipComp.nativeElement);
         });
 
         it('should focus on previous and next chips after arrows are pressed', () => {
@@ -211,22 +210,22 @@ describe('IgxChipsArea ', () => {
             const firstChipComp = fix.componentInstance.chips.toArray()[0];
             const secondChipComp = fix.componentInstance.chips.toArray()[1];
 
-            firstChipComp.elementRef.nativeElement.focus();
+            firstChipComp.nativeElement.focus();
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
+            expect(document.activeElement).toBe(firstChipComp.nativeElement);
 
             const rightKey = new KeyboardEvent('keydown', { key: 'ArrowRight' });
             firstChipComp.onChipKeyDown(rightKey);
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(secondChipComp.elementRef.nativeElement);
+            expect(document.activeElement).toBe(secondChipComp.nativeElement);
 
             const leftKey = new KeyboardEvent('keydown', { key: 'ArrowLeft' });
             secondChipComp.onChipKeyDown(leftKey);
             fix.detectChanges();
 
-            expect(document.activeElement).toBe(firstChipComp.elementRef.nativeElement);
+            expect(document.activeElement).toBe(firstChipComp.nativeElement);
         });
 
         it('should fire selectionChange event', () => {
@@ -328,17 +327,17 @@ describe('IgxChipsArea ', () => {
             selectedChip.selected = true;
             fix.detectChanges();
 
-            const selectedChipIconContainer = selectedChip.elementRef.nativeElement.children[0].children[0];
-            const unselectedChipIconContainer = unselectedChip.elementRef.nativeElement.children[0].children[0];
+            const selectedChipIconContainer = selectedChip.nativeElement.children[0].children[0];
+            const unselectedChipIconContainer = unselectedChip.nativeElement.children[0].children[0];
             expect(selectedChip.selected).toBe(true);
             expect(selectedChipIconContainer.children.length).toEqual(1);
             expect(selectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
             // expect(selectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).not.toEqual(0);
-            expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).toEqual(CHIP_SELECT_ICON);
-            expect(selectedChip.elementRef.nativeElement.children[0].children[0].className).not.toEqual(CHIP_SELECT_ICON_HIDDEN);
+            expect(selectedChip.nativeElement.children[0].children[0].className).toEqual(CHIP_SELECT_ICON);
+            expect(selectedChip.nativeElement.children[0].children[0].className).not.toEqual(CHIP_SELECT_ICON_HIDDEN);
             expect(unselectedChipIconContainer.children.length).toEqual(1);
             expect(unselectedChipIconContainer.children[0].tagName).toEqual('IGX-ICON');
-            expect(unselectedChip.elementRef.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
+            expect(unselectedChip.nativeElement.children[0].children[0].offsetWidth).toEqual(0);
         });
 
         it('should fire only onSelection event for chip area when selecting a chip using spacebar', () => {
@@ -423,8 +422,8 @@ describe('IgxChipsArea ', () => {
 
         it('should reorder chips when shift + leftarrow and shift + rightarrow is pressed', () => {
             const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
-            const firstChipAreaElem = chipComponents[0].componentInstance.elementRef.nativeElement;
-            const secondChipAreaElem = chipComponents[1].componentInstance.elementRef.nativeElement;
+            const firstChipAreaElem = chipComponents[0].componentInstance.nativeElement;
+            const secondChipAreaElem = chipComponents[1].componentInstance.nativeElement;
             const firstChipLeft = firstChipAreaElem.getBoundingClientRect().left;
             const secondChipLeft = secondChipAreaElem.getBoundingClientRect().left;
 
@@ -451,7 +450,7 @@ describe('IgxChipsArea ', () => {
                 chipArea = fix.componentInstance.chipsArea;
                 const chipComponents = fix.debugElement.queryAll(By.directive(IgxChipComponent));
                 const targetChip = chipComponents[2].componentInstance;
-                const targetChipElem = targetChip.elementRef.nativeElement;
+                const targetChipElem = targetChip.nativeElement;
 
                 targetChipElem.focus();
                 fix.detectChanges();
