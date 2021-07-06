@@ -177,9 +177,10 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
         <igx-paginator></igx-paginator>
-        <igx-row-island [key]="'childData'" #rowIsland1 [paging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
+        <igx-row-island [key]="'childData'" #rowIsland1 [primaryKey]="'ID'" [rowSelection]="'single'">
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
+            <igx-paginator *igxPaginator></igx-paginator>
             <ng-template igxHeadSelector let-headContext>
                 <igx-checkbox [readonly]="true" (click)="handleHeadSelectorClick(headContext)"
                     [checked]="headContext.selectedCount === headContext.totalCount"
