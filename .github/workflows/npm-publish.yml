@@ -47,7 +47,7 @@ jobs:
 
       - name: Create igniteui-angular version and publish it to npmjs
         run: npm version ${VERSION} --no-git-tag-version --save --verbose
-          working-directory: dist/igniteui-angular
+        working-directory: dist/igniteui-angular
 
       - name: Create igniteui-angular-i18n version and publish it to npmjs
         run: npm version ${VERSION} --no-git-tag-version --save

@@ -48,7 +48,6 @@ jobs:
         working-directory: projects/igniteui-angular-i18n
         run: |
             npm run build
-          # validate dist doesn't contain package imports
             npm run lint-dist
       - name: Install coverage combiner - istanbul
         if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
