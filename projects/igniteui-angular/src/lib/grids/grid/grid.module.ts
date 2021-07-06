@@ -49,6 +49,7 @@ import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.comp
     IgxGridFilteringPipe,
     IgxGridSummaryPipe,
     IgxGridDetailsPipe,
+    IgxGridGroupByAreaComponent,
     IgxGridCommonModule
   ],
   imports: [

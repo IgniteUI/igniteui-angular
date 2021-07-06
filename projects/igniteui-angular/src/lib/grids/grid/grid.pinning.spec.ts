@@ -10,7 +10,6 @@ import { IPinningConfig } from '../grid.common';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
 import {
     CELL_PINNED_CLASS,
-    GRID_HEADER_CLASS,
     GRID_MRL_BLOCK_CLASS,
     GRID_SCROLL_CLASS,
     GridFunctions,
@@ -502,12 +501,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 const lastIndexCell = grid.getCellByColumn(0, 'ContactName');
                 expect(lastIndexCell.visibleColumnIndex).toEqual(secondPinnedIndex);
 
-                const headers = GridFunctions.getColumnHeaders(fix);
+                // const headers = GridFunctions.getColumnHeaders(fix);
+                const headers = grid.headerCellList;
                 const penultimateColumnHeader = headers[headers.length - 2];
                 const lastColumnHeader = headers[headers.length - 1];
-                expect(penultimateColumnHeader.context.column.field).toEqual('CompanyName');
+                expect(penultimateColumnHeader.column.field).toEqual('CompanyName');
 
-                expect(lastColumnHeader.context.column.field).toEqual('ContactName');
+                expect(lastColumnHeader.column.field).toEqual('ContactName');
 
                 // verify container widths
                 GridFunctions.verifyPinnedAreaWidth(grid, 400);
@@ -691,10 +691,9 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 }
 
                 // check correct headers have left border
-                const fistPinnedHeaders = fix.debugElement.query(By.css(GRID_HEADER_CLASS))
-                    .queryAll((By.css(`.${HEADER_PINNED_CLASS}-first`)));
-                expect(fistPinnedHeaders[0].nativeElement.getAttribute('aria-label')).toBe('General Information');
-                expect(fistPinnedHeaders[1].context.column.field).toBe('CompanyName');
+                const pinnedHeaders = grid.headerGroupsList.filter(group => group.isPinned);
+                expect(pinnedHeaders[0].nativeElement.querySelector('[aria-label="General Information"]')).not.toBeNull();
+                expect(pinnedHeaders[1].column.field).toBe('CompanyName');
             }));
 
             it('should correctly pin multi-row-layouts to end.', fakeAsync(() => {
@@ -712,12 +711,13 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 expect(parseInt((row.children[1] as any).style.left, 10)).toEqual(-408);
 
                 // check correct headers have left border
-                const firstPinnedHeader = GridFunctions.getGridHeader(fix).query((By.css(`.${HEADER_PINNED_CLASS}-first`)));
-                expect(firstPinnedHeader.classes[GRID_MRL_BLOCK_CLASS]).toBeTruthy();
-                expect(firstPinnedHeader.classes[`${HEADER_PINNED_CLASS}-first`]).toBeTruthy();
+                const firstPinnedHeader = grid.headerGroupsList.find(group => group.isPinned);
+                // The first child of the header is the <div> wrapping the MRL block
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(GRID_MRL_BLOCK_CLASS)).toBeTrue();
+                expect(firstPinnedHeader.nativeElement.firstElementChild.classList.contains(`${HEADER_PINNED_CLASS}-first`)).toBeTrue();
             }));
 
-            it('should correctly add pinned colmns to the right of the already fixed one', () => {
+            it('should correctly add pinned columns to the right of the already fixed one', () => {
                 fix = TestBed.createComponent(GridPinningMRLComponent);
                 fix.componentInstance.grid.pinning = { columns: ColumnPinningPosition.Start };
                 fix.detectChanges();

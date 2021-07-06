@@ -526,7 +526,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public refreshGridState(args?) {
+    public refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];

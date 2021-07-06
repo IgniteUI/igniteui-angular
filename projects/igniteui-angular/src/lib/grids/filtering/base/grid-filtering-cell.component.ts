@@ -22,7 +22,6 @@ import { DisplayDensity } from '../../../core/displayDensity';
  */
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-filtering-cell',
     templateUrl: './grid-filtering-cell.component.html'
 })
