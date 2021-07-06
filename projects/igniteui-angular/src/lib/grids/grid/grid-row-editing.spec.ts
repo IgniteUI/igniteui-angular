@@ -35,7 +35,7 @@ const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';
 const ROW_DELETED_CLASS = 'igx-grid__tr--deleted';
 const SUMMARY_ROW = 'igx-grid-summary-row';
-const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 const DEBOUNCETIME = 30;
 
 describe('IgxGrid - Row Editing #grid', () => {
@@ -1465,7 +1465,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             const headerResArea = headers[2].children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 500, 0);
             tick(200);
-            const resizer = fix.debugElement.queryAll(By.css('.igx-grid__th-resize-line'))[0].nativeElement;
+            const resizer = fix.debugElement.queryAll(By.css('.igx-grid-th__resize-line'))[0].nativeElement;
             expect(resizer).toBeDefined();
             UIInteractions.simulateMouseEvent('mousemove', resizer, 550, 0);
             UIInteractions.simulateMouseEvent('mouseup', resizer, 550, 0);

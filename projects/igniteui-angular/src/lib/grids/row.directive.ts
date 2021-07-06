@@ -19,7 +19,7 @@ import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { IgxGridForOfDirective } from '../directives/for-of/for_of.directive';
 import { GridBaseAPIService } from './api.service';
 import { IgxColumnComponent } from './columns/column.component';
-import { TransactionType } from '../services/public_api';
+import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService } from './selection/selection.service';
 import { IgxRow } from './common/crud.service';

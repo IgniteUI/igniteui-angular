@@ -20,6 +20,7 @@ import { IgxGridExpandableCellComponent } from '../grids/grid/expandable-cell.co
 import { IgxColumnHidingDirective } from '../grids/column-actions/column-hiding.directive';
 import { IgxColumnPinningDirective } from '../grids/column-actions/column-pinning.directive';
 import { parseDate } from '../core/utils';
+import { IgxGridHeaderRowComponent } from '../grids/headers/grid-header-row.component';
 import { IgxGridRowComponent } from '../grids/grid/grid-row.component';
 
 const SUMMARY_LABEL_CLASS = '.igx-grid-summary__label';
@@ -46,19 +47,19 @@ const BANNER_ROW_CLASS = '.igx-banner__row';
 const EDIT_OVERLAY_CONTENT = '.igx-overlay__content';
 const PAGER_BUTTONS = 'igx-page-nav > button';
 const ACTIVE_GROUP_ROW_CLASS = 'igx-grid__group-row--active';
-const ACTIVE_HEADER_CLASS = 'igx-grid__th--active';
+const ACTIVE_HEADER_CLASS = 'igx-grid-th--active';
 const GROUP_ROW_CLASS = 'igx-grid-groupby-row';
 const CELL_SELECTED_CSS_CLASS = 'igx-grid__td--selected';
 const CELL_ACTIVE_CSS_CLASS = 'igx-grid__td--active';
 const ROW_DIV_SELECTION_CHECKBOX_CSS_CLASS = 'igx-grid__cbx-selection';
 const ROW_SELECTION_CSS_CLASS = 'igx-grid__tr--selected';
-const HEADER_ROW_CSS_CLASS = '.igx-grid__thead';
+const HEADER_ROW_CSS_CLASS = '.igx-grid-thead';
 const CHECKBOX_INPUT_CSS_CLASS = '.igx-checkbox__input';
 const CHECKBOX_ELEMENT = 'igx-checkbox';
 const ICON_CSS_CLASS = 'material-icons igx-icon';
 const CHECKBOX_LBL_CSS_CLASS = '.igx-checkbox__composite';
-const GROUP_EXPANDER_CLASS = '.igx-grid__th-expander';
-const GROUP_HEADER_CLASS = '.igx-grid__th-group-title';
+const GROUP_EXPANDER_CLASS = '.igx-grid-th__expander';
+const GROUP_HEADER_CLASS = '.igx-grid-th__group-title';
 const CELL_CSS_CLASS = '.igx-grid__td';
 const ROW_CSS_CLASS = '.igx-grid__tr';
 const FOCUSED_CHECKBOX_CLASS = 'igx-checkbox--focused';
@@ -68,12 +69,12 @@ const GRID_CONTENT_CLASS = '.igx-grid__tbody-content';
 const DISPLAY_CONTAINER = 'igx-display-container';
 const SORT_ICON_CLASS = '.sort-icon';
 const FILTER_ICON_CLASS = '.igx-excel-filter__icon';
-const SELECTED_COLUMN_CLASS = 'igx-grid__th--selected';
-const HOVERED_COLUMN_CLASS = 'igx-grid__th--selectable';
+const SELECTED_COLUMN_CLASS = 'igx-grid-th--selected';
+const HOVERED_COLUMN_CLASS = 'igx-grid-th--selectable';
 const SELECTED_COLUMN_CELL_CLASS = 'igx-grid__td--column-selected';
 const FOCUSED_DETAILS_ROW_CLASS = 'igx-grid__tr-container--active';
 const DRAG_INDICATOR_CLASS = '.igx-grid__drag-indicator';
-const SORTED_COLUMN_CLASS = 'igx-grid__th--sorted';
+const SORTED_COLUMN_CLASS = 'igx-grid-th--sorted';
 const SORTING_ICON_ASC_CONTENT = 'arrow_upward';
 const SORTING_ICON_DESC_CONTENT = 'arrow_downward';
 const SUMMARY_CELL = 'igx-grid-summary-cell';
@@ -87,13 +88,13 @@ const SORT_INDEX_ATTRIBUTE = 'data-sortIndex';
 export const GRID_SCROLL_CLASS = 'igx-grid__scroll';
 export const GRID_MRL_BLOCK_CLASS = 'igx-grid__mrl-block';
 export const CELL_PINNED_CLASS = 'igx-grid__td--pinned';
-export const HEADER_PINNED_CLASS = 'igx-grid__th--pinned';
-export const GRID_HEADER_CLASS = '.igx-grid__thead-wrapper';
+export const HEADER_PINNED_CLASS = 'igx-grid-th--pinned';
+export const GRID_HEADER_CLASS = '.igx-grid-thead__wrapper';
 export const PINNED_SUMMARY = 'igx-grid-summary--pinned';
 export const PAGER_CLASS = '.igx-page-nav';
-const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
-const RESIZE_AREA_CLASS = '.igx-grid__th-resize-handle';
-const GRID_COL_THEAD_CLASS = '.igx-grid__th';
+const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
+const RESIZE_AREA_CLASS = '.igx-grid-th__resize-handle';
+const GRID_COL_THEAD_CLASS = '.igx-grid-th';
 
 export class GridFunctions {
 
@@ -116,8 +117,8 @@ export class GridFunctions {
         return fix.debugElement.query(By.css(GRID_CONTENT_CLASS));
     }
 
-    public static getGridHeader(fix): DebugElement {
-        return fix.debugElement.query(By.css(GRID_HEADER_CLASS));
+    public static getGridHeader(grid: IgxGridBaseDirective): IgxGridHeaderRowComponent {
+        return grid.theadRow;
     }
 
     public static getGridDisplayContainer(fix): DebugElement {
@@ -156,16 +157,16 @@ export class GridFunctions {
     /**
      * Focus the grid header
      */
-    public static focusHeader(fix: ComponentFixture<any>) {
-        this.getGridHeader(fix).triggerEventHandler('focus', null);
+    public static focusHeader(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+        this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
     }
 
     /**
      * Focus the first cell in the grid
      */
-    public static focusFirstCell(fix: ComponentFixture<any>) {
-        this.getGridHeader(fix).triggerEventHandler('focus', null);
+    public static focusFirstCell(fix: ComponentFixture<any>, grid: IgxGridBaseDirective) {
+        this.getGridHeader(grid).nativeElement.focus();
         fix.detectChanges();
         this.getGridContent(fix).triggerEventHandler('focus', null);
         fix.detectChanges();
@@ -519,7 +520,7 @@ export class GridFunctions {
     }
 
     public static clickChip(debugElement) {
-        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.elementRef);
+        UIInteractions.simulateClickAndSelectEvent(debugElement.componentInstance.nativeElement);
     }
 
     public static isInView(index, state): boolean {
@@ -1074,7 +1075,7 @@ export class GridFunctions {
         const nativeHeaders = fix.debugElement.queryAll(By.directive(IgxGridHeaderComponent))
             .map((header) => header.nativeElement);
         const sortedNativeHeaders = GridFunctions.sortNativeElementsHorizontally(nativeHeaders);
-        return sortedNativeHeaders[index].querySelector('.igx-grid__th-title');
+        return sortedNativeHeaders[index].querySelector('.igx-grid-th__title');
     }
 
     public static getFilterChipsForColumn(columnField: string, fix: ComponentFixture<any>) {
@@ -1961,10 +1962,10 @@ export class GridFunctions {
         return null;
     }
 
-    public static verifyLayoutHeadersAreAligned(headerCells, rowCells) {
-        for (let i = 0; i < headerCells.length; i++) {
-            const widthDiff = headerCells[i].headerCell.elementRef.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
-            const heightDiff = headerCells[i].headerCell.elementRef.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
+    public static verifyLayoutHeadersAreAligned(headerGroups: IgxGridHeaderGroupComponent[], rowCells: IgxGridCellComponent[]) {
+        for (let i = 0; i < headerGroups.length; i++) {
+            const widthDiff = headerGroups[i].header.nativeElement.clientWidth - rowCells[i].nativeElement.clientWidth;
+            const heightDiff = headerGroups[i].header.nativeElement.clientHeight - rowCells[i].nativeElement.clientHeight;
             expect(widthDiff).toBeLessThanOrEqual(1);
             expect(heightDiff).toBeLessThanOrEqual(3);
         }
@@ -2373,7 +2374,7 @@ export class GridSelectionFunctions {
     public static verifyColumnSelected(column: IgxColumnComponent, selected = true) {
         expect(column.selected).toEqual(selected);
         if (!column.hidden) {
-            expect(column.headerCell.elementRef.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
+            expect(column.headerCell.nativeElement.classList.contains(SELECTED_COLUMN_CLASS)).toEqual(selected);
         }
     }
 
@@ -2409,6 +2410,6 @@ export class GridSelectionFunctions {
             stopPropagation: () => { }
         };
 
-        column.headerCell.onClick(event);
+        column.headerCell.onClick(event as any);
     }
 }
