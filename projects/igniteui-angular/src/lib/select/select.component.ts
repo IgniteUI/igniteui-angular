@@ -34,12 +34,14 @@ import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/d
 import { IgxInputGroupComponent } from '../input-group/input-group.component';
 import { AbsoluteScrollStrategy } from '../services/overlay/scroll/absolute-scroll-strategy';
 import { OverlaySettings } from '../services/overlay/utilities';
+import { IgxOverlayService } from '../services/public_api';
 import { IgxInputDirective, IgxInputState } from './../directives/input/input.directive';
 import { IgxDropDownComponent } from './../drop-down/drop-down.component';
 import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
+import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -325,6 +327,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         protected cdr: ChangeDetectorRef,
         protected platform: PlatformUtil,
         protected selection: IgxSelectionAPIService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Optional() @Inject(IGX_INPUT_GROUP_TYPE) private _inputGroupType: IgxInputGroupType,
         private _injector: Injector) {
@@ -363,10 +366,12 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     public selectItem(newSelection: IgxDropDownItemBaseDirective, event?) {
         const oldSelection = this.selectedItem;
 
-        if (event) {
-            this.toggleDirective.close();
+        if (newSelection === null || newSelection.disabled || newSelection.isHeader) {
+            return;
         }
-        if (newSelection === null || newSelection === oldSelection || newSelection.disabled || newSelection.isHeader) {
+
+        if (newSelection === oldSelection) {
+            this.toggleDirective.close();
             return;
         }
 
@@ -379,6 +384,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 
         this.setSelection(newSelection);
         this._value = newSelection.value;
+
+        if (event) {
+            this.toggleDirective.close();
+        }
+
         this.cdr.detectChanges();
         this._onChangeCallback(this.value);
     }
@@ -448,7 +458,15 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         if (args.cancel) {
             return;
         }
-        this.scrollToItem(this.selectedItem);
+    }
+
+    /** @hidden @internal */
+    public onToggleContentAppended(event: ToggleViewEventArgs) {
+        const info = this.overlayService.getOverlayById(event.id);
+        if (info?.settings?.positionStrategy instanceof SelectPositioningStrategy) {
+            return;
+        }
+        super.onToggleContentAppended(event);
     }
 
     /** @hidden @internal */
@@ -559,6 +577,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
             this.cdr.markForCheck();
         }
     }
+
     private setSelection(item: IgxDropDownItemBaseDirective) {
         if (item && item.value !== undefined && item.value !== null) {
             this.selection.set(this.id, new Set([item]));

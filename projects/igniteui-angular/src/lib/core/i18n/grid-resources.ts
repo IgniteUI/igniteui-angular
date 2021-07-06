@@ -79,6 +79,7 @@ export interface IGridResourceStrings {
     igx_grid_excel_pin?: string;
     igx_grid_excel_unpin?: string;
     igx_grid_excel_select?: string;
+    igx_grid_excel_deselect?: string;
     igx_grid_excel_text_filter?: string;
     igx_grid_excel_number_filter?: string;
     igx_grid_excel_date_filter?: string;
@@ -210,6 +211,7 @@ export const GridResourceStringsEN: IGridResourceStrings = {
     igx_grid_excel_pin: 'Pin column',
     igx_grid_excel_unpin: 'Unpin column',
     igx_grid_excel_select: 'Select column',
+    igx_grid_excel_deselect: 'Deselect column',
     igx_grid_excel_text_filter: 'Text filter',
     igx_grid_excel_number_filter: 'Number filter',
     igx_grid_excel_date_filter: 'Date filter',

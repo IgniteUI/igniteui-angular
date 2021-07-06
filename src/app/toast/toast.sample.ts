@@ -10,8 +10,6 @@ export class ToastSampleComponent {
     @ViewChild('toast')
     public toast: IgxToastComponent;
 
-    public toastVisibility = false;
-
     public showToast(toast: IgxToastComponent, pos: IgxToastPosition) {
         toast.position = pos;
         toast.open();
@@ -23,7 +21,6 @@ export class ToastSampleComponent {
 
     public handleShown(event) {
         console.log('toast shown', event);
-
     }
 
     public handleHiding(event) {

@@ -14,6 +14,8 @@ import {
 } from '../../test-utils/tree-grid-components.spec';
 import { wait } from '../../test-utils/ui-interactions.spec';
 import { GridSelectionMode } from '../common/enums';
+import { IgxHierarchicalGridTestComponent } from '../grid/row-drag.directive.spec';
+import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
 
 describe('IgxTreeGrid Component Tests #tGrid', () => {
     configureTestSuite();
@@ -156,6 +158,32 @@ describe('IgxTreeGrid Component Tests #tGrid', () => {
             expect(grid.dataRowList.length).toBeGreaterThan(0);
         });
     });
+
+    it ('checks if attributes are correctly assigned when grid has or does not have data', fakeAsync( () => {
+        const fixture = TestBed.createComponent(IgxTreeGridAutoGenerateComponent);
+        grid = fixture.componentInstance.treeGrid;
+
+        fixture.detectChanges();
+        tick(100);
+        // Checks if igx-grid__tbody-content attribute is null when there is data in the grid
+        const container = fixture.nativeElement.querySelectorAll('.igx-grid__tbody-content')[0];
+        expect(container.getAttribute('role')).toBe(null);
+
+        //Filter grid so no results are available and grid is empty
+        grid.filter('index','111',IgxStringFilteringOperand.instance().condition('contains'),true);
+        grid.markForCheck();
+        fixture.detectChanges();
+        expect(container.getAttribute('role')).toMatch('row');
+
+        // clear grid data and check if attribute is now 'row'
+        grid.clearFilter();
+        fixture.componentInstance.clearData();
+        fixture.detectChanges();
+        tick(100);
+
+        expect(container.getAttribute('role')).toMatch('row');
+
+    }));
 
     describe('Hide All', () => {
         beforeEach(waitForAsync(() => {
