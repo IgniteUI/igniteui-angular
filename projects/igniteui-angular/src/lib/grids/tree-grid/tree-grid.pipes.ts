@@ -257,7 +257,7 @@ export class IgxTreeGridPagingPipe implements PipeTransform {
 
         const result: ITreeGridRecord[] = DataUtil.page(cloneArray(collection), state, len);
         grid.pagingState = state;
-        (grid as any)._page = state.index;
+        grid.paginator.page = state.index;
 
         return result;
     }
