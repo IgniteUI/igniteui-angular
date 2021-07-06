@@ -331,7 +331,10 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
                 .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
             grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
-                .subscribe(() => grid.paginatorOutlet.createEmbeddedView(this.islandPaginatorTemplate));
+                .subscribe(() => {
+                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());
+                    grid.paginatorOutlet.createEmbeddedView(this.islandPaginatorTemplate);
+                });
         });
     }
 
