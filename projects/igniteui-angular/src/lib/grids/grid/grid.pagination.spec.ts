@@ -145,7 +145,7 @@ describe('IgxGrid - Grid Paging #grid', () => {
             grid.perPage = 5;
             fix.detectChanges();
 
-            expect(grid.paging).toBeTruthy();
+            expect(grid.paginator).toBeDefined();
             expect(grid.perPage).toEqual(5, 'Invalid page size');
             expect(grid.totalRecords).toBe(10);
             verifyGridPager(fix, 5, '1', '1\xA0of\xA02', []);
@@ -182,19 +182,18 @@ describe('IgxGrid - Grid Paging #grid', () => {
             grid.perPage = 2;
             fix.detectChanges();
 
-            expect(grid.paging).toBeTruthy();
+            expect(grid.paginator).toBeDefined();
             expect(grid.perPage).toEqual(2, 'Invalid page size');
             verifyGridPager(fix, 2, '1', '1\xA0of\xA05', []);
 
             // Turn off paging
-/*             grid.paging = false;
+            fix.componentInstance.paging = false;
             fix.detectChanges();
 
-            expect(grid.paging).toBeFalsy();
-            expect(grid.perPage).toEqual(2, 'Invalid page size after paging was turned off');
+            expect(grid.paginator).not.toBeDefined();
             verifyGridPager(fix, 10, '1', null, []);
             expect(GridFunctions.getGridPaginator(grid)).toBeNull();
-            expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0); */
+            expect(grid.nativeElement.querySelectorAll('.igx-paginator > select').length).toEqual(0);
         });
 
         it('change paging pages per page API', (async () => {
@@ -246,18 +245,18 @@ describe('IgxGrid - Grid Paging #grid', () => {
             expect(vScrollBar.scrollHeight).toBeLessThanOrEqual(510);
         }));
 
-        xit('activate/deactivate paging', () => {
+        it('activate/deactivate paging', () => {
 
             let paginator = GridFunctions.getGridPaginator(grid);
             expect(paginator).toBeDefined();
 
-            grid.paging = !grid.paging;
+            fix.componentInstance.paging = !fix.componentInstance.paging;
             fix.detectChanges();
 
             paginator = GridFunctions.getGridPaginator(grid);
             expect(paginator).toBeNull();
 
-            grid.paging = !grid.paging;
+            fix.componentInstance.paging = !fix.componentInstance.paging;
             fix.detectChanges();
 
             paginator = GridFunctions.getGridPaginator(grid);

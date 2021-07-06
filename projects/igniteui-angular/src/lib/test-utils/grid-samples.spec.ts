@@ -701,19 +701,21 @@ export class GridFeaturesComponent extends BasicGridComponent {
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` columnWidth="200" `,
-        '', ColumnDefinitions.idNameJobHireDate)
+        '', ColumnDefinitions.idNameJobHireDate, '', '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class ScrollableGridSearchComponent extends BasicGridSearchComponent {
     public data = SampleTestData.generateFromData(SampleTestData.personJobDataFull(), 30);
+    public paging = false;
 }
 
 @Component({
     template: GridTemplateStrings.declareGrid(
         ` columnWidth="200" [height]="null" `,
-        '', ColumnDefinitions.idNameJobTitleCompany)
+        '', ColumnDefinitions.idNameJobTitleCompany, '', '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class GroupableGridSearchComponent extends ScrollableGridSearchComponent {
     public data = SampleTestData.personIDNameJobCompany();
+    public paging = false;
 }
 
 @Component({
@@ -1562,12 +1564,13 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 
 @Component({
     template: `
-    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [paging]="true" [rowSelection]="'multiple'" [autoGenerate]="false">
+    <igx-grid #gridCustomSelectors [primaryKey]="'ID'" [data]="data" [rowSelection]="'multiple'" [autoGenerate]="false">
         <igx-column width="100px" [field]="'ID'" [header]="'ID'"></igx-column>
         <igx-column width="100px" [field]="'CompanyName'"></igx-column>
         <igx-column width="100px" [field]="'ContactName'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'ContactTitle'" dataType="string"></igx-column>
         <igx-column width="100px" [field]="'Address'" dataType="string"></igx-column>
+        <igx-paginator></igx-paginator>
         <ng-template igxRowSelector let-rowContext>
             <span class="rowNumber">{{ rowContext.index }}</span>
             <igx-checkbox [checked]="rowContext.selected" (click)="onRowCheckboxClick($event, rowContext)"></igx-checkbox>

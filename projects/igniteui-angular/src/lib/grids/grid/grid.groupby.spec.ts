@@ -19,7 +19,6 @@ import { MultiColumnHeadersWithGroupingComponent } from '../../test-utils/grid-s
 import { GridSelectionFunctions, GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridSelectionMode } from '../common/enums';
 import { ControlsFunction } from '../../test-utils/controls-functions.spec';
-import { RowType } from '../common/row.interface';
 
 describe('IgxGrid - GroupBy #grid', () => {
 
@@ -2053,7 +2052,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2077,7 +2076,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2113,7 +2112,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
+        tick();
+        fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
@@ -3430,6 +3431,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -3454,6 +3456,7 @@ export class DefaultGridComponent extends DataParent {
     public enableGrouping = true;
     public currentSortExpressions;
     public currentGroupingExpressions = [];
+    public paging = false;
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;

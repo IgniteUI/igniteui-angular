@@ -76,16 +76,18 @@ export class GridNxMComponent extends GridWithSizeComponent implements OnInit {
 }
 
 @Component({
-    template: GridTemplateStrings.declareBasicGridWithColumns(ColumnDefinitions.idNameJobHireDate)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.idNameJobHireDate, '',
+            '<igx-paginator *ngIf="paging"></igx-paginator>')
 })
 export class BasicGridSearchComponent extends GridWithSizeComponent {
     public highlightClass = 'igx-highlight';
     public activeClass = 'igx-highlight__active';
+    public paging = false;
 }
 
 @Component({
-    template: GridTemplateStrings.declareGrid(` [paging]="paging" [perPage]="perPage"`,
-        '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator></igx-paginator>')
+    template: GridTemplateStrings.declareGrid(``,
+        '', ColumnDefinitions.idNameJobTitle, '', '<igx-paginator *ngIf="paging" [perPage]="perPage"></igx-paginator>')
 })
 export class PagingComponent extends GridWithSizeComponent {
     public paging = true;
