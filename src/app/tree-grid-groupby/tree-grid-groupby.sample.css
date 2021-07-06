@@ -1,0 +1,23 @@
+.sample-column {
+    max-width: 900px;
+}
+
+.density-chooser{
+    margin-bottom: 16px;
+}
+
+igx-buttongroup {
+    display: block;
+}
+
+.topMargin {
+    margin-top: 20px;
+}
+
+.sample-buttons igx-switch{
+    margin: 8px;
+}
+
+.sample-buttons button{
+    margin: 8px 4px;
+}

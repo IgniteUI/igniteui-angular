@@ -14,10 +14,10 @@ import {
     ColumnGroupsNavigationTestComponent
 } from '../../test-utils/grid-samples.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
-import { DebugElement } from '@angular/core';
 import { GridSelectionMode, FilterMode } from '../common/enums';
 import { IActiveNodeChangeEventArgs } from '../common/events';
 import { IgxStringFilteringOperand } from '../../data-operations/filtering-condition';
+import { IgxGridHeaderRowComponent } from '../headers/grid-header-row.component';
 
 const DEBOUNCETIME = 30;
 
@@ -25,7 +25,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
     describe('Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridHeader: DebugElement;
+        let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -41,7 +41,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-            gridHeader = GridFunctions.getGridHeader(fix);
+            gridHeader = GridFunctions.getGridHeader(grid);
         }));
 
         it('when click on a header it should stay in the view', async () => {
@@ -64,7 +64,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             await wait(150);
             fix.detectChanges();
 
-            gridHeader.triggerEventHandler('focus', {});
+            gridHeader.nativeElement.focus(); //('focus', {});
             await wait(250);
             fix.detectChanges();
 
@@ -86,7 +86,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
                 tag: 'headerCell'
             };
 
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             expect(grid.activeNodeChange.emit).toHaveBeenCalledWith(args);
@@ -107,7 +107,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
 
         it('should allow horizontal navigation', async () => {
             // Focus grid header
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -226,7 +226,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             // Focus grid header
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             // Verify first header is focused
@@ -706,7 +706,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
     describe('MRL Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridHeader: DebugElement;
+        let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -723,7 +723,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-            gridHeader = GridFunctions.getGridHeader(fix);
+            gridHeader = GridFunctions.getGridHeader(grid);
         }));
 
         it('should navigate through a layout with right and left arrow keys in first level', async () => {
@@ -896,7 +896,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus the first element when focus the header', () => {
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnHeader('CompanyName', fix);
@@ -907,7 +907,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
     describe('MCH Headers Navigation', () => {
         let fix;
         let grid: IgxGridComponent;
-        let gridHeader: DebugElement;
+        let gridHeader: IgxGridHeaderRowComponent;
         configureTestSuite((() => {
             TestBed.configureTestingModule({
                 declarations: [
@@ -924,7 +924,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid = fix.componentInstance.grid;
             setupGridScrollDetection(fix, grid);
             fix.detectChanges();
-            gridHeader = GridFunctions.getGridHeader(fix);
+            gridHeader = GridFunctions.getGridHeader(grid);
         }));
 
         it('should navigate through groups with right and left arrow keys in first level', () => {
@@ -1131,7 +1131,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
         });
 
         it('should focus the first element when focus the header', () => {
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             let header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
@@ -1160,7 +1160,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             GridFunctions.verifyColumnIsHidden(companyName, false, 10);
             GridFunctions.verifyGroupIsExpanded(fix, getInfGroup);
 
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
@@ -1202,7 +1202,7 @@ describe('IgxGrid - Headers Keyboard navigation #grid', () => {
             grid.columnSelection = GridSelectionMode.multiple;
             fix.detectChanges();
 
-            gridHeader.triggerEventHandler('focus', null);
+            gridHeader.nativeElement.focus(); //('focus', null);
             fix.detectChanges();
 
             const header = GridFunctions.getColumnGroupHeaderCell('General Information', fix);
