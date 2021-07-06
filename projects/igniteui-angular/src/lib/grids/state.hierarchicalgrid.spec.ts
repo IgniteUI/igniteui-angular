@@ -48,7 +48,6 @@ describe('IgxHierarchicalGridState - input properties #hGrid', () => {
             filtering: true,
             advancedFiltering: true,
             sorting: true,
-            paging: true,
             cellSelection: true,
             rowSelection: true,
             columnSelection: true,
@@ -581,7 +580,7 @@ class HelperFunctions {
 
 @Component({
     template: `
-    <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" [paging]="true" perPage="5" primaryKey="ID"
+    <igx-hierarchical-grid #hGrid [data]="data" igxGridState [expandChildren]="true" primaryKey="ID"
      [autoGenerate]="false" [height]="'800px'" [width]="'800px'" rowSelection="multiple" cellSelection="multiple">
         <igx-column *ngFor="let c of columns"
             [width]="c.width"
@@ -604,7 +603,8 @@ class HelperFunctions {
             [pinned]="c.pinned"
             [hidden]="c.hidden">
         </igx-column>
-        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland [paging]="true" perPage="5" primaryKey="ID">
+        <igx-paginator [perPage]="5"></igx-paginator>
+        <igx-row-island [key]="'childData'" [autoGenerate]="false" #rowIsland primaryKey="ID">
             <igx-column *ngFor="let c of childColumns"
                 [width]="c.width"
                 [sortable]="c.sortable"
@@ -626,7 +626,9 @@ class HelperFunctions {
                 [pinned]="c.pinned"
                 [hidden]="c.hidden">
             </igx-column>
-            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2 [paging]="true" perPage="5">
+            <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
+            <igx-row-island [key]="'childData'" [autoGenerate]="true" #rowIsland2>
+                <igx-paginator *igxPaginator [perPage]="5"></igx-paginator>
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`
