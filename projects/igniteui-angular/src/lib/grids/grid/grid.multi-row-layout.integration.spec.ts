@@ -64,7 +64,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
@@ -238,7 +238,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             // group1 should be hidden on init, check DOM
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
@@ -367,7 +367,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
             GridFunctions.verifyDOMMatchesLayoutSettings(gridFirstRow, fixture.componentInstance.colGroups.slice(1));
 
@@ -411,7 +411,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -601,7 +601,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('Phone').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -782,7 +782,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
             expect(grid.getColumnByName('County').pinned).toBeTruthy();
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -821,7 +821,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
 
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             const pinnedCells = firstRowCells
                 .filter(c => c.element.nativeElement.className.indexOf('igx-grid__td--pinned') !== -1);
 
@@ -917,7 +917,7 @@ describe('IgxGrid - multi-row-layout Integration #grid - ', () => {
     describe('Resizing', () => {
         const DEBOUNCE_TIME = 200;
         const GRID_COL_GROUP_THEAD = 'igx-grid-header-group';
-        const RESIZE_LINE_CLASS = '.igx-grid__th-resize-line';
+        const RESIZE_LINE_CLASS = '.igx-grid-th__resize-line';
 
         beforeEach(fakeAsync(() => {
             fixture = TestBed.createComponent(ColumnLayoutResizingTestComponent);

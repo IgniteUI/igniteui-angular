@@ -12,6 +12,7 @@ import { IgxCell, IgxGridCRUDService, IgxRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
+import { IgxColumnMovingService } from './moving/moving.service';
 
 /**
  * @hidden
@@ -23,7 +24,9 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     public grid: T;
     protected destroyMap: Map<string, Subject<boolean>> = new Map<string, Subject<boolean>>();
 
-    constructor(public crudService: IgxGridCRUDService) { }
+    constructor(
+        public crudService: IgxGridCRUDService,
+        public cms: IgxColumnMovingService) { }
 
     public get_column_by_name(name: string): ColumnType {
         return this.grid.columnList.find((col: ColumnType) => col.field === name);
@@ -238,7 +241,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         }
     }
 
-    public clear_groupby(name?: string | Array<string>) {
+    public clear_groupby(_name?: string | Array<string>) {
     }
 
     public should_apply_number_style(column: ColumnType): boolean {
@@ -262,7 +265,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, parentRowID?) {
+    public addRowToData(rowData: any, _parentRowID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
@@ -442,7 +445,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         });
     }
 
-    public remove_grouping_expression(fieldName) {
+    public remove_grouping_expression(_fieldName) {
     }
 
     public filterDataByExpressions(expressionsTree: IFilteringExpressionsTree): any[] {
