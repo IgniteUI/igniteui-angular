@@ -229,7 +229,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
             return;
         }
 
-        // After the compositionend event IE triggers input events of type 'deleteContentBackward' and
+        // After the compositionend event Chromium triggers input events of type 'deleteContentBackward' and
         // we need to adjust the start and end indexes to include mask literals
         if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE ) {
             let numberOfMaskLiterals = 0;

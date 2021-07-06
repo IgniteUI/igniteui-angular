@@ -126,6 +126,18 @@ export class MaskParsingService {
             return strValue.substring(0, index) + char + strValue.substring(index + 1);
         }
     }
+    public getMaskLiterals(mask: string): Map<number, string> {
+        const literals = new Map<number, string>();
+
+        for (let i = 0; i < mask.length; i++) {
+            const char = mask.charAt(i);
+            if (MASK_FLAGS.indexOf(char) === -1) {
+                literals.set(i, char);
+            }
+        }
+
+        return literals;
+    }
 
     /** Validates only non literal positions. */
     private validateCharOnPosition(inputChar: string, position: number, mask: string): boolean {
@@ -181,18 +193,6 @@ export class MaskParsingService {
         }
 
         return isValid;
-    }
-    public getMaskLiterals(mask: string): Map<number, string> {
-        const literals = new Map<number, string>();
-
-        for (let i = 0; i < mask.length; i++) {
-            const char = mask.charAt(i);
-            if (MASK_FLAGS.indexOf(char) === -1) {
-                literals.set(i, char);
-            }
-        }
-
-        return literals;
     }
     private getNonLiteralIndices(mask: string, literalKeys: number[]): number[] {
         const nonLiteralsIndices: number[] = new Array();
