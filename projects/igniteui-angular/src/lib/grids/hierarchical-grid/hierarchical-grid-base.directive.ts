@@ -118,7 +118,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
     /**
      * Sets the outlet used to attach the grid's overlays to.
      */
-     public set outlet(val: any) {
+    public set outlet(val: any) {
         this._userOutletDirective = val;
     }
 
@@ -187,7 +187,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
      */
     public createColumnsList(cols: Array<any>) {
         const columns = [];
-        const topLevelCols = this.onlyTopLevel(cols);
+        const topLevelCols = cols.filter(c => c.level === 0);
         topLevelCols.forEach((col) => {
             const ref = this._createColumn(col);
             ref.changeDetectorRef.detectChanges();

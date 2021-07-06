@@ -158,7 +158,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    @ViewChild('groupArea')
+     @ViewChild(IgxGridGroupByAreaComponent)
     public groupArea: IgxGridGroupByAreaComponent;
 
     /**
@@ -797,8 +797,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * ```
      */
     public get dropAreaVisible(): boolean {
-        return (this.draggedColumn && this.draggedColumn.groupable) ||
-            !this.groupingExpressions.length;
+        return this.columnInDrag?.groupable || !this.groupingExpressions.length;
     }
 
     /**

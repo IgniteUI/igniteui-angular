@@ -513,6 +513,11 @@ export class IgxChipComponent extends DisplayDensityBase {
         return this.getComponentDensityClass('igx-chip__ghost');
     }
 
+    /** @hidden @internal */
+    public get nativeElement() {
+        return this.ref.nativeElement;
+    }
+
     /**
      * @hidden
      * @internal
@@ -525,7 +530,7 @@ export class IgxChipComponent extends DisplayDensityBase {
     protected _movedWhileRemoving = false;
     private _resourceStrings = CurrentResourceStrings.ChipResStrings;
 
-    constructor(public cdr: ChangeDetectorRef, public elementRef: ElementRef, private renderer: Renderer2,
+    constructor(public cdr: ChangeDetectorRef, private ref: ElementRef<HTMLElement>, private renderer: Renderer2,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions) {
         super(_displayDensityOptions);
     }
