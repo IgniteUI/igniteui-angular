@@ -1,6 +1,6 @@
 <button igxButton="outlined" [displayDensity]="grid.displayDensity" name="btnAdvancedFiltering" igxRipple
     [title]="grid?.resourceStrings.igx_grid_toolbar_advanced_filtering_button_tooltip"
-    (click)="grid.openAdvancedFilteringDialog()"
+    (click)="grid.openAdvancedFilteringDialog(overlaySettings)"
     [ngClass]="grid.advancedFilteringExpressionsTree ? 'igx-grid-toolbar__adv-filter--filtered' : 'igx-grid-toolbar__adv-filter'">
     <igx-icon>filter_list</igx-icon>
     <span #ref>
