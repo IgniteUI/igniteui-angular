@@ -252,7 +252,7 @@ export class IgxGridRow extends BaseRow implements RowType {
         if (this.grid.groupingExpressions.length) {
             return this.grid.filteredSortedData.indexOf(this.data);
         }
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + ((this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0));
     }
 
     /**

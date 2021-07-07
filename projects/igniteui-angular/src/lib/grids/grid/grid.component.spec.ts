@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, Injectable,
     OnInit, ViewChild, TemplateRef
 } from '@angular/core';
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -2330,16 +2330,19 @@ describe('IgxGrid Component Tests #grid', () => {
             });
         }));
 
-        it('should have access to grid context', () => {
+        it('should have access to grid context', fakeAsync(() => {
             const fix = TestBed.createComponent(IgxGridWithCustomPaginationTemplateComponent);
+            tick();
+            fix.detectChanges();
+            flush();
             fix.detectChanges();
 
             const totalRecords = fix.componentInstance.grid.totalRecords.toString();
-            const paginationContent = fix.debugElement.query(By.css('.igx-grid__footer > h2')).nativeElement;
+            const paginationContent = fix.debugElement.query(By.css('.records')).nativeElement;
             const paginationText = paginationContent.textContent.trim();
 
             expect(paginationText).toEqual(totalRecords);
-        });
+        }));
     });
 
     describe('IgxGrid - Performance tests #perf', () => {
@@ -3079,8 +3082,8 @@ export class IgxGridInsideIgxTabsComponent {
     template: `
         <igx-grid #grid [data]="data" [autoGenerate]="true">
             <igx-paginator>
-                <igx-paginator-content *ngIf="grid.rendered">
-                    <h2>{{grid.totalRecords}}</h2>
+                <igx-paginator-content>
+                    <h2 *ngIf="grid.rendered$ | async" class='records'>{{grid.totalRecords}}</h2>
                 </igx-paginator-content>
             </igx-paginator>
         </igx-grid>
