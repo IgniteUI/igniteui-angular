@@ -2112,7 +2112,8 @@ describe('IgxGrid Component Tests #grid', () => {
             thirdRow.selected = true;
             expect(thirdRow.selected).toBe(true);
 
-            grid.paging = true;
+            fix.componentInstance.paging = true;
+            fix.detectChanges();
             grid.perPage = 4;
             grid.columnList.forEach(c => c.hasSummary = true);
             fix.detectChanges();
@@ -2675,6 +2676,7 @@ export class IgxGridTestComponent {
     template: `<igx-grid #grid [data]="data" (columnInit)="initColumns($event)">
         <igx-column *ngFor="let col of columns" [field]="col.key" [header]="col.key" [dataType]="col.dataType">
         </igx-column>
+        <igx-paginator *ngIf="paging"></igx-paginator>
     </igx-grid>`
 })
 export class IgxGridDefaultRenderingComponent {
@@ -2683,6 +2685,7 @@ export class IgxGridDefaultRenderingComponent {
 
     public columns = [];
     public data = [];
+    public paging = false;
 
     public changeInitColumns = false;
 
