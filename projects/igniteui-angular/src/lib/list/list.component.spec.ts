@@ -594,6 +594,44 @@ describe('List', () => {
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
     }));
 
+    it('cancel left panning', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item left */
+        cancelItemPanning(itemNativeElements[1], -2, -8);
+        tick(600);
+
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    }));
+
+    it('cancel right panning', fakeAsync(() => {
+        const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
+        const list = fixture.componentInstance.list;
+        fixture.detectChanges();
+
+        const firstItem = list.items[0] as IgxListItemComponent;
+        const leftPanTmpl = firstItem.leftPanningTemplateElement;
+        const rightPanTmpl = firstItem.rightPanningTemplateElement;
+        const itemNativeElements = fixture.debugElement.queryAll(By.css('igx-list-item'));
+
+        /* Pan item right */
+        cancelItemPanning(itemNativeElements[1], 2, 8);
+        tick(600);
+
+        expect(firstItem.panState).toBe(IgxListPanState.NONE);
+        expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+    }));
+
     it('checking the header list item does not have panning and content containers.', () => {
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
@@ -816,6 +854,19 @@ describe('List', () => {
         itemNativeElement.triggerEventHandler('panmove', {
             deltaX: factorX * itemWidth, duration: 200
         });
+    };
+
+    const cancelItemPanning = (itemNativeElement, factorX, factorY) => {
+        itemNativeElement.triggerEventHandler('panstart', {
+            deltaX: factorX
+        });
+        itemNativeElement.triggerEventHandler('panmove', {
+            deltaX: factorX,
+            deltaY: factorY,
+            additionalEvent: 'panup'
+        });
+
+        itemNativeElement.triggerEventHandler('pancancel', null);
     };
 
     const clickItem = (currentItem: IgxListItemComponent) => Promise.resolve(currentItem.element.click());
