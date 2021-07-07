@@ -167,77 +167,76 @@
     $h: var(--igx-#{$name}-h);
     $s: var(--igx-#{$name}-s);
     $l: var(--igx-#{$name}-l);
-    $a: var(--igx-#{$name}-a);
     $lumen: luminance($color);
 
     @if ($variant == 50) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 98%, 13%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * 1.78), #{$a})};
+            @return #{$h, calc(#{$s} * 1.23), calc(#{$l} * 1.78)};
         }
     } @else if ($variant == 100) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 96%, 26%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} / 1.25), calc(#{$l} * 1.66), #{$a})};
+            @return #{$h, calc(#{$s} / 1.25), calc(#{$l} * 1.66)};
         }
     } @else if ($variant == 200) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 93%, 38%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * .64), calc(#{$l} * 1.43), #{$a})};
+            @return #{$h, calc(#{$s} * .64), calc(#{$l} * 1.43)};
         }
     } @else if ($variant == 300) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 88%, 54%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * .73), calc(#{$l} * 1.19), #{$a})};
+            @return #{$h, calc(#{$s} * .73), calc(#{$l} * 1.19)};
         }
     } @else if ($variant == 400) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 74%, 62%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * .875), calc(#{$l} * 1.08), #{$a})};
+            @return #{$h, calc(#{$s} * .875), calc(#{$l} * 1.08)};
         }
     } @else if ($variant == 500) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 62%, 72%)};
         } @else {
-            @return #{hsla($h, $s, $l, $a)};
+            @return #{$h, $s, $l};
         }
     } @else if ($variant == 600) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 54%, 88%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * 1.26), calc(#{$l} * .89), #{$a})};
+            @return #{$h, calc(#{$s} * 1.26), calc(#{$l} * .89)};
         }
     } @else if ($variant == 700) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 38%, 93%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * 1.52), calc(#{$l} * .81), #{$a})};
+            @return #{$h, calc(#{$s} * 1.52), calc(#{$l} * .81)};
         }
     } @else if ($variant == 800) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 26%, 96%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * 1.5), calc(#{$l} * .73), #{$a})};
+            @return #{$h, calc(#{$s} * 1.5), calc(#{$l} * .73)};
         }
     } @else if ($variant == 900) {
         @if $name == 'grays' {
             @return #{$h, $s, if($lumen < .5, 13%, 98%)};
         } @else {
-            @return #{hsla($h, calc(#{$s} * 1.34), calc(#{$l} * .64), #{$a})};
+            @return #{$h, calc(#{$s} * 1.34), calc(#{$l} * .64)};
         }
     } @else if ($variant == 'A100') {
-        @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * 1.34), #{$a})};
+        @return #{$h, calc(#{$s} * 1.23), calc(#{$l} * 1.34)};
     } @else if ($variant == 'A200') {
-        @return #{hsla($h, calc(#{$s} * 1.22), calc(#{$l} * 1.16), #{$a})};
+        @return #{$h, calc(#{$s} * 1.22), calc(#{$l} * 1.16)};
     } @else if ($variant == 'A400') {
-        @return #{hsla($h, calc(#{$s} * 1.23), calc(#{$l} * .91), #{$a})};
+        @return #{$h, calc(#{$s} * 1.23), calc(#{$l} * .91)};
     } @else if ($variant == 'A700') {
-        @return #{hsla($h, calc(#{$s} * 1.22), calc(#{$l} * .65), #{$a})};
+        @return #{$h, calc(#{$s} * 1.22), calc(#{$l} * .65)};
     }
 }
 
@@ -386,7 +385,13 @@ $p-test: igx-palette(#fff, #000);
 @function igx-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
     $c: map.get($palette or $p-test, $color);
     $v: if($c, map.get($c, $variant), null);
+    $a: var(--igx-#{$color}-a);
     $var-string: #{var(--igx-#{$color}-#{$variant})};
+    $contrast: if(
+        type-of($variant) == string,
+        list.index(str-split($variant, '-'), 'contrast'),
+        null
+    );
 
     @if not($c) {
         @error 'The passed color #{$color} is not valid.';
@@ -401,9 +406,9 @@ $p-test: igx-palette(#fff, #000);
             legacy(),
             igx-color($theme-palette, $color, $variant),
             if(
-                $color == 'grays' and meta.type-of($variant) == number,
-                hsla($var-string, if($opacity, $opacity, 1)),
-                $var-string
+                $contrast,
+                $var-string,
+                hsla($var-string, if($opacity, $opacity, $a)),
             )
         );
     }
@@ -419,8 +424,8 @@ $p-test: igx-palette(#fff, #000);
 /// @param {number|variant} $variant [500] - The target color shade from the color palette.
 /// @requires igx-color
 /// @returns {Color} [#fff] - Returns white if no palette, color and/or variant matches found.
-@function igx-contrast-color($palette: null, $color: primary, $variant: 500) {
-    @return igx-color($palette, $color, #{$variant}-contrast);
+@function igx-contrast-color($palette: null, $color: primary, $variant: 500, $opacity: null) {
+    @return igx-color($palette, $color, #{$variant}-contrast, $opacity);
 }
 
 /// Returns a CSS variable string reference as a list of words.
