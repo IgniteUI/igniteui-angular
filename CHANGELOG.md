@@ -94,6 +94,9 @@ All notable changes for each version of this project will be documented in this 
         </igx-expansion-panel>
     ```
 
+-   `IgxDropDown`
+    - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
     - `$color` -> `$icon-color`
