@@ -1,32 +1,29 @@
 <ng-template #defaultColumn>
-    <span [title]="columnTitle">{{ column.header || column.field }}</span>
+    <span [title]="title">{{ column.header || column.field }}</span>
 </ng-template>
 
 <ng-template #defaultESFHeaderIconTemplate>
     <igx-icon>more_vert</igx-icon>
 </ng-template>
 
-<span class="igx-grid__th-title">
+<span class="igx-grid-th__title">
     <ng-container *ngTemplateOutlet="column.headerTemplate ? column.headerTemplate : defaultColumn; context: { $implicit: column, column: column}">
     </ng-container>
 </span>
-<div class="igx-grid__th-icons" *ngIf="!column.columnGroup">
-    <igx-icon
-        [attr.draggable]="false"
-        [attr.data-sortIndex]="column.field | sortingIndex:grid.sortingExpressions"
-        class="sort-icon"
-        *ngIf="column.sortable"
-        (click)="onSortingIconClick($event)">
-        {{sortingIcon}}
-    </igx-icon>
-
-    <div *ngIf="grid.allowFiltering === true && column.filterable && grid.filterMode === 'excelStyleFilter'"
-         (click)="onFilteringIconClick($event)"
-         (pointerdown)="$event.stopPropagation()"
-         [ngClass]="filterIconClassName">
-
-        <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }">
+<ng-container *ngIf="!column.columnGroup">
+    <div class="igx-grid-th__icons">
+        <ng-container *ngIf="column.sortable">
+            <igx-icon class="sort-icon"
+                [attr.draggable]="false"
+                [attr.data-sortIndex]="column.field | sortingIndex:grid.sortingExpressions"
+                (click)="onSortingIconClick($event)">
+                {{ sortDirection < 2 ? 'arrow_upward' : 'arrow_downward' }}
+            </igx-icon>
+        </ng-container>
+        <ng-container *ngIf="grid.allowFiltering && column.filterable && grid.filterMode === 'excelStyleFilter'">
+            <div [ngClass]="filterIconClassName" (click)="onFilteringIconClick($event)" (pointerdown)="$event.stopPropagation()">
+                <ng-container *ngTemplateOutlet="esfIconTemplate; context: { $implicit:  this }"></ng-container>
+            </div>
         </ng-container>
     </div>
-
-</div>
+</ng-container>

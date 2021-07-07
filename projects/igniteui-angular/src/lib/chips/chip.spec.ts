@@ -382,7 +382,7 @@ describe('IgxChip', () => {
 
             spyOn(firstChipComp.selectedChanging, 'emit');
             spyOn(firstChipComp.selectedChanged, 'emit');
-            firstChipComp.elementRef.nativeElement.focus();
+            firstChipComp.nativeElement.focus();
 
             UIInteractions.triggerKeyDownEvtUponElem(' ', firstChipComp.chipArea.nativeElement, true);
             fix.detectChanges();
