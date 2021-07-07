@@ -34,7 +34,7 @@ export class IgxColumnResizingService {
     /**
      * @hidden
      */
-     public get resizerHeight(): number {
+    public get resizerHeight(): number {
         let height = this.column.grid.getVisibleContentHeight();
 
         // Column height multiplier in case there are Column Layouts. The resizer height need to take into account rowStart.
@@ -53,8 +53,8 @@ export class IgxColumnResizingService {
     /**
      * Returns the minimal possible width to which the column can be resized.
      */
-     public get restrictResizeMin(): number {
-        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+    public get restrictResizeMin(): number {
+        const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
         const minWidth = this.column.minWidthPx < actualWidth ? this.column.minWidthPx : actualWidth;
 
         return actualWidth - minWidth;
@@ -63,8 +63,8 @@ export class IgxColumnResizingService {
     /**
      * Returns the maximal possible width to which the column can be resized.
      */
-     public get restrictResizeMax(): number {
-        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+    public get restrictResizeMax(): number {
+        const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
         const maxWidth = this.column.maxWidthPx;
         if (this.column.maxWidth) {
             return maxWidth - actualWidth;
@@ -79,7 +79,7 @@ export class IgxColumnResizingService {
      * then the column is sized to its maxWidth.
      */
     public autosizeColumnOnDblClick() {
-        const currentColWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const currentColWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
         this.column.width = this.column.getAutoSize();
 
         this.zone.run(() => {});
@@ -101,8 +101,8 @@ export class IgxColumnResizingService {
         const colWidth = this.column.width;
         const isPercentageWidth = colWidth && typeof colWidth === 'string' && colWidth.indexOf('%') !== -1;
         let currentColWidth = parseFloat(colWidth);
-        const actualWidth = this.column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
-        currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth) : currentColWidth;
+        const actualWidth = this.column.headerCell.nativeElement.getBoundingClientRect().width;
+        currentColWidth = Number.isNaN(currentColWidth) ? parseFloat(actualWidth as any) : currentColWidth;
 
         if (this.column.grid.hasColumnLayouts) {
             this.resizeColumnLayoutFor(this.column, diff);
@@ -158,7 +158,7 @@ export class IgxColumnResizingService {
 
     protected getColMinWidth(column: IgxColumnComponent) {
         let currentColWidth = parseFloat(column.width);
-        const actualWidth = column.headerCell.elementRef.nativeElement.getBoundingClientRect().width;
+        const actualWidth = column.headerCell.nativeElement.getBoundingClientRect().width;
         currentColWidth = Number.isNaN(currentColWidth) || (currentColWidth < actualWidth) ? actualWidth : currentColWidth;
 
         const actualMinWidth = parseFloat(column.minWidth);

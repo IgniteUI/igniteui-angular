@@ -4,7 +4,6 @@ import { IgxRowDirective } from '../row.directive';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
-    preserveWhitespaces: false,
     selector: 'igx-grid-row',
     templateUrl: './grid-row.component.html',
     providers: [{ provide: IgxRowDirective, useExisting: forwardRef(() => IgxGridRowComponent) }]
@@ -12,24 +11,24 @@ import { IgxRowDirective } from '../row.directive';
 export class IgxGridRowComponent extends IgxRowDirective<IgxGridComponent> {
 
     @HostBinding('class.igx-grid__tr--mrl')
-    get hasColumnLayouts(): boolean {
+    public get hasColumnLayouts(): boolean {
         return this.grid.hasColumnLayouts;
     }
 
-    getContext(col, row) {
+    public getContext(col, row) {
         return {
             $implicit: col,
             row
         };
     }
 
-    get mrlRightPinnedOffset(): string {
+    public get mrlRightPinnedOffset(): string {
         return !this.grid.isPinningToStart ?
             - this.grid.pinnedWidth - this.grid.headerFeaturesWidth + 'px' :
             null;
     }
 
-    getContextMRL(pinnedCols, row) {
+    public getContextMRL(pinnedCols, row) {
         return {
             $implicit: pinnedCols,
             row
