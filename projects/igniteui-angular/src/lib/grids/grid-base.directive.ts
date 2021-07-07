@@ -84,8 +84,7 @@ import { IgxGridSummaryService } from './summaries/grid-summary.service';
 import { IgxSummaryRowComponent } from './summaries/summary-row.component';
 import {
     IgxGridSelectionService,
-    GridSelectionRange,
-    isChromium
+    GridSelectionRange
 } from './selection/selection.service';
 import {
     IgxRow,
@@ -5897,7 +5896,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Opens the advanced filtering dialog.
      */
-    public openAdvancedFilteringDialog() {
+    public openAdvancedFilteringDialog(overlaySettings?: OverlaySettings) {
+        const settings = overlaySettings ? overlaySettings : this._advancedFilteringOverlaySettings;
         if (!this._advancedFilteringOverlayId) {
             this._advancedFilteringOverlaySettings.target =
                 (this as any).rootGrid ? (this as any).rootGrid.nativeElement : this.nativeElement;
@@ -5905,12 +5905,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
             this._advancedFilteringOverlayId = this.overlayService.attach(
                 IgxAdvancedFilteringDialogComponent,
-                this._advancedFilteringOverlaySettings,
+                settings,
                 {
                     injector: this.viewRef.injector,
                     componentFactoryResolver: this.resolver
                 });
-            this.overlayService.show(this._advancedFilteringOverlayId, this._advancedFilteringOverlaySettings);
+            this.overlayService.show(this._advancedFilteringOverlayId);
         }
     }
 
@@ -6522,7 +6522,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let res = !this.nativeElement.parentElement ||
             this.nativeElement.parentElement.clientHeight === 0 ||
             this.nativeElement.parentElement.clientHeight === renderedHeight;
-        if (!isChromium()) {
+        if (!this.platform.isChromium && !this.platform.isFirefox) {
             // If grid causes the parent container to extend (for example when container is flex)
             // we should always auto-size since the actual size of the container will continuously change as the grid renders elements.
             res = this.checkContainerSizeChange();
