@@ -11,6 +11,7 @@ import { IgxInputGroupModule } from '../input-group/public_api';
 import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
 import { IgxPageNavigationComponent } from './pager.component';
 import { IgxPaginatorComponent, IgxPaginatorTemplateDirective } from './paginator.component';
+import { IgxPaginatorDirective } from './paginator_interfaces';
 
 export * from './page_size_selector.component';
 export * from './pager.component';
@@ -21,13 +22,15 @@ export * from './paginator.component';
         IgxPaginatorComponent,
         IgxPageNavigationComponent,
         IgxPageSizeSelectorComponent,
-        IgxPaginatorTemplateDirective
+        IgxPaginatorTemplateDirective,
+        IgxPaginatorDirective
     ],
     exports: [
         IgxPaginatorComponent,
         IgxPageNavigationComponent,
         IgxPageSizeSelectorComponent,
-        IgxPaginatorTemplateDirective
+        IgxPaginatorTemplateDirective,
+        IgxPaginatorDirective
     ],
     imports: [
         CommonModule,
