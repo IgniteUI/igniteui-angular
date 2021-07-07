@@ -26,6 +26,8 @@ describe('IgxGrid - Row Adding #grid', () => {
         const GRID_ROW = 'igx-grid-row';
         const DISPLAY_CONTAINER = 'igx-display-container';
         const SUMMARY_ROW = 'igx-grid-summary-row';
+        const GRID_THEAD_ITEM = '.igx-grid-thead__item';
+
         let fixture;
         let grid: IgxGridComponent;
         let gridContent: DebugElement;
@@ -128,7 +130,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should be able to enter add row mode on Alt + plus key.', () => {
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, false, false);
@@ -140,7 +142,7 @@ describe('IgxGrid - Row Adding #grid', () => {
         });
 
         it('Should not be able to enter add row mode on Alt + Shift + plus key.', () => {
-            GridFunctions.focusFirstCell(fixture);
+            GridFunctions.focusFirstCell(fixture, grid);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('+', gridContent, true, true, false);
@@ -813,7 +815,8 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             const gridFirstRow = grid.rowList.first;
             const firstRowCells = gridFirstRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            // const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, firstRowCells);
 
@@ -970,7 +973,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.gridAPI.get_row_by_index(1).addRow).toBeTrue();
             expect(grid.rowEditingOverlay.collapsed).toEqual(false);
 
-            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css('.igx-grid__thead-item'));
+            const headers: DebugElement[] = fixture.debugElement.queryAll(By.css(GRID_THEAD_ITEM));
             const headerResArea = headers[2].children[3].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 400, 0);
             await wait(200);

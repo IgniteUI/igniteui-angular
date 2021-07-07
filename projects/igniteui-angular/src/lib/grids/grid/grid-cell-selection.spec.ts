@@ -1919,7 +1919,7 @@ describe('IgxGrid - Cell selection #grid', () => {
             columnName.resizable = true;
             fix.detectChanges();
 
-            const headers = fix.debugElement.queryAll(By.css('.igx-grid__th'));
+            const headers = fix.debugElement.queryAll(By.css('.igx-grid-th'));
             const headerResArea = headers[2].parent.children[1].nativeElement;
             UIInteractions.simulateMouseEvent('mousedown', headerResArea, 100, 15);
             tick();

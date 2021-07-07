@@ -11,6 +11,8 @@ import { DropPosition } from '../moving/moving.service';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
+
 describe('IgxTreeGrid - Indentation #tGrid', () => {
     configureTestSuite();
     let fix;
@@ -138,7 +140,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             treeGrid.cdr.detectChanges();
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css(GRID_RESIZE_CLASS)).nativeElement;
 
             // Verify before resizing width
             expect(header.nativeElement.getBoundingClientRect().width).toBe(225);
@@ -297,7 +299,7 @@ describe('IgxTreeGrid - Indentation #tGrid', () => {
             tick(16);
 
             const header = TreeGridFunctions.getHeaderCell(fix, 'ID');
-            const resizer = header.parent.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = header.parent.query(By.css(GRID_RESIZE_CLASS)).nativeElement;
 
             // Verify before resizing width
             expect(header.nativeElement.getBoundingClientRect().width).toBe(180);

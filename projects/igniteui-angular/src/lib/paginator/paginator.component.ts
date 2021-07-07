@@ -1,20 +1,10 @@
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { Component, Input, Output, NgModule, Optional, Inject, EventEmitter,
+import { Component, Input, Output, Optional, Inject, EventEmitter,
     HostBinding, Directive, ContentChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
-import { IgxSelectModule } from '../select/public_api';
-import { IgxIconModule } from '../icon/public_api';
-import { IgxButtonModule } from '../directives/button/button.directive';
-import { IgxRippleModule } from '../directives/ripple/ripple.directive';
-import { IgxInputGroupModule } from '../input-group/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
-import { IgxPaginatorDirective, IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
-import { IgxPageNavigationComponent } from './pager.component';
-import { IgxPageSizeSelectorComponent } from './page_size_selector.component';
-
+import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
 
 @Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
 export class IgxPaginatorTemplateDirective {
@@ -358,12 +348,3 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
         return Array.from(new Set([...values, newOption])).sort((a, b) => a - b);
     }
 }
-
-@NgModule({
-    declarations: [IgxPaginatorComponent, IgxPageNavigationComponent,
-        IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective, IgxPaginatorDirective],
-    exports: [IgxPaginatorComponent, IgxPageNavigationComponent,
-        IgxPageSizeSelectorComponent, IgxPaginatorTemplateDirective, IgxPaginatorDirective],
-    imports: [CommonModule, IgxSelectModule, FormsModule, IgxIconModule, IgxButtonModule, IgxRippleModule, IgxInputGroupModule]
-})
-export class IgxPaginatorModule { }

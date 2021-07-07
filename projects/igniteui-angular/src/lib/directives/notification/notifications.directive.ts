@@ -37,7 +37,7 @@ export abstract class IgxNotificationsDirective extends IgxToggleDirective
      *  `outlet` is an instance of `IgxOverlayOutletDirective` or an `ElementRef`.
      */
     @Input()
-    public outlet: IgxOverlayOutletDirective | ElementRef;
+    public outlet: IgxOverlayOutletDirective | ElementRef<HTMLElement>;
 
     /**
      * Enables/Disables the visibility of the element.

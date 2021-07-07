@@ -713,7 +713,8 @@ describe('Row Pinning #grid', () => {
             expect(grid.gridAPI.get_row_by_index(0).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
             const pinnedRowCells = gridPinnedRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            // const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);
@@ -754,7 +755,8 @@ describe('Row Pinning #grid', () => {
             expect(grid.gridAPI.get_row_by_index(fix.componentInstance.data.length).pinned).toBeTruthy();
             const gridPinnedRow = grid.pinnedRows[0];
             const pinnedRowCells = gridPinnedRow.cells.toArray();
-            const headerCells = grid.headerGroups.first.children.toArray();
+            // const headerCells = grid.headerGroups.first.children.toArray();
+            const headerCells = grid.headerGroupsList[0].children.toArray();
 
             // headers are aligned to cells
             GridFunctions.verifyLayoutHeadersAreAligned(headerCells, pinnedRowCells);

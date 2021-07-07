@@ -28,6 +28,7 @@ import { IgxTreeGridRowComponent } from './tree-grid-row.component';
 
 const CSS_CLASS_BANNER = 'igx-banner';
 const CSS_CLASS_ROW_EDITED = 'igx-grid__tr--edited';
+const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     configureTestSuite();
@@ -191,7 +192,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(parseInt(column.width, 10)).toBe(225);
 
             // UI autosizing
-            const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = headerCell.query(By.css(GRID_RESIZE_CLASS)).nativeElement;
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
@@ -305,7 +306,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(parseInt(column.width, 10)).toBe(180);
 
             // UI autosizing
-            const resizer = headerCell.query(By.css('.igx-grid__th-resize-handle')).nativeElement;
+            const resizer = headerCell.query(By.css(GRID_RESIZE_CLASS)).nativeElement;
             UIInteractions.simulateMouseEvent('dblclick', resizer, 225, 5);
             fix.detectChanges();
 
@@ -1300,7 +1301,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             column.movable = true;
             fix.detectChanges();
 
-            const header = fix.debugElement.queryAll(By.css('.igx-grid__thead-item'))[0].nativeElement;
+            // const header = fix.debugElement.queryAll(By.css('.igx-grid-thead__item'))[0].nativeElement;
+            const header = treeGrid.headerGroups[0].nativeElement;
 
             UIInteractions.simulatePointerEvent('pointerdown', header, 100, 40);
             await wait();

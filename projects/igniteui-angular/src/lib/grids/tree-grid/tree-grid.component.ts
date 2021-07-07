@@ -41,6 +41,7 @@ import { GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 
 let NEXT_ID = 0;
 
@@ -163,6 +164,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     @HostBinding('attr.id')
     @Input()
     public id = `igx-tree-grid-${NEXT_ID++}`;
+
+    /**
+     * @hidden
+     * @internal
+     */
+    @ContentChild(IgxTreeGridGroupByAreaComponent, { read: IgxTreeGridGroupByAreaComponent })
+    public groupArea;
 
     /**
      * @hidden
@@ -518,7 +526,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public refreshGridState(args?) {
+    public refreshGridState(args?: IRowDataEventArgs) {
         super.refreshGridState();
         if (this.primaryKey && this.foreignKey && args) {
             const rowID = args.data[this.foreignKey];
@@ -700,6 +708,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return record.rowID !== undefined && record.data;
     }
 
+    /**
+     * Returns if the `IgxTreeGridComponent` has groupable columns.
+     *
+     * @example
+     * ```typescript
+     * const groupableGrid = this.grid.hasGroupableColumns;
+     * ```
+     */
+    public get hasGroupableColumns(): boolean {
+        return this.columnList.some((col) => col.groupable && !col.columnGroup);
+    }
+
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
     }
@@ -789,6 +809,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
 
         return row;
+    }
+
+    /**
+     * @hidden @internal
+     */
+    protected getGroupAreaHeight(): number {
+        return this.groupArea ? this.getComputedHeight(this.groupArea.nativeElement) : 0;
     }
 
     /**

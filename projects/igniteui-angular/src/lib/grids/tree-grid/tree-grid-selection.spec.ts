@@ -1952,7 +1952,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
         it('Should have the correct properties in the custom row selector header template', () => {
             const context = { selectedCount: 0, totalCount: 8 };
             const contextUnselect = { selectedCount: 8, totalCount: 8 };
-            const headerCheckbox = fix.nativeElement.querySelector('.igx-grid__thead').querySelector('.igx-checkbox__composite');
+            const headerCheckbox = treeGrid.theadRow.nativeElement.querySelector('.igx-checkbox__composite') as HTMLElement;
             spyOn(fix.componentInstance, 'onHeaderCheckboxClick').and.callThrough();
             headerCheckbox.click();
             fix.detectChanges();
