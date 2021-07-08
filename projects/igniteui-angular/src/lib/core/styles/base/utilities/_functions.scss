@@ -260,6 +260,7 @@
     @each $saturation in $saturations {
         $shade: gen-color($color, $saturation);
         $contrast: text-contrast(to-opaque($shade, $base, null));
+
         $result: map.merge($result, (
             $saturation: $shade,
             #{$saturation}-contrast: $contrast
