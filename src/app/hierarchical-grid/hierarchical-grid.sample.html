@@ -98,7 +98,7 @@
         <button igxButton="raised" (click)='toggleRootLevel()'>Toggle root level</button>
         <button igxButton="raised" (click)='toggleFirstIsland()'>Toggle level 1</button>
     </div>
-    <igx-hierarchical-grid [batchEditing]="true"[showExpandAll]='true' [primaryKey]="'ID'" [data]="localData" [autoGenerate]="true" [height]="'600px'"
+    <igx-hierarchical-grid [showExpandAll]='true' [primaryKey]="'ID'" [data]="localData" [autoGenerate]="true" [height]="'600px'"
         [width]="'800px'" [rowEditable]="true" #hGrid2>
         <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
@@ -109,13 +109,14 @@
     </igx-hierarchical-grid>
 
 
-    <h4 class="sample-title">Sample three</h4>
+    <h4 class="sample-title">Sample three (batch editing)</h4>
     <div class="sample-actions">
         <button igxButton="raised" (click)='riToggle = !riToggle'>Change row islands runtime</button>
     </div>
-    <igx-hierarchical-grid [batchEditing]="true"[data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'" #hGrid2>
+    <igx-hierarchical-grid [batchEditing]="true"
+    [rowEditable]="true" [primaryKey]="'ID'"  [data]="localData" [autoGenerate]="true" [height]="'600px'" [width]="'800px'" #hGrid2>
 
-        <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
+        <igx-row-island [key]="'childData'" [primaryKey]="'ID'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"
             [allowFiltering]="true">
             <div *ngIf='riToggle'>
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]='selectionMode' [batchEditing]="true" [rowEditable]="true"

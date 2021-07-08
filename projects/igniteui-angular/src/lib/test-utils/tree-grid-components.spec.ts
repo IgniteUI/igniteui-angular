@@ -4,7 +4,6 @@ import { SampleTestData } from './sample-test-data.spec';
 import { IgxSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/public_api';
 import { IgxGridTransaction } from '../grids/grid-base.directive';
 import { IgxTransactionService } from '../services/transaction/igx-transaction';
-import { IgxHierarchicalTransactionService } from '../services/transaction/igx-hierarchical-transaction';
 import { DisplayDensity } from '../core/displayDensity';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
 import { DefaultSortingStrategy } from 'igniteui-angular';
@@ -329,7 +328,7 @@ export class IgxTreeGridSummariesKeyComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
+    <igx-tree-grid #treeGrid [batchEditing]="true" [data]="data" primaryKey="ID" foreignKey="ParentID" expansionDepth="0"
         width="800px" height="800px" summaryCalculationMode="calculationMode">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string" [hasSummary]="true"></igx-column>
@@ -339,7 +338,6 @@ export class IgxTreeGridSummariesKeyComponent {
         <igx-column [field]="'ParentID'" dataType="number" [hasSummary]="false"></igx-column>
     </igx-tree-grid>
     `
-    , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
 })
 export class IgxTreeGridSummariesTransactionsComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -426,14 +424,14 @@ class PTOSummary extends IgxSummaryOperand {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
+    <igx-tree-grid #treeGrid  [batchEditing]="true" [data]="data"
+        primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'ParentID'" dataType="number"></igx-column>
         <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
         <igx-column [editable]="true" [field]="'JobTitle'" dataType="string"></igx-column>
         <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
     </igx-tree-grid>`
-    , providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }],
 })
 export class IgxTreeGridRowEditingTransactionComponent {
     @ViewChild('treeGrid', { read: IgxTreeGridComponent, static: true }) public treeGrid: IgxTreeGridComponent;
@@ -461,7 +459,7 @@ export class IgxTreeGridCustomSummariesComponent {
 }
 
 @Component({
-    template: `<igx-tree-grid #treeGrid [data]="data" primaryKey="ID" childDataKey="Employees"
+    template: `<igx-tree-grid #treeGrid [batchEditing]="true" [data]="data" primaryKey="ID" childDataKey="Employees"
     [rowEditable]="true" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [editable]="true" [field]="'Name'" dataType="string"></igx-column>
@@ -469,7 +467,6 @@ export class IgxTreeGridCustomSummariesComponent {
         <igx-column [editable]="true" [field]="'Age'" dataType="number"></igx-column>
         <igx-column [editable]="true" [field]="'OnPTO'" dataType="boolean"></igx-column>
     </igx-tree-grid>`
-    , providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
 })
 export class IgxTreeGridRowEditingHierarchicalDSTransactionComponent {
     @ViewChild('treeGrid', { read: IgxTreeGridComponent, static: true }) public treeGrid: IgxTreeGridComponent;
@@ -705,14 +702,15 @@ export class IgxTreeGridLoadOnDemandHasChildrenComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" width="800px" height="600px" columnWidth="150px" primaryKey="ID">
+    <igx-tree-grid #treeGrid [batchEditing]="true"
+        [data]="data" childDataKey="Employees" width="800px" height="600px" columnWidth="150px" primaryKey="ID">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
-    `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
+    `
 })
 export class IgxTreeGridSelectionWithTransactionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -721,14 +719,15 @@ export class IgxTreeGridSelectionWithTransactionComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px"columnWidth="150px" >
+    <igx-tree-grid #treeGrid [batchEditing]="true"
+    [data]="data" primaryKey="ID" foreignKey="ParentID" width="500px" height="600px"columnWidth="150px" >
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'Age'" dataType="number"></igx-column>
         <igx-column [field]="'OnPTO'" dataType="boolean"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
     </igx-tree-grid>
-    `, providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+    `
 })
 export class IgxTreeGridFKeySelectionWithTransactionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;
@@ -891,7 +890,8 @@ export class IgxTreeGridCascadingSelectionComponent {
 }
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" [rowSelection]="'multipleCascade'"
+    <igx-tree-grid #treeGrid [batchEditing]="true"
+    [data]="data" childDataKey="Employees" [rowSelection]="'multipleCascade'"
     width="800px" height="600px" columnWidth="150px" primaryKey="ID">
     <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
@@ -901,7 +901,7 @@ export class IgxTreeGridCascadingSelectionComponent {
         <igx-grid-editing-actions [addRow]="true" [addChild]='true'></igx-grid-editing-actions>
     </igx-action-strip>
     </igx-tree-grid>
-    `, providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }]
+    `
 })
 export class IgxTreeGridCascadingSelectionTransactionComponent {
     @ViewChild(IgxTreeGridComponent, { static: true }) public treeGrid: IgxTreeGridComponent;

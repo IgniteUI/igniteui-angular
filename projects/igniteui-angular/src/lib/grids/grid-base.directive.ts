@@ -5993,10 +5993,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected subscribeToTransactions(): void {
         this._unsubTransactions$.next();
         this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this._unsubTransactions$)))
-        .subscribe(this.transactionStatusUpdate);
+        .subscribe(this.transactionStatusUpdate.bind(this));
     }
 
-    protected transactionStatusUpdate: (event: StateUpdateEvent) => any = (event: StateUpdateEvent) => {
+    protected transactionStatusUpdate(event: StateUpdateEvent) {
         let actions: Action<Transaction>[] = [];
         if (event.origin === TransactionEventOrigin.REDO) {
             actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
