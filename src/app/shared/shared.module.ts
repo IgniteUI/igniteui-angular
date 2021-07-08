@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+    IgxAccordionModule,
     IgxActionStripModule,
     IgxAutocompleteModule,
     IgxAvatarModule,
@@ -46,6 +47,7 @@ import {
 
 
 const igniteModules = [
+    IgxAccordionModule,
     IgxActionStripModule,
     IgxAutocompleteModule,
     IgxAvatarModule,
