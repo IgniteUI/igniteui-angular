@@ -101,6 +101,13 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     /**
+     * @hidden @internal
+     */
+    public get innerElement() {
+        return this.elementRef.nativeElement.children[0];
+    }
+
+    /**
      * Gets/sets the position of the expansion-panel-header expand/collapse icon
      * Accepts `left`, `right` or `none`
      * ```typescript
