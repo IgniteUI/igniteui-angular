@@ -787,6 +787,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private setDateValue(value: Date | string) {
+        if (isDate(value) && isNaN(value.getTime())) {
+            this._dateValue = value;
+            return;
+        }
         this._dateValue = DateTimeUtil.isValidDate(value) ? value : DateTimeUtil.parseIsoDate(value);
     }
 
@@ -818,7 +822,7 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     };
 
     private handleSelection(date: Date): void {
-        if (this.dateValue) {
+        if (this.dateValue && DateTimeUtil.isValidDate(this.dateValue)) {
             date.setHours(this.dateValue.getHours());
             date.setMinutes(this.dateValue.getMinutes());
             date.setSeconds(this.dateValue.getSeconds());
