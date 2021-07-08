@@ -39,7 +39,7 @@ import {
 } from './grid/grid.directives';
 import { IgxChipsModule } from '../chips/chips.module';
 import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
-import { IgxTransactionFactoryService } from '../services/transaction/transaction-factory.service';
+import { IgxGridTransactionFactory } from '../services/transaction/transaction-factory.service';
 /**
  * @hidden
  */
@@ -115,6 +115,6 @@ import { IgxTransactionFactoryService } from '../services/transaction/transactio
         IgxGridSharedModules,
         IgxChipsModule
     ],
-    providers: [IgxTransactionFactoryService]
+    providers: [IgxGridTransactionFactory]
 })
 export class IgxGridCommonModule { }

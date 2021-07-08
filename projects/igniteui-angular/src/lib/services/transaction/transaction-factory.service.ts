@@ -5,7 +5,7 @@ import { IgxHierarchicalTransactionService } from './igx-hierarchical-transactio
 import { IgxTransactionService } from './igx-transaction';
 import { HierarchicalState, HierarchicalTransaction, State, Transaction, TransactionService } from './transaction';
 
-export const enum IGX_TRANSACTION_TYPE {
+export const enum IGX_GRID_TYPE {
     'None' = 'None',
     'Base' = 'Base',
     'Hierarchical' = 'TreeGrid',
@@ -15,14 +15,14 @@ export const enum IGX_TRANSACTION_TYPE {
 @Injectable({
     providedIn: 'root'
 })
-export class IgxTransactionFactoryService {
+export class IgxGridTransactionFactory {
 
-    public create(type: IGX_TRANSACTION_TYPE): TransactionService<Transaction, State> {
+    public create(type: IGX_GRID_TYPE): TransactionService<Transaction, State> {
         switch (type) {
-            case (IGX_TRANSACTION_TYPE.Base):
-            case (IGX_TRANSACTION_TYPE.Hierarchical):
+            case (IGX_GRID_TYPE.Base):
+            case (IGX_GRID_TYPE.Hierarchical):
                 return new IgxTransactionService() as unknown as TransactionService<Transaction, State>;
-            case (IGX_TRANSACTION_TYPE.Hierarchical):
+            case (IGX_GRID_TYPE.Hierarchical):
 return new IgxHierarchicalTransactionService() as unknown as HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>;
             default:
                 return new IgxBaseTransactionService() as unknown as TransactionService<Transaction, State>;

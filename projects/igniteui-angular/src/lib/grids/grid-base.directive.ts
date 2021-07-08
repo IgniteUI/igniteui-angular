@@ -154,7 +154,7 @@ import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
-import { IgxTransactionFactoryService, IGX_TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { IgxGridTransactionFactory, IGX_GRID_TYPE } from '../services/transaction/transaction-factory.service';
 
 let FAKE_ROW_ID = -1;
 
@@ -2369,15 +2369,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Gets/Sets the text to be displayed inside the toggle button.
+     * Gets/Sets whether the grid has batch editing enabled.
+     * When batch editing is enabled, changes are not made directly to the data underlying data.
+     * Instead, they are stored as transaction, which can later be commit w/ the `commit` method.
+     *
+     * @default
+     * `false`
      *
      * @deprecated
      *
-     * @remarks
-     * Used for the built-in column pinning UI of the`IgxColumnComponent`.
      * @example
      * ```html
-     * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
+     * <igx-grid [batchEditing]="true"></igx-grid>
      * ```
      */
     @Input()
@@ -3080,7 +3083,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        protected transactionFactory: IgxTransactionFactoryService,
+        protected transactionFactory: IgxGridTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
         private zone: NgZone,
         @Inject(DOCUMENT) public document: any,
@@ -3101,7 +3104,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.decimalPipe = new DecimalPipe(this.locale);
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
-        this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.None);
+        this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.None);
         this.cdr.detach();
     }
 
@@ -5981,9 +5984,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.Base);
+            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.Base);
         } else {
-            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.None);
+            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.None);
         }
     }
 

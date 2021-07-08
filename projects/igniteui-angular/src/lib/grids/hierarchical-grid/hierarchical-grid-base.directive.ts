@@ -35,7 +35,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
-import { IgxTransactionFactoryService } from '../../services/transaction/transaction-factory.service';
+import { IgxGridTransactionFactory } from '../../services/transaction/transaction-factory.service';
 
 export interface IPathSegment {
     rowID: any;
@@ -139,7 +139,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        protected transactionFactory: IgxTransactionFactoryService,
+        protected transactionFactory: IgxGridTransactionFactory,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,

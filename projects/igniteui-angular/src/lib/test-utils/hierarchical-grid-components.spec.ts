@@ -1,7 +1,6 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
 import { IgxColumnComponent } from '../grids/public_api';
-import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
@@ -41,8 +40,7 @@ import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
                 </igx-column-group>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`,
-    providers: [IgxHierarchicalTransactionServiceFactory]
+    </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
@@ -88,8 +86,7 @@ export class IgxHierarchicalGridTestBaseComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`,
-    providers: [IgxHierarchicalTransactionServiceFactory]
+    </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridRowSelectionComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;
@@ -120,8 +117,7 @@ export class IgxHierarchicalGridRowSelectionComponent {
                 <igx-column field="ProductName"></igx-column>
             </igx-row-island>
         </igx-row-island>
-    </igx-hierarchical-grid>`,
-    providers: [IgxHierarchicalTransactionServiceFactory]
+    </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridRowSelectionTestSelectRowOnClickComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true }) public hgrid: IgxHierarchicalGridComponent;

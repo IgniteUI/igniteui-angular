@@ -46,7 +46,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
-import { IgxTransactionFactoryService } from '../../services/transaction/transaction-factory.service';
+import { IgxGridTransactionFactory } from '../../services/transaction/transaction-factory.service';
 
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
@@ -221,7 +221,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        protected transactionFactory: IgxTransactionFactoryService,
+        protected transactionFactory: IgxGridTransactionFactory,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,
