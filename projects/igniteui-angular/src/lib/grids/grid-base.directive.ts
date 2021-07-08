@@ -150,7 +150,7 @@ import { IgxActionStripComponent } from '../action-strip/action-strip.component'
 import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IPageEventArgs } from '../paginator/paginator_interfaces';
+import { IPageEventArgs } from '../paginator/paginator-interfaces';
 import { IgxPaginatorComponent } from '../paginator/paginator.component';
 import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
@@ -292,7 +292,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after the current page is changed.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
@@ -310,7 +310,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted when `perPage` property value of the grid is changed.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
@@ -324,17 +324,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @DeprecateProperty('`perPageChange` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public perPageChange = new EventEmitter<number>();
-
-    /**
-     * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
-     * ```
-     */
-    @Input()
-    public paginationTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -672,7 +661,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after paging is performed.
      *
-     * @deprecated
+     * @deprecated in version 12.1.x
      * @remarks
      * Returns an object consisting of the previous and next pages.
      * @example
@@ -1502,7 +1491,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Gets/Sets whether the column hiding UI is enabled.
      *
      * @deprecated
-     *
      * @remarks
      * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
      * @example
@@ -4142,7 +4130,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets the total number of pages.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
@@ -4156,7 +4144,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets if the current page is the first page.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
@@ -4170,7 +4158,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Goes to the next page, if the grid is not already at the last page.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.nextPage();
@@ -4185,7 +4173,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Goes to the previous page, if the grid is not already at the first page.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.previousPage();
@@ -4226,7 +4214,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the current page is the last page.
      *
-     * @deprecated
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;

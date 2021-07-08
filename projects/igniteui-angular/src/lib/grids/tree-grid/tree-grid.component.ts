@@ -751,7 +751,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
             if (this.paginator) {
                 const rowIndex = this.processedExpandedFlatData.indexOf(rowData);
-                const page = Math.floor(rowIndex / this.perPage);
+                const page = Math.floor(rowIndex / this.paginator.perPage);
 
                 if (this.paginator.page !== page) {
                     delayScrolling = true;

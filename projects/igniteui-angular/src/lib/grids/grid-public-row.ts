@@ -22,7 +22,7 @@ abstract class BaseRow implements RowType {
      * Returns the view index calculated per the grid page.
      */
     public get viewIndex(): number {
-        return this.index + this.grid.page * this.grid.perPage;
+        return this.index + ((this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0));
     }
 
     /**

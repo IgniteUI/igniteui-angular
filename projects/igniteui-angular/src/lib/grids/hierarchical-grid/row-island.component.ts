@@ -46,7 +46,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
-import { IgxPaginatorDirective } from '../../paginator/paginator_interfaces';
+import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;

@@ -4,7 +4,7 @@ import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDisplayDensityOptions, DisplayDensityToken, DisplayDensityBase, DisplayDensity } from '../core/displayDensity';
 import { OverlaySettings } from '../services/public_api';
 import { IPaginatorResourceStrings } from '../core/i18n/paginator-resources';
-import { IPageCancellableEventArgs, IPageEventArgs } from './paginator_interfaces';
+import { IPageCancellableEventArgs, IPageEventArgs } from './paginator-interfaces';
 
 @Directive({ selector: '[igxPaginatorContent],igx-paginator-content' })
 export class IgxPaginatorTemplateDirective {
