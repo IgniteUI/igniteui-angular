@@ -15,14 +15,14 @@ import {
     EventEmitter,
     LOCALE_ID
 } from '@angular/core';
-import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { IgxRowIslandComponent } from './row-island.component';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IDisplayDensityOptions, DisplayDensityToken } from '../../core/displayDensity';
 import { IgxSummaryOperand } from '../summaries/grid-summary';
-import { IgxOverlayService, IgxTransactionService, Transaction, TransactionService, State } from '../../services/public_api';
+import { IgxOverlayService } from '../../services/public_api';
 import { DOCUMENT } from '@angular/common';
 import { IgxHierarchicalGridNavigationService } from './hierarchical-grid-navigation.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
@@ -35,13 +35,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { IForOfState } from '../../directives/for-of/for_of.directive';
 import { takeUntil } from 'rxjs/operators';
 import { PlatformUtil } from '../../core/utils';
-
-export const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
-
-export const IgxHierarchicalTransactionServiceFactory = {
-    provide: IgxGridTransaction,
-    useFactory: hierarchicalTransactionServiceFactory
-};
+import { IgxTransactionFactoryService } from '../../services/transaction/transaction-factory.service';
 
 export interface IPathSegment {
     rowID: any;
@@ -145,7 +139,7 @@ export abstract class IgxHierarchicalGridBaseDirective extends IgxGridBaseDirect
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected transactionFactory: TransactionService<Transaction, State>,
+        protected transactionFactory: IgxTransactionFactoryService,
         elementRef: ElementRef,
         zone: NgZone,
         @Inject(DOCUMENT) public document,

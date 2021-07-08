@@ -42,6 +42,7 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
+import { IGX_TRANSACTION_TYPE } from '../../services/transaction/transaction-factory.service';
 
 let NEXT_ID = 0;
 
@@ -379,6 +380,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
+        // TODO: cascade selection is logic should be refactor to be handled in the already existing subs
         this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);
@@ -434,31 +436,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
                 });
                 this.gridAPI.grid.selectionService.updateCascadeSelectionOnFilterAndCRUD(leafRowsDirectParents);
                 this.notifyChanges();
-            }
-        });
-
-        this.transactions.onStateUpdate.pipe(takeUntil<any>(this.destroy$)).subscribe((event: StateUpdateEvent) => {
-            let actions = [];
-            if (event.origin === TransactionEventOrigin.REDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-                if (this.rowSelection === GridSelectionMode.multipleCascade) {
-                    this.handleCascadeSelection(event);
-                }
-            } else if (event.origin === TransactionEventOrigin.UNDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-                if (this.rowSelection === GridSelectionMode.multipleCascade) {
-                    if (event.actions[0].transaction.type === 'add') {
-                        const rec = this._gridAPI.get_rec_by_id(event.actions[0].transaction.id);
-                        this.handleCascadeSelection(event, rec);
-                    } else {
-                        this.handleCascadeSelection(event);
-                    }
-                }
-            }
-            if (actions.length) {
-                for (const action of actions) {
-                    this.deselectChildren(action.transaction.id);
-                }
             }
         });
     }
@@ -719,6 +696,39 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public get hasGroupableColumns(): boolean {
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
+
+    protected switchTransactionService(val: boolean) {
+        if (val) {
+            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.Hierarchical) as any;
+        } else {
+            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.None) as any;
+        }
+    }
+
+    protected transactionStatusUpdate: (event: StateUpdateEvent) => any = (event: StateUpdateEvent) => {
+        let actions = [];
+            if (event.origin === TransactionEventOrigin.REDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+                if (this.rowSelection === GridSelectionMode.multipleCascade) {
+                    this.handleCascadeSelection(event);
+                }
+            } else if (event.origin === TransactionEventOrigin.UNDO) {
+                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+                if (this.rowSelection === GridSelectionMode.multipleCascade) {
+                    if (event.actions[0].transaction.type === 'add') {
+                        const rec = this._gridAPI.get_rec_by_id(event.actions[0].transaction.id);
+                        this.handleCascadeSelection(event, rec);
+                    } else {
+                        this.handleCascadeSelection(event);
+                    }
+                }
+            }
+            if (actions.length) {
+                for (const action of actions) {
+                    this.deselectChildren(action.transaction.id);
+                }
+            }
+    };
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);

@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import { getResizeObserver } from '../core/utils';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, noop } from 'rxjs';
+import { Subject, pipe, fromEvent, noop, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
@@ -50,7 +50,8 @@ import {
     ConnectedPositioningStrategy,
     ContainerPositionStrategy,
     StateUpdateEvent,
-    TransactionEventOrigin
+    TransactionEventOrigin,
+    Action,
 } from '../services/public_api';
 import { GridBaseAPIService } from './api.service';
 import { IgxGridCellComponent } from './cell.component';
@@ -153,6 +154,7 @@ import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
+import { IgxTransactionFactoryService, IGX_TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 
 let FAKE_ROW_ID = -1;
 
@@ -170,6 +172,7 @@ export const IgxGridTransaction = new InjectionToken<string>('IgxGridTransaction
 @Directive()
 export abstract class IgxGridBaseDirective extends DisplayDensityBase implements GridType,
     OnInit, DoCheck, OnDestroy, AfterContentInit, AfterViewInit {
+
     /**
      * Gets/Sets the display time for the row adding snackbar notification.
      *
@@ -2365,6 +2368,32 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.notifyChanges();
     }
 
+    /**
+     * Gets/Sets the text to be displayed inside the toggle button.
+     *
+     * @deprecated
+     *
+     * @remarks
+     * Used for the built-in column pinning UI of the`IgxColumnComponent`.
+     * @example
+     * ```html
+     * <igx-grid [pinnedColumnsText]="'PinnedCols Text" [data]="data" [width]="'100%'" [height]="'500px'"></igx-grid>
+     * ```
+     */
+    @Input()
+    public get batchEditing(): boolean {
+        return this._batchEditing;
+    }
+
+    public set batchEditing(val: boolean) {
+        if (val !== this._batchEditing) {
+            delete this._transactions;
+            this.switchTransactionService(val);
+            this.subscribeToTransactions();
+            this._batchEditing = val;
+        }
+    }
+
     /** @hidden @internal */
     public get pinnedColumnsTextInternal() {
         return this._pinnedColumnsText;
@@ -2821,6 +2850,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _init = true;
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
+    protected _transactions: TransactionService<Transaction, State>;
 
     /**
      * @hidden @internal
@@ -2918,6 +2948,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         outlet: this.rowOutletDirective,
         positionStrategy: this.rowEditPositioningStrategy
     };
+
+    private _batchEditing = false;
+    private _unsubTransactions$ = new Subject<void>();
 
     private readonly DRAG_SCROLL_DELTA = 10;
 
@@ -3047,7 +3080,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        @Inject(IgxGridTransaction) protected _transactions: TransactionService<Transaction, State>,
+        protected transactionFactory: IgxTransactionFactoryService,
         private elementRef: ElementRef<HTMLElement>,
         private zone: NgZone,
         @Inject(DOCUMENT) public document: any,
@@ -3068,6 +3101,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.decimalPipe = new DecimalPipe(this.locale);
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
+        this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.None);
         this.cdr.detach();
     }
 
@@ -3280,25 +3314,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.summaryService.clearSummaryCache(args);
         });
 
-        this.transactions.onStateUpdate.pipe(destructor).subscribe((event: StateUpdateEvent) => {
-            let actions = [];
-            if (event.origin === TransactionEventOrigin.REDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
-            } else if (event.origin === TransactionEventOrigin.UNDO) {
-                actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
-            }
-            if (actions.length > 0) {
-                for (const action of actions) {
-                    if (this.selectionService.isRowSelected(action.transaction.id)) {
-                        this.selectionService.deselectRow(action.transaction.id);
-                    }
-                }
-            }
-            this.selectionService.clearHeaderCBState();
-            this.summaryService.clearSummaryCache();
-            this.pipeTrigger++;
-            this.notifyChanges();
-        });
+        this.subscribeToTransactions();
 
         this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100, undefined, { leading: true, trailing: true }))
             .subscribe(() => {
@@ -3644,6 +3660,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.destroy$.next(true);
         this.destroy$.complete();
+        this._unsubTransactions$.next();
+        this._unsubTransactions$.complete();
         this._destroyed = true;
 
         if (this._advancedFilteringOverlayId) {
@@ -5960,6 +5978,40 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public endEdit(commit = true, event?: Event) {
         this.crudService.endEdit(commit, event);
     }
+
+    protected switchTransactionService(val: boolean) {
+        if (val) {
+            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.Base);
+        } else {
+            this._transactions = this.transactionFactory.create(IGX_TRANSACTION_TYPE.None);
+        }
+    }
+
+    protected subscribeToTransactions(): void {
+        this._unsubTransactions$.next();
+        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this._unsubTransactions$)))
+        .subscribe(this.transactionStatusUpdate);
+    }
+
+    protected transactionStatusUpdate: (event: StateUpdateEvent) => any = (event: StateUpdateEvent) => {
+        let actions: Action<Transaction>[] = [];
+        if (event.origin === TransactionEventOrigin.REDO) {
+            actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.DELETE) : [];
+        } else if (event.origin === TransactionEventOrigin.UNDO) {
+            actions = event.actions ? event.actions.filter(x => x.transaction.type === TransactionType.ADD) : [];
+        }
+        if (actions.length > 0) {
+            for (const action of actions) {
+                if (this.selectionService.isRowSelected(action.transaction.id)) {
+                    this.selectionService.deselectRow(action.transaction.id);
+                }
+            }
+        }
+        this.selectionService.clearHeaderCBState();
+        this.summaryService.clearSummaryCache();
+        this.pipeTrigger++;
+        this.notifyChanges();
+    };
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
