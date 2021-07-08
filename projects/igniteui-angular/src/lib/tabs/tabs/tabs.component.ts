@@ -167,7 +167,6 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
-            // 'igx-tabs__header-scroll': true,
             'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
             'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
             'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
