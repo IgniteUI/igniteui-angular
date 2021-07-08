@@ -5,7 +5,7 @@ import { GridType } from './grid.interface';
 
 export interface RowType {
     index: number;
-    viewIndex?: number;
+    viewIndex: number;
     isGroupByRow?: boolean;
     isSummaryRow?: boolean;
     summaries?: Map<string, IgxSummaryResult[]>;
