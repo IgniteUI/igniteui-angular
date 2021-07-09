@@ -201,8 +201,7 @@ export class IgxSwitchComponent implements ControlValueAccessor, EditorProvider 
      * Provides references to the `IgxSwitchComponent` and the `checked` property as event arguments.
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output()
-    public readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeSwitchEventArgs> = new EventEmitter<IChangeSwitchEventArgs>();
     /**
      * Returns the class of the switch component.
      *
