@@ -511,7 +511,7 @@ export class IgxToggleActionDirective implements OnInit {
     selector: '[igxOverlayOutlet]'
 })
 export class IgxOverlayOutletDirective {
-    constructor(public element: ElementRef) { }
+    constructor(public element: ElementRef<HTMLElement>) { }
 
     /** @hidden */
     public get nativeElement() {
