@@ -51,6 +51,15 @@ All notable changes for each version of this project will be documented in this 
 - `IgxDateTimeEditor`
     - The `IgxDateTimeEditor` directive supports IME input. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
 
+- `IgxMask`
+    - The `IgxMask` directive supports IME input and updates the mask when composition ends.
+
+- `IgxDatePicker`
+    - The `IgxDatePicker` now supports IME input. When composition ends, the control converts the wide-character numbers to ASCII characters.
+
+- `IgxTimePicker`
+    - The `IgxTimePicker` now supports IME input. When composition ends, the control converts the wide-character numbers to ASCII characters .
+
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
