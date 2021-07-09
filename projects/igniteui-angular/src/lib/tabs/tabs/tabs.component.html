@@ -10,13 +10,19 @@
     </button>
     <div #viewPort class="igx-tabs__header-content">
         <div
-            #itemsContainer
-            [ngClass]="resolveHeaderScrollClasses()"
+            #itemsWrapper
+            class="igx-tabs__header-wrapper"            
             role="tablist"
         >
-            <ng-container *ngFor="let tab of items; let i = index">
-                <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
-            </ng-container>
+            <div 
+                #itemsContainer
+                class="igx-tabs__header-scroll"
+                [ngClass]="resolveHeaderScrollClasses()"
+            >
+                <ng-container *ngFor="let tab of items; let i = index">
+                    <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
+                </ng-container>
+            </div>
             <div
                 #selectedIndicator
                 *ngIf="items.length > 0"
