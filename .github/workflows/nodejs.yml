@@ -33,8 +33,7 @@ jobs:
         env:
             NODE_OPTIONS: --max_old_space_size=4096
       - name: Lint i18n
-        run: npm run lint
-        working-directory: projects/igniteui-angular-i18n
+        run: npm run lint:i18n
       - name: Build
         run: npm run build:lib
       - name: Test
@@ -44,11 +43,10 @@ jobs:
             npm run test:schematics
         env:
             NODE_OPTIONS: --max_old_space_size=4096
-      - name: Build i18n
-        working-directory: projects/igniteui-angular-i18n
+      - name: Build i18n & validate output
         run: |
-            npm run build
-            npm run lint-dist
+            npm run build:i18n
+            npm run lint:i18n:dist
       - name: Install coverage combiner - istanbul
         if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
         run: sudo npm install -g istanbul

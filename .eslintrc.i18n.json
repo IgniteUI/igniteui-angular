@@ -36,7 +36,14 @@
             }
         ],
         "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/naming-convention": "error",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+              "selector": "variable",
+              "modifiers": ["const"],
+              "format": ["PascalCase"]
+            }
+          ],
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "error",
         "@typescript-eslint/no-inferrable-types": [
@@ -57,7 +64,11 @@
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/quotes": [
             "error",
-            "single"
+            "single",
+            {
+              "avoidEscape": true,
+              "allowTemplateLiterals": true
+            }
         ],
         "@typescript-eslint/semi": [
             "error",
@@ -132,7 +143,14 @@
         "no-unused-labels": "error",
         "no-var": "error",
         "prefer-const": "error",
-        "quotes": "error",
+        "quotes": [
+            2,
+            "single",
+            {
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
+            }
+        ],
         "radix": "error",
         "semi": "error",
         "spaced-comment": [

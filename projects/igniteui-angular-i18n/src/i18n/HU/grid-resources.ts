@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable max-len */
 import { IGridResourceStrings } from 'igniteui-angular';
 
 // exported below as re-cast to create declaration type with expanded properties

@@ -27,8 +27,7 @@ jobs:
         run: npm run build:migration
 
       - name: Build igniteui-angular-i18n
-        run: npm run build
-        working-directory: projects/igniteui-angular-i18n
+        run: npm run build:i18n
 
       # define npm tag
       - run: if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
