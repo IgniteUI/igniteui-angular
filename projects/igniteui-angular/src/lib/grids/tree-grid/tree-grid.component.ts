@@ -42,7 +42,7 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
-import { IGX_GRID_TYPE } from '../../services/transaction/transaction-factory.service';
+import { TRANSACTION_TYPE } from '../../services/transaction/transaction-factory.service';
 
 let NEXT_ID = 0;
 
@@ -699,9 +699,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.Hierarchical) as any;
+            this._transactions =
+            this.transactionFactory.create(TRANSACTION_TYPE.Hierarchical);
         } else {
-            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.None) as any;
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         }
     }
 

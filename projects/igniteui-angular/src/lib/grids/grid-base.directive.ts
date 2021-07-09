@@ -154,7 +154,7 @@ import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
-import { IgxGridTransactionFactory, IGX_GRID_TYPE } from '../services/transaction/transaction-factory.service';
+import { IgxGridTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 
 let FAKE_ROW_ID = -1;
 
@@ -3104,7 +3104,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.decimalPipe = new DecimalPipe(this.locale);
         this.currencyPipe = new CurrencyPipe(this.locale);
         this.percentPipe = new PercentPipe(this.locale);
-        this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.None);
+        this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         this.cdr.detach();
     }
 
@@ -3413,6 +3413,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngOnInit() {
         super.ngOnInit();
+        if (!this._batchEditing) {
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
+        }
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);
@@ -5984,9 +5987,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected switchTransactionService(val: boolean) {
         if (val) {
-            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.Base);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.Base);
         } else {
-            this._transactions = this.transactionFactory.create(IGX_GRID_TYPE.None);
+            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         }
     }
 
