@@ -1,13 +1,9 @@
 {
   "name": "igniteui-angular-i18n",
   "version": "1.0.0",
-  "description": "IgniteUI for Angular localization resources repository",
+  "description": "IgniteUI for Angular localization resources package",
   "main": "./index.js",
   "types": "./index.d.ts",
-  "scripts": {
-    "lint": "tslint 'src/**/*.ts'",
-    "lint-dist": "tslint '../../dist/igniteui-angular-i18n/**/*.d.ts' -c tslint.dist.json"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/IgniteUI/igniteui-angular"
@@ -23,7 +19,5 @@
   "bugs": {
     "url": "https://github.com/IgniteUI/igniteui-angular/issues"
   },
-  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme",
-
-
+  "homepage": "https://github.com/IgniteUI/igniteui-angular/projects/igniteui-angular-i18n#readme"
 }
