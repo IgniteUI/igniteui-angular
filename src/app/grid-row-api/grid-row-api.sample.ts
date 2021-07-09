@@ -8,7 +8,9 @@ import {
     IgxHierarchicalGridComponent,
     IPinningConfig,
     RowPinningPosition,
-    IRowDragStartEventArgs
+    IRowDragStartEventArgs,
+		GridSummaryCalculationMode,
+		GridSummaryPosition
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -28,8 +30,8 @@ export class GridRowAPISampleComponent implements OnInit {
     @ViewChild('targetGrid', { static: true })
     private targetGrid: IgxGridComponent;
 
-    @ViewChild('treeGrid', { static: true })
-    private treeGrid: IgxTreeGridComponent;
+    @ViewChild('treeGridHier', { static: true })
+    private treeGridHier: IgxTreeGridComponent;
 
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxTreeGridComponent;
@@ -60,6 +62,10 @@ export class GridRowAPISampleComponent implements OnInit {
     constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
+			this.grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
+			this.grid.summaryPosition = GridSummaryPosition.bottom;
+
+			this.treeGridHier.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
             { field: 'CompanyName', width: '200px', groupable: true },

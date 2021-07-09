@@ -363,7 +363,6 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
             return;
         }
         this.close();
-        this.nativeElement.focus();
 
         // Update model after the input is re-focused, in order to have proper valid styling.
         // Otherwise when item is selected using mouse (and input is blurred), then valid style will be removed.
