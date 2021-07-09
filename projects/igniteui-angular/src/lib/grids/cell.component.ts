@@ -193,7 +193,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the cell template.
+     * Gets the pinned indicator template.
      * ```typescript
      * let template = this.cell.template;
      * ```
@@ -411,7 +411,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
-
 
     public get rowEnd(): number {
         return this.column.rowEnd;

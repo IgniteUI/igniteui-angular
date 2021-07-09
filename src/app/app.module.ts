@@ -154,6 +154,7 @@ import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
+import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 
 const components = [
     AccordionSampleComponent,
@@ -226,6 +227,7 @@ const components = [
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
     GridRowAPISampleComponent,
+		GridCellAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,
