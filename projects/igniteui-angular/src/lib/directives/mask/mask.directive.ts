@@ -9,7 +9,6 @@ import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';
-import { forEach } from 'jszip';
 
 @Directive({
     providers: [{ provide: NG_VALUE_ACCESSOR, useExisting: IgxMaskDirective, multi: true }],
@@ -147,6 +146,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
     protected _composing: boolean;
     protected _compositionStartIndex: number;
+    private _compositionValue: string;
     private _end = 0;
     private _start = 0;
     private _key: string;
@@ -207,6 +207,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         const valueToParse = this.inputValue.substring(this._start, end);
         this.updateInput(valueToParse);
         this._end = this.selectionEnd;
+        this._compositionValue = this.inputValue;
     }
 
     /** @hidden @internal */
@@ -231,21 +232,26 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         // After the compositionend event Chromium triggers input events of type 'deleteContentBackward' and
         // we need to adjust the start and end indexes to include mask literals
-        if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE ) {
-            let numberOfMaskLiterals = 0;
-            const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
-            for (const index of literalPos) {
-                if (index >= this.selectionEnd && index < this._end) {
-                    numberOfMaskLiterals++;
+        if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE) {
+                const isInputComplete = this._compositionStartIndex === 0 && this._end === this.mask.length;
+                let numberOfMaskLiterals = 0;
+                const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
+                for (const index of literalPos) {
+                    if (index >= this._compositionStartIndex && index <= this._end) {
+                        numberOfMaskLiterals++;
+                    }
                 }
-            }
-            this._start = this.selectionStart;
-            this._end = this.selectionEnd;
-            this.inputValue = this.inputValue.substring(0, this._end - numberOfMaskLiterals) + this.inputValue.substring(this._end);
-            this.nativeElement.selectionStart = this._start - numberOfMaskLiterals;
-            this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
-            this._start = this.selectionStart;
-            this._end = this.selectionEnd;
+                this.inputValue = isInputComplete?
+                this.inputValue.substring(0, this.selectionEnd - numberOfMaskLiterals) + this.inputValue.substring(this.selectionEnd)
+                : this._compositionValue.substring(0, this._compositionStartIndex);
+
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+                this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
+                this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+                this.nativeElement.selectionEnd = this._end;
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
         }
 
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
