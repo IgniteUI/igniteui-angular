@@ -1,13 +1,5 @@
-import {
-    Component,
-    ChangeDetectorRef,
-    EventEmitter,
-    HostBinding,
-    Input,
-    Output,
-    ContentChild,
-    AfterContentInit
-} from '@angular/core';
+import { Component, ChangeDetectorRef, EventEmitter, HostBinding, Input, Output,
+    ContentChild, AfterContentInit, ElementRef } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
 import { IgxExpansionPanelBodyComponent } from './expansion-panel-body.component';
 import { IgxExpansionPanelHeaderComponent } from './expansion-panel-header.component';
@@ -83,6 +75,14 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
      */
     @HostBinding('class.igx-expansion-panel')
     public cssClass = 'igx-expansion-panel';
+
+    /**
+     * @hidden @internal
+     */
+    @HostBinding('attr.aria-expanded')
+    public get panelExpanded() {
+        return !this.collapsed;
+    }
 
     /**
      * Gets/sets whether the component is collapsed (its content is hidden)
@@ -179,6 +179,13 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
     }
 
     /**
+     * @hidden @internal
+     */
+    public get nativeElement() {
+        return this.elementRef.nativeElement;
+    }
+
+    /**
      * @hidden
      */
     @ContentChild(IgxExpansionPanelBodyComponent, { read: IgxExpansionPanelBodyComponent })
@@ -192,7 +199,7 @@ export class IgxExpansionPanelComponent extends ToggleAnimationPlayer implements
 
     private _collapsed = true;
 
-    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder) {
+    constructor(private cdr: ChangeDetectorRef, protected builder: AnimationBuilder, private elementRef?: ElementRef) {
         super(builder);
     }
 

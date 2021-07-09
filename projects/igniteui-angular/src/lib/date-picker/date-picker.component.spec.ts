@@ -35,7 +35,6 @@ const DATE_PICKER_CLEAR_ICON = 'clear';
 
 
 describe('IgxDatePicker', () => {
-
     describe('Integration tests', () => {
         configureTestSuite();
         beforeAll(waitForAsync(() => {
@@ -63,8 +62,6 @@ describe('IgxDatePicker', () => {
             }));
 
             it('Should render default toggle and clear icons', () => {
-                fixture = TestBed.createComponent(IgxDatePickerTestComponent);
-                fixture.detectChanges();
                 const inputGroup = fixture.debugElement.query(By.directive(IgxInputGroupComponent));
                 const prefix = inputGroup.queryAll(By.directive(IgxPrefixDirective));
                 expect(prefix).toHaveSize(1);
@@ -1059,14 +1056,15 @@ describe('IgxDatePicker', () => {
                 expect(mockDate1.setSeconds).not.toHaveBeenCalled();
                 expect(mockDate1.setMilliseconds).not.toHaveBeenCalled();
                 mockCalendar.selected.emit(mockDate1);
-                expect(mockDate2.getHours).toHaveBeenCalled();
-                expect(mockDate2.getMinutes).toHaveBeenCalled();
-                expect(mockDate2.getSeconds).toHaveBeenCalled();
-                expect(mockDate2.getMilliseconds).toHaveBeenCalled();
-                expect(mockDate1.setHours).toHaveBeenCalledWith(999);
-                expect(mockDate1.setMinutes).toHaveBeenCalledWith(999);
-                expect(mockDate1.setSeconds).toHaveBeenCalledWith(999);
-                expect(mockDate1.setMilliseconds).toHaveBeenCalledWith(999);
+                // if the value is falsy or InvalidDate, hours, minutes and seconds will not be mapped
+                expect(mockDate2.getHours).not.toHaveBeenCalled();
+                expect(mockDate2.getMinutes).not.toHaveBeenCalled();
+                expect(mockDate2.getSeconds).not.toHaveBeenCalled();
+                expect(mockDate2.getMilliseconds).not.toHaveBeenCalled();
+                expect(mockDate1.setHours).not.toHaveBeenCalledWith(999);
+                expect(mockDate1.setMinutes).not.toHaveBeenCalledWith(999);
+                expect(mockDate1.setSeconds).not.toHaveBeenCalledWith(999);
+                expect(mockDate1.setMilliseconds).not.toHaveBeenCalledWith(999);
                 expect(datePicker.close).toHaveBeenCalled();
 
                 parseIsoDate.and.callFake(init);
