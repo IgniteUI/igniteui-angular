@@ -48,17 +48,8 @@ All notable changes for each version of this project will be documented in this 
     - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
     
 
-- `IgxDateTimeEditor`
-    - The `IgxDateTimeEditor` directive supports IME input. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
-
-- `IgxMask`
-    - The `IgxMask` directive supports IME input and updates the mask when composition ends.
-
-- `IgxDatePicker`
-    - The `IgxDatePicker` now supports IME input. When composition ends, the control converts the wide-character numbers to ASCII characters.
-
-- `IgxTimePicker`
-    - The `IgxTimePicker` now supports IME input. When composition ends, the control converts the wide-character numbers to ASCII characters .
+- `IgxDateTimeEditor`, `IgxMask`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - Added IME input support. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
 
 ### General
 - `IgxPaginatorComponent`
