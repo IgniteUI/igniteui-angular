@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 ////
 /// @group themes
 /// @access public
@@ -144,12 +146,12 @@
     // Slider Thumb
     $slider-thumb-width: 40px;
     $slider-thumb-height: $slider-thumb-width;
-    $slider-thumb-radius: $slider-thumb-width / 2;
+    $slider-thumb-radius: math.div($slider-thumb-width, 2);
 
     // Slider Label
     $slider-label-width: 36px;
     $slider-label-height: $slider-label-width;
-    $slider-label-radius: $slider-label-width / 2;
+    $slider-label-radius: math.div($slider-label-width, 2);
     $slider-label-padding: 0 rem(2px);
 
     $switch-display: map-get((
@@ -521,8 +523,8 @@
             content: '';
             width: rem($dot-size);
             height: rem($dot-size);
-            #{$left}: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
-            top: #{rem($slider-thumb-radius) - (rem($dot-size) / 2)};
+            #{$left}: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
+            top: #{rem($slider-thumb-radius) - math.div(rem($dot-size), 2)};
             background: --var($theme, 'thumb-color');
             border: rem($thumb-border-width) solid --var($theme, 'thumb-border-color');
             transform: rotate(45deg);
