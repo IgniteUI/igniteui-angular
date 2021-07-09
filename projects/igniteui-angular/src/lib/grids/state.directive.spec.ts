@@ -661,11 +661,12 @@ export class IgxGridStateWithOptionsComponent {
 
 @Component({
     template: `
-        <igx-grid #grid [data]="data" [paging]="true" [autoGenerate]="true" igxGridState primaryKey="ProductID">
+        <igx-grid #grid [data]="data" [autoGenerate]="true" igxGridState primaryKey="ProductID">
             <!-- Grid Detail View Template -->
             <ng-template igxGridDetail let-dataItem>
                 <span>Detail view</span>
             </ng-template>
+            <igx-paginator></igx-paginator>
         </igx-grid>
     `
 })
