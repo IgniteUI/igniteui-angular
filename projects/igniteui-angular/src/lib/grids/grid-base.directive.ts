@@ -154,7 +154,7 @@ import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
 import { IPageEventArgs } from '../paginator/paginator_interfaces';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
-import { IgxGridTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
+import { IgxFlatTransactionFactory, TRANSACTION_TYPE } from '../services/transaction/transaction-factory.service';
 
 let FAKE_ROW_ID = -1;
 
@@ -3083,7 +3083,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
         public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
-        protected transactionFactory: IgxGridTransactionFactory,
+        protected transactionFactory: IgxFlatTransactionFactory,
         private elementRef: ElementRef<HTMLElement>,
         private zone: NgZone,
         @Inject(DOCUMENT) public document: any,

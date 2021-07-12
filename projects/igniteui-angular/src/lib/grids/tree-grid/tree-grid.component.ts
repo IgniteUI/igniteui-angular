@@ -11,7 +11,16 @@ import {
     AfterContentInit,
     ViewChild,
     DoCheck,
-    AfterViewInit
+    AfterViewInit,
+    ElementRef,
+    NgZone,
+    Inject,
+    ChangeDetectorRef,
+    ComponentFactoryResolver,
+    IterableDiffers,
+    ViewContainerRef,
+    Optional,
+    LOCALE_ID
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
 import { IgxGridBaseDirective } from '../grid-base.directive';
@@ -25,11 +34,11 @@ import {
     TransactionEventOrigin,
     StateUpdateEvent
 } from '../../services/transaction/transaction';
-import { HierarchicalTransactionService } from '../../services/public_api';
+import { HierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
-import { mergeObjects } from '../../core/utils';
+import { mergeObjects, PlatformUtil } from '../../core/utils';
 import { first, takeUntil } from 'rxjs/operators';
 import { IgxRowLoadingIndicatorTemplateDirective } from './tree-grid.directives';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
@@ -42,7 +51,10 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
-import { TRANSACTION_TYPE } from '../../services/transaction/transaction-factory.service';
+import { IgxHierarchicalTransactionFactory, TRANSACTION_TYPE } from '../../services/transaction/transaction-factory.service';
+import { IgxColumnResizingService } from '../resizing/resizing.service';
+import { DOCUMENT } from '@angular/common';
+import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
 
 let NEXT_ID = 0;
 
@@ -367,7 +379,32 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     // Kind of stupid
     private get _gridAPI(): IgxTreeGridAPIService {
-        return this.gridAPI as IgxTreeGridAPIService;
+        return this.gridAPI;
+    }
+
+    constructor(
+        public selectionService: IgxTreeGridSelectionService,
+        public colResizingService: IgxColumnResizingService,
+        public gridAPI: IgxTreeGridAPIService,
+        protected transactionFactory: IgxHierarchicalTransactionFactory,
+        private _elementRef: ElementRef<HTMLElement>,
+        private _zone: NgZone,
+        @Inject(DOCUMENT) public document: any,
+        public cdr: ChangeDetectorRef,
+        protected resolver: ComponentFactoryResolver,
+        protected differs: IterableDiffers,
+        protected viewRef: ViewContainerRef,
+        public navigation: IgxGridNavigationService,
+        public filteringService: IgxFilteringService,
+        @Inject(IgxOverlayService) protected overlayService: IgxOverlayService,
+        public summaryService: IgxGridSummaryService,
+        @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
+        @Inject(LOCALE_ID) localeId: string,
+        protected platform: PlatformUtil,
+        ) {
+        super(selectionService, colResizingService, gridAPI, transactionFactory,
+            _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,
+            filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
     }
 
     /**
@@ -700,7 +737,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     protected switchTransactionService(val: boolean) {
         if (val) {
             this._transactions =
-            this.transactionFactory.create(TRANSACTION_TYPE.Hierarchical);
+                this.transactionFactory.create(TRANSACTION_TYPE.Hierarchical);
         } else {
             this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
         }
