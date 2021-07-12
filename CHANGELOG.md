@@ -5,6 +5,21 @@ All notable changes for each version of this project will be documented in this 
 ## 12.1.0
 
 ### New Features
+- Added `IgxAccordion` component
+    - A collection of vertically collapsible igx-expansion-panels that provide users with data and the ability to navigate through it in a compact manner. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Exposed API to control the expansion state, easy-to-use keyboard navigation, option for nested accordions.
+    - Code example below:
+
+    ```html
+    <igx-accordion>
+        <igx-expansion-panel *ngFor="let panel of panels">
+           ...
+        </igx-expansion-panel>
+    </igx-accordion>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/accordion/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Accordion-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
+
 - `igxGrid`
     - New `additionalTemplateContext` column input:
 
@@ -97,6 +112,9 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
+-   `IgxDropDown`
+    - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
 
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
