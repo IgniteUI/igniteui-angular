@@ -397,6 +397,41 @@ describe('IgxSplitter pane toggle', () => {
         expect(splitter.resizeEnd.emit).toHaveBeenCalledWith(args);
     });
 });
+
+describe('IgxSplitter pane collapse', () => {
+    configureTestSuite();
+    beforeAll(waitForAsync(() => TestBed.configureTestingModule({
+            declarations: [ SplitterCollapsedPaneComponent ],
+            imports: [
+                IgxSplitterModule
+            ]
+        }).compileComponents()));
+
+    let fixture; let splitter;
+    beforeEach(waitForAsync(() => {
+        fixture = TestBed.createComponent(SplitterCollapsedPaneComponent);
+        fixture.detectChanges();
+        splitter = fixture.componentInstance.splitter;
+    }));
+
+    it('should reset sizes when pane is initially collapsed.', () => {
+        const panes = splitter.panes.toArray();
+        panes.forEach(pane => {
+            expect(pane.size).toBe('auto');
+        });
+    });
+    it('should reset sizes when pane is runtime collapsed.', () => {
+        const panes = splitter.panes.toArray();
+        panes[0].size = '70%';
+        fixture.detectChanges();
+        panes[1].collapsed = true;
+        fixture.detectChanges();
+        panes.forEach(pane => {
+            expect(pane.size).toBe('auto');
+        });
+    });
+});
+
 @Component({
     template: `
     <igx-splitter [type]="type">
@@ -442,4 +477,28 @@ export class SplitterTestComponent {
 })
 
 export class SplitterTogglePaneComponent extends SplitterTestComponent {
+}
+
+@Component({
+    template: `
+    <igx-splitter [type]="type">
+    <igx-splitter-pane size='30%'>
+         <div>
+           Pane 1
+        </div>
+    </igx-splitter-pane>
+    <igx-splitter-pane size='30%'>
+        <div>
+            Pane 2
+         </div>
+    </igx-splitter-pane>
+    <igx-splitter-pane size='30%' [collapsed]='true'>
+        <div>
+            Pane 3
+         </div>
+    </igx-splitter-pane>
+</igx-splitter>
+    `,
+})
+export class SplitterCollapsedPaneComponent extends SplitterTestComponent {
 }

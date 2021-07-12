@@ -145,6 +145,46 @@ describe('igxMask', () => {
         expect(comp.value).toEqual('7777');
     }));
 
+    it('Should be able to type full-width numbers', fakeAsync(() => {
+        const fixture = TestBed.createComponent(MaskComponent);
+        fixture.componentInstance.mask = '00/00/0000';
+        fixture.detectChanges();
+        tick();
+
+        const input = fixture.debugElement.query(By.css('input'));
+        input.triggerEventHandler('focus', {});
+        fixture.detectChanges();
+
+        UIInteractions.simulateCompositionEvent('０９０６２０２１', input, 0, 10);
+        fixture.detectChanges();
+
+        input.triggerEventHandler('blur', {});
+        tick();
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('09/06/2021');
+    }));
+
+    it('Should be able to type full-width characters', fakeAsync(() => {
+        const fixture = TestBed.createComponent(DefMaskComponent);
+        fixture.componentInstance.mask = 'CCC';
+        fixture.detectChanges();
+        tick();
+
+        const input = fixture.debugElement.query(By.css('input'));
+        input.triggerEventHandler('focus', {});
+        fixture.detectChanges();
+
+        UIInteractions.simulateCompositionEvent('あんｓ', input, 0, 3);
+        fixture.detectChanges();
+
+        input.triggerEventHandler('blur', {});
+        tick();
+        fixture.detectChanges();
+
+        expect(input.nativeElement.value).toEqual('あんｓ');
+    }));
+
     it('Should handle the input of invalid values', fakeAsync(() => {
         const fixture = TestBed.createComponent(MaskComponent);
         fixture.detectChanges();
