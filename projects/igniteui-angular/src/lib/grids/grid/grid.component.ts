@@ -237,6 +237,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * @hidden @internal
+     * Includes children of collapsed group rows.
      */
     public groupingResult: any[];
 
@@ -247,6 +248,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * @hidden @internal
+     * Does not include children of collapsed group rows.
      */
     public groupingFlatResult: any[];
     /**
