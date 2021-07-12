@@ -114,7 +114,6 @@ import { IgxFlatTransactionFactory } from '../services/transaction/transaction-f
         IgxPaginatorModule,
         IgxGridSharedModules,
         IgxChipsModule
-    ],
-    providers: [IgxFlatTransactionFactory]
+    ]
 })
 export class IgxGridCommonModule { }

@@ -23,7 +23,7 @@ import {
     LOCALE_ID
 } from '@angular/core';
 import { IgxTreeGridAPIService } from './tree-grid-api.service';
-import { IgxGridBaseDirective } from '../grid-base.directive';
+import { IgxGridBaseDirective, IgxGridTransaction } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { ITreeGridRecord } from './tree-grid.interfaces';
 import { IRowDataEventArgs, IRowToggleEventArgs } from '../common/events';
@@ -34,7 +34,7 @@ import {
     TransactionEventOrigin,
     StateUpdateEvent
 } from '../../services/transaction/transaction';
-import { HierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
+import { HierarchicalTransactionService, IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -55,7 +55,6 @@ import { IgxHierarchicalTransactionFactory, TRANSACTION_TYPE } from '../../servi
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
-import { IgxGridAPIService } from '../grid/grid-api.service';
 
 let NEXT_ID = 0;
 
@@ -331,7 +330,12 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @experimental @hidden
      */
     public get transactions() {
-        return this._transactions;
+        if (!this._diTransactions) {
+            return this._transactions;
+        } else if (!this.batchEditing) {
+            return this._diTransactions;
+        }
+        return this._diTransactions;
     }
 
     /**
@@ -402,6 +406,8 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) localeId: string,
         protected platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
+        HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>,
         ) {
         super(selectionService, colResizingService, gridAPI, transactionFactory,
             _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,

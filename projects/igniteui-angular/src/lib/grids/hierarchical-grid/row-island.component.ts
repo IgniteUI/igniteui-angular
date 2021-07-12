@@ -27,7 +27,7 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
-import { IgxGridTransaction, IgxGridBaseDirective } from '../grid-base.directive';
+import { IgxGridBaseDirective } from '../grid-base.directive';
 import { GridBaseAPIService } from '../api.service';
 import { IgxHierarchicalGridAPIService } from './hierarchical-grid-api.service';
 import { DOCUMENT } from '@angular/common';

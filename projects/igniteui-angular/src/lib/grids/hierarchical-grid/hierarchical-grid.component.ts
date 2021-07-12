@@ -310,6 +310,12 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         // this.expansionStatesChange.pipe(takeUntil(this.destroy$)).subscribe((value: Map<any, boolean>) => {
         //     const res = Array.from(value.entries()).filter(({1: v}) => v === true).map(([k]) => k);
         // });
+        this.batchEditing = !!this.rootGrid.batchEditing;
+        if (this.rootGrid !== this) {
+            this.rootGrid.batchEditingChange.pipe(takeUntil(this.destroy$)).subscribe((val: boolean) => {
+                this.batchEditing = val;
+            });
+        }
         super.ngOnInit();
     }
 

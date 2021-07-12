@@ -2401,6 +2401,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Get transactions service for the grid.
      */
     public get transactions(): TransactionService<Transaction, State> {
+        if (this._diTransactions && !this.batchEditing) {
+            return this._diTransactions;
+        }
         return this._transactions;
     }
 
@@ -2849,6 +2852,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
     protected _transactions: TransactionService<Transaction, State>;
+    protected _batchEditing = false;
 
     /**
      * @hidden @internal
@@ -2947,7 +2951,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
-    private _batchEditing = false;
     private _unsubTransactions$ = new Subject<void>();
 
     private readonly DRAG_SCROLL_DELTA = 10;
@@ -3092,7 +3095,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         public summaryService: IgxGridSummaryService,
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string,
-        protected platform: PlatformUtil) {
+        protected platform: PlatformUtil,
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
+        TransactionService<Transaction, State>) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
