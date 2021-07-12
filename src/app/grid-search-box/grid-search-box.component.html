@@ -1,6 +1,6 @@
 <igx-input-group type="search" [displayDensity]="'compact'" class="search-box">
     <igx-prefix>
-        <igx-icon *ngIf="searchText.length == 0">search</igx-icon>
+        <igx-icon *ngIf="searchText.length === 0">search</igx-icon>
         <igx-icon *ngIf="searchText.length > 0" (click)="clearSearch()">clear</igx-icon>
     </igx-prefix>
 
@@ -13,7 +13,7 @@
             <span *ngIf="grid.lastSearchInfo.matchInfoCache.length > 0">
                 {{ grid.lastSearchInfo.activeMatchIndex + 1 }}/{{ grid.lastSearchInfo.matchInfoCache.length }}
             </span>
-            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length == 0">
+            <span *ngIf="grid.lastSearchInfo.matchInfoCache.length === 0">
                 0/0
             </span>
         </div>

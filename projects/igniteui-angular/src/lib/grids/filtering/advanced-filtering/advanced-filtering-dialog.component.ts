@@ -1147,11 +1147,11 @@ export class IgxAdvancedFilteringDialogComponent implements AfterViewInit, OnDes
         const containerRect = this.expressionsContainer.nativeElement.getBoundingClientRect();
         const chips = this.chips.filter(c => this.selectedExpressions.indexOf(c.data) !== -1);
         let minTop = chips.reduce((t, c) =>
-            Math.min(t, c.elementRef.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
+            Math.min(t, c.nativeElement.getBoundingClientRect().top), Number.MAX_VALUE);
         minTop = Math.max(containerRect.top, minTop);
         minTop = Math.min(containerRect.bottom, minTop);
         let maxRight = chips.reduce((r, c) =>
-            Math.max(r, c.elementRef.nativeElement.getBoundingClientRect().right), 0);
+            Math.max(r, c.nativeElement.getBoundingClientRect().right), 0);
         maxRight = Math.max(maxRight, containerRect.left);
         maxRight = Math.min(maxRight, containerRect.right);
         this._overlaySettings.target = new Point(maxRight, minTop);

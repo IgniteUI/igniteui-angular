@@ -153,10 +153,7 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
     public set type(value) {
         this._type = value;
-        if (this.panes) {
-            // if type is changed runtime, should reset sizes.
-            this.panes.forEach(x => x.size = 'auto');
-        }
+        this.resetPaneSizes();
     }
 
     /**
@@ -170,11 +167,9 @@ export class IgxSplitterComponent implements AfterContentInit {
 
     /** @hidden @internal */
     public ngAfterContentInit(): void {
-        this.panes.forEach(pane => pane.owner = this);
-        this.assignFlexOrder();
+        this.initPanes();
         this.panes.changes.subscribe(() => {
-            this.panes.forEach(pane => pane.owner = this);
-            this.assignFlexOrder();
+            this.initPanes();
         });
     }
 
@@ -264,6 +259,30 @@ export class IgxSplitterComponent implements AfterContentInit {
         return parseFloat(totalSize);
     }
 
+
+    /**
+     * @hidden @internal
+     * This method inits panes with properties.
+     */
+    private initPanes() {
+        this.panes.forEach(pane => pane.owner = this);
+        this.assignFlexOrder();
+        if (this.panes.filter(x => x.collapsed).length > 0) {
+            // if any panes are collapsed, reset sizes.
+            this.resetPaneSizes();
+        }
+    }
+
+    /**
+     * @hidden @internal
+     * This method reset pane sizes.
+     */
+    private resetPaneSizes() {
+        if (this.panes) {
+            // if type is changed runtime, should reset sizes.
+            this.panes.forEach(x => x.size = 'auto');
+        }
+    }
 
     /**
      * @hidden @internal

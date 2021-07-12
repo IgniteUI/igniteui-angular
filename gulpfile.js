@@ -4,7 +4,7 @@ const autoprefixer = require('autoprefixer');
 const browserSync = require('browser-sync').create();
 const del = require('del');
 const gulp = require('gulp');
-const sass = require('gulp-dart-sass');
+const sass = require('gulp-sass')(require('sass'));
 const sourcemaps = require('gulp-sourcemaps');
 const postcss = require('gulp-postcss');
 const process = require('process');
@@ -16,11 +16,10 @@ const EventEmitter = require('events').EventEmitter;
 const { series } = require('gulp');
 const {spawnSync} = require('child_process');
 const slash = require('slash');
-
-sass.compiler = require('sass');
+const Fiber = require('fibers');
 
 const STYLES = {
-    SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/*',
+    SRC: './projects/igniteui-angular/src/lib/core/styles/themes/presets/**/*',
     DIST: './dist/igniteui-angular/styles',
     MAPS: './maps',
     THEMING: {
@@ -28,7 +27,8 @@ const STYLES = {
         DIST: './dist/igniteui-angular/lib/core/styles'
     },
     CONFIG: {
-        outputStyle: 'compressed'
+        outputStyle: 'compressed',
+        fiber: Fiber
     }
 };
 
@@ -39,7 +39,7 @@ const TYPEDOC_THEME = {
     OUTPUT: slash(path.join(DOCS_OUTPUT_PATH, 'typescript'))
 };
 
-module.exports.buildStyle =  (cb) => {
+module.exports.buildStyle = () => {
     const prefixer = postcss([autoprefixer({
         cascade: false,
         grid: true
@@ -50,18 +50,16 @@ module.exports.buildStyle =  (cb) => {
 
     const myEventEmitter = new EventEmitter();
 
-    gulp.src(STYLES.SRC)
+    return gulp.src(STYLES.SRC)
         .pipe(sourcemaps.init())
-        .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
+        .pipe(sass(STYLES.CONFIG).on('error', err => {
             sass.logError.bind(myEventEmitter)(err);
             myEventEmitter.emit('end');
             process.exit(1);
         }))
         .pipe(prefixer)
         .pipe(sourcemaps.write(STYLES.MAPS))
-        .pipe(gulp.dest(STYLES.DIST));
-
-    cb();
+        .pipe(gulp.dest(STYLES.DIST))
 };
 
 module.exports.copyGitHooks = async (cb) => {

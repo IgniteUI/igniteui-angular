@@ -1,0 +1,60 @@
+<igx-switch [(ngModel)]="singleBranchExpand">Single Branch Expand</igx-switch>
+<button igxButton (buttonClick)="accordion.expandAll()">Expand All</button>
+<button igxButton (buttonClick)="accordion.collapseAll()">Collapse All</button>
+<button igxButton (buttonClick)="accordion.panels[1].header.disabled = !accordion.panels[1].header.disabled">Disable
+    second</button>
+<igx-accordion #accordion [singleBranchExpand]="singleBranchExpand" (panelExpanding)="panelExpanding($event)"
+    (panelExpanded)="panelExpanded($event)">
+    <igx-expansion-panel class="my-expansion-panel" id="html5" [collapsed]="false">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>HTML5</igx-expansion-panel-title>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <igx-accordion>
+                <igx-expansion-panel>
+                    <igx-expansion-panel-header [disabled]="false">
+                        <igx-expansion-panel-title>First</igx-expansion-panel-title>
+                    </igx-expansion-panel-header>
+                    <igx-expansion-panel-body>
+                        <div>
+                            Content1
+                        </div>
+                    </igx-expansion-panel-body>
+                </igx-expansion-panel>
+                <igx-expansion-panel>
+                    <igx-expansion-panel-header [disabled]="false">
+                        <igx-expansion-panel-title>Second</igx-expansion-panel-title>
+                    </igx-expansion-panel-header>
+                    <igx-expansion-panel-body>
+                        <div>
+                            Content2
+                        </div>
+                    </igx-expansion-panel-body>
+                </igx-expansion-panel>
+            </igx-accordion>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel class="my-expansion-panel" id="css" [collapsed]="true">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>CSS3</igx-expansion-panel-title>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div class="example-content">
+                Cascading Style Sheets (CSS) is a style sheet language used for
+                describing the presentation of a document written in a markup language
+                like HTML
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+    <igx-expansion-panel class="my-expansion-panel" class="my-expansion-panel" id="scss" [collapsed]="false">
+        <igx-expansion-panel-header [disabled]="false">
+            <igx-expansion-panel-title>SASS/SCSS</igx-expansion-panel-title>
+        </igx-expansion-panel-header>
+        <igx-expansion-panel-body>
+            <div class="example-content">
+                Sass is a preprocessor scripting language that is interpreted or
+                compiled into Cascading Style Sheets (CSS).
+            </div>
+        </igx-expansion-panel-body>
+    </igx-expansion-panel>
+</igx-accordion>
