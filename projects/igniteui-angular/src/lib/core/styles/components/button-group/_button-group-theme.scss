@@ -251,12 +251,15 @@
         &:focus {
             color: var-get($theme, 'item-hover-text-color');
             background: var-get($theme, 'item-hover-background');
-            z-index: 2;
         }
 
         &:focus {
             @if $bootstrap-theme or $indigo-theme {
                 box-shadow: 0 0 0 rem(3px) var-get($theme, 'shadow-color');
+            }
+
+            @if $indigo-theme {
+                z-index: 2;
             }
         }
     }
@@ -291,6 +294,7 @@
 
         &:hover,
         &:focus {
+            z-index: 3;
             color: var-get($theme, 'item-selected-text-color');
             background: var-get($theme, 'item-selected-hover-background');
         }
