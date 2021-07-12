@@ -1242,16 +1242,16 @@ describe('IgxTabs', () => {
         });
 
         it('should hide scroll buttons if visible when alignment is set to "justify".', async () => {
-            pending('Known issue - postponed!');
             fixture.componentInstance.wrapperDiv.nativeElement.style.width = '360px';
             fixture.detectChanges();
+            await wait(200);
 
             const rightScrollButton = tabs.headerContainer.nativeElement.children[2];
             expect(rightScrollButton.clientWidth).toBeTruthy();
 
             tabs.tabAlignment = IgxTabsAlignment.justify;
-            await wait(200);
             fixture.detectChanges();
+            await wait(500);
 
             expect(rightScrollButton.clientWidth).toBeFalsy();
         });
