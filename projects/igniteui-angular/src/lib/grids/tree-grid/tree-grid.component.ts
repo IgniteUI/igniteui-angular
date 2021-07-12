@@ -55,6 +55,7 @@ import { IgxHierarchicalTransactionFactory, TRANSACTION_TYPE } from '../../servi
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
+import { IgxGridAPIService } from '../grid/grid-api.service';
 
 let NEXT_ID = 0;
 
@@ -379,13 +380,13 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     // Kind of stupid
     private get _gridAPI(): IgxTreeGridAPIService {
-        return this.gridAPI;
+        return this.gridAPI as IgxTreeGridAPIService;
     }
 
     constructor(
-        public selectionService: IgxTreeGridSelectionService,
+        public selectionService: IgxGridSelectionService,
         public colResizingService: IgxColumnResizingService,
-        public gridAPI: IgxTreeGridAPIService,
+        public gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>,
         protected transactionFactory: IgxHierarchicalTransactionFactory,
         private _elementRef: ElementRef<HTMLElement>,
         private _zone: NgZone,
