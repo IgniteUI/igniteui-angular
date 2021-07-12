@@ -69,6 +69,10 @@ All notable changes for each version of this project will be documented in this 
 - `IgxExcelExporterService`
     - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
     
+
+- `IgxDateTimeEditor`, `IgxMask`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - Added IME input support. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
+
 ### General
 - `IgxPaginatorComponent`
     - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
