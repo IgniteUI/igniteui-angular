@@ -37,15 +37,15 @@ export abstract class IgxGroupByAreaDirective {
     @Input()
     public density: DisplayDensity = DisplayDensity.comfortable;
 
-    @HostBinding('class.igx-grid__grouparea')
+    @HostBinding('class.igx-grid-grouparea')
     public defaultClass =  true;
 
-    @HostBinding('class.igx-grid__grouparea--cosy')
+    @HostBinding('class.igx-grid-grouparea--cosy')
     public get cosyStyle() {
         return this.density === 'cosy';
     }
 
-    @HostBinding('class.igx-grid__grouparea--compact')
+    @HostBinding('class.igx-grid-grouparea--compact')
     public get compactStyle() {
         return this.density === 'compact';
     }
@@ -102,7 +102,7 @@ export abstract class IgxGroupByAreaDirective {
 
 
     public get dropAreaVisible(): boolean {
-        return (this.grid.draggedColumn && this.grid.draggedColumn.groupable) ||
+        return (this.grid.columnInDrag && this.grid.columnInDrag.groupable) ||
             !this.expressions.length;
     }
 

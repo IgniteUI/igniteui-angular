@@ -21,6 +21,7 @@
 /// @param {Color} $body-color [null] - The panel body text color.
 /// @param {Color} $body-background [null] - The panel body background color.
 /// @param {Color} $disabled-color [null] - The panel body disabled text color.
+/// @param {Number} $expanded-margin [null] - The expansion panel margin in expanded state when positioned inside accordion.
 ///
 /// @param {border-radius} $border-radius [null] - The border radius used for expansion-panel component.
 ///
@@ -39,7 +40,7 @@
     $palette: null,
     $schema: $light-schema,
 
-    $border-radius:null,
+    $border-radius: null,
     $header-background: null,
     $header-focus-background: null,
     $header-title-color: null,
@@ -47,7 +48,8 @@
     $header-icon-color: null,
     $body-color: null,
     $body-background: null,
-    $disabled-color: null
+    $disabled-color: null,
+    $expanded-margin: null
 ) {
     $name: 'igx-expansion-panel';
     $expansion-panel-schema: ();
@@ -94,6 +96,7 @@
         body-color: $body-color,
         body-background: $body-background,
         disabled-color: $disabled-color,
+        expanded-margin: $expanded-margin
     ));
 }
 
@@ -132,6 +135,28 @@
         text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+    }
+
+    %igx-title--no-ellipsis {
+        %igx-expansion-panel__header-title {
+            @include line-clamp(4, true, true);
+            white-space: initial;
+            word-wrap: break-word;
+        }
+    }
+
+    %igx-expanded-panel-margin {
+        igx-expansion-panel[aria-expanded='true'] {
+            margin: var-get($theme, 'expanded-margin') 0;
+
+            &:first-of-type {
+                margin-top: 0;
+            }
+
+            &:last-of-type {
+                margin-bottom: 0;
+            }
+        }
     }
 
     %igx-expansion-panel__header-inner {

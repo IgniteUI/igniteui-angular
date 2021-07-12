@@ -282,12 +282,10 @@
         overflow: hidden;
     }
 
-    %tabs-header-scroll {
+    %tabs-header-wrapper {
         position: relative;
-        flex-wrap: nowrap;
+        flex-grow: 1;
         transition: transform .2s $tabs-animation-function;
-        display: inline-flex;
-        min-width: 100%;
 
         @if $bootstrap-theme or $indigo-theme {
             &::after {
@@ -301,6 +299,11 @@
                 z-index: 0;
             }
         }
+    }
+
+    %tabs-header-scroll {
+        display: flex;       
+        height: 100%;
     }
 
     %tabs-header-button {

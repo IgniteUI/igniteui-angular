@@ -25,8 +25,8 @@ import { IgxDateTimeEditorDirective } from '../../directives/date-time-editor/da
 
 describe('IgxGrid - Column properties #grid', () => {
 
-    const COLUMN_HEADER_CLASS = '.igx-grid__th';
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_CLASS = '.igx-grid-th';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
         TestBed.configureTestingModule({
@@ -228,7 +228,7 @@ describe('IgxGrid - Column properties #grid', () => {
         fix.detectChanges();
         const grid = fix.componentInstance.grid;
         const CELL_CSS_CLASS = '.igx-grid__td';
-        const COLUMN_NUMBER_CLASS = 'igx-grid__th--number';
+        const COLUMN_NUMBER_CLASS = 'igx-grid-th--number';
         const CELL_NUMBER_CLASS = 'igx-grid__td--number';
 
         // Verify haeder clases
@@ -299,7 +299,7 @@ describe('IgxGrid - Column properties #grid', () => {
             expect(c.nativeElement.querySelector('.customCellTemplate')).toBeDefined());
 
         grid.headerCellList.forEach(header =>
-            expect(header.elementRef.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
+            expect(header.nativeElement.querySelector('.customHeaderTemplate')).toBeDefined());
 
         const cell = grid.getCellByColumn(0, 'ID');
         cell.setEditMode(true);

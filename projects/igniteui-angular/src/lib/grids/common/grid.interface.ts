@@ -6,7 +6,7 @@ import { IGridResourceStrings } from '../../core/i18n/grid-resources';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IGroupingExpression } from '../../data-operations/grouping-expression.interface';
 import { TransactionService, Transaction, State } from '../../services/public_api';
-import { IgxColumnComponent, ITreeGridRecord } from '../tree-grid/public_api';
+import { ITreeGridRecord } from '../tree-grid/public_api';
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IGroupByExpandState } from '../../data-operations/groupby-expand-state.interface';
 
@@ -31,7 +31,6 @@ export interface GridType extends IGridDataBindable {
     id: string;
     renderedRowHeight: number;
     summaryPipeTrigger: number;
-    draggedColumn: IgxColumnComponent;
     hasColumnLayouts: boolean;
 
     filterMode: FilterMode;
@@ -40,8 +39,20 @@ export interface GridType extends IGridDataBindable {
     navigation: any;
     filteringService: any;
     outlet: any;
+    hasMovableColumns: boolean;
+    isRowSelectable: boolean;
+    showRowSelectors: boolean;
+    isPinningToStart: boolean;
+    columnInDrag: any;
+    pinnedWidth: number;
+    unpinnedWidth: number;
+
+    dragIndicatorIconTemplate: any;
+    dragIndicatorIconBase: any;
 
     calcHeight: number;
+    defaultHeaderGroupMinWidth: any;
+    scrollSize: number;
 
     parentVirtDir: any;
     tbody: any;
@@ -71,13 +82,15 @@ export interface GridType extends IGridDataBindable {
     advancedFilteringExpressionsTree: IFilteringExpressionsTree;
     advancedFilteringExpressionsTreeChange: EventEmitter<IFilteringExpressionsTree>;
 
+    trackColumnChanges(index: number, column: any): any;
+    hasVerticalScroll(): boolean;
     getColumnByName(name: string): any;
     sort(expression: ISortingExpression | Array<ISortingExpression>): void;
     clearSort(name?: string): void;
     isColumnGrouped(fieldName: string): boolean;
     isDetailRecord(rec: any): boolean;
     isGroupByRecord(rec: any): boolean;
-    notifyChanges(repaint: boolean): void;
+    notifyChanges(repaint?: boolean): void;
 }
 
 /**
@@ -87,6 +100,7 @@ export interface FlatGridType extends GridType {
     groupingExpansionState: IGroupByExpandState[];
     groupingExpressions: IGroupingExpression[];
     groupingExpressionsChange: EventEmitter<IGroupingExpression[]>;
+
     toggleGroup(groupRow: IGroupByRecord): void;
     clearGrouping(field: string): void;
     groupBy(expression: IGroupingExpression | Array<IGroupingExpression>): void;

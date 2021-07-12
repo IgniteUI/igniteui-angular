@@ -194,6 +194,8 @@ export class PlatformUtil {
     public isFirefox = this.isBrowser && /Firefox[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isEdge = this.isBrowser && /Edge[\/\s](\d+\.\d+)/.test(navigator.userAgent);
     public isIE = this.isBrowser && navigator.appVersion.indexOf('Trident/') > 0;
+    public isChromium = this.isBrowser && (/Chrom|e?ium/g.test(navigator.userAgent) ||
+    /Google Inc/g.test(navigator.vendor)) && !/Edge/g.test(navigator.userAgent);
 
     public KEYMAP = mkenum({
         ENTER: 'Enter',
@@ -370,6 +372,7 @@ export const NAVIGATION_KEYS = new Set([
     'spacebar',
     ' '
 ]);
+export const ACCORDION_NAVIGATION_KEYS = new Set('up down arrowup arrowdown home end'.split(' '));
 export const ROW_EXPAND_KEYS = new Set('right down arrowright arrowdown'.split(' '));
 export const ROW_COLLAPSE_KEYS = new Set('left up arrowleft arrowup'.split(' '));
 export const ROW_ADD_KEYS = new Set(['+', 'add', '≠', '±', '=']);

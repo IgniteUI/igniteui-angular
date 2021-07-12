@@ -1,0 +1,27 @@
+@use '../../base' as *;
+
+////
+/// @access private
+/// @group components
+/// @requires {mixin} bem-block
+/// @requires {mixin} bem-elem
+/// @requires {mixin} bem-mod
+////
+
+@mixin group-by-area {
+    @include b(igx-grid-grouparea) {
+        @extend %igx-grid-grouparea !optional;
+
+        @include e(connector) {
+            @extend %igx-grid-grouparea__connector !optional;
+        }
+
+        @include m(compact) {
+            @extend %igx-grid-grouparea--compact !optional;
+        }
+
+        @include m(cosy) {
+            @extend %igx-grid-grouparea--cosy !optional;
+        }
+    }
+}

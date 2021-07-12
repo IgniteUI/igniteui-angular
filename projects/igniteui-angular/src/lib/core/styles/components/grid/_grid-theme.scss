@@ -777,18 +777,12 @@
 
         z-index: 2;
 
-        %grid__group-indentation {
-            &::after {
-                display: none;
-            }
-        }
-
         %grid__cbx-selection--push {
             align-items: flex-start;
             padding-top: math.div(map.get($grid-header-height, 'comfortable') - rem(20px), 2);
         }
 
-        %grid-row:last-of-type {
+        %grid-row {
             border-bottom: none;
         }
     }
@@ -1627,7 +1621,7 @@
     }
 
 
-    %igx-grid__th-expander {
+    %igx-grid-th__expander {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -1645,15 +1639,15 @@
         }
     }
 
-    %igx-grid__th-group-title {
+    %igx-grid-th__group-title {
         @include ellipsis();
     }
 
-    %igx-grid__th--collapsible {
+    %igx-grid-th--collapsible {
         justify-content: normal;
     }
 
-    %igx-grid__th--selectable {
+    %igx-grid-th--selectable {
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
         opacity: if($variant != 'indigo-design', .7, 1);
@@ -1663,7 +1657,7 @@
         }
     }
 
-    %igx-grid__th--selected {
+    %igx-grid-th--selected {
         color: var-get($theme, 'header-selected-text-color');
         background: var-get($theme, 'header-selected-background');
 
@@ -1672,12 +1666,12 @@
         }
     }
 
-    %igx-grid__th--active {
-        @extend %grid-cell--active !optional;
+    %igx-grid-th--active {
+        @extend %grid-cell--active;
 
-        %igx-grid__th--selected,
-        %igx-grid__th--selectable {
-            @extend %grid-cell--active !optional;
+        %igx-grid-th--selected,
+        %igx-grid-th--selectable {
+            @extend %grid-cell--active;
         }
     }
 
@@ -1685,7 +1679,7 @@
         @extend %grid-cell--active !optional;
     }
 
-    %igx-grid__th--sortable {
+    %igx-grid-th--sortable {
         .sort-icon {
             cursor: pointer;
             opacity: .7;
@@ -1696,7 +1690,7 @@
         }
     }
 
-    %igx-grid__th--sorted {
+    %igx-grid-th--sorted {
         .sort-icon {
             opacity: 1;
             color: var-get($theme, 'sorted-header-icon-color');
@@ -1707,13 +1701,13 @@
         }
     }
 
-    %igx-grid__th--filtrable {
+    %igx-grid-th--filtrable {
         %grid-cell-header-title {
             opacity: .7;
         }
     }
 
-    %igx-grid__th--filtrable-sortable {
+    %igx-grid-th--filtrable-sortable {
         .sort-icon {
             &:hover {
                 opacity: 1;
@@ -1838,8 +1832,8 @@
     }
 
     // Column moving
-    %igx-grid__th-drop-indicator-left,
-    %igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator-left,
+    %igx-grid-th__drop-indicator-right {
         position: absolute;
         width: 1px;
         height: 100%;
@@ -1847,17 +1841,17 @@
         z-index: 1;
     }
 
-    %igx-grid__th-drop-indicator-left {
+    %igx-grid-th__drop-indicator-left {
         #{$left}: -1px;
     }
 
-    %igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator-right {
         #{$right}: -1px;
     }
 
-    %igx-grid__th-drop-indicator--active {
-        &%igx-grid__th-drop-indicator-left,
-        &%igx-grid__th-drop-indicator-right {
+    %igx-grid-th__drop-indicator--active {
+        &%igx-grid-th__drop-indicator-left,
+        &%igx-grid-th__drop-indicator-right {
             border-#{$right}: 1px solid var-get($theme, 'drop-indicator-color');
         }
 
@@ -2150,7 +2144,7 @@
         padding-#{$right}: map.get($grid-grouping-indicator-padding, 'compact')
     }
 
-    %igx-grid__grouparea {
+    %igx-grid-grouparea {
         grid-row: 2;
         display: flex;
         align-items: center;
@@ -2170,7 +2164,7 @@
         }
     }
 
-    %igx-grid__grouparea-connector {
+    %igx-grid-grouparea__connector {
         display: inline-flex;
         justify-content: center;
         align-items: center;
@@ -2187,12 +2181,12 @@
         }
     }
 
-    %igx-grid__grouparea--cosy {
+    %igx-grid-grouparea--cosy {
         min-height: map.get($grouparea-min-height, 'cosy');
         padding: map.get($grouparea-padding, 'cosy');
     }
 
-    %igx-grid__grouparea--compact {
+    %igx-grid-grouparea--compact {
         min-height: map.get($grouparea-min-height, 'compact');
         padding: map.get($grouparea-padding, 'compact');
     }

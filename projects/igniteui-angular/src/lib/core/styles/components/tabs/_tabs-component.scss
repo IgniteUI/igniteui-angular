@@ -41,6 +41,10 @@
             @extend %tabs-header-content !optional;
         }
 
+        @include e(header-wrapper) {
+            @extend %tabs-header-wrapper !optional;
+        }
+
         @include e(header-scroll) {
             @extend %tabs-header-scroll !optional;
         }
