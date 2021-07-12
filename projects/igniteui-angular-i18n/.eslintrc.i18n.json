@@ -1,12 +1,12 @@
 {
-    "env": {
-        "browser": true,
-        "es6": true,
-        "node": true
-    },
-    "parser": "@typescript-eslint/parser",
+    "extends": "../../.eslintrc.json",
+    "ignorePatterns": [
+        "!**/*"
+    ],
     "parserOptions": {
-        "sourceType": "module"
+        "project": [
+            "projects/igniteui-angular-i18n/tsconfig.build.json"
+        ]
     },
     "plugins": [
         "eslint-plugin-import",
@@ -39,11 +39,15 @@
         "@typescript-eslint/naming-convention": [
             "error",
             {
-              "selector": "variable",
-              "modifiers": ["const"],
-              "format": ["PascalCase"]
+                "selector": "variable",
+                "modifiers": [
+                    "const"
+                ],
+                "format": [
+                    "PascalCase"
+                ]
             }
-          ],
+        ],
         "@typescript-eslint/no-empty-function": "off",
         "@typescript-eslint/no-empty-interface": "error",
         "@typescript-eslint/no-inferrable-types": [
@@ -66,8 +70,8 @@
             "error",
             "single",
             {
-              "avoidEscape": true,
-              "allowTemplateLiterals": true
+                "avoidEscape": true,
+                "allowTemplateLiterals": true
             }
         ],
         "@typescript-eslint/semi": [

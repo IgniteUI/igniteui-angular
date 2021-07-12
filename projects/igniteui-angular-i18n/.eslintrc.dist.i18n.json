@@ -1,5 +1,5 @@
 {
-    "extends": "./.eslintrc.i18n.json",
+    "parser": "@typescript-eslint/parser",
     "rules": {
         "no-restricted-imports": [
             "error",
