@@ -53,13 +53,13 @@ jobs:
         working-directory: dist/igniteui-angular-i18n
 
       - name: Publish igniteui-angular
-        run: npm publish --dry-run --tag ${NPM_TAG}
+        run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       - name: Publish igniteui-angular-i18n
-        run: npm publish --dry-run --tag ${NPM_TAG}
+        run: npm publish --tag ${NPM_TAG}
         working-directory: dist/igniteui-angular-i18n
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
