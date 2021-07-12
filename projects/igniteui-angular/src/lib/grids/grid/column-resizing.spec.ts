@@ -15,7 +15,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
 describe('IgxGrid - Deferred Column Resizing #grid', () => {
 
-    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid__thead-item';
+    const COLUMN_HEADER_GROUP_CLASS = '.igx-grid-thead__item';
 
     configureTestSuite((() => {
         TestBed.configureTestingModule({
@@ -243,10 +243,10 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
         }));
 
         it('should recalculate grid heights after resizing so the horizontal scrollbar appears.', fakeAsync(() => {
-            let expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            let expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
 
             expect(grid.calcHeight).toEqual(expectedHeight);
             expect(grid.columns[0].width).toEqual('100px');
@@ -268,10 +268,11 @@ describe('IgxGrid - Deferred Column Resizing #grid', () => {
             const hScroll = fixture.componentInstance.grid.headerContainer.getScroll();
             const hScrollVisible = hScroll.offsetWidth < hScroll.children[0].offsetWidth;
 
-            expectedHeight = fixture.debugElement.query(By.css('igx-grid')).nativeElement.getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__thead').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__tfoot').getBoundingClientRect().height -
-                grid.nativeElement.querySelector('.igx-grid__scroll').getBoundingClientRect().height;
+            expectedHeight = grid.nativeElement.offsetHeight
+                - grid.theadRow.nativeElement.offsetHeight
+                - grid.tfoot.nativeElement.offsetHeight
+                - (grid.isHorizontalScrollHidden ? 0 : grid.scrollSize);
+
             expect(grid.calcHeight).toEqual(expectedHeight);
             expect(hScrollVisible).toBe(true);
         }));

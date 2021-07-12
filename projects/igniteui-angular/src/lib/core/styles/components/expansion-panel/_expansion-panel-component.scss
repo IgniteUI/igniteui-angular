@@ -56,5 +56,14 @@
         @include  m(disabled) {
             @extend %igx-expansion-panel--disabled !optional;
         }
+
+        @include m(expanded) {
+            @extend %igx-expansion-panel--expanded !optional;
+        }
+    }
+
+    @include b(igx-accordion) {
+        @extend %igx-title--no-ellipsis !optional;
+        @extend %igx-expanded-panel-margin !optional;
     }
 }

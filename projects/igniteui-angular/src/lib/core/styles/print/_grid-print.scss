@@ -10,7 +10,7 @@ $print-background: #eee;
         igx-input-group,
         igx-checkbox,
         igx-radio,
-        .igx-grid__grouparea,
+        .igx-grid-grouparea,
         .igx-tooltip--desktop,
         .igx-nav-drawer__aside,
         .igx-overlay,
@@ -37,7 +37,7 @@ $print-background: #eee;
             display: none !important;
         }
 
-        .igx-grid__grouparea,
+        .igx-grid-grouparea,
         igx-paginator,
         .igx-grid-toolbar__actions,
         .igx-drop-area__icon,
@@ -66,13 +66,13 @@ $print-background: #eee;
         }
 
         .igx-grid__tfoot,
-        .igx-grid__grouparea,
+        .igx-grid-grouparea,
         .igx-grid__filtering-cell,
         .igx-grid__group-row,
-        .igx-grid__thead-title,
+        .igx-grid-thead__title,
         igx-grid-toolbar,
         igx-grid-row,
-        .igx-grid__thead {
+        .igx-grid-thead {
             border-color: $border-color !important;
         }
 
@@ -82,21 +82,21 @@ $print-background: #eee;
             }
         }
 
-        .igx-grid__thead,
+        .igx-grid-thead,
         igx-grid-toolbar,
         .igx-grid__group-row,
         .igx-grid__tfoot {
             background: $print-background !important;
         }
 
-        .igx-grid__th-title,
+        .igx-grid-th__title,
         .igx-grid__td-text {
             white-space: unset !important;
             text-overflow: initial !important;
             overflow: visible !important;
         }
 
-        .igx-grid__thead-title {
+        .igx-grid-thead__title {
             igx-icon {
                 display: none;
             }
@@ -106,7 +106,7 @@ $print-background: #eee;
             display: none;
         }
 
-        .igx-grid__th--pinned-last {
+        .igx-grid-th--pinned-last {
             border-right: 2px solid red !important;
         }
     }

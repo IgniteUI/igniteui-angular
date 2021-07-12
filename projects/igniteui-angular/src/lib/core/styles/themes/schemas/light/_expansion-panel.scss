@@ -18,6 +18,7 @@
 /// @prop {Map} body-color [igx-color: ('grays', 800)] - The panel body text color.
 /// @prop {Map} disabled-color [igx-color: ('grays', 500)] - The panel disabled text color.
 /// @prop {Number} border-radius [0] - The border radius used for expansion-panel. Can be a fraction between 0 and 1, pixels, or percent.
+/// @prop {Number} expanded-margin [8px] - The expansion panel margin in expanded state when positioned inside accordion.
 ///
 /// @requires {function} extend
 /// @requires {Map} $default-shape-expansion-panel
@@ -50,7 +51,9 @@ $light-expansion-panel: extend(
 
         disabled-color: (
             igx-color: ('grays', 500)
-        )
+        ),
+
+        expanded-margin: rem(8px)
     )
 );
 

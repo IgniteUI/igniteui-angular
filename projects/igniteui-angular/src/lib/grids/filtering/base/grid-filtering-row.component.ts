@@ -84,6 +84,19 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         return this.column.grid.displayDensity === DisplayDensity.comfortable ? DisplayDensity.cosy : this.column.grid.displayDensity;
     }
 
+    @HostBinding('class.igx-grid__filtering-row')
+    public defaultCSSClass = true;
+
+    @HostBinding('class.igx-grid__filtering-row--compact')
+    public get compactCSSClass() {
+        return this.column.grid.displayDensity === DisplayDensity.compact;
+    }
+
+    @HostBinding('class.igx-grid__filtering-row--cosy')
+    public get cosyCSSClass() {
+        return this.column.grid.displayDensity === DisplayDensity.cosy;
+    }
+
     @ViewChild('defaultFilterUI', { read: TemplateRef, static: true })
     protected defaultFilterUI: TemplateRef<any>;
 
@@ -97,7 +110,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     protected defaultDateTimeUI: TemplateRef<any>;
 
     @ViewChild('input', { read: ElementRef })
-    protected input: ElementRef;
+    protected input: ElementRef<HTMLInputElement>;
 
     @ViewChild('inputGroupConditions', { read: IgxDropDownComponent, static: true })
     protected dropDownConditions: IgxDropDownComponent;
@@ -109,36 +122,25 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     protected dropDownOperators: QueryList<IgxDropDownComponent>;
 
     @ViewChild('inputGroup', { read: ElementRef })
-    protected inputGroup: ElementRef;
+    protected inputGroup: ElementRef<HTMLElement>;
 
     @ViewChild('picker')
     protected picker: IgxDatePickerComponent | IgxTimePickerComponent;
 
     @ViewChild('inputGroupPrefix', { read: ElementRef })
-    protected inputGroupPrefix: ElementRef;
+    protected inputGroupPrefix: ElementRef<HTMLElement>;
 
     @ViewChild('container', { static: true })
-    protected container: ElementRef;
+    protected container: ElementRef<HTMLElement>;
 
     @ViewChild('operand')
-    protected operand: ElementRef;
+    protected operand: ElementRef<HTMLElement>;
 
     @ViewChild('closeButton', { static: true })
-    protected closeButton: ElementRef;
+    protected closeButton: ElementRef<HTMLElement>;
 
-    @HostBinding('class')
-    public get styleClasses(): string {
-        let classes = 'igx-grid__filtering-row';
-
-        switch (this.column.grid.displayDensity) {
-            case DisplayDensity.compact:
-                classes = classes + ' igx-grid__filtering-row--compact';
-                break;
-            case DisplayDensity.cosy:
-                classes = classes + ' igx-grid__filtering-row--cosy';
-                break;
-        }
-        return classes;
+    public get nativeElement() {
+        return this.ref.nativeElement;
     }
 
     public showArrows: boolean;
@@ -170,11 +172,15 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     private isKeyPressed = false;
     private isComposing = false;
     private _cancelChipClick = false;
+
+    /** switch to icon buttons when width is below 432px */
+    private readonly NARROW_WIDTH_THRESHOLD = 432;
+
     private $destroyer = new Subject<boolean>();
 
     constructor(
         public filteringService: IgxFilteringService,
-        public element: ElementRef,
+        public ref: ElementRef<HTMLElement>,
         public cdr: ChangeDetectorRef,
         protected platform: PlatformUtil
     ) { }
@@ -223,7 +229,7 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
         return this.defaultFilterUI;
     }
 
-     public get type() {
+    public get type() {
         switch (this.column.dataType) {
             case GridColumnDataType.String:
             case GridColumnDataType.Boolean:
@@ -708,8 +714,8 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
 
                 // TODO: revise the cdr.detectChanges() usage here
                 if (!(this.cdr as ViewRef).destroyed) {
-                this.cdr.detectChanges();
-}
+                    this.cdr.detectChanges();
+                }
             }
         });
     }
@@ -842,6 +848,6 @@ export class IgxGridFilteringRowComponent implements AfterViewInit, OnDestroy {
     }
 
     public get isNarrowWidth(): boolean {
-        return this.element.nativeElement.offsetWidth < 432;
+        return this.nativeElement.offsetWidth < this.NARROW_WIDTH_THRESHOLD;
     }
 }
