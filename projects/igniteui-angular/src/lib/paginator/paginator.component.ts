@@ -164,7 +164,7 @@ export class IgxPaginatorComponent extends DisplayDensityBase {
     }
 
     public set perPage(value: number) {
-        if (value < 0) {
+        if (value < 0 || this.perPage === value) {
             return;
         }
         this._perPage = Number(value);
