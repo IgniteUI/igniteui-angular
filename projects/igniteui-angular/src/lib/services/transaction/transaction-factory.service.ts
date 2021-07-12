@@ -7,8 +7,7 @@ import { HierarchicalState, HierarchicalTransaction, State, Transaction, Transac
 
 export const enum TRANSACTION_TYPE {
     'None' = 'None',
-    'Base' = 'Base',
-    'Hierarchical' = 'Hierarchical',
+    'Base' = 'Base'
 }
 
 @Injectable({

@@ -735,15 +735,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.columnList.some((col) => col.groupable && !col.columnGroup);
     }
 
-    protected switchTransactionService(val: boolean) {
-        if (val) {
-            this._transactions =
-                this.transactionFactory.create(TRANSACTION_TYPE.Hierarchical);
-        } else {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
-        }
-    }
-
     protected transactionStatusUpdate(event: StateUpdateEvent) {
         let actions = [];
         if (event.origin === TransactionEventOrigin.REDO) {

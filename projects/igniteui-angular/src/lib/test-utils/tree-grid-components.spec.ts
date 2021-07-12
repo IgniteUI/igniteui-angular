@@ -59,7 +59,8 @@ export class IgxTreeGridSimpleComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees" primaryKey="ID" width="318px" height="400px" columnWidth="100px">
+    <igx-tree-grid #treeGrid [data]="data" childDataKey="Employees"
+        primaryKey="ID" width="318px" height="400px" columnWidth="100px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>
         <igx-column [field]="'HireDate'" dataType="date"></igx-column>
@@ -91,7 +92,7 @@ export class IgxTreeGridWithNoScrollsComponent {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid [batchEditing]="true" [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
+    <igx-tree-grid #treeGrid [data]="data" primaryKey="ID" foreignKey="ParentID" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'ParentID'" dataType="number"></igx-column>
         <igx-column [field]="'Name'" dataType="string"></igx-column>

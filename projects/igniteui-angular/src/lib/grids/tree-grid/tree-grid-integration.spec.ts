@@ -950,6 +950,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.batchEditing = true;
+            fix.detectChange();
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
@@ -1053,6 +1055,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.batchEditing = true;
+            fix.detectChange();
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
