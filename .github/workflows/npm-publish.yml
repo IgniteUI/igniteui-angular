@@ -22,16 +22,18 @@ jobs:
       - run: npm ci
 
       - name: Build igniteui-angular
-        run: npm run build:lib
-        run: npm run build:schematics
-        run: npm run build:migration
+        run: |
+            npm run build:lib
+            npm run build:schematics
+            npm run build:migration
 
       - name: Build igniteui-angular-i18n
         run: npm run build:i18n
 
-      # define npm tag
-      - run: if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
-      - run: echo ${NPM_TAG}
+      - name: Define npm tag
+        run: |
+            if [[ ${VERSION} == *"alpha"* || ${VERSION} == *"beta"* || ${VERSION} == *"rc"* ]]; then echo "NPM_TAG=next"; else echo "NPM_TAG=latest"; fi >> $GITHUB_ENV
+            echo ${NPM_TAG}
 
       - name: Copy readme for igniteui-angular
         run: cp ../../README.md README.md
