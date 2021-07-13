@@ -138,7 +138,7 @@
 
 <div class="igx-grid__footer" #footer>
     <ng-content select="igx-grid-footer"></ng-content>
-    <ng-content *ngIf="totalRecords"  select="igx-paginator"></ng-content>
+    <ng-content *ngIf="totalRecords || pagingMode === 1"  select="igx-paginator"></ng-content>
     <ng-container #paginatorOutlet></ng-container>
 </div>
 
