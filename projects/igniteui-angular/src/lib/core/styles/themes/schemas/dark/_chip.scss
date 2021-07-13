@@ -20,7 +20,6 @@
 /// @prop {Map} selected-text-color [igx-color: ('grays', 900)] - The selected chip text color.
 /// @prop {Map} hover-selected-text-color [igx-color: ('grays', 900)] - The selected chip hover text color.
 /// @prop {Map} focus-selected-text-color [igx-color: ('grays', 900)] - The selected chip text focus color.
-
 $base-dark-chip: (
     background: (
         igx-color: ('grays', 100, .4)
