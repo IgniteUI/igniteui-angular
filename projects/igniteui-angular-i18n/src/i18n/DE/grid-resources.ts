@@ -119,7 +119,7 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_snackbar_addrow_actiontext: 'HINZUFÜGEN',
     igx_grid_actions_edit_label: 'Editiere',
     igx_grid_actions_add_label: 'Füge hinzu',
-    igx_grid_add_row_label: 'FÜGE REIHE HUNZU',
+    igx_grid_add_row_label: 'FÜGE REIHE HINZU',
     igx_grid_actions_add_child_label: 'Füge Kind hinzu',
     igx_grid_actions_delete_label: 'Lösche',
     igx_grid_actions_pin_label: 'Fixiere',
