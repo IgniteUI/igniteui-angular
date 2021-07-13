@@ -32,10 +32,12 @@ All notable changes for each version of this project will be documented in this 
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
     - Added `batchEditing` `Input` for controlling whether the grid should have transactions or not.
-    - **Breaking Change** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is no longer valid
-    Instead, use the new `batchEditing` property to control the grid's Transactions
+    - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
+    Instead, use the new `batchEditing` property to control the grid's Transactions.
 
 - `Transactions`
+    - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
+    - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
     
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
