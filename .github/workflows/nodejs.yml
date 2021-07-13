@@ -19,38 +19,44 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run lint:lib
-    - run: npm run build:lib
-    - run: npm run test:lib:others
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:grid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:tgrid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:lib:hgrid
-      env:
-        NODE_OPTIONS: --max_old_space_size=4096
-    - run: npm run test:schematics
-    - name: Install coverage combiner
-      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
-      run: sudo npm install -g istanbul-combine
-    - name: Combine scripts
-      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
-      run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
-    - name: Publish to coveralls.io
-      if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
-      uses: coverallsapp/github-action@v1.1.2
-      with:
-        github-token: ${{ github.token }}
-
-
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+            node-version: ${{ matrix.node-version }}
+            cache: 'npm'
+      - name: Install packages
+        run: npm ci
+      - name: Lint
+        run: npm run lint:lib
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096
+      - name: Lint i18n
+        run: npm run lint:i18n
+      - name: Build
+        run: npm run build:lib
+      - name: Test
+        run: |
+            npm run test:lib:others
+            npm run test:lib:grid
+            npm run test:lib:tgrid
+            npm run test:lib:hgrid
+            npm run test:schematics
+        env:
+            NODE_OPTIONS: --max_old_space_size=4096
+      - name: Build i18n & validate output
+        run: |
+            npm run build:i18n
+            npm run lint:i18n:dist
+      - name: Install coverage combiner
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+        run: sudo npm install -g istanbul-combine
+      - name: Combine scripts
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+        run: istanbul-combine -d coverage -p none -r lcov -r cobertura coverage/hierarchical-grid/coverage-final.json coverage/tree-grid/coverage-final.json coverage/non-grid/coverage-final.json coverage/grid/coverage-final.json
+      - name: Publish to coveralls.io
+        if: github.repository == 'IgniteUI/igniteui-angular' && matrix.node-version == '14.x'
+        uses: coverallsapp/github-action@v1.1.2
+        with:
+          github-token: ${{ github.token }}
