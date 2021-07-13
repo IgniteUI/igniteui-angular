@@ -30,6 +30,11 @@ export class AppComponent implements OnInit {
 
     public componentLinks = [
         {
+            link: '/accordion',
+            icon: 'horizontal_split',
+            name: 'Accordion'
+        },
+        {
             link: '/action-strip',
             icon: 'view_list',
             name: 'Action Strip'
@@ -405,6 +410,11 @@ export class AppComponent implements OnInit {
             name: 'Progress Indicators'
         },
         {
+            link: '/pagination',
+            icon: 'menu',
+            name: 'Paginator'
+        },
+        {
             link: '/radio',
             icon: 'radio_button_checked',
             name: 'Radio Group'
@@ -489,6 +499,11 @@ export class AppComponent implements OnInit {
             link: '/treeGridFlatData',
             icon: 'view_column',
             name: 'Tree Grid Flat Data'
+        },
+        {
+            link: '/treeGridGroupBy',
+            icon: 'view_column',
+            name: 'Tree Grid GroupBy'
         },
         {
             link: '/treeGridLoadOnDemand',

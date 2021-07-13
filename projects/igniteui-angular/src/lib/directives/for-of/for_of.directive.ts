@@ -45,10 +45,10 @@ const MAX_PERF_SCROLL_DIFF = 4;
  */
 export class IgxForOfContext<T> {
     constructor(
-       public $implicit: T,
-       public index: number,
-       public count: number
-    ) {}
+        public $implicit: T,
+        public index: number,
+        public count: number
+    ) { }
 
     /**
      * A function that returns whether the element is the first or not
@@ -80,8 +80,10 @@ export class IgxForOfContext<T> {
 
 }
 
-@Directive({ selector: '[igxFor][igxForOf]',
-providers: [ IgxForOfScrollSyncService ] })
+@Directive({
+    selector: '[igxFor][igxForOf]',
+    providers: [IgxForOfScrollSyncService]
+})
 // eslint-disable @angular-eslint/no-conflicting-lifecycle
 export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestroy, AfterViewInit {
 
@@ -92,7 +94,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      * ```
      */
     @Input()
-    public igxForOf: any[];
+    public igxForOf: any[] | null;
 
     /**
      * An @Input property that sets the property name from which to read the size in the data object.
@@ -409,7 +411,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
                     this.igxForOf.length - this.state.chunkSize);
             }
             for (let i = this.state.startIndex; i < this.state.startIndex + this.state.chunkSize &&
-                    this.igxForOf[i] !== undefined; i++) {
+                this.igxForOf[i] !== undefined; i++) {
                 const input = this.igxForOf[i];
                 const embeddedView = this.dc.instance._vcr.createEmbeddedView(
                     this._template,
@@ -435,7 +437,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.contentResizeNotify.pipe(
                 destructor,
                 filter(() => this.igxForContainerSize && this.igxForOf && this.igxForOf.length > 0),
-                throttleTime(40, undefined, {leading: true, trailing: true})
+                throttleTime(40, undefined, { leading: true, trailing: true })
             ).subscribe(() => this._zone.runTask(() => this.updateSizes()));
         }
 
@@ -772,8 +774,9 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
             // update scrBar heights/widths
             if (this.igxForScrollOrientation === 'horizontal') {
-                const totalWidth = parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10) + totalDiff;
-                (this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width = totalWidth + 'px';
+                const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
+                const totalWidth = parseInt(firstScrollChild.style.width, 10) + totalDiff;
+                firstScrollChild.style.width = `${totalWidth}px`;
             }
             const reducer = (acc, val) => acc + val;
             if (this.igxForScrollOrientation === 'vertical') {
@@ -997,7 +1000,8 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
      */
     protected onHScroll(event) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
+        const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
+        if (!parseInt(firstScrollChild.style.width, 10)) {
             return;
         }
         const prevStartIndex = this.state.startIndex;
@@ -1243,7 +1247,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this.scrollComponent.nativeElement.style.width = this.igxForContainerSize + 'px';
             this.scrollComponent.size = totalWidth;
             if (totalWidth <= parseInt(this.igxForContainerSize, 10)) {
-               this.resetScrollPosition();
+                this.resetScrollPosition();
             }
         }
         if (this.igxForScrollOrientation === 'vertical') {
@@ -1292,7 +1296,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
 
     /**
      * @hidden
-     * Removes an elemenet from the embedded views and updates chunkSize.
+     * Removes an element from the embedded views and updates chunkSize.
      */
     protected removeLastElem() {
         const oldElem = this._embeddedViews.pop();
@@ -1359,7 +1363,7 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
     protected _calcVirtualScrollTop(scrollTop: number) {
         const containerSize = parseInt(this.igxForContainerSize, 10);
         const maxRealScrollTop = this.scrollComponent.size - containerSize;
-        const realPercentScrolled = maxRealScrollTop !== 0 ?  scrollTop / maxRealScrollTop : 0;
+        const realPercentScrolled = maxRealScrollTop !== 0 ? scrollTop / maxRealScrollTop : 0;
         const maxVirtScrollTop = this._virtHeight - containerSize;
         this._virtScrollTop = realPercentScrolled * maxVirtScrollTop;
     }
@@ -1371,15 +1375,15 @@ export class IgxForOfDirective<T> implements OnInit, OnChanges, DoCheck, OnDestr
             this._calcVirtualScrollTop(this.scrollPosition);
             currentScrollTop = this._virtScrollTop;
         }
-        const vScroll =  this.scrollComponent.nativeElement;
+        const vScroll = this.scrollComponent.nativeElement;
         scrollOffset = vScroll && this.scrollComponent.size ?
-        currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
+            currentScrollTop - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.top = -(scrollOffset) + 'px';
     }
 
     private _updateHScrollOffset() {
         let scrollOffset = 0;
-        scrollOffset =  this.scrollComponent.nativeElement &&
+        scrollOffset = this.scrollComponent.nativeElement &&
             this.scrollComponent.size ?
             this.scrollPosition - this.sizesCache[this.state.startIndex] : 0;
         this.dc.instance._viewContainer.element.nativeElement.style.left = -scrollOffset + 'px';
@@ -1496,7 +1500,7 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
         }
         const defaultItemSize = 'igxForItemSize';
         if (defaultItemSize in changes && !changes[defaultItemSize].firstChange &&
-             this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
+            this.igxForScrollOrientation === 'vertical' && this.igxForOf) {
             // handle default item size changed.
             this.initSizesCache(this.igxForOf);
         }
@@ -1563,7 +1567,8 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
 
     public onHScroll(scrollAmount) {
         /* in certain situations this may be called when no scrollbar is visible */
-        if (!this.scrollComponent || !parseInt((this.scrollComponent.nativeElement.children[0] as HTMLElement).style.width, 10)) {
+        const firstScrollChild = this.scrollComponent.nativeElement.children.item(0) as HTMLElement;
+        if (!this.scrollComponent || !parseInt(firstScrollChild.style.width, 10)) {
             return;
         }
         // Updating horizontal chunks
@@ -1750,8 +1755,14 @@ export class IgxGridForOfDirective<T> extends IgxForOfDirective<T> implements On
  * @hidden
  */
 @NgModule({
-    declarations: [IgxForOfDirective, IgxGridForOfDirective, DisplayContainerComponent, VirtualHelperComponent,
-         HVirtualHelperComponent, VirtualHelperBaseDirective],
+    declarations: [
+        IgxForOfDirective,
+        IgxGridForOfDirective,
+        DisplayContainerComponent,
+        VirtualHelperComponent,
+        HVirtualHelperComponent,
+        VirtualHelperBaseDirective
+    ],
     entryComponents: [DisplayContainerComponent, VirtualHelperComponent, HVirtualHelperComponent],
     exports: [IgxForOfDirective, IgxGridForOfDirective],
     imports: [IgxScrollInertiaModule, CommonModule]

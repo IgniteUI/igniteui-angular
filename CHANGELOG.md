@@ -3,8 +3,55 @@
 All notable changes for each version of this project will be documented in this file.
 
 ## 12.1.0
+
 ### New Features
-- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file. 
+- Added `IgxAccordion` component
+    - A collection of vertically collapsible igx-expansion-panels that provide users with data and the ability to navigate through it in a compact manner. The control is **not** data bound and takes a declarative approach, giving users more control over what is being rendered.
+    - Exposed API to control the expansion state, easy-to-use keyboard navigation, option for nested accordions.
+    - Code example below:
+
+    ```html
+    <igx-accordion>
+        <igx-expansion-panel *ngFor="let panel of panels">
+           ...
+        </igx-expansion-panel>
+    </igx-accordion>
+    ```
+
+    - For more information, check out the [README](https://github.com/IgniteUI/igniteui-angular/blob/master/projects/igniteui-angular/src/lib/accordion/README.md), [specification](https://github.com/IgniteUI/igniteui-angular/wiki/Accordion-Specification) and [official documentation](https://www.infragistics.com/products/ignite-ui-angular/angular/components/accordion)
+
+- `igxGrid`
+    - New `additionalTemplateContext` column input:
+
+    ```html
+    <igx-column [additionalTemplateContext]="contextObject">
+      <ng-template igxCell let-cell="cell" let-props="additionalTemplateContext">
+         {{ props }}
+      </ng-template>
+    </igx-column>
+    ```
+- `Toolbar Actions`
+    - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
+
+    ```html
+    <igx-grid-toolbar-actions>
+        <igx-grid-toolbar-pinning [overlaySettings]="overlaySettingsGlobal"></igx-grid-toolbar-pinning>
+        <igx-grid-toolbar-hiding [overlaySettings]="overlaySettingsAuto"></igx-grid-toolbar-hiding>
+    </igx-grid-toolbar-actions>
+    ```
+- `IgxPaginatorComponent`
+    - Added `paging` and `pagingDone` events; `paging` event is cancellable and is emitted before pagination is performed, `pagingDone` event gives you information about the previous and the current page number and is not cancellable; Also `IgxPageSizeSelectorComponent` and `IgxPageNavigationComponent` are introduced and now the paginator components allows you to define a custom content, as it is shown in the example below:
+    ```html
+    <igx-paginator #paginator>
+        <igx-paginator-content>
+            <igx-page-size></igx-page-size>
+            <button [disabled]="paginator.isFirstPage" (click)="paginator.previousPage()">PREV</button>
+            <span>Page {{paginator.page}} of {{paginator.totalPages}}</span>
+            <button [disabled]="paginator.isLastPage" (click)="paginator.nextPage()">NEXT</button>
+        </igx-paginator-content>
+    </igx-paginator>
+    ```
+- `Exporters`'s `columnExporting` event now supports changing the index of the column in the exported file.
     ```typescript
         this.excelExporterService.columnExporting.subscribe((col) => {
             if (col.field === 'Index') {
@@ -12,7 +59,28 @@ All notable changes for each version of this project will be documented in this 
             }
         });
     ```
+- `IgxExcelExporterService`
+    - Added support for exporting the grids' multi-column headers to **Excel**. By default, the multi-column headers would be exported but this behavior can be controlled by the `ignoreMultiColumnHeaders` option off the IgxExcelExporterOptions object.
+    
+
+- `IgxDateTimeEditor`, `IgxMask`, `IgxDatePicker`, `IgxTimePicker`, `IgxDateRangePicker`
+    - Added IME input support. When typing in an Asian language input, the control will display input method compositions and candidate lists directly in the control’s editing area, and immediately re-flow surrounding text as the composition ends.
+
 ### General
+- `IgxPaginatorComponent`
+    - Deprecated properties `selectLabel` and `prepositionPage` are now removed;
+    -  **Breaking Change** - the following properties are removed
+        - `pagerEnabled`
+        - `pagerHidden `
+        - `dropdownEnabled`
+        - `dropdownHidden`
+- `IgxSnackbarComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - the `snackbarAnimationStarted` and `snackbarAnimationDone` methods are now removed. The `animationStarted` and `animationDone` events now provide reference to the `ToggleViewEventArgs` interface as an argument and are emitted by the `onOpened` and `onClosed` events of the `IgxToggleDirective`. 
+- `IgxToastComponent`
+    - Deprecated property `message` is now removed;
+    - **Breaking Change** - The `isVisibleChange` event now provides reference to the `ToggleViewEventArgs` interface as an argument.
+
 - **Breaking Change** - `IgxOverlayService` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
@@ -44,6 +112,13 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
+-   `IgxDropDown`
+    - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+
+### Themes
+- **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
+    - `$color` -> `$icon-color`
 
 ## 12.0.3
 
@@ -3189,7 +3264,7 @@ export class IgxCustomFilteringOperand extends IgxFilteringOperand {
                 [igxForContainerSize]='"500px"'
                 [igxForItemSize]='"50px"'
                 let-rowIndex="index">
-                <div style='height:50px;'>{{rowIndex}} : {{item.text}}</div>
+                <div style='height: 50px;'>{{rowIndex}} : {{item.text}}</div>
         </ng-template>
     </div>
     ```

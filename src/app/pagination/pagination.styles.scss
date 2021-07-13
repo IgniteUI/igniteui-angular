@@ -1,0 +1,39 @@
+@import '../../../projects/igniteui-angular/src/lib/core/styles/base/index';
+
+:host {
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+:host ::ng-deep {
+    .hamburger {
+        margin-right: rem(16px);
+
+        [dir='rtl'] & {
+            margin-left: rem(16px);
+            margin-right: initial;
+        }
+    }
+}
+
+.sample-header {
+    display: flex;
+    align-items: center;
+    height: rem(90px);
+    padding: 0 rem(16px);
+    background: var(--igx-primary-500);
+    overflow: hidden;
+
+    .title {
+        color: var(--igx-primary-500-contrast);
+        margin: 0;
+        text-transform: capitalize;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

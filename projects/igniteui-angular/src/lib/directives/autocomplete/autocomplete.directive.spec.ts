@@ -372,17 +372,15 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.target.open).toHaveBeenCalledTimes(0);
         }));
         it('Should select item when drop down item is clicked', fakeAsync(() => {
+            input.nativeElement.focus();
+            expect(input.nativeElement as Element).toBe(document.activeElement);
             const startsWith = 's';
             const filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             UIInteractions.setInputElementValue(input, startsWith, fixture);
             tick();
             expect(dropDown.collapsed).toBeFalsy();
-
             const targetElement = fixture.debugElement.queryAll(By.css('.' + CSS_CLASS_DROP_DOWN_ITEM))[0];
-            targetElement.nativeElement.tabIndex = 0;
-            targetElement.nativeElement.focus();
             targetElement.nativeElement.click();
-            targetElement.nativeElement.tabIndex = -1;
             fixture.detectChanges();
             tick();
             expect(dropDown.collapsed).toBeTruthy();
@@ -904,6 +902,7 @@ describe('IgxAutocomplete', () => {
             group = fixture.componentInstance.group;
             dropDown = fixture.componentInstance.dropDown;
             input.nativeElement.click();
+            input.nativeElement.focus();
             UIInteractions.clickAndSendInputElementValue(input, 's', fixture);
             tick();
             expect(dropDown.collapsed).toBeFalsy();
