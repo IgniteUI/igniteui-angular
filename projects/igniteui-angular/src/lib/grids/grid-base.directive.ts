@@ -29,9 +29,9 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import { getResizeObserver } from '../core/utils';
+import { resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, noop } from 'rxjs';
+import { Subject, pipe, fromEvent, noop, animationFrameScheduler } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
 import { cloneArray, flatten, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
@@ -2824,7 +2824,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new (getResizeObserver())(noop);
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -3305,7 +3304,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges();
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100, undefined, { leading: true, trailing: true }))
+        this.resizeNotify.pipe(
+            destructor,
+            filter(() => !this._init),
+            throttleTime(0, animationFrameScheduler, { leading: true, trailing: true })
+        )
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
@@ -3557,8 +3560,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            this.observer = new (getResizeObserver())(() => this.resizeNotify.next());
-            this.observer.observe(this.nativeElement);
+            fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
     }
 
@@ -3663,7 +3666,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.zone.runOutsideAngular(() => {
-            this.observer.disconnect();
             this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer?.displayContainer;
