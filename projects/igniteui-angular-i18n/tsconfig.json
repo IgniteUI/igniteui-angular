@@ -1,9 +1,0 @@
-{
-    "compilerOptions": {
-        "paths": {
-            "igniteui-angular": [
-                "../igniteui-angular/src/public_api.ts"
-            ]
-        }
-    }
-}

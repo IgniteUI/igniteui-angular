@@ -46,11 +46,11 @@ jobs:
             cp ../../projects/igniteui-angular-i18n/LICENSE LICENSE
         working-directory: dist/igniteui-angular-i18n
 
-      - name: Create igniteui-angular version and publish it to npmjs
+      - name: Create igniteui-angular version
         run: npm version ${VERSION} --no-git-tag-version --save --verbose
         working-directory: dist/igniteui-angular
 
-      - name: Create igniteui-angular-i18n version and publish it to npmjs
+      - name: Create igniteui-angular-i18n version
         run: npm version ${VERSION} --no-git-tag-version --save
         working-directory: dist/igniteui-angular-i18n
 

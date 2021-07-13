@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable max-len */
 import { IGridResourceStrings } from 'igniteui-angular';
 
