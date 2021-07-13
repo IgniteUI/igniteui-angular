@@ -72,6 +72,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     public set tabAlignment(value: string | IgxTabsAlignment) {
         this._tabAlignment = value;
         requestAnimationFrame(() => {
+            this.updateScrollButtons();
             this.realignSelectedIndicator();
         });
     }
@@ -83,6 +84,10 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     @ViewChild('viewPort', { static: true })
     public viewPort: ElementRef<HTMLElement>;
+
+    /** @hidden */
+    @ViewChild('itemsWrapper', { static: true })
+    public itemsWrapper: ElementRef<HTMLElement>;
 
     /** @hidden */
     @ViewChild('itemsContainer', { static: true })
@@ -125,6 +130,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         this.ngZone.runOutsideAngular(() => {
             this._resizeObserver = new (getResizeObserver())(() => {
                 this.updateScrollButtons();
+                this.realignSelectedIndicator();
             });
             this._resizeObserver.observe(this.headerContainer.nativeElement);
             this._resizeObserver.observe(this.viewPort.nativeElement);
@@ -136,7 +142,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         super.ngOnDestroy();
 
         this.ngZone.runOutsideAngular(() => {
-            this._resizeObserver.disconnect();
+            this._resizeObserver?.disconnect();
         });
     }
 
@@ -161,7 +167,6 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
     /** @hidden */
     public resolveHeaderScrollClasses() {
         return {
-            'igx-tabs__header-scroll': true,
             'igx-tabs__header-scroll--start': this.tabAlignment === 'start',
             'igx-tabs__header-scroll--end': this.tabAlignment === 'end',
             'igx-tabs__header-scroll--center': this.tabAlignment === 'center',
@@ -246,7 +251,7 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         const viewPortWidth = this.viewPort.nativeElement.offsetWidth;
 
         this.offset = (scrollRight) ? element.offsetWidth + element.offsetLeft - viewPortWidth : element.offsetLeft;
-        this.itemsContainer.nativeElement.style.transform = `translate(${-this.offset}px)`;
+        this.itemsWrapper.nativeElement.style.transform = `translate(${-this.offset}px)`;
         this.updateScrollButtons();
     }
 
@@ -309,8 +314,9 @@ export class IgxTabsComponent extends IgxTabsDirective implements AfterViewInit,
         // because there is inconsistency in IE we cannot use offsetWidth or scrollOffset.
         const itemsContainerChildrenCount = this.itemsContainer.nativeElement.children.length;
         let itemsContainerWidth = 0;
+
         if (itemsContainerChildrenCount > 1) {
-            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 2] as HTMLElement;
+            const lastTab = this.itemsContainer.nativeElement.children[itemsContainerChildrenCount - 1] as HTMLElement;
             itemsContainerWidth = lastTab.offsetLeft + lastTab.offsetWidth;
         }
 

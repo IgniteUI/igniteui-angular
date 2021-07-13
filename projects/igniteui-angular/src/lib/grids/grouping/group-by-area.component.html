@@ -12,10 +12,10 @@
             (chipClick)="handleClick(expression.fieldName)"
         >
             <span>{{ (expression.fieldName | igxGroupByMeta:grid).title }}</span>
-            <igx-icon igxSuffix>{{ expression.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+            <igx-icon igxSuffix>{{ expression.dir === 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
         </igx-chip>
 
-        <span class="igx-grid__grouparea-connector">
+        <span class="igx-grid-grouparea__connector">
             <igx-icon [hidden]="(last && !dropAreaVisible)">arrow_forward</igx-icon>
         </span>
     </ng-container>
