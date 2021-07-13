@@ -595,9 +595,15 @@ describe('List', () => {
     }));
 
     it('cancel left panning', fakeAsync(() => {
+        let timesCalledEndPan = 0;
+
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
+
+        list.endPan.subscribe(() => {
+            timesCalledEndPan++;
+        });
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;
@@ -611,12 +617,19 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(timesCalledEndPan).toBe(1);
     }));
 
     it('cancel right panning', fakeAsync(() => {
+        let timesCalledEndPan = 0;
+
         const fixture = TestBed.createComponent(ListWithPanningTemplatesComponent);
         const list = fixture.componentInstance.list;
         fixture.detectChanges();
+
+        list.endPan.subscribe(() => {
+            timesCalledEndPan++;
+        });
 
         const firstItem = list.items[0] as IgxListItemComponent;
         const leftPanTmpl = firstItem.leftPanningTemplateElement;
@@ -630,6 +643,7 @@ describe('List', () => {
         expect(firstItem.panState).toBe(IgxListPanState.NONE);
         expect(leftPanTmpl.nativeElement.style.visibility).toBe('hidden');
         expect(rightPanTmpl.nativeElement.style.visibility).toBe('hidden');
+        expect(timesCalledEndPan).toBe(1);
     }));
 
     it('checking the header list item does not have panning and content containers.', () => {

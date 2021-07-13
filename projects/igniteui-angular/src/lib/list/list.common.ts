@@ -16,8 +16,9 @@ export class IgxListBaseDirective extends DisplayDensityBase {
     public panEndTriggeringThreshold: number;
     public leftPan: EventEmitter<any>;
     public rightPan: EventEmitter<any>;
-    public panningStart: EventEmitter<any>;
-    public panningEnd: EventEmitter<any>;
+    public startPan: EventEmitter<any>;
+    public endPan: EventEmitter<any>;
+    public resetPan: EventEmitter<any>;
     public panStateChange: EventEmitter<any>;
     public children: QueryList<any>;
     public listItemLeftPanningTemplate: IgxListItemLeftPanningTemplateDirective;
