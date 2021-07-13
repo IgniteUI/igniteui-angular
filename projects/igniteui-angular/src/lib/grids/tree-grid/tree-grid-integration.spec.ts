@@ -1213,7 +1213,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(grid.getRowData(11)).toEqual(newRow);
         }));
 
-        fit('Should have transactions enabled when batchEditing === false and service is provider', fakeAsync(() => {
+        it('Should have transactions enabled when batchEditing === false and service is provider', fakeAsync(() => {
             const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
             const grid = fixture.componentInstance.treeGrid;
             tick();

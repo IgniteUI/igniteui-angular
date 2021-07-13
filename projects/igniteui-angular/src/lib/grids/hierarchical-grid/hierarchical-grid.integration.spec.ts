@@ -23,8 +23,6 @@ import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-fu
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { IgxGridTransaction } from '../public_api';
-import { IgxTransactionService } from '../../services/transaction/igx-transaction';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -257,7 +255,7 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowData('101')).toEqual({});
         });
 
-        fit('should respect transaction service that is provided in the providers array', fakeAsync(() => {
+        it('should respect transaction service that is provided in the providers array', fakeAsync(() => {
             fixture = TestBed.createComponent(IgxHierarchicalGridWithTransactionProviderComponent);
             tick();
             fixture.detectChanges();

@@ -21,7 +21,6 @@ export class MySummaryOperand extends IgxSummaryOperand {
 }
 
 @Component({
-    providers: [{ provide: IgxGridTransaction, useClass: IgxHierarchicalTransactionService }],
     selector: 'app-tree-grid-load-on-demand-sample',
     styleUrls: ['tree-grid-load-on-demand.sample.css'],
     templateUrl: 'tree-grid-load-on-demand.sample.html'

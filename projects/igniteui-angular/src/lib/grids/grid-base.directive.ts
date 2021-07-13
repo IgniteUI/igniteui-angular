@@ -2371,11 +2371,12 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets whether the grid has batch editing enabled.
      * When batch editing is enabled, changes are not made directly to the data underlying data.
-     * Instead, they are stored as transaction, which can later be commit w/ the `commit` method.
+     * Instead, they are stored as transactions, which can later be committed w/ the `commit` method.
      *
      * @example
      * ```html
-     * <igx-grid [batchEditing]="true"></igx-grid>
+     * <igx-grid [batchEditing]="true" [data]="someData">
+     * </igx-grid>
      * ```
      */
     @Input()

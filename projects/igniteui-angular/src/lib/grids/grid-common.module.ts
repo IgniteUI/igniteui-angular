@@ -4,8 +4,6 @@ import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective
 } from './grid.common';
-import { IgxGridTransaction } from './grid-base.directive';
-import { IgxBaseTransactionService } from '../services/transaction/base-transaction';
 import {
     IgxRowAddTextDirective,
     IgxRowEditTemplateDirective,
