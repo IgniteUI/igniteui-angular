@@ -15,13 +15,16 @@ import { take } from 'rxjs/operators';
 import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
-    IgxHierarchicalGridTestCustomToolbarComponent
+    IgxHierarchicalGridTestCustomToolbarComponent,
+    IgxHierarchicalGridWithTransactionProviderComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
 import { GridSelectionMode, ColumnPinningPosition, RowPinningPosition } from '../common/enums';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
+import { IgxGridTransaction } from '../public_api';
+import { IgxTransactionService } from '../../services/transaction/igx-transaction';
 
 describe('IgxHierarchicalGrid Integration #hGrid', () => {
     let fixture: ComponentFixture<IgxHierarchicalGridTestBaseComponent>;
@@ -36,7 +39,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridTestCustomToolbarComponent
+                IgxHierarchicalGridTestCustomToolbarComponent,
+                IgxHierarchicalGridWithTransactionProviderComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
@@ -252,6 +256,25 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
             expect(hierarchicalGrid.getRowData('101')).toEqual({});
         });
+
+        fit('should respect transaction service that is provided in the providers array', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridWithTransactionProviderComponent);
+            tick();
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(hierarchicalGrid.transactions.enabled).toBeTruthy();
+            expect(hierarchicalGrid.batchEditing).toBeFalsy();
+            let childGrid: IgxHierarchicalGridComponent;
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
+                childGrid = args.grid;
+            });
+            // expand first row
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            expect(childGrid).toBeDefined();
+            expect(childGrid.transactions.enabled).toBeTruthy();
+            childGrid.updateRow({ ProductName: 'Changed' }, '00');
+            expect(childGrid.transactions.getAggregatedChanges(false).length).toBe(1);
+        }));
     });
 
     describe('Sorting', () => {

@@ -1212,6 +1212,22 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(grid.transactions.getTransactionLog().length).toEqual(1);
             expect(grid.getRowData(11)).toEqual(newRow);
         }));
+
+        fit('Should have transactions enabled when batchEditing === false and service is provider', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            tick();
+            fixture.detectChanges();
+
+            grid.batchEditing = false;
+            fixture.detectChanges();
+
+            expect(grid.batchEditing).toBeFalsy();
+            expect(grid.transactions.enabled).toBeTruthy();
+
+            grid.deleteRowById(147);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
+        }));
     });
 
     describe('Multi-column header', () => {

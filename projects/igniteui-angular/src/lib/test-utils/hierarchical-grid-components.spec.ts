@@ -1,13 +1,15 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent } from '../grids/public_api';
+import { IgxColumnComponent, IgxGridTransaction } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
+import { IgxTransactionService } from '../services/public_api';
 
+const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
 
 @Component({
     template: `
@@ -43,6 +45,70 @@ import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
     </igx-hierarchical-grid>`
 })
 export class IgxHierarchicalGridTestBaseComponent {
+    @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
+    public hgrid: IgxHierarchicalGridComponent;
+
+    @ViewChild('rowIsland', { read: IgxRowIslandComponent, static: true })
+    public rowIsland: IgxRowIslandComponent;
+
+    @ViewChild('rowIsland2', { read: IgxRowIslandComponent, static: true })
+    public rowIsland2: IgxRowIslandComponent;
+
+    public data;
+    public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
+
+    constructor() {
+        // 3 level hierarchy
+        this.data = SampleTestData.generateHGridData(40, 3);
+    }
+
+    public pinColumn(column: IgxColumnComponent) {
+        if (column.pinned) {
+            column.unpin();
+        } else {
+            column.pin();
+        }
+    }
+}
+
+@Component({
+    template: `
+    <igx-hierarchical-grid #grid1 [data]="data" [allowFiltering]="true" [rowEditable]="true" [pinning]='pinningConfig'
+     [height]="'600px'" [width]="'700px'" #hierarchicalGrid [primaryKey]="'ID'">
+        <igx-column field="ID" [groupable]="true" [movable]='true'></igx-column>
+        <igx-column-group header="Information">
+                <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
+                <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
+        </igx-column-group>
+        <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
+            <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
+            <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
+                <ng-template igxHeader let-columnRef="column">
+                    <div>
+                        <span>ID</span>
+                        <igx-icon (click)="pinColumn(columnRef)">lock</igx-icon>
+                    </div>
+                </ng-template>
+            </igx-column>
+            <igx-column-group header="Information">
+                    <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                    <igx-column field="ProductName" [groupable]="true"></igx-column>
+            </igx-column-group>
+            <igx-row-island [key]="'childData'" #rowIsland2 >
+                <igx-column field="ID" [groupable]="true" ></igx-column>
+                <igx-column-group header="Information">
+                        <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true"></igx-column>
+                        <igx-column field="ProductName" [groupable]="true" [hasSummary]='true'></igx-column>
+                </igx-column-group>
+            </igx-row-island>
+        </igx-row-island>
+    </igx-hierarchical-grid>`,
+    providers: [{
+        provide: IgxGridTransaction,
+        useFactory: hierarchicalTransactionServiceFactory,
+    }]
+})
+export class IgxHierarchicalGridWithTransactionProviderComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
     public hgrid: IgxHierarchicalGridComponent;
 

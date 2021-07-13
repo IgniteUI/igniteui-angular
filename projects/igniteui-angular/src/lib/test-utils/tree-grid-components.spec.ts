@@ -425,7 +425,7 @@ class PTOSummary extends IgxSummaryOperand {
 
 @Component({
     template: `
-    <igx-tree-grid #treeGrid  [batchEditing]="true" [data]="data"
+    <igx-tree-grid #treeGrid [batchEditing]="true" [data]="data"
         primaryKey="ID" foreignKey="ParentID" [rowEditable]="true" width="900px" height="600px">
         <igx-column [field]="'ID'" dataType="number"></igx-column>
         <igx-column [field]="'ParentID'" dataType="number"></igx-column>
