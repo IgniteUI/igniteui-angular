@@ -401,8 +401,24 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     // TODO: Consider changing the modifier to protected or private.
     public addRowParent = null;
 
+    public createAddRowParent(row: IgxRowDirective<IgxGridBaseDirective & GridType>, newRowAsChild?: boolean)
+    {
+        const rowIndex = row ? row.index : this.grid.rowList.length - 1;
+        const rowId = row ? row.rowID : (rowIndex >= 0 ? this.grid.rowList.last.rowID : null);
+
+        const isInPinnedArea =  this.grid.isRecordPinnedByViewIndex(rowIndex);
+        const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
+        const unpinIndex = this.grid.unpinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
+        this.addRowParent = {
+            rowID: rowId,
+            index: isInPinnedArea ? pinIndex : unpinIndex,
+            asChild: newRowAsChild,
+            isPinned: isInPinnedArea
+        };
+    }
+
      /** Starts row adding */
-     public beginAddRow(cell, event?: Event) {
+    public beginAddRow(cell, event?: Event) {
         this.createCell(cell);
         this.cell.primaryKey = this.primaryKey;
         cell.enterAddMode = true;
@@ -559,6 +575,44 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
         }
     }
 
+    /**
+     * Enters add row mode by creating temporary dummy so the user can fill in new row cells.
+     * 
+     * @param parentRow Parent row after which the Add Row UI will be rendered. If `null` will show it at the bottom after all rows (or top if there are not rows).
+     * @param asChild Specifies if the new row should be added as a child to a tree row.
+     * @param event Base event that triggered the add row mode.
+     */
+    public enterAddRowMode(parentRow: IgxRowDirective<IgxGridBaseDirective & GridType>, asChild?: boolean, event?: Event)
+    {
+        if (!this.rowEditing && (this.grid.primaryKey === undefined || this.grid.primaryKey === null)) {
+            console.warn('The grid must use row edit mode to perform row adding! Please set rowEditable to true.');
+            return;
+        }
+        this.endEdit(true, event);
+        this.cancelAddMode = false;
+
+        if (parentRow != null && this.grid.expansionStates.get(parentRow.rowID)) {
+            this.grid.collapseRow(parentRow.rowID);
+        }
+
+        this.createAddRowParent(parentRow, asChild);
+        this.grid.triggerPipes();
+        this.grid.notifyChanges(true);
+
+        const dummyRowIndex = this.addRowParent.index + 1;
+        this.grid.navigateTo(dummyRowIndex, -1);
+
+        const dummyRow = this.grid.gridAPI.get_row_by_index(dummyRowIndex);
+        dummyRow.triggerAddAnimation();
+        dummyRow.addAnimationEnd.pipe(first()).subscribe(() => {
+            const cell = dummyRow.cells.find(c => c.editable);
+            if (cell) {
+                this.grid.gridAPI.update_cell(this.cell);
+                this.enterEditMode(cell, event);
+                cell.activate();
+            }
+        });
+    }
 
     /**
      * Finishes the row transactions on the current row.
