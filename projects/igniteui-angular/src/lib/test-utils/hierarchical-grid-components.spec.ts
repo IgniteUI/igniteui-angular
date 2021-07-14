@@ -1,15 +1,13 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { SampleTestData } from './sample-test-data.spec';
-import { IgxColumnComponent, IgxGridTransaction } from '../grids/public_api';
+import { IgxColumnComponent } from '../grids/public_api';
 import { IgxHierarchicalGridComponent } from '../grids/hierarchical-grid/hierarchical-grid.component';
 import { IgxRowIslandComponent } from '../grids/hierarchical-grid/row-island.component';
 import { IPinningConfig } from '../grids/grid.common';
 import { ColumnPinningPosition, RowPinningPosition } from '../grids/common/enums';
 import { IgxActionStripComponent } from '../action-strip/public_api';
 import { HIERARCHICAL_SAMPLE_DATA } from 'src/app/shared/sample-data';
-import { IgxTransactionService } from '../services/public_api';
-
-const hierarchicalTransactionServiceFactory = () => new IgxTransactionService();
+import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-grid/hierarchical-grid-base.directive';
 
 @Component({
     template: `
@@ -103,10 +101,7 @@ export class IgxHierarchicalGridTestBaseComponent {
             </igx-row-island>
         </igx-row-island>
     </igx-hierarchical-grid>`,
-    providers: [{
-        provide: IgxGridTransaction,
-        useFactory: hierarchicalTransactionServiceFactory,
-    }]
+    providers: [IgxHierarchicalTransactionServiceFactory]
 })
 export class IgxHierarchicalGridWithTransactionProviderComponent {
     @ViewChild('hierarchicalGrid', { read: IgxHierarchicalGridComponent, static: true })
