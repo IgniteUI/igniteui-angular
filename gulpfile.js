@@ -50,7 +50,7 @@ module.exports.buildStyle = () => {
 
     return gulp.src(STYLES.SRC)
         .pipe(sourcemaps.init())
-        .pipe(sass(STYLES.CONFIG).on('error', err => {
+        .pipe(sass.sync(STYLES.CONFIG).on('error', err => {
             sass.logError.bind(myEventEmitter)(err);
             myEventEmitter.emit('end');
             process.exit(1);
