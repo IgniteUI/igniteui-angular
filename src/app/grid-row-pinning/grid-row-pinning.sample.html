@@ -86,7 +86,7 @@
 
     <div class="sample-column">
         <div>igxTreeGrid</div>
-        <igx-tree-grid [paging]='true' [pinning]="pinningConfig" #treegrid [allowFiltering]="true" [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
+        <igx-tree-grid [pinning]="pinningConfig" #treegrid [allowFiltering]="true" [data]="treeData" primaryKey="employeeID" foreignKey="PID" [rowSelection]="selectionMode"
         [width]="'900px'" [height]="'800px'">
         <igx-grid-toolbar [displayDensity]="treegrid.displayDensity">
             <app-grid-search-box [grid]="treegrid" [style.width]="'450px'"></app-grid-search-box>
@@ -111,6 +111,8 @@
             [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
             [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
         </igx-column>
+        <igx-paginator>
+        </igx-paginator>
     </igx-tree-grid>
     </div>
 </div>
