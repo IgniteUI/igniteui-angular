@@ -798,7 +798,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = this.dataView[index];
 
         if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
+            row = new IgxSummaryRow(this, index, rec.summaries, 'tGrid');
         }
 
         if (!row && rec) {
