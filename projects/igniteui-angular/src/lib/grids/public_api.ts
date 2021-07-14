@@ -7,6 +7,7 @@ export * from './grid.common';
 export * from './grid-public-row';
 export * from './grid-public-cell';
 export * from './common/row.interface';
+export * from './common/cell.interface';
 export * from './summaries/grid-summary';
 export * from './grid-common.module';
 export * from './column-actions/column-actions.module';

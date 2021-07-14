@@ -1,12 +1,9 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
-    IgxTransactionService,
-    IgxGridTransaction,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
-		IgxGridCellComponent,
-		IgxGridExpandableCellComponent
+		CellType
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -43,7 +40,7 @@ export class GridCellAPISampleComponent implements OnInit {
     public tHKey = '';
     public hKey = '';
 
-		public selectedCell: IgxGridCellComponent;
+		public selectedCell: CellType;
 
     constructor(private renderer: Renderer2) { }
 
@@ -186,23 +183,6 @@ export class GridCellAPISampleComponent implements OnInit {
 			cell.setEditMode(!cell.editMode);
 			this.logState(grid, indices, logger);
 		}
-
-		public highlightText(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
-			logger: HTMLElement) {
-			const indxs = this.getIndices(indices);
-			const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-			cell.highlightText(cell.value);
-			this.logState(grid, indices, logger);
-		}
-
-		public clearHighlight(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
-			logger: HTMLElement) {
-			const indxs = this.getIndices(indices);
-			const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-			cell.clearHighlight();
-			this.logState(grid, indices, logger);
-		}
-
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
@@ -245,7 +225,6 @@ export class GridCellAPISampleComponent implements OnInit {
 
 				if (cell) {
 					state = `
-						isExpandableCell: ${cell instanceof IgxGridExpandableCellComponent},
 						value: ${cell.value},
 						selected: ${cell.selected},
 						editable: ${cell.editable},
@@ -261,7 +240,7 @@ export class GridCellAPISampleComponent implements OnInit {
 						rowKey: ${cell.row.key},
 						rowData: ${cell.rowData},
 						-----------------------------,
-						gridId: ${cell.gridID},
+						gridId: ${cell.grid.id},
 						cellID: ${cell.cellID},
 						width: ${cell.width}`;
 
