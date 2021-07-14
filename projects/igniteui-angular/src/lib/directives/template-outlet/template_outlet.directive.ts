@@ -33,7 +33,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
      * The embedded views cache. Collection is key-value paired.
      * Key is the template id, value is the embedded view for the related template.
      */
-    private _embeddedViewsMap: Map<string, Map<object, EmbeddedViewRef<any>>> = new Map();
+    private _embeddedViewsMap: Map<string, Map<any, EmbeddedViewRef<any>>> = new Map();
 
     constructor(public _viewContainerRef: ViewContainerRef, private _zone: NgZone, public cdr: ChangeDetectorRef) {
     }
