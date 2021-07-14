@@ -824,19 +824,13 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     moveView: view,
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
-                    templateID: {
-                        type: 'detailRow',
-                        rowID,
-                    }
+                    templateID:'detailRow-' + rowID
                 };
             } else {
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData.detailsData,
-                    templateID: {
-                        type: 'detailRow',
-                        rowID,
-                    },
+                    templateID:'detailRow-' + rowID,
                     index: this.dataView.indexOf(rowData)
                 };
             }
@@ -844,10 +838,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return {
             $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
-            templateID: {
-                type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-                rowID: null
-            },
+            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
             disabled: this.isGhostRecord(rowData),
             addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
         };
@@ -857,7 +848,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewCreatedHandler(args) {
-        if (args.context.templateID.type === 'detailRow') {
+        if (args.context.templateID.indexOf('detailRow') !== -1) {
             this.childDetailTemplates.set(args.context.$implicit, args);
         }
     }
@@ -866,7 +857,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewMovedHandler(args) {
-        if (args.context.templateID.type === 'detailRow') {
+        if (args.context.templateID.indexOf('detailRow') !== -1) {
             // view was moved, update owner in cache
             const key = args.context.$implicit;
             const cachedData = this.childDetailTemplates.get(key);
