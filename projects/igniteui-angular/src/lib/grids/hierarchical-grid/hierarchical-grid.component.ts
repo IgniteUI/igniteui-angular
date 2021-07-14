@@ -536,14 +536,20 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData,
-                    templateID: 'childRow-' + rowData.rowID,
+                    templateID: {
+                        type: 'childRow',
+                        rowID: rowData.rowID
+                    },
                     index: this.dataView.indexOf(rowData)
                 };
             }
         } else {
             return {
                 $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
-                templateID: 'dataRow-' + rowData.rowID,
+                templateID: {
+                    type: 'dataRow',
+                    rowID: null
+                },
                 index: this.getDataViewIndex(rowIndex, pinned),
                 disabled: this.isGhostRecord(rowData),
                 addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false

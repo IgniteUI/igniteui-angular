@@ -931,7 +931,6 @@ describe('IgxGrid Master Detail #grid', () => {
                 expect(detailViews[0].context.index).toBe(1);
                 expect(detailViews[0].context.templateID.type).toBe('detailRow');
                 expect(detailViews[0].context.templateID.rowID).toBe('ANATR');
-
             });
 
             it('Should be able to expand detail view of newly added row.', async () => {
