@@ -196,7 +196,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     protected onItemChanges() {
         this.setAttributes();
 
-        if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
+        if (this.selectedIndex < this.items.length) {
 
             // Check if there is selected tab
             let selectedIndex = -1;
