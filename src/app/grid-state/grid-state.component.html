@@ -121,7 +121,7 @@
                 <ng-container *ngTemplateOutlet="controls; context: getContext(treeGrid)"></ng-container>
                 <igx-tree-grid [id]="treeGridId" igxGridState #treeGrid [data]="treeGridFlatData"
                     primaryKey="employeeID" foreignKey="PID" [allowFiltering]="true" displayDensity="cosy"
-                    rowSelection="multiple" [paging]="false" [width]="'900px'" [height]="'800px'">
+                    rowSelection="multiple" [width]="'900px'" [height]="'800px'">
                     <igx-grid-toolbar [displayDensity]="treeGrid.displayDensity">
                         <igx-grid-toolbar-actions>
                             <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
