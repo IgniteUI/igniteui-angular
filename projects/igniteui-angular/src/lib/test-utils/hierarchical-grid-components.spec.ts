@@ -374,14 +374,14 @@ export class IgxHierarchicalGridExportComponent {
         </igx-column-group>
 
         <igx-row-island [key]="'ChildCompanies'" [autoGenerate]="false">
-            <!-- <igx-column-group [movable]="true" [pinned]="false" header="General Information"> -->
+            <igx-column-group [movable]="true" [pinned]="false" header="General Information">
                 <igx-column field="CompanyName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
                 <igx-column-group [movable]="true" header="Personal Details">
                     <igx-column field="ContactName" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
                     <igx-column field="ContactTitle" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
-            <!-- </igx-column-group> -->
-            <!-- <igx-column-group header="Address Information"> -->
+            </igx-column-group>
+            <igx-column-group header="Address Information">
                 <igx-column-group header="Location">
                     <igx-column field="Address" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
                     <igx-column field="City" [movable]="true" [sortable]="true" [resizable]="true"></igx-column>
@@ -392,7 +392,7 @@ export class IgxHierarchicalGridExportComponent {
                     <igx-column field="Phone" [sortable]="true" [resizable]="true"></igx-column>
                     <igx-column field="Fax" [sortable]="true" [resizable]="true"></igx-column>
                 </igx-column-group>
-            <!-- </igx-column-group> -->
+            </igx-column-group>
         </igx-row-island>
     </igx-hierarchical-grid>
     `
