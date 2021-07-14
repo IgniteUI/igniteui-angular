@@ -311,10 +311,10 @@ const appRoutes = [
         path: 'gridRowAPI',
         component: GridRowAPISampleComponent
     },
-		{
-			path: 'gridCellAPI',
-			component: GridCellAPISampleComponent
-		},
+    {
+        path: 'gridCellAPI',
+        component: GridCellAPISampleComponent
+    },
     {
         path: 'gridColumnResizing',
         component: GridColumnResizingSampleComponent

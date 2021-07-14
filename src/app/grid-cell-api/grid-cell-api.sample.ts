@@ -3,7 +3,7 @@ import {
     IgxGridComponent,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
-		CellType
+    CellType
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
@@ -40,7 +40,7 @@ export class GridCellAPISampleComponent implements OnInit {
     public tHKey = '';
     public hKey = '';
 
-		public selectedCell: CellType;
+    public selectedCell: CellType;
 
     constructor(private renderer: Renderer2) { }
 
@@ -161,28 +161,28 @@ export class GridCellAPISampleComponent implements OnInit {
     }
 
     public updateCell(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
-			logger: HTMLElement) {
-				const indxs = this.getIndices(indices);
+        logger: HTMLElement) {
+        const indxs = this.getIndices(indices);
         const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-				cell.update('New Value');
-				this.logState(grid, indices, logger);
+        cell.update('New Value');
+        this.logState(grid, indices, logger);
     }
 
     public select(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
-				const indxs = this.getIndices(indices);
-				const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-				cell.selected = !cell.selected;
-				this.selectedCell = cell;
-				this.logState(grid, indices, logger);
+        const indxs = this.getIndices(indices);
+        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        cell.selected = !cell.selected;
+        this.selectedCell = cell;
+        this.logState(grid, indices, logger);
     }
 
-		public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
-			logger: HTMLElement) {
-			const indxs = this.getIndices(indices);
-			const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-			cell.setEditMode(!cell.editMode);
-			this.logState(grid, indices, logger);
-		}
+    public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+        logger: HTMLElement) {
+        const indxs = this.getIndices(indices);
+        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        cell.setEditMode(!cell.editMode);
+        this.logState(grid, indices, logger);
+    }
 
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
@@ -219,13 +219,13 @@ export class GridCellAPISampleComponent implements OnInit {
 
     public logState(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, logger: HTMLElement) {
         this.clearLog(logger);
-				const indxs = this.getIndices(indices);
+        const indxs = this.getIndices(indices);
         const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-				let state: string;
-				let states: string[];
+        let state: string;
+        let states: string[];
 
-				if (cell) {
-					state = `
+        if (cell) {
+            state = `
 						value: ${cell.value},
 						selected: ${cell.selected},
 						editable: ${cell.editable},
@@ -245,10 +245,10 @@ export class GridCellAPISampleComponent implements OnInit {
 						cellID: ${cell.cellID},
 						width: ${cell.width}`;
 
-						states = state.split(',');
-				} else {
-						states = [`Cell is: ${cell}`];
-				}
+            states = state.split(',');
+        } else {
+            states = [`Cell is: ${cell}`];
+        }
 
         const createElem = this.renderer.createElement('p');
 
@@ -260,14 +260,14 @@ export class GridCellAPISampleComponent implements OnInit {
 
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
-		private getIndices(indices: string): number[] {
-			if (indices.length === 1) {
-				indices = `0${indices}`;
-			}
-			let nums: number[] = indices.split('').map(n => parseInt(n, 10));
-			if (nums.length === 0) {
-				nums = [0, 0];
-			}
-			return nums;
-		}
+    private getIndices(indices: string): number[] {
+        if (indices.length === 1) {
+            indices = `0${indices}`;
+        }
+        let nums: number[] = indices.split('').map(n => parseInt(n, 10));
+        if (nums.length === 0) {
+            nums = [0, 0];
+        }
+        return nums;
+    }
 }

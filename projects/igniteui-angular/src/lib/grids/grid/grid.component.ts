@@ -160,7 +160,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-     @ViewChild(IgxGridGroupByAreaComponent)
+    @ViewChild(IgxGridGroupByAreaComponent)
     public groupArea: IgxGridGroupByAreaComponent;
 
     /**
@@ -1028,59 +1028,59 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return new IgxGridRow(this, index, rec);
     }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @example
-		 * ```typescript
-		 * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
-		 * ```
-		 * @param rowIndex
-		 * @param columnField
-		 */
-		public getCellByColumn(rowIndex: number, columnField: string): CellType {
-				const column = this.columnList.find((col) => col.field === columnField);
-				if (column) {
-						return new IgxGridCell(this, rowIndex, columnField);
-				}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param columnField
+     */
+    public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (column) {
+            return new IgxGridCell(this, rowIndex, columnField);
+        }
+    }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @example
-		 * ```typescript
-		 * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-		 * ```
-		 * @param rowIndex
-		 * @param index
-		 */
-		public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-				const column = this.columnList.find((col) => col.visibleIndex === index);
-				if (column) {
-					return new IgxGridCell(this, rowIndex, column.field);
-				}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
+    }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @remarks
-		 * Requires that the primaryKey property is set.
-		 * @example
-		 * ```typescript
-		 * grid.getCellByKey(1, 'index');
-		 * ```
-		 * @param rowSelector match any rowID
-		 * @param columnField
-		 */
-		public getCellByKey(rowSelector: any, columnField: string): CellType {
-			const row = this.getRowByKey(rowSelector);
-			const column = this.columnList.find((col) => col.field === columnField);
-			if (row && column) {
-					return new IgxGridCell(this, row.index, columnField);
-			}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @remarks
+     * Requires that the primaryKey property is set.
+     * @example
+     * ```typescript
+     * grid.getCellByKey(1, 'index');
+     * ```
+     * @param rowSelector match any rowID
+     * @param columnField
+     */
+    public getCellByKey(rowSelector: any, columnField: string): CellType {
+        const row = this.getRowByKey(rowSelector);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && column) {
+            return new IgxGridCell(this, row.index, columnField);
+        }
+    }
 
     public pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
@@ -1092,27 +1092,27 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return super.unpinRow(rowID, row);
     }
 
-		/**
-		 * @hidden @internal
-		 */
-		public createRow(index: number): RowType {
-				let row: RowType;
+    /**
+     * @hidden @internal
+     */
+    public createRow(index: number): RowType {
+        let row: RowType;
 
-				const rec: any = this.dataView[index];
+        const rec: any = this.dataView[index];
 
-				if (this.isGroupByRecord(rec)) {
-						row = new IgxGroupByRow(this, index, rec);
-				}
-				if (this.isSummaryRecord(rec)) {
-						row = new IgxSummaryRow(this, index, rec.summaries);
-				}
-				// if found record is a no a groupby or summary row, return IgxGridRow instance
-				if (!row && rec) {
-						row = new IgxGridRow(this, index, rec);
-				}
+        if (this.isGroupByRecord(rec)) {
+            row = new IgxGroupByRow(this, index, rec);
+        }
+        if (this.isSummaryRecord(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
 
-				return row;
-		}
+        return row;
+    }
 
     /**
      * @hidden @internal

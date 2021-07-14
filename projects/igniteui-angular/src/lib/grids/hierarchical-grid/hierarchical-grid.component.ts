@@ -419,15 +419,15 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return this.createRow(index);
     }
 
-		/**
-		 * Returns the `RowType` by key.
-		 *
-		 * @example
-		 * ```typescript
-		 * const myRow = this.grid1.getRowByKey(1);
-		 * ```
-		 * @param key
-		 */
+    /**
+     * Returns the `RowType` by key.
+     *
+     * @example
+     * ```typescript
+     * const myRow = this.grid1.getRowByKey(1);
+     * ```
+     * @param key
+     */
     public getRowByKey(key: any): RowType {
         const data = this.dataView;
         const rec = this.primaryKey ?
@@ -441,59 +441,59 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         return new IgxHierarchicalGridRow(this, index, rec);
     }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @example
-		 * ```typescript
-		 * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
-		 * ```
-		 * @param rowIndex
-		 * @param columnField
-		 */
-		public getCellByColumn(rowIndex: number, columnField: string): CellType {
-				const column = this.columnList.find((col) => col.field === columnField);
-				if (column) {
-						return new IgxGridCell(this, rowIndex, columnField);
-				}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param columnField
+     */
+    public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (column) {
+            return new IgxGridCell(this, rowIndex, columnField);
+        }
+    }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @example
-		 * ```typescript
-		 * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-		 * ```
-		 * @param rowIndex
-		 * @param index
-		 */
-		public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-				const column = this.columnList.find((col) => col.visibleIndex === index);
-				if (column) {
-					return new IgxGridCell(this, rowIndex, column.field);
-				}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
+    }
 
-		/**
-		 * Returns a `CellType` object that matches the conditions.
-		 *
-		 * @remarks
-		 * Requires that the primaryKey property is set.
-		 * @example
-		 * ```typescript
-		 * grid.getCellByKey(1, 'index');
-		 * ```
-		 * @param rowSelector match any rowID
-		 * @param columnField
-		 */
-		public getCellByKey(rowSelector: any, columnField: string): CellType {
-			const row = this.getRowByKey(rowSelector);
-			const column = this.columnList.find((col) => col.field === columnField);
-			if (row && column) {
-					return new IgxGridCell(this, row.index, columnField);
-			}
-		}
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @remarks
+     * Requires that the primaryKey property is set.
+     * @example
+     * ```typescript
+     * grid.getCellByKey(1, 'index');
+     * ```
+     * @param rowSelector match any rowID
+     * @param columnField
+     */
+    public getCellByKey(rowSelector: any, columnField: string): CellType {
+        const row = this.getRowByKey(rowSelector);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && column) {
+            return new IgxGridCell(this, row.index, columnField);
+        }
+    }
 
     public pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
@@ -768,19 +768,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         this.hideOverlays();
     }
 
-		/**
-		 * @hidden
-		 */
-		public createRow(index: number): RowType {
-				let row: RowType;
-				const rec: any = this.dataView[index];
+    /**
+     * @hidden
+     */
+    public createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
 
-				if (!row && rec) {
-						row = new IgxHierarchicalGridRow(this, index, rec);
-				}
+        if (!row && rec) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
 
-				return row;
-		}
+        return row;
+    }
 
     protected getChildGrids(inDeph?: boolean) {
         return this.hgridAPI.getChildGrids(inDeph);
