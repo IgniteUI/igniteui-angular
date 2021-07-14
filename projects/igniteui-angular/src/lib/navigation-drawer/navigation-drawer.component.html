@@ -19,7 +19,7 @@
     [class.igx-nav-drawer__aside--mini]="miniTemplate && !isOpen"
     [class.igx-nav-drawer__aside--normal]="!miniTemplate || isOpen"
     [class.igx-nav-drawer__aside--pinned]="pin"
-    [class.igx-nav-drawer__aside--right]="position == 'right'" #aside
+    [class.igx-nav-drawer__aside--right]="position === 'right'" #aside
     [class.igx-nav-drawer--disable-animation]="disableAnimation">
 
     <ng-container *ngTemplateOutlet="template || defaultItemsTemplate"></ng-container>

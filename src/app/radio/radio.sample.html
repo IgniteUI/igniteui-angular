@@ -3,8 +3,8 @@
         <igx-radio-group #group="igxRadioGroup" [(ngModel)]="initial">
             <div igxLayout>
                 <igx-card class="promotion" layout="justify" *ngFor="let opt of options"
-                    [type]="group.value != opt ? 'outlined' : 'default'"
-                    [class.promotion-selected]="group.value == opt">
+                    [type]="group.value !== opt ? 'outlined' : 'default'"
+                    [class.promotion-selected]="group.value === opt">
                     <igx-card-header>
                         <h6 igxCardHeaderTitle>Reserve your dream vacation at {{ opt }}</h6>
                     </igx-card-header>
@@ -17,7 +17,7 @@
                         </p>
                     </igx-card-content>
                     <igx-card-actions layout="justify-center">
-                        <button igxRipple igxButton="outlined" [disabled]="group.value != opt">
+                        <button igxRipple igxButton="outlined" [disabled]="group.value !== opt">
                             Reserve item
                             {{ opt }}
                         </button>
