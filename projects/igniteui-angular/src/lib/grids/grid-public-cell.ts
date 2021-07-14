@@ -111,9 +111,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get editable(): boolean {
-		return this.column.editable;
-		// TODO cell
-		// return this.column.editable && !this.intRow.disabled;
+		return this.column.editable && !this.row.disabled;
 	}
 
 	/**
@@ -139,7 +137,8 @@ export class IgxGridCell implements CellType {
 	 * Returns the row that contains the cell.
 	 */
 	public get value(): any {
-		return this.rowData[this.columnField];
+		// TODO cell when MRL, will return undefined.
+		return this.columnField ? this.rowData[this.columnField] : undefined;
 	}
 
 	/**
@@ -162,9 +161,11 @@ export class IgxGridCell implements CellType {
 	 * Returns if the row is currently in edit mode.
 	 */
 	public get editMode(): boolean {
-		// TODO cell
 		if (this.grid.crudService.cellInEditMode) {
-			const isCurrentCell = this.grid.crudService.cell.id === this.cellID;
+		  const cellInEditMode = this.grid.crudService.cell.id;
+			const isCurrentCell = cellInEditMode.rowID === this.cellID.rowID &&
+				cellInEditMode.rowIndex === this.cellID.rowIndex &&
+				cellInEditMode.columnID === this.cellID.columnID;
 			return isCurrentCell;
 		} else {
 			return false;
@@ -219,8 +220,6 @@ export class IgxGridCell implements CellType {
 		}
 		cell.editValue = val;
 		this.grid.crudService.endCellEdit();
-		// TODO cell
-		// this.cdr.markForCheck();
 	}
 
 	/**
