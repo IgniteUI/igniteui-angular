@@ -156,7 +156,7 @@ import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 
 let FAKE_ROW_ID = -1;
-
+const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
@@ -1477,7 +1477,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @DeprecateProperty('`perPage` is deprecated. Use `perPage` property from `paginator` component instead.')
     @Input()
     public get perPage(): number {
-        return this.paginator?.perPage || 15;
+        return this.paginator?.perPage || DEFAULT_ITEMS_PER_PAGE;
     }
 
     public set perPage(val: number) {
@@ -2739,7 +2739,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _perPage = 15;
+    protected _perPage = DEFAULT_ITEMS_PER_PAGE;
     /**
      * @hidden
      */
@@ -3627,7 +3627,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         // Keep the stream open for future subscribers
         this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
             if (this.paginator) {
-                this.paginator.perPage = this._perPage !== 15 ? this._perPage : this.paginator.perPage;
+                this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
                 this.paginator.totalRecords = this.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
