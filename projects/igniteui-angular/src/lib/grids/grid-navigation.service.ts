@@ -506,9 +506,9 @@ export class IgxGridNavigationService {
             }
 
             if (event.shiftKey && row.treeRow !== undefined) {
-                this.grid.beginAddRowByIndex(row.rowID, row.index, true, event);
+                this.grid.crudService.enterAddRowMode(row, true, event);
             } else if (!event.shiftKey) {
-                this.grid.beginAddRowByIndex(row.rowID, row.index, false, event);
+                this.grid.crudService.enterAddRowMode(row, false, event);
             }
         } else if (!row.expanded && ROW_EXPAND_KEYS.has(key)) {
             if (row.rowID === undefined) {

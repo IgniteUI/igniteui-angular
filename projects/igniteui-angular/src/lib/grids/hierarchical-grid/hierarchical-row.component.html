@@ -12,7 +12,7 @@
 </ng-template>
 
 <ng-template #addTemp>
-    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='animateAdd' (animationend)='animationEndHandler()'>
+    <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='triggerAddAnimationClass' (animationend)='animationEndHandler()'>
         <ng-container *ngTemplateOutlet='defaultTemp'></ng-container>
     </div>
 </ng-template>
