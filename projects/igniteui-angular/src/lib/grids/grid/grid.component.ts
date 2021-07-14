@@ -826,7 +826,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     index: this.dataView.indexOf(rowData),
                     templateID: {
                         type:'detailRow',
-                        rowID: rowID
+                        rowID
                     }
                 };
             } else {
@@ -835,7 +835,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     $implicit: rowData.detailsData,
                     templateID: {
                         type:'detailRow',
-                        rowID: rowID
+                        rowID
                     },
                     index: this.dataView.indexOf(rowData)
                 };
