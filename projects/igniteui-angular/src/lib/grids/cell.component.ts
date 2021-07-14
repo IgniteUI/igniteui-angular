@@ -257,7 +257,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the visible `index` of the in which the cell is stored.
+     * Returns the column visible index.
      * ```typescript
      * let visibleColumnIndex = this.cell.visibleColumnIndex;
      * ```
@@ -802,7 +802,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        const args = this.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }

@@ -4063,44 +4063,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Returns the `IgxGridCellComponent` that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param columnField
-     */
-    public getCellByColumn(rowIndex: number, columnField: string): IgxGridCellComponent {
-        const columnId = this.columnList.map((column) => column.field).indexOf(columnField);
-        if (columnId !== -1) {
-            return this.gridAPI.get_cell_by_index(rowIndex, columnId);
-        }
-    }
-
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_visible_index(rowIndex, index);
-
-    }
-
-    /**
-     * Returns an `IgxGridCellComponent` object by the specified primary key and column field.
-     *
-     * @remarks
-     * Requires that the primaryKey property is set.
-     * @example
-     * ```typescript
-     * grid.getCellByKey(1, 'index');
-     * ```
-     * @param rowSelector match any rowID
-     * @param columnField
-     */
-    public getCellByKey(rowSelector: any, columnField: string): IgxGridCellComponent {
-        return this.gridAPI.get_cell_by_key(rowSelector, columnField);
-    }
-
-    /**
      * Gets the total number of pages.
      *
      * @example

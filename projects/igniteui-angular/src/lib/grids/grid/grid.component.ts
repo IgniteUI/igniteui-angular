@@ -30,6 +30,8 @@ import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
+import { IgxGridCell } from '../grid-public-cell';
+import { CellType } from '../common/cell.interface';
 
 let NEXT_ID = 0;
 
@@ -1026,6 +1028,60 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return new IgxGridRow(this, index, rec);
     }
 
+		/**
+		 * Returns a `CellType` object that matches the conditions.
+		 *
+		 * @example
+		 * ```typescript
+		 * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+		 * ```
+		 * @param rowIndex
+		 * @param columnField
+		 */
+		public getCellByColumn(rowIndex: number, columnField: string): CellType {
+				const column = this.columnList.find((col) => col.field === columnField);
+				if (column) {
+						return new IgxGridCell(this, rowIndex, columnField);
+				}
+		}
+
+		/**
+		 * Returns a `CellType` object that matches the conditions.
+		 *
+		 * @example
+		 * ```typescript
+		 * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
+		 * ```
+		 * @param rowIndex
+		 * @param index
+		 */
+		public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+				const column = this.columnList.find((col) => col.visibleIndex === index);
+				if (column) {
+					return new IgxGridCell(this, rowIndex, column.field);
+				}
+		}
+
+		/**
+		 * Returns a `CellType` object that matches the conditions.
+		 *
+		 * @remarks
+		 * Requires that the primaryKey property is set.
+		 * @example
+		 * ```typescript
+		 * grid.getCellByKey(1, 'index');
+		 * ```
+		 * @param rowSelector match any rowID
+		 * @param columnField
+		 */
+		public getCellByKey(rowSelector: any, columnField: string): CellType {
+			const row = this.getRowByKey(rowSelector);
+			const column = this.columnList.find((col) => col.field === columnField);
+			if (row && column) {
+					return new IgxGridCell(this, row.index, columnField);
+			}
+		}
+
     public pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
@@ -1035,6 +1091,28 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByKey(rowID);
         return super.unpinRow(rowID, row);
     }
+
+		/**
+		 * @hidden @internal
+		 */
+		public createRow(index: number): RowType {
+				let row: RowType;
+
+				const rec: any = this.dataView[index];
+
+				if (this.isGroupByRecord(rec)) {
+						row = new IgxGroupByRow(this, index, rec);
+				}
+				if (this.isSummaryRecord(rec)) {
+						row = new IgxSummaryRow(this, index, rec.summaries);
+				}
+				// if found record is a no a groupby or summary row, return IgxGridRow instance
+				if (!row && rec) {
+						row = new IgxGridRow(this, index, rec);
+				}
+
+				return row;
+		}
 
     /**
      * @hidden @internal
@@ -1094,28 +1172,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected _applyGrouping() {
         this._gridAPI.sort_multiple(this._groupingExpressions);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected createRow(index: number): RowType {
-        let row: RowType;
-
-        const rec: any = this.dataView[index];
-
-        if (this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow(this, index, rec);
-        }
-        if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
-        }
-        // if found record is a no a groupby or summary row, return IgxGridRow instance
-        if (!row && rec) {
-            row = new IgxGridRow(this, index, rec);
-        }
-
-        return row;
     }
 
     private _setupNavigationService() {
