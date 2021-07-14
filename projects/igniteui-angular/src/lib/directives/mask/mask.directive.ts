@@ -129,6 +129,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         return this._end;
     }
 
+    protected _composing: boolean;
+    protected _compositionStartIndex: number;
+    private _compositionValue: string;
     private _end = 0;
     private _start = 0;
     private _key: string;
@@ -173,8 +176,28 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     }
 
     /** @hidden @internal */
-    @HostListener('input', ['$event.isComposing'])
-    public onInputChanged(isComposing: boolean): void {
+    @HostListener('compositionstart')
+    public onCompositionStart(): void {
+        if (!this._composing) {
+            this._compositionStartIndex = this._start;
+            this._composing = true;
+        }
+    }
+
+    /** @hidden @internal */
+    @HostListener('compositionend')
+    public onCompositionEnd(): void {
+        this._start = this._compositionStartIndex;
+        const end = this.selectionEnd;
+        const valueToParse = this.inputValue.substring(this._start, end);
+        this.updateInput(valueToParse);
+        this._end = this.selectionEnd;
+        this._compositionValue = this.inputValue;
+    }
+
+    /** @hidden @internal */
+    @HostListener('input', ['$event'])
+    public onInputChanged(event): void {
         /**
          * '!this._focused' is a fix for #8165
          * On page load IE triggers input events before focus events and
@@ -183,6 +206,39 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
          * the end user will be unable to blur the input.
          * https://stackoverflow.com/questions/21406138/input-event-triggered-on-internet-explorer-when-placeholder-changed
          */
+
+        if (this._composing) {
+            if (this.inputValue.length < this._oldText.length) {
+                // software keyboard input delete
+                this._key = this.platform.KEYMAP.BACKSPACE;
+            }
+            return;
+        }
+
+        // After the compositionend event Chromium triggers input events of type 'deleteContentBackward' and
+        // we need to adjust the start and end indexes to include mask literals
+        if (event.inputType === 'deleteContentBackward' && this._key !== this.platform.KEYMAP.BACKSPACE) {
+                const isInputComplete = this._compositionStartIndex === 0 && this._end === this.mask.length;
+                let numberOfMaskLiterals = 0;
+                const literalPos = this.maskParser.getMaskLiterals(this.maskOptions.format).keys();
+                for (const index of literalPos) {
+                    if (index >= this._compositionStartIndex && index <= this._end) {
+                        numberOfMaskLiterals++;
+                    }
+                }
+                this.inputValue = isInputComplete?
+                this.inputValue.substring(0, this.selectionEnd - numberOfMaskLiterals) + this.inputValue.substring(this.selectionEnd)
+                : this._compositionValue.substring(0, this._compositionStartIndex);
+
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+                this.nativeElement.selectionStart = isInputComplete ? this._start - numberOfMaskLiterals : this._compositionStartIndex;
+                this.nativeElement.selectionEnd = this._end - numberOfMaskLiterals;
+                this.nativeElement.selectionEnd = this._end;
+                this._start = this.selectionStart;
+                this._end = this.selectionEnd;
+        }
+
         if (this.platform.isIE && (this._stopPropagation || !this._focused)) {
             this._stopPropagation = false;
             return;
@@ -190,10 +246,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         if (this._hasDropAction) {
             this._start = this.selectionStart;
-        }
-        if (this.inputValue.length < this._oldText.length && isComposing) {
-            // software keyboard input delete
-            this._key = this.platform.KEYMAP.BACKSPACE;
         }
 
         let valueToParse = '';
@@ -209,20 +261,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
                 break;
         }
 
-        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
-        this.inputValue = replacedData.value;
-        if (this._key === this.platform.KEYMAP.BACKSPACE) {
-            replacedData.end = this._start;
-        }
-        this.setSelectionRange(replacedData.end);
-
-        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
-        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
-        this._onChangeCallback(this._dataValue);
-
-        this.valueChanged.emit({ rawValue: rawVal, formattedValue: this.inputValue });
-
-        this.afterInput();
+        this.updateInput(valueToParse);
     }
 
     /** @hidden */
@@ -284,6 +323,9 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * @hidden
      */
     public ngAfterViewChecked(): void {
+        if (this._composing) {
+            return;
+        }
         this._oldText = this.inputValue;
     }
 
@@ -340,6 +382,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._start = 0;
         this._end = 0;
         this._key = null;
+        this._composing = false;
     }
 
     /** @hidden */
@@ -358,7 +401,24 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         }
     }
 
-    private showDisplayValue(value: string): void {
+    private updateInput(valueToParse: string) {
+        const replacedData = this.maskParser.replaceInMask(this._oldText, valueToParse, this.maskOptions, this._start, this._end);
+        this.inputValue = replacedData.value;
+        if (this._key === this.platform.KEYMAP.BACKSPACE) {
+            replacedData.end = this._start;
+        };
+
+        this.setSelectionRange(replacedData.end);
+
+        const rawVal = this.maskParser.parseValueFromMask(this.inputValue, this.maskOptions);
+        this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
+        this._onChangeCallback(this._dataValue);
+
+        this.valueChanged.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.afterInput();
+    }
+
+    private showDisplayValue(value: string) {
         if (this.displayValuePipe) {
             this.inputValue = this.displayValuePipe.transform(value);
         } else if (value === this.maskParser.applyMask(null, this.maskOptions)) {
