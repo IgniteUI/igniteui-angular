@@ -195,7 +195,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     /**
      * Gets the pinned indicator template.
      * ```typescript
-     * let template = this.cell.template;
+     * let template = this.cell.pinnedIndicatorTemplate;
      * ```
      *
      * @memberof IgxGridCellComponent

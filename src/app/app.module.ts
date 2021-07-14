@@ -227,7 +227,7 @@ const components = [
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
     GridRowAPISampleComponent,
-		GridCellAPISampleComponent,
+    GridCellAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,

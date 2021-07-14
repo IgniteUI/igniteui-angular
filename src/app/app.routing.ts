@@ -314,7 +314,7 @@ const appRoutes = [
 		{
 			path: 'gridCellAPI',
 			component: GridCellAPISampleComponent
-	  },
+		},
     {
         path: 'gridColumnResizing',
         component: GridColumnResizingSampleComponent
