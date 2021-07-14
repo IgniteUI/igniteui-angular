@@ -46,6 +46,7 @@ import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { GridType } from '../common/grid.interface';
 import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolbar/common';
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
+import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
 
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
@@ -93,6 +94,9 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
 
     @ContentChild(IgxGridToolbarDirective, { read: TemplateRef })
     public islandToolbarTemplate: TemplateRef<IgxGridToolbarTemplateContext>;
+
+    @ContentChild(IgxPaginatorDirective, { read: TemplateRef })
+    public islandPaginatorTemplate: TemplateRef<any>;
 
     @ContentChildren(IgxActionStripComponent, { read: IgxActionStripComponent, descendants: false })
     public actionStrips: QueryList<IgxActionStripComponent>;
@@ -327,6 +331,11 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
         this.gridCreated.pipe(pluck('grid'), takeUntil(this.destroy$)).subscribe(grid => {
             grid.rendered$.pipe(first(), filter(() => !!this.islandToolbarTemplate))
                 .subscribe(() => grid.toolbarOutlet.createEmbeddedView(this.islandToolbarTemplate, { $implicit: grid }));
+            grid.rendered$.pipe(first(), filter(() => !!this.islandPaginatorTemplate))
+                .subscribe(() => {
+                    this.rootGrid.paginatorList.changes.pipe(takeUntil(this.destroy$)).subscribe(() => grid.setUpPaginator());
+                    grid.paginatorOutlet.createEmbeddedView(this.islandPaginatorTemplate);
+                });
         });
     }
 

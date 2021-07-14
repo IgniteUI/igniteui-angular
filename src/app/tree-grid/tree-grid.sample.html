@@ -3,10 +3,9 @@
         <igx-buttongroup [values]="displayDensities" (selected)="selectDensity($event)"></igx-buttongroup>
     </div>
 
-    <igx-tree-grid #grid1 [batchEditing]="true" selectionType='multi' [data]="data" childDataKey="ChildCompanies" primaryKey="ID"
-        [rowEditable]="true"
-        [expansionDepth]="1"
-        [rowSelection]="selectionMode" [paging]="false" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
+    <igx-tree-grid #grid1 selectionType='multi' [batchEditing]="true" [data]="data"
+        childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1"
+        [rowSelection]="selectionMode" [displayDensity]="density" [width]="'900px'" [height]="'500px'"
         [allowFiltering]="true" [filterMode]="'excelStyleFilter'">
         <igx-grid-toolbar [displayDensity]="grid1.displayDensity">
             <app-grid-search-box [grid]="grid1" [style.width]="'300px'"></app-grid-search-box>

@@ -78,6 +78,7 @@ export class IgxHierarchicalGridTestBaseComponent {
                 <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
                 <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
+        <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
@@ -115,6 +116,7 @@ export class IgxHierarchicalGridWithTransactionProviderComponent {
 
     public data;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
+    public paging = false;
 
     constructor() {
         // 3 level hierarchy
@@ -227,14 +229,16 @@ export class IgxHierarchicalGridRowSelectionNoTransactionsComponent {
 
 @Component({
     template: `
-    <igx-hierarchical-grid [paging]="true" [data]="data" [cellSelection]="false" [height]="'600px'"
+    <igx-hierarchical-grid [data]="data" [cellSelection]="false" [height]="'600px'"
         [width]="'700px'" #hGridCustomSelectors [primaryKey]="'ID'"
         [rowSelection]="'multiple'">
         <igx-column field="ChildLevels"></igx-column>
         <igx-column field="ProductName"></igx-column>
-        <igx-row-island [key]="'childData'" #rowIsland1 [paging]="true" [primaryKey]="'ID'" [rowSelection]="'single'">
+        <igx-paginator></igx-paginator>
+        <igx-row-island [key]="'childData'" #rowIsland1 [primaryKey]="'ID'" [rowSelection]="'single'">
             <igx-column field="ChildLevels"></igx-column>
             <igx-column field="ProductName"></igx-column>
+            <igx-paginator *igxPaginator></igx-paginator>
             <ng-template igxHeadSelector let-headContext>
                 <igx-checkbox [readonly]="true" (click)="handleHeadSelectorClick(headContext)"
                     [checked]="headContext.selectedCount === headContext.totalCount"
