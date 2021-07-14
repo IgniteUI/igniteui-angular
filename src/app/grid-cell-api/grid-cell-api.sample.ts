@@ -30,10 +30,10 @@ export class GridCellAPISampleComponent implements OnInit {
     public treeColumns: any[];
     public treeData: any[];
 
-    public index = "00";
-    public tIndex = "00";
-    public tHIndex = "00";
-    public hIndex = "00";
+    public index = '00';
+    public tIndex = '00';
+    public tHIndex = '00';
+    public hIndex = '00';
 
     public key = '';
     public tKey = '';
@@ -47,7 +47,7 @@ export class GridCellAPISampleComponent implements OnInit {
     public ngOnInit(): void {
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
-            { field: 'CompanyName', header: "Company Name", width: '200px', groupable: true },
+            { field: 'CompanyName', header: 'Company Name', width: '200px', groupable: true },
             { field: 'ContactName', width: '200px', pinned: false, groupable: true },
             { field: 'ContactTitle', width: '300px', pinned: false, groupable: true },
             { field: 'Address', width: '250px' },
@@ -176,13 +176,14 @@ export class GridCellAPISampleComponent implements OnInit {
 				this.logState(grid, indices, logger);
     }
 
-		public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string, 
+		public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
 			logger: HTMLElement) {
 			const indxs = this.getIndices(indices);
 			const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
 			cell.setEditMode(!cell.editMode);
 			this.logState(grid, indices, logger);
 		}
+
     public generateDataUneven(count: number, level: number, parendID: string = null) {
         const prods = [];
         const currLevel = level;
@@ -263,7 +264,7 @@ export class GridCellAPISampleComponent implements OnInit {
 			if (indices.length === 1) {
 				indices = `0${indices}`;
 			}
-			let nums: number[] = indices.split("").map(n => parseInt(n, 10));
+			let nums: number[] = indices.split('').map(n => parseInt(n, 10));
 			if (nums.length === 0) {
 				nums = [0, 0];
 			}
