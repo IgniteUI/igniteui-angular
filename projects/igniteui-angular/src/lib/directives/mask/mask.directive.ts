@@ -57,21 +57,6 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
     public includeLiterals: boolean;
 
     /**
-     * Specifies a placeholder.
-     * ```html
-     * <input placeholder = "enter text...">
-     * ```
-     */
-    @DeprecateProperty('"placeholder" is deprecated, use native placeholder instead.')
-    public set placeholder(val: string) {
-        this.renderer.setAttribute(this.nativeElement, 'placeholder', val);
-    }
-
-    public get placeholder(): string {
-        return this.nativeElement.placeholder;
-    }
-
-    /**
      * Specifies a pipe to be used on blur.
      * ```html
      * <input [displayValuePipe] = "displayFormatPipe">
@@ -93,11 +78,11 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
      * Emits an event each time the value changes.
      * Provides `rawValue: string` and `formattedValue: string` as event arguments.
      * ```html
-     * <input (onValueChange) = "onValueChange(rawValue: string, formattedValue: string)">
+     * <input (valueChanged) = "valueChanged(rawValue: string, formattedValue: string)">
      * ```
      */
     @Output()
-    public onValueChange = new EventEmitter<IMaskEventArgs>();
+    public valueChanged = new EventEmitter<IMaskEventArgs>();
 
     /** @hidden */
     public get nativeElement(): HTMLInputElement {
@@ -235,7 +220,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
         this._dataValue = this.includeLiterals ? this.inputValue : rawVal;
         this._onChangeCallback(this._dataValue);
 
-        this.onValueChange.emit({ rawValue: rawVal, formattedValue: this.inputValue });
+        this.valueChanged.emit({ rawValue: rawVal, formattedValue: this.inputValue });
 
         this.afterInput();
     }
@@ -315,7 +300,7 @@ export class IgxMaskDirective implements OnInit, AfterViewChecked, ControlValueA
 
         this._dataValue = this.includeLiterals ? this.inputValue : value;
 
-        this.onValueChange.emit({ rawValue: value, formattedValue: this.inputValue });
+        this.valueChanged.emit({ rawValue: value, formattedValue: this.inputValue });
     }
 
     /** @hidden */

@@ -476,7 +476,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         mask.mask = format;
         mask.registerOnChange(mockNgControl.registerOnChangeCb);
         mask.registerOnTouched(mockNgControl.registerOnTouchedCb);
-        spyOn(mask.onValueChange, 'emit');
+        spyOn(mask.valueChanged, 'emit');
         const inputGet = spyOnProperty(mask as any, 'inputValue', 'get');
         const inputSet = spyOnProperty(mask as any, 'inputValue', 'set');
 
@@ -486,7 +486,7 @@ describe('igxMaskDirective ControlValueAccessor Unit', () => {
         expect(mockParser.applyMask).toHaveBeenCalledWith('test', jasmine.objectContaining({ format }));
         expect(inputSet).toHaveBeenCalledWith('test____');
         expect(mockNgControl.registerOnChangeCb).not.toHaveBeenCalled();
-        expect(mask.onValueChange.emit).toHaveBeenCalledWith({ rawValue: 'test', formattedValue: 'formatted' });
+        expect(mask.valueChanged.emit).toHaveBeenCalledWith({ rawValue: 'test', formattedValue: 'formatted' });
 
         // OnChange callback
         inputGet.and.returnValue('test_2___');
@@ -614,7 +614,7 @@ class AnyCharMaskComponent {
 @Component({
     template: `<igx-input-group>
                             <input #input type="text" igxInput [(ngModel)]="myValue" [igxMask]="myMask"
-                            (onValueChange)="handleValueChange($event)"/>
+                            (valueChanged)="handleValueChanged($event)"/>
                         </igx-input-group>` })
 class EventFiringComponent {
 
@@ -625,7 +625,7 @@ class EventFiringComponent {
     raw: string;
     formatted: string;
 
-    handleValueChange(event) {
+    handleValueChanged(event) {
         this.raw = event.rawValue;
         this.formatted = event.formattedValue;
     }
