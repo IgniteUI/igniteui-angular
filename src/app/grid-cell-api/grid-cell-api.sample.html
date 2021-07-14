@@ -11,13 +11,20 @@
             <button (click)="setEditMode(grid, index, gridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logState(grid, index, gridLogger)">Log state</button>
+            <button (click)="logState(grid, index, gridLogger)">Log state by Index</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByKey(grid, cellKey, columnField, gridLogger)">Log state by key</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByColumn(grid, index, columnField, gridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
             <input name="index" type="string" [(ngModel)]="index" />
             <br/>
-            <input name="key" [(ngModel)]="key" />
+            <input name="cellKey" [(ngModel)]="cellKey" />
+            <input name="columnField" [(ngModel)]="columnField" />
         </div>
     </div>
     <div class="grid-wrapper">
@@ -30,9 +37,9 @@
                     <div><span class='categoryStyle'>Address:</span> {{dataItem.Address}}</div>
                 </div>
             </ng-template>
-            <!-- <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
-            </igx-column> -->
-            <igx-column-layout [header]="'ID'">
+            <igx-column *ngFor="let c of columns" [sortable]="true" [field]="c.field" [header]="c.field" [width]="c.width" [pinned]='c.pinned' [groupable]='c.groupable' [hidden]='c.hidden' [editable]='true' [hasSummary]='true'>
+            </igx-column>
+            <!-- <igx-column-layout [header]="'ID'">
                 <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="3" field="ID" header="ID">
                     <ng-template igxCell let-value let-cell="cell">
                         {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
@@ -94,7 +101,7 @@
                         {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
                     </ng-template>
                 </igx-column>
-            </igx-column-layout>
+            </igx-column-layout> -->
             <igx-grid-toolbar [displayDensity]="grid.displayDensity">
                 <igx-grid-toolbar-actions>
                     <igx-grid-toolbar-pinning></igx-grid-toolbar-pinning>
@@ -126,13 +133,23 @@
             <button (click)="select(treeGridHier, tHIndex, tHGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logState(treeGridHier, tHIndex, tHGridLogger, tHGridLogger)">Log state</button>
+            <button (click)="setEditMode(treeGridHier, tHIndex, tHGridLogger)">Set editMode</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logState(treeGridHier, tHIndex, tHGridLogger, tHGridLogger)">Log state By Index</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByKey(treeGridHier, tHCellKey, tHcolumnField, gridLogger)">Log state by key</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByColumn(treeGridHier, tHIndex, tHcolumnField, gridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
             <input name="tHIndex" type="string" [(ngModel)]="tHIndex" />
             <br/>
-            <input name="tHKey" [(ngModel)]="tHKey" />
+            <input name="tHCellKey" [(ngModel)]="tHCellKey" />
+            <input name="tHcolumnField" [(ngModel)]="tHcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">
@@ -170,13 +187,23 @@
             <button (click)="select(treeGrid, tIndex, tGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logState(treeGrid, tIndex, tGridLogger)">Log state</button>
+            <button (click)="setEditMode(treeGrid, tIndex, tGridLogger)">Set editMode</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logState(treeGrid, tIndex, tGridLogger)">Log state By Index</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByKey(treeGrid, tCellKey, tcolumnField, tGridLogger)">Log state by key</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByColumn(treeGrid, tIndex, tcolumnField, tGridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
             <input name="tIndex" type="string" [(ngModel)]="tIndex" />
             <br/>
-            <input name="tKey" [(ngModel)]="tKey" />
+            <input name="tCellKey" [(ngModel)]="tCellKey" />
+            <input name="tcolumnField" [(ngModel)]="tcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">
@@ -214,13 +241,23 @@
             <button (click)="select(hGrid, hIndex)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logState(hGrid, hIndex, hGridLogger)">Log state</button>
+            <button (click)="setEditMode(hGrid, hIndex, hGridLogger)">Set editMode</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logState(hGrid, hIndex, hGridLogger)">Log state By Index</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByKey(hGrid, hCellKey, hcolumnField, hGridLogger)">Log state by key</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="logStateByColumn(hGrid, hIndex, hcolumnField, hGridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
             <input name="hIndex" type="string" [(ngModel)]="hIndex" />
             <br/>
-            <input name="hKey" [(ngModel)]="hKey" />
+            <input name="hCellKey" [(ngModel)]="hCellKey" />
+            <input name="hcolumnField" [(ngModel)]="hcolumnField" />
         </div>
     </div>
     <div class="grid-wrapper">

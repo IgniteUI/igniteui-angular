@@ -35,10 +35,15 @@ export class GridCellAPISampleComponent implements OnInit {
     public tHIndex = '00';
     public hIndex = '00';
 
-    public key = '';
-    public tKey = '';
-    public tHKey = '';
-    public hKey = '';
+    public cellKey = 'ALFKI';
+    public tCellKey = '0';
+    public tHCellKey = 'ALFKI';
+    public hCellKey = '0';
+
+    public columnField = 'ContactName';
+    public tcolumnField = 'Salary';
+    public tHcolumnField = 'ContactName';
+    public hcolumnField = 'ProductName';
 
     public selectedCell: CellType;
 
@@ -260,6 +265,96 @@ export class GridCellAPISampleComponent implements OnInit {
 
         this.renderer.insertBefore(logger, createElem, logger.children[0]);
     }
+
+    public logStateByKey(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, key: any,
+    field: string, logger: HTMLElement) {
+        this.clearLog(logger);
+        const cell = grid.getCellByKey(key, field);
+        let state: string;
+        let states: string[];
+
+        if (cell) {
+            state = `
+                value: ${cell.value},
+                selected: ${cell.selected},
+                editable: ${cell.editable},
+                editMode: ${cell.editMode},
+                editValue: ${cell.editValue},
+                colSelected: ${cell.columnSelected},
+                -----------------------------,
+                colIndex: ${cell.columnIndex},
+                visibleColIndex: ${cell.visibleColumnIndex},
+                colField: ${cell.column.field},
+                -----------------------------,
+                rowIndex: ${cell.rowIndex},
+                rowKey: ${cell.row.key},
+                rowData: ${cell.rowData},
+                -----------------------------,
+                gridId: ${cell.grid.id},
+                cellID: ${cell.cellID},
+                width: ${cell.width}`;
+
+            states = state.split(',');
+        } else {
+            states = [`Cell is: ${cell}`];
+        }
+
+        const createElem = this.renderer.createElement('p');
+
+        states.forEach(st => {
+            const text = this.renderer.createText(st);
+            this.renderer.appendChild(createElem, text);
+            this.renderer.appendChild(createElem, this.renderer.createElement('br'));
+        });
+
+        this.renderer.insertBefore(logger, createElem, logger.children[0]);
+    }
+
+    public logStateByColumn(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+    field: string, logger: HTMLElement) {
+        this.clearLog(logger);
+        const indxs = this.getIndices(indices);
+        const cell = grid.getCellByColumn(indxs[0], field);
+        let state: string;
+        let states: string[];
+
+        if (cell) {
+            state = `
+						value: ${cell.value},
+						selected: ${cell.selected},
+						editable: ${cell.editable},
+						editMode: ${cell.editMode},
+						editValue: ${cell.editValue},
+						colSelected: ${cell.columnSelected},
+						-----------------------------,
+						colIndex: ${cell.columnIndex},
+						visibleColIndex: ${cell.visibleColumnIndex},
+						colField: ${cell.column.field},
+						-----------------------------,
+						rowIndex: ${cell.rowIndex},
+						rowKey: ${cell.row.key},
+						rowData: ${cell.rowData},
+						-----------------------------,
+						gridId: ${cell.grid.id},
+						cellID: ${cell.cellID},
+						width: ${cell.width}`;
+
+            states = state.split(',');
+        } else {
+            states = [`Cell is: ${cell}`];
+        }
+
+        const createElem = this.renderer.createElement('p');
+
+        states.forEach(st => {
+            const text = this.renderer.createText(st);
+            this.renderer.appendChild(createElem, text);
+            this.renderer.appendChild(createElem, this.renderer.createElement('br'));
+        });
+
+        this.renderer.insertBefore(logger, createElem, logger.children[0]);
+    }
+
     private getIndices(indices: string): number[] {
         if (indices.length === 1) {
             indices = `0${indices}`;
