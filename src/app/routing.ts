@@ -428,7 +428,7 @@ const appRoutes = [
 		{
 			path: 'gridCellAPI',
 			component: GridCellAPISampleComponent
-	  },
+		},
     {
         path: 'gridRemotePaging',
         component: GridRemotePagingSampleComponent
