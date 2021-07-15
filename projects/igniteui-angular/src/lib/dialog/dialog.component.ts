@@ -485,9 +485,9 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     ngAfterContentInit() {
-        this.toggleRef.onClosing.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitCloseFromDialog(eventArgs));
-        this.toggleRef.onClosed.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitClosedFromDialog(eventArgs));
-        this.toggleRef.onOpened.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitOpenedFromDialog(eventArgs));
+        this.toggleRef.closing.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitCloseFromDialog(eventArgs));
+        this.toggleRef.closed.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitClosedFromDialog(eventArgs));
+        this.toggleRef.opened.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitOpenedFromDialog(eventArgs));
     }
 
     /**
