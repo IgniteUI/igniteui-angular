@@ -18,6 +18,7 @@ import { IgxHierarchicalTransactionServiceFactory } from '../grids/hierarchical-
                 <igx-column field="ChildLevels" [groupable]="true" [sortable]="true" [editable]="true" [movable]='true'></igx-column>
                 <igx-column field="ProductName" [groupable]="true" [hasSummary]='true' [movable]='true'></igx-column>
         </igx-column-group>
+        <igx-paginator *ngIf="paging"></igx-paginator>
         <igx-row-island [key]="'childData'" #rowIsland [allowFiltering]="true" [rowEditable]="true" [primaryKey]="'ID'">
             <igx-grid-toolbar [grid]="grid" *igxGridToolbar="let grid"></igx-grid-toolbar>
             <igx-column field="ID" [groupable]="true" [hasSummary]='true' [movable]='true'>
@@ -54,6 +55,7 @@ export class IgxHierarchicalGridTestBaseComponent {
 
     public data;
     public pinningConfig: IPinningConfig = { columns: ColumnPinningPosition.Start, rows: RowPinningPosition.Top };
+    public paging = false;
 
     constructor() {
         // 3 level hierarchy
