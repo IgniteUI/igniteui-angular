@@ -194,4 +194,156 @@ export class TestComponent implements OnInit {
     </igx-expansion-panel-header>
 </igx-expansion-panel>`);
     });
+
+    it('should remove paging property and define a igx-paginator component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" [paging]="someVal" [perPage]="10" height="300px" width="300px">
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" [perPage]="10" height="300px" width="300px">
+<igx-paginator *ngIf="someVal"></igx-paginator>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
+
+    it('should remove paging property and define a igx-paginator component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+<ng-template #customPager let-api>
+<div class="igx-grid__footer">
+    <div id="numberPager" class="igx-paginator" style="justify-content: center;">
+        <button [disabled]="firstPage" (click)="previousPage()" igxButton="flat">PREV</button>
+        <button [disabled]="lastPage" (click)="nextPage()" igxButton="flat">NEXT</button>
+    </div>
+</div>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-paginator>
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+<div class="igx-grid__footer">
+    <div id="numberPager" class="igx-paginator" style="justify-content: center;">
+        <button [disabled]="firstPage" (click)="previousPage()" igxButton="flat">PREV</button>
+        <button [disabled]="lastPage" (click)="nextPage()" igxButton="flat">NEXT</button>
+    </div>
+</div>
+
+        </igx-paginator-content>
+</igx-paginator>
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+`);
+    });
+
+    it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-hierarchical-grid [paging]="parentPaging">
+    <igx-column></igx-column>
+    <igx-row-island [paging]="childPaging">
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-hierarchical-grid>
+<igx-paginator *ngIf="parentPaging"></igx-paginator>
+    <igx-column></igx-column>
+    <igx-row-island>
+<igx-paginator *igxPaginator  *ngIf="childPaging">
+              </igx-paginator>
+
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>`);
+    });
+
+    it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-hierarchical-grid [paging]="parentPaging" [paginationTemplate]="myTemplate">
+<igx-column></igx-column>
+<igx-row-island [paging]="childPaging" [paginationTemplate]="childTemplate">
+<igx-column></igx-column>
+</igx-row-island>
+</igx-hierarchical-grid>
+<ng-template #myTemplate>
+<div>
+Current page: {{ hierarchicalGrid.page }}
+</div>
+</ng-template>
+<ng-template #childTemplate>
+<div>
+<button (click)="previous()">PREV</button>
+Current page: {{ hierarchicalGrid.page }}
+<button (click)="next()">NEXT</button>
+</div>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-hierarchical-grid>
+<igx-paginator *ngIf="parentPaging">
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+<div>
+Current page: {{ hierarchicalGrid.page }}
+</div>
+
+        </igx-paginator-content>
+</igx-paginator>
+<igx-column></igx-column>
+<igx-row-island>
+<igx-paginator *igxPaginator  *ngIf="childPaging">
+
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+<div>
+<button (click)="previous()">PREV</button>
+Current page: {{ hierarchicalGrid.page }}
+<button (click)="next()">NEXT</button>
+</div>
+
+        </igx-paginator-content>
+</igx-paginator>
+
+<igx-column></igx-column>
+</igx-row-island>
+</igx-hierarchical-grid>
+
+`);
+    });
 });
