@@ -107,6 +107,8 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'すべて非表示',
     igx_grid_pinning_check_all_label: 'すべて固定',
     igx_grid_pinning_uncheck_all_label: 'すべて固定解除',
+    igx_grid_row_edit_btn_done: 'Done',
+    igx_grid_row_edit_btn_cancel: 'Cancel',
     igx_grid_toolbar_actions_filter_prompt: '列リストのフィルター',
     igx_grid_toolbar_pinning_button_tooltip: '列ピン固定のドロップダウンを開く',
     igx_grid_toolbar_hiding_button_tooltip: '列非表示のドロップダウンを開く',

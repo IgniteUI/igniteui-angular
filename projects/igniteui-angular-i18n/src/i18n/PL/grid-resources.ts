@@ -109,6 +109,8 @@ const GridResourceStringsPL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Ukryj wszystko',
     igx_grid_pinning_check_all_label: 'Przypnij wszystko',
     igx_grid_pinning_uncheck_all_label: 'Odepnij wszystko',
+    igx_grid_row_edit_btn_done: 'Done',
+    igx_grid_row_edit_btn_cancel: 'Cancel',
     igx_grid_toolbar_actions_filter_prompt: 'Filtruj listę kolumn...',
     igx_grid_toolbar_pinning_button_tooltip: 'Otwórz menu przypinania kolumn',
     igx_grid_toolbar_hiding_button_tooltip: 'Otwórz menu ukrywania kolumn',
