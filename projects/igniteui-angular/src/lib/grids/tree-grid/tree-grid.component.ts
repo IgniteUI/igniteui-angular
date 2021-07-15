@@ -37,7 +37,7 @@ import { IgxGridNavigationService } from '../grid-navigation.service';
 import { GridType } from '../common/grid.interface';
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
-import { GridSelectionMode } from '../common/enums';
+import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -798,7 +798,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         const rec: any = this.dataView[index];
 
         if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries, 'tGrid');
+            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.treeGrid);
         }
 
         if (!row && rec) {
