@@ -175,6 +175,50 @@ export class TestComponent implements OnInit {
 }`);
     });
 
+    it('should update mask event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (onValueChange)="handleEvent()" />`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (valueChanged)="handleEvent()" />`);
+    });
+
+    it('should update mask event subscriptions .ts file', async () => {
+        pending('ts language service tests do not pass');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts', `
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.onValueChange;
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(`
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.valueChanged;
+    }
+}`);
+    });
+
+
     it('should update expansion panel event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
