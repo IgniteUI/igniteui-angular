@@ -101,6 +101,8 @@ const GridResourceStringsCS_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Skrýt vše',
     igx_grid_pinning_check_all_label: 'Připnout vše',
     igx_grid_pinning_uncheck_all_label: 'Odepnout vše',
+    igx_grid_row_edit_btn_done: 'Hotovo',
+    igx_grid_row_edit_btn_cancel: 'Storno',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrovat seznam sloupců ...',
     igx_grid_snackbar_addrow_label: 'Řádek přidán',
     igx_grid_snackbar_addrow_actiontext: 'UKÁZAT',

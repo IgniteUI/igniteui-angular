@@ -101,6 +101,8 @@ const GridResourceStringsSV_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Dölj alla',
     igx_grid_pinning_check_all_label: 'Fäst alla',
     igx_grid_pinning_uncheck_all_label: 'Lossa alla',
+    igx_grid_row_edit_btn_done: 'Klar',
+    igx_grid_row_edit_btn_cancel: 'Avbryt',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrera kolumnlista ...',
     igx_grid_snackbar_addrow_label: 'Rad tillagd',
     igx_grid_snackbar_addrow_actiontext: 'VISA',

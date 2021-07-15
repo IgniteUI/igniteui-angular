@@ -101,6 +101,8 @@ const GridResourceStringsJA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'すべて非表示',
     igx_grid_pinning_check_all_label: 'すべて固定',
     igx_grid_pinning_uncheck_all_label: 'すべて固定解除',
+    igx_grid_row_edit_btn_done: '完了',
+    igx_grid_row_edit_btn_cancel: 'キャンセル',
     igx_grid_toolbar_actions_filter_prompt: '列リストのフィルター',
     igx_grid_snackbar_addrow_label: '行が追加されました',
     igx_grid_snackbar_addrow_actiontext: '表示',

@@ -101,6 +101,8 @@ const GridResourceStringsTR_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Tümünü Gizle',
     igx_grid_pinning_check_all_label: 'Tümünü Sabitle',
     igx_grid_pinning_uncheck_all_label: 'Tümünün Sabitlemesini Kaldır',
+    igx_grid_row_edit_btn_done: 'Bitti',
+    igx_grid_row_edit_btn_cancel: 'İptal',
     igx_grid_toolbar_actions_filter_prompt: 'Sütun listesini filtrele ...',
     igx_grid_snackbar_addrow_label: 'Satır eklendi',
     igx_grid_snackbar_addrow_actiontext: 'GÖSTER',

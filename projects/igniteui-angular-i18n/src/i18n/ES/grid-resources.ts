@@ -101,6 +101,8 @@ const GridResourceStringsES_: ExpandRequire<IGridResourceStrings> = {
   igx_grid_hiding_uncheck_all_label: 'Ocultar todo',
   igx_grid_pinning_check_all_label: 'Anclar todo',
   igx_grid_pinning_uncheck_all_label: 'Desanclar todo',
+  igx_grid_row_edit_btn_done: 'Listo',
+  igx_grid_row_edit_btn_cancel: 'Cancelar',
   igx_grid_toolbar_actions_filter_prompt: 'Filtrar lista de columnas…',
   igx_grid_snackbar_addrow_label: 'Fila agregada',
   igx_grid_snackbar_addrow_actiontext: 'MOSTRAR',
