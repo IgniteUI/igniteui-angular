@@ -433,7 +433,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const rec = this.primaryKey ?
             data.find(record => record[this.primaryKey] === key) :
             data.find(record => record === key);
-        const index = data.indexOf[rec];
+        const index = data.indexOf(rec);
         if (index < 0 || index > data.length) {
             return undefined;
         }

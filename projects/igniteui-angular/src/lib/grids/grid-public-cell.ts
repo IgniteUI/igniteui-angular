@@ -219,7 +219,9 @@ export class IgxGridCell implements CellType {
 			cell = this.grid.crudService.createCell(this);
 		}
 		cell.editValue = val;
+		this.grid.gridAPI.update_cell(cell);
 		this.grid.crudService.endCellEdit();
+		this.grid.notifyChanges();
 	}
 
 	/**
