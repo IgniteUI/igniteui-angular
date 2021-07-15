@@ -23,6 +23,7 @@ describe(`Update to ${version}`, () => {
     };
 
     const migrationName = 'migration-21';
+    const lineAndBreaksRegex = /\s/g;
     // eslint-disable-next-line max-len
     const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
@@ -235,7 +236,7 @@ export class TestComponent implements OnInit {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineAndBreaksRegex, ''))
             .toEqual(`
 <igx-grid #grid1 [data]="data" height="300px" width="300px">
 <igx-paginator>
@@ -256,7 +257,7 @@ export class TestComponent implements OnInit {
     <igx-column field="TrackProgress" header="Track Progress"></igx-column>
     <igx-column field="CountryFlag" header="Country"></igx-column>
 </igx-grid>
-`);
+`.replace(lineAndBreaksRegex, ''));
     });
 
     it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
@@ -285,31 +286,31 @@ export class TestComponent implements OnInit {
 </igx-hierarchical-grid>`);
     });
 
-    it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
+    it('should remove paging property and paginationTemplate in hGrid', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
 <igx-hierarchical-grid [paging]="parentPaging" [paginationTemplate]="myTemplate">
-<igx-column></igx-column>
-<igx-row-island [paging]="childPaging" [paginationTemplate]="childTemplate">
-<igx-column></igx-column>
-</igx-row-island>
+    <igx-column></igx-column>
+    <igx-row-island [paging]="childPaging" [paginationTemplate]="childTemplate">
+        <igx-column></igx-column>
+    </igx-row-island>
 </igx-hierarchical-grid>
 <ng-template #myTemplate>
-<div>
-Current page: {{ hierarchicalGrid.page }}
-</div>
+    <div>
+        Current page: {{ hierarchicalGrid.page }}
+    </div>
 </ng-template>
 <ng-template #childTemplate>
-<div>
-<button (click)="previous()">PREV</button>
-Current page: {{ hierarchicalGrid.page }}
-<button (click)="next()">NEXT</button>
-</div>
+    <div>
+        <button (click)="previous()">PREV</button>
+        Current page: {{ hierarchicalGrid.page }}
+        <button (click)="next()">NEXT</button>
+    </div>
 </ng-template>`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineAndBreaksRegex, ''))
             .toEqual(`
 <igx-hierarchical-grid>
 <igx-paginator *ngIf="parentPaging">
@@ -317,33 +318,31 @@ Current page: {{ hierarchicalGrid.page }}
 
 <igx-paginator-content>
 
-<div>
-Current page: {{ hierarchicalGrid.page }}
-</div>
+    <div>
+        Current page: {{ hierarchicalGrid.page }}
+    </div>
 
         </igx-paginator-content>
 </igx-paginator>
-<igx-column></igx-column>
-<igx-row-island>
+    <igx-column></igx-column>
+    <igx-row-island>
 <igx-paginator *igxPaginator  *ngIf="childPaging">
 
 <!-- Auto migrated template content. Please, check your bindings! -->
 
 <igx-paginator-content>
 
-<div>
-<button (click)="previous()">PREV</button>
-Current page: {{ hierarchicalGrid.page }}
-<button (click)="next()">NEXT</button>
-</div>
+    <div>
+        <button (click)="previous()">PREV</button>
+        Current page: {{ hierarchicalGrid.page }}
+        <button (click)="next()">NEXT</button>
+    </div>
 
         </igx-paginator-content>
 </igx-paginator>
 
-<igx-column></igx-column>
-</igx-row-island>
-</igx-hierarchical-grid>
-
-`);
+    <igx-column></igx-column>
+    </igx-row-island>
+    </igx-hierarchical-grid>`.replace(lineAndBreaksRegex, ''));
     });
 });
