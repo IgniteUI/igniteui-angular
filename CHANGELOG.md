@@ -104,6 +104,9 @@ All notable changes for each version of this project will be documented in this 
     - `onAppended` -> `contentAppended`
     - `onAnimation` -> `animationStarting`
 
+- **Breaking Change** - `IgxMaskDirective` events are renamed as follows:
+    - `onValueChange` -> `valueChanged`
+
 - **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
@@ -127,6 +130,8 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+- `IgxBanner`
+    - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the panel.
 
 -   `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.

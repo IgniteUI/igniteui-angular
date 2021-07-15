@@ -12,6 +12,10 @@ import { CancelableEventArgs, IBaseEventArgs } from '../core/utils';
 import { ToggleAnimationSettings } from '../expansion-panel/toggle-animation-component';
 
 export interface BannerEventArgs extends IBaseEventArgs {
+    /**
+     * @deprecated
+     * To get a reference to the banner, use `owner` instead.
+     */
     banner: IgxBannerComponent;
     event?: Event;
 }
