@@ -555,7 +555,7 @@ describe('Excel Exporter', () => {
             await exportAndVerify(grid, options, actualData.exportGroupedData);
         });
 
-        fit('Should export grouped grid with collapsed rows', async () => {
+        it('Should export grouped grid with collapsed rows', async () => {
             const fix = TestBed.createComponent(GridExportGroupedDataComponent);
             fix.detectChanges();
             await wait();
