@@ -182,7 +182,7 @@ abstract class BaseRow implements RowType {
      * Gets the rendered cells in the row component.
      */
     public get cells(): CellType[] {
-        let res: CellType[] = [];
+        const res: CellType[] = [];
         this.grid.columnList.forEach(col => {
             const cell: CellType = new IgxGridCell(this.grid, this.index, col.field);
             res.push(cell);
