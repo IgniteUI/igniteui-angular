@@ -184,6 +184,7 @@ export class GridRowAPISampleComponent implements OnInit {
     public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
         byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
+        const index2: number = row.index;
         if (row.pinned) {
             row.unpin();
         } else {

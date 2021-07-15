@@ -139,10 +139,10 @@
             <button (click)="logState(treeGridHier, tHIndex, tHGridLogger, tHGridLogger)">Log state By Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logStateByKey(treeGridHier, tHCellKey, tHcolumnField, gridLogger)">Log state by key</button>
+            <button (click)="logStateByKey(treeGridHier, tHCellKey, tHcolumnField, tHGridLogger)">Log state by key</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logStateByColumn(treeGridHier, tHIndex, tHcolumnField, gridLogger)">Log state by field</button>
+            <button (click)="logStateByColumn(treeGridHier, tHIndex, tHcolumnField, tHGridLogger)">Log state by field</button>
         </div>
         <div style="margin-right: 5px;">
             <span>One digit indicates Column Index. Two digits indicates rowIndex, colIndex</span><br />
@@ -235,10 +235,10 @@
     <div>igxHierarchicalGrid</div>
     <div style="width: 100%; margin-bottom: 15px; text-align:center; display: flex;">
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="update(hGrid, hIndex)">Update</button>
+            <button (click)="updateCell(hGrid, hIndex, hGridLogger)">Update</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="select(hGrid, hIndex)">Select</button>
+            <button (click)="select(hGrid, hIndex, hGridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="setEditMode(hGrid, hIndex, hGridLogger)">Set editMode</button>
