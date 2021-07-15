@@ -215,7 +215,7 @@ export class IgxBannerComponent implements IToggleView {
      */
     public close(event?: Event) {
         this._bannerEvent = { banner: this, owner: this, event};
-        const closingArgs = {
+        const closingArgs: BannerCancelEventArgs = {
             banner: this,
             owner: this,
             event,
