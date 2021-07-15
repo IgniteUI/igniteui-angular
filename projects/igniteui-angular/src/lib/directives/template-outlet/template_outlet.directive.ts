@@ -58,6 +58,7 @@ export class IgxTemplateOutletDirective implements OnChanges {
             }));
             collection.clear();
         });
+        this._embeddedViewsMap.clear();
     }
 
     public cleanView(tmplID) {
