@@ -2078,7 +2078,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2102,7 +2102,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2138,7 +2138,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
+        tick();
+        fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
@@ -3447,6 +3449,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
             [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -3471,6 +3474,7 @@ export class DefaultGridComponent extends DataParent {
     public enableGrouping = true;
     public currentSortExpressions;
     public currentGroupingExpressions = [];
+    public paging = false;
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
@@ -3489,8 +3493,7 @@ export class DefaultGridComponent extends DataParent {
         <igx-grid
             [width]='width'
             [height]='height'
-            [data]="data"
-            [paging]="true">
+            [data]="data">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
@@ -3498,6 +3501,7 @@ export class DefaultGridComponent extends DataParent {
                 dataType="number"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-paginator></igx-paginator>
         </igx-grid>
     `
 })
