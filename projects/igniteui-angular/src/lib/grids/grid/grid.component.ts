@@ -815,7 +815,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         if (this.isDetailRecord(rowData)) {
             const cachedData = this.childDetailTemplates.get(rowData.detailsData);
-            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
+            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : rowData.detailsData;
             if (cachedData) {
                 const view = cachedData.view;
                 const tmlpOutlet = cachedData.owner;
@@ -826,7 +826,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     index: this.dataView.indexOf(rowData),
                     templateID: {
                         type:'detailRow',
-                        rowID
+                        id: rowID
                     }
                 };
             } else {
@@ -835,7 +835,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     $implicit: rowData.detailsData,
                     templateID: {
                         type:'detailRow',
-                        rowID
+                        id: rowID
                     },
                     index: this.dataView.indexOf(rowData)
                 };
@@ -846,7 +846,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
-                rowID: null
+                id: null
             },
             disabled: this.isGhostRecord(rowData),
             addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false

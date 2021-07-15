@@ -538,7 +538,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                     $implicit: rowData,
                     templateID: {
                         type: 'childRow',
-                        rowID: rowData.rowID
+                        id: rowData.rowID
                     },
                     index: this.dataView.indexOf(rowData)
                 };
@@ -548,7 +548,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
                 $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: {
                     type: 'dataRow',
-                    rowID: null
+                    id: null
                 },
                 index: this.getDataViewIndex(rowIndex, pinned),
                 disabled: this.isGhostRecord(rowData),
