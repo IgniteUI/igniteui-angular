@@ -101,7 +101,6 @@
     "eslint-plugin-import": "2.22.1",
     "eslint-plugin-jsdoc": "30.7.6",
     "eslint-plugin-prefer-arrow": "1.2.2",
-    "fibers": "^5.0.0",
     "gulp": "^4.0.2",
     "gulp-cached": "^1.1.1",
     "gulp-concat": "^2.6.1",
