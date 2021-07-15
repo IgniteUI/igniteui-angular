@@ -569,8 +569,8 @@ class MaskComponent {
 
     @ViewChild('input', { static: true })
     public input: ElementRef;
-    mask = '(000) 0000-000';
-    value = '1234567890';
+    public mask = '(000) 0000-000';
+    public value = '1234567890';
 }
 
 @Component({
@@ -660,12 +660,12 @@ class EventFiringComponent {
 
     @ViewChild('input', { static: true })
     public input: ElementRef;
-    myValue = '';
-    myMask = '(000) 0000-000';
-    raw: string;
-    formatted: string;
+    public myValue = '';
+    public myMask = '(000) 0000-000';
+    public raw: string;
+    public formatted: string;
 
-    handleValueChanged(event) {
+    public handleValueChanged(event) {
         this.raw = event.rawValue;
         this.formatted = event.formattedValue;
     }
@@ -683,8 +683,8 @@ class OneWayBindComponent {
     @ViewChild('input', { static: true })
     public input: ElementRef;
 
-    myMask = 'AAAAAAAA';
-    value = 3456;
+    public myMask = 'AAAAAAAA';
+    public value = 3456;
 }
 
 @Component({
@@ -746,14 +746,14 @@ class ReadonlyMaskTestComponent {
 
 @Pipe({ name: 'inputFormat' })
 export class InputFormatPipe implements PipeTransform {
-    transform(value: any): string {
+    public transform(value: any): string {
         return value.toUpperCase();
     }
 }
 
 @Pipe({ name: 'displayFormat' })
 export class DisplayFormatPipe implements PipeTransform {
-    transform(value: any): string {
+    public transform(value: any): string {
         return value.toLowerCase();
     }
 }

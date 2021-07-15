@@ -5,7 +5,6 @@ import {
     Input, NgModule, OnInit, AfterViewChecked,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { DeprecateProperty } from '../../core/deprecateDecorators';
 import { MaskParsingService, MaskOptions } from './mask-parsing.service';
 import { IBaseEventArgs, PlatformUtil } from '../../core/utils';
 import { noop } from 'rxjs';

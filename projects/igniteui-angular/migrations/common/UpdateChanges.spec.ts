@@ -897,7 +897,7 @@ export class AppModule { }`);
 
         it('Should be able to replace property of an event', () => {
             pending('set up tests for migrations through lang service');
-            const membersConfig = {
+            const _membersConfig = {
                 member: 'onGridKeydown',
                 replaceWith: 'gridKeydown',
                 definedIn: [
