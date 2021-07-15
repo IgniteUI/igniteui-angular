@@ -13,6 +13,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const prop = ['[paging]', 'paging'];
   const changes = new Map<string, FileChange[]>();
   const warnMsg = `\n<!-- Auto migrated template content. Please, check your bindings! -->\n`;
+  const templateNames = [];
 
   const applyChanges = () => {
     for (const [path, change] of changes.entries()) {
@@ -39,7 +40,8 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const moveTemplateIfAny = (grid, path) => {
     const paginationTemplateName = getAttribute(grid, '[paginationTemplate]')[0];
     const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
-    const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName.value}`))[0];
+    templateNames.push('#' + paginationTemplateName?.value);
+    const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
     if (paginatorTemplate) {
         return `${warnMsg}\n<igx-paginator-content>
         ${serializeNodes((paginatorTemplate as Element).children).join('')}
@@ -47,7 +49,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     }
     return '';
   };
-
+// migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), TAGS)
         .filter(grid => hasAttribute(grid as Element, prop))
@@ -63,7 +65,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   applyChanges();
   changes.clear();
-
+// apply the migrations to the rowIsland
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), 'igx-row-island')
         .filter(island => hasAttribute(island as Element, prop))
@@ -75,6 +77,19 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
               `\n<igx-paginator *igxPaginator ${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>
               ${moveTemplateIfAny(node, path)}</igx-paginator>\n`;
             addChange(file.url, new FileChange(startTag.end, text));
+        });
+  }
+
+  applyChanges();
+  changes.clear();
+// clear paginationTemplate definitions
+  for (const path of update.templateFiles) {
+    findElementNodes(parseFile(host, path), 'ng-template')
+        .filter(template => hasAttribute(template as Element, templateNames))
+        .forEach(node => {
+            const { startTag, endTag, file } = getSourceOffset(node as Element);
+            const replaceText = file.content.substring(startTag.start, endTag.end);
+            addChange(file.url, new FileChange(startTag.start, '', replaceText, 'replace'));
         });
   }
 
