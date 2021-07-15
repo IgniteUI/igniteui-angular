@@ -330,12 +330,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @experimental @hidden
      */
     public get transactions() {
-        if (!this._diTransactions) {
-            return this._transactions;
-        } else if (!this.batchEditing) {
+        if (this._diTransactions && !this.batchEditing) {
             return this._diTransactions;
         }
-        return this._diTransactions;
+        return this._transactions;
     }
 
     /**
@@ -424,7 +422,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
             this.loadChildrenOnRowExpansion(args);
         });
 
-        // TODO: cascade selection is logic should be refactor to be handled in the already existing subs
+        // TODO: cascade selection logic should be refactor to be handled in the already existing subs
         this.rowAddedNotifier.pipe(takeUntil(this.destroy$)).subscribe(args => {
             if (this.rowSelection === GridSelectionMode.multipleCascade) {
                 let rec = this._gridAPI.get_rec_by_id(this.primaryKey ? args.data[this.primaryKey] : args.data);

@@ -1,16 +1,14 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
-    IgxTransactionService,
-    IgxGridTransaction,
     RowType,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
     IPinningConfig,
     RowPinningPosition,
     IRowDragStartEventArgs,
-		GridSummaryCalculationMode,
-		GridSummaryPosition
+    GridSummaryCalculationMode,
+    GridSummaryPosition
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 

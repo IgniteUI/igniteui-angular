@@ -31,7 +31,8 @@ All notable changes for each version of this project will be documented in this 
     </igx-column>
     ```
 - `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
-    - Added `batchEditing` - an `Input` property for controlling whether the grid should have transactions or not.
+    - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`. 
     - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
     Instead, use the new `batchEditing` property to control the grid's Transactions.
 

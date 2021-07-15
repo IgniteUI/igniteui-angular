@@ -31,7 +31,7 @@ import {
 } from '@angular/core';
 import { resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, animationFrameScheduler } from 'rxjs';
+import { Subject, pipe, fromEvent, animationFrameScheduler, merge } from 'rxjs';
 import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
@@ -2370,7 +2370,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     /**
      * Gets/Sets whether the grid has batch editing enabled.
-     * When batch editing is enabled, changes are not made directly to the data underlying data.
+     * When batch editing is enabled, changes are not made directly to the underlying data.
      * Instead, they are stored as transactions, which can later be committed w/ the `commit` method.
      *
      * @example
@@ -3106,8 +3106,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         @Optional() @Inject(DisplayDensityToken) protected _displayDensityOptions: IDisplayDensityOptions,
         @Inject(LOCALE_ID) private localeId: string,
         protected platform: PlatformUtil,
-        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?:
-        TransactionService<Transaction, State>) {
+        @Optional() @Inject(IgxGridTransaction) protected _diTransactions?: TransactionService<Transaction, State>) {
         super(_displayDensityOptions);
         this.locale = this.locale || this.localeId;
         this.datePipe = new DatePipe(this.locale);
@@ -3421,9 +3420,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public ngOnInit() {
         super.ngOnInit();
-        if (!this._batchEditing) {
-            this._transactions = this.transactionFactory.create(TRANSACTION_TYPE.None);
-        }
         this._setupServices();
         this._setupListeners();
         this.rowListDiffer = this.differs.find([]).create(null);

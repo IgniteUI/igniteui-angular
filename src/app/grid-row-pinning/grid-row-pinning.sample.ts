@@ -3,8 +3,6 @@ import {
     IgxGridComponent,
     ColumnPinningPosition,
     RowPinningPosition,
-    IgxTransactionService,
-    IgxGridTransaction,
     IgxGridStateDirective,
     IgxExcelExporterService,
     IgxExcelExporterOptions,
