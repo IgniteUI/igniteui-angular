@@ -668,7 +668,7 @@ export class IgxSummaryRow implements RowType {
      */
      public get viewIndex(): number {
         if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
-            if (this.gridType === GridInstanceType.grid) {
+            if (this.gridType === GridInstanceType.Grid) {
                 this.grid = this.grid as IgxGridComponent;
 								if (this.grid.page) {
 									const precedingDetailRows = [];
@@ -710,7 +710,7 @@ export class IgxSummaryRow implements RowType {
 							} else {
 									return this.index;
 							}
-            } else if (this.gridType === GridInstanceType.treeGrid) {
+            } else if (this.gridType === GridInstanceType.TreeGrid) {
                 this.grid = this.grid as IgxTreeGridComponent;
                 if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
                     const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);

@@ -1108,7 +1108,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             row = new IgxGroupByRow(this, index, rec);
         }
         if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.grid);
+            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.Grid);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
         if (!row && rec) {
