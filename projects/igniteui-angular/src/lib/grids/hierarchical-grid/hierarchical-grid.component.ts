@@ -794,7 +794,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         let row: RowType;
         const rec: any = this.dataView[index];
 
-        if (!row && rec) {
+        if (!row && rec && !rec.childGridsData) {
             row = new IgxHierarchicalGridRow(this, index, rec);
         }
 

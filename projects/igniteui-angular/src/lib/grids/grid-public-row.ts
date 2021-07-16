@@ -487,6 +487,9 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
         return !!this.grid.childLayoutKeys.length;
     }
 
+    /**
+     * Returns the view index calculated per the grid page.
+     */
     public get viewIndex() {
         const firstRowInd = this.grid.filteredSortedData.indexOf(this.grid.dataView[0]);
         const expandedRows = this.grid.filteredSortedData.filter((rec, ind) => {
@@ -494,6 +497,18 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
             return this.grid.expansionStates.get(rowID) && ind < firstRowInd;
         });
         return firstRowInd + expandedRows.length + this.index;
+    }
+
+    /**
+     * Gets the rendered cells in the row component.
+     */
+    public get cells(): CellType[] {
+        const res: CellType[] = [];
+        this.grid.columnList.forEach(col => {
+            const cell: CellType = new IgxGridCell(this.grid, this.index, col.field);
+            res.push(cell);
+        });
+        return res;
     }
 }
 
