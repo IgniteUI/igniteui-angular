@@ -185,7 +185,7 @@ export class GridCellAPISampleComponent implements OnInit {
         logger: HTMLElement) {
         const indxs = this.getIndices(indices);
         const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-        cell.setEditMode(!cell.editMode);
+        cell.editMode = !cell.editMode;
         this.logState(grid, indices, logger);
     }
 
@@ -226,6 +226,7 @@ export class GridCellAPISampleComponent implements OnInit {
         this.clearLog(logger);
         const indxs = this.getIndices(indices);
         const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        const tt = cell.column.cells;
         let state: string;
         let states: string[];
 
@@ -236,15 +237,14 @@ export class GridCellAPISampleComponent implements OnInit {
 						editable: ${cell.editable},
 						editMode: ${cell.editMode},
 						editValue: ${cell.editValue},
-						colSelected: ${cell.columnSelected},
 						-----------------------------,
-						colIndex: ${cell.columnIndex},
-						visibleColIndex: ${cell.visibleColumnIndex},
+						colIndex: ${cell.column.index},
+						visibleColIndex: ${cell.column.visibleIndex},
 						colField: ${cell.column.field},
 						-----------------------------,
-						rowIndex: ${cell.rowIndex},
+						rowIndex: ${cell.row.index},
 						rowKey: ${cell.row.key},
-						rowData: ${cell.rowData},
+						rowData: ${cell.row.data},
 						-----------------------------,
 						gridId: ${cell.grid.id},
 						cellID: ${cell.cellID},
@@ -280,15 +280,14 @@ export class GridCellAPISampleComponent implements OnInit {
                 editable: ${cell.editable},
                 editMode: ${cell.editMode},
                 editValue: ${cell.editValue},
-                colSelected: ${cell.columnSelected},
                 -----------------------------,
-                colIndex: ${cell.columnIndex},
-                visibleColIndex: ${cell.visibleColumnIndex},
+                colIndex: ${cell.column.index},
+                visibleColIndex: ${cell.column.visibleIndex},
                 colField: ${cell.column.field},
                 -----------------------------,
-                rowIndex: ${cell.rowIndex},
+                rowIndex: ${cell.row.index},
                 rowKey: ${cell.row.key},
-                rowData: ${cell.rowData},
+                rowData: ${cell.row.data},
                 -----------------------------,
                 gridId: ${cell.grid.id},
                 cellID: ${cell.cellID},
@@ -325,15 +324,14 @@ export class GridCellAPISampleComponent implements OnInit {
 						editable: ${cell.editable},
 						editMode: ${cell.editMode},
 						editValue: ${cell.editValue},
-						colSelected: ${cell.columnSelected},
 						-----------------------------,
-						colIndex: ${cell.columnIndex},
-						visibleColIndex: ${cell.visibleColumnIndex},
+						colIndex: ${cell.column.index},
+						visibleColIndex: ${cell.column.visibleIndex},
 						colField: ${cell.column.field},
 						-----------------------------,
-						rowIndex: ${cell.rowIndex},
+						rowIndex: ${cell.row.index},
 						rowKey: ${cell.row.key},
-						rowData: ${cell.rowData},
+						rowData: ${cell.row.data},
 						-----------------------------,
 						gridId: ${cell.grid.id},
 						cellID: ${cell.cellID},
