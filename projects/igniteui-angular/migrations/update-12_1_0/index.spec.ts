@@ -23,7 +23,7 @@ describe(`Update to ${version}`, () => {
     };
 
     const migrationName = 'migration-21';
-    const lineAndBreaksRegex = /\s/g;
+    const lineBreaksAndSpaceRegex = /\s/g;
     // eslint-disable-next-line max-len
     const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
@@ -217,7 +217,7 @@ export class TestComponent implements OnInit {
         </igx-grid>`);
     });
 
-    it('should remove paging property and define a igx-paginator component instead', async () => {
+    it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
 <igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
@@ -236,7 +236,7 @@ export class TestComponent implements OnInit {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineAndBreaksRegex, ''))
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
 <igx-grid #grid1 [data]="data" height="300px" width="300px">
 <igx-paginator>
@@ -257,7 +257,7 @@ export class TestComponent implements OnInit {
     <igx-column field="TrackProgress" header="Track Progress"></igx-column>
     <igx-column field="CountryFlag" header="Country"></igx-column>
 </igx-grid>
-`.replace(lineAndBreaksRegex, ''));
+`.replace(lineBreaksAndSpaceRegex, ''));
     });
 
     it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
@@ -278,9 +278,7 @@ export class TestComponent implements OnInit {
 <igx-paginator *ngIf="parentPaging"></igx-paginator>
     <igx-column></igx-column>
     <igx-row-island>
-<igx-paginator *igxPaginator  *ngIf="childPaging">
-              </igx-paginator>
-
+<igx-paginator *igxPaginator *ngIf="childPaging"></igx-paginator>
         <igx-column></igx-column>
     </igx-row-island>
 </igx-hierarchical-grid>`);
@@ -310,7 +308,7 @@ export class TestComponent implements OnInit {
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineAndBreaksRegex, ''))
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
             .toEqual(`
 <igx-hierarchical-grid>
 <igx-paginator *ngIf="parentPaging">
@@ -343,6 +341,36 @@ export class TestComponent implements OnInit {
 
     <igx-column></igx-column>
     </igx-row-island>
-    </igx-hierarchical-grid>`.replace(lineAndBreaksRegex, ''));
+    </igx-hierarchical-grid>`.replace(lineBreaksAndSpaceRegex, ''));
     });
+
+    it('should define correctly paginator when using the component inside custom template', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+<ng-template #customPager let-api>
+<igx-paginator #paginator [(page)]="grid.page" [totalRecords]="grid.totalRecords" [(perPage)]="grid.perPage"
+   [selectOptions]="selectOptions" [displayDensity]="grid.displayDensity">
+        </igx-paginator>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-paginator #paginator [(page)]="grid.page" [totalRecords]="grid.totalRecords" [(perPage)]="grid.perPage"
+[selectOptions]="selectOptions" [displayDensity]="grid.displayDensity">
+</igx-paginator>
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+`.replace(lineBreaksAndSpaceRegex, ''));
+    });
+
 });

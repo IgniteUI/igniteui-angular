@@ -1,4 +1,4 @@
-import { Element } from '@angular/compiler';
+import { Attribute, Element } from '@angular/compiler';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile, serializeNodes } from '../common/util';
@@ -37,17 +37,41 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
 
-  const moveTemplateIfAny = (grid, path) => {
-    const paginationTemplateName = getAttribute(grid, '[paginationTemplate]')[0];
+  const checkForPaginatorInTemplate = (path, name) => {
+    const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
+    const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${name}`))[0];
+    return paginatorTemplate ? !!findElementNodes((paginatorTemplate as Element).children, 'igx-paginator').length : false;
+  };
+
+  const moveTemplate = (paginatorTemplate) => {
+    if (paginatorTemplate) {
+      return  `${warnMsg}\n<igx-paginator-content>
+      ${serializeNodes((paginatorTemplate as Element).children).join('')}
+      </igx-paginator-content>\n`;
+    }
+    return '';
+  };
+
+  const stringifyAttriutes = (attributes: Attribute[]) => {
+    let stringAttributes = '';
+    attributes.forEach(element => {
+      stringAttributes = stringAttributes.concat(element.name.includes('#')? `${element.name} ` : `${element.name}="${element.value}" `);
+    });
+    return stringAttributes;
+  };
+
+  const buildPaginator = (node, path, propName, value, isChildGrid = false) => {
+    const paginationTemplateName = getAttribute(node, '[paginationTemplate]')[0];
     const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
     templateNames.push('#' + paginationTemplateName?.value);
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
-    if (paginatorTemplate) {
-        return `${warnMsg}\n<igx-paginator-content>
-        ${serializeNodes((paginatorTemplate as Element).children).join('')}
-        </igx-paginator-content>\n`;
+    if (paginatorTemplate && checkForPaginatorInTemplate(path, paginationTemplateName?.value)) {
+      const pgCmpt = findElementNodes((paginatorTemplate as Element).children, 'igx-paginator')[0];
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
+    } else {
+      // eslint-disable-next-line max-len
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
     }
-    return '';
   };
 // migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
@@ -57,8 +81,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         .forEach(offset => {
             const { startTag, file, node } = offset;
             const { name, value } = getAttribute(node, prop)[0];
-            const text =
-            `\n<igx-paginator${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>${moveTemplateIfAny(node, path)}</igx-paginator>`;
+            const text = buildPaginator(node, path, name, value);
             addChange(file.url, new FileChange(startTag.end, text));
         });
   }
@@ -73,9 +96,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
         .forEach(offset => {
             const { startTag, file, node } = offset;
             const { name, value } = getAttribute(node, prop)[0];
-            const text =
-              `\n<igx-paginator *igxPaginator ${makeNgIf(name, value) ? ` *ngIf="${value}"` : ''}>
-              ${moveTemplateIfAny(node, path)}</igx-paginator>\n`;
+            const text = buildPaginator(node, path, name, value, true);
             addChange(file.url, new FileChange(startTag.end, text));
         });
   }
