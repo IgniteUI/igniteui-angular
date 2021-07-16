@@ -29,10 +29,10 @@ import {
     LOCALE_ID,
     HostListener
 } from '@angular/core';
-import { getResizeObserver } from '../core/utils';
+import { resizeObservable } from '../core/utils';
 import 'igniteui-trial-watermark';
-import { Subject, pipe, fromEvent, noop } from 'rxjs';
-import { takeUntil, first, filter, throttleTime, map, shareReplay } from 'rxjs/operators';
+import { Subject, pipe, fromEvent, animationFrameScheduler } from 'rxjs';
+import { takeUntil, first, filter, throttleTime, map, shareReplay, takeWhile } from 'rxjs/operators';
 import { cloneArray, mergeObjects, compareMaps, resolveNestedPath, isObject, PlatformUtil } from '../core/utils';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { FilteringLogic, IFilteringExpression } from '../data-operations/filtering-expression.interface';
@@ -147,15 +147,16 @@ import { IgxGridExcelStyleFilteringComponent } from './filtering/excel-style/gri
 import { IgxSnackbarComponent } from '../snackbar/snackbar.component';
 import { v4 as uuidv4 } from 'uuid';
 import { IgxActionStripComponent } from '../action-strip/action-strip.component';
-import { DeprecateProperty } from '../core/deprecateDecorators';
-import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
+import { DeprecateMethod, DeprecateProperty } from '../core/deprecateDecorators';
 import { RowType } from './common/row.interface';
 import { IgxGridRowComponent } from './grid/grid-row.component';
-import { IPageEventArgs } from '../paginator/paginator_interfaces';
+import { IPageEventArgs } from '../paginator/paginator-interfaces';
+import { IgxPaginatorComponent } from '../paginator/paginator.component';
+import { IgxGridHeaderRowComponent } from './headers/grid-header-row.component';
 import { IgxGridGroupByAreaComponent } from './grouping/grid-group-by-area.component';
 
 let FAKE_ROW_ID = -1;
-
+const DEFAULT_ITEMS_PER_PAGE = 15;
 const MINIMUM_COLUMN_WIDTH = 136;
 const FILTER_ROW_HEIGHT = 50;
 // By default row editing overlay outlet is inside grid body so that overlay is hidden below grid header when scrolling.
@@ -291,6 +292,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after the current page is changed.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid (pageChange)="onPageChange($event)"></igx-grid>
@@ -301,12 +303,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
+    @DeprecateProperty('`pageChange` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public pageChange = new EventEmitter<number>();
 
     /**
      * Emitted when `perPage` property value of the grid is changed.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```html
      * <igx-grid #grid (perPageChange)="onPerPageChange($event)" [autoGenerate]="true"></igx-grid>
@@ -317,19 +321,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * }
      * ```
      */
+    @DeprecateProperty('`perPageChange` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public perPageChange = new EventEmitter<number>();
-
-    /**
-     * Gets/Sets a custom `ng-template` for the pagination UI of the grid.
-     *
-     * @example
-     * ```html
-     * <igx-grid #grid [paging]="true" [myTemplate]="myTemplate" [height]="'305px'"></igx-grid>
-     * ```
-     */
-    @Input()
-    public paginationTemplate: TemplateRef<any>;
 
     /**
      * @hidden
@@ -667,6 +661,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Emitted after paging is performed.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * Returns an object consisting of the previous and next pages.
      * @example
@@ -674,6 +669,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * <igx-grid #grid [data]="localData" [height]="'305px'" [autoGenerate]="true" (pagingDone)="pagingDone($event)"></igx-grid>
      * ```
      */
+    @DeprecateProperty('`pagingDone` is deprecated. Use the corresponding output exposed by the `igx-paginator` component instead.')
     @Output()
     public pagingDone = new EventEmitter<IPageEventArgs>();
 
@@ -1217,6 +1213,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     @ContentChildren(IgxGridToolbarComponent)
     public toolbar: QueryList<IgxGridToolbarComponent>;
 
+    /** @hidden @internal */
+    @ContentChildren(IgxPaginatorComponent)
+    protected paginationComponents: QueryList<IgxPaginatorComponent>;
+
     /**
      * @hidden @internal
      */
@@ -1415,13 +1415,17 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets whether the paging feature is enabled.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * The default state is disabled (false).
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [autoGenerate]="true" [paging]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator></igx-paginator>
+     * </igx-grid>
      * ```
      */
+    @DeprecateProperty('`paging` is deprecated')
     @Input()
     public get paging(): boolean {
         return this._paging;
@@ -1435,62 +1439,58 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets/Sets the current page index.
      *
+     * @deprecated in version 12.1.x
      * @example
      * ```html
-     *  <igx-grid #grid [data]="Data" [paging]="true" [(page)]="model.page" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator [(page)]="model.page"></igx-paginator>
+     * </igx-grid>
      * ```
      * @remarks
      * Supports two-way binding.
      */
+    @DeprecateProperty('`page` is deprecated. Use `page` property form `paginator` component instead.')
     @Input()
     public get page(): number {
-        return this._page;
+        return this.paginator?.page || 0;
     }
 
     public set page(val: number) {
-        if (val === this._page || val < 0 || val > this.totalPages - 1) {
-            return;
+        if (this.paginator) {
+            this.paginator.page = val;
         }
-        this.selectionService.clear(true);
-        this.pagingDone.emit({ previous: this._page, current: val });
-        this._page = val;
-        this.pageChange.emit(this._page);
-        this.navigateTo(0);
-        this.notifyChanges();
     }
 
     /**
      * Gets/Sets the number of visible items per page.
      *
+     * @deprecated in version 12.1.x
      * @remarks
      * The default is 15.
      * @example
      * ```html
-     * <igx-grid #grid [data]="Data" [paging]="true" [(perPage)]="model.perPage" [autoGenerate]="true"></igx-grid>
+     * <igx-grid #grid [data]="Data" [autoGenerate]="true">
+     *  <igx-paginator [(perPage)]="model.perPage"></igx-paginator>
+     * </igx-grid>
      * ```
      */
+    @DeprecateProperty('`perPage` is deprecated. Use `perPage` property from `paginator` component instead.')
     @Input()
     public get perPage(): number {
-        return this._perPage;
+        return this.paginator?.perPage || DEFAULT_ITEMS_PER_PAGE;
     }
 
     public set perPage(val: number) {
-        if (val < 0) {
-            return;
-        }
-        this.selectionService.clear(true);
         this._perPage = val;
-        this.perPageChange.emit(this._perPage);
-        this.page = 0;
-        this.crudService.endEdit(false);
-        this.notifyChanges();
+        if (this.paginator) {
+            this.paginator.perPage = val;
+        }
     }
 
     /**
      * Gets/Sets whether the column hiding UI is enabled.
      *
      * @deprecated
-     *
      * @remarks
      * By default it is disabled (false). In order for the UI to work, you need to enable the toolbar as shown in the example below.
      * @example
@@ -2604,6 +2604,20 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
+    public set pagingState(value) {
+        this._pagingState = value;
+        if (this.paginator && !this._init) {
+            this.paginator.totalRecords = value.metadata.countRecords;
+        }
+    }
+
+    public get pagingState() {
+        return this._pagingState;
+    }
+
+    /**
+     * @hidden @internal
+     */
     public rowEditMessage;
 
     /**
@@ -2616,10 +2630,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
 
-    /**
-     * @hidden @internal
-     */
-    public pagingState;
     /**
      * @hidden @internal
      */
@@ -2683,11 +2693,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public pipeTriggerNotifier = new Subject();
 
     /**
-     * @hidden @internal
-     */
-    public paginatorSettings: OverlaySettings = null;
-
-    /**
      * @hidden
      */
     public _filteredUnpinnedData;
@@ -2734,11 +2739,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-    protected _perPage = 15;
-    /**
-     * @hidden
-     */
-    protected _page = 0;
+    protected _perPage = DEFAULT_ITEMS_PER_PAGE;
     /**
      * @hidden
      */
@@ -2747,6 +2748,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden
      */
     protected _pagingMode = GridPagingMode.Local;
+    /**
+     * @hidden
+     */
+    protected _pagingState;
     /**
      * @hidden
      */
@@ -2811,7 +2816,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _allowAdvancedFiltering = false;
     protected _filterMode: FilterMode = FilterMode.quickFilter;
 
-    protected observer: ResizeObserver = new (getResizeObserver())(noop);
 
     protected _defaultTargetRecordNumber = 10;
     protected _expansionStates: Map<any, boolean> = new Map<any, boolean>();
@@ -2821,6 +2825,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _init = true;
     protected _cdrRequestRepaint = false;
     protected _userOutletDirective: IgxOverlayOutletDirective;
+
+    /** @hidden @internal */
+    public get paginator() {
+        return this.paginationComponents?.first;
+    }
 
     /**
      * @hidden @internal
@@ -3300,7 +3309,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             this.notifyChanges();
         });
 
-        this.resizeNotify.pipe(destructor, filter(() => !this._init), throttleTime(100, undefined, { leading: true, trailing: true }))
+        this.resizeNotify.pipe(
+            destructor,
+            filter(() => !this._init),
+            throttleTime(0, animationFrameScheduler, { leading: true, trailing: true })
+        )
             .subscribe(() => {
                 this.zone.run(() => {
                     this.notifyChanges(true);
@@ -3308,12 +3321,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             });
 
         this.pipeTriggerNotifier.pipe(takeUntil(this.destroy$)).subscribe(() => this.pipeTrigger++);
-
-        this.pagingDone.pipe(destructor).subscribe(() => {
-            this.crudService.endEdit(false);
-            this.selectionService.clear(true);
-        });
-
         this.columnMovingEnd.pipe(destructor).subscribe(() => this.crudService.endEdit(false));
 
         this.overlayService.opening.pipe(destructor).subscribe((event) => {
@@ -3493,8 +3500,41 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public ngAfterContentInit() {
         this.setupColumns();
         this.toolbar.changes.pipe(takeUntil(this.destroy$), filter(() => !this._init)).subscribe(() => this.notifyChanges(true));
+        this.setUpPaginator();
+        this.paginationComponents.changes.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            this.setUpPaginator();
+        });
         if (this.actionStrip) {
             this.actionStrip.menuOverlaySettings.outlet = this.outlet;
+        }
+    }
+
+    /** @hidden @internal */
+    public setUpPaginator() {
+        if (this.paginator) {
+            this.paginator.pageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((page: number) => {
+                this.pageChange.emit(page);
+            });
+            this.paginator.pagingDone.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((args: IPageEventArgs) => {
+                this.selectionService.clear(true);
+                this.pagingDone.emit({ previous: args.previous, current: args.current });
+                this.crudService.endEdit(false);
+                this.pipeTrigger++;
+                this.navigateTo(0);
+                this.notifyChanges();
+            });
+            this.paginator.perPageChange.pipe(takeWhile(() => !!this.paginator), filter(() => !this._init))
+            .subscribe((perPage: number) => {
+                this.selectionService.clear(true);
+                this.perPageChange.emit(perPage);
+                this.paginator.page = 0;
+                this.crudService.endEdit(false);
+                this.notifyChanges();
+            });
+        } else {
+            this.markForCheck();
         }
     }
 
@@ -3553,8 +3593,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.zone.runOutsideAngular(() => {
             this.verticalScrollContainer.getScroll().addEventListener('scroll', this.verticalScrollHandler.bind(this));
             this.headerContainer.getScroll().addEventListener('scroll', this.horizontalScrollHandler.bind(this));
-            this.observer = new (getResizeObserver())(() => this.resizeNotify.next());
-            this.observer.observe(this.nativeElement);
+            fromEvent(window, 'resize').pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
+            resizeObservable(this.nativeElement).pipe(takeUntil(this.destroy$)).subscribe(() => this.resizeNotify.next());
         });
     }
 
@@ -3568,8 +3608,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         this.cdr.reattach();
         this._setupRowObservers();
         this._zoneBegoneListeners();
-
-        this.paginatorSettings = { outlet: this.outlet };
 
         const vertScrDC = this.verticalScrollContainer.displayContainer;
         vertScrDC.addEventListener('scroll', this.preventContainerScroll.bind(this));
@@ -3587,7 +3625,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         // Keep the stream open for future subscribers
-        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(noop);
+        this.rendered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+            if (this.paginator) {
+                this.paginator.perPage = this._perPage !== DEFAULT_ITEMS_PER_PAGE ? this._perPage : this.paginator.perPage;
+                this.paginator.totalRecords = this.totalRecords;
+                this.paginator.overlaySettings = { outlet: this.outlet };
+            }
+        });
         Promise.resolve().then(() => this.rendered.next(true));
     }
 
@@ -3659,7 +3703,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         });
 
         this.zone.runOutsideAngular(() => {
-            this.observer.disconnect();
             this.verticalScrollContainer?.getScroll()?.removeEventListener('scroll', this.verticalScrollHandler);
             this.headerContainer?.getScroll()?.removeEventListener('scroll', this.horizontalScrollHandler);
             const vertScrDC = this.verticalScrollContainer?.displayContainer;
@@ -3871,20 +3914,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 return 24;
             default:
                 return 48;
-        }
-    }
-
-    /**
-     * @hidden @internal
-     */
-    public paginatorClassName(): string {
-        switch (this.displayDensity) {
-            case DisplayDensity.cosy:
-                return 'igx-paginator--cosy';
-            case DisplayDensity.compact:
-                return 'igx-paginator--compact';
-            default:
-                return 'igx-paginator';
         }
     }
 
@@ -4103,56 +4132,59 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Gets the total number of pages.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const totalPages = this.grid.totalPages;
      * ```
      */
+    @DeprecateProperty('`totalPages` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get totalPages(): number {
-        if (this.pagingState) {
-            return this.pagingState.metadata.countPages;
-        }
-        return this._totalRecords >= 0 ? Math.ceil(this._totalRecords / this.perPage) : -1;
+        return this.paginator?.totalPages;
     }
 
     /**
      * Gets if the current page is the first page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const firstPage = this.grid.isFirstPage;
      * ```
      */
+    @DeprecateProperty('`isFirstPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get isFirstPage(): boolean {
-        return this.page === 0;
+        return this.paginator.isLastPage;
     }
 
     /**
      * Goes to the next page, if the grid is not already at the last page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.nextPage();
      * ```
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public nextPage(): void {
-        if (!this.isLastPage) {
-            this.page += 1;
-        }
+        this.paginator?.nextPage();
     }
 
     /**
      * Goes to the previous page, if the grid is not already at the first page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * this.grid1.previousPage();
      * ```
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+    @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public previousPage(): void {
-        if (!this.isFirstPage) {
-            this.page -= 1;
-        }
+        this.paginator?.previousPage();
     }
 
     /**
@@ -4172,6 +4204,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     public set totalRecords(total: number) {
         if (total >= 0) {
+            if (this.paginator) {
+                this.paginator.totalRecords = total;
+            }
             this._totalRecords = total;
             this.pipeTrigger++;
             this.notifyChanges();
@@ -4181,13 +4216,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * Returns if the current page is the last page.
      *
+     * @deprecated in version 12.1.0
      * @example
      * ```typescript
      * const lastPage = this.grid.isLastPage;
      * ```
      */
+    @DeprecateProperty('`isLastPage` is deprecated. Use the corresponding property exposed by the `igx-paginator`.')
     public get isLastPage(): boolean {
-        return this.page + 1 >= this.totalPages;
+        return this.paginator.isLastPage;
     }
 
     /**
@@ -4300,12 +4337,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      * @param val
      */
+    // eslint-disable-next-line @typescript-eslint/member-ordering
+     @DeprecateMethod('Use the corresponding method exposed by the `igx-paginator`.')
     public paginate(val: number): void {
-        if (val < 0 || val > this.totalPages - 1) {
-            return;
-        }
-
-        this.page = val;
+        this.paginator?.paginate(val);
     }
 
     /**
@@ -5067,7 +5102,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paging ? Math.min(allItems, this.perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
     /**
@@ -5817,7 +5852,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-        public closeRowEditingOverlay() {
+    public closeRowEditingOverlay() {
         this.rowEditingOverlay.element.removeEventListener('wheel', this.rowEditingWheelHandler);
         this.rowEditPositioningStrategy.isTopInitialPosition = null;
         this.rowEditingOverlay.close();
@@ -5942,7 +5977,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden
      */
-     public rowEditingWheelHandler(event: WheelEvent) {
+    public rowEditingWheelHandler(event: WheelEvent) {
         if (event.deltaY > 0) {
             this.verticalScrollContainer.scrollNext();
         } else {
@@ -6683,7 +6718,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         // eslint-disable-next-line prefer-const
         for (let [row, set] of selectionMap) {
-            row = this.paging ? row + (this.perPage * this.page) : row;
+            row = this.paginator ? row + (this.paginator.perPage * this.paginator.page) : row;
             row = isRemote ? row - this.virtualizationState.startIndex : row;
             if (!source[row] || source[row].detailsData !== undefined) {
                 continue;
@@ -6825,13 +6860,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected scrollTo(row: any | number, column: any | number, inCollection = this._filteredSortedUnpinnedData): void {
         let delayScrolling = false;
 
-        if (this.paging && typeof (row) !== 'number') {
+        if (this.paginator && typeof (row) !== 'number') {
             const rowIndex = inCollection.indexOf(row);
-            const page = Math.floor(rowIndex / this.perPage);
+            const page = Math.floor(rowIndex / this.paginator.perPage);
 
-            if (this.page !== page) {
+            if (this.paginator.page !== page) {
                 delayScrolling = true;
-                this.page = page;
+                this.paginator.page = page;
             }
         }
 
