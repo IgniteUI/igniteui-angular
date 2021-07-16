@@ -19,12 +19,6 @@ export const GridSummaryCalculationMode = mkenum({
 });
 export type GridSummaryCalculationMode = (typeof GridSummaryCalculationMode)[keyof typeof GridSummaryCalculationMode];
 
-export const GridInstanceType = mkenum({
-    grid: 'grid',
-    treeGrid: 'treeGrid'
-});
-export type GridInstanceType = (typeof GridInstanceType)[keyof typeof GridInstanceType];
-
 export type GridKeydownTargetType =
     'dataCell' |
     'summaryCell' |
@@ -62,3 +56,7 @@ export enum GridPagingMode {
     Remote
 }
 
+export enum GridInstanceType {
+    Grid,
+    TreeGrid
+}
