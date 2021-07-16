@@ -64,6 +64,38 @@
                 "selector": "igx-row-island",
                 "type": "component"
             }
+        },
+        {
+            "name": "pagerHidden",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
+        },
+        {
+            "name": "dropdownHidden",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
+        },
+        {
+            "name": "dropdownEnabled",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
+        },
+        {
+            "name": "pagerEnabled",
+            "remove": "true",
+            "owner": {
+                "selector": "igx-paginator",
+                "type": "component"
+            }
         }
     ]
 }
