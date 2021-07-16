@@ -226,7 +226,6 @@ export class GridCellAPISampleComponent implements OnInit {
         this.clearLog(logger);
         const indxs = this.getIndices(indices);
         const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
-        const tt = cell.column.cells;
         let state: string;
         let states: string[];
 
