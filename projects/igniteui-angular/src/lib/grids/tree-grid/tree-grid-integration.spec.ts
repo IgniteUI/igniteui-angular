@@ -990,6 +990,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             treeGrid.transactions.undo();
             fix.detectChanges();
+            tick();
+            fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
             expect(trans.add).toHaveBeenCalled();
@@ -1090,6 +1092,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
+            tick();
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
