@@ -34,7 +34,7 @@ import {
     TransactionEventOrigin,
     StateUpdateEvent
 } from '../../services/transaction/transaction';
-import { HierarchicalTransactionService, IgxHierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
+import { HierarchicalTransactionService, IgxOverlayService } from '../../services/public_api';
 import { IgxFilteringService } from '../filtering/grid-filtering.service';
 import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
@@ -51,7 +51,7 @@ import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
-import { IgxHierarchicalTransactionFactory, TRANSACTION_TYPE } from '../../services/transaction/transaction-factory.service';
+import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
 import { DOCUMENT } from '@angular/common';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../../core/density';
