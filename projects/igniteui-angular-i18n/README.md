@@ -8,6 +8,6 @@ This package stores resource strings for the Ignite UI for Angular `i18n`. The E
 
 An npm package will be produced and it could be referenced alongside with the igniteui-angular in the clients' projects.
 
-or usage details and examples see [Ignite UI for Angular Localization (i18n)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/localization) documentation.
+For usage details and examples see [Ignite UI for Angular Localization (i18n)](https://www.infragistics.com/products/ignite-ui-angular/angular/components/general/localization) documentation.
 
 > Note: The source for the package has been moved to this repository from [igniteui-angular-i18n](https://github.com/IgniteUI/igniteui-angular-i18n) which will remain archived for history reference.
