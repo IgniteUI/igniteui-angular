@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 
 import { IgxColumnComponent } from './column.component';
-import { IgxGridCellComponent } from '../cell.component';
 import { flatten } from '../../core/utils';
 
 
@@ -189,14 +188,14 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      */
     public set inlineEditorTemplate(template: TemplateRef<any>) { }
     /**
-     * Gets the column group cells.
+     * Will return empty array. Use this.children.toArray()[index].cells to get the cells for a column that is part of the column group.
      * ```typescript
      * let columnCells = this.columnGroup.cells;
      * ```
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get cells(): IgxGridCellComponent[] {
+    public get cells(): [] {
         return [];
     }
     /**

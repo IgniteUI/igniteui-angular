@@ -4,17 +4,43 @@ import { IgxGridComponent } from './grid/public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/public_api';
 import { IgxColumnComponent } from './public_api';
 import { ISelectionNode } from './selection/selection.service';
-import { IgxTreeGridComponent } from './tree-grid/public_api';
+import { IgxGridBaseDirective, IgxTreeGridComponent } from './tree-grid/public_api';
 
 export class IgxGridCell implements CellType {
+
+	/**
+	 * Returns the grid containing the cell.
+	 *
+	 * @memberof IgxGridCell
+	 */
+	public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+	private _row: RowType;
+	private _rowIndex: number;
+	private _column: IgxColumnComponent;
+	private _columnField: string;
+
 	/**
 	 * @hidden
 	 */
 	constructor(
-		public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-		public rowIndex: number,
-		private columnField: string) {
-	}
+		grid: IgxGridBaseDirective | IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+			row: number | RowType,
+			column: string | IgxColumnComponent);
+	constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+			row: RowType,
+			column: IgxColumnComponent)	{
+		this.grid = grid;
+		if (typeof row === 'number') {
+			this._rowIndex = row;
+		} else {
+			this._row = row;
+		}
+		if (typeof column === 'string') {
+			this._columnField = column;
+		} else {
+			this._column = column;
+		}
+		}
 
 	/**
 	 * Returns the row containing the cell.
@@ -25,7 +51,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get row(): RowType {
-		return this.grid.createRow(this.rowIndex);
+		return this._row || this.grid.createRow(this._rowIndex);
 	}
 
 	/**
@@ -37,43 +63,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get column(): IgxColumnComponent {
-		return this.grid.getColumnByName(this.columnField);
-	}
-
-	/**
-	 * Returns the column index.
-	 * ```typescript
-	 * let colIndex = this.cell.columnIndex;
-	 * ```
-	 *
-	 * @memberof IgxGridCell
-	 */
-	public get columnIndex(): number {
-		return this.column.index;
-	}
-
-	/**
-	 * Returns the column index.
-	 * ```typescript
-	 * let isSelected = this.cell.columnSelected;
-	 * ```
-	 *
-	 * @memberof IgxGridCell
-	 */
-	public get columnSelected(): boolean {
-		return this.grid.selectionService.isColumnSelected(this.columnField);
-	}
-
-	/**
-	 * Returns the column visible index.
-	 * ```typescript
-	 * let visibleIndex = this.cell.visibleColumnIndex;
-	 * ```
-	 *
-	 * @memberof IgxGridCell
-	 */
-	public get visibleColumnIndex(): number {
-		return this.column.visibleIndex;
+		return this._column || this.grid.getColumnByName(this._columnField);
 	}
 
 	/**
@@ -127,38 +117,40 @@ export class IgxGridCell implements CellType {
 	}
 
 	/**
-	 * Returns the row data.
-	 */
-	public get rowData(): any {
-		return this.row.data;
-	}
-
-	/**
-	 * Returns the row that contains the cell.
+	 * Returns the cell value.
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public get value(): any {
-		// TODO cell when MRL, will return undefined.
-		return this.columnField ? this.rowData[this.columnField] : undefined;
+		// TODO remove
+		// will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
+		// getCellByColumnVisibleIndex is deprecated and will be removed in future version
+		return this.column.field ? this.row.data[this.column.field] : undefined;
 	}
 
 	/**
-	 * Gets the row key.
-	 * A row in the grid is identified either by:
-	 * - primaryKey data value,
-	 * - the whole rowData, if the primaryKey is omitted.
+	 * Gets the cellID key.
+	 * A cell in the grid is identified by:
+	 * - rowID - primaryKey data value or the whole rowData, if the primaryKey is omitted.
+	 * - rowIndex - the row index
+	 * - columnID - column index
 	 *
 	 * ```typescript
 	 * let rowKey = row.key;
 	 * ```
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public get cellID(): any {
 		const primaryKey = this.grid.primaryKey;
-		const rowID = primaryKey ? this.rowData[primaryKey] : this.rowData;
-		return { rowID, columnID: this.columnIndex, rowIndex: this.rowIndex };
+		const rowID = primaryKey ? this.row.data[primaryKey] : this.row.data;
+		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row.index};
 	}
 
 	/**
 	 * Returns if the row is currently in edit mode.
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public get editMode(): boolean {
 		if (this.grid.crudService.cellInEditMode) {
@@ -173,12 +165,38 @@ export class IgxGridCell implements CellType {
 	}
 
 	/**
+	 * Starts/ends edit mode for the cell.
+	 *
+	 * ```typescript
+	 * cell.editMode  = !cell.editMode;
+	 * ```
+	 *
+	 * @memberof IgxGridCell
+	 */
+	public set editMode(value: boolean) {
+		if (this.row.deleted) {
+			return;
+		}
+		if (this.editable && value) {
+			if (this.grid.crudService.cellInEditMode) {
+				this.grid.gridAPI.update_cell(this.grid.crudService.cell);
+				this.grid.crudService.endCellEdit();
+			}
+			this.grid.crudService.enterEditMode(this);
+		} else {
+			this.grid.crudService.endCellEdit();
+		}
+		this.grid.notifyChanges();
+	}
+
+	/**
 	 * Gets whether the cell is selected.
 	 * ```typescript
 	 * let isSelected = this.cell.selected;
 	 * ```
 	 *
-	 * @memberof IgxGridCellComponent
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public get selected(): boolean {
 		return this.grid.selectionService.selected(this.selectionNode);
@@ -190,7 +208,8 @@ export class IgxGridCell implements CellType {
 	 * this.cell.selected = true.
 	 * ```
 	 *
-	 * @memberof IgxGridCellComponent
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public set selected(val: boolean) {
 		const node = this.selectionNode;
@@ -208,6 +227,8 @@ export class IgxGridCell implements CellType {
 	 * ```typescript
 	 * cell.update(newValue);
 	 * ```
+	 *
+	 * @memberof IgxGridCell
 	 */
 	public update(val: any): void {
 		if (this.row.deleted) {
@@ -224,39 +245,16 @@ export class IgxGridCell implements CellType {
 		this.grid.notifyChanges();
 	}
 
-	/**
-	 * Starts/ends edit mode for the cell.
-	 *
-	 * ```typescript
-	 * cell.setEditMode(true);
-	 * ```
-	 */
-	public setEditMode(value: boolean): void {
-		if (this.row.deleted) {
-			return;
-		}
-		if (this.editable && value) {
-			if (this.grid.crudService.cellInEditMode) {
-				this.grid.gridAPI.update_cell(this.grid.crudService.cell);
-				this.grid.crudService.endCellEdit();
-			}
-			this.grid.crudService.enterEditMode(this);
-		} else {
-			this.grid.crudService.endCellEdit();
-		}
-		this.grid.notifyChanges();
-	}
-
 	protected get selectionNode(): ISelectionNode {
 		return {
-			row: this.rowIndex,
-			column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.visibleColumnIndex,
+			row: this.row.index,
+			column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.column.visibleIndex,
 			layout: this.column.columnLayoutChild ? {
 				rowStart: this.column.rowStart,
 				colStart: this.column.colStart,
 				rowEnd: this.column.rowEnd,
 				colEnd: this.column.colEnd,
-				columnVisibleIndex: this.visibleColumnIndex
+				columnVisibleIndex: this.column.visibleIndex
 			} : null
 		};
 	}

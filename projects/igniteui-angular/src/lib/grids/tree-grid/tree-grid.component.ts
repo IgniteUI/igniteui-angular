@@ -44,6 +44,7 @@ import { IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -364,6 +365,26 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     public set rowLoadingIndicatorTemplate(value: TemplateRef<any>) {
         this._rowLoadingIndicatorTemplate = value;
         this.notifyChanges();
+    }
+
+    /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxTreeGridRow && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
     }
 
     // Kind of stupid
@@ -693,26 +714,10 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @param columnField
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
-        if (column) {
+        if (row && row instanceof IgxTreeGridRow && column) {
             return new IgxGridCell(this, rowIndex, columnField);
-        }
-    }
-
-    /**
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const column = this.columnList.find((col) => col.visibleIndex === index);
-        if (column) {
-            return new IgxGridCell(this, rowIndex, column.field);
         }
     }
 
@@ -771,7 +776,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         let row: RowType;
         const rec: any = this.dataView[index];
 
-        if (this.isSummaryRecord(rec)) {
+        if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this, index, rec.summaries);
         }
 

@@ -41,6 +41,7 @@ import { IgxHierarchicalGridRow } from '../grid-public-row';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 import { IgxPaginatorComponent } from '../../paginator/paginator.component';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -273,6 +274,26 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+     @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxHierarchicalGridRow && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
+    }
+
+    /**
      * Gets if all immediate children of the `IgxHierarchicalGridComponent` previously have been set to be expanded/collapsed.
      * If previously set and some rows have been manually expanded/collapsed it will still return the last set value.
      * ```typescript
@@ -466,26 +487,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @param columnField
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
-        if (column) {
+        if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, columnField);
-        }
-    }
-
-    /**
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const column = this.columnList.find((col) => col.visibleIndex === index);
-        if (column) {
-            return new IgxGridCell(this, rowIndex, column.field);
         }
     }
 

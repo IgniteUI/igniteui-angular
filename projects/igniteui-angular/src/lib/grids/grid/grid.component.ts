@@ -32,6 +32,7 @@ import { RowType } from '../common/row.interface';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
 import { IgxGridCell } from '../grid-public-cell';
 import { CellType } from '../common/cell.interface';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -474,6 +475,26 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public get dropAreaMessage(): string {
         return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
+
+    /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxGridRow && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
     }
 
     /**
@@ -1039,26 +1060,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @param columnField
      */
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
-        if (column) {
+        if (row && row instanceof IgxGridRow && column) {
             return new IgxGridCell(this, rowIndex, columnField);
-        }
-    }
-
-    /**
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumn(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const column = this.columnList.find((col) => col.visibleIndex === index);
-        if (column) {
-            return new IgxGridCell(this, rowIndex, column.field);
         }
     }
 
@@ -1103,7 +1108,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         if (this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);
         }
-        if (this.isSummaryRecord(rec)) {
+        if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this, index, rec.summaries);
         }
         // if found record is a no a groupby or summary row, return IgxGridRow instance
