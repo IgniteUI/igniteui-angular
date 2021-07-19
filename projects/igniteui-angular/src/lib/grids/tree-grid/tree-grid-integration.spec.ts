@@ -989,7 +989,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
 
             treeGrid.transactions.undo();
-            (treeGrid as any).pipeTrigger++;
             fix.detectChanges();
             tick();
             fix.detectChanges();
@@ -1093,7 +1092,6 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
 
             treeGrid.transactions.undo();
-            (treeGrid as any).pipeTrigger++;
             fix.detectChanges();
             tick();
             fix.detectChanges();

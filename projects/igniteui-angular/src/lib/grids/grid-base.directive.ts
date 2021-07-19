@@ -2387,9 +2387,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public set batchEditing(val: boolean) {
         if (val !== this._batchEditing) {
             delete this._transactions;
+            this._batchEditing = val;
             this.switchTransactionService(val);
             this.subscribeToTransactions();
-            this._batchEditing = val;
         }
     }
 
@@ -2961,7 +2961,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         positionStrategy: this.rowEditPositioningStrategy
     };
 
-    private _unsubTransactions$ = new Subject<void>();
+    private transactionChange$ = new Subject<void>();
 
     private readonly DRAG_SCROLL_DELTA = 10;
 
@@ -3707,8 +3707,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this.destroy$.next(true);
         this.destroy$.complete();
-        this._unsubTransactions$.next();
-        this._unsubTransactions$.complete();
+        this.transactionChange$.next();
+        this.transactionChange$.complete();
         this._destroyed = true;
 
         if (this._advancedFilteringOverlayId) {
@@ -6026,8 +6026,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     protected subscribeToTransactions(): void {
-        this._unsubTransactions$.next();
-        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this._unsubTransactions$)))
+        this.transactionChange$.next();
+        this.transactions.onStateUpdate.pipe(takeUntil(merge(this.destroy$,this.transactionChange$)))
         .subscribe(this.transactionStatusUpdate.bind(this));
     }
 
