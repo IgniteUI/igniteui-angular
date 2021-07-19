@@ -55,7 +55,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const stringifyAttriutes = (attributes: Attribute[]) => {
     let stringAttributes = '';
     attributes.forEach(element => {
-      stringAttributes = stringAttributes.concat(element.name.includes('#') ? `${element.name} ` : `${element.name}="${element.value}" `);
+      stringAttributes = stringAttributes.concat(element.name.includes('#') ? ` ${element.name} ` : `${element.name}="${element.value}" `);
     });
     return stringAttributes;
   };
@@ -67,10 +67,10 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
     if (paginatorTemplate && checkForPaginatorInTemplate(path, paginationTemplateName?.value)) {
       const pgCmpt = findElementNodes((paginatorTemplate as Element).children, 'igx-paginator')[0];
-      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ' '}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
     } else {
       // eslint-disable-next-line max-len
-      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ' '}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
     }
   };
   // migrate paging and pagination template for grid, tree grid and hierarchical grid
