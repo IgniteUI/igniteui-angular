@@ -154,11 +154,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Emitted after item from the drop down is selected
      *
      * ```html
-     * <input igxInput [igxAutocomplete]="townsPanel" (onItemSelected)='itemSelected($event)' />
+     * <input igxInput [igxAutocomplete]="townsPanel" (itemSelected)='itemSelected($event)' />
      * ```
      */
     @Output()
-    public onItemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
+    public itemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
     /** @hidden @internal */
     get nativeElement(): HTMLInputElement {
@@ -358,7 +358,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
         const newValue = value.newSelection.value;
         const args: AutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
-        this.onItemSelected.emit(args);
+        this.itemSelected.emit(args);
         if (args.cancel) {
             return;
         }
