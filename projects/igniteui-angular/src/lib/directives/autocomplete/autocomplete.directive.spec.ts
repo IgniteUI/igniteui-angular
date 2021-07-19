@@ -893,7 +893,7 @@ describe('IgxAutocomplete', () => {
             expect(dropdownListScrollElement.children.length).toEqual(0);
             expect(textarea.nativeElement.value).toBe(filteredTowns[0]);
         }));
-        fit('Should be instantiated properly on ReactiveForm', fakeAsync(() => {
+        it('Should be instantiated properly on ReactiveForm', fakeAsync(() => {
             fixture = TestBed.createComponent(AutocompleteFormComponent);
             fixture.detectChanges();
             tick();
