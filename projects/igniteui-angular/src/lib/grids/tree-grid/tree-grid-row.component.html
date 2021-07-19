@@ -1,4 +1,4 @@
-<ng-container *ngTemplateOutlet='addRow ? addTemp : defaultTemp'></ng-container>
+<ng-container *ngTemplateOutlet='addRowUI ? addTemp : defaultTemp'></ng-container>
 
 <ng-template #addTemp>
     <div class='igx-grid__tr--inner' [class.igx-grid__tr--add-animate]='triggerAddAnimationClass' (animationend)='animationEndHandler()'>

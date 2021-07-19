@@ -67,9 +67,13 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         const result: T[] = [];
         this._pendingStates.forEach((state: S, key: any) => {
             const value = mergeChanges ? this.getAggregatedValue(key, mergeChanges) : state.value;
-            result.push({ id: key, newValue: value, type: state.type } as T);
+            result.push({ id: key, newValue: value, type: state.type, pendingIndex: state.pendingIndex, pending: true } as T);
         });
         return result;
+    }
+
+    public getAggregatedPendingAddChanges(mergeChanges: boolean): T[] {
+        return [];
     }
 
     /**
@@ -87,7 +91,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         if (!state) {
             return null;
         }
-        if (mergeChanges) {
+        if (mergeChanges && state.recordRef) {
             return this.updateValue(state);
         }
         return state.value;
@@ -139,7 +143,7 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
+            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type, pendingIndex: transaction.pendingIndex } as S;
             states.set(transaction.id, state);
         }
     }
