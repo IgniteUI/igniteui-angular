@@ -4304,6 +4304,14 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public moveColumn(column: IgxColumnComponent, target: IgxColumnComponent, pos: DropPosition = DropPosition.AfterDropTarget) {
+        // M.A. May 11th, 2021 #9508 Make the event cancelable
+        const eventArgs: IColumnMovingEndEventArgs = { source: column, target, cancel: false };
+
+        this.columnMovingEnd.emit(eventArgs);
+
+        if (eventArgs.cancel) {
+            return;
+        }
 
         if (column === target || (column.level !== target.level) ||
             (column.topLevelParent !== target.topLevelParent)) {
@@ -4339,8 +4347,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
         this._moveColumns(column, target, pos);
         this._columnsReordered(column);
-
-        this.columnMovingEnd.emit({ source: column, target });
     }
 
     /**
