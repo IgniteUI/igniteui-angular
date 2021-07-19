@@ -17,21 +17,21 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   const applyChanges = () => {
     for (const [path, change] of changes.entries()) {
-        let buffer = host.read(path).toString();
+      let buffer = host.read(path).toString();
 
-        change.sort((c, c1) => c.position - c1.position)
-            .reverse()
-            .forEach(c => buffer = c.apply(buffer));
+      change.sort((c, c1) => c.position - c1.position)
+        .reverse()
+        .forEach(c => buffer = c.apply(buffer));
 
-        host.overwrite(path, buffer);
-      }
+      host.overwrite(path, buffer);
+    }
   };
 
   const addChange = (path: string, change: FileChange) => {
     if (changes.has(path)) {
-        changes.get(path).push(change);
+      changes.get(path).push(change);
     } else {
-        changes.set(path, [change]);
+      changes.set(path, [change]);
     }
   };
 
@@ -45,7 +45,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   const moveTemplate = (paginatorTemplate) => {
     if (paginatorTemplate) {
-      return  `${warnMsg}\n<igx-paginator-content>
+      return `${warnMsg}\n<igx-paginator-content>
       ${serializeNodes((paginatorTemplate as Element).children).join('')}
       </igx-paginator-content>\n`;
     }
@@ -55,7 +55,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const stringifyAttriutes = (attributes: Attribute[]) => {
     let stringAttributes = '';
     attributes.forEach(element => {
-      stringAttributes = stringAttributes.concat(element.name.includes('#')? `${element.name} ` : `${element.name}="${element.value}" `);
+      stringAttributes = stringAttributes.concat(element.name.includes('#') ? `${element.name} ` : `${element.name}="${element.value}" `);
     });
     return stringAttributes;
   };
@@ -67,51 +67,51 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${paginationTemplateName?.value}`))[0];
     if (paginatorTemplate && checkForPaginatorInTemplate(path, paginationTemplateName?.value)) {
       const pgCmpt = findElementNodes((paginatorTemplate as Element).children, 'igx-paginator')[0];
-      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ' '}${stringifyAttriutes((pgCmpt as Element).attrs)}></igx-paginator>`;
     } else {
       // eslint-disable-next-line max-len
-      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
+      return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ' '}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
     }
   };
-// migrate paging and pagination template for grid, tree grid and hierarchical grid
+  // migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), TAGS)
-        .filter(grid => hasAttribute(grid as Element, prop))
-        .map(node => getSourceOffset(node as Element))
-        .forEach(offset => {
-            const { startTag, file, node } = offset;
-            const { name, value } = getAttribute(node, prop)[0];
-            const text = buildPaginator(node, path, name, value);
-            addChange(file.url, new FileChange(startTag.end, text));
-        });
+      .filter(grid => hasAttribute(grid as Element, prop))
+      .map(node => getSourceOffset(node as Element))
+      .forEach(offset => {
+        const { startTag, file, node } = offset;
+        const { name, value } = getAttribute(node, prop)[0];
+        const text = buildPaginator(node, path, name, value);
+        addChange(file.url, new FileChange(startTag.end, text));
+      });
   }
 
   applyChanges();
   changes.clear();
-// apply the migrations to the rowIsland
+  // apply the migrations to the rowIsland
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), 'igx-row-island')
-        .filter(island => hasAttribute(island as Element, prop))
-        .map(island => getSourceOffset(island as Element))
-        .forEach(offset => {
-            const { startTag, file, node } = offset;
-            const { name, value } = getAttribute(node, prop)[0];
-            const text = buildPaginator(node, path, name, value, true);
-            addChange(file.url, new FileChange(startTag.end, text));
-        });
+      .filter(island => hasAttribute(island as Element, prop))
+      .map(island => getSourceOffset(island as Element))
+      .forEach(offset => {
+        const { startTag, file, node } = offset;
+        const { name, value } = getAttribute(node, prop)[0];
+        const text = buildPaginator(node, path, name, value, true);
+        addChange(file.url, new FileChange(startTag.end, text));
+      });
   }
 
   applyChanges();
   changes.clear();
-// clear paginationTemplate definitions
+  // clear paginationTemplate definitions
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), 'ng-template')
-        .filter(template => hasAttribute(template as Element, templateNames))
-        .forEach(node => {
-            const { startTag, endTag, file } = getSourceOffset(node as Element);
-            const replaceText = file.content.substring(startTag.start, endTag.end);
-            addChange(file.url, new FileChange(startTag.start, '', replaceText, 'replace'));
-        });
+      .filter(template => hasAttribute(template as Element, templateNames))
+      .forEach(node => {
+        const { startTag, endTag, file } = getSourceOffset(node as Element);
+        const replaceText = file.content.substring(startTag.start, endTag.end);
+        addChange(file.url, new FileChange(startTag.start, '', replaceText, 'replace'));
+      });
   }
 
   applyChanges();
