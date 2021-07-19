@@ -58,6 +58,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                 this._selectedIndex = newIndex;
                 this.selectedIndexChange.emit(this._selectedIndex);
             }
+
             this.updateSelectedTabs(oldIndex);
         }
     }
