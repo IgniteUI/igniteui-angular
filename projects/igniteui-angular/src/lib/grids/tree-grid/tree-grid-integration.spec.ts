@@ -32,7 +32,7 @@ const GRID_RESIZE_CLASS = '.igx-grid-th__resize-handle';
 
 describe('IgxTreeGrid - Integration #tGrid', () => {
     configureTestSuite();
-    let fix;
+    let fix: ComponentFixture<any>;
     let treeGrid: IgxTreeGridComponent;
 
     beforeAll(waitForAsync(() => {
@@ -950,6 +950,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.batchEditing = true;
+            fix.detectChanges();
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
@@ -987,6 +989,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
+            tick();
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -1053,6 +1057,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix = TestBed.createComponent(IgxTreeGridPrimaryForeignKeyComponent);
             fix.detectChanges();
             treeGrid = fix.componentInstance.treeGrid;
+            treeGrid.batchEditing = true;
+            fix.detectChanges();
             const trans = treeGrid.transactions;
             spyOn(trans, 'add').and.callThrough();
             treeGrid.foreignKey = 'ParentID';
@@ -1086,6 +1092,8 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             expect(treeGrid.transactions.getTransactionLog()[1].newValue).toBeNull();
 
             treeGrid.transactions.undo();
+            fix.detectChanges();
+            tick();
             fix.detectChanges();
             expect(treeGrid.rowList.filter(r => r.rowID === addedRowId).length).toEqual(1);
             expect(treeGrid.transactions.getTransactionLog().length).toEqual(1);
@@ -1207,6 +1215,22 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
 
             expect(grid.transactions.getTransactionLog().length).toEqual(1);
             expect(grid.getRowData(11)).toEqual(newRow);
+        }));
+
+        it('Should have transactions enabled when batchEditing === false and service is provider', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxTreeGridRowEditingHierarchicalDSTransactionComponent);
+            const grid = fixture.componentInstance.treeGrid;
+            tick();
+            fixture.detectChanges();
+
+            grid.batchEditing = false;
+            fixture.detectChanges();
+
+            expect(grid.batchEditing).toBeFalsy();
+            expect(grid.transactions.enabled).toBeTruthy();
+
+            grid.deleteRowById(147);
+            expect(grid.transactions.getTransactionLog().length).toBe(1);
         }));
     });
 
