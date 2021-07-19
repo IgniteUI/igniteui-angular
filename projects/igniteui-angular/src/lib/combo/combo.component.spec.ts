@@ -67,7 +67,7 @@ const CSS_CLASS_EMPTY = 'igx-combo__empty';
 const defaultDropdownItemHeight = 40;
 const defaultDropdownItemMaxHeight = 400;
 
-fdescribe('igxCombo', () => {
+describe('igxCombo', () => {
     let fixture: ComponentFixture<any>;
     let combo: IgxComboComponent;
     let input: DebugElement;
@@ -2664,7 +2664,7 @@ fdescribe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
             });
-            fit('should properly initialize when used as a form control', () => {                expect(combo).toBeDefined();
+            it('should properly initialize when used as a form control', () => {                expect(combo).toBeDefined();
                 const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
                 expect(comboFormReference).toBeDefined();
                 expect(combo.selectedItems()).toEqual(comboFormReference.value);
