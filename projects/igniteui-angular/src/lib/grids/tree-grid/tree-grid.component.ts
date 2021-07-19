@@ -873,7 +873,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-
      * @hidden @internal
      */
     protected getGroupAreaHeight(): number {

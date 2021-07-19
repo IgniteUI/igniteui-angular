@@ -274,6 +274,19 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * Gets if all immediate children of the `IgxHierarchicalGridComponent` previously have been set to be expanded/collapsed.
+     * If previously set and some rows have been manually expanded/collapsed it will still return the last set value.
+     * ```typescript
+     * const expanded = this.grid.expandChildren;
+     * ```
+     *
+     * @memberof IgxHierarchicalGridComponent
+     */
+    public get expandChildren(): boolean {
+        return this._defaultExpandState;
+    }
+
+    /**
      * @deprecated
      * Returns a `CellType` object that matches the conditions.
      *
@@ -291,19 +304,6 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         if (row && row instanceof IgxHierarchicalGridRow && column) {
             return new IgxGridCell(this, rowIndex, column.field);
         }
-    }
-
-    /**
-     * Gets if all immediate children of the `IgxHierarchicalGridComponent` previously have been set to be expanded/collapsed.
-     * If previously set and some rows have been manually expanded/collapsed it will still return the last set value.
-     * ```typescript
-     * const expanded = this.grid.expandChildren;
-     * ```
-     *
-     * @memberof IgxHierarchicalGridComponent
-     */
-    public get expandChildren(): boolean {
-        return this._defaultExpandState;
     }
 
     /**
