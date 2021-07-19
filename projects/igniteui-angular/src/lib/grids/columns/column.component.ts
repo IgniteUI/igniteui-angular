@@ -1212,7 +1212,7 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         return this.grid.dataView
             .map((rec, index) => {
                 if (!this.grid.isGroupByRecord(rec) && !this.grid.isSummaryRow(rec)) {
-                    const cell = new IgxGridCell(this.grid, index, this.field);
+                    const cell = new IgxGridCell(this.grid as any, index, this.field);
                     return cell;
                 }
             }).filter(cell => cell);

@@ -13,6 +13,7 @@ import {
 
 import { IgxColumnComponent } from './column.component';
 import { flatten } from '../../core/utils';
+import { CellType } from '../common/cell.interface';
 
 
 @Component({
@@ -195,7 +196,7 @@ export class IgxColumnGroupComponent extends IgxColumnComponent implements After
      *
      * @memberof IgxColumnGroupComponent
      */
-    public get cells(): [] {
+    public get cells(): CellType[] {
         return [];
     }
     /**

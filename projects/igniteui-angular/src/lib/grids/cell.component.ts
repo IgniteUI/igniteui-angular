@@ -25,7 +25,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { ISearchInfo } from './grid/public_api';
+import { CellType, IgxGridCell, ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
@@ -677,7 +677,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.grid.doubleClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     };
@@ -689,7 +689,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         this.grid.cellClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     }
@@ -907,7 +907,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.selected.emit({ cell: this, event });
+            this.grid.selected.emit({ cell: this.getCellType(), event });
         }
     }
 
@@ -1029,5 +1029,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
+
+    private getCellType(): CellType {
+        return new IgxGridCell(this.grid, this.row, this.column.field);
     }
 }

@@ -4,7 +4,7 @@ import { IgxGridComponent } from './grid/public_api';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid/public_api';
 import { IgxColumnComponent } from './public_api';
 import { ISelectionNode } from './selection/selection.service';
-import { IgxGridBaseDirective, IgxTreeGridComponent } from './tree-grid/public_api';
+import { IgxTreeGridComponent } from './tree-grid/public_api';
 
 export class IgxGridCell implements CellType {
 
@@ -23,7 +23,7 @@ export class IgxGridCell implements CellType {
 	 * @hidden
 	 */
 	constructor(
-		grid: IgxGridBaseDirective | IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+			grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
 			row: number | RowType,
 			column: string | IgxColumnComponent);
 	constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
