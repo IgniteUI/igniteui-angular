@@ -166,10 +166,10 @@ export class DataUtil {
         transactions
             .filter(t => t.type === TransactionType.ADD)
             .forEach(t => {
-                if (t.pending && t.pendingIndex != null && t.pendingIndex != undefined) {
-                    data.splice(t.pendingIndex, 0, t.newValue)
+                if (t.pending && t.pendingIndex !== null && t.pendingIndex !== undefined) {
+                    data.splice(t.pendingIndex, 0, t.newValue);
                 } else {
-                    data.push(t.newValue)
+                    data.push(t.newValue);
                 }
             });
 

@@ -139,7 +139,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     public get addRowUI(): any {
-        return this.grid.crudService.addRow != null && this.grid.crudService.addRow.id == this.rowID;
+        return this.grid.crudService.addRow && this.grid.crudService.addRow.id === this.rowID;
     }
 
     @HostBinding('style.min-height.px')
@@ -553,11 +553,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         return this.pinned && this.disabled && visibleColumnIndex === 0;
     }
 
-    public animationEndHandler() {
-        this.triggerAddAnimationClass = false;
-        this.addAnimationEnd.emit(this);
-    }
-
     /**
      * Spawns the add row UI for the specific row.
      *
@@ -569,6 +564,21 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
      */
     public beginAddRow() {
         this.grid.crudService.enterAddRowMode(this);
+    }
+
+    /**
+     * @hidden
+     */
+    public triggerAddAnimation() {
+        this.triggerAddAnimationClass = true;
+    }
+
+    /**
+     * @hidden
+     */
+    public animationEndHandler() {
+        this.triggerAddAnimationClass = false;
+        this.addAnimationEnd.emit(this);
     }
 
     /**
@@ -593,12 +603,5 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         const defaultDragIndicatorCssClass = 'igx-grid__drag-indicator';
         const dragIndicatorOff = this.grid.rowDragging && !this.dragging ? 'igx-grid__drag-indicator--off' : '';
         return `${defaultDragIndicatorCssClass} ${dragIndicatorOff}`;
-    }
-
-    /**
-     * @hidden
-     */
-    public triggerAddAnimation() {
-        this.triggerAddAnimationClass = true;
     }
 }
