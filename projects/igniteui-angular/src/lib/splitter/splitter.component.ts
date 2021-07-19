@@ -216,8 +216,14 @@ export class IgxSplitterComponent implements AfterContentInit {
     }
 
     public onMoveEnd(delta: number) {
+        const min = parseInt(this.pane.minSize, 10) || 0;
+        const max = parseInt(this.pane.maxSize, 10) || this.initialPaneSize + this.initialSiblingSize;
         const paneSize = this.initialPaneSize - delta;
         const siblingSize = this.initialSiblingSize + delta;
+
+        if (paneSize < min || paneSize > max) {
+            return;
+        }
         if (this.pane.isPercentageSize) {
             // handle % resizes
             const totalSize = this.getTotalSize();
