@@ -383,26 +383,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         this.notifyChanges();
     }
 
-    /**
-     * @deprecated
-     * Returns a `CellType` object that matches the conditions.
-     *
-     * @example
-     * ```typescript
-     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
-     * ```
-     * @param rowIndex
-     * @param index
-     */
-    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
-    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
-        const row = this.getRowByIndex(rowIndex);
-        const column = this.columnList.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxTreeGridRow && column) {
-            return new IgxGridCell(this, rowIndex, column.field);
-        }
-    }
-
     // Kind of stupid
     private get _gridAPI(): IgxTreeGridAPIService {
         return this.gridAPI as IgxTreeGridAPIService;
@@ -433,6 +413,26 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         super(selectionService, colResizingService, gridAPI, transactionFactory,
             _elementRef, _zone, document, cdr, resolver, differs, viewRef, navigation,
             filteringService, overlayService, summaryService, _displayDensityOptions, localeId, platform);
+    }
+
+    /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxTreeGridRow && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
     }
 
     /**
