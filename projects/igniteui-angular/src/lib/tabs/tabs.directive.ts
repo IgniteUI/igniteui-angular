@@ -58,9 +58,7 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
                 this._selectedIndex = newIndex;
                 this.selectedIndexChange.emit(this._selectedIndex);
             }
-            Promise.resolve().then(() => {
-                this.updateSelectedTabs(oldIndex);
-            });
+            this.updateSelectedTabs(oldIndex);
         }
     }
 
@@ -173,7 +171,9 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
         if (selected) {
             const index = tabs.indexOf(tab);
-            this.selectedIndex = index;
+            if (index > -1) {
+                this.selectedIndex = index;
+            }
         } else {
             if (tabs.every(t => !t.selected)) {
                 this.selectedIndex = -1;
@@ -287,9 +287,6 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
 
     private triggerPanelAnimations(oldSelectedIndex: number) {
         const item = this.items.get(this._selectedIndex);
-        if (!item) {
-            return;
-        }
 
         if (!this.disableAnimation &&
             this.hasPanels &&
