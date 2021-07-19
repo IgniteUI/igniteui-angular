@@ -143,7 +143,12 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
                 state.value = transaction.newValue;
             }
         } else {
-            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type, pendingIndex: transaction.pendingIndex } as S;
+            state = {
+                value: cloneValue(transaction.newValue),
+                recordRef,
+                type: transaction.type,
+                pendingIndex: transaction.pendingIndex
+            } as S;
             states.set(transaction.id, state);
         }
     }
