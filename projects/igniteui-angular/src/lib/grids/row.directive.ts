@@ -138,13 +138,8 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         this.gridAPI.set_row_expansion_state(this.rowID, val);
     }
 
-    @Input()
-    public get addRow(): any {
-        return this._addRow;
-    }
-
-    public set addRow(v: any) {
-        this._addRow = v;
+    public get addRowUI(): any {
+        return this.grid.crudService.addRow != null && this.grid.crudService.addRow.id == this.rowID;
     }
 
     @HostBinding('style.min-height.px')
@@ -154,11 +149,11 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
             const maxRowSpan = this.grid.multiRowLayoutRowSize;
             height = height * maxRowSpan;
         }
-        return this.addRow ? height : null;
+        return this.addRowUI ? height : null;
     }
 
     get cellHeight() {
-        return this.addRow && !this.inEditMode ? null : this.grid.rowHeight || 32;
+        return this.addRowUI && !this.inEditMode ? null : this.grid.rowHeight || 32;
     }
 
     /**
