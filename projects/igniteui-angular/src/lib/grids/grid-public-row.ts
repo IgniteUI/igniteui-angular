@@ -2,7 +2,7 @@ import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
 import { CellType } from './common/cell.interface';
 import { IgxRow } from './common/crud.service';
-import { GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
+import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridCell } from './grid-public-cell';
 import { IgxGridAPIService } from './grid/grid-api.service';
@@ -263,43 +263,43 @@ export class IgxGridRow extends BaseRow implements RowType {
      */
     public get viewIndex(): number {
         if (this.grid.paginator) {
-                const precedingDetailRows = [];
-                const precedingGroupRows = [];
-                const firstRow = this.grid.dataView[0];
-                const hasDetailRows = this.grid.expansionStates.size;
-                const hasGroupedRows = this.grid.groupingExpressions.length;
-                let precedingSummaryRows = 0;
-                const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
+            const precedingDetailRows = [];
+            const precedingGroupRows = [];
+            const firstRow = this.grid.dataView[0];
+            const hasDetailRows = this.grid.expansionStates.size;
+            const hasGroupedRows = this.grid.groupingExpressions.length;
+            let precedingSummaryRows = 0;
+            const firstRowInd = this.grid.groupingFlatResult.indexOf(firstRow);
 
-                // from groupingFlatResult, resolve two other collections:
-                // precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
-                // precedingDetailRows -> ise it to resolve the detail row for each expanded grid row in previous pages
-                if (hasDetailRows || hasGroupedRows) {
-                        this.grid.groupingFlatResult.forEach((r, ind) => {
-                                const rowID = this.grid.primaryKey ? r[this.grid.primaryKey] : r;
-                                if (hasGroupedRows && ind < firstRowInd && this.grid.isGroupByRecord(r)) {
-                                        precedingGroupRows.push(r);
-                                }
-                                if (this.grid.expansionStates.get(rowID) && ind < firstRowInd && !this.grid.isGroupByRecord(r)) {
-                                        precedingDetailRows.push(r);
-                                }
-                        });
-                }
-
-                if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
-                    // if firstRow is a child of the last item in precedingGroupRows,
-                    // then summaryRow for this given groupedRecord is rendered after firstRow,
-                    // i.e. need to decrease firstRowInd to account for the above.
-                    precedingSummaryRows = precedingGroupRows.filter(gr => this.grid.isExpandedGroup(gr)).length;
-                    if (this.grid.summaryPosition === GridSummaryPosition.bottom && precedingGroupRows.length &&
-                        precedingGroupRows[precedingGroupRows.length - 1].records.indexOf(firstRow) > -1) {
-                            precedingSummaryRows += -1;
+            // from groupingFlatResult, resolve two other collections:
+            // precedingGroupedRows -> use it to resolve summaryRow for each group in previous pages
+            // precedingDetailRows -> ise it to resolve the detail row for each expanded grid row in previous pages
+            if (hasDetailRows || hasGroupedRows) {
+                this.grid.groupingFlatResult.forEach((r, ind) => {
+                    const rowID = this.grid.primaryKey ? r[this.grid.primaryKey] : r;
+                    if (hasGroupedRows && ind < firstRowInd && this.grid.isGroupByRecord(r)) {
+                        precedingGroupRows.push(r);
                     }
-                }
+                    if (this.grid.expansionStates.get(rowID) && ind < firstRowInd && !this.grid.isGroupByRecord(r)) {
+                        precedingDetailRows.push(r);
+                    }
+                });
+            }
 
-                return precedingDetailRows.length + precedingSummaryRows + firstRowInd + this.index;
+            if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
+                // if firstRow is a child of the last item in precedingGroupRows,
+                // then summaryRow for this given groupedRecord is rendered after firstRow,
+                // i.e. need to decrease firstRowInd to account for the above.
+                precedingSummaryRows = precedingGroupRows.filter(gr => this.grid.isExpandedGroup(gr)).length;
+                if (this.grid.summaryPosition === GridSummaryPosition.bottom && precedingGroupRows.length &&
+                    precedingGroupRows[precedingGroupRows.length - 1].records.indexOf(firstRow) > -1) {
+                    precedingSummaryRows += -1;
+                }
+            }
+
+            return precedingDetailRows.length + precedingSummaryRows + firstRowInd + this.index;
         } else {
-                return this.index;
+            return this.index;
         }
     }
 
@@ -348,7 +348,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
                 return firstRowIndex + precedingSummaryRows + this.index;
             }
         }
-        return this.index + ((this.grid.paginator?.page || 0)  * (this.grid.paginator?.perPage || 0));
+        return this.index + ((this.grid.paginator?.page || 0) * (this.grid.paginator?.perPage || 0));
     }
 
     /**
@@ -681,6 +681,12 @@ export class IgxSummaryRow implements RowType {
      */
     public isSummaryRow: boolean;
 
+
+    /**
+     * Returns the curent grid type
+     */
+    private gridType: GridInstanceType;
+
     /**
      * The IGroupByRecord object, representing the group record, if the row is a GroupByRow.
      */
@@ -693,9 +699,9 @@ export class IgxSummaryRow implements RowType {
      */
     public get viewIndex(): number {
         if (this.grid.hasSummarizedColumns && this.grid.page > 0) {
-            if (this.grid instanceof IgxGridComponent) {
-                const grid = this.grid as IgxGridComponent;
-                if (grid.page) {
+            if (this.gridType === GridInstanceType.Grid) {
+                this.grid = this.grid as IgxGridComponent;
+                if (this.grid.page) {
                     const precedingDetailRows = [];
                     const precedingGroupRows = [];
                     const firstRow = this.grid.dataView[0];
@@ -735,13 +741,13 @@ export class IgxSummaryRow implements RowType {
                 } else {
                     return this.index;
                 }
-            } else if (this.grid instanceof IgxTreeGridComponent) {
-                const grid = this.grid as IgxTreeGridComponent;
-                if (grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
-                    const firstRowIndex = grid.processedExpandedFlatData.indexOf(grid.dataView[0].data);
+            } else if (this.gridType === GridInstanceType.TreeGrid) {
+                this.grid = this.grid as IgxTreeGridComponent;
+                if (this.grid.summaryCalculationMode !== GridSummaryCalculationMode.rootLevelOnly) {
+                    const firstRowIndex = this.grid.processedExpandedFlatData.indexOf(this.grid.dataView[0].data);
                     const precedingSummaryRows = this.grid.summaryPosition === GridSummaryPosition.bottom ?
-                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) :
-                        this.grid.rootRecords.indexOf(this.getRootParent(grid.dataView[0])) + 1;
+                        this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) :
+                        this.grid.rootRecords.indexOf(this.getRootParent(this.grid.dataView[0])) + 1;
                     return firstRowIndex + precedingSummaryRows + this.index;
                 }
             }
@@ -754,10 +760,11 @@ export class IgxSummaryRow implements RowType {
      * @hidden
      */
     constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-        index: number, private _summaries?: Map<string, IgxSummaryResult[]>) {
+        index: number, private _summaries?: Map<string, IgxSummaryResult[]>, type?: GridInstanceType) {
         this.grid = grid;
         this.index = index;
         this.isSummaryRow = true;
+        this.gridType = type;
     }
 
     private getRootParent(row: ITreeGridRecord): ITreeGridRecord {
