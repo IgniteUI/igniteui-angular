@@ -704,6 +704,37 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
+     * Returns the collection of all RowType for current page.
+     *
+     * @hidden @internal
+     */
+    public allRows(): RowType[] {
+        return this.dataView.map((rec, index) => this.createRow(index));
+    }
+
+    /**
+     * Returns the collection of `IgxTreeGridRow`s for current page.
+     *
+     * @hidden @internal
+     */
+    public dataRows(): RowType[] {
+        return this.allRows().filter(row => row instanceof IgxTreeGridRow);
+    }
+
+    /**
+     * Returns an array of the selected `IgxGridCell`s.
+     *
+     * @example
+     * ```typescript
+     * const selectedCells = this.grid.selectedCells;
+     * ```
+     */
+    public get selectedCells(): CellType[] {
+        return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
+            .reduce((a, b) => a.concat(b), []);
+    }
+
+    /**
      * Returns a `CellType` object that matches the conditions.
      *
      * @example

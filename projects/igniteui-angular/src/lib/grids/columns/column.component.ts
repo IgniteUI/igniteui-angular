@@ -52,7 +52,6 @@ import { DropPosition } from '../moving/moving.service';
 import { IgxColumnGroupComponent } from './column-group.component';
 import { IColumnVisibilityChangingEventArgs, IPinColumnCancellableEventArgs, IPinColumnEventArgs } from '../common/events';
 import { PlatformUtil } from '../../core/utils';
-import { IgxGridRow, IgxTreeGridRow, IgxHierarchicalGridRow } from '../grid-public-row';
 import { CellType } from '../common/cell.interface';
 import { IgxGridCell } from '../grid-public-cell';
 
@@ -1219,6 +1218,19 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
             }).filter(cell => cell);
     }
 
+
+    /**
+     * @hidden @internal
+     */
+    public get _cells(): IgxGridCellComponent[] {
+        return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
+            .map((row) => {
+                if (row._cells) {
+                    return row._cells.filter((cell) => cell.columnIndex === this.index);
+                }
+            }).reduce((a, b) => a.concat(b), []);
+    }
+
     /**
      * Gets the column visible index.
      * If the column is not visible, returns `-1`.
@@ -2376,19 +2388,5 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
         if (this.selectable) {
             this._applySelectableClass = value;
         }
-    }
-
-    /**
-     * Gets the cell components of the column.
-     * Returns only the cells for the rows in teh current virtualization container. For internal use only.
-     *
-     */
-    private get _cells(): IgxGridCellComponent[] {
-        return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
-            .map((row) => {
-                if (row._cells) {
-                    return row._cells.filter((cell) => cell.columnIndex === this.index);
-                }
-            }).reduce((a, b) => a.concat(b), []);
     }
 }

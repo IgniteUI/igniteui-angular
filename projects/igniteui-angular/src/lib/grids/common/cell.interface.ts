@@ -8,6 +8,7 @@ export interface CellType {
 	value: any;
 	editValue: any;
 	selected: boolean;
+	active: boolean;
 	editable: boolean;
 	editMode: boolean;
 	column: IgxColumnComponent;

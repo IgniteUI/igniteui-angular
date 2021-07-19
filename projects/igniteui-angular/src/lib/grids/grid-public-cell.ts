@@ -221,6 +221,12 @@ export class IgxGridCell implements CellType {
 		this.grid.notifyChanges();
 	}
 
+	public get active() {
+			const node = this.grid.navigation.activeNode;
+			return node ? node.row === this.row.index && node.column === this.column.visibleIndex : false;
+	}
+
+
 	/**
 	 * Updates the cell value.
 	 *

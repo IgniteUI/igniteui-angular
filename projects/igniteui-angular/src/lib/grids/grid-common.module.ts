@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { IgxGridCellComponent } from './cell.component';
 import { IgxGridFooterComponent } from './grid-footer/grid-footer.component';
 import {
     IgxGridBodyDirective
@@ -45,7 +44,6 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
 @NgModule({
     declarations: [
         IgxRowDirective,
-        IgxGridCellComponent,
         IgxRowAddTextDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,
@@ -66,7 +64,6 @@ import { IgxGroupByMetaPipe } from './grouping/group-by-area.directive';
         IgxAdvancedFilteringDialogComponent
     ],
     exports: [
-        IgxGridCellComponent,
         IgxRowAddTextDirective,
         IgxRowEditTemplateDirective,
         IgxRowEditActionsDirective,

@@ -393,10 +393,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * Emitted when `IgxGridCellComponent` is clicked.
+     * Emitted when a cell is clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent`.
+     * Returns the `IgxGridCell`.
      * @example
      * ```html
      * <igx-grid #grid (cellClick)="cellClick($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -406,10 +406,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public cellClick = new EventEmitter<IGridCellEventArgs>();
 
     /**
-     * Emitted when `IgxGridCellComponent` is selected.
+     * Emitted when a cell is selected.
      *
      * @remarks
-     *  Returns the `IgxGridCellComponent`.
+     *  Returns the `IgxGridCell`.
      * @example
      * ```html
      * <igx-grid #grid (selected)="onCellSelect($event)" [data]="localData" [height]="'305px'" [autoGenerate]="true"></igx-grid>
@@ -716,7 +716,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when a cell is right clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent` object.
+     * Returns the `IgxGridCell` object.
      * ```html
      * <igx-grid #grid [data]="localData" (contextMenu)="contextMenu($event)" [autoGenerate]="true"></igx-grid>
      * ```
@@ -728,7 +728,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * Emitted when a cell is double clicked.
      *
      * @remarks
-     * Returns the `IgxGridCellComponent` object.
+     * Returns the `IgxGridCell` object.
      * @example
      * ```html
      * <igx-grid #grid [data]="localData" (doubleClick)="dblClick($event)" [autoGenerate]="true"></igx-grid>
@@ -5008,21 +5008,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return !!this.columnList.some(col => col.columnLayout);
     }
 
-    /**
-     * Returns an array of the selected `IgxGridCellComponent`s.
-     *
-     * @example
-     * ```typescript
-     * const selectedCells = this.grid.selectedCells;
-     * ```
-     */
-    public get selectedCells(): IgxGridCellComponent[] | any[] {
-        if (this.dataRowList) {
-            return this.dataRowList.map((row) => row.cells.filter((cell) => cell.selected))
-                .reduce((a, b) => a.concat(b), []);
-        }
-        return [];
-    }
 
     /**
      * @hidden @internal
