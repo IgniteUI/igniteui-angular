@@ -715,7 +715,7 @@
 
     %cal-value--selected--hover {
         %cal-value-content::after {
-            background: igx-color($palette, 'grays', 100, .54);
+            background: igx-color($palette, 'grays', 100, .18);
         }
     }
 
@@ -962,6 +962,12 @@
 
             &:focus {
                 background: var-get($theme, 'date-current-bg-color');
+            }
+
+            @if $variant == 'fluent' or 'bootstrap' {
+                &::after {
+                    opacity: .2;
+                }
             }
         }
     }

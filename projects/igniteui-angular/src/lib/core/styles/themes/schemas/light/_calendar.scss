@@ -246,6 +246,7 @@ $fluent-calendar: extend(
 /// @prop {Map} date-selected-background [igx-color: ('primary', 300)] - The background color for the selected date.
 /// @prop {Color} date-selected-text-color [igx-color: 'surface'] - The text color for the selected date.
 /// @prop {Color} content-background [igx-color: 'surface'] - The main content background color.
+/// @prop {Map} week-number-background [('grays', 300, .5)] - The background color of the week number column.
 ///
 /// @prop {Number} border-radius [4px] - The border radius used for calendar. Can be a fraction between 0 and 1, pixels, or percent.
 /// @prop {Number} date-border-radius [4px] - The border radius used for calendar date. Can be a fraction between 0 and 1, pixels, or percent.
@@ -345,6 +346,10 @@ $bootstrap-calendar: extend(
 
         inactive-text-color: (
             igx-color: ('grays', 500)
+        ),
+
+        week-number-background: (
+            igx-color: ('grays', 300, .5),
         ),
     )
 );
