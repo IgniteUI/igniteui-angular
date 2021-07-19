@@ -427,8 +427,8 @@ $fluent-button: (
 
 
 /// @type {Map}
-/// @prop {Map} disabled-background [igx-color: ('primary', 500), lighten: 20%] - The disabled background color of the button.
-/// @prop {Map} disabled-foreground [igx-color: ('primary', 500), lighten: 35%] - The disabled foreground color of the button.
+/// @prop {Map} disabled-background [igx-color: ('primary', 50)] - The disabled background color of the button.
+/// @prop {Map} disabled-foreground [igx-color: ('primary', 200)] - The disabled foreground color of the button.
 /// @requires {Map} $material-base-button
 /// @requires {Map} $flat-elevation-button
 /// @requires {function} extend
@@ -439,13 +439,11 @@ $bootstrap-base-button: extend(
         variant: 'bootstrap',
 
         disabled-foreground: (
-            igx-color: ('primary', 500),
-            lighten: 20%
+            igx-color: ('primary', 200)
         ),
 
         disabled-background: (
-            igx-color: ('primary', 500),
-            lighten: 35%
+            igx-color: ('primary', 50)
         ),
     )
 );
@@ -486,8 +484,8 @@ $bootstrap-flat-button: extend(
 
 /// @type {Map}
 /// @prop {Map} foreground [igx-color: ('primary', 500)] - The idle text color of an outlined button.
-/// @prop {Color} hover-foreground [#fff] - The hover text color of an outlined button.
-/// @prop {Color} focus-foreground [#fff] - The focus text color of an outlined button.
+/// @prop {Color} hover-foreground [igx-contrast-color: ('primary', 600)] - The hover text color of an raised button.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('primary', 600)] - The focus text color of an raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 500)] - The hover background color of an outlined button.
 /// @prop {Map} focus-background [igx-color: ('primary', 500)] - The focus background color of an outlined button.
 /// @prop {Map} border-color [igx-color: ('primary', 500)] - The border color of an outlined button.
@@ -505,9 +503,13 @@ $bootstrap-outlined-button: extend(
             igx-color: ('primary', 500)
         ),
 
-        hover-foreground: #fff,
+        hover-foreground: (
+            igx-contrast-color: ('primary', 600)
+        ),
 
-        focus-foreground: #fff,
+        focus-foreground: (
+            igx-contrast-color: ('primary', 600)
+        ),
 
         hover-background: (
             igx-color: ('primary', 500)
@@ -522,8 +524,7 @@ $bootstrap-outlined-button: extend(
         ),
 
         disabled-border-color: (
-            igx-color: ('primary', 500),
-            lighten: 35%
+            igx-color: ('primary', 50)
         ),
 
         shadow-color: (
@@ -533,8 +534,8 @@ $bootstrap-outlined-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Color} hover-foreground [#fff] - The hover text color of an raised button.
-/// @prop {Color} focus-foreground [#fff] - The focus text color of an raised button.
+/// @prop {Color} hover-foreground [igx-contrast-color: ('primary', 600)] - The hover text color of an raised button.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('primary', 600)] - The focus text color of an raised button.
 /// @prop {Map} background [igx-color: ('primary', 500)] - The background color of a raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an raised button.
 /// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an raised button.
@@ -547,9 +548,13 @@ $bootstrap-raised-button: extend(
     $material-raised-button,
     $bootstrap-base-button,
     (
-        hover-foreground:  #fff,
+        hover-foreground:  (
+            igx-contrast-color: ('primary', 600)
+        ),
 
-        focus-foreground: #fff,
+        focus-foreground: (
+            igx-contrast-color: ('primary', 600)
+        ),
 
         background: (
             igx-color: ('primary', 500)
@@ -571,6 +576,8 @@ $bootstrap-raised-button: extend(
 
 /// @type {Map}
 /// @requires {function} extend
+/// @prop {Color} hover-foreground [igx-contrast-color: ('primary', 600)] - The hover text color of an raised button.
+/// @prop {Color} focus-foreground [igx-contrast-color: ('primary', 600)] - The focus text color of an raised button.
 /// @prop {Map} background [igx-color: ('primary', 500)] - The background color of a raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 600)] - The hover background color of an raised button.
 /// @prop {Map} focus-background [igx-color: ('primary', 600)] - The focus background color of an raised button.
@@ -584,9 +591,13 @@ $bootstrap-fab-button: extend(
     (
         selector: '[igxButton="fab"], .igx-button--fab',
 
-        hover-foreground:  #fff,
+        hover-foreground:  (
+            igx-contrast-color: ('primary', 600)
+        ),
 
-        focus-foreground: #fff,
+        focus-foreground: (
+            igx-contrast-color: ('primary', 600)
+        ),
 
         background: (
             igx-color: ('primary', 500)

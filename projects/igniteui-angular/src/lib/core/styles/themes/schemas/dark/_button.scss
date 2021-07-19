@@ -199,22 +199,9 @@ $dark-fluent-button: (
 );
 
 /// @type {Map}
-/// @prop {Color} disabled-foreground [igx-color: ('primary', 900)] - The disabled foreground color of the button.
-/// @prop {Color} disabled-background [igx-color: ('primary', 900)] - The disabled background color of the button.
 /// @requires {Map} $bootstrap-base-button
 /// @requires {function} extend
-$bootstrap-base-button-dark: extend(
-    $bootstrap-base-button,
-    (
-        disabled-foreground: (
-            igx-color: ('primary', 900),
-        ),
-
-        disabled-background: (
-            igx-color: ('primary', 900, .5),
-        ),
-    )
-);
+$bootstrap-base-button-dark: extend($bootstrap-base-button);
 
 /// @type {Map}
 /// @prop {Map} disabled-border-color [igx-color: ('primary', 900)] - The disabled border color of the button.
