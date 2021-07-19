@@ -2664,7 +2664,8 @@ describe('igxCombo', () => {
                 combo = fixture.componentInstance.combo;
                 input = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
             });
-            it('should properly initialize when used as a form control', () => {                expect(combo).toBeDefined();
+            it('should properly initialize when used as a form control', () => {
+                expect(combo).toBeDefined();
                 const comboFormReference = fixture.componentInstance.reactiveForm.controls.townCombo;
                 expect(comboFormReference).toBeDefined();
                 expect(combo.selectedItems()).toEqual(comboFormReference.value);
