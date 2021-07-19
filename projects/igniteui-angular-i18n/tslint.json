@@ -1,0 +1,12 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "variable-name": {
+        "options": [
+          "check-format",
+          "allow-trailing-underscore",
+          "allow-pascal-case"
+        ]
+      }
+  }
+}

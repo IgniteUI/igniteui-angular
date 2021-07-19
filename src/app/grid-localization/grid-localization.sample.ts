@@ -5,9 +5,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeBG from '@angular/common/locales/bg';
 import localeEN from '@angular/common/locales/en';
-import localeDE from '@angular/common/locales/de';
 import localeES from '@angular/common/locales/es';
-import localeFR from '@angular/common/locales/fr';
 import localeIT from '@angular/common/locales/it';
 import localeJA from '@angular/common/locales/ja';
 import localeKO from '@angular/common/locales/ko';
@@ -18,7 +16,7 @@ import { DATA } from '../shared/financialData';
 
 import { IgxGridComponent, IResourceStrings, changei18n, getCurrentResourceStrings } from 'igniteui-angular';
 import {
-    IgxResourceStringsBG, IgxResourceStringsDE, IgxResourceStringsES, IgxResourceStringsFR, IgxResourceStringsIT,
+    IgxResourceStringsBG, IgxResourceStringsES, IgxResourceStringsIT,
     IgxResourceStringsJA, IgxResourceStringsKO, IgxResourceStringsZHHANS, IgxResourceStringsZHHANT
 } from 'igniteui-angular-i18n';
 
@@ -34,7 +32,7 @@ export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
     public data: any[];
     public locale: string;
     public locales: { type: string, resource: object }[];
-    public selectLocales = ['HI', 'BG', 'EN', 'DE', 'ES', 'FR', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'];
+    public selectLocales = ['HI', 'BG', 'EN', 'ES', 'IT', 'JA', 'KO', 'zh-Hans', 'zh-Hant'];
     public cashedLocalizationEN: IResourceStrings;
     public partialCustomHindi: IResourceStrings;
 
@@ -42,9 +40,7 @@ export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         registerLocaleData(localeBG);
         registerLocaleData(localeEN);
-        registerLocaleData(localeDE);
         registerLocaleData(localeES);
-        registerLocaleData(localeFR);
         registerLocaleData(localeIT);
         registerLocaleData(localeJA);
         registerLocaleData(localeKO);
@@ -65,9 +61,7 @@ export class GridLocalizationSampleComponent implements OnInit, OnDestroy {
 
         this.locales = [
             { type: 'BG', resource: IgxResourceStringsBG },
-            { type: 'DE', resource: IgxResourceStringsDE },
             { type: 'ES', resource: IgxResourceStringsES },
-            { type: 'FR', resource: IgxResourceStringsFR },
             { type: 'IT', resource: IgxResourceStringsIT },
             { type: 'JA', resource: IgxResourceStringsJA },
             { type: 'KO', resource: IgxResourceStringsKO },
