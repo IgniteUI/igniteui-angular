@@ -850,7 +850,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(DEBOUNCETIME);
 
-            let cell = grid.gridAPI.get_cell_by_index(2, 'Released');
+            const cell = grid.gridAPI.get_cell_by_index(2, 'Released');
             UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();

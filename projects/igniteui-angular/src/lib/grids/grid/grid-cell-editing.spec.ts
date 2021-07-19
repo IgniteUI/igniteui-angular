@@ -360,9 +360,9 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
             expect(grid.gridAPI.crudService.cell).toBeNull();
             expect(grid.pinnedColumns.length).toBe(1);
-            let cell2 = grid.getCellByColumn(0, 'firstName');
+            cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             expect(cell.value).toBe(cacheValue);
-            cell2 = grid.getCellByColumn(1, 'firstName');
+            cell = grid.gridAPI.get_cell_by_index(1, 'firstName');
             const cellValue = cell.value;
             cell.editMode = true;
             fixture.detectChanges();
@@ -370,7 +370,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(grid.gridAPI.crudService.cell).toBeDefined();
             grid.unpinColumn('firstName');
             fixture.detectChanges();
-            cell2 = grid.getCellByColumn(1, 'firstName');
+            cell = grid.gridAPI.get_cell_by_index(1, 'firstName');
             expect(grid.pinnedColumns.length).toBe(0);
             expect(grid.gridAPI.crudService.cell).toBeNull();
             expect(cell.editMode).toBe(false);
@@ -592,21 +592,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBeFalsy();
-            const cell2 = grid.getCellByColumn(0, 'age');
-            initialRowData = {...cell2.row.data};
+            cell = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell.row.data};
             cellArgs = {
-                cellID: cell2.cellID,
-                rowID: cell2.row.key,
+                cellID: cell.cellID,
+                rowID: cell.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
                 cancel: false,
-                column: cell2.column,
+                column: cell.column,
                 owner: grid,
                 event: jasmine.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
-            expect(cell2.editMode).toBeTruthy();
+            expect(cell.editMode).toBeTruthy();
         });
 
         it(`Should be able to cancel 'cellEditEnter' event`, () => {
@@ -1105,7 +1105,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         });
 
         it('should exit edit mode on filtering', () => {
-            let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const cellDom = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[0];
             const cellValue = cell.value;
 

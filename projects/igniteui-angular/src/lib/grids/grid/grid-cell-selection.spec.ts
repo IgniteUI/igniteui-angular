@@ -1637,7 +1637,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             const column = grid.getColumnByName('ID');
             column.sortable = true;
             const selectionChangeSpy = spyOn<any>(grid.rangeSelected, 'emit').and.callThrough();
-            GridSelectionFunctions.selectCellsRangeNoWait(fix, grid.gridAPI.get_cell_by_index(1, 'ParentID'), grid.gridAPI.get_cell_by_index(4, 'HireDate'));
+            GridSelectionFunctions.selectCellsRangeNoWait(
+                fix, grid.gridAPI.get_cell_by_index(1, 'ParentID'), grid.gridAPI.get_cell_by_index(4, 'HireDate'));
             detect();
 
             expect(selectionChangeSpy).toHaveBeenCalledTimes(1);
@@ -2086,8 +2087,8 @@ describe('IgxGrid - Cell selection #grid', () => {
             grid.dataRowList.first.virtDirRow.scrollTo(2);
             await wait(100);
             fix.detectChanges();
-
-            await GridSelectionFunctions.selectCellsRange(fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
+            await GridSelectionFunctions.selectCellsRange
+                (fix, grid.gridAPI.get_cell_by_index(2, 'Age'), grid.gridAPI.get_cell_by_index(4, 'Name'));
             detect();
 
             const selectedData = [

@@ -519,7 +519,7 @@ describe('IgxGrid Master Detail #grid', () => {
             await wait(DEBOUNCETIME);
             fix.detectChanges();
             const row = grid.gridAPI.get_row_by_index(52) as IgxGridRowComponent;
-            let targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
+            const targetCellElement = grid.gridAPI.get_cell_by_index(52, 'ContactName');
 
             UIInteractions.simulateClickAndSelectEvent(targetCellElement);
             fix.detectChanges();
@@ -1046,7 +1046,7 @@ describe('IgxGrid Master Detail #grid', () => {
             it(`Should navigate down through a detail view by focusing the whole row and continuing
             onto the next with arrow down in multi-row layout grid.`, async () => {
                 const gridContent = GridFunctions.getGridContent(fix);
-                let targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
+                const targetCellElement = grid.gridAPI.get_cell_by_index(0, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
                 fix.detectChanges();
 
@@ -1073,7 +1073,7 @@ describe('IgxGrid Master Detail #grid', () => {
             it(`Should navigate up through a detail view by
             focusing the whole row and continuing onto the next with arrow up in multi-row layout grid.`, async () => {
                 const gridContent = GridFunctions.getGridContent(fix);
-                let targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
+                const targetCellElement = grid.gridAPI.get_cell_by_index(2, 'ContactName');
                 UIInteractions.simulateClickAndSelectEvent(targetCellElement);
                 fix.detectChanges();
 
