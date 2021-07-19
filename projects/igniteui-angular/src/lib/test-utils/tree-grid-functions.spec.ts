@@ -1,10 +1,11 @@
 import { By } from '@angular/platform-browser';
-import { IgxTreeGridComponent, IgxGridBaseDirective, IgxGridCellComponent } from '../grids/tree-grid/public_api';
+import { IgxTreeGridComponent, IgxGridBaseDirective, CellType } from '../grids/tree-grid/public_api';
 import { IGridDataBindable } from '../grids/common/grid.interface';
 import { IgxCheckboxComponent } from '../checkbox/checkbox.component';
 import { UIInteractions, wait } from './ui-interactions.spec';
 import { GridFunctions } from './grid-functions.spec';
 import { IgxRowDirective } from '../grids/row.directive';
+import { IgxGridCellComponent } from '../grids/cell.component';
 
 // CSS class should end with a number that specified the row's level
 const TREE_CELL_DIV_INDENTATION_CSS_CLASS = '.igx-grid__tree-cell--padding-level-';
@@ -399,7 +400,7 @@ export class TreeGridFunctions {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 
-    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: CellType, selected: boolean = true) {
         expect(cell).toBeDefined();
         if (cell) {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
@@ -410,7 +411,7 @@ export class TreeGridFunctions {
                 if (selectedCell) {
                     expect(selectedCell.value).toEqual(cell.value);
                     expect(selectedCell.column.field).toEqual(cell.column.field);
-                    expect(selectedCell.rowIndex).toEqual(cell.rowIndex);
+                    expect(selectedCell.row.index).toEqual(cell.row.index);
                     expect(selectedCell.value).toEqual(cell.value);
                 }
             }

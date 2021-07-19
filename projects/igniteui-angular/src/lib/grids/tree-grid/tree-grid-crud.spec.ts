@@ -836,12 +836,12 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                 cell.column.editable = true;
                 treeGrid.rowEditable = true;
                 fix.detectChanges();
-                cell.setEditMode(true);
+                cell.editMode = true;
                 fix.detectChanges();
                 expect(cell.row.inEditMode).toBeTrue();
                 treeGrid.rowEditable = false;
                 fix.detectChanges();
-                cell.setEditMode(true);
+                cell.editValue = true;
                 fix.detectChanges();
                 expect(cell.row.inEditMode).toBeFalse();
             });

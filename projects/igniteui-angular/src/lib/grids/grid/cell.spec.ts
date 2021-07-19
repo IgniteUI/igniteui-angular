@@ -10,7 +10,7 @@ import { PlatformUtil } from '../../core/utils';
 import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
-import { IgxGridCellComponent } from '../tree-grid/public_api';
+import { IgxGridCellComponent } from '../cell.component';
 
 describe('IgxGrid - Cell component #grid', () => {
 
@@ -34,7 +34,7 @@ describe('IgxGrid - Cell component #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cellElem = GridFunctions.getRowCells(fix, 0)[0];
-            firstCell = grid.getCellByColumn(0, 'ID');
+            firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
         }));
 
         it('@Input properties and getters', () => {
@@ -52,7 +52,7 @@ describe('IgxGrid - Cell component #grid', () => {
             spyOn(grid.selected, 'emit').and.callThrough();
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             const args: IGridCellEventArgs = {
-                cell: firstCell,
+                cell: grid.getCellByColumn(0, 'ID'),
                 event: jasmine.anything() as any
             };
             fix.detectChanges();
@@ -87,7 +87,7 @@ describe('IgxGrid - Cell component #grid', () => {
             const event = new Event('click');
             firstCell.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
-                cell: firstCell,
+                cell: grid.getCellByColumn(0, 'ID'),
                 event
             };
 
@@ -115,7 +115,7 @@ describe('IgxGrid - Cell component #grid', () => {
             const event = new Event('contextmenu');
             cellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
-                cell: firstCell,
+                cell: grid.getCellByColumn(0, 'ID'),
                 event
             };
 
@@ -130,7 +130,7 @@ describe('IgxGrid - Cell component #grid', () => {
             spyOn(event, 'preventDefault');
             cellElem.nativeElement.dispatchEvent(event);
             const args: IGridCellEventArgs = {
-                cell: firstCell,
+                cell: grid.getCellByColumn(0, 'ID'),
                 event
             };
 
@@ -294,7 +294,7 @@ describe('IgxGrid - Cell component #grid', () => {
             fix.detectChanges();
 
             const grid = fix.componentInstance.grid;
-            const firstCell = grid.getCellByColumn(0, 'ID');
+            const firstCell = grid.gridAPI.get_cell_by_index(0, 'ID');
 
             // should attach 'doubletap'
             expect(addListenerSpy.calls.count()).toBeGreaterThan(1);
@@ -336,7 +336,7 @@ describe('IgxGrid - Cell component #grid', () => {
             fix.detectChanges();
             const columns = fix.componentInstance.grid.columnList;
             const lastCol: IgxColumnComponent = columns.last;
-            lastCol.cells.forEach((cell) => {
+            lastCol._cells.forEach((cell) => {
                 expect(cell.nativeElement.clientWidth).toBeGreaterThan(100);
             });
         }));
@@ -358,20 +358,20 @@ describe('IgxGrid - Cell component #grid', () => {
 
             const grid = fixture.componentInstance.grid;
 
-            grid.getColumnByName('UnitsInStock').cells.forEach((cell) => {
+            grid.getColumnByName('UnitsInStock')._cells.forEach((cell) => {
                 expect(cell.nativeElement.classList).toContain('test1');
             });
 
-            const indexColCells = grid.getColumnByName('ProductID').cells;
+            const indexColCells = grid.getColumnByName('ProductID')._cells;
 
             expect(indexColCells[3].nativeElement.classList).not.toContain('test');
             expect(indexColCells[4].nativeElement.classList).toContain('test2');
             expect(indexColCells[5].nativeElement.classList).toContain('test');
             expect(indexColCells[6].nativeElement.classList).toContain('test');
 
-            expect(grid.getColumnByName('ProductName').cells[4].nativeElement.classList).toContain('test2');
-            expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
-            expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
+            expect(grid.getColumnByName('ProductName')._cells[4].nativeElement.classList).toContain('test2');
+            expect(grid.getColumnByName('InStock')._cells[4].nativeElement.classList).toContain('test2');
+            expect(grid.getColumnByName('OrderDate')._cells[4].nativeElement.classList).toContain('test2');
         }));
     });
 });

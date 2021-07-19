@@ -1756,13 +1756,13 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
         fix.detectChanges();
 
         let row = treeGrid.getRowByKey(15);
-        (row as IgxTreeGridRowComponent).expanded = false;
+        row.expanded = false;
         fix.detectChanges();
         await wait(16);
         fix.detectChanges();
 
         row = treeGrid.getRowByKey(15);
-        (row as IgxTreeGridRowComponent).expanded = true;
+        row.expanded = true;
         fix.detectChanges();
         await wait(16);
         fix.detectChanges();

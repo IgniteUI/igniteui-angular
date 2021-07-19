@@ -86,9 +86,9 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should not be possible to select a range when change cellSelection to single', () => {
             const rangeChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
-            const startCell = treeGrid.getCellByColumn(0, 'ID');
-            const middleCell = treeGrid.getCellByColumn(1, 'ID');
-            const endCell = treeGrid.getCellByColumn(2, 'ID');
+            const startCell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
+            const middleCell = treeGrid.gridAPI.get_cell_by_index(1, 'ID');
+            const endCell = treeGrid.gridAPI.get_cell_by_index(2, 'ID');
 
             expect(treeGrid.cellSelection).toEqual(GridSelectionMode.multiple);
             GridSelectionFunctions.selectCellsRangeNoWait(fix, startCell, endCell);
@@ -167,7 +167,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should be able to select a range with holding Shift key', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
-            const firstCell = treeGrid.getCellByColumn(6, 'Age');
+            const firstCell = treeGrid.gridAPI.get_cell_by_index(6, 'Age');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
@@ -212,7 +212,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
         it('Should be able to select a range with keyboard', (async () => {
             const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
-            let cell = treeGrid.getCellByColumn(9, 'Age');
+            let cell = treeGrid.gridAPI.get_cell_by_index(9, 'Age');
 
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
@@ -371,7 +371,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
 
-            const cell = treeGrid.getCellByColumn(8, 'Name');
+            const cell = treeGrid.gridAPI.get_cell_by_index(8, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 

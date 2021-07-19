@@ -7,8 +7,8 @@ import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { setupGridScrollDetection } from '../../test-utils/helper-utils.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { IgxGridCellComponent } from '../grid/public_api';
 import { DebugElement } from '@angular/core';
+import { IgxGridCellComponent } from '../cell.component';
 
 const DEBOUNCETIME = 30;
 
@@ -409,11 +409,11 @@ describe('IgxTreeGrid - Key Board Navigation #tGrid', () => {
 
         it('should navigate with arrow Up and Down keys', async () => {
             spyOn(treeGrid.selected, 'emit').and.callThrough();
-            const firstCell: IgxGridCellComponent = treeGrid.getCellByColumn(5, 'ID');
+            const firstCell: IgxGridCellComponent = treeGrid.gridAPI.get_cell_by_index(5, 'ID');
             UIInteractions.simulateClickAndSelectEvent(firstCell);
             fix.detectChanges();
 
-            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, firstCell);
+            TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, treeGrid.getCellByColumn(5, 'ID'));
             expect(treeGrid.selected.emit).toHaveBeenCalledTimes(1);
 
             for (let i = 5; i < 9; i++) {

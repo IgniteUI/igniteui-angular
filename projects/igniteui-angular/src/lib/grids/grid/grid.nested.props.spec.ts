@@ -523,7 +523,7 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.cellEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
@@ -561,7 +561,7 @@ describe('Edit cell with data of type Array', () => {
 
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
 
         expect(cellArgs.newValue.length).toEqual(1);
@@ -585,7 +585,7 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.cellEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
@@ -622,7 +622,7 @@ describe('Edit cell with data of type Array', () => {
 
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
         cellArgs.newValue = initialRowData.locations;
 
@@ -652,7 +652,7 @@ describe('Edit cell with data of type Array', () => {
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
@@ -691,7 +691,7 @@ describe('Edit cell with data of type Array', () => {
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         rowArgs.newValue = initialRowData;
 
         delete rowArgs.cancel;
@@ -715,7 +715,7 @@ describe('Edit cell with data of type Array', () => {
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell);
         fixture.detectChanges();
@@ -754,7 +754,7 @@ describe('Edit cell with data of type Array', () => {
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         rowArgs.newValue = initialRowData;
 
         expect(rowArgs.newValue.locations.length).toEqual(1);

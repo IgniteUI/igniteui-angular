@@ -1033,7 +1033,7 @@ describe('Row Pinning #grid', () => {
             const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
-            expect(selectedCell.rowIndex).toBe(27);
+            expect(selectedCell.row.index).toBe(27);
         });
 
         it('should navigate and scroll to first unpinned row from top pinned row using ArrowDown', async () => {
@@ -1058,7 +1058,7 @@ describe('Row Pinning #grid', () => {
             const secondRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(secondRowCell);
-            expect(selectedCell.rowIndex).toBe(1);
+            expect(selectedCell.row.index).toBe(1);
         });
 
         it('should navigate to top pinned row from bottom unpinned row without scrolling using Ctrl+ArrowUp', async () => {
@@ -1087,7 +1087,7 @@ describe('Row Pinning #grid', () => {
             const firstRowCell =  grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(firstRowCell);
-            expect(selectedCell.rowIndex).toBe(0);
+            expect(selectedCell.row.index).toBe(0);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).not.toEqual(0);
         });
 
@@ -1111,7 +1111,7 @@ describe('Row Pinning #grid', () => {
             const secondRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(secondRowCell);
-            expect(selectedCell.rowIndex).toBe(1);
+            expect(selectedCell.row.index).toBe(1);
         });
 
         it('should navigate and scroll to top from bottom pinned row using Ctrl+ArrowUp', async () => {
@@ -1142,7 +1142,7 @@ describe('Row Pinning #grid', () => {
             const firstRowCell =  grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(firstRowCell);
-            expect(selectedCell.rowIndex).toBe(0);
+            expect(selectedCell.row.index).toBe(0);
         });
 
         it('should navigate to last unpinned row from bottom pinned row using ArrowUp', async () => {
@@ -1164,7 +1164,7 @@ describe('Row Pinning #grid', () => {
             const lastUnpinnedRowCell =  grid.gridAPI.get_row_by_index(26).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastUnpinnedRowCell);
-            expect(selectedCell.rowIndex).toBe(26);
+            expect(selectedCell.row.index).toBe(26);
         });
 
         it('should navigate to bottom pinned row from top unpinned row without scrolling using Ctrl+ArrowDown', async () => {
@@ -1188,7 +1188,7 @@ describe('Row Pinning #grid', () => {
             const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
-            expect(selectedCell.rowIndex).toBe(27);
+            expect(selectedCell.row.index).toBe(27);
             expect(grid.verticalScrollContainer.getScroll().scrollTop).toEqual(0);
         });
 
@@ -1220,7 +1220,7 @@ describe('Row Pinning #grid', () => {
             const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
-            expect(selectedCell.rowIndex).toBe(27);
+            expect(selectedCell.row.index).toBe(27);
         });
 
         it('should navigate down from pinned to unpinned row when there are filtered out pinned rows', async () => {
@@ -1243,7 +1243,7 @@ describe('Row Pinning #grid', () => {
             const lastRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
-            expect(selectedCell.rowIndex).toBe(1);
+            expect(selectedCell.row.index).toBe(1);
         });
     });
 
