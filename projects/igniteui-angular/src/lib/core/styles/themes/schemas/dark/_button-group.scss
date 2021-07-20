@@ -124,7 +124,7 @@ $dark-bootstrap-button-group: extend($bootstrap-button-group);
 /// @type {Map}
 /// @prop {Map} item-background [igx-color: ('surface')] - The background color for button group items.
 /// @prop {Color} item-text-color [igx-contrast-color: 'surface']- The text color for button group items.
-/// @prop {Color} item-hover-text-color [#fff] - The hover text color for button group items.
+/// @prop {Color} item-hover-text-color [igx-contrast-color: 'surface'] - The hover text color for button group items.
 ///
 /// @requires {function} extend
 /// @requires $indigo-button-group
@@ -139,7 +139,9 @@ $dark-indigo-button-group: extend(
             igx-contrast-color: 'surface'
         ),
 
-        item-hover-text-color: #fff,
+        item-hover-text-color: (
+            igx-contrast-color: 'surface'
+        ),
     )
 );
 

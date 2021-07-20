@@ -25,6 +25,7 @@
 /// @prop {Map} item-selected-background [igx-color: ('grays', 400)] - The background color for a selected item in the button group.
 /// @prop {Map} item-selected-border-color [igx-color: ('grays', 500)] - The border color for a selected item from the button group.
 /// @prop {Map} item-selected-hover-background [igx-color: ('grays', 500, 8)] - The background color for a selected item in hover or focus state in the button group.
+/// @prop {Map} idle-shadow-color [transparent] - The outline color of button group items.
 /// @prop {Number} elevation [2] - The elevation level, between 0-24, to be used for the button group shadow.
 /// @prop {Number} border-radius [.2] - The border radius used for button-group component. Can be a fraction between 0 and 1, pixels, or percent.
 /// @requires {function} extend
@@ -36,6 +37,8 @@ $light-button-group: extend(
     $default-elevation-button-group,
     (
         variant: 'material',
+
+        idle-shadow-color: transparent,
 
         item-background: (
             igx-color: ('grays', 50)
@@ -223,7 +226,7 @@ $bootstrap-button-group: extend(
 /// @type {Map}
 /// @prop {Color} item-background [igx-color: ('grays', 50)] - The background color for button group items.
 /// @prop {Color} item-text-color [igx-contrast-color: ('grays', 50)]- The text color for button group items.
-/// @prop {Map} shadow-color [igx-color: ('grays', 300)] - The outline color of button group items.
+/// @prop {Map} idle-shadow-color [igx-color: ('primary', 200)] - The outline color of button group items.
 /// @prop {Map} selected-shadow-color [igx-color: ('primary', 200)] - The outline color of selected button group items.
 /// @prop {Map} item-border-color [igx-color: ('primary', 400)] - The border color between button group items.
 /// @prop {Map} item-hover-background [igx-color: ('grays', 100, .87)] - The hover background color for button group items.
@@ -252,8 +255,8 @@ $indigo-button-group: extend(
             igx-color: ('grays', 50),
         ),
 
-        shadow-color: (
-            igx-color: ('grays', 300),
+        idle-shadow-color: (
+            igx-color: ('primary', 200),
         ),
 
         selected-shadow-color: (
