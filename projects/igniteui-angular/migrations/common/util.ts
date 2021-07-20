@@ -90,7 +90,7 @@ export const getPackageVersion = (pkg: string): string => {
     let version = null;
     try {
         version = require(path.posix.join(pkg, 'package.json'))?.version;
-    } catch {}
+    } catch { }
 
     return version;
 };
@@ -153,7 +153,7 @@ export class FileChange {
         public text = '',
         public replaceText = '',
         public type: 'insert' | 'replace' = 'insert'
-        ) {}
+    ) { }
 
     public apply(content: string) {
         if (this.type === 'insert') {
@@ -270,3 +270,14 @@ class SerializerVisitor implements Visitor {
 
 
 export const serializeNodes = (nodes: Node[]): string[] => nodes.map(node => node.visit(new SerializerVisitor(), null));
+
+export const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
+
+export const stringifyAttriutes = (attributes: Attribute[]) => {
+    let stringAttributes = '';
+    attributes.forEach(element => {
+        // eslint-disable-next-line max-len
+        stringAttributes = stringAttributes.concat(element.name.includes('#') ? ` ${element.name} ` : `${element.name}="${element.value}" `);
+    });
+    return stringAttributes;
+};
