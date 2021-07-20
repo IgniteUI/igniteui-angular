@@ -1,7 +1,8 @@
 import { Attribute, Element } from '@angular/compiler';
 import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
-import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile, serializeNodes } from '../common/util';
+import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
+        serializeNodes, makeNgIf, stringifyAttriutes } from '../common/util';
 
 const version = '12.1.0';
 
@@ -35,8 +36,6 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     }
   };
 
-  const makeNgIf = (name: string, value: string) => name.startsWith('[') && value !== 'true';
-
   const checkForPaginatorInTemplate = (path, name) => {
     const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
     const paginatorTemplate = ngTemplates.filter(template => hasAttribute(template as Element, `#${name}`))[0];
@@ -52,14 +51,6 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     return '';
   };
 
-  const stringifyAttriutes = (attributes: Attribute[]) => {
-    let stringAttributes = '';
-    attributes.forEach(element => {
-      stringAttributes = stringAttributes.concat(element.name.includes('#') ? ` ${element.name} ` : `${element.name}="${element.value}" `);
-    });
-    return stringAttributes;
-  };
-
   const buildPaginator = (node, path, propName, value, isChildGrid = false) => {
     const paginationTemplateName = getAttribute(node, '[paginationTemplate]')[0];
     const ngTemplates = findElementNodes(parseFile(host, path), 'ng-template');
@@ -73,6 +64,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
       return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
     }
   };
+
   // migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), TAGS)
@@ -88,6 +80,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   applyChanges();
   changes.clear();
+
   // apply the migrations to the rowIsland
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), 'igx-row-island')
@@ -103,6 +96,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   applyChanges();
   changes.clear();
+
   // clear paginationTemplate definitions
   for (const path of update.templateFiles) {
     findElementNodes(parseFile(host, path), 'ng-template')
