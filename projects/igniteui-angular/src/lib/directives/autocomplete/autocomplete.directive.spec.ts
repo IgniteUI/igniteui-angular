@@ -594,7 +594,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.items[1].focused).toBeFalsy();
             expect(dropDown.items[1].value).toBe(filteredTowns[1]);
         }));
-        it('Should trigger itemSelected event on item selection', fakeAsync(() => {
+        fit('Should trigger itemSelected event on item selection', fakeAsync(() => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             spyOn(autocomplete.itemSelected, 'emit').and.callThrough();
@@ -619,7 +619,7 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.itemSelected.emit).toHaveBeenCalledTimes(2);
             expect(autocomplete.itemSelected.emit).toHaveBeenCalledWith({ value: 'Stara Zagora', cancel: false });
 
-            fixture.componentInstance.itemSelected = (args) => {
+            fixture.componentInstance.onItemSelected = (args) => {
                 args.cancel = true;
             };
             UIInteractions.setInputElementValue(input, 's', fixture);
@@ -627,12 +627,12 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
-        it('Should trigger itemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
+        fit('Should trigger itemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
             spyOn(autocomplete.itemSelected, 'emit').and.callThrough();
 
-            fixture.componentInstance.itemSelected = (args) => {
- args.cancel = true;
-};
+            fixture.componentInstance.onItemSelected = (args) => {
+                args.cancel = true;
+            };
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             tick();
@@ -643,9 +643,9 @@ describe('IgxAutocomplete', () => {
             expect(autocomplete.itemSelected.emit).toHaveBeenCalledTimes(1);
             expect(autocomplete.itemSelected.emit).toHaveBeenCalledWith({ value: 'Sofia', cancel: true });
 
-            fixture.componentInstance.itemSelected = (args) => {
- args.cancel = true;
-};
+            fixture.componentInstance.onItemSelected = (args) => {
+                args.cancel = true;
+            };
             UIInteractions.setInputElementValue(input, 's', fixture);
             fixture.detectChanges();
             tick();
