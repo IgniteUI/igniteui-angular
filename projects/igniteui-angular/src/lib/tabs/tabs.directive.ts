@@ -199,25 +199,29 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     /** @hidden */
     protected onItemChanges() {
         this.setAttributes();
-        let selectedIndex = -1;
 
         // Check if there is selected tab
-        this.items.forEach((tab, i) => {
+        let selectedIndex = -1;
+        this.items.some((tab, i) => {
             if (tab.selected) {
                 selectedIndex = i;
             }
+            return tab.selected;
         });
 
         if (selectedIndex >= 0) {
+            // Set the selected index to the tab that has selected=true
             Promise.resolve().then(() => {
                 this.selectedIndex = selectedIndex;
             });
         } else {
             if (this.selectedIndex >= 0 && this.selectedIndex < this.items.length) {
+                // Select the tab on the same index the previous selected tab was
                 Promise.resolve().then(() => {
                     this.updateSelectedTabs(null);
                 });
             } else if (this.selectedIndex >= this.items.length) {
+                // Select the last tab
                 Promise.resolve().then(() => {
                     this.selectedIndex = this.items.length - 1;
                 });
@@ -289,7 +293,8 @@ export abstract class IgxTabsDirective extends IgxCarouselComponentBase implemen
     private triggerPanelAnimations(oldSelectedIndex: number) {
         const item = this.items.get(this._selectedIndex);
 
-        if (!this.disableAnimation &&
+        if (item &&
+            !this.disableAnimation &&
             this.hasPanels &&
             this.currentItem &&
             !this.currentItem.selected) {

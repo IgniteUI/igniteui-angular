@@ -508,7 +508,7 @@ export class TabsContactsComponent extends TabsTestComponent {
     template: `
     <div #wrapperDiv style="display: flex;">
             <igx-tabs>
-                <igx-tab-item *ngFor="let tab of collection" [selected]="tab.selected">
+                <igx-tab-item *ngFor="let tab of collection" [(selected)]="tab.selected">
                     <igx-tab-header><span igxTabHeaderLabel>{{ tab.name }}</span></igx-tab-header>
                     <igx-tab-content></igx-tab-content>
                 </igx-tab-item>
@@ -526,6 +526,7 @@ export class AddingSelectedTabComponent {
     }
 
     public addTab(num: number) {
+        this.collection.forEach(t => t.selected = false);
         this.collection.push({name: 'tab' + num, selected: true });
     }
 }
