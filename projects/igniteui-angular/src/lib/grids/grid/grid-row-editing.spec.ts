@@ -281,7 +281,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         it('Should display the banner after the edited row if it is the last one, but has room underneath it', () => {
             const lastItemIndex = 6;
             cell = grid.getCellByColumn(lastItemIndex, 'ProductName');
-            cellElem = grid.gridAPI.get_cell_by_index(lastItemIndex, 'ProductName')
+            cellElem = grid.gridAPI.get_cell_by_index(lastItemIndex, 'ProductName');
             cell.editMode = true;
 
             const editRow = cellElem.intRow.nativeElement;
@@ -2101,7 +2101,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const grid = fix.componentInstance.grid;
             let cell = grid.getCellByColumn(0, 'ProductName');
-            let cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+            const cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
 
             fix.detectChanges();
@@ -2141,7 +2141,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             grid = fix.componentInstance.grid;
             cell = grid.getCellByColumn(0, 'ProductName');
-            cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName')
+            cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
         }));
 
         it('cellEditDone, rowEditDone should emit the committed/new rowData', () => {

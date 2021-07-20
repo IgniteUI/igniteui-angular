@@ -789,7 +789,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(grid.getCellByColumn(0, 'Address').column.visibleIndex).toBe(1);
                 expect(grid.getCellByColumn(0, 'PostalCode').column.visibleIndex).toBe(2);
                 // focus last
-                let cell = grid.gridAPI.get_cell_by_index(0, 'Address');
+                const cell = grid.gridAPI.get_cell_by_index(0, 'Address');
                 UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 

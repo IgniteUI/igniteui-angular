@@ -246,7 +246,7 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('Should not clear selected cell when scrolling with mouse wheel', (async () => {
-            let cell = grid.gridAPI.get_cell_by_index(3, 'value');
+            const cell = grid.gridAPI.get_cell_by_index(3, 'value');
             UIInteractions.simulateClickAndSelectEvent(cell);
             fix.detectChanges();
 

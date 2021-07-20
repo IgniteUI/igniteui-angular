@@ -972,7 +972,7 @@ describe('IgxGrid - Summaries #grid', () => {
             fix.detectChanges();
 
             let cell = grid.getCellByColumn(2, 'ID');
-            let cellElem = grid.gridAPI.get_cell_by_index(2, 'ID');
+            const cellElem = grid.gridAPI.get_cell_by_index(2, 'ID');
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
 

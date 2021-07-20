@@ -566,7 +566,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         it(`Should properly emit 'cellEditEnter' event`, () => {
             spyOn(grid.cellEditEnter, 'emit').and.callThrough();
-            let cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             let initialRowData = {...cell.row.data};
             expect(cell.editMode).toBeFalsy();
 
