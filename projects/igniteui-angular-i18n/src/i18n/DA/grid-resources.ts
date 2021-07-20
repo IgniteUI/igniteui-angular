@@ -101,6 +101,8 @@ const GridResourceStringsDA_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Gem alt',
     igx_grid_pinning_check_all_label: 'Fastgør alle',
     igx_grid_pinning_uncheck_all_label: 'Frigør alle',
+    igx_grid_row_edit_btn_done: 'Færdig',
+    igx_grid_row_edit_btn_cancel: 'Annuller',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrer kolonneliste ...',
     igx_grid_snackbar_addrow_label: 'Række tilføjet',
     igx_grid_snackbar_addrow_actiontext: 'VIS',

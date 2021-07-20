@@ -101,6 +101,8 @@ const GridResourceStringsKO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: '모두 숨기기',
     igx_grid_pinning_check_all_label: '모두 고정',
     igx_grid_pinning_uncheck_all_label: '모두 고정 해제',
+    igx_grid_row_edit_btn_done: '완료',
+    igx_grid_row_edit_btn_cancel: '취소',
     igx_grid_toolbar_actions_filter_prompt: '필터 열 목록 ...',
     igx_grid_snackbar_addrow_label: '추가된 열',
     igx_grid_snackbar_addrow_actiontext: '표시',

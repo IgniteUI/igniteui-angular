@@ -101,6 +101,8 @@ const GridResourceStringsHU_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Összes elrejtése',
     igx_grid_pinning_check_all_label: 'Összes rögzítése',
     igx_grid_pinning_uncheck_all_label: 'Összes rögzítésének feloldása',
+    igx_grid_row_edit_btn_done: 'Kész',
+    igx_grid_row_edit_btn_cancel: 'Mégse',
     igx_grid_toolbar_actions_filter_prompt: 'Oszloplista szűrése...',
     igx_grid_snackbar_addrow_label: 'Sor hozzáadva',
     igx_grid_snackbar_addrow_actiontext: 'MEGJELENÍTÉS',

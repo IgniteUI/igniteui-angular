@@ -101,6 +101,8 @@ const GridResourceStringsRO_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Ascunde tot',
     igx_grid_pinning_check_all_label: 'Fixați toate',
     igx_grid_pinning_uncheck_all_label: 'Anulați fixarea tuturor',
+    igx_grid_row_edit_btn_done: 'Terminat',
+    igx_grid_row_edit_btn_cancel: 'Anulați',
     igx_grid_toolbar_actions_filter_prompt: 'Filtrează lista coloanelor ...',
     igx_grid_snackbar_addrow_label: 'Rând adăugat',
     igx_grid_snackbar_addrow_actiontext: 'ARATĂ',
