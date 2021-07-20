@@ -215,6 +215,10 @@ $light-grid: extend(
             igx-color: ('secondary', 50),
         ),
 
+        tree-selected-filtered-row-text-color: (
+            igx-color: ('secondary', 300)
+        ),
+
         row-selected-text-color: (
             igx-contrast-color: ('secondary', 50)
         ),
@@ -261,6 +265,10 @@ $light-grid: extend(
 
         cell-selected-background: (
             igx-color: ('grays', 200),
+        ),
+
+        tree-selected-filtered-cell-text-color: (
+            igx-color: ('secondary', 500)
         ),
 
         cell-selected-text-color: (
@@ -520,6 +528,10 @@ $fluent-grid: extend(
             igx-color: ('grays', 200)
         ),
 
+        tree-selected-filtered-row-text-color: (
+            igx-color: ('grays', 400)
+        ),
+
         cell-selected-within-background: (
             igx-color: ('grays', 300),
         ),
@@ -607,6 +619,10 @@ $bootstrap-grid: extend(
 
         row-selected-background: (
             igx-color: ('primary', 50),
+        ),
+
+        tree-selected-filtered-row-text-color: (
+            igx-color: ('primary', 400)
         ),
 
         cell-selected-within-background: (
@@ -743,6 +759,10 @@ $indigo-grid: extend(
             igx-color: ('primary', 100),
         ),
 
+        tree-selected-filtered-cell-text-color: (
+            igx-color: ('primary', 500)
+        ),
+
         cell-selected-text-color: (
             igx-contrast-color: ('primary', 100),
         ),
@@ -789,6 +809,10 @@ $indigo-grid: extend(
 
         row-selected-background: (
             igx-color: ('primary', 100),
+        ),
+
+        tree-selected-filtered-row-text-color: (
+            igx-color: ('primary', 400)
         ),
 
         cell-selected-within-background: (
