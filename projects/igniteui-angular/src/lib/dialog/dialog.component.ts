@@ -236,11 +236,11 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Input()
-    get closeOnOutsideSelect() {
+    public get closeOnOutsideSelect() {
         return this._closeOnOutsideSelect;
     }
 
-    set closeOnOutsideSelect(val: boolean) {
+    public set closeOnOutsideSelect(val: boolean) {
         this._overlayDefaultSettings.closeOnOutsideClick = val;
         this._closeOnOutsideSelect = val;
     }
@@ -372,7 +372,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * }
      * ```
      */
-    get state(): string {
+     public get state(): string {
         return this.isOpen ? 'open' : 'close';
     }
 
@@ -413,7 +413,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     }
 
     @HostBinding('class.igx-dialog--hidden')
-    get isCollapsed() {
+    public get isCollapsed() {
         return this.toggleRef.collapsed;
     }
 
@@ -428,7 +428,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      *  ```
      */
     @Input()
-    get role() {
+    public get role() {
         if (this.leftButtonLabel !== '' && this.rightButtonLabel !== '') {
             return 'dialog';
         } else if (
@@ -452,7 +452,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
      * ```
      */
     @Input()
-    get titleId() {
+    public get titleId() {
         return this._titleId;
     }
 
@@ -484,7 +484,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
         };
     }
 
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this.toggleRef.closing.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitCloseFromDialog(eventArgs));
         this.toggleRef.closed.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitClosedFromDialog(eventArgs));
         this.toggleRef.opened.pipe(takeUntil(this.destroy$)).subscribe((eventArgs) => this.emitOpenedFromDialog(eventArgs));

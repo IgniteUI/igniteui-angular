@@ -1,13 +1,13 @@
-import { ChangeDetectionStrategy, Component, DebugElement, EventEmitter, Output, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DebugElement, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { fakeAsync, TestBed, tick, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxToggleActionDirective, IgxToggleDirective, IgxToggleModule, IgxOverlayOutletDirective } from './toggle.directive';
 import {
     IgxOverlayService, OverlaySettings, ConnectedPositioningStrategy,
-    AbsoluteScrollStrategy, AutoPositionStrategy, IPositionStrategy, HorizontalAlignment
+    AbsoluteScrollStrategy, AutoPositionStrategy, HorizontalAlignment
 } from '../../services/public_api';
-import { CancelableEventArgs, CancelableBrowserEventArgs } from '../../core/utils';
+import { CancelableEventArgs } from '../../core/utils';
 
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { first } from 'rxjs/operators';
@@ -735,9 +735,9 @@ export class TestWithThreeToggleActionsComponent implements OnInit {
     @ViewChild('button2', { static: true }) public button2: ElementRef;
     @ViewChild('button3', { static: true }) public button3: ElementRef;
 
-    overlaySettings: OverlaySettings = {};
+    public overlaySettings: OverlaySettings = {};
 
-    ngOnInit(): void {
+    public ngOnInit(): void {
         this.overlaySettings.positionStrategy = new ConnectedPositioningStrategy({
             horizontalDirection: HorizontalAlignment.Left,
             horizontalStartPoint: HorizontalAlignment.Right

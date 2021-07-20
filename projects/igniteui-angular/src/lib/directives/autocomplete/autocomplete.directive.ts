@@ -121,7 +121,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * ```
      */
     @Input('igxAutocompleteSettings')
-    autocompleteSettings: AutocompleteOverlaySettings;
+    public autocompleteSettings: AutocompleteOverlaySettings;
 
     /** @hidden @internal */
     @HostBinding('attr.autocomplete')
@@ -161,12 +161,12 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
     public itemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
 
     /** @hidden @internal */
-    get nativeElement(): HTMLInputElement {
+    public get nativeElement(): HTMLInputElement {
         return this.elementRef.nativeElement;
     }
 
     /** @hidden @internal */
-    get parentElement(): HTMLElement {
+    public get parentElement(): HTMLElement {
         return this.group ? this.group.element.nativeElement : this.nativeElement;
     }
 

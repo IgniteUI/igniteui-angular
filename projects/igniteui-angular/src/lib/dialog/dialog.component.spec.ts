@@ -84,7 +84,6 @@ describe('Dialog', () => {
     it('Should open and close dialog when set values to IsOpen', fakeAsync(() => {
         const fixture = TestBed.createComponent(AlertComponent);
         const dialog = fixture.componentInstance.dialog;
-        const expectedMessage = 'message';
 
         dialog.isOpen = true;
         tick(100);

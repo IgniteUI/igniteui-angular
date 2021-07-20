@@ -2176,8 +2176,6 @@ describe('igxSelect', () => {
         const defaultItemTopPadding = 0;
         const defaultItemBottomPadding = 0;
         const defaultTextIdent = 8;
-        let visibleItems = 5;
-        let hasScroll = true;
         let selectedItemIndex: number;
         let listRect: DOMRect;
         let inputRect: DOMRect;
@@ -2228,8 +2226,6 @@ describe('igxSelect', () => {
                 addScrollDivToElement(fixture.nativeElement);
             }));
             it('should display selected item over input and all other items without scroll', fakeAsync(() => {
-                hasScroll = false;
-                visibleItems = 3;
                 selectedItemIndex = 1;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
@@ -2273,8 +2269,6 @@ describe('igxSelect', () => {
                 verifyListPositioning();
             }));
             it('should scroll and display selected item over input and all other possible items', fakeAsync(() => {
-                visibleItems = 5;
-                hasScroll = true;
                 fixture.componentInstance.items = [
                     'Option 1',
                     'Option 2',
@@ -2329,8 +2323,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-                visibleItems = 5;
-                hasScroll = true;
             }));
             it('should display selected item over input when first item is selected',
                 fakeAsync(() => {
@@ -2377,8 +2369,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-                visibleItems = 5;
-                hasScroll = true;
             }));
             it('should display list with selected item and all possible items after it when first item is selected',
                 fakeAsync(() => {
@@ -2447,8 +2437,6 @@ describe('igxSelect', () => {
                 fixture.detectChanges();
                 inputElement = fixture.debugElement.query(By.css('.' + CSS_CLASS_INPUT));
                 selectList = fixture.debugElement.query(By.css('.' + CSS_CLASS_DROPDOWN_LIST_SCROLL));
-                visibleItems = 5;
-                hasScroll = true;
             }));
             it('should ident option text to the input text',
                 fakeAsync(() => {
@@ -2476,8 +2464,6 @@ describe('igxSelect', () => {
                 addScrollDivToElement(fixture.nativeElement);
             }));
             it('should correctly reposition the items container when perform horizontal scroll', fakeAsync(() => {
-                hasScroll = false;
-                visibleItems = 3;
                 selectedItemIndex = 1;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();
@@ -2530,8 +2516,6 @@ describe('igxSelect', () => {
                 verifyListPositioning();
             }));
             it('should correctly reposition the items container when perform vertical scroll', fakeAsync(() => {
-                hasScroll = false;
-                visibleItems = 3;
                 selectedItemIndex = 1;
                 select.items[selectedItemIndex].selected = true;
                 fixture.detectChanges();

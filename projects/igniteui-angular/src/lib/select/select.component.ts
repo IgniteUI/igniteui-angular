@@ -130,7 +130,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Input()
-    overlaySettings: OverlaySettings;
+    public overlaySettings: OverlaySettings;
 
     /** @hidden @internal */
     @HostBinding('style.maxHeight')
@@ -426,7 +426,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
 }
 
     /** @hidden @internal */
-    ngAfterContentInit() {
+    public ngAfterContentInit() {
         this._overlayDefaults = {
             target: this.getEditElement(),
             modal: false,

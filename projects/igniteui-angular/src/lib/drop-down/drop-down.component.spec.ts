@@ -844,7 +844,7 @@ describe('IgxDropDown ', () => {
     });
     describe('Virtualisation tests', () => {
         let scroll: IgxForOfDirective<any>;
-        let button; let items;
+        let items;
         configureTestSuite();
         beforeAll(waitForAsync(() => {
             TestBed.configureTestingModule({
@@ -863,7 +863,6 @@ describe('IgxDropDown ', () => {
             fixture = TestBed.createComponent(VirtualizedDropDownComponent);
             fixture.detectChanges();
             dropdown = fixture.componentInstance.dropdown;
-            button = fixture.componentInstance.toggleButton;
             scroll = fixture.componentInstance.virtualScroll;
             items = fixture.componentInstance.dropdownItems;
         });
@@ -1364,7 +1363,7 @@ class IgxDropDownAnchorTestComponent {
         this.dropdown.toggle();
     }
 
-    public selecting(ev) { }
+    public selecting(ev) { } // eslint-disable-line
 
     public onToggleOpening() { }
 
