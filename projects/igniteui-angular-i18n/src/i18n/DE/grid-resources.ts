@@ -2,7 +2,7 @@ import { IGridResourceStrings } from 'igniteui-angular';
 
 // exported below as re-cast to create declaration type with expanded properties
 const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
-    igx_grid_groupByArea_message: 'Lege eine Spaltenüberschrift hier ab, um danach zu sortieren.',
+    igx_grid_groupByArea_message: 'Lege eine Spaltenüberschrift hier ab, um danach zu gruppieren.',
     igx_grid_emptyFilteredGrid_message: 'Keine Einträge gefunden.',
     igx_grid_emptyGrid_message: 'Grid hat keine Daten.',
     igx_grid_filter: 'Filter',
