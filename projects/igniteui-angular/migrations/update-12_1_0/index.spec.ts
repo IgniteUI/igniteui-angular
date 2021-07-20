@@ -23,8 +23,6 @@ describe(`Update to ${version}`, () => {
     };
 
     const migrationName = 'migration-21';
-    // eslint-disable-next-line max-len
-    const _noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -198,7 +196,7 @@ export class TestComponent implements OnInit {
     public mask: IgxMaskDirective
 
     public ngOnInit() {
-        this.mask.onValueChange;
+        this.mask.onValueChange.subscribe();
     }
 }`);
         const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)

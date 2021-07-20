@@ -296,7 +296,6 @@ export class UpdateChanges {
 
             let base: string;
             let replace: string;
-            let _groups = 1;
             let searchPattern;
 
             if (type === BindingType.Output) {
