@@ -523,7 +523,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
         it(`Should scroll editable column into view when navigating from buttons`, (async () => {
             let cell = grid.getCellByColumn(0, 'Downloads');
-            let cellElem = grid.gridAPI.get_cell_by_index(0, 'Downloads')
+            let cellElem = grid.gridAPI.get_cell_by_index(0, 'Downloads');
             // let cellDebug;
             UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
             fix.detectChanges();

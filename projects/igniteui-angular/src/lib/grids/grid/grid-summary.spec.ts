@@ -1930,11 +1930,11 @@ describe('IgxGrid - Summaries #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('Home', cellElem.nativeElement, true, false, false, true);
             fix.detectChanges();
 
-            cell = grid.getCellByColumnx(2, 'ID');
+            cell = grid.getCellByColumn(2, 'ID');
             expect(cell.selected).toBe(true);
             expect(cell.active).toBe(true);
 
-            cell = grid.getCellByColumnx(6, 'Name');
+            cell = grid.getCellByColumn(6, 'Name');
             cellElem = grid.gridAPI.get_cell_by_index(6, 'Name');
             UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
@@ -1942,7 +1942,7 @@ describe('IgxGrid - Summaries #grid', () => {
             UIInteractions.triggerKeyDownEvtUponElem('ArrowUp', cellElem.nativeElement, true, false, false, true);
             fix.detectChanges();
 
-            cell = grid.getCellByColumnx(2, 'Name');
+            cell = grid.getCellByColumn(2, 'Name');
             expect(cell.selected).toBe(true);
             expect(cell.active).toBe(true);
         });

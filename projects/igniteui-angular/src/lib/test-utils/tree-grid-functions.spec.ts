@@ -400,7 +400,7 @@ export class TreeGridFunctions {
         return cellDOM.nativeElement.classList.contains(TREE_CELL_SELECTION_CSS_CLASS);
     }
 
-    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: CellType, selected: boolean = true) {
+    public static verifyTreeGridCellSelected(treeGrid: IgxTreeGridComponent, cell: IgxGridCellComponent, selected: boolean = true) {
         expect(cell).toBeDefined();
         if (cell) {
             expect(TreeGridFunctions.verifyGridCellHasSelectedClass(cell)).toBe(selected);
@@ -433,7 +433,7 @@ export class TreeGridFunctions {
     }
 
     public static moveCellUpDown(fix, treeGrid: IgxTreeGridComponent, rowIndex: number, columnName: string, moveDown: boolean = true) {
-        const cell = treeGrid.getCellByColumn(rowIndex, columnName);
+        const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, columnName);
         const newRowIndex = moveDown ? rowIndex + 1 : rowIndex - 1;
         const keyboardEventKey = moveDown ? 'ArrowDown' : 'ArrowUp';
         const gridContent = GridFunctions.getGridContent(fix);
@@ -443,13 +443,13 @@ export class TreeGridFunctions {
 
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
 
-        const newCell = treeGrid.getCellByColumn(newRowIndex, columnName);
+        const newCell = treeGrid.gridAPI.get_cell_by_index(newRowIndex, columnName);
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
     }
 
     public static moveCellLeftRight(fix, treeGrid: IgxTreeGridComponent, rowIndex: number,
         firstColumnName: string, nextColumnName: string, moveRight: boolean = true) {
-        const cell = treeGrid.getCellByColumn(rowIndex, firstColumnName);
+        const cell = treeGrid.gridAPI.get_cell_by_index(rowIndex, firstColumnName);
         const keyboardEventKey = moveRight ? 'ArrowRight' : 'ArrowLeft';
         const gridContent = GridFunctions.getGridContent(fix);
 
@@ -457,7 +457,7 @@ export class TreeGridFunctions {
         fix.detectChanges();
 
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, cell, false);
-        const newCell = treeGrid.getCellByColumn(rowIndex, nextColumnName);
+        const newCell = treeGrid.gridAPI.get_cell_by_index(rowIndex, nextColumnName);
         TreeGridFunctions.verifyTreeGridCellSelected(treeGrid, newCell);
     }
 

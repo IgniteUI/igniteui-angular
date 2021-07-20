@@ -181,7 +181,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const secondCell = treeGrid.getCellByColumn(16, 'HireDate');
+            const secondCell = treeGrid.gridAPI.get_cell_by_index(16, 'HireDate');
             UIInteractions.simulateClickAndSelectEvent(secondCell, true);
             fix.detectChanges();
 
@@ -199,7 +199,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             await wait(200);
             fix.detectChanges();
 
-            const thirdCell = treeGrid.getCellByColumn(4, 'ID');
+            const thirdCell = treeGrid.gridAPI.get_cell_by_index(4, 'ID');
             UIInteractions.simulateClickAndSelectEvent(thirdCell, true);
             fix.detectChanges();
 
@@ -220,7 +220,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
 
             for (let i = 9; i < 14; i++) {
-                cell = treeGrid.getCellByColumn(i, 'Age');
+                cell = treeGrid.gridAPI.get_cell_by_index(i, 'Age');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowdown', cell.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -229,7 +229,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(5);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 2);
 
-            cell = treeGrid.getCellByColumn(14, 'Age');
+            cell = treeGrid.gridAPI.get_cell_by_index(14, 'Age');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             await wait(30);
             fix.detectChanges();
@@ -237,7 +237,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             expect(selectionChangeSpy).toHaveBeenCalledTimes(6);
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 3);
 
-            cell = treeGrid.getCellByColumn(14, 'OnPTO');
+            cell = treeGrid.gridAPI.get_cell_by_index(14, 'OnPTO');
             UIInteractions.triggerKeyDownEvtUponElem('arrowright', cell.nativeElement, true, false, true);
             await wait(30);
             fix.detectChanges();
@@ -246,7 +246,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 9, 14, 2, 4);
 
             for (let i = 14; i > 3; i--) {
-                cell = treeGrid.getCellByColumn(i, 'HireDate');
+                cell = treeGrid.gridAPI.get_cell_by_index(i, 'HireDate');
                 UIInteractions.triggerKeyDownEvtUponElem('arrowup', cell.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -256,7 +256,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 3, 9, 2, 4);
 
             for (let i = 4; i > 2; i--) {
-                cell = treeGrid.getCellByColumn(3, treeGrid.columns[i].field);
+                cell = treeGrid.gridAPI.get_cell_by_index(3, treeGrid.columns[i].field);
                 UIInteractions.triggerKeyDownEvtUponElem('arrowleft', cell.nativeElement, true, false, true);
                 await wait(30);
                 fix.detectChanges();
@@ -280,7 +280,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
                 { ID: 847, Name: 'Ana Sanders', Age: 42 },
                 { ID: 225, Name: 'Laurence Johnson', Age: 44 }
             ];
-            const startCell = treeGrid.getCellByColumn(0, 'ID');
+            const startCell = treeGrid.gridAPI.get_cell_by_index(0, 'ID');
 
             treeGrid.getColumnByName('Name').hasSummary = true;
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
@@ -378,7 +378,7 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             GridSelectionFunctions.verifyCellSelected(cell);
 
             for (let i = 8; i < 16; i++) {
-                let cellObj = treeGrid.getCellByColumn(i, 'Name');
+                let cellObj = treeGrid.gridAPI.get_cell_by_index(i, 'Name');
                 if (!cellObj) {
                     cellObj = treeGrid.summariesRowList.find(row => row.index === i)
                         .summaryCells.find(sCell => sCell.visibleColumnIndex === 1);
@@ -416,11 +416,11 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
             treeGrid.summaryCalculationMode = 'childLevelsOnly';
             fix.detectChanges();
 
-            const cell = treeGrid.getCellByColumn(8, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(cell);
+            const cellElem = treeGrid.gridAPI.get_cell_by_index(8, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
 
-            GridSelectionFunctions.verifyCellSelected(cell);
+            GridSelectionFunctions.verifyCellSelected(cellElem);
             const gridContent = GridFunctions.getGridContent(fix);
             for (let i = 8; i < 16; i++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowdown', gridContent, false, true);
