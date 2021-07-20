@@ -1015,7 +1015,6 @@ describe('Row Pinning #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
         }));
 
-        // TODO cell
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
             fix.detectChanges();

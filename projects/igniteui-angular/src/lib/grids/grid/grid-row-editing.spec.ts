@@ -2717,36 +2717,6 @@ describe('IgxGrid - Row Editing #grid', () => {
             cell.editMode = true;
             fix.detectChanges();
 
-            expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
-
-            // expand first group
-            grid.toggleGroup(groupRows[0].groupRow);
-            fix.detectChanges();
-
-            expect(groupRows[0].expanded).toBeTruthy();
-            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
-
-            // set cell in first group in edit mode
-            cell = grid.getCellByColumn(1, 'ProductName');
-            cellElem = grid.gridAPI.get_cell_by_index(1, 'ProductName');
-            cell.editMode = true;
-            fix.detectChanges();
-
-            expect(grid.gridAPI.crudService.cellInEditMode).toBeTruthy();
-            expect(groupRows[0].expanded).toBeTruthy();
-
-            // collapse first group
-            grid.toggleGroup(groupRows[0].groupRow);
-            fix.detectChanges();
-
-            expect(groupRows[0].expanded).toBeFalsy();
-            expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
-
-            // expand first group
-            grid.toggleGroup(groupRows[0].groupRow);
-            fix.detectChanges();
-
-            expect(groupRows[0].expanded).toBeTruthy();
             expect(grid.gridAPI.crudService.cellInEditMode).toBeFalsy();
         });
 
