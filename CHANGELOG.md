@@ -111,6 +111,49 @@ All notable changes for each version of this project will be documented in this 
 
 -   `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selecting`
+
+
+- `IgxToggleDirective`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpen` -> `open`
+        - `onOpening` -> `opening`
+        - `onClosed` -> `closed`
+        - `onClosing` -> `closing`
+        - `onAppended` -> `appended`
+
+- `IgxCombo`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onSelectionChange` -> `selectionChange`
+        - `onSearchInput` -> `searchInputUpdate`
+        - `onAddition` -> `addition`
+        - `onDataPreLoad` -> `dataPreLoad`
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+
+- `IgxSelect`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onSelection` -> `selecting`
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+
+- `IgxAutocomplete`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onItemSelected` -> `itemSelected`
+
+- `IgxDialog`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onLeftButtonSelect` -> `leftButtonSelect`
+        - `onRightButtonSelect` -> `rightButtonSelect`
 
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
