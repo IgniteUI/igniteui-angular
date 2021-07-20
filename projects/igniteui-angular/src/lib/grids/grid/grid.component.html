@@ -11,7 +11,7 @@
                 (chipClick)="getColumnGroupable(expr.fieldName) ? onChipClicked($event): null"
                 [disabled]='!getColumnGroupable(expr.fieldName)'>
                 <span>{{ getGroupByChipTitle(expr) }}</span>
-                <igx-icon igxSuffix>{{ expr.dir == 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
+                <igx-icon igxSuffix>{{ expr.dir === 1 ? 'arrow_upward' : 'arrow_downward' }}</igx-icon>
             </igx-chip>
             <span class="igx-grid__grouparea-connector">
                 <igx-icon [style.visibility]="(!last || dropAreaVisible) ? 'visible' : 'hidden'">arrow_forward
@@ -312,8 +312,8 @@
 </ng-template>
 
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
+    <button igxButton igxRowEditTabStop (click)="endRowEdit(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
 </ng-template>
 
 <ng-template #defaultRowEditTemplate>
