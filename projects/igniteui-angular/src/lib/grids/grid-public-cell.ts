@@ -101,7 +101,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get editable(): boolean {
-		return this.column.editable && !this.row.disabled;
+		return this.column.editable && !this.row?.disabled;
 	}
 
 	/**
@@ -125,7 +125,7 @@ export class IgxGridCell implements CellType {
 		// TODO remove
 		// will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
 		// getCellByColumnVisibleIndex is deprecated and will be removed in future version
-		return this.column.field ? this.row.data[this.column.field] : undefined;
+		return this.column.field ? this.row?.data[this.column.field] : undefined;
 	}
 
 	/**
@@ -143,8 +143,8 @@ export class IgxGridCell implements CellType {
 	 */
 	public get cellID(): any {
 		const primaryKey = this.grid.primaryKey;
-		const rowID = primaryKey ? this.row.data[primaryKey] : this.row.data;
-		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row.index};
+		const rowID = primaryKey ? this.row?.data[primaryKey] : this.row?.data;
+		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row?.index};
 	}
 
 	/**
@@ -174,7 +174,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public set editMode(value: boolean) {
-		if (this.row.deleted) {
+		if (!this.row || this.row?.deleted) {
 			return;
 		}
 		if (this.editable && value) {
@@ -223,7 +223,7 @@ export class IgxGridCell implements CellType {
 
 	public get active() {
 			const node = this.grid.navigation.activeNode;
-			return node ? node.row === this.row.index && node.column === this.column.visibleIndex : false;
+			return node ? node.row === this.row?.index && node.column === this.column.visibleIndex : false;
 	}
 
 
@@ -237,7 +237,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public update(val: any): void {
-		if (this.row.deleted) {
+		if (this.row?.deleted) {
 			return;
 		}
 
@@ -253,7 +253,7 @@ export class IgxGridCell implements CellType {
 
 	protected get selectionNode(): ISelectionNode {
 		return {
-			row: this.row.index,
+			row: this.row?.index,
 			column: this.column.columnLayoutChild ? this.column.parent.visibleIndex : this.column.visibleIndex,
 			layout: this.column.columnLayoutChild ? {
 				rowStart: this.column.rowStart,
