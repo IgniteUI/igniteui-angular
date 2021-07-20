@@ -594,7 +594,7 @@ describe('IgxAutocomplete', () => {
             expect(dropDown.items[1].focused).toBeFalsy();
             expect(dropDown.items[1].value).toBe(filteredTowns[1]);
         }));
-        fit('Should trigger itemSelected event on item selection', fakeAsync(() => {
+        it('Should trigger itemSelected event on item selection', fakeAsync(() => {
             let startsWith = 'st';
             let filteredTowns = fixture.componentInstance.filterTowns(startsWith);
             spyOn(autocomplete.itemSelected, 'emit').and.callThrough();
