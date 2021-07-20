@@ -55,3 +55,8 @@ export enum GridPagingMode {
     Local,
     Remote
 }
+
+export enum GridInstanceType {
+    Grid,
+    TreeGrid
+}
