@@ -102,6 +102,8 @@ const GridResourceStringsZHHANT_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: '隱藏全部',
     igx_grid_pinning_check_all_label: '釘選全部',
     igx_grid_pinning_uncheck_all_label: '取消全部釘選',
+    igx_grid_row_edit_btn_done: '完成',
+    igx_grid_row_edit_btn_cancel: '取消',
     igx_grid_toolbar_actions_filter_prompt: '篩選條件列清單...',
     igx_grid_toolbar_pinning_button_tooltip: '打開列釘選下拉式選單',
     igx_grid_toolbar_hiding_button_tooltip: '打開列隱藏下拉式選單',
