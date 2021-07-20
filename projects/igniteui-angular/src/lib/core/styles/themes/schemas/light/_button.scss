@@ -766,9 +766,9 @@ $indigo-outlined-button: extend(
 );
 
 /// @type {Map}
-/// @prop {Color} foreground [#fff] - The idle text color of a raised button.
-/// @prop {Color} hover-foreground [#fff] - The hover text color of a raised button.
-/// @prop {Color} focus-foreground [#fff] - The focus text color of a raised button.
+/// @prop {Color} foreground [igx-color: ('grays', 50)] - The idle text color of a raised button.
+/// @prop {Color} hover-foreground [ igx-color: ('grays', 50)] - The hover text color of a raised button.
+/// @prop {Color} focus-foreground [ igx-color: ('grays', 50)] - The focus text color of a raised button.
 /// @prop {Map} hover-background [igx-color: ('primary', 400)] - The hover background color of a raised button.
 /// @prop {Map} focus-background [igx-color: ('primary', 400)] - The focus background color of a raised button.
 /// @prop {Map} shadow-color [igx-color: ('primary', 200)] - The shadow color of the button.
@@ -780,27 +780,36 @@ $indigo-raised-button: extend(
     $material-raised-button,
     $indigo-base-button,
     (
-        foreground: #fff,
+        foreground: (
+            igx-color: ('grays', 50)
+        ),
 
-        hover-foreground: #fff,
+        hover-foreground: (
+            igx-color: ('grays', 50)
+        ),
 
-        focus-foreground: #fff,
+        focus-foreground: (
+            igx-color: ('grays', 50)
+        ),
 
         hover-background: (
-            igx-color: ('primary', 400),
+            igx-color: ('secondary', 400),
         ),
 
         focus-background: (
-            igx-color: ('primary', 400),
+            igx-color: ('secondary', 400),
         ),
 
         shadow-color: (
-            igx-color: ('primary', 200),
+            igx-color: ('secondary', 200),
         ),
     )
 );
 
 /// @type {Map}
+/// @prop {Color} foreground [ igx-color: ('grays', 50)] - The idle text color of a raised button.
+/// @prop {Color} hover-foreground [ igx-color: ('grays', 50)] - The hover text color of a raised button.
+/// @prop {Color} focus-foreground [ igx-color: ('grays', 50)] - The focus text color of a raised button.
 /// @requires {Map} $material-fab-button
 /// @requires {Map} $indigo-base-button
 /// @requires {Map} $indigo-raised-button
@@ -811,6 +820,18 @@ $indigo-fab-button: extend(
     $indigo-raised-button,
     (
         selector: '[igxButton="fab"], .igx-button--fab',
+
+        foreground: (
+            igx-color: ('grays', 50)
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 50)
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 50)
+        ),
     )
 );
 

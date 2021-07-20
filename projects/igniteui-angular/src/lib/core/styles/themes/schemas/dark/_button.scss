@@ -283,10 +283,29 @@ $indigo-flat-button-dark: extend(
 );
 
 /// @type {Map}
+/// @prop {Color} foreground [igx-color: ('grays', 900)] - The idle text color of a raised button.
+/// @prop {Color} hover-foreground [igx-color: ('grays', 900)] - The hover text color of a raised button.
+/// @prop {Color} focus-foreground [igx-color: ('grays', 900)] - The focus text color of a raised button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-raised-button
 /// @requires {function} extend
-$indigo-raised-button-dark: extend($indigo-raised-button, $indigo-base-button-dark);
+$indigo-raised-button-dark: extend(
+    $indigo-raised-button,
+    $indigo-base-button-dark,
+    (
+        foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 900)
+        ),
+    )
+);
 
 /// @type {Map}
 /// @prop {Map} foreground [igx-color: ('grays', 600, .8)] - The idle text color of a outlined button.
@@ -320,10 +339,29 @@ $indigo-outlined-button-dark: extend(
 $indigo-icon-button-dark: extend($indigo-icon-button, $indigo-base-button-dark);
 
 /// @type {Map}
+/// @prop {Color} foreground [igx-color: ('grays', 900) - The idle text color of a raised button.
+/// @prop {Color} hover-foreground [igx-color: ('grays', 900)] - The hover text color of a raised button.
+/// @prop {Color} focus-foreground [igx-color: ('grays', 900)] - The focus text color of a raised button.
 /// @requires {Map} $indigo-base-button-dark
 /// @requires {Map} $indigo-fab-button
 /// @requires {function} extend
-$indigo-fab-button-dark: extend($indigo-fab-button, $indigo-base-button-dark);
+$indigo-fab-button-dark: extend(
+    $indigo-fab-button,
+    $indigo-base-button-dark,
+    (
+        foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        hover-foreground: (
+            igx-color: ('grays', 900)
+        ),
+
+        focus-foreground: (
+            igx-color: ('grays', 900)
+        ),
+    )
+);
 
 /// Generates a dark indigo button schema.
 /// @type {Map}
