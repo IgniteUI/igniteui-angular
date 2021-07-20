@@ -271,7 +271,7 @@
             >
                 <igx-tab-item
                     *ngFor="let tab of tabsArray; index as i"
-                    [selected]="tab.selected"
+                    [(selected)]="tab.selected"
                 >
                     <igx-tab-header>
                         <span igxTabHeaderLabel>{{tab.name}}</span>
