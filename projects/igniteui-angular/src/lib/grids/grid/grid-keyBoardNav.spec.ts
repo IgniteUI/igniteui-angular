@@ -295,7 +295,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(fix.componentInstance.selectedCell.rowIndex).toEqual(90);
         });
 
-        fit('should allow horizontal navigation', async () => {
+        it('should allow horizontal navigation', async () => {
             const cols = [];
             for (let i = 0; i < 10; i++) {
                 cols.push({ field: 'col' + i });
