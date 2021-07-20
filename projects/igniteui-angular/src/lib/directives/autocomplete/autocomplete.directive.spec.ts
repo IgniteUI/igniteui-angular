@@ -930,7 +930,7 @@ describe('IgxAutocomplete', () => {
         <igx-prefix igxRipple><igx-icon>home</igx-icon> </igx-prefix>
         <input igxInput name="towns" type="text" [(ngModel)]="townSelected" required
             [igxAutocomplete]='townsPanel'
-            [igxAutocompleteSettings]='settings' (itemSelected)="itemSelected($event)"/>
+            [igxAutocompleteSettings]='settings' (itemSelected)="onItemSelected($event)"/>
         <label igxLabel for="towns">Towns</label>
         <igx-suffix igxRipple><igx-icon>clear</igx-icon> </igx-suffix>
     </igx-input-group>

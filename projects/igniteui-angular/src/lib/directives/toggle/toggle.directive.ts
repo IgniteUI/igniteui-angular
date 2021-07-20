@@ -109,7 +109,7 @@ export class IgxToggleDirective implements IToggleView, OnInit, OnDestroy {
      * ```html
      * <div
      *  igxToggle
-     *  (onClosing)='onToggleClosing($event)'>
+     *  (closing)='onToggleClosing($event)'>
      * </div>
      * ```
      */
