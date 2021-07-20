@@ -1617,7 +1617,7 @@ describe('IgxTreeGrid - Summaries #tGrid', () => {
             fix.detectChanges();
 
             let cell = treeGrid.getCellByColumn(0, 'ID');
-           UIInteractions.simulateClickAndSelectEvent(cell);
+            UIInteractions.simulateClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
             fix.detectChanges();
 
             expect(cell.selected).toBe(true);

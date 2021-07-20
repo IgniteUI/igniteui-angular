@@ -1035,8 +1035,8 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
 
     const verifySelectingRangeWithMouseDrag = (fix, treeGrid, detect) => {
         const selectionChangeSpy = spyOn<any>(treeGrid.rangeSelected, 'emit').and.callThrough();
-        const startCell = treeGrid.getCellByColumn(4, 'Name');
-        const endCell = treeGrid.getCellByColumn(7, 'Age');
+        const startCell = treeGrid.gridAPI.get_cell_by_index(4, 'Name');
+        const endCell = treeGrid.gridAPI.get_cell_by_index(7, 'Age');
         const range = { rowStart: 4, rowEnd: 7, columnStart: 1, columnEnd: 2 };
         const expectedData = [
             { Name: 'Ana Sanders', Age: 42 },
@@ -1058,35 +1058,35 @@ describe('IgxTreeGrid - Multi Cell selection #tGrid', () => {
         expect(startCell.active).toBe(true);
 
         for (let i = 5; i < 7; i++) {
-            const cell = treeGrid.getCellByColumn(i, treeGrid.columns[i - 3].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columns[i - 3].field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, i - 3);
         }
 
         for (let i = 5; i > 0; i--) {
-            const cell = treeGrid.getCellByColumn(i, 'OnPTO');
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, 'OnPTO');
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 3);
         }
 
         for (let i = 2; i >= 0; i--) {
-            const cell = treeGrid.getCellByColumn(1, treeGrid.columns[i].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(1, treeGrid.columns[i].field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, 1, 1, i);
         }
 
         for (let i = 2; i < 10; i++) {
-            const cell = treeGrid.getCellByColumn(i, 'ID');
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, 'ID');
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 0);
         }
 
         for (let i = 8; i > 6; i--) {
-            const cell = treeGrid.getCellByColumn(i, treeGrid.columns[9 - i].field);
+            const cell = treeGrid.gridAPI.get_cell_by_index(i, treeGrid.columns[9 - i].field);
             UIInteractions.simulatePointerOverElementEvent('pointerenter', cell.nativeElement);
             detect();
             GridSelectionFunctions.verifyCellsRegionSelected(treeGrid, 4, i, 1, 9 - i);

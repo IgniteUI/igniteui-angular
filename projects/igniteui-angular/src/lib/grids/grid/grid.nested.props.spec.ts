@@ -525,7 +525,7 @@ describe('Edit cell with data of type Array', () => {
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -587,7 +587,7 @@ describe('Edit cell with data of type Array', () => {
         const cell = grid.getCellByColumn(2, 'locations');
         let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -654,7 +654,7 @@ describe('Edit cell with data of type Array', () => {
         const row = grid.gridAPI.get_row_by_index(2);
         let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -717,7 +717,7 @@ describe('Edit cell with data of type Array', () => {
         const row = grid.gridAPI.get_row_by_index(2);
         let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();

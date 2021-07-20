@@ -789,7 +789,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 expect(grid.getCellByColumn(0, 'Address').column.visibleIndex).toBe(1);
                 expect(grid.getCellByColumn(0, 'PostalCode').column.visibleIndex).toBe(2);
                 // focus last
-                let cell = grid.getCellByColumn(0, 'Address');
+                let cell = grid.gridAPI.get_cell_by_index(0, 'Address');
                 UIInteractions.simulateClickAndSelectEvent(cell);
                 fix.detectChanges();
 
@@ -798,8 +798,8 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 // check correct cell has focus
-                cell = grid.getCellByColumn(0, 'ID');
-                expect(cell.active).toBe(true);
+                const cell2 = grid.getCellByColumn(0, 'ID');
+                expect(cell2.active).toBe(true);
 
                 // arrow right
                 GridFunctions.simulateGridContentKeydown(fix, 'ArrowRight');
@@ -1386,7 +1386,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let targetCell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectEvent(targetCell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'CompanyName'));
                 fix.detectChanges();
 
                 const rowEditingBannerElement = fix.debugElement.query(By.css('.igx-banner__row')).nativeElement;
@@ -1989,7 +1989,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
 
                 // focus 1st row, 2nd row cell
                 let cell = grid.getCellByColumn(0, 'Phone');
-                UIInteractions.simulateClickAndSelectEvent(cell);
+                UIInteractions.simulateClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'Phone'));
                 fix.detectChanges();
 
                 // arrow right
@@ -2415,7 +2415,7 @@ describe('IgxGrid Multi Row Layout - Keyboard navigation #grid', () => {
                 fix.detectChanges();
 
                 let cell = grid.getCellByColumn(0, 'CompanyName');
-                UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+                UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'CompanyName'));
                 fix.detectChanges();
 
                 const order = ['CompanyName', 'City', 'Phone', 'ContactTitle'];

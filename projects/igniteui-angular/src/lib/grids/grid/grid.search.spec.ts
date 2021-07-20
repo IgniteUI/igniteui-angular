@@ -614,7 +614,7 @@ describe('IgxGrid - search API #grid - ', () => {
         });
 
         it('Should exit edit mode and search a cell', () => {
-            const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
+            const cell = grid.getCellByColumn(0, 'Name');
             cell.column.editable = true;
             fix.detectChanges();
             cell.editMode = true;
@@ -774,7 +774,7 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('should keep the active highlight when active cell enters and exits edit mode', () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
-            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.getCellByColumn(0, 'ID');
             const initialValue = rv.textContent;
             let activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(activeHighlight).toBeNull();
@@ -802,7 +802,7 @@ describe('IgxGrid - search API #grid - ', () => {
 
         it('should update highlights when a new value is entered', () => {
             const rv = fix.debugElement.query(By.css(CELL_CSS_CLASS));
-            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.getCellByColumn(0, 'ID');
             cell.column.editable = true;
             fix.detectChanges();
             let activeHighlight = rv.nativeElement.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
@@ -832,7 +832,7 @@ describe('IgxGrid - search API #grid - ', () => {
         it('should update highlights when the cell value is cleared', () => {
             const rv = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[1].nativeElement;
             const rv2 = fix.debugElement.queryAll(By.css(CELL_CSS_CLASS))[2].nativeElement;
-            const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
+            const cell = grid.getCellByColumn(0, 'Name');
             let activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(activeHighlight).toBeNull();
 

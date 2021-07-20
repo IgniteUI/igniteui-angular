@@ -405,7 +405,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         it('When cell in editMode and try to navigate with `ArrowDown` - focus should remain over the input.', async () => {
             const verticalScroll = grid.verticalScrollContainer.getScroll();
             const cellElem = fixture.debugElement.query(By.css(CELL_CSS_CLASS)).nativeElement;
-            const cell = grid.getCellByColumn(0, 'firstName');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'firstName');
             expect(cellElem.classList.contains(CELL_CLASS_IN_EDIT_MODE)).toBe(false);
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -592,21 +592,21 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             expect(cell.editMode).toBeFalsy();
-            cell = grid.getCellByColumn(0, 'age');
-            initialRowData = {...cell.row.data};
+            const cell2 = grid.getCellByColumn(0, 'age');
+            initialRowData = {...cell2.row.data};
             cellArgs = {
-                cellID: cell.cellID,
-                rowID: cell.row.key,
+                cellID: cell2.cellID,
+                rowID: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
                 cancel: false,
-                column: cell.column,
+                column: cell2.column,
                 owner: grid,
                 event: jasmine.anything() as any
             };
             expect(grid.cellEditEnter.emit).toHaveBeenCalledTimes(2);
             expect(grid.cellEditEnter.emit).toHaveBeenCalledWith(cellArgs);
-            expect(cell.editMode).toBeTruthy();
+            expect(cell2.editMode).toBeTruthy();
         });
 
         it(`Should be able to cancel 'cellEditEnter' event`, () => {
@@ -770,7 +770,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             grid.cellEdit.subscribe((e: IGridEditEventArgs) => {
                 e.cancel = true;
             });
-            const cell = grid.getCellByColumn(0, 'fullName');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'fullName');
             const initialRowData = {...cell.row.data};
 
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
@@ -850,7 +850,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             let cell = grid.getCellByColumn(0, 'fullName');
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'fullName'));
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -985,7 +985,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const secondNewValue = 1;
             let updatedRowData = Object.assign({}, cell.row.data, { fullName: firstNewValue });
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'fullName'));
             fixture.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1219,7 +1219,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         let cell = grid.getCellByColumn(0, 'Age');
         let cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS_NUMBER_FORMAT))[1];
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'Age'));
         fixture.detectChanges();
         expect(cell.editMode).toBe(true);
 
@@ -1236,7 +1236,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
         cell = grid.getCellByColumn(1, 'OnPTO');
         cellDomPK = fixture.debugElement.queryAll(By.css(CELL_CSS_CLASS))[5];
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(1, 'OnPTO'));
         fixture.detectChanges();
         tick();
 

@@ -933,10 +933,10 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(3).pin();
             fix.detectChanges();
 
-            const firstEditable = grid.getCellByColumn(0, 'CompanyName');
-            const secondEditable = grid.getCellByColumn(1, 'CompanyName');
-            const thirdEditable = grid.getCellByColumn(3, 'CompanyName');
-            const fourthEditable = grid.getCellByColumn(5, 'CompanyName');
+            const firstEditable = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+            const secondEditable = grid.gridAPI.get_cell_by_index(1, 'CompanyName');
+            const thirdEditable = grid.gridAPI.get_cell_by_index(3, 'CompanyName');
+            const fourthEditable = grid.gridAPI.get_cell_by_index(5, 'CompanyName');
 
             // enter edit mode for pinned row
             UIInteractions.simulateDoubleClickAndSelectEvent(firstEditable);
@@ -971,10 +971,10 @@ describe('Row Pinning #grid', () => {
             grid.gridAPI.get_row_by_index(3).pin();
             fix.detectChanges();
 
-            const firstEditable = grid.getCellByColumn(0, 'CompanyName');
-            const secondEditable = grid.getCellByColumn(1, 'CompanyName');
-            const thirdEditable = grid.getCellByColumn(3, 'CompanyName');
-            const fourthEditable = grid.getCellByColumn(5, 'CompanyName');
+            const firstEditable = grid.gridAPI.get_cell_by_index(0, 'CompanyName');
+            const secondEditable = grid.gridAPI.get_cell_by_index(1, 'CompanyName');
+            const thirdEditable = grid.gridAPI.get_cell_by_index(3, 'CompanyName');
+            const fourthEditable = grid.gridAPI.get_cell_by_index(5, 'CompanyName');
 
             // enter edit mode for unpinned row
             UIInteractions.simulateDoubleClickAndSelectEvent(fourthEditable);
@@ -1015,6 +1015,7 @@ describe('Row Pinning #grid', () => {
             gridContent = GridFunctions.getGridContent(fix);
         }));
 
+        // TODO cell
         it('should navigate to bottom from top pinned row using Ctrl+ArrowDown', async () => {
             grid.gridAPI.get_row_by_index(5).pin();
             fix.detectChanges();
@@ -1030,7 +1031,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const lastRowCell =  grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(27);
@@ -1055,7 +1056,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const secondRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
+            const secondRowCell =  grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(secondRowCell);
             expect(selectedCell.row.index).toBe(1);
@@ -1084,7 +1085,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell =  grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell =  grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(firstRowCell);
             expect(selectedCell.row.index).toBe(0);
@@ -1108,7 +1109,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const secondRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
+            const secondRowCell =  grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(secondRowCell);
             expect(selectedCell.row.index).toBe(1);
@@ -1139,7 +1140,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const firstRowCell =  grid.gridAPI.get_row_by_index(0).cells.toArray()[1];
+            const firstRowCell =  grid.getRowByIndex(0).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(firstRowCell);
             expect(selectedCell.row.index).toBe(0);
@@ -1161,7 +1162,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastUnpinnedRowCell =  grid.gridAPI.get_row_by_index(26).cells.toArray()[1];
+            const lastUnpinnedRowCell =  grid.getRowByIndex(26).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastUnpinnedRowCell);
             expect(selectedCell.row.index).toBe(26);
@@ -1185,7 +1186,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const lastRowCell = grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(27);
@@ -1217,7 +1218,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.gridAPI.get_row_by_index(27).cells.toArray()[1];
+            const lastRowCell =  grid.getRowByIndex(27).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(27);
@@ -1240,7 +1241,7 @@ describe('Row Pinning #grid', () => {
             await wait(DEBOUNCE_TIME);
             fix.detectChanges();
 
-            const lastRowCell =  grid.gridAPI.get_row_by_index(1).cells.toArray()[1];
+            const lastRowCell =  grid.getRowByIndex(1).cells[1];
             const selectedCell = fix.componentInstance.instance.selectedCells[0];
             expect(selectedCell).toBe(lastRowCell);
             expect(selectedCell.row.index).toBe(1);

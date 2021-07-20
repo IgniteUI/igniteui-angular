@@ -270,7 +270,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(10);
+            expect(fix.componentInstance.selectedCell.row.index).toEqual(10);
         });
 
         it('should allow navigating up', async () => {
@@ -283,14 +283,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             await wait();
             fix.detectChanges();
 
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(100);
+            expect(fix.componentInstance.selectedCell.row.index).toEqual(100);
             // Navigate to the 94th row
             for (let index = 0; index < 10; index++) {
                 UIInteractions.triggerEventHandlerKeyDown('arrowup', gridContent);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
-            expect(fix.componentInstance.selectedCell.rowIndex).toEqual(90);
+            expect(fix.componentInstance.selectedCell.row.index).toEqual(90);
         });
 
         it('should allow horizontal navigation', async () => {
@@ -313,14 +313,14 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 fix.detectChanges();
             }
 
-            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(9);
+            expect(fix.componentInstance.selectedCell.column.index).toEqual(9);
 
             for (let index = 9; index > 1; index--) {
                 UIInteractions.triggerEventHandlerKeyDown('ArrowLeft', gridContent);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
-            expect(fix.componentInstance.selectedCell.columnIndex).toEqual(1);
+            expect(fix.componentInstance.selectedCell.column.index).toEqual(1);
         });
 
         it('should allow horizontal navigation in virtualized grid with pinned cols.', async () => {
@@ -348,7 +348,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 fix.detectChanges();
             }
 
-            expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(9);
+            expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(9);
             // Verify columns
             let cells = grid.gridAPI.get_row_by_index(0).cells.toArray();
             expect(cells.length).toEqual(5);
@@ -362,7 +362,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
-            expect(fix.componentInstance.selectedCell.visibleColumnIndex).toEqual(1);
+            expect(fix.componentInstance.selectedCell.column.visibleIndex).toEqual(1);
 
             cells = grid.gridAPI.get_row_by_index(0).cells.toArray();
             expect(cells.length).toEqual(5);

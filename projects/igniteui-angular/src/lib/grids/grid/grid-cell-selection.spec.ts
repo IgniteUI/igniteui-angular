@@ -2575,19 +2575,21 @@ describe('IgxGrid - Cell selection #grid', () => {
             expect(grid.getSelectedData()).toEqual(selectedData);
         });
 
+        // TODO cell
         it('CRUD: Non-primary click with a cell in edit mode', () => {
             grid.getColumnByName('Name').editable = true;
             fix.detectChanges();
 
-            const cell = grid.gridAPI.get_cell_by_index(0, 'Name');
-            UIInteractions.simulateClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'Name'));
+            const cell = grid.getCellByColumn(0, 'Name');
+            const cellElem = grid.gridAPI.get_cell_by_index(0, 'Name');
+            UIInteractions.simulateClickAndSelectEvent(cellElem);
             fix.detectChanges();
 
             cell.editMode = true;
             cell.editValue = 'No name';
             fix.detectChanges();
 
-            UIInteractions.simulateNonPrimaryClick(cell);
+            UIInteractions.simulateNonPrimaryClick(cellElem);
             fix.detectChanges();
             expect(cell.editMode).toEqual(true);
             expect(cell.editValue).toEqual('No name');

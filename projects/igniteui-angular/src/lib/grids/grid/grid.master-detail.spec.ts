@@ -1067,7 +1067,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(2, 'CompanyName');
-                expect(targetCellElement.active).toBeTruthy();
+                expect(grid.gridAPI.get_cell_by_index(2, 'CompanyName').active).toBeTruthy();
             });
 
             it(`Should navigate up through a detail view by
@@ -1094,7 +1094,7 @@ describe('IgxGrid Master Detail #grid', () => {
                 fix.detectChanges();
 
                 targetCellElement2 = grid.getCellByColumn(0, 'Address');
-                expect(targetCellElement.active).toBeTruthy();
+                expect(grid.gridAPI.get_cell_by_index(0, 'Address').active).toBeTruthy();
             });
         });
 
