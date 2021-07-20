@@ -118,7 +118,7 @@
 
     @if not($idle-shadow-color) and $selected-shadow-color {
         @if meta.type-of($selected-shadow-color) == 'color' {
-            $resting-shadow-color: $selected-shadow-color;
+            $idle-shadow-color: $selected-shadow-color;
         }
     }
 
@@ -162,7 +162,7 @@
         item-selected-hover-background: $item-selected-hover-background,
         border: $border,
         shadow: $shadow,
-        resting-shadow-color: $idle-shadow-color,
+        idle-shadow-color: $idle-shadow-color,
         selected-shadow-color: $selected-shadow-color,
     ));
 }
