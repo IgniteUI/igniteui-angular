@@ -627,7 +627,7 @@ describe('IgxAutocomplete', () => {
             UIInteractions.triggerKeyDownEvtUponElem('enter', input.nativeElement, true);
             expect(fixture.componentInstance.townSelected).toBe('s');
         }));
-        fit('Should trigger itemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
+        it('Should trigger itemSelected only once when the event is cancelled (issue #7483)', fakeAsync(() => {
             spyOn(autocomplete.itemSelected, 'emit').and.callThrough();
 
             fixture.componentInstance.onItemSelected = (args) => {
