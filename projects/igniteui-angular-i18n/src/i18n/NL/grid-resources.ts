@@ -109,6 +109,8 @@ const GridResourceStringsNL_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Alles verbergen',
     igx_grid_pinning_check_all_label: 'Alles vastmaken',
     igx_grid_pinning_uncheck_all_label: 'Alles losmaken',
+    igx_grid_row_edit_btn_done: 'Gereed',
+    igx_grid_row_edit_btn_cancel: 'Annuleren',
     igx_grid_toolbar_actions_filter_prompt: 'Lijst met filterkolommen ...',
     igx_grid_toolbar_pinning_button_tooltip: 'Vervolgkeuzelijst kolom vastmaken openen',
     igx_grid_toolbar_hiding_button_tooltip: 'Vervolgkeuzelijst kolom verbergen openen',
