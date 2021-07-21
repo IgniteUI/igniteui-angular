@@ -113,7 +113,8 @@ export class IgxCellCrudState {
     public cancelAddMode = false;
 
     public createCell(cell): IgxCell {
-        return this.cell = new IgxCell(cell.cellID, cell.row.index, cell.column, cell.value, cell.value, cell.row.data, cell.grid);
+        return this.cell = new IgxCell(cell.cellID, cell.row.index, cell.column, cell.value, cell.value,
+            cell.row.data ?? cell.rowData, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxRow {
