@@ -140,7 +140,6 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxSelect`
     - **Breaking Change** - The following events have been renamed as follows:
-        - `onSelection` -> `selecting`
         - `onOpening` -> `opening`
         - `onOpened` -> `opened`
         - `onClosing` -> `closing`
@@ -152,6 +151,10 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxDialog`
     - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpen` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClose` -> `closing`
+        - `onClosed` -> `closed`
         - `onLeftButtonSelect` -> `leftButtonSelect`
         - `onRightButtonSelect` -> `rightButtonSelect`
 
