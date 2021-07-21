@@ -265,8 +265,9 @@ export class IgxGridRow extends BaseRow implements RowType {
      * @hidden
      */
     constructor(public grid: IgxGridComponent,
-        public index: number, protected _data?: any) {
+        public index: number, data?: any) {
         super();
+        this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
 
     /**
@@ -340,8 +341,9 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * @hidden
      */
     constructor(public grid: IgxTreeGridComponent,
-        public index: number, protected _data?: any, private _treeRow?: ITreeGridRecord) {
+        public index: number, data?: any, private _treeRow?: ITreeGridRecord) {
         super();
+        this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
 
     /**
@@ -487,8 +489,9 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
      * @hidden
      */
     constructor(public grid: IgxHierarchicalGridComponent,
-        public index: number, protected _data?: any) {
+        public index: number, data?: any) {
         super();
+        this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
     }
 
     /**
