@@ -372,12 +372,17 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
      * ```
      */
     public get data(): any {
-        if (this._data) {
-            return this._data;
-        } else {
-            const rec = this.grid.dataView[this.index];
-            return this.grid.isTreeRow(rec) ? rec.data : rec;
+        if (this.inEditMode) {
+            return mergeWith(cloneValue(this._data ?? this.grid.dataView[this.index]),
+                this.grid.transactions.getAggregatedValue(this.key, false),
+                (objValue, srcValue) => {
+                    if (Array.isArray(srcValue)) {
+                        return objValue = srcValue;
+                    }
+                });
         }
+        const rec = this.grid.dataView[this.index];
+        return this._data ?? this.grid.isTreeRow(rec) ? rec.data : rec;
     }
 
     /**

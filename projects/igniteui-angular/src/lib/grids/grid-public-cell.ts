@@ -129,6 +129,15 @@ export class IgxGridCell implements CellType {
 	}
 
 	/**
+	 * Updates the cell value.
+	 *
+	 * @memberof IgxGridCell
+	 */
+	public set value(val: any) {
+		this.update(val);
+	}
+
+	/**
 	 * Gets the cellID key.
 	 * A cell in the grid is identified by:
 	 * - rowID - primaryKey data value or the whole rowData, if the primaryKey is omitted.
