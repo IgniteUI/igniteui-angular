@@ -121,7 +121,7 @@ All notable changes for each version of this project will be documented in this 
 
 - `IgxToggleDirective`
     - **Breaking Change** - The following events have been renamed as follows:
-        - `onOpen` -> `open`
+        - `onOpened` -> `opened`
         - `onOpening` -> `opening`
         - `onClosed` -> `closed`
         - `onClosing` -> `closing`
