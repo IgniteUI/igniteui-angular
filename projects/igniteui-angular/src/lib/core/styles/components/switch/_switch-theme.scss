@@ -1,4 +1,3 @@
-@use 'sass:math';
 @import '../ripple/ripple-theme';
 @import '../ripple/ripple-component';
 
@@ -185,16 +184,16 @@
 
     $switch-on-offset: map-get((
         material: 1px,
-        fluent: math.div($switch-thumb-width, 2),
-        bootstrap: math.div($switch-thumb-width, 2),
+        fluent: $switch-thumb-width / 2,
+        bootstrap: $switch-thumb-width / 2,
         indigo-design: 7px
     ), $variant);
 
     $switch-off-offset: map-get((
         material: -1px,
-        fluent: math.div($switch-thumb-width, 3),
-        bootstrap: math.div($switch-thumb-width, 3),
-        indigo-design: math.div($switch-thumb-width, 3),
+        fluent: $switch-thumb-width / 3,
+        bootstrap: $switch-thumb-width / 3,
+        indigo-design: $switch-thumb-width / 3,
     ), $variant);
 
     $ripple-display: map-get((
@@ -228,7 +227,7 @@
     $switch-thumb-height: $switch-thumb-width ;
 
     $ripple-size: em(48px);
-    $ripple-radius: math.div($ripple-size, 2);
+    $ripple-radius: $ripple-size / 2;
 
     $label-margin: em(8px);
 

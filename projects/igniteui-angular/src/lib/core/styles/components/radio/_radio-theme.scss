@@ -1,4 +1,3 @@
-@use 'sass:math';
 @import '../ripple/ripple-theme';
 @import '../ripple/ripple-component';
 
@@ -129,7 +128,7 @@
     $transition: all .2s ease-in;
 
     $ripple-size: em(48px);
-    $ripple-radius: math.div($ripple-size, 2);
+    $ripple-radius: $ripple-size / 2;
 
     $ripple-theme: igx-ripple-theme(
         $color: --var($theme, 'fill-color')

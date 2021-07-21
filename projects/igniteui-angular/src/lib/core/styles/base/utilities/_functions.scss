@@ -1,5 +1,3 @@
-@use 'sass:math';
-
 ////
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
@@ -16,7 +14,7 @@
     @if (unitless($context)) {
         $context: $context * 1px;
     }
-    @return math.div($pixels, $context) * 1em;
+    @return ($pixels / $context) * 1em;
 }
 
 /// Pixels to root relative values (rem).
@@ -30,7 +28,7 @@
     @if (unitless($context)) {
         $context: $context * 1px;
     }
-    @return math.div($pixels, $context) * 1rem;
+    @return ($pixels / $context) * 1rem;
 }
 
 /// Relative value(em/rem) to pixel.
@@ -39,7 +37,7 @@
 /// @param {number|string} $context [$browser-context] - The base context to convert against.
 @function px($num, $context: $browser-context) {
     @if type-of $num == 'number' {
-        @return math.div($num, $num * 0 + 1) * 16px;
+        @return ($num / ($num * 0 + 1)) * 16px;
     }
 
     @return $num;
@@ -70,7 +68,7 @@
     $backLum: luminance($background) + .05;
     $foreLum: luminance($foreground) + .05;
 
-    @return math.div(max($backLum, $foreLum), min($backLum, $foreLum));
+    @return max($backLum, $foreLum) / min($backLum, $foreLum);
 }
 
 /// Returns an alpha channel map for a given palette variant.
