@@ -740,13 +740,14 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        const cell = childGrid.hgridAPI.get_row_by_index(0).cells.toArray()[0];
+        const cellElem = childGrid.hgridAPI.get_row_by_index(0).cells.toArray()[0];
+        const cell = childGrid.getRowByIndex(0).cells[0];
         const ri1 = fixture.componentInstance.rowIsland1;
 
         spyOn(ri1.cellClick, 'emit').and.callThrough();
 
         const event = new Event('click');
-        cell.nativeElement.dispatchEvent(event);
+        cellElem.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
             cell,
             event,
