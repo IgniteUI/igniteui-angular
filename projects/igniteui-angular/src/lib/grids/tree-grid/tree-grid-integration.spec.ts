@@ -509,7 +509,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const nameCell = grid.getCellByColumn(2, 'Name');
             const idCell = grid.getCellByColumn(2, 'ID');
             const ageCell = grid.getCellByColumn(2, 'Age');
-            UIInteractions.simulateDoubleClickAndSelectEvent(dateCell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'HireDate'));
             await wait(30);
             fix.detectChanges();
 
@@ -671,7 +671,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             treeGrid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
             const trans = treeGrid.transactions;
 
-            const targetCell = treeGrid.gridAPI.get_cell_by_index(3, 'Age');
+            const targetCell = treeGrid.getCellByColumn(3, 'Age');
             targetCell.editMode = true;
             targetCell.update('333');
             flush();
@@ -700,7 +700,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             // Edit a cell value and check it is correctly updated
-            const newTargetCell = treeGrid.gridAPI.get_cell_by_index(10, 'Age');
+            const newTargetCell = treeGrid.getCellByColumn(10, 'Age');
             newTargetCell.editMode = true;
             newTargetCell.update('666');
             flush();

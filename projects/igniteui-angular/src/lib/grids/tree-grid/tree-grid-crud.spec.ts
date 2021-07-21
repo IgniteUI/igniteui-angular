@@ -676,7 +676,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);
@@ -814,7 +814,7 @@ describe('IgxTreeGrid - CRUD #tGrid', () => {
                     expect(args.newValue).toBe(146);
                 });
 
-                UIInteractions.simulateDoubleClickAndSelectEvent(cellComponent);
+                UIInteractions.simulateDoubleClickAndSelectEvent(treeGrid.gridAPI.get_cell_by_index(0, 'ID'));
                 fix.detectChanges();
 
                 expect(cellComponent.editMode).toBe(true);

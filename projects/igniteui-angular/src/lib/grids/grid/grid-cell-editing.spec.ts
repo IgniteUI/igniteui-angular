@@ -1250,6 +1250,6 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
         expect(cell.editMode).toBe(false);
         expect(cell.value).toBe(false);
-        expect(grid.gridAPI.get_cell_by_index(0, 'OnPTO').nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
+        expect(grid.gridAPI.get_cell_by_index(1, 'OnPTO').nativeElement.classList).toContain(EDITED_CELL_CSS_CLASS);
     }));
 });
