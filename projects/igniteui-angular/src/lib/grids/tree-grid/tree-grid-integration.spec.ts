@@ -328,12 +328,13 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             const grid = fix.componentInstance.treeGrid as IgxTreeGridComponent;
 
             const verifyBannerPositioning = (columnIndex: number) => {
-                const cell = grid.gridAPI.get_cell_by_index(columnIndex, 'Name');
+                const cellElem = grid.gridAPI.get_cell_by_index(columnIndex, 'Name');
+                const cell = grid.getCellByColumn(columnIndex, 'Name');
                 cell.editMode = true;
                 fix.detectChanges();
 
                 // const editRow = cell.row.nativeElement;
-                const editRow = cell.intRow.nativeElement;
+                const editRow = cellElem.intRow.nativeElement;
                 const banner = fix.debugElement.query(By.css('.' + CSS_CLASS_BANNER)).nativeElement;
 
                 const bannerTop = banner.getBoundingClientRect().top;
@@ -361,7 +362,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(1, 'Name');
-            cell.editMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
@@ -387,7 +388,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(2, 'Name');
-            cell.editMode = true;
+            cell.setEditMode(true);
             tick(16);
             fix.detectChanges();
 
@@ -410,7 +411,7 @@ describe('IgxTreeGrid - Integration #tGrid', () => {
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(grid.rowList.length - 1, 'Name');
-            cell.editMode = true;
+            cell.setEditMode(true);
             fix.detectChanges();
 
             // const editRow = cell.row.nativeElement;
