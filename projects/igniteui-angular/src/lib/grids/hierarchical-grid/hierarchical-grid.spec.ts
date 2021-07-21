@@ -807,7 +807,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(childGrid1.data.length).toEqual(2);
         expect(childGrid1.filteredData.length).toEqual(1);
         expect(childGrid1.rowList.length).toEqual(1);
-        expect(childGrid1.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
+        expect(childGrid1.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
     }));
 });
 

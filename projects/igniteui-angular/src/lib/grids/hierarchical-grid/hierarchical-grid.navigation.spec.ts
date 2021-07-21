@@ -331,9 +331,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
         const childFirstCell =  childGrid.dataRowList.toArray()[0].cells.toArray()[0];
         const selectedCell = fixture.componentInstance.selectedCell;
-        expect(selectedCell).toBe(childFirstCell);
-        expect(selectedCell.rowIndex).toBe(0);
-
+        expect(selectedCell.row.index).toBe(childFirstCell.row.index);
+        expect(selectedCell.column.index).toBe(childFirstCell.column.index);
         currScrTop = childGrid.verticalScrollContainer.getScroll().scrollTop;
         expect(currScrTop).toBe(0);
     }));
@@ -376,11 +375,10 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await waitForSelectionChange(hierarchicalGrid);
         fixture.detectChanges();
 
-        const lastDataCell = hierarchicalGrid.gridAPI.get_cell_by_key(19, 'childData2');
+        const lastDataCell = hierarchicalGrid.getCellByKey(19, 'childData2');
         const selectedCell = fixture.componentInstance.selectedCell;
-        expect(selectedCell).toBe(lastDataCell);
-        expect(selectedCell.rowIndex).toBe(38);
-        expect(selectedCell.columnIndex).toBe(6);
+        expect(selectedCell.row.index).toBe(lastDataCell.row.index);
+        expect(selectedCell.column.index).toBe(lastDataCell.column.index);
     }));
     it('if next child cell is not in view should scroll parent so that it is in view.', (async () => {
         hierarchicalGrid.verticalScrollContainer.scrollTo(4);
@@ -397,10 +395,10 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         // check if selected row is in view of parent.
         const selectedCell = fixture.componentInstance.selectedCell;
         const gridOffsets = hierarchicalGrid.tbody.nativeElement.getBoundingClientRect();
-        const rowOffsets = selectedCell.intRow.nativeElement.getBoundingClientRect();
+        const rowElem = hierarchicalGrid.gridAPI.get_row_by_index(parentCell.row.index);
+        const rowOffsets = rowElem.nativeElement.getBoundingClientRect();
         expect(rowOffsets.top >= gridOffsets.top && rowOffsets.bottom <= gridOffsets.bottom).toBeTruthy();
-
-        expect(  hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
+        expect(hierarchicalGrid.verticalScrollContainer.getScroll().scrollTop - prevScroll).toBeGreaterThanOrEqual(100);
     }));
 
     it('should expand/collapse hierarchical row using ALT+Arrow Right/ALT+Arrow Left.', ( async () => {
@@ -490,11 +488,12 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         fixture.detectChanges();
 
         // second data row in parent should be focused
-        const parentRow2 = hierarchicalGrid.gridAPI.get_row_by_index(2);
-        const parentCell2 = parentRow2.cells.toArray()[0];
+        const parentRow2 = hierarchicalGrid.getRowByIndex(2);
+        const parentCell2 = parentRow2.cells[0];
 
         let selectedCell = fixture.componentInstance.selectedCell;
-        expect(selectedCell).toBe(parentCell2);
+        expect(selectedCell.row.index).toBe(parentCell2.row.index);
+        expect(selectedCell.column.index).toBe(parentCell2.column.index);
 
         UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent, false, false, false);
         await wait(DEBOUNCE_TIME);
@@ -502,7 +501,7 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
 
         // first data row in parent should be selected
         selectedCell = fixture.componentInstance.selectedCell;
-        expect(selectedCell).toBe(parentCell);
+        expect(selectedCell.row.index).toBe(parentCell.row.index);
         expect(parentCell.selected).toBeTruthy();
     }));
 
