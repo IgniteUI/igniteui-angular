@@ -16,7 +16,8 @@ import {
 import { FormsModule, ReactiveFormsModule, ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, AbstractControl } from '@angular/forms';
 import { IgxCheckboxModule } from '../checkbox/checkbox.component';
 import { IgxSelectionAPIService } from '../core/selection';
-import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, CancelableEventArgs } from '../core/utils';
+import { cloneArray, IBaseEventArgs, IBaseCancelableBrowserEventArgs,
+    IBaseCancelableEventArgs, CancelableEventArgs,mkenum } from '../core/utils';
 import { IgxStringFilteringOperand, IgxBooleanFilteringOperand } from '../data-operations/filtering-condition';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
 import { IgxForOfModule, IForOfState, IgxForOfDirective } from '../directives/for-of/for_of.directive';
@@ -81,6 +82,14 @@ export enum IgxComboState {
      */
     INVALID = IgxInputState.INVALID
 }
+
+/** The selection modes that the IgxComboComponent can use */
+export const ComboSelectionMode = mkenum({
+    single: 'single',
+    multiple: 'multiple',
+});
+export type ComboSelectionMode = (typeof ComboSelectionMode)[keyof typeof ComboSelectionMode];
+
 
 /** The filtering criteria to be applied on data search */
 export interface IComboFilteringOptions {
@@ -182,6 +191,37 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
 
     @Input()
     public overlaySettings: OverlaySettings = null;
+
+    /**
+     * Specifies how the combo component handles selection.
+     *
+     * When set to single selection, the combo will allow only one of its items to be selected.
+     * When a new one is chosen, previous selection is erased.
+     *
+     * Multiple selection allows multiple items to be chosen.
+     *
+     * @default 'multiple'
+     *
+     * @example
+     * ```html
+     * <igx-combo [data]="comboData" selection="single" [(ngModel)]="selected">
+     * </igx-combo>
+     * ```
+     */
+    @Input()
+    public get selectionMode(): ComboSelectionMode {
+        return this._selectionMode;
+    }
+
+    public set selectionMode(val: ComboSelectionMode) {
+        if (this._selectionMode !== val) {
+            this._selectionMode = val;
+            const selection = this.selectedItems();
+            if (this._selectionMode === ComboSelectionMode.single && selection.length > 1) {
+                this.setSelection(new Set(this.validateSelectionSize(selection)));
+            }
+        }
+    }
 
     /** @hidden @internal */
     @ViewChild('inputGroup', { read: IgxInputGroupComponent, static: true }) public inputGroup: IgxInputGroupComponent;
@@ -891,6 +931,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     protected _displayKey: string;
     protected _prevInputValue = '';
 
+    private _selectionMode: ComboSelectionMode = ComboSelectionMode.multiple;
     private _dataType = '';
     private _searchValue = '';
     private _type = null;
@@ -1226,7 +1267,8 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public writeValue(value: any[]): void {
-        const selection = Array.isArray(value) ? value : [];
+        let selection = Array.isArray(value) ? value : [];
+        selection = this.validateSelectionSize(selection, true);
         const oldSelection = this.selectedItems();
         this.selection.select_items(this.id, selection, true);
         this.cdr.markForCheck();
@@ -1510,10 +1552,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
     }
 
     protected setSelection(newSelection: Set<any>, event?: Event): void {
-        const removed = diffInSets(this.selection.get(this.id), newSelection);
-        const added = diffInSets(newSelection, this.selection.get(this.id));
-        const newSelectionAsArray = Array.from(newSelection);
+        const newSelectionAsArray = this.validateSelectionSize(Array.from(newSelection));
         const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
+        const modifiedSelection = new Set(newSelectionAsArray);
+        const removed = diffInSets(this.selection.get(this.id), modifiedSelection);
+        const added = diffInSets(modifiedSelection, this.selection.get(this.id));
         const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
         const args: IComboSelectionChangeEventArgs = {
             newSelection: newSelectionAsArray,
@@ -1582,6 +1625,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             [this.valueKey]: e[this.valueKey],
             [this.displayKey]: e[this.displayKey]
         }));
+    }
+
+    private validateSelectionSize<T>(selection: T[], mutate = false): T[] {
+        if (this.selectionMode === ComboSelectionMode.single) {
+            if (mutate) {
+                selection.splice(0, selection.length - 1);
+            } else {
+                selection = selection.slice(selection.length - 1);
+            }
+        }
+        return selection;
     }
 
     private checkMatch(): void {

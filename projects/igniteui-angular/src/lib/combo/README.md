@@ -301,6 +301,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 |  `id`                    | combo id                                          | string                      |
 |  `data`                  | combo data source                                 | any                         |
 |  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
+|  `selectionMode`         | specified whether the combo allows single or multiple selection | string ('multiple' | 'single' ) | 
 |  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
 |  `showSearchCaseIcon`          | defines whether the search case-sensitive icon should be displayed - disabled by default| boolean                     |
 |  `valueKey`              | combo value data source property                  | string                      |

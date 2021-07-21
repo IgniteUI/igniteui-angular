@@ -2,15 +2,18 @@ import { AfterViewInit, ChangeDetectorRef, Component, Injectable, OnInit, ViewCh
 import { TestBed, tick, fakeAsync, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule,
-    FormsModule, NgControl, NgModel, NgForm } from '@angular/forms';
+import {
+    FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule,
+    FormsModule, NgControl, NgModel, NgForm
+} from '@angular/forms';
 import {
     IgxComboComponent,
     IgxComboModule,
     IComboSelectionChangeEventArgs,
     IgxComboState,
     IComboSearchInputEventArgs,
-    IComboItemAdditionEvent
+    IComboItemAdditionEvent,
+    ComboSelectionMode
 } from './combo.component';
 import { IgxComboItemComponent } from './combo-item.component';
 import { IgxComboDropDownComponent } from './combo-dropdown.component';
@@ -305,7 +308,7 @@ describe('igxCombo', () => {
             };
             combo.comboInput = {
                 nativeElement: {
-                    focus: () => {}
+                    focus: () => { }
                 }
             } as any;
             combo.handleOpening(inputEvent);
@@ -2090,6 +2093,50 @@ describe('igxCombo', () => {
             expect(combo.selectedItems().length).toEqual(0);
             expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(0);
         });
+        it('should allow changing of selection mode runtime, leaving only the last element selected', () => {
+            spyOn(combo.onSelectionChange, 'emit').and.callThrough();
+
+            combo.selectItems(['Michigan', 'Ohio', 'Wisconsin']);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
+            expect(combo.selectedItems().length).toBe(3);
+            combo.selectionMode = ComboSelectionMode.single;
+            fixture.detectChanges();
+            expect(combo.selectedItems().length).toBe(1);
+            expect(combo.selectedItems()).toEqual(['Wisconsin']);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
+
+            // does not mutate the input array
+            const selectCall = ['Ohio', 'Wisconsin', 'Michigan'];
+            combo.selectItems(selectCall);
+            expect(combo.selectedItems().length).toBe(1);
+            expect(combo.selectedItems()).toEqual(['Michigan']);
+            expect(selectCall).toEqual(['Ohio', 'Wisconsin', 'Michigan']);
+        });
+        it('should support single selection mode, allowing only one item to be selected', () => {
+            spyOn(combo.onSelectionChange, 'emit').and.callThrough();
+            combo.selectionMode = ComboSelectionMode.single;
+
+            combo.selectItems(['Michigan']);
+            expect(combo.selectedItems().length).toBe(1);
+            expect(combo.selectedItems()).toEqual(['Michigan']);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(1);
+
+            combo.selectItems(['Wisconsin']);
+            expect(combo.selectedItems().length).toBe(1);
+            expect(combo.selectedItems()).toEqual(['Wisconsin']);
+            expect(combo.onSelectionChange.emit).toHaveBeenCalledTimes(2);
+        });
+        it('should select only the last item when calling selectAllItems and selection mode === single', () => {
+            combo.selectAllItems();
+
+            expect(combo.selectedItems().length).toBe(51);
+            const lastItem = combo.selectedItems()[combo.selectedItems().length - 1];
+            expect(lastItem).toBe('Washington');
+
+            combo.selectionMode = ComboSelectionMode.single;
+            expect(combo.selectedItems().length).toBe(1);
+            expect(combo.selectedItems()[0]).toBe('Washington');
+        });
     });
     describe('Grouping tests: ', () => {
         configureTestSuite();
@@ -2406,8 +2453,8 @@ describe('igxCombo', () => {
             const searchInput = fixture.debugElement.query(By.css(CSS_CLASS_SEARCHINPUT));
 
             const verifyFilteredItems = (inputValue: string,
-                                        expectedDropdownItemsNumber: number,
-                                        expectedFilteredItemsNumber: number) => {
+                expectedDropdownItemsNumber: number,
+                expectedFilteredItemsNumber: number) => {
                 UIInteractions.triggerInputEvent(searchInput, inputValue);
                 fixture.detectChanges();
                 dropdownList = fixture.debugElement.query(By.css(`.${CSS_CLASS_CONTAINER}`)).nativeElement;
@@ -2911,6 +2958,29 @@ describe('igxCombo', () => {
                 tick();
                 expect(combo.valid).toEqual(IgxComboState.INITIAL);
                 expect(combo.comboInput.valid).toEqual(IgxInputState.INITIAL);
+            }));
+
+            it('should allow binding to an array of multiple items, leaving only 1 item selected, when SINGLE mode', fakeAsync(() => {
+                expect(combo.selectionMode).toBe(ComboSelectionMode.multiple);
+                combo.selectItems(['Connecticut', 'Washington']);
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.values).toEqual(['Connecticut', 'Washington']);
+
+                combo.selectionMode = ComboSelectionMode.single;
+                tick();
+                fixture.detectChanges();
+                expect(fixture.componentInstance.values).toEqual(['Washington']);
+                expect(combo.selectedItems()).toEqual(['Washington']);
+
+                fixture.componentInstance.values = ['Connecticut', 'New Jersey'];
+                tick();
+                fixture.detectChanges();
+                tick();
+                fixture.detectChanges();
+
+                expect(combo.selectedItems()).toEqual(['New Jersey']);
+                expect(fixture.componentInstance.values).toEqual(['New Jersey']);
             }));
         });
     });
