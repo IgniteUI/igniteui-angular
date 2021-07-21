@@ -329,7 +329,7 @@ describe('IgxGrid - CRUD operations #grid', () => {
 
         const cell = grid.getCellByKey(rowID, columnName);
         expect(grid.data.length).toBe(11);
-        expect(cell.row.index).toBe(7);
+        expect(cell.row.index).toBe(8);
         expect(cell.row.key).toBe(rowID);
         expect(cell.column.field).toBe(columnName);
 

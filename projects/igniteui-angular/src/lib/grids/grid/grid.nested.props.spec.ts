@@ -363,7 +363,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.first'));
         fixture.detectChanges();
         expect(cell1.editMode).toBe(true);
         cell1.editValue = 'Petar';
@@ -401,7 +401,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell2);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.last'));
         fixture.detectChanges();
         expect(cell2.editMode).toBe(true);
         cell2.editValue = 'Petrov';
@@ -422,7 +422,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.first'));
         fixture.detectChanges();
         expect(cell1.editMode).toBe(true);
         cell1.editValue = 'Petar';

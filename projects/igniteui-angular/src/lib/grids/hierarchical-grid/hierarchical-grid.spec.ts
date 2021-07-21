@@ -402,7 +402,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const masterGridSecondCell = masterGridFirstRow.cells.find(c => c.columnIndex === 1);
         expect(masterGridSecondCell.editMode).toBeFalsy();
 
-        masterGridSecondCell.editMode = true;
+        masterGridSecondCell.setEditMode(true);
         fixture.detectChanges();
         wait();
 
@@ -425,7 +425,7 @@ describe('Basic IgxHierarchicalGrid #hGrid', () => {
         const childGridSecondCell = childGridSecondRow.cells.find(c => c.columnIndex === 1);
         expect(childGridSecondCell.editMode).toBeFalsy();
 
-        childGridSecondCell.editMode = true;
+        childGridSecondCell.setEditMode(true);
         fixture.detectChanges();
         wait();
 
