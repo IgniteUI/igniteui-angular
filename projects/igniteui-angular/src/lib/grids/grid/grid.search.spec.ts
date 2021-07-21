@@ -779,8 +779,7 @@ describe('IgxGrid - search API #grid - ', () => {
             let activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(activeHighlight).toBeNull();
 
-            // TODO cell
-            // cell.column.editable = true;
+            cell.column.editable = true;
             grid.findNext('1');
             fix.detectChanges();
             activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
@@ -792,7 +791,7 @@ describe('IgxGrid - search API #grid - ', () => {
             activeHighlight = rv.querySelector(HIGHLIGHT_ACTIVE_CSS_CLASS);
             expect(activeHighlight).toBeNull();
 
-            cell.editMode = true;
+            cell.editMode = false;
             fix.detectChanges();
             expect(rv.innerText).toBe(initialValue);
             expect(rv.querySelectorAll(HIGHLIGHT_CSS_CLASS).length).toBe(1);
