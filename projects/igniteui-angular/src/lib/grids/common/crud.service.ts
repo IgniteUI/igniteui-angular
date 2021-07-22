@@ -50,7 +50,7 @@ export class IgxEditRow {
 }
 
 export class IgxAddRow extends IgxEditRow {
-    public isAddRow: boolean = true;
+    public isAddRow = true;
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args = super.createEditEventArgs(includeNewValue, event);

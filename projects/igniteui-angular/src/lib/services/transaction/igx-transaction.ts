@@ -59,17 +59,6 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         return result;
     }
 
-    public getAggregatedPendingAddChanges(mergeChanges: boolean): T[] {
-        const result: T[] = [];
-        this._pendingStates.forEach((state: S, key: any) => {
-            if (state.type === TransactionType.ADD) {
-                const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
-                result.push({ id: key, newValue: value, type: state.type } as T);
-            }
-        });
-        return result;
-    }
-
     /**
      * @inheritdoc
      */

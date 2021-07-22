@@ -139,7 +139,9 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     public get addRowUI(): any {
-        return this.grid.crudService.row && this.grid.crudService.row.getClassName() === IgxAddRow.name && this.grid.crudService.row.id === this.rowID;
+        return this.grid.crudService.row &&
+            this.grid.crudService.row.getClassName() === IgxAddRow.name &&
+            this.grid.crudService.row.id === this.rowID;
     }
 
     @HostBinding('style.min-height.px')
