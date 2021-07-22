@@ -650,6 +650,53 @@ public onBannerOpened(event: BannerEventArgs) {
         </igx-dialog>`);
     });
 
+    // CellType
+    it('Should update cell component types with CellType', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/cells.component.ts', `
+        import { IgxGridComponent, IgxGridCellComponent, IgxHierarchicalGridCellComponent,
+            IgxTreeGridCellComponent, IgxGridExpandableCellComponent } from 'igniteui-angular';
+        export class HGridMultiRowDragComponent {
+            public onDropAllowed(args: IDropDroppedEventArgs)
+                const hierRow: RowType = args.dragData;
+                const row: RowType = args.dragData;
+                const treeRow: RowType = args.dragData;
+                const cells: IgxGridCellComponent[] = row.cells;
+                const tells: IgxTreeGridCellComponent[] = treeRow.cells;
+                const hcells: IgxHierarchicalGridCellComponent[] = hierRow.cells;
+            }
+            public ngOnInit() {
+                const cell: this.grid1.getCellByColumn(0, "ContactName") as IgxGridCellComponent;
+                const cell2: this.grid1.getCellByColumnVisibleIndex(0, 2) as IgxTreeGridCellComponent;
+                const cell3: this.grid1.getCellByKey(0, "Age") as IgxHierarchicalGridCellComponent;
+
+                const cells = grid.selectedCells as IgxGridCellComponent[];
+            }
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/cells.component.ts'))
+                .toEqual(`
+        import { IgxGridComponent, CellType } from 'igniteui-angular';
+        export class HGridMultiRowDragComponent {
+            public onDropAllowed(args: IDropDroppedEventArgs)
+                const hierRow: RowType = args.dragData;
+                const row: RowType = args.dragData;
+                const treeRow: RowType = args.dragData;
+                const cells: CellType[] = row.cells;
+                const tells: CellType[] = treeRow.cells;
+                const hcells: CellType[] = hierRow.cells;
+            }
+            public ngOnInit() {
+                const cell: this.grid1.getCellByColumn(0, "ContactName") as CellType;
+                const cell2: this.grid1.getCellByColumnVisibleIndex(0, 2) as CellType;
+                const cell3: this.grid1.getCellByKey(0, "Age") as CellType;
+
+                const cells = grid.selectedCells as CellType[];
+            }
+        }`);
+    });
 });
 
 
