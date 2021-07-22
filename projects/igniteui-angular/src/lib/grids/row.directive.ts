@@ -22,7 +22,7 @@ import { IgxColumnComponent } from './columns/column.component';
 import { TransactionType } from '../services/transaction/transaction';
 import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxGridSelectionService } from './selection/selection.service';
-import { IgxRow } from './common/crud.service';
+import { IgxAddRow, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
@@ -139,7 +139,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
     }
 
     public get addRowUI(): any {
-        return this.grid.crudService.addRow && this.grid.crudService.addRow.id === this.rowID;
+        return this.grid.crudService.row && this.grid.crudService.row.getClassName() === IgxAddRow.name && this.grid.crudService.row.id === this.rowID;
     }
 
     @HostBinding('style.min-height.px')
@@ -481,7 +481,7 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.rowID) {
             this.grid.transactions.endPending(false);
         }
-        const row = new IgxRow(this.rowID, this.index, this.rowData, this.grid);
+        const row = new IgxEditRow(this.rowID, this.index, this.rowData, this.grid);
         this.gridAPI.update_row(row, value);
         this.cdr.markForCheck();
     }

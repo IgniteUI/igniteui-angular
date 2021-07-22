@@ -18,8 +18,6 @@ export interface Transaction {
     id: any;
     type: TransactionType;
     newValue: any;
-    pending?: boolean;
-    pendingIndex?: number;
 }
 
 /**
@@ -34,7 +32,6 @@ export interface State {
     value: any;
     recordRef: any;
     type: TransactionType;
-    pendingIndex?: number;
 }
 
 export interface Action<T extends Transaction> {

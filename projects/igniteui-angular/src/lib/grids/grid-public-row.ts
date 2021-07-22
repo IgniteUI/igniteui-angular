@@ -1,6 +1,6 @@
 import { DeprecateProperty } from '../core/deprecateDecorators';
 import { IGroupByRecord } from '../data-operations/groupby-record.interface';
-import { IgxRow } from './common/crud.service';
+import { IgxEditRow } from './common/crud.service';
 import { GridInstanceType, GridSummaryCalculationMode, GridSummaryPosition } from './common/enums';
 import { RowType } from './common/row.interface';
 import { IgxGridAPIService } from './grid/grid-api.service';
@@ -218,7 +218,7 @@ abstract class BaseRow implements RowType {
         if (crudService.cellInEditMode && crudService.cell.id.rowID === this.key) {
             this.grid.transactions.endPending(false);
         }
-        const row = new IgxRow(this.key, this.index, this.data, this.grid);
+        const row = new IgxEditRow(this.key, this.index, this.data, this.grid);
         this.grid.gridAPI.update_row(row, value);
         this.grid.notifyChanges();
     }

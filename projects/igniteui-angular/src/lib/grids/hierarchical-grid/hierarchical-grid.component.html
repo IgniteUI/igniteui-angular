@@ -31,9 +31,10 @@
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
+            | gridAddRow:true:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true">
+            | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
                     [ngClass]="{ 'igx-grid__tr--pinned-bottom':  !isRowPinningToTop, 'igx-grid__tr--pinned-top': isRowPinningToTop }"
                     [style.width.px]='calcWidth'>
@@ -53,6 +54,7 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
+        | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'

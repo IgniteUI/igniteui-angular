@@ -557,7 +557,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
             }
         } else {
             return {
-                $implicit: this.isGhostRecord(rowData) || rowData,
+                $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
                 templateID: 'dataRow',
                 index: this.getDataViewIndex(rowIndex, pinned),
                 disabled: this.isGhostRecord(rowData)

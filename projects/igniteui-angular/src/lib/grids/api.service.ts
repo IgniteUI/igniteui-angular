@@ -8,7 +8,7 @@ import { IgxGridBaseDirective } from './grid-base.directive';
 import { IgxRowDirective } from './row.directive';
 import { IFilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { Transaction, TransactionType, State } from '../services/transaction/transaction';
-import { IgxCell, IgxGridCRUDService, IgxRow } from './common/crud.service';
+import { IgxCell, IgxGridCRUDService, IgxEditRow } from './common/crud.service';
 import { GridType } from './common/grid.interface';
 import { ColumnType } from './common/column.interface';
 import { IGridEditEventArgs, IRowToggleEventArgs } from './common/events';
@@ -145,7 +145,7 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
     }
 
     // TODO: CRUD refactor to not emit editing evts.
-    public update_row(row: IgxRow, value: any, event?: Event) {
+    public update_row(row: IgxEditRow, value: any, event?: Event) {
         const grid = this.grid;
         const selected = grid.selectionService.isRowSelected(row.id);
         const rowInEditMode = this.crudService.row;
@@ -248,19 +248,17 @@ export class GridBaseAPIService<T extends IgxGridBaseDirective & GridType> {
         return this.grid.filteredData;
     }
 
-    public addRowToData(rowData: any, parentID?, atIndex?: number) {
+    public addRowToData(rowData: any, parentID?) {
         // Add row goes to transactions and if rowEditable is properly implemented, added rows will go to pending transactions
         // If there is a row in edit - > commit and close
         const grid = this.grid;
 
-        // If no index is provided, add to bottom.
-        const rowIndex = atIndex != null ? atIndex : grid.dataLength;
         if (grid.transactions.enabled) {
             const transactionId = grid.primaryKey ? rowData[grid.primaryKey] : rowData;
-            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData, pendingIndex: rowIndex };
+            const transaction: Transaction = { id: transactionId, type: TransactionType.ADD, newValue: rowData };
             grid.transactions.add(transaction);
         } else {
-            grid.data.splice(rowIndex, 0, rowData);
+            grid.data.push(rowData);
         }
     }
 
