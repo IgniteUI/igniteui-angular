@@ -150,10 +150,11 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
 - `IgxBanner`
     - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the banner.
 
--   `IgxDropDown`
+- `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
     - **Breaking Change** - The following events have been renamed as follows:
         - `onOpening` -> `opening`
@@ -172,6 +173,7 @@ All notable changes for each version of this project will be documented in this 
         - `onAppended` -> `appended`
 
 - `IgxCombo`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
     - **Breaking Change** - The following events have been renamed as follows:
         - `onSelectionChange` -> `selectionChange`
         - `onSearchInput` -> `searchInputUpdate`
@@ -183,6 +185,7 @@ All notable changes for each version of this project will be documented in this 
         - `onClosed` -> `closed`
 
 - `IgxSelect`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
     - **Breaking Change** - The following events have been renamed as follows:
         - `onOpening` -> `opening`
         - `onOpened` -> `opened`
@@ -201,6 +204,9 @@ All notable changes for each version of this project will be documented in this 
         - `onClosed` -> `closed`
         - `onLeftButtonSelect` -> `leftButtonSelect`
         - `onRightButtonSelect` -> `rightButtonSelect`
+
+- `IgxDropDown`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`.
 
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
