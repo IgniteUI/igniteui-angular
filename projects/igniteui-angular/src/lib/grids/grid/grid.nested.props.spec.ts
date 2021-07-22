@@ -466,7 +466,7 @@ describe('Grid nested data advanced editing', () => {
 
         GridFunctions.verifyHeaderSortIndicator(header, false, true);
 
-        const cell1 = grid.getCellByColumn(0, 'user.address.zip');
+        const cell1 = grid.gridAPI.get_cell_by_index(0, 'user.address.zip');
         expect(cell1.value).toEqual(1700);
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
