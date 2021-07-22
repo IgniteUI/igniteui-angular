@@ -437,7 +437,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted after the dropdown is closed
      *
      * ```html
-     * <igx-combo (onClosed)='handleClosed($event)'></igx-combo>
+     * <igx-combo (closed)='handleClosed($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -447,7 +447,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when an item is being added to the data collection
      *
      * ```html
-     * <igx-combo (onAddition)='handleAdditionEvent($event)'></igx-combo>
+     * <igx-combo (addition)='handleAdditionEvent($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -457,7 +457,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when the value of the search input changes (e.g. typing, pasting, clear, etc.)
      *
      * ```html
-     * <igx-combo (onSearchInput)='handleSearchInputEvent($event)'></igx-combo>
+     * <igx-combo (searchInputUpdate)='handleSearchInputEvent($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -467,7 +467,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when new chunk of data is loaded from the virtualization
      *
      * ```html
-     * <igx-combo (onDataPreLoad)='handleDataPreloadEvent($event)'></igx-combo>
+     * <igx-combo (dataPreLoad)='handleDataPreloadEvent($event)'></igx-combo>
      * ```
      */
     @Output()
