@@ -299,9 +299,11 @@ describe('igxCombo', () => {
             spyOn(combo.opening, 'emit').and.callThrough();
             spyOn(combo.closing, 'emit').and.callThrough();
             const mockObj = {};
+            const mockEvent = new Event('mock');
             const inputEvent: IBaseCancelableBrowserEventArgs = {
                 cancel: false,
                 owner: mockObj,
+                event: mockEvent
             };
             combo.comboInput = {
                 nativeElement: {
@@ -309,12 +311,10 @@ describe('igxCombo', () => {
                 }
             } as any;
             combo.handleOpening(inputEvent);
-            const expectedCall: IBaseCancelableBrowserEventArgs = Object.assign({}, inputEvent, { owner: combo });
+            const expectedCall: IBaseCancelableBrowserEventArgs = { owner: combo, event: inputEvent.event, cancel: inputEvent.cancel };
             expect(combo.opening.emit).toHaveBeenCalledWith(expectedCall);
-            expect(inputEvent.owner).toEqual(mockObj);
             combo.handleClosing(inputEvent);
             expect(combo.closing.emit).toHaveBeenCalledWith(expectedCall);
-            expect(inputEvent.owner).toEqual(mockObj);
             let sub = combo.opening.subscribe((e: IBaseCancelableBrowserEventArgs) => {
                 e.cancel = true;
             });

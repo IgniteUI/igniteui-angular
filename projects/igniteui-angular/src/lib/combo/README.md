@@ -296,61 +296,61 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 
 ### Inputs
 
-| Name                     | Description                                       | Type                        |
-|--------------------------|---------------------------------------------------|-----------------------------|
-|  `id`                    | combo id                                          | string                      |
-|  `data`                  | combo data source                                 | any                         |
-|  `allowCustomValue`      | enables/disables combo custom value                | boolean                     |
-|  `filterable`            | enables/disables combo drop down filtering - enabled by default                  | boolean                     |
-|  `showSearchCaseIcon`          | defines whether the search case-sensitive icon should be displayed - disabled by default| boolean                     |
-|  `valueKey`              | combo value data source property                  | string                      |
-|  `displayKey`            | combo display data source property                | string                      |
-|  `groupKey`              | combo item group                                  | string                      |
-|  `virtualizationState`   | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize`      | `IForOfState`               |
-|  `totalItemCount`        | total count of the virtual data items, when using remote service                                | number                      |
-|  `width `                | defines combo width                               | string                      |
-| `displayDensity` | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
-|  `itemsMaxHeight `       | defines drop down maximum height                  | number                      |
-|  `itemsWidth `           | defines drop down width                           | string                      |
-|  `itemHeight `           | defines drop down item height                     | number                      |
-|  `placeholder `          | defines the "empty value" text                    | string                      |
-|  `searchPlaceholder `    | defines the placeholder text for search input     | string                      |
-|  `collapsed`             | gets drop down state                              | boolean                     |
-|  `disabled`              | defines whether the control is active or not      | boolean                     |
-|  `ariaLabelledBy`        | defines label ID related to combo                 | boolean                     |
-|  `type`                  | Combo style. - "line", "box", "border", "search"                                        | string                      |
-|  `valid`                 | gets if control is valid, when used in a form     | boolean                     |
-|  `overlaySettings`       | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings         |
-|  `autoFocusSearch`     | controls whether the search input should be focused when the combo is opened | boolean |
+| Name                  | Description                                       | Type                        |
+|-----------------------|---------------------------------------------------|-----------------------------|
+| `id`                  | combo id                                          | string                      |
+| `data`                | combo data source                                 | any                         |
+| `allowCustomValue`    | enables/disables combo custom value               | boolean                     |
+| `filterable`          | enables/disables combo drop down filtering - enabled by default | boolean       |
+| `showSearchCaseIcon`  | defines whether the search case-sensitive icon should be displayed - disabled by default | boolean |
+| `valueKey`            | combo value data source property                  | string                      |
+| `displayKey`          | combo display data source property                | string                      |
+| `groupKey`            | combo item group                                  | string                      |
+| `virtualizationState` | defines the current state of the virtualized data. It contains `startIndex` and `chunkSize` | `IForOfState` |
+| `totalItemCount`      | total count of the virtual data items, when using remote service | number       |
+| `width `              | defines combo width                               | string                      |
+| `displayDensity`      | defines the display density of the combo . Available options are `cosy`, `compact`, `comfortable` | `DisplayDensity | string` |
+| `itemsMaxHeight `     | defines drop down maximum height                  | number                      |
+| `itemsWidth `         | defines drop down width                           | string                      |
+| `itemHeight `         | defines drop down item height                     | number                      |
+| `placeholder `        | defines the "empty value" text                    | string                      |
+| `searchPlaceholder `  | defines the placeholder text for search input     | string                      |
+| `collapsed`           | gets drop down state                              | boolean                     |
+| `disabled`            | defines whether the control is active or not      | boolean                     |
+| `ariaLabelledBy`      | defines label ID related to combo                 | boolean                     |
+| `type`                | Combo style. - "line", "box", "border", "search"  | string                      |
+| `valid`               | gets if control is valid, when used in a form     | boolean                     |
+| `overlaySettings`     | gets/sets the custom overlay settings that control how the drop-down list displays | OverlaySettings |
+| `autoFocusSearch`     | controls whether the search input should be focused when the combo is opened | boolean |
 
 ### Getters
 | Name                     | Description                                       | Type                        |
 |--------------------------|---------------------------------------------------|-----------------------------|
-|  `value`                    | the value of the combo text field                                          | string                      |
+|  `value`                 | the value of the combo text field                 | string                      |
 
 ### Outputs
 
-| Name                | Description                                                             | Cancelable   | Parameters                              |
-|------------------   |-------------------------------------------------------------------------|------------- |-----------------------------------------|
-| `selectionChange` | Emitted when item selection is changing, before the selection completes | true         | [`IComboSelectionChangeEventArgs`](https://www.infragistics.com/products/ignite-ui-angular/docs/typescript/latest/interfaces/icomboselectionchangeeventargs.html) |
-| `searchInputUpdate`     | Emitted when an the search input's input event is triggered             | true        | { searchValue: `string` }               |
-| `addition`        | Emitted when an item is being added to the data collection              | true        | { oldCollection: `any[]`, addedItem: `<any>`, newCollection: `any[]`, owner?: `IgxComboComponent`, cancel: `boolean` }|
-| `dataPreLoad`     | Emitted when new chunk of data is loaded from the virtualization        | false        | { event: `Event` }                        |
-| `opening`   | Emitted before the dropdown is opened                                   | false        | `IBaseCancelableBrowserEventArgs` |
-| `opened`    | Emitted after the dropdown is opened                                    | false        | { event: `Event` }                        |
-| `closing`   | Emitted before the dropdown is closed                                   | false        | `IBaseCancelableBrowserEventArgs` |
-| `closed`    | Emitted after the dropdown is closed                                    | false        | { event: `Event` }                        |
+| Name                | Description                                                             | Cancelable   | Emitted with                      |
+|---------------------|-------------------------------------------------------------------------|--------------|-----------------------------------|
+| `selectionChange`   | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangeEventArgs`  |
+| `searchInputUpdate` | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`      |
+| `addition`          | Emitted when an item is being added to the data collection              | true         | `IComboItemAdditionEvent`         |
+| `dataPreLoad`       | Emitted when new chunk of data is loaded from the virtualization        | false        | `IForOfState`                     |
+| `opening`           | Emitted before the dropdown is opened                                   | false        | `IBaseCancelableBrowserEventArgs` |
+| `opened`            | Emitted after the dropdown is opened                                    | false        | `IBaseEventArgs`                  |
+| `closing`           | Emitted before the dropdown is closed                                   | false        | `IBaseCancelableBrowserEventArgs` |
+| `closed`            | Emitted after the dropdown is closed                                    | false        | `IBaseEventArgs`                  |
 
 ### Methods
 
-| Name             | Description                 | Return type          | Parameters                  |
-|----------------- |-----------------------------|----------------------|-----------------------------|
-| `open`           | Opens drop down             | `void`               | `None`                      |
-| `close`          | Closes drop down            | `void`               | `None`                      |
-| `toggle`         | Toggles drop down           | `void`               | `None`                      |
-| `selectedItems`  | Get current selection state | `any[]`         | `None`                      |
-| `selectItems`    | Select defined items        | `void`               | items: `any[]`, clearCurrentSelection: `boolean` |
-| `deselectItems`  | Deselect defined items      | `void`               | items: `any[]`         |
-| `selectAllItems` | Select all (filtered) items | `void`               | ignoreFilter?: `boolean` - if `true` selects **all** values |
-| `deselectAllItems` | Deselect (filtered) all items | `void`           | ignoreFilter?: `boolean` - if `true` deselects **all** values |
-| `setSelectedItem` | Toggles (select/deselect) an item by key | `void` | itemID: any, select = true, event?: Event |
+| Name               | Description                              | Return type | Parameters                                                    |
+|--------------------|------------------------------------------|-------------|---------------------------------------------------------------|
+| `open`             | Opens drop down                          | `void`      | `None`                                                        |
+| `close`            | Closes drop down                         | `void`      | `None`                                                        |
+| `toggle`           | Toggles drop down                        | `void`      | `None`                                                        |
+| `selectedItems`    | Get current selection state              | `any[]`     | `None`                                                        |
+| `selectItems`      | Select defined items                     | `void`      | items: `any[]`, clearCurrentSelection: `boolean`              |
+| `deselectItems`    | Deselect defined items                   | `void`      | items: `any[]`                                                |
+| `selectAllItems`   | Select all (filtered) items              | `void`      | ignoreFilter?: `boolean` - if `true` selects **all** values   |
+| `deselectAllItems` | Deselect (filtered) all items            | `void`      | ignoreFilter?: `boolean` - if `true` deselects **all** values |
+| `setSelectedItem`  | Toggles (select/deselect) an item by key | `void`      | itemID: any, select = true, event?: Event                     |

@@ -38,13 +38,13 @@ handlers when the toggle is opened and respectively closed.
 ## API Summary
 
 ### Outputs
-| Name | Return Type | Description |
-|:--:|:---|:---|
-| `appended`   | `ToggleViewEventArgs`           | Emits an event after content is appended to the overlay.         |
-| `opening`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is opened.            |
-| `opened`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is opened.             |
-| `closing`    | `ToggleViewCancelableEventArgs` | Emits an event before the toggle container is closed.            |
-| `closed`     | `ToggleViewEventArgs`           | Emits an event after the toggle container is closed.             |
+| Name         | Description                                              | Cancelable | Emitted with                    |
+|:------------:|:---------------------------------------------------------|:----------:|:--------------------------------|
+| `appended`   | Emits an event after content is appended to the overlay. | false      | `ToggleViewEventArgs`           |
+| `opening`    | Emits an event before the toggle container is opened.    | true       | `ToggleViewCancelableEventArgs` |
+| `opened`     | Emits an event after the toggle container is opened.     | false      | `ToggleViewEventArgs`           |
+| `closing`    | Emits an event before the toggle container is closed.    | true       | `ToggleViewCancelableEventArgs` |
+| `closed`     | Emits an event after the toggle container is closed.     | false      | `ToggleViewEventArgs`           |
 ### Methods
 | Name   | Arguments | Return Type | Description |
 |:----------:|:------|:------|:------|

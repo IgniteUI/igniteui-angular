@@ -417,11 +417,11 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted after the dropdown is opened
      *
      * ```html
-     * <igx-combo (opened)='handleOpened()'></igx-combo>
+     * <igx-combo (opened)='handleOpened($event)'></igx-combo>
      * ```
      */
     @Output()
-    public opened = new EventEmitter<void>();
+    public opened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
@@ -437,17 +437,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted after the dropdown is closed
      *
      * ```html
-     * <igx-combo (closed)='handleClosed()'></igx-combo>
+     * <igx-combo (closed)='handleClosed($event)'></igx-combo>
      * ```
      */
     @Output()
-    public closed = new EventEmitter<void>();
+    public closed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted when an item is being added to the data collection
      *
      * ```html
-     * <igx-combo (addition)='handleAdditionEvent()'></igx-combo>
+     * <igx-combo (addition)='handleAdditionEvent($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -457,7 +457,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when the value of the search input changes (e.g. typing, pasting, clear, etc.)
      *
      * ```html
-     * <igx-combo (searchInputUpdate)='handleSearchInputEvent()'></igx-combo>
+     * <igx-combo (searchInputUpdate)='handleSearchInputEvent($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -467,7 +467,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when new chunk of data is loaded from the virtualization
      *
      * ```html
-     * <igx-combo (dataPreLoad)='handleDataPreloadEvent()'></igx-combo>
+     * <igx-combo (dataPreLoad)='handleDataPreloadEvent($event)'></igx-combo>
      * ```
      */
     @Output()
@@ -1458,10 +1458,10 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden
      * @internal
      */
-    public handleOpening(event: IBaseCancelableBrowserEventArgs) {
-        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
-        this.opening.emit(eventArgs);
-        event.cancel = eventArgs.cancel;
+    public handleOpening(e: IBaseCancelableBrowserEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
+        this.opening.emit(args);
+        e.cancel = args.cancel;
     }
 
     /**
@@ -1478,17 +1478,17 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         } else {
             this.dropdownContainer.nativeElement.focus();
         }
-        this.opened.emit();
+        this.opened.emit({ owner: this });
     }
 
     /**
      * @hidden @internal
      */
-    public handleClosing(event: IBaseCancelableBrowserEventArgs) {
-        const eventArgs: IBaseCancelableBrowserEventArgs = Object.assign({}, event, { owner: this });
-        this.closing.emit(eventArgs);
-        event.cancel = eventArgs.cancel;
-        if (event.cancel) {
+    public handleClosing(e: IBaseCancelableBrowserEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
+        this.closing.emit(args);
+        e.cancel = args.cancel;
+        if (e.cancel) {
             return;
         }
         this.searchValue = '';
@@ -1499,7 +1499,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * @hidden @internal
      */
     public handleClosed() {
-        this.closed.emit();
+        this.closed.emit({ owner: this });
     }
 
     /**
