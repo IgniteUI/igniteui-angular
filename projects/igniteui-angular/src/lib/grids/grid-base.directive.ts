@@ -2651,11 +2651,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
-
-    /**
-     * @hidden @internal
-     */
     public pagingState;
     /**
      * @hidden @internal
