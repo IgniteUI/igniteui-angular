@@ -24,8 +24,6 @@ describe(`Update to ${version}`, () => {
 
     const migrationName = 'migration-21';
     const lineBreaksAndSpaceRegex = /\s/g;
-    // eslint-disable-next-line max-len
-    const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -176,6 +174,50 @@ export class TestComponent implements OnInit {
 }`);
     });
 
+    it('should update mask event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (onValueChange)="handleEvent()" />`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (valueChanged)="handleEvent()" />`);
+    });
+
+    it('should update mask event subscriptions .ts file', async () => {
+        pending('ts language service tests do not pass');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts', `
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.onValueChange.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(`
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.valueChanged;
+    }
+}`);
+    });
+
+
     it('should update expansion panel event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -196,6 +238,52 @@ export class TestComponent implements OnInit {
 </igx-expansion-panel>`);
     });
 
+it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
+    pending('set up tests for migrations through lang service');
+    appTree.create(
+        '/testSrc/appPrefix/component/expansion-test.component.ts',
+        `import { Component, ViewChild } from '@angular/core';
+import { IgxBanner } from 'igniteui-angular';
+
+@Component({
+selector: 'app-banner-test',
+templateUrl: './banner-test.component.html',
+styleUrls: ['./banner-test.component.scss']
+})
+export class BannerTestComponent {
+
+@ViewChild(IgxBannerComponent, { static: true })
+public panel: IgxBannerComponent;
+
+public onBannerOpened(event: BannerEventArgs) {
+    console.log(event.banner);
+}
+}`
+    );
+    const tree = await schematicRunner
+        .runSchematicAsync('migration-17', {}, appTree)
+        .toPromise();
+    const expectedContent =  `import { Component, ViewChild } from '@angular/core';
+import { IgxBanner } from 'igniteui-angular';
+
+@Component({
+selector: 'app-banner-test',
+templateUrl: './banner-test.component.html',
+styleUrls: ['./banner-test.component.scss']
+})
+export class BannerTestComponent {
+
+@ViewChild(IgxBannerComponent, { static: true })
+public panel: IgxBannerComponent;
+
+public onBannerOpened(event: BannerEventArgs) {
+    console.log(event.owner);
+}
+}`;
+    expect(
+            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+        ).toEqual(expectedContent);
+});
     it('should remove paging property and define a igx-paginator component instead', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -373,4 +461,195 @@ export class TestComponent implements OnInit {
 `.replace(lineBreaksAndSpaceRegex, ''));
     });
 
+    // IgxDropDown
+    it('should update IgxDropDown event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update dropdown event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-drop-down
+            (onOpening)="handleEvent($event, 'opening')"
+            (onOpened)="handleEvent($event, 'opened')"
+            (onClosing)="handleEvent($event, 'closing')"
+            (onClosed)="handleEvent($event, 'closed')"
+            (onSelection)="handleEvent($event, 'selection')"
+        >
+            Display something onOpening, onClosing, onOpened, onClosed
+        </igx-drop-down>`);
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+                .toPromise();
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
+        <igx-drop-down
+            (opening)="handleEvent($event, 'opening')"
+            (opened)="handleEvent($event, 'opened')"
+            (closing)="handleEvent($event, 'closing')"
+            (closed)="handleEvent($event, 'closed')"
+            (selecting)="handleEvent($event, 'selection')"
+        >
+            Display something onOpening, onClosing, onOpened, onClosed
+        </igx-drop-down>`);
+    });
+
+    // IgxToggleDirective
+    it('should update IgxToggleDirective event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update dropdown event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+            <div igxToggle
+                (onOpening)="eventHandler($event)"
+                (onAppended)="eventHandler($event)"
+                (onOpened)="eventHandler($event)"
+                (onClosing)="eventHandler($event)"
+                (onClosed)="eventHandler($event)"
+            >
+                <p>Some content that user would like to make it togglable.</p>
+            </div>`);
+                const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+                    .toPromise();
+
+                expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                    .toEqual(`
+            <div igxToggle
+                (opening)="eventHandler($event)"
+                (appended)="eventHandler($event)"
+                (opened)="eventHandler($event)"
+                (closing)="eventHandler($event)"
+                (closed)="eventHandler($event)"
+            >
+                <p>Some content that user would like to make it togglable.</p>
+            </div>`);
+    });
+
+    // IgxCombo
+    it('should update IgxCombo event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update combo event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+                <igx-combo
+                    (onSelectionChange)="eventHandler($event)"
+                    (onSearchInput)="eventHandler($event)"
+                    (onAddition)="eventHandler($event)"
+                    (onDataPreLoad)="eventHandler($event)"
+                    (onOpening)="eventHandler($event)"
+                    (onOpened)="eventHandler($event)"
+                    (onClosing)="eventHandler($event)"
+                    (onClosed)="eventHandler($event)"
+                >
+                </igx-combo>`);
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
+                <igx-combo
+                    (selectionChange)="eventHandler($event)"
+                    (searchInputUpdate)="eventHandler($event)"
+                    (addition)="eventHandler($event)"
+                    (dataPreLoad)="eventHandler($event)"
+                    (opening)="eventHandler($event)"
+                    (opened)="eventHandler($event)"
+                    (closing)="eventHandler($event)"
+                    (closed)="eventHandler($event)"
+                >
+                </igx-combo>`);
+    });
+
+    // IgxSelect
+    it('should update IgxSelect event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update select event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+                <igx-select
+                    (onOpening)="eventHandler($event)"
+                    (onOpened)="eventHandler($event)"
+                    (onClosing)="eventHandler($event)"
+                    (onClosed)="eventHandler($event)"
+                >
+                </igx-select>`);
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
+                <igx-select
+                    (opening)="eventHandler($event)"
+                    (opened)="eventHandler($event)"
+                    (closing)="eventHandler($event)"
+                    (closed)="eventHandler($event)"
+                >
+                </igx-select>`);
+    });
+
+    // IgxAutocomplete
+    it('should update IgxAutocomplete event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update autocomplete event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+            <input
+                igxInput
+                [igxAutocomplete]="townsPanel"
+                (onItemSelected)='itemSelected($event)'
+            />`);
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
+            <input
+                igxInput
+                [igxAutocomplete]="townsPanel"
+                (itemSelected)='itemSelected($event)'
+            />`);
+    });
+
+    // IgxDialog
+    it('should update IgxDialog event subscriptions', () => {
+        pending('ts language service tests do not pass');
+    });
+
+    it('should update dialog event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-dialog
+            (onOpen)="eventHandler($event)"
+            (onOpened)="eventHandler($event)"
+            (onClose)="eventHandler($event)"
+            (onClosed)="eventHandler($event)"
+            (onLeftButtonSelect)="eventHandler($event)"
+            (onRightButtonSelect)="eventHandler($event)"
+        >
+        </igx-dialog>`);
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
+        <igx-dialog
+            (opening)="eventHandler($event)"
+            (opened)="eventHandler($event)"
+            (closing)="eventHandler($event)"
+            (closed)="eventHandler($event)"
+            (leftButtonSelect)="eventHandler($event)"
+            (rightButtonSelect)="eventHandler($event)"
+        >
+        </igx-dialog>`);
+    });
+
 });
+
+

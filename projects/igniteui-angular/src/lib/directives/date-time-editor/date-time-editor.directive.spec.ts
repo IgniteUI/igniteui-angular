@@ -19,7 +19,7 @@ describe('IgxDateTimeEditor', () => {
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
         const _ngModel = {
-            control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
+            control: { touched: false, dirty: false, validator: null, setValue: () => { } },
             valid: false,
             statusChanges: new EventEmitter(),
         };
@@ -1061,7 +1061,6 @@ describe('IgxDateTimeEditor', () => {
             it('should validate properly when used as form control.', () => {
                 spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
                 const dateEditor = form.controls['dateEditor'];
-                const args = { oldValue: '', newValue: null };
                 const inputDate = '99-99-9999';
 
                 inputElement.triggerEventHandler('focus', {});
