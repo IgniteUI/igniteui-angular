@@ -17,10 +17,10 @@ export interface IgxComboBase {
     searchValue: string;
     searchInput: ElementRef<HTMLInputElement>;
     comboInput: ElementRef<HTMLInputElement>;
-    onOpened: EventEmitter<IBaseEventArgs>;
-    onOpening: EventEmitter<CancelableBrowserEventArgs>;
-    onClosing: EventEmitter<CancelableBrowserEventArgs>;
-    onClosed: EventEmitter<IBaseEventArgs>;
+    opened: EventEmitter<IBaseEventArgs>;
+    opening: EventEmitter<CancelableBrowserEventArgs>;
+    closing: EventEmitter<CancelableBrowserEventArgs>;
+    closed: EventEmitter<IBaseEventArgs>;
     focusSearchInput(opening?: boolean): void;
     triggerCheck(): void;
     addItemToCollection(): void;

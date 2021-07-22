@@ -1243,7 +1243,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this.toggleRef.element.style.width = this._inputGroup.element.nativeElement.getBoundingClientRect().width + 'px';
             }
 
-            this.toggleRef.onOpening.pipe(takeUntil(this._destroy$)).subscribe((e) => {
+            this.toggleRef.opening.pipe(takeUntil(this._destroy$)).subscribe((e) => {
                 const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
                 this.opening.emit(args);
                 e.cancel = args.cancel;
@@ -1253,15 +1253,15 @@ export class IgxTimePickerComponent extends PickerBaseDirective
                 this.initializeContainer();
             });
 
-            this.toggleRef.onOpened.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.toggleRef.opened.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.opened.emit({ owner: this });
             });
 
-            this.toggleRef.onClosed.pipe(takeUntil(this._destroy$)).subscribe(() => {
+            this.toggleRef.closed.pipe(takeUntil(this._destroy$)).subscribe(() => {
                 this.closed.emit({ owner: this });
             });
 
-            this.toggleRef.onClosing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
+            this.toggleRef.closing.pipe(takeUntil(this._destroy$)).subscribe((e) => {
                 const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: false };
                 this.closing.emit(args);
                 e.cancel = args.cancel;
