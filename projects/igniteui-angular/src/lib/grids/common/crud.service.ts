@@ -113,6 +113,10 @@ export class IgxCellCrudState {
     public cancelAddMode = false;
 
     public createCell(cell): IgxCell {
+        // cell.row.data ?? cell.rowData covers the cases, where
+        // 1. cell is an instance of IgxGridCell
+        // 2. cell is an instance og IgxGridCellComponent
+        // Why not use cell.row.data
         return this.cell = new IgxCell(cell.cellID, cell.row.index, cell.column, cell.value, cell.value,
             cell.row.data ?? cell.rowData, cell.grid);
     }
@@ -510,7 +514,6 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 export class IgxGridCRUDService extends IgxRowAddCrudState {
 
     public enterEditMode(cell, event?: Event) {
-        // TODO cell type cell
         if (this.isInCompositionMode) {
             return;
         }
@@ -523,7 +526,8 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
                 this.grid.tbody.nativeElement.focus();
             }
         } else {
-            // TODO cell cell.intRow is always undefined
+            // TODO cell cell.intRow is always undefined, if enterEditMode is initialized by IgxGridCell instance
+            // see #9792 and #9429 - and how those are integrated and work together
             if (cell?.intRow?.addRow) {
                 this.beginAddRow(cell, event);
                 return;

@@ -76,7 +76,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get editValue(): any {
-		if (this.grid.crudService.cellInEditMode) {
+		if (this.isCellInEditMode()) {
 			return this.grid.crudService.cell.editValue;
 		}
 	}
@@ -91,7 +91,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public set editValue(value: any) {
-		if (this.grid.crudService.cellInEditMode) {
+		if (this.isCellInEditMode()) {
 			this.grid.crudService.cell.editValue = value;
 		}
 	}
@@ -164,15 +164,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get editMode(): boolean {
-		if (this.grid.crudService.cellInEditMode) {
-			const cellInEditMode = this.grid.crudService.cell.id;
-			const isCurrentCell = cellInEditMode.rowID === this.cellID.rowID &&
-				cellInEditMode.rowIndex === this.cellID.rowIndex &&
-				cellInEditMode.columnID === this.cellID.columnID;
-			return isCurrentCell;
-		} else {
-			return false;
-		}
+		return this.isCellInEditMode();
 	}
 
 	/**
@@ -185,14 +177,12 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public set editMode(value: boolean) {
-		if (!this.row || this.row?.deleted) {
+		const isInEditMode = this.isCellInEditMode();
+		if (!this.row || this.row?.deleted || isInEditMode === value) {
 			return;
 		}
 		if (this.editable && value) {
-			if (this.grid.crudService.cellInEditMode) {
-				this.grid.gridAPI.update_cell(this.grid.crudService.cell);
-				this.grid.crudService.endCellEdit();
-			}
+			this.endEdit();
 			this.grid.crudService.enterEditMode(this);
 		} else {
 			this.grid.crudService.endCellEdit();
@@ -252,10 +242,9 @@ export class IgxGridCell implements CellType {
 			return;
 		}
 
-		let cell = this.grid.crudService.cell;
-		if (!cell) {
-			cell = this.grid.crudService.createCell(this);
-		}
+		this.endEdit();
+
+		let cell = this.isCellInEditMode() ? this.grid.crudService.cell : this.grid.crudService.createCell(this);
 		cell.editValue = val;
 		this.grid.gridAPI.update_cell(cell);
 		this.grid.crudService.endCellEdit();
@@ -275,4 +264,22 @@ export class IgxGridCell implements CellType {
 			} : null
 		};
 	}
+
+		private isCellInEditMode(): boolean {
+			if (this.grid.crudService.cellInEditMode) {
+				const cellInEditMode = this.grid.crudService.cell.id;
+				const isCurrentCell = cellInEditMode.rowID === this.cellID.rowID &&
+						cellInEditMode.rowIndex === this.cellID.rowIndex &&
+						cellInEditMode.columnID === this.cellID.columnID;
+						return isCurrentCell;
+			}
+			return false;
+		}
+
+		private endEdit(): void {
+				if (!this.isCellInEditMode()) {
+					this.grid.gridAPI.update_cell(this.grid.crudService.cell);
+					this.grid.crudService.endCellEdit();
+				}
+		}
 }
