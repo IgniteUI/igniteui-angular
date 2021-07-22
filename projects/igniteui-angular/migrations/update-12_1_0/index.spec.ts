@@ -589,7 +589,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (opened)="eventHandler($event)"
                     (closing)="eventHandler($event)"
                     (closed)="eventHandler($event)"
-                    (selection)="eventHandler($event)"
+                    (selecting)="eventHandler($event)"
                 >
                 </igx-select>`);
     });
