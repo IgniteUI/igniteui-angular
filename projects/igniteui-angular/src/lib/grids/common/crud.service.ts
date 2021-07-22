@@ -308,6 +308,8 @@ export class IgxRowCrudState extends IgxCellCrudState {
             this.updateRowEditData(this.row, this.row.newData);
             args = this.rowEdit(event);
             if (args.cancel) {
+                delete this.row.newData;
+                this.grid.transactions.clear(this.row.id);
                 return args;
             }
         }

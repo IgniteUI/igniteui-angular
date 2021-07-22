@@ -179,7 +179,7 @@ class NestedPropertyGridComponent {
     }
 }
 
-describe('Grid - nested data source properties', () => {
+describe('Grid - nested data source properties #grid', () => {
 
     const NAMES = 'John Jane Ivan Bianka'.split(' ');
     const AGES = [30, 23, 33, 21];
@@ -326,7 +326,7 @@ describe('Grid - nested data source properties', () => {
 });
 
 // related to fix of issue #8343
-describe('Grid nested data advanced editing', () => {
+describe('Grid nested data advanced editing #grid', () => {
 
     let fixture: ComponentFixture<NestedPropertiesGrid2Component>;
     let grid: IgxGridComponent;
@@ -484,7 +484,7 @@ describe('Grid nested data advanced editing', () => {
 });
 
 // related to issue #8343
-describe('Edit cell with data of type Array', () => {
+describe('Edit cell with data of type Array #grid', () => {
 
     let fixture: ComponentFixture<NestedPropertyGridComponent>;
     let grid: IgxGridComponent;
