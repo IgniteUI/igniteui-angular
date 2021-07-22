@@ -294,6 +294,13 @@
             "definedIn": [
                 "IgxDialogComponent"
             ]
+        },
+        {
+            "member": "onValueChange",
+            "replaceWith": "valueChanged",
+            "definedIn": [
+                "IgxMaskDirective"
+            ]
         }
     ]
 }

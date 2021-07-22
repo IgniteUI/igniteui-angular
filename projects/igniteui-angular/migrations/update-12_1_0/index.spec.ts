@@ -23,8 +23,7 @@ describe(`Update to ${version}`, () => {
     };
 
     const migrationName = 'migration-21';
-    // eslint-disable-next-line max-len
-    const noteText = `<!--NOTE: This component has been updated by Infragistics migration: v${version}\nPlease check your template whether all bindings/event handlers are correct.-->`;
+    const lineBreaksAndSpaceRegex = /\s/g;
 
     beforeEach(() => {
         appTree = new UnitTestTree(new EmptyTree());
@@ -175,6 +174,50 @@ export class TestComponent implements OnInit {
 }`);
     });
 
+    it('should update mask event subscriptions in .html file', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (onValueChange)="handleEvent()" />`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<input igxInput type="text" [igxMask]="'(####) 00-00-00 Ext. 9999'" (valueChanged)="handleEvent()" />`);
+    });
+
+    it('should update mask event subscriptions .ts file', async () => {
+        pending('ts language service tests do not pass');
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.ts', `
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.onValueChange.subscribe();
+    }
+}`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.ts'))
+            .toEqual(`
+import { Component, OnInit } from '@angular/core';
+import { IgxMaskDirective } from 'igniteui-angular';
+export class TestComponent implements OnInit {
+    @ViewChild(IgxMaskDirective)
+    public mask: IgxMaskDirective
+
+    public ngOnInit() {
+        this.mask.valueChanged;
+    }
+}`);
+    });
+
+
     it('should update expansion panel event subscriptions in .html file', async () => {
         appTree.create(
             '/testSrc/appPrefix/component/test.component.html', `
@@ -195,6 +238,229 @@ export class TestComponent implements OnInit {
 </igx-expansion-panel>`);
     });
 
+it('Should remove references to deprecated `banner` property of `BannerEventArgs`', async () => {
+    pending('set up tests for migrations through lang service');
+    appTree.create(
+        '/testSrc/appPrefix/component/expansion-test.component.ts',
+        `import { Component, ViewChild } from '@angular/core';
+import { IgxBanner } from 'igniteui-angular';
+
+@Component({
+selector: 'app-banner-test',
+templateUrl: './banner-test.component.html',
+styleUrls: ['./banner-test.component.scss']
+})
+export class BannerTestComponent {
+
+@ViewChild(IgxBannerComponent, { static: true })
+public panel: IgxBannerComponent;
+
+public onBannerOpened(event: BannerEventArgs) {
+    console.log(event.banner);
+}
+}`
+    );
+    const tree = await schematicRunner
+        .runSchematicAsync('migration-17', {}, appTree)
+        .toPromise();
+    const expectedContent =  `import { Component, ViewChild } from '@angular/core';
+import { IgxBanner } from 'igniteui-angular';
+
+@Component({
+selector: 'app-banner-test',
+templateUrl: './banner-test.component.html',
+styleUrls: ['./banner-test.component.scss']
+})
+export class BannerTestComponent {
+
+@ViewChild(IgxBannerComponent, { static: true })
+public panel: IgxBannerComponent;
+
+public onBannerOpened(event: BannerEventArgs) {
+    console.log(event.owner);
+}
+}`;
+    expect(
+            tree.readContent('/testSrc/appPrefix/component/expansion-test.component.ts')
+        ).toEqual(expectedContent);
+});
+    it('should remove paging property and define a igx-paginator component instead', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+        <igx-grid #grid1 [data]="data" [paging]="someVal" [perPage]="10" height="300px" width="300px">
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+        <igx-grid #grid1 [data]="data" [perPage]="10" height="300px" width="300px">
+<igx-paginator *ngIf="someVal"></igx-paginator>
+            <igx-column field="Name" header="Athlete"></igx-column>
+            <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+            <igx-column field="CountryFlag" header="Country"></igx-column>
+        </igx-grid>`);
+    });
+
+    it('should remove paging and paginationTemplate property and define a igx-paginator component with custom content', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+<ng-template #customPager let-api>
+<div class="igx-grid__footer">
+    <div id="numberPager" class="igx-paginator" style="justify-content: center;">
+        <button [disabled]="firstPage" (click)="previousPage()" igxButton="flat">PREV</button>
+        <button [disabled]="lastPage" (click)="nextPage()" igxButton="flat">NEXT</button>
+    </div>
+</div>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-paginator>
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+<div class="igx-grid__footer">
+    <div id="numberPager" class="igx-paginator" style="justify-content: center;">
+        <button [disabled]="firstPage" (click)="previousPage()" igxButton="flat">PREV</button>
+        <button [disabled]="lastPage" (click)="nextPage()" igxButton="flat">NEXT</button>
+    </div>
+</div>
+
+        </igx-paginator-content>
+</igx-paginator>
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+`.replace(lineBreaksAndSpaceRegex, ''));
+    });
+
+    it('should remove paging property and define a igx-paginator component instead in hGrid', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-hierarchical-grid [paging]="parentPaging">
+    <igx-column></igx-column>
+    <igx-row-island [paging]="childPaging">
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+            .toEqual(`
+<igx-hierarchical-grid>
+<igx-paginator *ngIf="parentPaging"></igx-paginator>
+    <igx-column></igx-column>
+    <igx-row-island>
+<igx-paginator *igxPaginator *ngIf="childPaging"></igx-paginator>
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>`);
+    });
+
+    it('should remove paging property and paginationTemplate in hGrid', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-hierarchical-grid [paging]="parentPaging" [paginationTemplate]="myTemplate">
+    <igx-column></igx-column>
+    <igx-row-island [paging]="childPaging" [paginationTemplate]="childTemplate">
+        <igx-column></igx-column>
+    </igx-row-island>
+</igx-hierarchical-grid>
+<ng-template #myTemplate>
+    <div>
+        Current page: {{ hierarchicalGrid.page }}
+    </div>
+</ng-template>
+<ng-template #childTemplate>
+    <div>
+        <button (click)="previous()">PREV</button>
+        Current page: {{ hierarchicalGrid.page }}
+        <button (click)="next()">NEXT</button>
+    </div>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<igx-hierarchical-grid>
+<igx-paginator *ngIf="parentPaging">
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+    <div>
+        Current page: {{ hierarchicalGrid.page }}
+    </div>
+
+        </igx-paginator-content>
+</igx-paginator>
+    <igx-column></igx-column>
+    <igx-row-island>
+<igx-paginator *igxPaginator  *ngIf="childPaging">
+
+<!-- Auto migrated template content. Please, check your bindings! -->
+
+<igx-paginator-content>
+
+    <div>
+        <button (click)="previous()">PREV</button>
+        Current page: {{ hierarchicalGrid.page }}
+        <button (click)="next()">NEXT</button>
+    </div>
+
+        </igx-paginator-content>
+</igx-paginator>
+
+    <igx-column></igx-column>
+    </igx-row-island>
+    </igx-hierarchical-grid>`.replace(lineBreaksAndSpaceRegex, ''));
+    });
+
+    it('should define correctly paginator when using the component inside custom template', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/test.component.html', `
+<igx-grid #grid1 [data]="data" [paging]="true" [paginationTemplate]="customPager" height="300px" width="300px">
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+<ng-template #customPager let-api>
+<igx-paginator #paginator [(page)]="grid.page" [totalRecords]="grid.totalRecords" [(perPage)]="grid.perPage"
+   [selectOptions]="selectOptions" [displayDensity]="grid.displayDensity">
+        </igx-paginator>
+</ng-template>`);
+        const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html').replace(lineBreaksAndSpaceRegex, ''))
+            .toEqual(`
+<igx-grid #grid1 [data]="data" height="300px" width="300px">
+<igx-paginator #paginator [(page)]="grid.page" [totalRecords]="grid.totalRecords" [(perPage)]="grid.perPage"
+[selectOptions]="selectOptions" [displayDensity]="grid.displayDensity">
+</igx-paginator>
+    <igx-column field="Name" header="Athlete"></igx-column>
+    <igx-column field="TrackProgress" header="Track Progress"></igx-column>
+    <igx-column field="CountryFlag" header="Country"></igx-column>
+</igx-grid>
+`.replace(lineBreaksAndSpaceRegex, ''));
+    });
+
     // IgxDropDown
     it('should update IgxDropDown event subscriptions', () => {
         pending('ts language service tests do not pass');
@@ -212,11 +478,10 @@ export class TestComponent implements OnInit {
         >
             Display something onOpening, onClosing, onOpened, onClosed
         </igx-drop-down>`);
-                const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
-                    .toPromise();
-
-                expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-                    .toEqual(`
+            const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+                .toPromise();
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
         <igx-drop-down
             (opening)="handleEvent($event, 'opening')"
             (opened)="handleEvent($event, 'opened')"
@@ -283,8 +548,8 @@ export class TestComponent implements OnInit {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
                 <igx-combo
                     (selectionChange)="eventHandler($event)"
                     (searchInputUpdate)="eventHandler($event)"
@@ -316,8 +581,8 @@ export class TestComponent implements OnInit {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
                 <igx-select
                     (opening)="eventHandler($event)"
                     (opened)="eventHandler($event)"
@@ -343,8 +608,8 @@ export class TestComponent implements OnInit {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
@@ -372,8 +637,8 @@ export class TestComponent implements OnInit {
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
 
-        expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
-            .toEqual(`
+            expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
+                .toEqual(`
         <igx-dialog
             (opening)="eventHandler($event)"
             (opened)="eventHandler($event)"
@@ -384,6 +649,7 @@ export class TestComponent implements OnInit {
         >
         </igx-dialog>`);
     });
+
 });
 
 

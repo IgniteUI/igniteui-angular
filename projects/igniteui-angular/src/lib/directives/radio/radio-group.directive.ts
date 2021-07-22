@@ -198,8 +198,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * ```
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output()
-    public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
 
     /**
      * The css class applied to the component.

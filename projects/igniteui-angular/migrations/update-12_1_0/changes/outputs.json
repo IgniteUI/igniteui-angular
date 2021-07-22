@@ -288,6 +288,14 @@
                 "selector": "igx-dialog",
                 "type": "component"
             }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChanged",
+            "owner": {
+                "selector": "[igxMask]",
+                "type": "directive"
+            }
         }
 
     ]
