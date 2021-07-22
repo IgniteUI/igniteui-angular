@@ -12,7 +12,7 @@ import { SortingDirection } from '../../data-operations/sorting-expression.inter
 import { DefaultSortingStrategy } from '../../data-operations/sorting-strategy';
 import { IgxGridGroupByRowComponent } from './groupby-row.component';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
-import { CellType } from '../tree-grid/public_api';
+import { CellType } from '../common/cell.interface';
 
 const DEBOUNCETIME = 30;
 const CELL_CSS_CLASS = '.igx-grid__td';

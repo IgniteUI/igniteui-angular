@@ -478,6 +478,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
     }
 
     public get disabled(): boolean {
+        // TODO cell
         return this.grid.isGhostRecord(this.data) ? this.treeRow.isFilteredOutParent === undefined : false;
     }
 

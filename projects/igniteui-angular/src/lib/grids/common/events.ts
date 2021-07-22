@@ -9,7 +9,7 @@ import { ColumnType } from './column.interface';
 import { ISortingExpression } from '../../data-operations/sorting-expression.interface';
 import { IFilteringExpressionsTree } from '../../data-operations/filtering-expressions-tree';
 import { RowType } from './row.interface';
-import { CellType } from '../tree-grid/public_api';
+import { CellType } from './cell.interface';
 export { GridSelectionRange } from '../selection/selection.service';
 
 export interface IGridClipboardEvent {

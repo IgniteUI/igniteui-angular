@@ -3,7 +3,9 @@ import {
     IgxGridComponent,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
-    CellType
+    CellType,
+    IgxGridTransaction,
+    IgxTransactionService
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 

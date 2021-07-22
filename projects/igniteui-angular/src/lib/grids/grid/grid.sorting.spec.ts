@@ -9,7 +9,7 @@ import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { GridDeclaredColumnsComponent, SortByParityComponent, GridWithPrimaryKeyComponent } from '../../test-utils/grid-samples.spec';
 import { UIInteractions } from '../../test-utils/ui-interactions.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
-import { CellType } from '../tree-grid/public_api';
+import { CellType } from '../common/cell.interface';
 
 describe('IgxGrid - Grid Sorting #grid', () => {
 

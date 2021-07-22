@@ -24,12 +24,12 @@ export class IgxGridCell implements CellType {
 	 * @hidden
 	 */
 	constructor(
-			grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-			row: number | RowType,
-			column: string | IgxColumnComponent);
+		grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+		row: number | RowType,
+		column: string | IgxColumnComponent);
 	constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
-			row: RowType,
-			column: IgxColumnComponent)	{
+		row: RowType,
+		column: IgxColumnComponent) {
 		this.grid = grid;
 		if (typeof row === 'number') {
 			this._rowIndex = row;
@@ -41,7 +41,7 @@ export class IgxGridCell implements CellType {
 		} else {
 			this._column = column;
 		}
-		}
+	}
 
 	/**
 	 * Returns the row containing the cell.
@@ -155,7 +155,7 @@ export class IgxGridCell implements CellType {
 	public get cellID(): any {
 		const primaryKey = this.grid.primaryKey;
 		const rowID = primaryKey ? this.row?.data[primaryKey] : this.row?.data;
-		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row?.index};
+		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row?.index };
 	}
 
 	/**
@@ -165,7 +165,7 @@ export class IgxGridCell implements CellType {
 	 */
 	public get editMode(): boolean {
 		if (this.grid.crudService.cellInEditMode) {
-		  const cellInEditMode = this.grid.crudService.cell.id;
+			const cellInEditMode = this.grid.crudService.cell.id;
 			const isCurrentCell = cellInEditMode.rowID === this.cellID.rowID &&
 				cellInEditMode.rowIndex === this.cellID.rowIndex &&
 				cellInEditMode.columnID === this.cellID.columnID;
@@ -233,8 +233,8 @@ export class IgxGridCell implements CellType {
 	}
 
 	public get active() {
-			const node = this.grid.navigation.activeNode;
-			return node ? node.row === this.row?.index && node.column === this.column.visibleIndex : false;
+		const node = this.grid.navigation.activeNode;
+		return node ? node.row === this.row?.index && node.column === this.column.visibleIndex : false;
 	}
 
 

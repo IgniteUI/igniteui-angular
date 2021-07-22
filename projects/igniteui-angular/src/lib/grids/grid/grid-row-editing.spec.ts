@@ -28,7 +28,7 @@ import {
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { RowType } from '../common/row.interface';
-import { CellType } from '../tree-grid/public_api';
+import { CellType } from '../common/cell.interface';
 
 const CELL_CLASS = '.igx-grid__td';
 const ROW_EDITED_CLASS = 'igx-grid__tr--edited';

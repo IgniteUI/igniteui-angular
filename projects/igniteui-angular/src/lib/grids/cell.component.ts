@@ -25,10 +25,12 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { CellType, IgxGridCell, ISearchInfo } from './grid/public_api';
 import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
+import { ISearchInfo } from './common/events';
+import { CellType } from './common/cell.interface';
+import { IgxGridCell } from './grid-public-cell';
 
 /**
  * Providing reference to `IgxGridCellComponent`:

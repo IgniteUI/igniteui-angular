@@ -1,7 +1,7 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
-import { CellType } from '../hierarchical-grid/public_api';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
+import { CellType } from './cell.interface';
 import { GridType } from './grid.interface';
 
 export interface RowType {

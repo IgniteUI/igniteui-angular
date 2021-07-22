@@ -492,7 +492,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
-        if (row && row instanceof IgxGridRow && column) {
+        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
             return new IgxGridCell(this, rowIndex, column.field);
         }
     }
@@ -1091,7 +1091,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getCellByColumn(rowIndex: number, columnField: string): CellType {
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
-        if (row && row instanceof IgxGridRow && column) {
+        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
             return new IgxGridCell(this, rowIndex, columnField);
         }
     }

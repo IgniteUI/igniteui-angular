@@ -3263,13 +3263,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * @hidden @internal
-     */
-    public isSummaryRecord(record: any): boolean {
-        return record.summaries && record.summaries.size;
-    }
-
-    /**
      * @hidden
      * @internal
      */
