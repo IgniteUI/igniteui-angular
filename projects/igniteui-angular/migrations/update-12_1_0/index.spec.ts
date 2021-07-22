@@ -576,6 +576,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (onOpened)="eventHandler($event)"
                     (onClosing)="eventHandler($event)"
                     (onClosed)="eventHandler($event)"
+                    (onSelection)="eventHandler($event)"
                 >
                 </igx-select>`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
@@ -588,6 +589,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (opened)="eventHandler($event)"
                     (closing)="eventHandler($event)"
                     (closed)="eventHandler($event)"
+                    (selection)="eventHandler($event)"
                 >
                 </igx-select>`);
     });

@@ -234,6 +234,14 @@
             }
         },
         {
+            "name": "onSelection",
+            "replaceWith": "selecting",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
             "name": "onItemSelected",
             "replaceWith": "itemSelected",
             "owner": {

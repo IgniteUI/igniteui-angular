@@ -247,6 +247,13 @@
             ]
         },
         {
+            "member": "onSelection",
+            "replaceWith": "selecting",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
             "member": "onItemSelected",
             "replaceWith": "itemSelected",
             "definedIn": [
