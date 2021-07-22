@@ -245,7 +245,7 @@ export class IgxGridCell implements CellType {
 
 		this.endEdit();
 
-		let cell = this.isCellInEditMode() ? this.grid.crudService.cell : this.grid.crudService.createCell(this);
+		const cell = this.isCellInEditMode() ? this.grid.crudService.cell : this.grid.crudService.createCell(this);
 		cell.editValue = val;
 		this.grid.gridAPI.update_cell(cell);
 		this.grid.crudService.endCellEdit();
