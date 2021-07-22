@@ -72,10 +72,6 @@ export class IgxBaseTransactionService<T extends Transaction, S extends State> i
         return result;
     }
 
-    public getAggregatedPendingAddChanges(mergeChanges: boolean): T[] {
-        return [];
-    }
-
     /**
      * @inheritdoc
      */

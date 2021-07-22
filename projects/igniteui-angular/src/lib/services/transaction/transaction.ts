@@ -108,8 +108,6 @@ export interface TransactionService<T extends Transaction, S extends State> {
      */
     getAggregatedChanges(mergeChanges: boolean): T[];
 
-    getAggregatedPendingAddChanges(mergeChanges: boolean): T[];
-
     /**
      * Returns the state of the record with provided id
      *
