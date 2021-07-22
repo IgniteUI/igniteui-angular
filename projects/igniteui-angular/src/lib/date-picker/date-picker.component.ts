@@ -849,22 +849,21 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
-            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
+            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
             this.opening.emit(args);
-            eventArgs.cancel = args.cancel;
+            e.cancel = args.cancel;
             if (args.cancel) {
                 this._overlayService.detach(this._overlayId);
                 return;
             }
 
-            this._initializeCalendarContainer(eventArgs.componentRef.instance);
+            this._initializeCalendarContainer(e.componentRef.instance);
             this._collapsed = false;
         });
 
-        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe((_eventArgs) => {
-            const args: IBaseEventArgs = { owner: this };
-            this.opened.emit(args);
+        this._overlayService.opened.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.opened.emit({ owner: this });
             if (this._calendar?.daysView?.selectedDates) {
                 this._calendar?.daysView?.focusActiveDate();
                 return;
@@ -876,10 +875,10 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs: OverlayCancelableEventArgs) => {
-            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: eventArgs.event, cancel: eventArgs.cancel };
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e: OverlayCancelableEventArgs) => {
+            const args: IBaseCancelableBrowserEventArgs = { owner: this, event: e.event, cancel: e.cancel };
             this.closing.emit(args);
-            eventArgs.cancel = args.cancel;
+            e.cancel = args.cancel;
             if (args.cancel) {
                 return;
             }
@@ -892,9 +891,8 @@ export class IgxDatePickerComponent extends PickerBaseDirective implements Contr
             }
         });
 
-        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe((_event) => {
-            const args: IBaseEventArgs = { owner: this };
-            this.closed.emit(args);
+        this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe(() => {
+            this.closed.emit({ owner: this });
             this._overlayService.detach(this._overlayId);
             this._collapsed = true;
             this._overlayId = null;

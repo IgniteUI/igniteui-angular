@@ -707,15 +707,15 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
         }
     }
 
-    private handleClosing(event: IBaseCancelableBrowserEventArgs): void {
-        const args = { owner: this, cancel: event.cancel, event: event.event };
+    private handleClosing(e: IBaseCancelableBrowserEventArgs): void {
+        const args = { owner: this, cancel: e?.cancel, event: e?.event };
         this.closing.emit(args);
-        event.cancel = args.cancel;
+        e.cancel = args.cancel;
         if (args.cancel) {
             return;
         }
 
-        if (this.isDropdown && event.event && !this.element.nativeElement.contains(event.event.target)) {
+        if (this.isDropdown && e?.event && !this.element.nativeElement.contains(e.event.target)) {
             // outside click
             this.updateValidityOnBlur();
         } else {
@@ -732,9 +732,9 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
     }
 
     private subscribeToOverlayEvents() {
-        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            const args = { owner: this, cancel: false, event: eventArgs.event };
-            const overlayEvent = eventArgs as OverlayCancelableEventArgs;
+        this._overlayService.opening.pipe(...this._overlaySubFilter).subscribe((e) => {
+            const overlayEvent = e as OverlayCancelableEventArgs;
+            const args = { owner: this, cancel: overlayEvent?.cancel, event: e.event };
             this.opening.emit(args);
             if (args.cancel) {
                 this._overlayService.detach(this._overlayId);
@@ -742,7 +742,7 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
                 return;
             }
 
-            this._initializeCalendarContainer(eventArgs.componentRef.instance);
+            this._initializeCalendarContainer(e.componentRef.instance);
             this._collapsed = false;
             this.updateCalendar();
         });
@@ -752,8 +752,8 @@ export class IgxDateRangePickerComponent extends PickerBaseDirective
             this.opened.emit({ owner: this });
         });
 
-        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((eventArgs) => {
-            this.handleClosing(eventArgs as OverlayCancelableEventArgs);
+        this._overlayService.closing.pipe(...this._overlaySubFilter).subscribe((e) => {
+            this.handleClosing(e as OverlayCancelableEventArgs);
         });
 
         this._overlayService.closed.pipe(...this._overlaySubFilter).subscribe(() => {

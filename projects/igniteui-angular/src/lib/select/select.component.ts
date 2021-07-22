@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs/operators';
 import { DisplayDensityToken, IDisplayDensityOptions } from '../core/density';
 import { EditorProvider } from '../core/edit-provider';
 import { IgxSelectionAPIService } from '../core/selection';
-import { CancelableEventArgs, IBaseCancelableBrowserEventArgs, IBaseCancelableEventArgs, PlatformUtil } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil } from '../core/utils';
 import { IgxLabelDirective } from '../directives/label/label.directive';
 import { IgxDropDownItemBaseDirective } from '../drop-down/drop-down-item.base';
 import { IGX_DROPDOWN_BASE, ISelectionEventArgs, Navigate } from '../drop-down/drop-down.common';
@@ -41,7 +41,7 @@ import { IgxSelectItemComponent } from './select-item.component';
 import { SelectPositioningStrategy } from './select-positioning-strategy';
 import { IgxSelectBase } from './select.common';
 import { IgxHintDirective, IgxInputGroupType, IGX_INPUT_GROUP_TYPE } from '../input-group/public_api';
-import { ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
+import { ToggleViewCancelableEventArgs, ToggleViewEventArgs } from '../directives/toggle/toggle.directive';
 
 /** @hidden @internal */
 @Directive({
@@ -144,17 +144,17 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * ```
      */
     @Output()
-    public onOpening = new EventEmitter<IBaseCancelableEventArgs>();
+    public onOpening = new EventEmitter<IBaseCancelableBrowserEventArgs>();
 
     /**
      * Emitted after the dropdown is opened
      *
      * ```html
-     * <igx-select (onOpened)='handleOpened()'></igx-select>
+     * <igx-select (onOpened)='handleOpened($event)'></igx-select>
      * ```
      */
     @Output()
-    public onOpened = new EventEmitter<void>();
+    public onOpened = new EventEmitter<IBaseEventArgs>();
 
     /**
      * Emitted before the dropdown is closed
@@ -170,11 +170,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      * Emitted after the dropdown is closed
      *
      * ```html
-     * <igx-select (onClosed)='handleClosed()'></igx-select>
+     * <igx-select (onClosed)='handleClosed($event)'></igx-select>
      * ```
      */
     @Output()
-    public onClosed = new EventEmitter<void>();
+    public onClosed = new EventEmitter<IBaseEventArgs>();
 
     /**
      * The custom template, if any, that should be used when rendering the select TOGGLE(open/close) button
@@ -450,11 +450,11 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
      *
      * @hidden @internal
      */
-    public handleOpening(event: CancelableEventArgs) {
-        const args: CancelableEventArgs = { cancel: event.cancel };
+    public handleOpening(e: ToggleViewCancelableEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
         this.onOpening.emit(args);
 
-        event.cancel = args.cancel;
+        e.cancel = args.cancel;
         if (args.cancel) {
             return;
         }
@@ -472,20 +472,20 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
     /** @hidden @internal */
     public handleOpened() {
         this.updateItemFocus();
-        this.onOpened.emit();
+        this.onOpened.emit({ owner: this });
     }
 
     /** @hidden @internal */
-    public handleClosing(event) {
-        const args: CancelableEventArgs = { cancel: event.cancel };
+    public handleClosing(e: ToggleViewCancelableEventArgs) {
+        const args: IBaseCancelableBrowserEventArgs = { owner:this, event:e.event, cancel: e.cancel };
         this.onClosing.emit(args);
-        event.cancel = args.cancel;
+        e.cancel = args.cancel;
     }
 
     /** @hidden @internal */
     public handleClosed() {
         this.focusItem(false);
-        this.onClosed.emit();
+        this.onClosed.emit({ owner: this });
     }
 
     /** @hidden @internal */
