@@ -47,6 +47,7 @@ All notable changes for each version of this project will be documented in this 
     - **Behavioral changes**
     - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
     - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events. 
+    - `let-cell` property in cell template is now `CellType`.
     - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
 - `Transactions`
