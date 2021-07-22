@@ -865,7 +865,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
             }
         }
         return {
-            $implicit: this.isGhostRecord(rowData) || rowData,
+            $implicit: this.isGhostRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
             templateID: {
                 type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',

@@ -86,7 +86,7 @@ import {
     IgxGridSelectionService,
     GridSelectionRange
 } from './selection/selection.service';
-import { IgxRow, IgxCell } from './common/crud.service';
+import { IgxEditRow, IgxCell, IgxAddRow } from './common/crud.service';
 import { ICachedViewLoadedEventArgs, IgxTemplateOutletDirective } from '../directives/template-outlet/template_outlet.directive';
 import { IgxExcelStyleLoadingValuesTemplateDirective } from './filtering/excel-style/excel-style-search.component';
 import { IgxGridColumnResizerComponent } from './resizing/resizer.component';
@@ -3005,6 +3005,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 .map(t => t.newValue));
         }
 
+        if (this.crudService.row && this.crudService.row.getClassName() === IgxAddRow.name) {
+            result.splice(this.crudService.row.index, 0, this.crudService.row.data);
+        }
+
         return result;
     }
 
@@ -4448,7 +4452,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             if (editableCell && editableCell.id.rowID === rowSelector) {
                 this.crudService.endCellEdit();
             }
-            const row = new IgxRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
+            const row = new IgxEditRow(rowSelector, -1, this.gridAPI.getRowData(rowSelector), this);
             this.gridAPI.update_row(row, value);
 
             // TODO: fix for #5934 and probably break for #5763

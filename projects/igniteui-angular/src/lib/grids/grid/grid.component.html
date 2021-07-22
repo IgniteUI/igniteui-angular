@@ -49,9 +49,10 @@
         <ng-container *ngIf='data
         | gridTransaction:id:pipeTrigger
         | visibleColumns:hasVisibleColumns
+        | gridAddRow:true:pipeTrigger
         | gridRowPinning:id:true:pipeTrigger
         | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
-        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true'>
+        | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData'>
             <div #pinContainer *ngIf='pinnedData.length > 0'
                 [ngClass]="{
                     'igx-grid__tr--pinned-bottom':  !isRowPinningToTop,
@@ -74,6 +75,7 @@
         | gridPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:id:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
         | gridDetails:hasDetails:expansionStates:pipeTrigger
+        | gridAddRow:false:pipeTrigger
         | gridRowPinning:id:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight'

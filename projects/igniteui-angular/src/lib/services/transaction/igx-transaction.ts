@@ -64,7 +64,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
         this._pendingStates.forEach((state: S, key: any) => {
             if (state.type === TransactionType.ADD) {
                 const value = mergeChanges ? this.mergeValues(state.recordRef, state.value) : state.value;
-                result.push({ id: key, newValue: value, type: state.type, pendingIndex: state.pendingIndex, pending: true } as T);
+                result.push({ id: key, newValue: value, type: state.type } as T);
             }
         });
         return result;
@@ -290,12 +290,7 @@ export class IgxTransactionService<T extends Transaction, S extends State> exten
                     }
             }
         } else {
-            state = {
-                value: cloneValue(transaction.newValue),
-                recordRef,
-                type: transaction.type,
-                pendingIndex: transaction.pendingIndex
-            } as S;
+            state = { value: cloneValue(transaction.newValue), recordRef, type: transaction.type } as S;
             states.set(transaction.id, state);
         }
 

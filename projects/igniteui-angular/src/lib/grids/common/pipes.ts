@@ -8,6 +8,7 @@ import { IgxColumnComponent } from '../columns/column.component';
 import { ColumnDisplayOrder } from './enums';
 import { IgxColumnActionsComponent } from '../column-actions/column-actions.component';
 import { IgxSummaryOperand, IgxSummaryResult } from '../grid/public_api';
+import { IgxAddRow } from './crud.service';
 
 /**
  * @hidden
@@ -124,7 +125,7 @@ export class IgxGridTransactionPipe implements PipeTransform {
         if (grid.transactions.enabled) {
             const result = DataUtil.mergeTransactions(
                 cloneArray(collection),
-                [...grid.transactions.getAggregatedChanges(true), ...grid.transactions.getAggregatedPendingAddChanges(true)],
+                grid.transactions.getAggregatedChanges(true),
                 grid.primaryKey);
             return result;
         }
@@ -319,6 +320,23 @@ export class IgxSummaryFormatterPipe implements PipeTransform {
     }
 }
 
+@Pipe({ name: 'gridAddRow' })
+export class IgxGridAddRowPipe implements PipeTransform {
+
+    constructor(private gridAPI: GridBaseAPIService<IgxGridBaseDirective & GridType>) { }
+
+    public transform(collection: any, isPinned = false, _pipeTrigger: number) {
+        const grid = this.gridAPI.grid;
+        if (!grid.rowEditable || !grid.crudService.row || grid.crudService.row.getClassName() !== IgxAddRow.name ||
+            !grid.gridAPI.crudService.addRowParent || isPinned !== grid.gridAPI.crudService.addRowParent.isPinned) {
+            return collection;
+        }
+        const copy = collection.slice(0);
+        const row = grid.gridAPI.getRowData(grid.crudService.row.id);
+        copy.splice(grid.crudService.row.index, 0, row);
+        return copy;
+    }
+}
 
 @Pipe({ name: 'igxHeaderGroupWidth' })
 export class IgxHeaderGroupWidthPipe implements PipeTransform {
