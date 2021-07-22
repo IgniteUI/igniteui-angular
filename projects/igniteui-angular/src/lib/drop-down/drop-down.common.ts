@@ -70,10 +70,10 @@ export interface IDropDownList extends DisplayDensityBase {
  */
 export interface IDropDownBase extends IDropDownList, IToggleView {
     selectedItem: any;
-    onOpening: EventEmitter<CancelableEventArgs>;
-    onOpened: EventEmitter<void>;
+    onOpening: EventEmitter<CancelableBrowserEventArgs>;
+    onOpened: EventEmitter<IBaseEventArgs>;
     onClosing: EventEmitter<CancelableBrowserEventArgs>;
-    onClosed: EventEmitter<void>;
+    onClosed: EventEmitter<IBaseEventArgs>;
     allowItemsFocus?: boolean;
     setSelectedItem(index: number): void;
     selectItem(item: IgxDropDownItemBaseDirective, event?: Event): void;

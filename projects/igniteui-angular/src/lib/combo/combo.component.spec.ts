@@ -291,7 +291,7 @@ describe('igxCombo', () => {
             combo.selectItems([], true);
             expect(combo.selectedItems()).toEqual([]);
         });
-        it('should emit owner on `onOpening` and `onClosing`', () => {
+        fit('should emit owner on `onOpening` and `onClosing`', () => {
             combo = new IgxComboComponent(elementRef, mockCdr, mockSelection as any, mockComboService,
                 mockIconService, null, null, mockInjector);
             spyOn(mockIconService, 'addSvgIconFromText').and.returnValue(null);
@@ -299,9 +299,11 @@ describe('igxCombo', () => {
             spyOn(combo.onOpening, 'emit').and.callThrough();
             spyOn(combo.onClosing, 'emit').and.callThrough();
             const mockObj = {};
+            const mockEvent = new Event('mock');
             const inputEvent: IBaseCancelableBrowserEventArgs = {
                 cancel: false,
                 owner: mockObj,
+                event: mockEvent
             };
             combo.comboInput = {
                 nativeElement: {
@@ -309,12 +311,10 @@ describe('igxCombo', () => {
                 }
             } as any;
             combo.handleOpening(inputEvent);
-            const expectedCall: IBaseCancelableBrowserEventArgs = Object.assign({}, inputEvent, { owner: combo });
+            const expectedCall: IBaseCancelableBrowserEventArgs = { owner: combo, event: inputEvent.event, cancel: inputEvent.cancel };
             expect(combo.onOpening.emit).toHaveBeenCalledWith(expectedCall);
-            expect(inputEvent.owner).toEqual(mockObj);
             combo.handleClosing(inputEvent);
             expect(combo.onClosing.emit).toHaveBeenCalledWith(expectedCall);
-            expect(inputEvent.owner).toEqual(mockObj);
             let sub = combo.onOpening.subscribe((e: IBaseCancelableBrowserEventArgs) => {
                 e.cancel = true;
             });

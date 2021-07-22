@@ -1,7 +1,7 @@
 import { IDropDownBase, IGX_DROPDOWN_BASE } from './drop-down.common';
 import { Directive, Input, HostBinding, HostListener, ElementRef, Optional, Inject, DoCheck, Output, EventEmitter } from '@angular/core';
 import { IgxSelectionAPIService } from '../core/selection';
-import { DeprecateProperty, showMessage } from '../core/deprecateDecorators';
+import { showMessage } from '../core/deprecateDecorators';
 import { IgxDropDownGroupComponent } from './drop-down-group.component';
 
 let NEXT_ID = 0;

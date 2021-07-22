@@ -28,7 +28,7 @@ import {
 import { CurrentResourceStrings } from '../core/i18n/resources';
 import { IDatePickerResourceStrings } from '../core/i18n/date-picker-resources';
 import { DateRangeDescriptor, DateRangeType } from '../core/dates/dateRange';
-import { IBaseCancelableBrowserEventArgs, IBaseEventArgs, PlatformUtil, isDate } from '../core/utils';
+import { IBaseCancelableBrowserEventArgs, PlatformUtil, isDate } from '../core/utils';
 import { IgxCalendarContainerComponent } from '../date-common/calendar-container/calendar-container.component';
 import { fadeIn, fadeOut } from '../animations/fade';
 import { PickerBaseDirective } from '../date-common/picker-base.directive';
