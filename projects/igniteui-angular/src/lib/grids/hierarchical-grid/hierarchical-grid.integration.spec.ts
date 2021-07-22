@@ -15,7 +15,8 @@ import { take } from 'rxjs/operators';
 import { IgxIconModule } from '../../icon/public_api';
 import {
     IgxHierarchicalGridTestBaseComponent,
-    IgxHierarchicalGridTestCustomToolbarComponent
+    IgxHierarchicalGridTestCustomToolbarComponent,
+    IgxHierarchicalGridWithTransactionProviderComponent
 } from '../../test-utils/hierarchical-grid-components.spec';
 import { GridFunctions, GridSelectionFunctions } from '../../test-utils/grid-functions.spec';
 import { HierarchicalGridFunctions } from '../../test-utils/hierarchical-grid-functions.spec';
@@ -36,7 +37,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         TestBed.configureTestingModule({
             declarations: [
                 IgxHierarchicalGridTestBaseComponent,
-                IgxHierarchicalGridTestCustomToolbarComponent
+                IgxHierarchicalGridTestCustomToolbarComponent,
+                IgxHierarchicalGridWithTransactionProviderComponent
             ],
             imports: [
                 NoopAnimationsModule, IgxHierarchicalGridModule, IgxIconModule]
@@ -157,6 +159,9 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(2)).subscribe((args) => {
                 firstLayoutInstances.push(args.grid);
             });
+            hierarchicalGrid.batchEditing = true;
+            tick();
+            fixture.detectChanges();
             const dataRows = hierarchicalGrid.dataRowList.toArray();
             // expand 1st row
             hierarchicalGrid.expandRow(dataRows[0].rowID);
@@ -175,6 +180,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should remove expand indicator for uncommitted added rows', fakeAsync(() => {
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -189,6 +196,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
 
         it('should now allow expanding uncommitted added rows', fakeAsync(() => {
             /* using the API here assumes keyboard interactions to expand/collapse would also be blocked */
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             hierarchicalGrid.data = hierarchicalGrid.data.slice(0, 3);
             fixture.detectChanges();
             hierarchicalGrid.addRow({ ID: -1, ProductName: 'Name1' });
@@ -210,6 +219,8 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         }));
 
         it('should revert changes when transactions are cleared for child grids', fakeAsync(() => {
+            hierarchicalGrid.batchEditing = true;
+            fixture.detectChanges();
             let childGrid;
             hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
                 childGrid = args.grid;
@@ -243,6 +254,25 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
             expect(hierarchicalGrid.getRowData('2')).toEqual(rowData);
             expect(hierarchicalGrid.getRowData('101')).toEqual({});
         });
+
+        it('should respect transaction service that is provided in the providers array', fakeAsync(() => {
+            fixture = TestBed.createComponent(IgxHierarchicalGridWithTransactionProviderComponent);
+            tick();
+            fixture.detectChanges();
+            hierarchicalGrid = fixture.componentInstance.hgrid;
+            expect(hierarchicalGrid.transactions.enabled).toBeTruthy();
+            expect(hierarchicalGrid.batchEditing).toBeFalsy();
+            let childGrid: IgxHierarchicalGridComponent;
+            hierarchicalGrid.childLayoutList.first.gridCreated.pipe(take(1)).subscribe((args) => {
+                childGrid = args.grid;
+            });
+            // expand first row
+            hierarchicalGrid.expandRow(hierarchicalGrid.dataRowList.first.rowID);
+            expect(childGrid).toBeDefined();
+            expect(childGrid.transactions.enabled).toBeTruthy();
+            childGrid.updateRow({ ProductName: 'Changed' }, '00');
+            expect(childGrid.transactions.getAggregatedChanges(false).length).toBe(1);
+        }));
     });
 
     describe('Sorting', () => {

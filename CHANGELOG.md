@@ -30,6 +30,23 @@ All notable changes for each version of this project will be documented in this 
       </ng-template>
     </igx-column>
     ```
+- `IgxGrid`, `IgxTreeGrid`, `IgxHierarchicalGrid`
+    - Added `batchEditing` - an `Input` property for controlling what type of transaction service is provided for the grid.
+    Setting `<igx-grid [batchEditing]="true">` is the same as providing `[{ provide: IgxGridTransaction, useClass: IgxTransactionService }]`. 
+    - **Deprecation** - Providing a transaction service for the grid via `providers: [IgxTransactionService]` is now deprecated and will be removed in a future patch.
+    Instead, use the new `batchEditing` property to control the grid's Transactions.
+
+    ```html
+    <igx-grid #grid [data]="data" [batchEditing]="true">
+        ...
+    </igx-grid>
+    <button igxButton (click)="grid.transactions.undo">Undo</button>
+    ```
+
+- `Transactions`
+    - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
+    - Added `IgxHierarchicalTransactionFactory` - the singleton service instantiates a new `HierarchicalTransactionService<HierarchicalTransaction, HierarchicalState>` given a `transaction type`.
+    
 - `Toolbar Actions`
     - Exposed a new input property `overlaySettings` for all column actions (`hiding` | `pinning` | `advanced filtering` | `exporter`). Example below:
 
@@ -104,6 +121,11 @@ All notable changes for each version of this project will be documented in this 
     - `onAppended` -> `contentAppended`
     - `onAnimation` -> `animationStarting`
 
+- `IgxMaskDirective`
+    - **Breaking Change** - Deprecated property `placeholder` is now removed;
+    - **Breaking Change** - `IgxMaskDirective` events are renamed as follows:
+        - `onValueChange` -> `valueChanged`
+
 - **Breaking Change** - `IgxBannerComponent` events are renamed as follows:
     - `onOpening` -> `opening`
     - `onOpened` -> `opened`
@@ -111,6 +133,7 @@ All notable changes for each version of this project will be documented in this 
     - `onClosed` -> `closed`
 
 - `IgxExpansionPanelComponent`
+    - **Breaking Change** - `IExpansionPanelEventArgs.panel` - Deprecated event property `panel` is removed. Usе `owner` property to get a reference to the panel.
     - **Breaking Change** - `IgxExpansionPanelComponent` events are renamed as follows:
         - `onCollapsed` -> `contentCollapsed`
         - `onExpanded` -> `contentExpanded`
@@ -127,6 +150,8 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+- `IgxBanner`
+    - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the banner.
 
 -   `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.

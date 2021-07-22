@@ -192,8 +192,8 @@
     You have {{ rowChangesCount }} changes in this row
 </ng-template>
 <ng-template #defaultRowEditActions>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">Cancel</button>
-    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">Done</button>
+    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(false, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_cancel }}</button>
+    <button igxButton igxRowEditTabStop (click)="this.endRowEditTabStop(true, $event)">{{ this.resourceStrings.igx_grid_row_edit_btn_done }}</button>
 </ng-template>
 <ng-template #defaultRowEditTemplate>
     <div class="igx-banner__message">

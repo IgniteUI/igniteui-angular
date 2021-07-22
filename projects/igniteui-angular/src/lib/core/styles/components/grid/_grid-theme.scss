@@ -673,9 +673,9 @@
     $hierarchical-action-icon: 24px;
 
     $grouparea-padding: (
-        comfortable: rem(8px) rem(24px),
-        cosy: rem(8px) rem(16px),
-        compact: rem(4px) rem(12px)
+        comfortable: 0 rem(24px),
+        cosy: 0 rem(16px),
+        compact: 0 rem(12px)
     );
 
     $grouparea-min-height: (
@@ -772,7 +772,7 @@
 
         %grid__cbx-selection--push {
             align-items: flex-start;
-            padding-top: math.div(map-get($grid-header-height, 'comfortable') - rem(20px), 2);
+            padding-top: private-div(map-get($grid-header-height, 'comfortable') - rem(20px), 2);
         }
 
         %grid-row {
@@ -802,14 +802,14 @@
     %grid-thead--cosy {
         %grid__cbx-selection--push--cosy {
             align-items: flex-start;
-            padding-top: math.div(map-get($grid-header-height, 'cosy') - rem(20px), 2);
+            padding-top: private-div(map-get($grid-header-height, 'cosy') - rem(20px), 2);
         }
     }
 
     %grid-thead--compact {
         %grid__cbx-selection--push--compact {
             align-items: flex-start;
-            padding-top: math.div(map-get($grid-header-height, 'compact') - rem(20px), 2);
+            padding-top: private-div(map-get($grid-header-height, 'compact') - rem(20px), 2);
         }
     }
 
@@ -1563,7 +1563,7 @@
         cursor: initial;
         flex-grow: 1; /* hey IE, the text should take most of the space */
         // align-self: flex-end; /* commenting out for now on external request */
-        line-height: math.div(map-get($grid-header-height, 'comfortable'), $grid-head-fs);
+        line-height: private-div(map-get($grid-header-height, 'comfortable'), $grid-head-fs);
         transition: opacity 250ms ease-in-out, color 250ms ease-in-out;
 
         @if $variant != 'indigo-design' {
@@ -1572,11 +1572,11 @@
     }
 
     %grid-cell-header-title--cosy {
-        line-height: math.div(map-get($grid-header-height, 'cosy'), $grid-head-fs);
+        line-height: private-div(map-get($grid-header-height, 'cosy'), $grid-head-fs);
     }
 
     %grid-cell-header-title--compact {
-        line-height: math.div(map-get($grid-header-height, 'compact'), $grid-head-fs);
+        line-height: private-div(map-get($grid-header-height, 'compact'), $grid-head-fs);
     }
 
     %grid-cell-header-icons {
@@ -2155,6 +2155,11 @@
         &:focus {
             outline-style: none;
         }
+
+        %igx-chip {
+            margin-top: rem(8px);
+            margin-bottom: rem(8px);
+        }
     }
 
     %igx-grid-grouparea__connector {
@@ -2177,11 +2182,21 @@
     %igx-grid-grouparea--cosy {
         min-height: map-get($grouparea-min-height, 'cosy');
         padding: map-get($grouparea-padding, 'cosy');
+
+        %igx-chip {
+            margin-top: rem(8px);
+            margin-bottom: rem(8px);
+        }
     }
 
     %igx-grid-grouparea--compact {
         min-height: map-get($grouparea-min-height, 'compact');
         padding: map-get($grouparea-padding, 'compact');
+
+        %igx-chip {
+            margin-top: rem(4px);
+            margin-bottom: rem(4px);
+        }
     }
 
     %igx-drop-area {
@@ -2295,7 +2310,7 @@
         }
 
         &%igx-grid__group-expand-btn--push {
-            top: math.div(map-get($grid-header-height, 'comfortable') - rem(24px), 2);
+            top: private-div(map-get($grid-header-height, 'comfortable') - rem(24px), 2);
         }
     }
 
@@ -2303,7 +2318,7 @@
         #{$left}: map-get($grid-grouping-indicator-padding, 'cosy');
 
         &%igx-grid__group-expand-btn--push {
-            top: math.div(map-get($grid-header-height, 'cosy') - rem(24px), 2);
+            top: private-div(map-get($grid-header-height, 'cosy') - rem(24px), 2);
         }
     }
 
@@ -2311,7 +2326,7 @@
         #{$left}: map-get($grid-grouping-indicator-padding, 'compact');
 
         &%igx-grid__group-expand-btn--push {
-            top: math.div(map-get($grid-header-height, 'compact') - rem(24px), 2);
+            top: private-div(map-get($grid-header-height, 'compact') - rem(24px), 2);
         }
     }
 
