@@ -314,10 +314,10 @@ myComponent.select.toggleIconTemplate = myCustomTemplate;
 ### Events
 `IgxSelectComponent`
 
-   | Name        | Description                                                             | Cancelable | Parameters |
-   |-------------|-------------------------------------------------------------------------|------------|------------|
-   | selecting | Emitted when item selection is changing, before the selection completes | true       |{ISelectionEventArgs}|
-   | opening   | Emitted before the IgxSelect is opened.                                 | true       |            |
-   | opened    | Emitted after the IgxSelect is opened.                                  | false      |            |
-   | closing   | Emitted before the IgxSelect is closed.                                 | true       |            |
-   | closed    | Emitted after the IgxSelect is closed.                                  | false      |            |
+   | Name      | Description                                                             | Cancelable | Parameters                       |
+   |-----------|-------------------------------------------------------------------------|------------|----------------------------------|
+   | selecting | Emitted when item selection is changing, before the selection completes | true       | `ISelectionEventArgs`            |
+   | opening   | Emitted before the IgxSelect is opened.                                 | true       | `IBaseCancelableBrowserEventArgs`|
+   | opened    | Emitted after the IgxSelect is opened.                                  | false      | `IBaseEventArgs`                 |
+   | closing   | Emitted before the IgxSelect is closed.                                 | true       | `IBaseCancelableBrowserEventArgs`|
+   | closed    | Emitted after the IgxSelect is closed.                                  | false      | `IBaseEventArgs`                 |

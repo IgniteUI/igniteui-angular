@@ -122,14 +122,14 @@ The date picker also supports binding through `ngModel` if two-way date-bind is 
 | `headerOrientation` | Determines whether the calendar's header renders in `vertical` or `horizontal` state. Applies only in `dialog` mode. | 'horizontal' \| 'vertical' |
 
 ### Outputs
-| Name | Description | Emitted with |
-|:-----|:------------|:----|
-| `opening` | Fired when the calendar has started opening, cancelable. | IBaseCancelableBrowserEventArgs |
-| `opened` | Fired after the calendar has opened. | IBaseEventArgs |
-| `closing` | Fired when the calendar has started closing, cancelable. | IBaseCancelableBrowserEventArgs |
-| `closed` | Fired after the calendar has closed. | IBaseEventArgs |
-| `valueChange` | Emitted when the picker's value changes. Allows two-way binding of `value`. | Date |
-| `validationFailed` | Emitted when a user enters an invalid date string or when the value is not within a min/max range. | IDatePickerValidationFailedEventArgs |
+| Name | Description | Cancelable | Emitted with |
+|------|-------------|------------|--------------|
+| `opening` | Fired when the calendar has started opening. | true | IBaseCancelableBrowserEventArgs |
+| `opened` | Fired after the calendar has opened. | false | IBaseEventArgs |
+| `closing` | Fired when the calendar has started closing | true  | IBaseCancelableBrowserEventArgs |
+| `closed` | Fired after the calendar has closed. | false | IBaseEventArgs |
+| `valueChange` | Emitted when the picker's value changes. Allows two-way binding of `value`. | false | Date |
+| `validationFailed` | Emitted when a user enters an invalid date string or when the value is not within a min/max range. | false | IDatePickerValidationFailedEventArgs |
 
 ### Methods
 | Name | Description | Return type |

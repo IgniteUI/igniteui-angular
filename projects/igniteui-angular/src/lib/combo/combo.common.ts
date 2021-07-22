@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, InjectionToken } from '@angular/core';
-import { CancelableEventArgs, CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
+import { CancelableBrowserEventArgs, IBaseEventArgs } from '../core/utils';
 
 export const IGX_COMBO_COMPONENT = new InjectionToken<IgxComboBase>('IgxComboComponentToken');
 
