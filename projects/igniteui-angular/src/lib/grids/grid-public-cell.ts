@@ -125,9 +125,8 @@ export class IgxGridCell implements CellType {
 	public get value(): any {
 		// will return undefined for a column layout, because getCellByColumnVisibleIndex may return the column layout at that index.
 		// getCellByColumnVisibleIndex is deprecated and will be removed in future version
-		const val = this.row?.data[this.column.field];
 		return this.column.field ?
-			this.column.hasNestedPath ? resolveNestedPath(val, this.column.field) : val
+			this.column.hasNestedPath ? resolveNestedPath(this.row?.data, this.column.field) : this.row?.data[this.column.field]
 			: undefined;
 	}
 
