@@ -188,8 +188,8 @@
     <div class="igx-banner__message">
         <span class="igx-banner__text">
             <ng-container
-                *ngTemplateOutlet="this.crudService.row?.isAddRow ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
-                context: { $implicit: !this.crudService.row?.isAddRow ? rowChangesCount : null }">
+                *ngTemplateOutlet="this.crudService.row?.getClassName() === 'IgxAddRow' ? rowAddText : rowEditText ? rowEditText : defaultRowEditText;
+                context: { $implicit: this.crudService.row?.getClassName() !== 'IgxAddRow' ? rowChangesCount : null }">
             </ng-container>
         </span>
     </div>
