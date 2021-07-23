@@ -173,7 +173,6 @@ All notable changes for each version of this project will be documented in this 
         - `onAppended` -> `appended`
 
 - `IgxCombo`
-    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
     - **Breaking Change** - The following events have been renamed as follows:
         - `onSelectionChange` -> `selectionChanging`
         - `onSearchInput` -> `searchInputUpdate`
@@ -183,6 +182,8 @@ All notable changes for each version of this project will be documented in this 
         - `onOpened` -> `opened`
         - `onClosing` -> `closing`
         - `onClosed` -> `closed`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - `IComboSelectionChangeEventArgs` is renamed to `IComboSelectionChangingEventArgs`
 
 - `IgxSelect`
     - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
