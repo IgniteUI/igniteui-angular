@@ -150,11 +150,63 @@ All notable changes for each version of this project will be documented in this 
             ...
         </igx-expansion-panel>
     ```
+
 - `IgxBanner`
     - `BannerEventArgs.banner` - Deprecated. Usе `owner` property to get a reference to the banner.
 
--   `IgxDropDown`
+- `IgxDropDown`
     - **Breaking Change** - The dropdown items no longer takes focus unless `allowItemsFocus` is set to `true`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+        - `onSelection` -> `selecting`
+
+
+- `IgxToggleDirective`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpened` -> `opened`
+        - `onOpening` -> `opening`
+        - `onClosed` -> `closed`
+        - `onClosing` -> `closing`
+        - `onAppended` -> `appended`
+
+- `IgxCombo`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onSelectionChange` -> `selectionChange`
+        - `onSearchInput` -> `searchInputUpdate`
+        - `onAddition` -> `addition`
+        - `onDataPreLoad` -> `dataPreLoad`
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+
+- `IgxSelect`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpening` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClosing` -> `closing`
+        - `onClosed` -> `closed`
+
+- `IgxAutocomplete`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onItemSelected` -> `itemSelected`
+
+- `IgxDialog`
+    - **Breaking Change** - The following events have been renamed as follows:
+        - `onOpen` -> `opening`
+        - `onOpened` -> `opened`
+        - `onClose` -> `closing`
+        - `onClosed` -> `closed`
+        - `onLeftButtonSelect` -> `leftButtonSelect`
+        - `onRightButtonSelect` -> `rightButtonSelect`
+
+- `IgxDropDown`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`.
 
 ### Themes
 - **Breaking Change**  - The `$color` property of the `igx-action-strip-theme` has been renamed as follows:
