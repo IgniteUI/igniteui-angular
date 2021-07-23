@@ -397,7 +397,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * Emitted when item selection is changing, before the selection completes
      *
      * ```html
-     * <igx-combo (selectionChange)='handleSelection()'></igx-combo>
+     * <igx-combo (selectionChanging)='handleSelection()'></igx-combo>
      * ```
      */
     @Output()

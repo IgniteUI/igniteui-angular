@@ -1,5 +1,5 @@
 <!-- Have to apply styles inline because of the overlay outlet ... -->
-<igx-drop-down #inputGroupConditions [displayDensity]="displayDensity" [height]="'200px'" (selecting)="onConditionsChanged($event)">
+<igx-drop-down #inputGroupConditions [displayDensity]="displayDensity" [height]="'200px'" (selectionChanging)="onConditionsChanged($event)">
     <igx-drop-down-item *ngFor="let condition of conditions"
         [value]="condition"
         [selected]="isConditionSelected(condition)">
