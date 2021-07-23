@@ -89,6 +89,7 @@ export class WorksheetFile implements IExcelFile {
             this.dimension = 'A1';
             done('', sheetData);
         } else {
+            const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
 
             const height =  worksheetData.options.rowHeight;
@@ -96,12 +97,12 @@ export class WorksheetFile implements IExcelFile {
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
             sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
+            owner.columns.filter(c => !c.skip).forEach((currentCol, index) => {
+                const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
+                const columnValue = dictionary.saveValue(currentCol.header, true);
+                sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
+            });
 
-            for (let i = 0; i < worksheetData.rootKeys.length; i++) {
-                const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.rootKeys[i], true);
-                sheetData += `<c r="${column}"${rowStyle} t="s"><v>${value}</v></c>`;
-            }
             sheetData += '</row>';
 
             if (!isHierarchicalGrid) {
