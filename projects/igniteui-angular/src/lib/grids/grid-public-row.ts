@@ -382,7 +382,7 @@ export class IgxTreeGridRow extends BaseRow implements RowType {
                 });
         }
         const rec = this.grid.dataView[this.index];
-        return this._data ?? this.grid.isTreeRow(rec) ? rec.data : rec;
+        return this._data ?? this._data : this.grid.isTreeRow(rec) ? rec.data : rec;
     }
 
     /**

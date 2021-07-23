@@ -867,8 +867,16 @@ describe('IgxHierarchicalGrid Integration #hGrid', () => {
         it('should pin rows to top ', (() => {
             hierarchicalGrid.pinRow('0');
             fixture.detectChanges();
-
             expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+
+            hierarchicalGrid.unpinRow('0');
+            fixture.detectChanges();
+            expect(hierarchicalGrid.pinnedRows.length).toBe(0);
+
+            hierarchicalGrid.pinRow('0');
+            fixture.detectChanges();
+            expect(hierarchicalGrid.pinnedRows.length).toBe(1);
+
             let pinRowContainer = fixture.debugElement.queryAll(By.css(FIXED_ROW_CONTAINER));
             expect(pinRowContainer.length).toBe(1);
             expect(pinRowContainer[0].nativeElement.classList.contains(FIXED_ROW_CONTAINER_TOP)).toBeTruthy();

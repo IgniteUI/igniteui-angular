@@ -44,6 +44,10 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(firstCell.column.index).toEqual(grid.columnList.first.index);
             expect(firstCell.row.index).toEqual(grid.rowList.first.index);
             expect(firstCell.grid).toBe(grid);
+            expect(firstCell.active).toBeFalse();
+            expect(firstCell.selected).toBeFalse();
+            expect(firstCell.editMode).toBeFalse();
+            expect(firstCell.editValue).toBeUndefined();
             expect(firstCellElem.nativeElement).toBeDefined();
             expect(firstCellElem.nativeElement.textContent).toMatch('1');
             expect(firstCellElem.readonly).toBe(true);
@@ -63,6 +67,12 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.selected.emit).toHaveBeenCalledWith(args);
             expect(firstCell.selected).toBe(true);
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('true');
+
+            firstCell.selected = !firstCell.selected;
+            expect(firstCell.selected).toBe(false);
+
+            firstCell.selected = !firstCell.selected;
+            expect(firstCell.selected).toBe(true);
         });
 
         it('Should not emit selection event for already selected cell', () => {
