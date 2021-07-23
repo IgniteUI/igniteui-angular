@@ -30,6 +30,8 @@
     <div class="grid-wrapper">
         <igx-grid #grid [rowDraggable]="true" (rowDragStart)="onRowDragStart($event)" (onRowDragEnd)="onRowDragEnd($event)" [data]="data" [cellSelection]="true" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [columnSelection]="'single'"
             [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
+            <igx-paginator>
+            </igx-paginator>
             <ng-template igxGridDetail let-dataItem>
                 <div>
                     <div><span class='categoryStyle'>Country:</span> {{dataItem.Country}}</div>
@@ -42,63 +44,63 @@
             <!-- <igx-column-layout [header]="'ID'">
                 <igx-column [rowStart]="1" [colStart]="1" [rowEnd]="3" field="ID" header="ID">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
             </igx-column-layout>
             <igx-column-layout [header]="'Details'">
                 <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="CompanyName">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="2" [colStart]="1" [colEnd]="2" field="ContactName">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="2" [colStart]="2" [colEnd]="3" field="ContactTitle">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
             </igx-column-layout>
             <igx-column-layout [header]="'Address'">
                 <igx-column [rowStart]="1" [colStart]="1" [colEnd]="3" field="Country">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="1" [colStart]="3" [colEnd]="5" field="Region">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="1" [colStart]="5" [colEnd]="7" field="PostalCode">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="2" [colStart]="1" [colEnd]="4" field="City">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="2" [colStart]="4" [colEnd]="7" field="Address">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
             </igx-column-layout>
             <igx-column-layout [header]="'Phone'">
                 <igx-column [rowStart]="1" [colStart]="1" field="Phone">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
                 <igx-column [rowStart]="2" [colStart]="1" field="Fax">
                     <ng-template igxCell let-value let-cell="cell">
-                        {{ cell.columnIndex }} {{ cell.visibleColumnIndex }}
+                        Col Idx: {{ cell.column.index }}; Visible Col Idx: {{ cell.column.visibleIndex }}
                     </ng-template>
                 </igx-column>
             </igx-column-layout> -->
@@ -153,7 +155,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGridHier [width]="'900px'" [height]="'500px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'" [paging]="false">
+        <igx-tree-grid #treeGridHier [width]="'800px'" [height]="'600px'" [data]="treeGridHierData" childDataKey="ChildCompanies" primaryKey="ID" [expansionDepth]="1" [columnSelection]="'single'" [rowSelection]="'multiple'" [paging]="false">
             <igx-column *ngFor="let c of treeGridHierColumns" [field]="c.field" [header]="c.field" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true" [hidden]="c.hidden"
                 [hasSummary]="c.summary" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
@@ -163,6 +165,8 @@
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
+            <igx-paginator>
+            </igx-paginator>
         </igx-tree-grid>
     </div>
     <div class="log-wrapper">
@@ -207,7 +211,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'900px'" [height]="'800px'">
+        <igx-tree-grid #treeGrid [paging]='true' [allowFiltering]='true' [data]="treeData" [columnSelection]="'single'" primaryKey="employeeID" foreignKey="PID" [rowSelection]="'multiple'" [width]="'800px'" [height]="'600px'">
             <igx-column *ngFor="let c of treeColumns" [field]="c.field" [dataType]="c.dataType" [header]="c.label" [pinned]="c.pinned" [movable]="c.movable" [groupable]="false" [resizable]="c.resizable" [width]="c.width" [sortable]="true" [filterable]="true" [editable]="true"
                 [hidden]="c.hidden" [minWidth]="c.minWidth" [maxWidth]="c.maxWidth">
             </igx-column>
@@ -217,6 +221,8 @@
                     <igx-grid-toolbar-hiding></igx-grid-toolbar-hiding>
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
+            <igx-paginator>
+            </igx-paginator>
         </igx-tree-grid>
     </div>
     <div class="log-wrapper">
@@ -271,9 +277,19 @@
                 </igx-grid-toolbar-actions>
             </igx-grid-toolbar>
             <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
-                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'></igx-row-island>
+                <igx-paginator>
+                </igx-paginator>
+                <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
+                    <igx-paginator>
+                    </igx-paginator>
+                </igx-row-island>
             </igx-row-island>
-            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'></igx-row-island>
+            <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'>
+                <igx-paginator>
+                </igx-paginator>
+            </igx-row-island>
+            <igx-paginator>
+            </igx-paginator>
         </igx-hierarchical-grid>
     </div>
     <div class="log-wrapper">

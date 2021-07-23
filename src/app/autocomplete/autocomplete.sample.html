@@ -24,7 +24,7 @@
             </div>
         </igx-drop-down-item>
     </igx-drop-down>
-    <igx-dialog #alert leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"></igx-dialog>
+    <igx-dialog #alert leftButtonLabel="OK" (leftButtonSelect)="alert.close()"></igx-dialog>
 
     <button igxButton="raised" (click)="onSearch()" [disabled]="!travel.valid">Search</button>
 
