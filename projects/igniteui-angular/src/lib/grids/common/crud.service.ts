@@ -113,12 +113,13 @@ export class IgxCellCrudState {
     public cancelAddMode = false;
 
     public createCell(cell): IgxCell {
-        // cell.row.data ?? cell.rowData covers the cases, where
-        // 1. cell is an instance of IgxGridCell
-        // 2. cell is an instance og IgxGridCellComponent
-        // Why not use cell.row.data
+        // cell.rowData ?? cell.row.data covers the cases, where
+        // 1. cell is an instance og IgxGridCellComponent
+        // 2. cell is an instance of IgxGridCell
+        // Note: if at some point we are going to get rid of using 1), then see test 'should allow adding row to empty grid':
+        // cell.row.data will return a { data; rowID } object here, and test will fail
         return this.cell = new IgxCell(cell.cellID, cell.row.index, cell.column, cell.value, cell.value,
-            cell.row.data ?? cell.rowData, cell.grid);
+            cell.rowData ?? cell.row.data, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxRow {
