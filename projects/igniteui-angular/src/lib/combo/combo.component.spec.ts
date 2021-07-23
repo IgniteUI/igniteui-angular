@@ -7,7 +7,7 @@ import { FormGroup, FormControl, Validators, FormBuilder, ReactiveFormsModule,
 import {
     IgxComboComponent,
     IgxComboModule,
-    IComboselectionChangingEventArgs,
+    IComboSelectionChangingEventArgs,
     IgxComboState,
     IComboSearchInputEventArgs,
     IComboItemAdditionEvent
@@ -418,7 +418,7 @@ describe('igxCombo', () => {
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
             const selectionSpy = spyOn(combo.selectionChanging, 'emit');
-            const expectedResults: IComboselectionChangingEventArgs = {
+            const expectedResults: IComboSelectionChangingEventArgs = {
                 newSelection: [combo.data[0][combo.valueKey]],
                 oldSelection: [],
                 added: [combo.data[0][combo.valueKey]],
@@ -455,7 +455,7 @@ describe('igxCombo', () => {
             let oldSelection = [];
             let newSelection = [combo.data[0], combo.data[1], combo.data[2]];
             const selectionSpy = spyOn(combo.selectionChanging, 'emit');
-            const expectedResults: IComboselectionChangingEventArgs = {
+            const expectedResults: IComboSelectionChangingEventArgs = {
                 newSelection: newSelection.map(e => e[combo.valueKey]),
                 oldSelection,
                 added: newSelection.map(e => e[combo.valueKey]),
@@ -561,7 +561,7 @@ describe('igxCombo', () => {
             combo.data = data;
             combo.dropdown = dropdown;
             spyOnProperty(combo, 'totalItemCount').and.returnValue(combo.data.length);
-            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboselectionChangingEventArgs) => event.newSelection = []);
+            spyOn(combo.selectionChanging, 'emit').and.callFake((event: IComboSelectionChangingEventArgs) => event.newSelection = []);
             // No items are initially selected
             expect(combo.selectedItems()).toEqual([]);
             // Select the first 5 items
