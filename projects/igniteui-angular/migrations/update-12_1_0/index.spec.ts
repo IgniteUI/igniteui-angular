@@ -487,7 +487,7 @@ public onBannerOpened(event: BannerEventArgs) {
             (opened)="handleEvent($event, 'opened')"
             (closing)="handleEvent($event, 'closing')"
             (closed)="handleEvent($event, 'closed')"
-            (selecting)="handleEvent($event, 'selection')"
+            (selectionChanging)="handleEvent($event, 'selection')"
         >
             Display something onOpening, onClosing, onOpened, onClosed
         </igx-drop-down>`);
@@ -551,7 +551,7 @@ public onBannerOpened(event: BannerEventArgs) {
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
                 <igx-combo
-                    (selectionChange)="eventHandler($event)"
+                    (selectionChanging)="eventHandler($event)"
                     (searchInputUpdate)="eventHandler($event)"
                     (addition)="eventHandler($event)"
                     (dataPreLoad)="eventHandler($event)"
@@ -576,6 +576,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (onOpened)="eventHandler($event)"
                     (onClosing)="eventHandler($event)"
                     (onClosed)="eventHandler($event)"
+                    (onSelection)="eventHandler($event)"
                 >
                 </igx-select>`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
@@ -588,6 +589,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (opened)="eventHandler($event)"
                     (closing)="eventHandler($event)"
                     (closed)="eventHandler($event)"
+                    (selectionChanging)="eventHandler($event)"
                 >
                 </igx-select>`);
     });
@@ -603,7 +605,7 @@ public onBannerOpened(event: BannerEventArgs) {
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
-                (onItemSelected)='itemSelected($event)'
+                (onItemSelected)='selectionChanging($event)'
             />`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -613,7 +615,7 @@ public onBannerOpened(event: BannerEventArgs) {
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
-                (itemSelected)='itemSelected($event)'
+                (selectionChanging)='selectionChanging($event)'
             />`);
     });
 

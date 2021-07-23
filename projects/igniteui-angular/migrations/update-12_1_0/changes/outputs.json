@@ -91,7 +91,7 @@
         },
         {
             "name": "onSelection",
-            "replaceWith": "selecting",
+            "replaceWith": "selectionChanging",
             "owner": {
                 "selector": "igx-drop-down",
                 "type": "component"
@@ -139,7 +139,7 @@
         },
         {
             "name": "onSelectionChange",
-            "replaceWith": "selectionChange",
+            "replaceWith": "selectionChanging",
             "owner": {
                 "selector": "igx-combo",
                 "type": "component"
@@ -234,8 +234,16 @@
             }
         },
         {
+            "name": "onSelection",
+            "replaceWith": "selectionChanging",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
             "name": "onItemSelected",
-            "replaceWith": "itemSelected",
+            "replaceWith": "selectionChanging",
             "owner": {
                 "selector": "igxAutocomplete",
                 "type": "directive"

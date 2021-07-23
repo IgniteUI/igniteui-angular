@@ -376,7 +376,7 @@ export class IgxSelectComponent extends IgxDropDownComponent implements IgxSelec
         }
 
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.selecting.emit(args);
+        this.selectionChanging.emit(args);
 
         if (args.cancel) {
             return;

@@ -14,7 +14,7 @@
     (opened)="testOnOpened()"
     (closing)="testOnClosing($event)"
     (closed)="testOnClosed()"
-    (selecting)="testOnSelection($event)"
+    (selectionChanging)="testOnSelection($event)"
     [disabled]="isDisabled"
     [displayDensity]="'cosy'">
         <label igxLabel>Sample Label</label>
@@ -54,7 +54,7 @@
                 (opened)="testOnOpened()"
                 (closing)="testOnClosing($event)"
                 (closed)="testOnClosed()"
-                (selecting)="testOnSelection($event)"
+                (selectionChanging)="testOnSelection($event)"
                 [disabled]="false"
                 [type]="'box'">
         <label igxLabel>Sample Label</label>
@@ -79,7 +79,7 @@
                 (opened)="testOnOpened()"
                 (closing)="testOnClosing($event)"
                 (closed)="testOnClosed()"
-                (selecting)="testOnSelection($event)"
+                (selectionChanging)="testOnSelection($event)"
                 [disabled]="false"
                 [type]="'border'">
         <igx-hint>I am a Hint</igx-hint>
@@ -97,7 +97,7 @@
                 (opened)="testOnOpened()"
                 (closing)="testOnClosing($event)"
                 (closed)="testOnClosed()"
-                (selecting)="testOnSelection($event)"
+                (selectionChanging)="testOnSelection($event)"
                 [disabled]="false">
         <label igxLabel>Group</label>
         <igx-prefix igxPrefix>

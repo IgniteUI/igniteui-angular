@@ -41,7 +41,7 @@ import { IgxOverlayOutletDirective } from '../toggle/toggle.directive';
  *
  * @export
  */
-export interface AutocompleteItemSelectionEventArgs extends CancelableEventArgs, IBaseEventArgs {
+export interface AutocompleteSelectionChangingEventArgs extends CancelableEventArgs, IBaseEventArgs {
     /**
      * New value selected from the drop down
      */
@@ -154,11 +154,11 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
      * Emitted after item from the drop down is selected
      *
      * ```html
-     * <input igxInput [igxAutocomplete]="townsPanel" (itemSelected)='itemSelected($event)' />
+     * <input igxInput [igxAutocomplete]="townsPanel" (selectionChanging)='selectionChanging($event)' />
      * ```
      */
     @Output()
-    public itemSelected = new EventEmitter<AutocompleteItemSelectionEventArgs>();
+    public selectionChanging = new EventEmitter<AutocompleteSelectionChangingEventArgs>();
 
     /** @hidden @internal */
     public get nativeElement(): HTMLInputElement {
@@ -344,7 +344,7 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
                 this.target.close();
             }
         });
-        this.target.selecting.pipe(takeUntil(this.destroy$)).subscribe(this.select.bind(this));
+        this.target.selectionChanging.pipe(takeUntil(this.destroy$)).subscribe(this.select.bind(this));
     }
 
     private get collapsed(): boolean {
@@ -357,8 +357,8 @@ export class IgxAutocompleteDirective extends IgxDropDownItemNavigationDirective
         }
         value.cancel = true; // Disable selection in the drop down, because in autocomplete we do not save selection.
         const newValue = value.newSelection.value;
-        const args: AutocompleteItemSelectionEventArgs = { value: newValue, cancel: false };
-        this.itemSelected.emit(args);
+        const args: AutocompleteSelectionChangingEventArgs = { value: newValue, cancel: false };
+        this.selectionChanging.emit(args);
         if (args.cancel) {
             return;
         }
