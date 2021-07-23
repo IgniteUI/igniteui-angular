@@ -3,6 +3,7 @@ import { Rule, SchematicContext, Tree } from '@angular-devkit/schematics';
 import { UpdateChanges } from '../common/UpdateChanges';
 import { FileChange, findElementNodes, getAttribute, getSourceOffset, hasAttribute, parseFile,
         serializeNodes, makeNgIf, stringifyAttriutes } from '../common/util';
+import { findMatches, replaceMatch } from '../common/tsUtils';
 
 const version = '12.1.0';
 
@@ -64,6 +65,33 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
       return `\n<igx-paginator${isChildGrid ? ' *igxPaginator' : ''}${makeNgIf(propName, value) ? ` *ngIf="${value}"` : ''}>${moveTemplate(paginatorTemplate)}</igx-paginator>`;
     }
   };
+
+    const cellChanges= [
+        { member: 'rowIndex', replaceWith: 'row.index', definedIn: ['IgxGridCell'] },
+        { member: 'columnIndex', replaceWith: 'column.index', definedIn: ['IgxGridCellComponent'] },
+        { member: 'visibleColumnIndex', replaceWith: 'column.visibleIndex.index', definedIn: ['IgxGridCellComponent'] },
+    ];
+
+    for (const entryPath of update.tsFiles) {
+        const ls = update.getDefaultLanguageService(entryPath);
+        let content = host.read(entryPath).toString();
+        for (const change of cellChanges) {
+            const matches = findMatches(content, change.member);
+            for (const position of matches) {
+                const definition = ls.getDefinitionAndBoundSpan(entryPath, position - 1)?.definitions[0];
+                if (definition
+                    && definition.kind === 'class'
+                    && (definition.name === 'IgxGridCell' || definition.name === 'CellType')
+                    && definition.fileName.includes('igniteui-angular')) {
+                    content = replaceMatch(content, change.member, change.replaceWith, position);
+                    host.overwrite(entryPath, content);
+                }
+            }
+        }
+    }
+
+  applyChanges();
+  changes.clear();
 
   // migrate paging and pagination template for grid, tree grid and hierarchical grid
   for (const path of update.templateFiles) {
