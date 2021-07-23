@@ -83,7 +83,6 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         let columnWidths;
         let indexOfLastPinnedColumn;
 
-
         const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
             isHierarchicalGrid ?
                 data.some(d =>  Object.keys(d.data).length > EXCEL_MAX_COLS) :

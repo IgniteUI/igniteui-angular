@@ -61,6 +61,7 @@ export class WorksheetFile implements IExcelFile {
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
+    private rowIndex = 0;
 
     public writeElement() {}
 
@@ -81,6 +82,7 @@ export class WorksheetFile implements IExcelFile {
         let sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
+        this.rowIndex = 0;
 
         if (worksheetData.isEmpty) {
             sheetData += '<sheetData/>';
@@ -149,16 +151,21 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
+        let recordHeaders = [];
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                rowDataArr[i] = this.processRow(worksheetData, i + 1);
+                recordHeaders = worksheetData.owner.columns
+                            .filter(c => !c.skip)
+                            .map(c => c.field);
+                rowDataArr[i] = this.processRow(worksheetData, i + 1, recordHeaders);
             },
             () => {
                 done(rowDataArr.join(''));
             });
     }
 
-    private processRow(worksheetData: WorksheetData, i: number) {
+    private processRow(worksheetData: WorksheetData, i: number, headers: any[]) {
+        // const rowData = new Array(worksheetData.columnCount + 2);
         const record = worksheetData.data[i - 1];
 
         const isHierarchicalGrid = record.type === ExportRecordType.HeaderRecord || record.type === ExportRecordType.HierarchicalGridRecord;
@@ -172,13 +179,11 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        const keys = worksheetData.isSpecialData ? [record.data] : Object.keys(record.data);
+        const keys = worksheetData.isSpecialData ? [record.data] : headers;
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
-
             const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j]);
-
             rowData[j + 1] = cellData;
         }
 

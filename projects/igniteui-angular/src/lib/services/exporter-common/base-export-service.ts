@@ -47,6 +47,7 @@ export interface IColumnInfo {
     dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
+    maxLevel?: number;
 }
 
 /**
