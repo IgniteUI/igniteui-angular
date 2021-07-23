@@ -20,6 +20,7 @@ export class IgxEditRow {
             oldValue: this.data,
             cancel: false,
             owner: this.grid,
+            isAddRow: false,
             event
         };
         if (includeNewValue) {
@@ -38,6 +39,7 @@ export class IgxEditRow {
             oldValue: cachedRowData,
             newValue: updatedData,
             owner: this.grid,
+            isAddRow: false,
             event
         };
 
@@ -51,6 +53,14 @@ export class IgxEditRow {
 
 export class IgxAddRow extends IgxEditRow {
     public isAddRow = true;
+
+    constructor(public id: any,
+        public index: number,
+        public data: any,
+        public recordRef: any,
+        public grid: IgxGridBaseDirective & GridType) {
+        super(id, index, data, grid);
+    }
 
     public createEditEventArgs(includeNewValue = true, event?: Event): IGridEditEventArgs {
         const args = super.createEditEventArgs(includeNewValue, event);
@@ -343,7 +353,9 @@ export class IgxRowCrudState extends IgxCellCrudState {
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
             this.grid.transactions.endPending(false);
-            this.grid.gridAPI.addRowToData(this.row.newData ?? this.row.data);
+            const parentId = this.getParentRowId();
+            this.grid.gridAPI.addRowToData(this.row.newData ?? this.row.data, parentId);
+            nonCancelableArgs = this.rowEditDone(null, event);
         }
 
         nonCancelableArgs = this.exitRowEdit(rowEditArgs.oldValue, event);
@@ -399,6 +411,9 @@ export class IgxRowCrudState extends IgxCellCrudState {
         }
     }
 
+    protected getParentRowId() {
+        return null;
+    }
 }
 
 export class IgxRowAddCrudState extends IgxRowCrudState {
@@ -410,9 +425,9 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
     public createAddRow(parentRow: IgxRowDirective<IgxGridBaseDirective & GridType>, asChild?: boolean) {
         this.createAddRowParent(parentRow, asChild);
 
-        const newRec = this.grid.getEmptyRecordObjectFor(parentRow ? parentRow.rowData : null);
+        const newRec = this.grid.getEmptyRecordObjectFor(parentRow);
         const addRowIndex = this.addRowParent.index + 1;
-        return this.row = new IgxAddRow(newRec[this.primaryKey], addRowIndex, newRec, this.grid);
+        return this.row = new IgxAddRow(newRec.rowID, addRowIndex, newRec.data, newRec.recordRef, this.grid);
     }
 
     /**
@@ -424,7 +439,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 
         const isInPinnedArea = this.grid.isRecordPinnedByViewIndex(rowIndex);
         const pinIndex = this.grid.pinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
-        const unpinIndex = this.grid.unpinnedRecords.findIndex(x => x[this.primaryKey] === rowId);
+        const unpinIndex = this.grid.getUnpinnedIndexById(rowId);
         this.addRowParent = {
             rowID: rowId,
             index: isInPinnedArea ? pinIndex : unpinIndex,
@@ -454,6 +469,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
 
         this.endAddRow();
         if (commit) {
+            this.grid.rowAddedNotifier.next({ data: args.newValue });
             this.grid.rowAdded.emit({ data: args.newValue });
         }
 
@@ -477,7 +493,7 @@ export class IgxRowAddCrudState extends IgxRowCrudState {
         return this.grid.dataView.findIndex(data => data[this.primaryKey] === rec[this.primaryKey]);
     }
 
-    protected _getParentRecordId() {
+    protected getParentRowId() {
         if (this.addRowParent.asChild) {
             return this.addRowParent.asChild ? this.addRowParent.rowID : undefined;;
         } else if (this.addRowParent.rowID !== null && this.addRowParent.rowID !== undefined) {

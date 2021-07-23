@@ -5859,11 +5859,15 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
     }
 
-    public getEmptyRecordObjectFor(rec) {
-        const row = { ...rec };
+    /**
+     * @hidden @internal
+     */
+    public getEmptyRecordObjectFor(inRow: IgxRowDirective<IgxGridBaseDirective & GridType>) {
+        const row = { ...inRow.rowData };
         Object.keys(row).forEach(key => row[key] = undefined);
-        row[this.primaryKey] = this.generateRowID();
-        return row;
+        const id = this.generateRowID();
+        row[this.primaryKey] = id;
+        return { rowID: id, data: row, recordRef: row };
     }
 
     /**
@@ -5897,6 +5901,13 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         } else {
             this.verticalScrollContainer.scrollPrev();
         }
+    }
+
+    /**
+     * @hidden
+     */
+    public getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x[this.primaryKey] === id);
     }
 
     /**
@@ -5952,10 +5963,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
 
     protected writeToData(rowIndex: number, value: any) {
         mergeObjects(this.gridAPI.get_all_data()[rowIndex], value);
-    }
-
-    protected getUnpinnedIndexById(id) {
-        return this.unpinnedRecords.findIndex(x => x[this.primaryKey] === id);
     }
 
     protected _restoreVirtState(row) {

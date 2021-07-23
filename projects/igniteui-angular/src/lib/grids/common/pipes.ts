@@ -332,8 +332,8 @@ export class IgxGridAddRowPipe implements PipeTransform {
             return collection;
         }
         const copy = collection.slice(0);
-        const row = grid.gridAPI.getRowData(grid.crudService.row.id);
-        copy.splice(grid.crudService.row.index, 0, row);
+        const rec = (grid.crudService.row as IgxAddRow).recordRef;
+        copy.splice(grid.crudService.row.index, 0, rec);
         return copy;
     }
 }
