@@ -53,7 +53,7 @@ export class GridCellAPISampleComponent implements OnInit {
 
     public ngOnInit(): void {
         this.columns = [
-            { field: 'ID', width: '200px', hidden: true },
+            { field: 'ID', width: '200px', hidden: false },
             { field: 'CompanyName', header: 'Company Name', width: '200px', groupable: true },
             { field: 'ContactName', width: '200px', pinned: false, groupable: true },
             { field: 'ContactTitle', width: '300px', pinned: false, groupable: true },
@@ -244,6 +244,7 @@ export class GridCellAPISampleComponent implements OnInit {
 						colField: ${cell.column.field},
 						-----------------------------,
 						rowIndex: ${cell.row.index},
+                        rowViewIndex: ${cell.row.viewIndex},
 						rowKey: ${cell.row.key},
 						rowData: ${cell.row.data},
 						-----------------------------,
@@ -287,6 +288,7 @@ export class GridCellAPISampleComponent implements OnInit {
                 colField: ${cell.column.field},
                 -----------------------------,
                 rowIndex: ${cell.row.index},
+                rowViewIndex: ${cell.row.viewIndex},
                 rowKey: ${cell.row.key},
                 rowData: ${cell.row.data},
                 -----------------------------,
@@ -331,6 +333,7 @@ export class GridCellAPISampleComponent implements OnInit {
 						colField: ${cell.column.field},
 						-----------------------------,
 						rowIndex: ${cell.row.index},
+                        rowViewIndex: ${cell.row.viewIndex},
 						rowKey: ${cell.row.key},
 						rowData: ${cell.row.data},
 						-----------------------------,
