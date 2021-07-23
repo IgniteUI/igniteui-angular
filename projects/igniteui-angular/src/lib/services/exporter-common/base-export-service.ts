@@ -198,13 +198,6 @@ export abstract class IgxBaseExporter {
             this._columnList[++lastVisibleColumnIndex] = hiddenColumn;
         });
 
-        const columnList: IColumnList = {
-            columns: this._columnList,
-            columnWidths: this._columnWidthList,
-            indexOfLastPinnedColumn: this._indexOfLastPinnedColumn
-        };
-
-        this._ownersMap.set(DEFAULT_OWNER, columnList);
         this.prepareData(grid, options);
         this.exportGridRecordsData(this.flatRecords, options);
     }
@@ -285,6 +278,14 @@ export abstract class IgxBaseExporter {
         const dataToExport = new Array<IExportRecord>();
         const actualData = records.map(r => r.data);
         const isSpecialData = ExportUtilities.isSpecialData(actualData);
+
+        const columnList: IColumnList = {
+            columns: this._columnList,
+            columnWidths: this._columnWidthList,
+            indexOfLastPinnedColumn: this._indexOfLastPinnedColumn
+        };
+
+        this._ownersMap.set(DEFAULT_OWNER, columnList);
 
         yieldingLoop(records.length, 100, (i) => {
             const row = records[i];

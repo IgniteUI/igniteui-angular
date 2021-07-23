@@ -142,12 +142,12 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
-        let recordHeaders = [];
+        const recordHeaders = worksheetData.owner.columns
+                    .filter(c => !c.skip)
+                    .map(c => c.field);
+
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                recordHeaders = worksheetData.owner.columns
-                            .filter(c => !c.skip)
-                            .map(c => c.field);
                 rowDataArr[i] = this.processRow(worksheetData, i + 1, recordHeaders);
             },
             () => {
@@ -272,7 +272,10 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.keys;
+        const values = worksheetData.owner.columns
+                            .filter(c => !c.skip)
+                            .map(c => c.header);
+
         let sortString = '';
 
         let tableColumns = '<tableColumns count="' + columnCount + '">';
