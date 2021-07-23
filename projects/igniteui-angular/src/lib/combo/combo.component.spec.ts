@@ -2981,7 +2981,7 @@ describe('igxCombo', () => {
     template: `
 <igx-combo #combo [placeholder]="'Location'" [data]='items' [displayDensity]="density"
 [filterable]='true' [valueKey]="'field'" [groupKey]="'region'" [width]="'400px'"
-(selectionChanging)="onselectionChanging($event)">
+(selectionChanging)="selectionChanging($event)">
 <ng-template igxComboItem let-display let-key="valueKey">
 <div class="state-card--simple">
 <span class="small-red-circle"></span>
@@ -3045,7 +3045,7 @@ class IgxComboSampleComponent {
         this.initData = this.items;
     }
 
-    public onselectionChanging() {
+    public selectionChanging() {
     }
 }
 
