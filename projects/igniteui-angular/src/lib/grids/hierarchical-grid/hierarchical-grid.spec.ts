@@ -1212,7 +1212,7 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     }));
 
     it('test getRowByIndex API methods', fakeAsync(() => {
-        const nonExistingRow = hierarchicalGrid.getRowByKey("nonexisting");
+        const nonExistingRow = hierarchicalGrid.getRowByKey('nonexisting');
         expect(nonExistingRow).toBeUndefined();
 
         const nonExistingRow2 = hierarchicalGrid.getRowByIndex(-1);
