@@ -49,7 +49,7 @@ import { IgxTreeGridSelectionService } from './tree-grid-selection.service';
 import { GridInstanceType, GridSelectionMode } from '../common/enums';
 import { IgxSummaryRow, IgxTreeGridRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
-import { IgxGridCRUDService } from '../common/crud.service';
+import { IgxAddRow, IgxGridCRUDService } from '../common/crud.service';
 import { IgxTreeGridGroupByAreaComponent } from '../grouping/tree-grid-group-by-area.component';
 import { IgxHierarchicalTransactionFactory } from '../../services/transaction/transaction-factory.service';
 import { IgxColumnResizingService } from '../resizing/resizing.service';
@@ -630,14 +630,18 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return this.extractDataFromSelection(source, formatters, headers);
     }
 
-    public getEmptyRecordObjectFor(rec) {
-        const row = { ...rec };
-        const data = rec || {};
+    /**
+     * @hidden @internal
+     */
+    public getEmptyRecordObjectFor(inTreeRow) {
+        const treeRowRec = inTreeRow?.treeRow || null;
+        const row = { ...treeRowRec };
+        const data = treeRowRec?.data || {};
         row.data = { ...data };
         Object.keys(row.data).forEach(key => {
             // persist foreign key if one is set.
             if (this.foreignKey && key === this.foreignKey) {
-                row.data[key] = rec.data[key];
+                row.data[key] = treeRowRec.data[key];
             } else {
                 row.data[key] = undefined;
             }
@@ -651,7 +655,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         }
         row.rowID = id;
         row.data[this.primaryKey] = id;
-        return row;
+        return { rowID: id, data: row.data, recordRef: row };
     }
 
     /** @hidden */
@@ -726,6 +730,11 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
         return record.rowID !== undefined && record.data;
     }
 
+    /** @hidden */
+    public getUnpinnedIndexById(id) {
+        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
+    }
+
     /**
      * Returns if the `IgxTreeGridComponent` has groupable columns.
      *
@@ -766,10 +775,6 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
     protected findRecordIndexInView(rec) {
         return this.dataView.findIndex(x => x.data[this.primaryKey] === rec[this.primaryKey]);
-    }
-
-    protected getUnpinnedIndexById(id) {
-        return this.unpinnedRecords.findIndex(x => x.data[this.primaryKey] === id);
     }
 
     /**

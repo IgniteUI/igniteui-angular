@@ -31,8 +31,8 @@
             | treeGridTransaction:pipeTrigger
             | visibleColumns:hasVisibleColumns
             | treeGridNormalizeRecord:pipeTrigger
-            | gridAddRow:true:pipeTrigger
             | gridRowPinning:id:true:pipeTrigger
+            | treeGridAddRow:true:pipeTrigger
             | treeGridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:pipeTrigger:filteringPipeTrigger:true
             | treeGridSorting:sortingExpressions:sortStrategy:pipeTrigger:true as pinnedData'>
                 <div #pinContainer *ngIf='pinnedData.length > 0'
@@ -58,8 +58,8 @@
         | treeGridFlattening:expansionDepth:expansionStates:pipeTrigger
         | treeGridPaging:paginator?.page:paginator?.perPage:pipeTrigger
         | treeGridSummary:hasSummarizedColumns:summaryCalculationMode:summaryPosition:showSummaryOnCollapse:pipeTrigger:summaryPipeTrigger
-        | gridAddRow:false:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger"
+        | gridRowPinning:id:false:pipeTrigger
+        | treeGridAddRow:false:pipeTrigger"
             let-rowIndex="index" [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" #verticalScrollContainer>
             <ng-template [igxTemplateOutlet]='isSummaryRow(rowData) ? summary_template : record_template'
@@ -73,7 +73,7 @@
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #pinned_record_template let-rowIndex="index" let-rowData>
-            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" #row #pinnedRow>
+            <igx-tree-grid-row [gridID]="id" [index]="rowIndex" [treeRow]="rowData" #row #pinnedRow>
             </igx-tree-grid-row>
         </ng-template>
         <ng-template #summary_template let-rowIndex="index" let-rowData>
