@@ -1,11 +1,11 @@
 <ng-template #defaultPickerActions>
     <div *ngIf="this.closeButtonLabel || this.todayButtonLabel" class="igx-date-picker__buttons">
         <button #closeButton *ngIf="this.closeButtonLabel" igxButton="flat" igxRipple
-            (click)="this.calendarClose.emit()">
+            (click)="this.calendarClose.emit({ owner: this })">
             {{ this.closeButtonLabel }}
         </button>
         <button #todayButton *ngIf="this.todayButtonLabel" igxButton="flat" igxRipple
-            (click)="this.todaySelection.emit()">
+            (click)="this.todaySelection.emit({ owner: this })">
             {{ this.todayButtonLabel }}
         </button>
     </div>
