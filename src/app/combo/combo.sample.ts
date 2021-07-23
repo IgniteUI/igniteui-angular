@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, TemplateRef, AfterViewInit, ElementRef } from '@angular/core';
-import { IgxComboComponent, IComboSelectionChangeEventArgs,
+import { IgxComboComponent, IComboSelectionChangingEventArgs,
     DisplayDensity, OverlaySettings, VerticalAlignment, HorizontalAlignment, GlobalPositionStrategy,
     scaleInCenter, scaleOutCenter, ElasticPositionStrategy, ConnectedPositioningStrategy
 } from 'igniteui-angular';
@@ -177,7 +177,7 @@ export class ComboSampleComponent implements OnInit, AfterViewInit {
         this.igxCombo.displayDensity = density;
     }
 
-    public handleSelectionChange(event: IComboSelectionChangeEventArgs) {
+    public handleSelectionChange(event: IComboSelectionChangingEventArgs) {
         console.log(event);
     }
 }

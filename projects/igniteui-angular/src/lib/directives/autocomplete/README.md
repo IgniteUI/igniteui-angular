@@ -167,14 +167,14 @@ Methods
 
 | Name   |  Description |
 |:----------|:------|
-| `open` | list of options to choose from |
-| `close` |  list of options to choose from |
+| `open` | opens the autocomplete |
+| `close` |  closes the autocomplete |
 
 Events
 
 | Name   |  Description | Cancelable |
 |:----------|:------|:------|
-| `itemSelected` | list of options to choose from | true
+| `selectionChanging` | list of options to choose from | true
 
 
 # Examples

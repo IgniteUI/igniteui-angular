@@ -89,7 +89,7 @@ export interface IComboFilteringOptions {
 }
 
 /** Event emitted when an igx-combo's selection is changing */
-export interface IComboSelectionChangeEventArgs extends IBaseCancelableEventArgs {
+export interface IComboSelectionChangingEventArgs extends IBaseCancelableEventArgs {
     /** An array containing the values that are currently selected */
     oldSelection: any[];
     /** An array containing the values that will be selected after this event */
@@ -401,7 +401,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
      * ```
      */
     @Output()
-    public selectionChange = new EventEmitter<IComboSelectionChangeEventArgs>();
+    public selectionChanging = new EventEmitter<IComboSelectionChangingEventArgs>();
 
     /**
      * Emitted before the dropdown is opened
@@ -1515,7 +1515,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
         const newSelectionAsArray = Array.from(newSelection);
         const oldSelectionAsArray = Array.from(this.selection.get(this.id) || []);
         const displayText = this.createDisplayText(newSelectionAsArray, oldSelectionAsArray);
-        const args: IComboSelectionChangeEventArgs = {
+        const args: IComboSelectionChangingEventArgs = {
             newSelection: newSelectionAsArray,
             oldSelection: oldSelectionAsArray,
             added,
@@ -1525,7 +1525,7 @@ export class IgxComboComponent extends DisplayDensityBase implements IgxComboBas
             displayText,
             cancel: false
         };
-        this.selectionChange.emit(args);
+        this.selectionChanging.emit(args);
         if (!args.cancel) {
             this.selection.select_items(this.id, args.newSelection, true);
             if (displayText !== args.displayText) {
