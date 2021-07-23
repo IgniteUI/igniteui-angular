@@ -122,7 +122,7 @@
         },
         {
             "member": "onSelection",
-            "replaceWith": "selecting",
+            "replaceWith": "selectionChanging",
             "definedIn": [
                 "IgxDropDownBaseDirective"
             ]
@@ -164,7 +164,7 @@
         },
         {
             "member": "onSelectionChange",
-            "replaceWith": "selectionChange",
+            "replaceWith": "selectionChanging",
             "definedIn": [
                 "IgxComboComponent"
             ]
@@ -247,8 +247,15 @@
             ]
         },
         {
+            "member": "onSelection",
+            "replaceWith": "selectionChanging",
+            "definedIn": [
+                "IgxSelectComponent"
+            ]
+        },
+        {
             "member": "onItemSelected",
-            "replaceWith": "itemSelected",
+            "replaceWith": "selectionChanging",
             "definedIn": [
                 "IgxAutocompleteDirective"
             ]

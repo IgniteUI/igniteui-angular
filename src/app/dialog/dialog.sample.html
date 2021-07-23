@@ -8,7 +8,7 @@
             <igx-switch (click)="togglePosition()">Toggle position</igx-switch>
         </div>
 
-        <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (onLeftButtonSelect)="alert.close()"
+        <igx-dialog #alert title="Notification" message="Your email has been sent successfully!" leftButtonLabel="OK" (leftButtonSelect)="alert.close()"
             [positionSettings]="positionSettings" >
         </igx-dialog>
     </article>
@@ -26,8 +26,8 @@
             rightButtonLabel="Cancel"
             leftButtonType='raised'
             rightButtonType='outlined'
-            (onLeftButtonSelect)="fluent.close()"
-            (onRightButtonSelect)="fluent.close()">
+            (leftButtonSelect)="fluent.close()"
+            (rightButtonSelect)="fluent.close()">
         </igx-dialog>
     </article>
 
@@ -45,8 +45,8 @@
             leftButtonType='raised'
             leftButtonBackgroundColor='#6c757d'
             rightButtonType='raised'
-            (onLeftButtonSelect)="bootstrap.close()"
-            (onRightButtonSelect)="bootstrap.close()">
+            (leftButtonSelect)="bootstrap.close()"
+            (rightButtonSelect)="bootstrap.close()">
         </igx-dialog>
     </article>
 
@@ -55,8 +55,8 @@
         <p class="sample-description">Detailed description to be added</p>
         <br>
         <button igxButton="raised" igxRipple (click)="dialog.open()">Trigger Dialog</button>
-        <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (onLeftButtonSelect)="dialog.close()" rightButtonLabel="OK"
-                    (onRightButtonSelect)="onDialogOKSelected($event)"
+        <igx-dialog #dialog title="Confirmation" leftButtonLabel="Cancel" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK"
+                    (rightButtonSelect)="onDialogOKSelected($event)"
                     message="Are you sure you want to delete the Microsoft_Annual_Report_2015.pdf and Microsoft_Annual_Report_2015.pdf files?">
         </igx-dialog>
     </article>
@@ -68,7 +68,7 @@
         <button igxButton="raised" igxRipple (click)="form.open()">Trigger Custom</button>
 
         <igx-dialog #form title="Custom Content" leftButtonLabel="Cancel" (onClose)="closeDialog($event)"
-                    (onLeftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
+                    (leftButtonSelect)="form.close()" rightButtonLabel="Sign In" backgroundClick="true"
                     [closeOnOutsideSelect]="true">
             <span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur dolor doloremque itaque nesciunt nostrum quas, quasi sequi sint tempora voluptatem! Asperiores, distinctio doloribus eaque harum ipsam iure minima mollitia nisi quod rem repudiandae saepe, ullam unde, vel veniam! Consequuntur, praesentium.</span>
             <div class="login-form">

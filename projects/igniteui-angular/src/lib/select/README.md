@@ -259,11 +259,11 @@ myComponent.select.toggleIconTemplate = myCustomTemplate;
 * Disabled items are not selectable
 * Selection is removed if selected option has been deleted
 * When value is set to the value of duplicated items, the first one gets selected
-* selecting event is emitted on item selection by mouse click
-* selecting event is emitted on item selection by ENTER/SPACE key
-* selecting event is emitted on setting the value property
-* selecting event is emitted on item selection using the API selectItem() method
-* selecting event is emitted on setting item's selected property
+* selectionChanging event is emitted on item selection by mouse click
+* selectionChanging event is emitted on item selection by ENTER/SPACE key
+* selectionChanging event is emitted on setting the value property
+* selectionChanging event is emitted on item selection using the API selectItem() method
+* selectionChanging event is emitted on setting item's selected property
 * The component renders all aria attributes properly
 * All aria attributes of the dropdown items are set properly
 * Selected item is displayed over the input when there is enough space above and below the input. 
