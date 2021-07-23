@@ -95,7 +95,7 @@ export class WorksheetFile implements IExcelFile {
             this.rowIndex++;
             sheetData += `<row r="1"${this.rowHeight}>`;
 
-            owner.columns.forEach((currentCol, index) => {
+            owner.columns.filter(c => !c.skip).forEach((currentCol, index) => {
                 const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
                 const columnValue = dictionary.saveValue(currentCol.header, index, true);
                 sheetData += `<c r="${columnCoordinate}" t="s"><v>${columnValue}</v></c>`;
