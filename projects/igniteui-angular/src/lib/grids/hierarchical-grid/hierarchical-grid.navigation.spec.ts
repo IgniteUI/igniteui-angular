@@ -760,12 +760,12 @@ describe('IgxHierarchicalGrid Complex Navigation #hGrid', () => {
 
             const parentCell = hierarchicalGrid.gridAPI.get_cell_by_index(2, 'ID');
             GridFunctions.focusCell(fixture, parentCell);
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
             fixture.detectChanges();
 
             UIInteractions.triggerEventHandlerKeyDown('arrowup', baseHGridContent , false, false, false);
             fixture.detectChanges();
-            await wait(DEBOUNCE_TIME);
+            await wait(DEBOUNCE_TIME * 2);
             fixture.detectChanges();
 
             const nestedChild = child.hgridAPI.getChildGrids(false)[5];
