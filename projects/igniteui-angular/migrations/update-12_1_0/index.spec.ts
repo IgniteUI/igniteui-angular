@@ -699,6 +699,73 @@ public onBannerOpened(event: BannerEventArgs) {
             }
         }`);
     });
+
+    // Transaction providers
+    it('Should add a comment for the deprecated IgxGridTransactionToken', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/transaction.component.ts', `
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+            .toEqual(`
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [/* Injection token 'IgxGridTransaction' has been deprecated. Please refer to the update guide for more details. */
+/* { provide: IgxGridTransaction, useClass: IgxTransactionService } */]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    });
+
+    it('Should add a comment for the deprecated IgxGridTransactionToken, multiple providers', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/transaction.component.ts', `
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [
+                { provider: A, useClass: AService },
+                { provide: IgxGridTransaction, useClass: IgxTransactionService },
+                { provider: B, useClass: BService}
+            ]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+            .toEqual(`
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [
+                { provider: A, useClass: AService },
+                /* Injection token 'IgxGridTransaction' has been deprecated. Please refer to the update guide for more details. */
+/* { provide: IgxGridTransaction, useClass: IgxTransactionService }, */
+                { provider: B, useClass: BService}
+            ]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    });
 });
 
 
