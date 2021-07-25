@@ -122,7 +122,7 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
     if (content.indexOf(deprecatedToken) < 0) {
       continue;
     }
-    content = content.replace(matchExpr, `${providerWarnMsg}\n/* $1 */`);
+    content = content.replace(matchExpr, `${providerWarnMsg}\n$1`);
     host.overwrite(path, content);
   }
 
