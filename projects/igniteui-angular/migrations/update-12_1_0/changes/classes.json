@@ -15,6 +15,14 @@
         {
             "name": "IgxGridExpandableCellComponent",
             "replaceWith": "CellType"
+        },
+        {
+            "name": "IComboSelectionChangeEventArgs",
+            "replaceWith": "IComboSelectionChangingEventArgs"
+        },
+        {
+            "name": "AutocompleteItemSelectionEventArgs",
+            "replaceWith": "AutocompleteSelectionChangingEventArgs"
         }
     ]
 }
