@@ -153,10 +153,15 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
-        const recordHeaders = worksheetData.rootKeys;
+        const isHierarchicalGrid =
+            worksheetData.data.some(r => r.type === ExportRecordType.HeaderRecord || r.type === ExportRecordType.HierarchicalGridRecord);
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
+                const recordHeaders = !isHierarchicalGrid ?
+                                    worksheetData.rootKeys :
+                                    Object.keys(worksheetData.data[i].data);
+
                 rowDataArr[i] = this.processRow(worksheetData, i + 1, recordHeaders);
             },
             () => {
@@ -195,6 +200,7 @@ export class WorksheetFile implements IExcelFile {
     /* eslint-disable  @typescript-eslint/member-ordering */
     private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
+        debugger;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
         const fullRow = worksheetData.data[row - 1];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
