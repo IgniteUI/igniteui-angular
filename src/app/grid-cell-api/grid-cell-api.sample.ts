@@ -233,25 +233,24 @@ export class GridCellAPISampleComponent implements OnInit {
 
         if (cell) {
             state = `
-						value: ${cell.value},
-						selected: ${cell.selected},
-						editable: ${cell.editable},
-						editMode: ${cell.editMode},
-						editValue: ${cell.editValue},
-						-----------------------------,
-						colIndex: ${cell.column.index},
-						visibleColIndex: ${cell.column.visibleIndex},
-						colField: ${cell.column.field},
-						-----------------------------,
-						rowIndex: ${cell.row.index},
-                        rowViewIndex: ${cell.row.viewIndex},
-						rowKey: ${cell.row.key},
-						rowData: ${cell.row.data},
-						-----------------------------,
-						gridId: ${cell.grid.id},
-						cellID: ${cell.cellID},
-						width: ${cell.width}`;
-
+                value: ${cell.value},
+                selected: ${cell.selected},
+                editable: ${cell.editable},
+                editMode: ${cell.editMode},
+                editValue: ${cell.editValue},
+                -----------------------------,
+                colIndex: ${cell.column.index},
+                visibleColIndex: ${cell.column.visibleIndex},
+                colField: ${cell.column.field},
+                -----------------------------,
+                rowIndex: ${cell.row.index},
+                rowViewIndex: ${cell.row.viewIndex},
+                rowKey: ${cell.row.key},
+                rowData: ${cell.row.data},
+                -----------------------------,
+                gridId: ${cell.grid.id},
+                id: ${cell.id},
+                width: ${cell.width}`;
             states = state.split(',');
         } else {
             states = [`Cell is: ${cell}`];

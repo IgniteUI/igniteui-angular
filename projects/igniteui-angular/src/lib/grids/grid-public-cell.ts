@@ -152,7 +152,7 @@ export class IgxGridCell implements CellType {
 	 *
 	 * @memberof IgxGridCell
 	 */
-	public get cellID(): any {
+	public get id(): any {
 		const primaryKey = this.grid.primaryKey;
 		const rowID = primaryKey ? this.row?.data[primaryKey] : this.row?.data;
 		return { rowID, columnID: this.column.index, rowIndex: this._rowIndex || this.row?.index };
@@ -269,9 +269,9 @@ export class IgxGridCell implements CellType {
 		private isCellInEditMode(): boolean {
 			if (this.grid.crudService.cellInEditMode) {
 				const cellInEditMode = this.grid.crudService.cell.id;
-				const isCurrentCell = cellInEditMode.rowID === this.cellID.rowID &&
-						cellInEditMode.rowIndex === this.cellID.rowIndex &&
-						cellInEditMode.columnID === this.cellID.columnID;
+				const isCurrentCell = cellInEditMode.rowID === this.id.rowID &&
+						cellInEditMode.rowIndex === this.id.rowIndex &&
+						cellInEditMode.columnID === this.id.columnID;
 						return isCurrentCell;
 			}
 			return false;
