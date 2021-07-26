@@ -766,6 +766,55 @@ public onBannerOpened(event: BannerEventArgs) {
             public IgxGridTransaction!: IgxGridComponent;
         }`);
     });
-});
 
+    it('Should properly rename IComboSelectionChangeEventArgs to IComboSelectionChangingEventArgs',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: IComboSelectionChangeEventArgs;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: IComboSelectionChangingEventArgs;
+        }
+        `
+        );
+    });
+
+    it('Should properly rename AutocompleteItemSelectionEventArgs to AutocompleteSelectionChangingEventArgs',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { AutocompleteItemSelectionEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: AutocompleteItemSelectionEventArgs;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { AutocompleteSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: AutocompleteSelectionChangingEventArgs;
+        }
+        `
+        );
+    });
+});
 
