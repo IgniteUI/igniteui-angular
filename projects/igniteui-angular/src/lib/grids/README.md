@@ -510,7 +510,7 @@ import {
 |`active`|boolean|Yes|No|Returns if the cell is active (focused).|
 |`editable`|boolean|Yes|No|Returns if the cell can enter edit mode).|
 |`editMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
-|`cellID`|object|Yes|No|An object describing the cell with `rowID`, `columnID` and `rowIndex`.|
+|`id`|object|Yes|No|An object describing the cell with `rowID`, `columnID` and `rowIndex`.|
 |`editMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
 
 ### Methods

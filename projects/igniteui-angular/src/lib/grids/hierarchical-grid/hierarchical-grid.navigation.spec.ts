@@ -587,8 +587,8 @@ describe('IgxHierarchicalGrid Basic Navigation #hGrid', () => {
         await wait(50);
         fixture.detectChanges();
 
-        const cellID = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
-        GridFunctions.focusCell(fixture, cellID);
+        const cellElem = hierarchicalGrid.gridAPI.get_cell_by_index(0, 'ID');
+        GridFunctions.focusCell(fixture, cellElem);
         fixture.detectChanges();
 
         UIInteractions.triggerEventHandlerKeyDown('end', baseHGridContent, false, false, false);

@@ -14,7 +14,7 @@ export interface CellType {
 	column: IgxColumnComponent;
 	row: RowType;
 	grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
-	cellID: { rowID: any; columnID: number; rowIndex: number };
+	id: { rowID: any; columnID: number; rowIndex: number };
 	width: string;
 	update: (value: any) => void;
 }

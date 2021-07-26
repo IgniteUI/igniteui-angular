@@ -147,7 +147,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
             expect(row.inEditMode).toBe(true);
             const cellEditArgs: IGridEditEventArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: cell.value,
@@ -174,7 +174,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             expect(row.inEditMode).toBe(false);
             let cellEditExitArgs: IGridEditDoneEventArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.rowID,
                 rowData: cell.row.data,
                 oldValue: cell.value,
@@ -206,7 +206,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             cellEditExitArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: Object.assign({}, row.rowData, { ProductName: newCellValue }),
                 oldValue: cell.value,
@@ -232,7 +232,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable - IgxGridRowEditingComponent
                 oldValue: cell.value,
                 newValue: newCellValue,
@@ -578,7 +578,7 @@ describe('IgxGrid - Row Editing #grid', () => {
         }));
 
         it(`Should skip non-editable columns`, () => {
-            const cellID = grid.gridAPI.get_cell_by_index(0, 'ID');
+            const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
             const cellReleaseDate = grid.gridAPI.get_cell_by_index(0, 'ReleaseDate');
             targetCell = grid.gridAPI.get_cell_by_index(0, 'Downloads');
             targetCellDebug = GridFunctions.getRowCells(fix, 0)[0];
@@ -593,14 +593,14 @@ describe('IgxGrid - Row Editing #grid', () => {
             fix.detectChanges();
 
             expect(targetCell.editMode).toBeFalsy();
-            expect(cellID.editMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(cellReleaseDate.editMode).toBeTruthy();
 
             UIInteractions.triggerEventHandlerKeyDown('tab', gridContent, false, true);
 
             fix.detectChanges();
             expect(targetCell.editMode).toBeTruthy();
-            expect(cellID.editMode).toBeFalsy();
+            expect(cell.editMode).toBeFalsy();
             expect(cellReleaseDate.editMode).toBeFalsy();
         });
 
@@ -1953,7 +1953,7 @@ describe('IgxGrid - Row Editing #grid', () => {
             spyOn(grid.cellEdit, 'emit').and.callThrough();
             // TODO: cellEdit should emit updated rowData - issue #7304
             const cellArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: cell.row.data,
                 oldValue: 'Chai',
@@ -2161,7 +2161,7 @@ describe('IgxGrid - Row Editing #grid', () => {
 
             const cellDoneArgs: IGridEditDoneEventArgs = {
                 rowID: cell.row.key,
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowData: updatedRowData, // with rowEditable&Transactions - IgxGridRowEditingTransactionComponent
                 oldValue: cell.value,
                 newValue: newCellValue,

@@ -248,15 +248,15 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                const cellID = grid.gridAPI.get_cell_by_index(0, 'ID');
-                expect(cellID.active).toBe(true);
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+                expect(cell.active).toBe(true);
                 expect(cellContactName.active).toBe(false);
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft'));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
 
-                expect(cellID.active).toBe(false);
+                expect(cell.active).toBe(false);
                 expect(cellContactName.active).toBe(true);
             }));
         });
@@ -656,15 +656,15 @@ describe('IgxGrid - Column Pinning #grid', () => {
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowLeft', false, false, true));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
-                const cellID = grid.gridAPI.get_cell_by_index(0, 'ID');
-                expect(cellID.active).toBe(true);
+                const cell = grid.gridAPI.get_cell_by_index(0, 'ID');
+                expect(cell.active).toBe(true);
                 expect(cellCompanyName.active).toBe(false);
 
                 grid.navigation.dispatchEvent(UIInteractions.getKeyboardEvent('keydown', 'ArrowRight', false, false, true));
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
                 const cellContactName = grid.gridAPI.get_cell_by_index(0, 'ContactName');
-                expect(cellID.active).toBe(false);
+                expect(cell.active).toBe(false);
                 expect(cellContactName.active).toBe(true);
             }));
         });

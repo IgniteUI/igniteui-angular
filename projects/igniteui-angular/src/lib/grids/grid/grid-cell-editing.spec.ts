@@ -595,7 +595,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             const cell2 = grid.getCellByColumn(0, 'age');
             initialRowData = {...cell2.row.data};
             cellArgs = {
-                cellID: cell2.cellID,
+                cellID: cell2.id,
                 rowID: cell2.row.key,
                 rowData: initialRowData,
                 oldValue: 20,
@@ -930,7 +930,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             expect(cell.value).toBe(newValue);
 
             const cellArgs: IGridEditDoneEventArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: updatedRowData, // fixture is with transactions & without rowEditing
                 oldValue: initialValue,
@@ -998,7 +998,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
             fixture.detectChanges();
 
             cellArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: updatedRowData, // fixture is without rowEditing and without transactions
                 oldValue: 'John Brown',
@@ -1022,7 +1022,7 @@ describe('IgxGrid - Cell Editing #grid', () => {
 
             updatedRowData = Object.assign({}, cell.row.data, { age: secondNewValue });
             cellArgs = {
-                cellID: cell.cellID,
+                cellID: cell.id,
                 rowID: cell.row.key,
                 rowData: cell.row.data, // fixture is without rowEditing and without transactions
                 oldValue: 20,

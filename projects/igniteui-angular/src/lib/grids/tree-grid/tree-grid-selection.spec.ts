@@ -996,7 +996,7 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             treeGrid.rowEditable = true;
 
             // select the second row
-            treeGrid.selectRows([targetCell.cellID.rowID], true);
+            treeGrid.selectRows([targetCell.id.rowID], true);
             tick(16);
             fix.detectChanges();
 
