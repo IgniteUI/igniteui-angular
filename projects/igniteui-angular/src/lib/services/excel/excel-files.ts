@@ -89,17 +89,18 @@ export class WorksheetFile implements IExcelFile {
             this.dimension = 'A1';
             done('', sheetData);
         } else {
-            const owner = worksheetData.owner;
             const isHierarchicalGrid = worksheetData.data[0].type === ExportRecordType.HierarchicalGridRecord;
 
             const height =  worksheetData.options.rowHeight;
             const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
+            this.rowIndex++;
             sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
-            owner.columns.filter(c => !c.skip).forEach((currentCol, index) => {
+
+            worksheetData.rootKeys.forEach((currentCol, index) => {
                 const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
-                const columnValue = dictionary.saveValue(currentCol.header, true);
+                const columnValue = dictionary.saveValue(currentCol, true);
                 sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
             });
 
@@ -152,9 +153,7 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
-        const recordHeaders = worksheetData.owner.columns
-                    .filter(c => !c.skip)
-                    .map(c => c.field);
+        const recordHeaders = worksheetData.rootKeys;
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
@@ -290,9 +289,7 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.owner.columns
-                            .filter(c => !c.skip)
-                            .map(c => c.header);
+        const values = worksheetData.rootKeys;
 
         let sortString = '';
 
