@@ -200,7 +200,6 @@ export class WorksheetFile implements IExcelFile {
     /* eslint-disable  @typescript-eslint/member-ordering */
     private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
-        debugger;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
         const fullRow = worksheetData.data[row - 1];
         const isHeaderRecord = fullRow.type === ExportRecordType.HeaderRecord;
