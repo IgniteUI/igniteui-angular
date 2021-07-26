@@ -533,7 +533,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            cellID: cell.cellID,
+            cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,
@@ -595,7 +595,7 @@ describe('Edit cell with data of type Array #grid', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            cellID: cell.cellID,
+            cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,

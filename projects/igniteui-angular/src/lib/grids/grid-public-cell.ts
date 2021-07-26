@@ -140,14 +140,14 @@ export class IgxGridCell implements CellType {
 	}
 
 	/**
-	 * Gets the cellID key.
+	 * Gets the cell id.
 	 * A cell in the grid is identified by:
 	 * - rowID - primaryKey data value or the whole rowData, if the primaryKey is omitted.
 	 * - rowIndex - the row index
 	 * - columnID - column index
 	 *
 	 * ```typescript
-	 * let rowKey = row.key;
+	 * let cellID = cell.id;
 	 * ```
 	 *
 	 * @memberof IgxGridCell

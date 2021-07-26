@@ -118,7 +118,7 @@ export class IgxCellCrudState {
         // 2. cell is an instance of IgxGridCell
         // Note: if at some point we are going to get rid of using 1), then see test 'should allow adding row to empty grid':
         // cell.row.data will return a { data; rowID } object here, and test will fail
-        return this.cell = new IgxCell(cell.cellID, cell.row.index, cell.column, cell.value, cell.value,
+        return this.cell = new IgxCell(cell.cellID || cell.id, cell.row.index, cell.column, cell.value, cell.value,
             cell.rowData ?? cell.row.data, cell.grid);
     }
 

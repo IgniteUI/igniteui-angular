@@ -292,7 +292,7 @@ export class GridCellAPISampleComponent implements OnInit {
                 rowData: ${cell.row.data},
                 -----------------------------,
                 gridId: ${cell.grid.id},
-                cellID: ${cell.cellID},
+                cellID: ${cell.id},
                 width: ${cell.width}`;
 
             states = state.split(',');
@@ -337,7 +337,7 @@ export class GridCellAPISampleComponent implements OnInit {
 						rowData: ${cell.row.data},
 						-----------------------------,
 						gridId: ${cell.grid.id},
-						cellID: ${cell.cellID},
+						cellID: ${cell.id},
 						width: ${cell.width}`;
 
             states = state.split(',');
