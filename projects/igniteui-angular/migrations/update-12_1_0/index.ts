@@ -14,6 +14,9 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
   const prop = ['[paging]', 'paging'];
   const changes = new Map<string, FileChange[]>();
   const warnMsg = `\n<!-- Auto migrated template content. Please, check your bindings! -->\n`;
+  const deprecatedToken = 'IgxGridTransaction';
+  const providerWarnMsg = `/* Injection token 'IgxGridTransaction' has been deprecated. ` +
+  `Please refer to the update guide for more details. */`;
   const templateNames = [];
 
   const applyChanges = () => {
@@ -110,6 +113,18 @@ export default (): Rule => (host: Tree, context: SchematicContext) => {
 
   applyChanges();
   changes.clear();
+
+  const matchStr = String.raw`({\s*provide:\s*${deprecatedToken}[^}]*},?)`;
+  const matchExpr = new RegExp(matchStr, 'g');
+
+  for (const path of update.tsFiles) {
+    let content = host.read(path)?.toString();
+    if (content.indexOf(deprecatedToken) < 0) {
+      continue;
+    }
+    content = content.replace(matchExpr, `${providerWarnMsg}\n$1`);
+    host.overwrite(path, content);
+  }
 
   update.applyChanges();
 };
