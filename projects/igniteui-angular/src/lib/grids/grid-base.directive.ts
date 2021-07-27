@@ -2112,8 +2112,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const rowList = this.grid.rowList;
      * ```
      */
-    public get rowList() {
-        const res = new QueryList<any>();
+    public get rowList(): QueryList<IgxGridRowComponent> {
+        const res = new QueryList<IgxGridRowComponent>();
         if (!this._rowList) {
             return res;
         }
@@ -6878,7 +6878,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected scrollToHorizontally(column: any | number) {
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
-        const scrollRow = this.rowList.find(r => r.virtDirRow);
+        const scrollRow = this.rowList.find(r => r.virtDirRow !== null);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
         if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {
