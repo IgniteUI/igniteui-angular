@@ -47,9 +47,8 @@ export class CharSeparatedValueData {
             done('');
         }
 
-        const keys = this.columns && this.columns.length ?
-                        this.columns.filter(c => !c.skip).map(c => c.field) :
-                        ExportUtilities.getKeysFromData(this._data);
+        const columns = this.columns?.filter(c => !c.skip);
+        const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
             done('');
@@ -58,7 +57,10 @@ export class CharSeparatedValueData {
         this._isSpecialData = ExportUtilities.isSpecialData(this._data);
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keys);
+        const headers = columns && columns.length ?
+                        columns.map(c => c.header ? c.header : c.field) :
+                        keys;
+        this._headerRecord = this.processHeaderRecord(headers);
         this.processDataRecordsAsync(this._data, keys, (dr) => {
             done(this._headerRecord + dr);
         });
