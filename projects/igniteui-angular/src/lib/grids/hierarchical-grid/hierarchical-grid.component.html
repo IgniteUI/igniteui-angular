@@ -31,8 +31,8 @@
             <ng-container *ngIf="data
             | gridTransaction:id:pipeTrigger
             | visibleColumns:hasVisibleColumns
-            | gridRowPinning:id:true:pipeTrigger
             | gridAddRow:true:pipeTrigger
+            | gridRowPinning:id:true:pipeTrigger
             | gridFiltering:filteringExpressionsTree:filterStrategy:advancedFilteringExpressionsTree:id:pipeTrigger:filteringPipeTrigger:true
             | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger:true as pinnedData">
                 <div #pinContainer *ngIf='pinnedData.length > 0' class='igx-grid__tr--pinned'
@@ -54,8 +54,8 @@
         | gridSort:sortingExpressions:sortStrategy:id:pipeTrigger
         | gridHierarchicalPaging:paginator?.page:paginator?.perPage:id:pipeTrigger
         | gridHierarchical:expansionStates:id:primaryKey:childLayoutKeys:pipeTrigger
-        | gridRowPinning:id:false:pipeTrigger
-        | gridAddRow:false:pipeTrigger"
+        | gridAddRow:false:pipeTrigger
+        | gridRowPinning:id:false:pipeTrigger"
             [igxForScrollOrientation]="'vertical'" [igxForScrollContainer]='verticalScroll'
             [igxForContainerSize]='calcHeight' [igxForItemSize]="renderedRowHeight" [igxForTrackBy]='trackChanges'
             #verticalScrollContainer (chunkPreload)="dataLoading($event)">

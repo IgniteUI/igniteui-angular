@@ -5860,7 +5860,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * @hidden @internal
      */
     public getEmptyRecordObjectFor(inRow: IgxRowDirective<IgxGridBaseDirective & GridType>) {
-        const row = { ...inRow.rowData };
+        const row = { ...inRow?.rowData };
         Object.keys(row).forEach(key => row[key] = undefined);
         const id = this.generateRowID();
         row[this.primaryKey] = id;
