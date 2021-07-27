@@ -2112,8 +2112,8 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * const rowList = this.grid.rowList;
      * ```
      */
-    public get rowList(): QueryList<IgxGridRowComponent> {
-        const res = new QueryList<IgxGridRowComponent>();
+    public get rowList(): QueryList<IgxRowDirective<IgxGridBaseDirective & GridType>> {
+        const res = new QueryList<IgxRowDirective<IgxGridBaseDirective & GridType>>();
         if (!this._rowList) {
             return res;
         }
