@@ -1,5 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { yieldingLoop } from '../../core/utils';
+import { IColumnInfo } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -13,7 +14,7 @@ export class CharSeparatedValueData {
     private _delimiterLength = 1;
     private _isSpecialData = false;
 
-    constructor(private _data: any[], valueDelimiter: string)  {
+    constructor(private _data: any[], valueDelimiter: string, private columns: IColumnInfo[] = [])  {
         this.setDelimiter(valueDelimiter);
     }
 
@@ -46,7 +47,9 @@ export class CharSeparatedValueData {
             done('');
         }
 
-        const keys = ExportUtilities.getKeysFromData(this._data);
+        const keys = this.columns && this.columns.length ?
+                        this.columns.map(c => c.field) :
+                        ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
             done('');
