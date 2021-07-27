@@ -48,7 +48,7 @@ export class CharSeparatedValueData {
         }
 
         const keys = this.columns && this.columns.length ?
-                        this.columns.map(c => c.field) :
+                        this.columns.filter(c => !c.skip).map(c => c.field) :
                         ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
