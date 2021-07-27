@@ -487,7 +487,7 @@ public onBannerOpened(event: BannerEventArgs) {
             (opened)="handleEvent($event, 'opened')"
             (closing)="handleEvent($event, 'closing')"
             (closed)="handleEvent($event, 'closed')"
-            (selecting)="handleEvent($event, 'selection')"
+            (selectionChanging)="handleEvent($event, 'selection')"
         >
             Display something onOpening, onClosing, onOpened, onClosed
         </igx-drop-down>`);
@@ -551,7 +551,7 @@ public onBannerOpened(event: BannerEventArgs) {
             expect(tree.readContent('/testSrc/appPrefix/component/test.component.html'))
                 .toEqual(`
                 <igx-combo
-                    (selectionChange)="eventHandler($event)"
+                    (selectionChanging)="eventHandler($event)"
                     (searchInputUpdate)="eventHandler($event)"
                     (addition)="eventHandler($event)"
                     (dataPreLoad)="eventHandler($event)"
@@ -576,6 +576,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (onOpened)="eventHandler($event)"
                     (onClosing)="eventHandler($event)"
                     (onClosed)="eventHandler($event)"
+                    (onSelection)="eventHandler($event)"
                 >
                 </igx-select>`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
@@ -588,6 +589,7 @@ public onBannerOpened(event: BannerEventArgs) {
                     (opened)="eventHandler($event)"
                     (closing)="eventHandler($event)"
                     (closed)="eventHandler($event)"
+                    (selectionChanging)="eventHandler($event)"
                 >
                 </igx-select>`);
     });
@@ -603,7 +605,7 @@ public onBannerOpened(event: BannerEventArgs) {
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
-                (onItemSelected)='itemSelected($event)'
+                (onItemSelected)='selectionChanging($event)'
             />`);
             const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
             .toPromise();
@@ -613,7 +615,7 @@ public onBannerOpened(event: BannerEventArgs) {
             <input
                 igxInput
                 [igxAutocomplete]="townsPanel"
-                (itemSelected)='itemSelected($event)'
+                (selectionChanging)='selectionChanging($event)'
             />`);
     });
 
@@ -650,6 +652,169 @@ public onBannerOpened(event: BannerEventArgs) {
         </igx-dialog>`);
     });
 
-});
+    // CellType
+    it('Should update cell component types with CellType', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/cells.component.ts', `
+        import { IgxGridComponent, IgxGridCellComponent, IgxHierarchicalGridCellComponent,
+            IgxTreeGridCellComponent, IgxGridExpandableCellComponent } from 'igniteui-angular';
+        export class HGridMultiRowDragComponent {
+            public onDropAllowed(args: IDropDroppedEventArgs)
+                const hierRow: RowType = args.dragData;
+                const row: RowType = args.dragData;
+                const treeRow: RowType = args.dragData;
+                const cells: IgxGridCellComponent[] = row.cells;
+                const tells: IgxTreeGridCellComponent[] = treeRow.cells;
+                const hcells: IgxHierarchicalGridCellComponent[] = hierRow.cells;
+            }
+            public ngOnInit() {
+                const cell: this.grid1.getCellByColumn(0, "ContactName") as IgxGridCellComponent;
+                const cell2: this.grid1.getCellByColumnVisibleIndex(0, 2) as IgxTreeGridCellComponent;
+                const cell3: this.grid1.getCellByKey(0, "Age") as IgxHierarchicalGridCellComponent;
 
+                const cells = grid.selectedCells as IgxGridCellComponent[];
+            }
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+            expect(tree.readContent('/testSrc/appPrefix/component/cells.component.ts'))
+                .toEqual(`
+        import { IgxGridComponent, CellType } from 'igniteui-angular';
+        export class HGridMultiRowDragComponent {
+            public onDropAllowed(args: IDropDroppedEventArgs)
+                const hierRow: RowType = args.dragData;
+                const row: RowType = args.dragData;
+                const treeRow: RowType = args.dragData;
+                const cells: CellType[] = row.cells;
+                const tells: CellType[] = treeRow.cells;
+                const hcells: CellType[] = hierRow.cells;
+            }
+            public ngOnInit() {
+                const cell: this.grid1.getCellByColumn(0, "ContactName") as CellType;
+                const cell2: this.grid1.getCellByColumnVisibleIndex(0, 2) as CellType;
+                const cell3: this.grid1.getCellByKey(0, "Age") as CellType;
+
+                const cells = grid.selectedCells as CellType[];
+            }
+        }`);
+    });
+
+    // Transaction providers
+    it('Should add a comment for the deprecated IgxGridTransactionToken', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/transaction.component.ts', `
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+            .toEqual(`
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [/* Injection token 'IgxGridTransaction' has been deprecated. Please refer to the update guide for more details. */
+{ provide: IgxGridTransaction, useClass: IgxTransactionService }]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    });
+
+    it('Should add a comment for the deprecated IgxGridTransactionToken, multiple providers', async () => {
+        appTree.create(
+            '/testSrc/appPrefix/component/transaction.component.ts', `
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [
+                { provider: A, useClass: AService },
+                { provide: IgxGridTransaction, useClass: IgxTransactionService },
+                { provider: B, useClass: BService}
+            ]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    const tree = await schematicRunner.runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(tree.readContent('/testSrc/appPrefix/component/transaction.component.ts'))
+            .toEqual(`
+        import { IgxGridComponent, IgxGridTransaction, IgxTransactionService } from 'igniteui-angular';
+        @Component({
+            template: '',
+            providers: [
+                { provider: A, useClass: AService },
+                /* Injection token 'IgxGridTransaction' has been deprecated. Please refer to the update guide for more details. */
+{ provide: IgxGridTransaction, useClass: IgxTransactionService },
+                { provider: B, useClass: BService}
+            ]
+        })
+        export class TransactionComponent {
+            @ViewChild(IgxGridComponent, { read: IgxGridComponent })
+            public IgxGridTransaction!: IgxGridComponent;
+        }`);
+    });
+
+    it('Should properly rename IComboSelectionChangeEventArgs to IComboSelectionChangingEventArgs',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { IComboSelectionChangeEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: IComboSelectionChangeEventArgs;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { IComboSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: IComboSelectionChangingEventArgs;
+        }
+        `
+        );
+    });
+
+    it('Should properly rename AutocompleteItemSelectionEventArgs to AutocompleteSelectionChangingEventArgs',  async () => {
+        appTree.create('/testSrc/appPrefix/component/test.component.ts',
+        `
+        import { AutocompleteItemSelectionEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: AutocompleteItemSelectionEventArgs;
+        }
+        `);
+
+        const tree = await schematicRunner
+            .runSchematicAsync(migrationName, {}, appTree)
+            .toPromise();
+
+        expect(
+            tree.readContent('/testSrc/appPrefix/component/test.component.ts')
+        ).toEqual(
+        `
+        import { AutocompleteSelectionChangingEventArgs } from 'igniteui-angular';
+        export class MyClass {
+            public eventArgs: AutocompleteSelectionChangingEventArgs;
+        }
+        `
+        );
+    });
+});
 

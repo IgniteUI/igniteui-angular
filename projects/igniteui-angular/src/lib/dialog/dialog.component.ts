@@ -341,7 +341,7 @@ export class IgxDialogComponent implements IToggleView, OnInit, OnDestroy, After
     /**
      * An event that is emitted when the right button is clicked.
      * ```html
-     * <igx-dialog (onRightButtonSelect)="onDialogOKSelected($event)"
+     * <igx-dialog (rightButtonSelect)="onDialogOKSelected($event)"
      * #dialog title="Confirmation" (leftButtonSelect)="dialog.close()" rightButtonLabel="OK"
      * rightButtonRipple="#4CAF50" closeOnOutsideSelect="true">
      * </igx-dialog>

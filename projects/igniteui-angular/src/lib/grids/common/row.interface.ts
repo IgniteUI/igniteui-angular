@@ -1,6 +1,7 @@
 import { IGroupByRecord } from '../../data-operations/groupby-record.interface';
 import { IgxSummaryResult } from '../summaries/grid-summary';
 import { ITreeGridRecord } from '../tree-grid/tree-grid.interfaces';
+import { CellType } from './cell.interface';
 import { GridType } from './grid.interface';
 
 export interface RowType {
@@ -16,6 +17,7 @@ export interface RowType {
     /** Deprecated, will be removed. data is the new property */
     rowData?: any;
     data?: any;
+    cells?: CellType[];
     disabled?: boolean;
     pinned?: boolean;
     selected?: boolean;

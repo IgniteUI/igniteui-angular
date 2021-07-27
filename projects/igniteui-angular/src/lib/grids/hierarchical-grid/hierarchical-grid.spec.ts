@@ -1,7 +1,7 @@
 import { configureTestSuite } from '../../test-utils/configure-suite';
 import { TestBed, fakeAsync, tick, ComponentFixture, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IgxHierarchicalGridModule } from './public_api';
+import { CellType, IgxHierarchicalGridModule } from './public_api';
 import { ChangeDetectorRef, Component, ViewChild, AfterViewInit } from '@angular/core';
 import { IgxHierarchicalGridComponent } from './hierarchical-grid.component';
 import { wait, UIInteractions } from '../../test-utils/ui-interactions.spec';
@@ -570,6 +570,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(child2.data).toBe(fixture.componentInstance.data[0].childData2);
 
         expect(child1.getCellByColumn(0, 'ID').value).toBe(11);
+        expect(child1.getCellByColumnVisibleIndex(0, 0).column.field).toBe('ID');
         expect(child1.getCellByColumn(0, 'ProductName').value).toBe('Child1 Name');
 
         expect(child2.getCellByColumn(0, 'Col1').value).toBe('Child2 Col1');
@@ -732,6 +733,8 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
     }));
 
     it('should emit child grid events with the related child grid instance as an event arg.', async () => {
+        hierarchicalGrid.cellSelection = 'single';
+        fixture.detectChanges();
         const row = hierarchicalGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();
@@ -740,13 +743,17 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
 
         const childGrids =  fixture.debugElement.queryAll(By.css('igx-child-grid-row'));
         const childGrid = childGrids[0].query(By.css('igx-hierarchical-grid')).componentInstance;
-        const cell = childGrid.hgridAPI.get_row_by_index(0).cells.toArray()[0];
+        const cellElem = childGrid.hgridAPI.get_row_by_index(0).cells.toArray()[0];
+        const cell = childGrid.getRowByIndex(0).cells[0] as CellType;
         const ri1 = fixture.componentInstance.rowIsland1;
+
+        expect(cell.active).toBeFalse();
+        expect(cell.selected).toBeFalse();
 
         spyOn(ri1.cellClick, 'emit').and.callThrough();
 
         const event = new Event('click');
-        cell.nativeElement.dispatchEvent(event);
+        cellElem.nativeElement.dispatchEvent(event);
         const args: IGridCellEventArgs = {
             cell,
             event,
@@ -756,6 +763,13 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         fixture.detectChanges();
         expect(ri1.cellClick.emit).toHaveBeenCalledTimes(1);
         expect(ri1.cellClick.emit).toHaveBeenCalledWith(args);
+
+        cell.selected = true;
+        fixture.detectChanges();
+
+        expect(cell.selected).toBeTrue();
+        expect(childGrid.selectedCells[0].row.index).toEqual(cell.row.index);
+        expect(childGrid.selectedCells[0].column.field).toEqual(cell.column.field);
     });
 
     it('should filter correctly on row island',
@@ -806,7 +820,7 @@ describe('IgxHierarchicalGrid Row Islands #hGrid', () => {
         expect(childGrid1.data.length).toEqual(2);
         expect(childGrid1.filteredData.length).toEqual(1);
         expect(childGrid1.rowList.length).toEqual(1);
-        expect(childGrid1.getCellByColumn(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
+        expect(childGrid1.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.innerText).toEqual('Child12 ProductName');
     }));
 });
 
@@ -1198,6 +1212,16 @@ describe('IgxHierarchicalGrid Template Changing Scenarios #hGrid', () => {
     }));
 
     it('test getRowByIndex API methods', fakeAsync(() => {
+        const nonExistingRow = hierarchicalGrid.getRowByKey('nonexisting');
+        expect(nonExistingRow).toBeUndefined();
+
+        const nonExistingRow2 = hierarchicalGrid.getRowByIndex(-1);
+        expect(nonExistingRow2).toBeUndefined();
+
+        const cell00 = hierarchicalGrid.getCellByColumnVisibleIndex(0, 0);
+        expect(cell00.row.index).toBe(0);
+        expect(cell00.column.visibleIndex).toBe(0);
+
         const row = hierarchicalGrid.hgridAPI.get_row_by_index(0) as IgxHierarchicalRowComponent;
         UIInteractions.simulateClickAndSelectEvent(row.expander);
         fixture.detectChanges();

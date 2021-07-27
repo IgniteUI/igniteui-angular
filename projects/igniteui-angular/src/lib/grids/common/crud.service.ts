@@ -149,7 +149,13 @@ export class IgxCellCrudState {
     public cancelAddMode = false;
 
     public createCell(cell): IgxCell {
-        return this.cell = new IgxCell(cell.cellID, cell.rowIndex, cell.column, cell.value, cell.value, cell.intRow.rowData, cell.grid);
+        // cell.rowData ?? cell.row.data covers the cases, where
+        // 1. cell is an instance og IgxGridCellComponent
+        // 2. cell is an instance of IgxGridCell
+        // Note: if at some point we are going to get rid of using 1), then see test 'should allow adding row to empty grid':
+        // cell.row.data will return a { data; rowID } object here, and test will fail
+        return this.cell = new IgxCell(cell.cellID || cell.id, cell.row.index, cell.column, cell.value, cell.value,
+            cell.rowData ?? cell.row.data, cell.grid);
     }
 
     public createRow(cell: IgxCell): IgxEditRow {
@@ -321,6 +327,8 @@ export class IgxRowCrudState extends IgxCellCrudState {
             this.updateRowEditData(this.row, this.row.newData);
             args = this.rowEdit(event);
             if (args.cancel) {
+                delete this.row.newData;
+                this.grid.transactions.clear(this.row.id);
                 return args;
             }
         }
