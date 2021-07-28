@@ -183,17 +183,15 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /**
-     * @hidden
+     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
+     * ```typescript
+     * const expanded = this.rowIsland.expandChildren;
+     * ```
+     *
+     * @memberof IgxRowIslandComponent
      */
-    public createRow(index: number): RowType {
-        let row: RowType;
-        const rec: any = this.dataView[index];
-
-        if (!row && rec && !rec.childGridsData) {
-            row = new IgxHierarchicalGridRow(this, index, rec);
-        }
-
-        return row;
+    public get expandChildren(): boolean {
+        return this._defaultExpandState;
     }
 
     /**
@@ -215,18 +213,6 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
             .map(r => this.createRow(r.index));
         res.reset(rList);
         return res;
-    }
-
-    /**
-     * Gets if all immediate children of the grids for this `IgxRowIslandComponent` have been set to be expanded/collapsed.
-     * ```typescript
-     * const expanded = this.rowIsland.expandChildren;
-     * ```
-     *
-     * @memberof IgxRowIslandComponent
-     */
-    public get expandChildren(): boolean {
-        return this._defaultExpandState;
     }
 
     /**
@@ -416,6 +402,20 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
      * @hidden
      */
     public reflow() { }
+
+    /**
+     * @hidden
+     */
+    public createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (!row && rec && !rec.childGridsData) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
+    }
 
     /**
      * @hidden
