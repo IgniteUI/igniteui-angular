@@ -397,7 +397,7 @@ describe('IgxGrid - Cell component #grid', () => {
             fixture.detectChanges();
 
             const highlightDir = (cellElem as any).highlight;
-            let highlightedNode = highlightDir.parentElement.querySelector(".igx-highlight");
+            let highlightedNode = highlightDir.parentElement.querySelector('.igx-highlight');
             expect(highlightedNode.textContent).toBe('a');
             expect((cellElem as any).highlight.cssClass).toBe('igx-highlight');
             expect((cellElem as any).highlight.activeCssClass).toBe('igx-highlight__active');
@@ -405,7 +405,7 @@ describe('IgxGrid - Cell component #grid', () => {
             grid.getCellByColumn(0, 'ProductName').clearHighlight();
             fixture.detectChanges();
 
-            highlightedNode = highlightDir.parentElement.querySelector(".igx-highlight");
+            highlightedNode = highlightDir.parentElement.querySelector('.igx-highlight');
             expect(highlightedNode).toBeNull();
         }));
     });
