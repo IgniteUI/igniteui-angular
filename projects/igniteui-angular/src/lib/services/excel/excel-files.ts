@@ -178,13 +178,21 @@ export class WorksheetFile implements IExcelFile {
 
                 const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
 
+                const frozenColumnCount = indexOfLastPinnedColumn + 1;
+                const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
+                const freezeHeaders = worksheetData.options.ignoreFreezedHeaders ? 1 : 2 + multiColumnHeaderLevel;
+                let firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + freezeHeaders;
                 if (indexOfLastPinnedColumn !== -1 &&
                     !worksheetData.options.ignorePinning &&
                     !worksheetData.options.ignoreColumnsOrder) {
-                    const frozenColumnCount = indexOfLastPinnedColumn + 1;
-                    const firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + '1';
                     this.freezePane =
-                        `<pane xSplit="${frozenColumnCount}" topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+                        `<pane xSplit="${frozenColumnCount}" ySplit="${freezeHeaders - 1}"
+                         topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+                } else if (!worksheetData.options.ignoreFreezedHeaders) {
+                    firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
+                    this.freezePane =
+                        `<pane xSplit="0" ySplit="${freezeHeaders - 1}"
+                         topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
                 }
             } else {
                 const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
