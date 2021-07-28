@@ -183,6 +183,22 @@ export class GridCellAPISampleComponent implements OnInit {
         this.logState(grid, indices, logger);
     }
 
+    public highlight(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+        logger: HTMLElement) {
+        const indxs = this.getIndices(indices);
+        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        cell.highlightText('a');
+        this.logState(grid, indices, logger);
+    }
+
+    public clearHighlight(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
+        logger: HTMLElement) {
+        const indxs = this.getIndices(indices);
+        const cell = grid.getCellByColumnVisibleIndex(indxs[0], indxs[1]);
+        cell.clearHighlight();
+        this.logState(grid, indices, logger);
+    }
+
     public setEditMode(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent, indices: string,
         logger: HTMLElement) {
         const indxs = this.getIndices(indices);

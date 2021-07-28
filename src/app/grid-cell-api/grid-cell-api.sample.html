@@ -8,6 +8,12 @@
             <button (click)="select(grid, index, gridLogger)">Select</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
+        <button (click)="highlight(grid, index, gridLogger)">Highlight</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
+            <button (click)="clearHighlight(grid, index, gridLogger)">Clear highlight</button>
+        </div>
+        <div style="margin-right: 5px; text-align: start">
             <button (click)="setEditMode(grid, index, gridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
@@ -281,11 +287,13 @@
                 </igx-paginator>
                 <igx-row-island [key]="'childData'" [autoGenerate]="true" [rowSelection]="'multiple'" [allowFiltering]='true'>
                     <igx-paginator>
-                    </igx-paginator></igx-row-island>
+                    </igx-paginator>
+                </igx-row-island>
             </igx-row-island>
             <igx-row-island [key]="'childData2'" [autoGenerate]="true" [allowFiltering]='true'>
                 <igx-paginator>
-                </igx-paginator></igx-row-island>
+                </igx-paginator>
+            </igx-row-island>
             <igx-paginator>
             </igx-paginator>
         </igx-hierarchical-grid>
