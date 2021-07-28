@@ -606,8 +606,7 @@
             padding: map-get($chip-padding, 'compact');
         }
     }
-
-    // Fix for #2749, the problem was that the grid was having a bigger z-index.
+    
     %igx-chip__ghost,
     %igx-chip__ghost--cosy,
     %igx-chip__ghost--compact {
