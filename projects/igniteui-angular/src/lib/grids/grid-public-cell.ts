@@ -307,8 +307,4 @@ export class IgxGridCell implements CellType {
 					this.grid.crudService.endCellEdit();
 				}
 		}
-
-		// private get highlight() {
-		// 	return t
-		// }
 }
