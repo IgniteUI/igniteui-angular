@@ -517,6 +517,27 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     }
 
     /**
+     * A list of `IgxGridRow`.
+     *
+     * @example
+     * ```typescript
+     * const rowList = this.grid.rowList;
+     * ```
+     */
+    public get rowList(): QueryList<RowType> {
+        const res = new QueryList<RowType>();
+        if (!this._rowList) {
+            return res;
+        }
+        const rList = this._rowList
+            .filter((item) => item.element.nativeElement.parentElement !== null)
+            .sort((a, b) => a.index - b.index)
+            .map(r => this.createRow(r.index));
+        res.reset(rList);
+        return res;
+    }
+
+    /**
      * @hidden
      * @internal
      */

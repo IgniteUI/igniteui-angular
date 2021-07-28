@@ -1248,7 +1248,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     protected _summaryRowList: QueryList<IgxSummaryRowComponent>;
 
     @ViewChildren('row')
-    private _rowList: QueryList<IgxGridRowComponent>;
+    protected _rowList: QueryList<IgxGridRowComponent>;
 
     @ViewChildren('pinnedRow')
     private _pinnedRowList: QueryList<IgxGridRowComponent>;
@@ -2105,24 +2105,9 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     }
 
     /**
-     * A list of `IgxGridRowComponent`.
-     *
-     * @example
-     * ```typescript
-     * const rowList = this.grid.rowList;
-     * ```
+     * @hidden @internal
      */
-    public get rowList(): QueryList<IgxRowDirective<IgxGridBaseDirective & GridType>> {
-        const res = new QueryList<IgxRowDirective<IgxGridBaseDirective & GridType>>();
-        if (!this._rowList) {
-            return res;
-        }
-        const rList = this._rowList
-            .filter((item) => item.element.nativeElement.parentElement !== null)
-            .sort((a, b) => a.index - b.index);
-        res.reset(rList);
-        return res;
-    }
+    public abstract get rowList(): any;
 
     /**
      * A list of currently rendered `IgxGridRowComponent`'s.
@@ -6878,7 +6863,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     protected scrollToHorizontally(column: any | number) {
         let columnIndex = typeof column === 'number' ? column : this.getColumnByName(column).visibleIndex;
-        const scrollRow = this.rowList.find(r => r.virtDirRow !== null);
+        const scrollRow = this.rowList.find(r => r.virtDirRow);
         const virtDir = scrollRow ? scrollRow.virtDirRow : null;
         if (this.isPinningToStart && this.pinnedColumns.length) {
             if (columnIndex >= this.pinnedColumns.length) {

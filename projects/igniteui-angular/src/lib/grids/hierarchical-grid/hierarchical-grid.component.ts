@@ -306,6 +306,27 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
+     * A list of `IgxGridRow`.
+     *
+     * @example
+     * ```typescript
+     * const rowList = this.grid.rowList;
+     * ```
+     */
+    public get rowList(): QueryList<RowType> {
+        const res = new QueryList<RowType>();
+        if (!this._rowList) {
+            return res;
+        }
+        const rList = this._rowList
+            .filter((item) => item.element.nativeElement.parentElement !== null)
+            .sort((a, b) => a.index - b.index)
+            .map(r => this.createRow(r.index));
+        res.reset(rList);
+        return res;
+    }
+
+    /**
      * Gets the unique identifier of the parent row. It may be a `string` or `number` if `primaryKey` of the
      * parent grid is set or an object reference of the parent record otherwise.
      * ```typescript

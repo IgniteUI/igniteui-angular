@@ -13,13 +13,14 @@ import { IgxTreeGridComponent } from './tree-grid/tree-grid.component';
 import { ITreeGridRecord } from './tree-grid/tree-grid.interfaces';
 import mergeWith from 'lodash.mergewith';
 import { cloneValue } from '../core/utils';
+import { IgxRowIslandComponent } from './hierarchical-grid/row-island.component';
 
 abstract class BaseRow implements RowType {
     public index: number;
     /**
      * The grid that contains the row.
      */
-    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+    public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent | IgxRowIslandComponent;
     protected _data?: any;
 
     /**
@@ -494,7 +495,7 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
     /**
      * @hidden
      */
-    constructor(public grid: IgxHierarchicalGridComponent,
+    constructor(public grid: IgxHierarchicalGridComponent | IgxRowIslandComponent,
         public index: number, data?: any) {
         super();
         this._data = data && data.addRow && data.recordRef ? data.recordRef : data;
@@ -504,7 +505,7 @@ export class IgxHierarchicalGridRow extends BaseRow implements RowType {
      * Returns true if row islands exist.
      */
     public get hasChildren(): boolean {
-        return !!this.grid.childLayoutKeys.length;
+        return !!(this.grid as any).childLayoutKeys.length;
     }
 
     /**

@@ -48,6 +48,7 @@ import { IgxGridToolbarDirective, IgxGridToolbarTemplateContext } from '../toolb
 import { IgxActionStripComponent } from '../../action-strip/action-strip.component';
 import { IgxPaginatorDirective } from '../../paginator/paginator-interfaces';
 import { IgxFlatTransactionFactory } from '../../services/transaction/transaction-factory.service';
+import { IgxHierarchicalGridRow, RowType } from './public_api';
 
 export interface IGridCreatedEventArgs extends IBaseEventArgs {
     owner: IgxRowIslandComponent;
@@ -179,6 +180,41 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
                 grid.updateOnRender = true;
             }
         });
+    }
+
+    /**
+     * @hidden
+     */
+    public createRow(index: number): RowType {
+        let row: RowType;
+        const rec: any = this.dataView[index];
+
+        if (!row && rec && !rec.childGridsData) {
+            row = new IgxHierarchicalGridRow(this, index, rec);
+        }
+
+        return row;
+    }
+
+    /**
+     * A list of `IgxGridRow`.
+     *
+     * @example
+     * ```typescript
+     * const rowList = this.grid.rowList;
+     * ```
+     */
+    public get rowList(): QueryList<RowType> {
+        const res = new QueryList<RowType>();
+        if (!this._rowList) {
+            return res;
+        }
+        const rList = this._rowList
+            .filter((item) => item.element.nativeElement.parentElement !== null)
+            .sort((a, b) => a.index - b.index)
+            .map(r => this.createRow(r.index));
+        res.reset(rList);
+        return res;
     }
 
     /**

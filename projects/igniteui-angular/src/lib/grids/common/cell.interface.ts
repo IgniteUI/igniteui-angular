@@ -1,6 +1,7 @@
 import { IgxColumnComponent } from '../columns/column.component';
 import { IgxGridComponent } from '../grid/grid.component';
 import { IgxHierarchicalGridComponent } from '../hierarchical-grid/hierarchical-grid.component';
+import { IgxRowIslandComponent } from '../hierarchical-grid/row-island.component';
 import { IgxTreeGridComponent } from '../tree-grid/tree-grid.component';
 import { RowType } from './row.interface';
 
@@ -13,7 +14,7 @@ export interface CellType {
 	editMode: boolean;
 	column: IgxColumnComponent;
 	row: RowType;
-	grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+	grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent | IgxRowIslandComponent;
 	id: { rowID: any; columnID: number; rowIndex: number };
 	width: string;
 	update: (value: any) => void;

@@ -1225,8 +1225,8 @@ export class IgxColumnComponent implements AfterContentInit, OnDestroy {
     public get _cells(): IgxGridCellComponent[] {
         return this.grid.rowList.filter((row) => row instanceof IgxRowDirective)
             .map((row) => {
-                if (row.cells) {
-                    return row.cells.filter((cell) => cell.columnIndex === this.index);
+                if (row._cells) {
+                    return row._cells.filter((cell) => cell.columnIndex === this.index);
                 }
             }).reduce((a, b) => a.concat(b), []);
     }

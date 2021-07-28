@@ -2,7 +2,7 @@ import { resolveNestedPath } from '../core/utils';
 import { CellType } from './common/cell.interface';
 import { RowType } from './common/row.interface';
 import { IgxGridComponent } from './grid/public_api';
-import { IgxHierarchicalGridComponent } from './hierarchical-grid/public_api';
+import { IgxHierarchicalGridComponent, IgxRowIslandComponent } from './hierarchical-grid/public_api';
 import { IgxColumnComponent } from './public_api';
 import { ISelectionNode } from './selection/selection.service';
 import { IgxTreeGridComponent } from './tree-grid/public_api';
@@ -14,7 +14,7 @@ export class IgxGridCell implements CellType {
 	 *
 	 * @memberof IgxGridCell
 	 */
-	public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
+	public grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent | IgxRowIslandComponent;
 	private _row: RowType;
 	private _rowIndex: number;
 	private _column: IgxColumnComponent;
@@ -24,10 +24,10 @@ export class IgxGridCell implements CellType {
 	 * @hidden
 	 */
 	constructor(
-		grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+		grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent | IgxRowIslandComponent,
 		row: number | RowType,
 		column: string | IgxColumnComponent);
-	constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
+	constructor(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent | IgxRowIslandComponent,
 		row: RowType,
 		column: IgxColumnComponent) {
 		this.grid = grid;
