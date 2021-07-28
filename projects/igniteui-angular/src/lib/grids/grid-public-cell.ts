@@ -228,6 +228,30 @@ export class IgxGridCell implements CellType {
 		return node ? node.row === this.row?.index && node.column === this.column.visibleIndex : false;
 	}
 
+	/**
+	 * If the provided string matches the text in the cell, the text gets highlighted.
+	 * ```typescript
+	 * this.cell.highlightText('Cell Value', true);
+	 * ```
+	 *
+	 * @memberof IgxGridCell
+	 */
+	public highlightText(text: string, caseSensitive?: boolean, exactMatch?: boolean): number {
+			const igxcellcomp = this.grid.gridAPI.get_cell_by_index(this.row.index, this.column.field);
+			return igxcellcomp ? igxcellcomp.highlightText(text, caseSensitive, exactMatch) : 0;
+	}
+
+	/**
+		* Clears the highlight of the text in the cell.
+		* ```typescript
+		* this.cell.clearHighLight();
+		* ```
+		*
+		* @memberof IgxGridCell
+		*/
+	public clearHighlight(): void {
+			this.grid.gridAPI.get_cell_by_index(this.row.index, this.column.field)?.clearHighlight();
+	}
 
 	/**
 	 * Updates the cell value.
@@ -283,4 +307,8 @@ export class IgxGridCell implements CellType {
 					this.grid.crudService.endCellEdit();
 				}
 		}
+
+		// private get highlight() {
+		// 	return t
+		// }
 }

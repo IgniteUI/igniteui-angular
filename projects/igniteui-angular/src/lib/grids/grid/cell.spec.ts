@@ -385,6 +385,29 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.getColumnByName('InStock')._cells[4].nativeElement.classList).toContain('test2');
             expect(grid.getColumnByName('OrderDate')._cells[4].nativeElement.classList).toContain('test2');
         }));
+
+        it('should be able to highlight cells', fakeAsync(() => {
+            const fixture = TestBed.createComponent(ConditionalCellStyleTestComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const cellElem = grid.gridAPI.get_cell_by_index(0, 'ProductName');
+
+            grid.getCellByColumn(0, 'ProductName').highlightText('a');
+            fixture.detectChanges();
+
+            const highlightDir = (cellElem as any).highlight;
+            let highlightedNode = highlightDir.parentElement.querySelector(".igx-highlight");
+            expect(highlightedNode.textContent).toBe('a');
+            expect((cellElem as any).highlight.cssClass).toBe('igx-highlight');
+            expect((cellElem as any).highlight.activeCssClass).toBe('igx-highlight__active');
+
+            grid.getCellByColumn(0, 'ProductName').clearHighlight();
+            fixture.detectChanges();
+
+            highlightedNode = highlightDir.parentElement.querySelector(".igx-highlight");
+            expect(highlightedNode).toBeNull();
+        }));
     });
 });
 @Component({

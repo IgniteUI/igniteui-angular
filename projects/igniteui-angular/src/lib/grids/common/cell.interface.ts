@@ -16,6 +16,8 @@ export interface CellType {
 	grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent;
 	id: { rowID: any; columnID: number; rowIndex: number };
 	width: string;
+	highlightText: (value: string, caseSensitive?: boolean, exactMatch?: boolean) => number;
+	clearHighlight: () => void;
 	update: (value: any) => void;
 }
 
