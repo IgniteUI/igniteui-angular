@@ -376,7 +376,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
     /** @hidden @internal */
     @HostListener('click', ['$event'])
-    public _onCheckboxClick(event: MouseEvent) {
+    public _onCheckboxClick(event: PointerEvent | MouseEvent) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
         // we need to prevent the checkbox click event from bubbling up
@@ -390,7 +390,6 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             event.preventDefault();
             return;
         }
-        console.log(event.type);
 
         this.nativeCheckbox.nativeElement.focus();
 

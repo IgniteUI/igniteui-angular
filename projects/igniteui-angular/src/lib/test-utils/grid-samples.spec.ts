@@ -1582,8 +1582,11 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
     }
+    public rowCheckboxClick: any;
+    public headerCheckboxClick: any;
 
     public onRowCheckboxClick(event, rowContext) {
+        this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
@@ -1594,6 +1597,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     }
 
     public onHeaderCheckboxClick(event, headContext) {
+        this.headerCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (headContext.selected) {
