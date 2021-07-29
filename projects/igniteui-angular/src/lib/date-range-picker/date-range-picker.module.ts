@@ -43,6 +43,7 @@ import { IgxCalendarContainerModule } from '../date-common/calendar-container/ca
         IgxDateRangeEndComponent,
         IgxDateRangeSeparatorDirective,
         IgxDateTimeEditorModule,
+        IgxPickersCommonModule,
         IgxInputGroupModule
     ]
 })
