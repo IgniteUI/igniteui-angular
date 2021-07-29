@@ -578,7 +578,6 @@
 
     %igx-chip__ghost {
         position: absolute;
-        z-index: 10;
         box-shadow: --var($theme, 'ghost-shadow');
         overflow: hidden;
         color: --var($theme, 'focus-text-color');
@@ -606,11 +605,13 @@
             padding: map-get($chip-padding, 'compact');
         }
     }
-    
+
+    // Remark: If z-index is not set, the chip would
+    // hide behind it's parent grid as it has a z-index of 1
     %igx-chip__ghost,
     %igx-chip__ghost--cosy,
     %igx-chip__ghost--compact {
-        z-index: 3;
+        z-index: 10;
     }
 }
 
