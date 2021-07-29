@@ -728,7 +728,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((rec, index) => this.createRow(index, rec));
     }
 
     /**
@@ -822,9 +822,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     /**
      * @hidden
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, data?: any): RowType {
         let row: RowType;
-        const rec: any = this.dataView[index];
+        const rec: any = data ?? this.dataView[index];
 
         if (this.isSummaryRow(rec)) {
             row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.TreeGrid);
