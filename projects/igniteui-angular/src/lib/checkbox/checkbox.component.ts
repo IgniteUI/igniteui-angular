@@ -390,6 +390,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
             event.preventDefault();
             return;
         }
+        console.log(event.type);
 
         this.nativeCheckbox.nativeElement.focus();
 

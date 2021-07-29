@@ -2105,7 +2105,7 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(context);
 
             // Verify correct properties when unselecting a row
             firstCheckbox.click();
@@ -2124,13 +2124,13 @@ describe('IgxGrid - Row Selection #grid', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new PointerEvent('click'), context);
 
             headerCheckbox.click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
-            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new PointerEvent('click'), contextUnselect);
         });
 
         it('Should have correct indices on all pages', () => {
