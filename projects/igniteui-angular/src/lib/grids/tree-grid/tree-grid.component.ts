@@ -832,9 +832,9 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
 
         if (!row && rec) {
             const isTreeRow = this.isTreeRow(rec);
-            const data = isTreeRow ? rec.data : rec;
+            const dataRec = isTreeRow ? rec.data : rec;
             const treeRow = isTreeRow ? rec : undefined;
-            row = new IgxTreeGridRow(this, index, data, treeRow);
+            row = new IgxTreeGridRow(this, index, dataRec, treeRow);
         }
 
         return row;
