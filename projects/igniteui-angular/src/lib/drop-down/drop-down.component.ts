@@ -489,7 +489,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
     }
 
     /**
-     * Handles the `selecting` emit and the drop down toggle when selection changes
+     * Handles the `selectionChanging` emit and the drop down toggle when selection changes
      *
      * @hidden
      * @internal
@@ -514,7 +514,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
             } as IgxDropDownItemBaseDirective;
         }
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.selecting.emit(args);
+        this.selectionChanging.emit(args);
 
         if (!args.cancel) {
             if (this.isSelectionValid(args.newSelection)) {
@@ -546,7 +546,7 @@ export class IgxDropDownComponent extends IgxDropDownBaseDirective implements ID
         const oldSelection = this.selectedItem;
         const newSelection: IgxDropDownItemBaseDirective = null;
         const args: ISelectionEventArgs = { oldSelection, newSelection, cancel: false };
-        this.selecting.emit(args);
+        this.selectionChanging.emit(args);
         if (this.selectedItem && !args.cancel) {
             this.selectedItem.selected = false;
             this.selection.clear(this.id);

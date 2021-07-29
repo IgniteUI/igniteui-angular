@@ -332,7 +332,7 @@ Setting `[displayDensity]` affects the control's items' and inputs' css properti
 
 | Name                | Description                                                             | Cancelable   | Emitted with                      |
 |---------------------|-------------------------------------------------------------------------|--------------|-----------------------------------|
-| `selectionChange`   | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangeEventArgs`  |
+| `selectionChanging`   | Emitted when item selection is changing, before the selection completes | true         | `IComboSelectionChangingEventArgs`  |
 | `searchInputUpdate` | Emitted when an the search input's input event is triggered             | true         | `IComboSearchInputEventArgs`      |
 | `addition`          | Emitted when an item is being added to the data collection              | true         | `IComboItemAdditionEvent`         |
 | `dataPreLoad`       | Emitted when new chunk of data is loaded from the virtualization        | false        | `IForOfState`                     |

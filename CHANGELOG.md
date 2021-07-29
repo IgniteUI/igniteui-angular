@@ -42,6 +42,13 @@ All notable changes for each version of this project will be documented in this 
     </igx-grid>
     <button igxButton (click)="grid.transactions.undo">Undo</button>
     ```
+    - **Breaking changes**
+        - `IgxGridCellComponent`,  `IgxTreeGridCellComponent`, `IgxHierarchicalGridCellComponent` are no longer exposed in the public API. Instead, a new class `IgxGridCell` replaces all of these. It is a facade class which exposes only the public API of the above mentioned. Automatic migration will change these imports with `CellType`, which is the interface implemented by `IgxGridCell`
+    - **Behavioral changes**
+    - `getCellByKey`, `getCellByColumn`, `getCellByColumnVisibleIndex`, `row.cells`, `column.cells`, `grid.selectedCells` now return an `IgxGridCell` the `CellType` interface.
+    - `cell` in `IGridCellEventArgs` is now `CellType`. `IGridCellEventArgs` are emitetd in `cellClick`, `selected`, `contextMenu` and `doubleClick` events. 
+    - `let-cell` property in cell template is now `CellType`.
+    - `getCellByColumnVisibleIndex` is now deprecated and will be removed in next major version. Use `getCellByKey`, `getCellByColumn` instead.
 
 - `Transactions`
     - Added `IgxFlatTransactionFactory` - the singleton service instantiates a new `TransactionService<Transaction, State>` given a `transaction type`.
@@ -161,7 +168,7 @@ All notable changes for each version of this project will be documented in this 
         - `onOpened` -> `opened`
         - `onClosing` -> `closing`
         - `onClosed` -> `closed`
-        - `onSelection` -> `selecting`
+        - `onSelection` -> `selectionChanging`
 
 
 - `IgxToggleDirective`
@@ -173,9 +180,8 @@ All notable changes for each version of this project will be documented in this 
         - `onAppended` -> `appended`
 
 - `IgxCombo`
-    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
     - **Breaking Change** - The following events have been renamed as follows:
-        - `onSelectionChange` -> `selectionChange`
+        - `onSelectionChange` -> `selectionChanging`
         - `onSearchInput` -> `searchInputUpdate`
         - `onAddition` -> `addition`
         - `onDataPreLoad` -> `dataPreLoad`
@@ -183,6 +189,8 @@ All notable changes for each version of this project will be documented in this 
         - `onOpened` -> `opened`
         - `onClosing` -> `closing`
         - `onClosed` -> `closed`
+    - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
+    - **Breaking Change** - `IComboSelectionChangeEventArgs` is renamed to `IComboSelectionChangingEventArgs`
 
 - `IgxSelect`
     - `opened` and `closed` event will emit with `IBaseEventArgs`. `opening` event will emit with `CancelableBrowserEventArgs`.
@@ -191,10 +199,12 @@ All notable changes for each version of this project will be documented in this 
         - `onOpened` -> `opened`
         - `onClosing` -> `closing`
         - `onClosed` -> `closed`
+        - `onSelection` -> `selectionChanging`
 
 - `IgxAutocomplete`
     - **Breaking Change** - The following events have been renamed as follows:
-        - `onItemSelected` -> `itemSelected`
+        - `onItemSelected` -> `selectionChanging`
+    - **Breaking Change** - `AutocompleteItemSelectionEventArgs` is renamed to `AutocompleteSelectionChangingEventArgs`
 
 - `IgxDialog`
     - **Breaking Change** - The following events have been renamed as follows:
@@ -1227,7 +1237,7 @@ The following example shows how you can use the Indigo theme:
     export class MyInvitationComponent {
         public people: { name: string; id: string }[] = [...];
         ...
-        handleSelection(event: IComboSelectionChangeEventArgs) {
+        handleSelection(event: IComboSelectionChangingEventArgs) {
             const count = event.newSelection.length;
             event.displayText = count > 0 ? `${count} friend(s) invited!` : `No friends invited :(`;
         }
@@ -1472,7 +1482,7 @@ For more information about the theming please read our [documentation](https://w
     ```typescript
         export class Example {
             ...
-            handleChange(event: IComboSelectionChangeEventArgs) {
+            handleChange(event: IComboSelectionChangingEventArgs) {
             console.log("Items added: ", [...event.added]); // the items added to the selection in this change
             console.log("Items removed: ", [...event.removed]); // the items removed from the selection in this change
             }

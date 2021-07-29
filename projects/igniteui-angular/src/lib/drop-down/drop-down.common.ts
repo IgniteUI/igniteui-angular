@@ -19,7 +19,7 @@ export const DropDownActionKey = mkenum({
 export type DropDownActionKey = (typeof DropDownActionKey)[keyof typeof DropDownActionKey];
 
 /**
- * Interface that encapsulates selecting event arguments - old selection, new selection and cancel selection.
+ * Interface that encapsulates selectionChanging event arguments - old selection, new selection and cancel selection.
  *
  * @export
  */
@@ -48,7 +48,7 @@ export const IGX_DROPDOWN_BASE = new InjectionToken<IDropDownBase>('IgxDropDownB
  * @hidden
  */
 export interface IDropDownList extends DisplayDensityBase {
-    selecting: EventEmitter<ISelectionEventArgs>;
+    selectionChanging: EventEmitter<ISelectionEventArgs>;
     width: string;
     height: string;
     id: string;
