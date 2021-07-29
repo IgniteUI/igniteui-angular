@@ -1579,11 +1579,11 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
     @ViewChild('gridCustomSelectors', { static: true })
     public grid: IgxGridComponent;
+    public rowCheckboxClick: any;
+    public headerCheckboxClick: any;
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
     }
-    public rowCheckboxClick: any;
-    public headerCheckboxClick: any;
 
     public onRowCheckboxClick(event, rowContext) {
         this.rowCheckboxClick = event;
