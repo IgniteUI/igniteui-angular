@@ -797,6 +797,8 @@ export class IgxTreeGridDefaultLoadingComponent implements OnInit {
 export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
     @ViewChild(IgxTreeGridComponent, { static: true })
     public treeGrid: IgxTreeGridComponent;
+    public rowCheckboxClick: any;
+    public headerCheckboxClick: any;
     public data = [];
 
     public ngOnInit(): void {
@@ -804,6 +806,7 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
     }
 
     public onRowCheckboxClick(event, rowContext) {
+        this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
@@ -814,6 +817,7 @@ export class IgxTreeGridCustomRowSelectorsComponent implements OnInit {
     }
 
     public onHeaderCheckboxClick(event, headContext) {
+        this.headerCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (headContext.selected) {
