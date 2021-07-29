@@ -192,7 +192,7 @@ export class IgxYearsViewComponent implements ControlValueAccessor {
      *
      * @hidden
      */
-    public get decade(): number[] {
+    public get decade(): Date[] {
         const result = [];
         const start = this.date.getFullYear() - 3;
         const end = this.date.getFullYear() + 4;
