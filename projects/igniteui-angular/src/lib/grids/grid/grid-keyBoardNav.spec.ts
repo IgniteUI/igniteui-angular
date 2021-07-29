@@ -246,11 +246,11 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             fix.detectChanges();
 
             grid.verticalScrollContainer.getScroll().scrollTop = 200;
-            await wait(100);
+            await wait(200);
             fix.detectChanges();
 
             gridContent.triggerEventHandler('focus', null);
-            await wait(200);
+            await wait(400);
             fix.detectChanges();
 
             const cell = grid.gridAPI.get_cell_by_index(4, 'col5');
