@@ -98,7 +98,11 @@ export class WorksheetFile implements IExcelFile {
             this.rowIndex++;
             sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
 
-            worksheetData.rootKeys.forEach((currentCol, index) => {
+            const headers = worksheetData.owner ?
+                            worksheetData.owner.columns.filter(c => !c.skip).map(c => c.header ?? c.field):
+                            worksheetData.rootKeys;
+
+            headers.forEach((currentCol, index) => {
                 const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
                 const columnValue = dictionary.saveValue(currentCol, true);
                 sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
@@ -158,11 +162,11 @@ export class WorksheetFile implements IExcelFile {
 
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                const recordHeaders = !isHierarchicalGrid ?
+                const keys = !isHierarchicalGrid ?
                                     worksheetData.rootKeys :
                                     Object.keys(worksheetData.data[i].data);
 
-                rowDataArr[i] = this.processRow(worksheetData, i + 1, recordHeaders);
+                rowDataArr[i] = this.processRow(worksheetData, i + 1, keys);
             },
             () => {
                 done(rowDataArr.join(''));
@@ -294,7 +298,9 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.rootKeys;
+        const values = worksheetData.owner ?
+                        worksheetData.owner.columns.filter(c => !c.skip).map(c => c.header ?? c.field) :
+                        worksheetData.rootKeys;
 
         let sortString = '';
 

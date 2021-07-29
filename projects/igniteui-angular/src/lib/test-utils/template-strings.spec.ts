@@ -303,6 +303,10 @@ export class ColumnDefinitions {
         </igx-column>
     `;
 
+    public static generatedWithHeaderAndDataType = `
+        <igx-column *ngFor="let c of columns" [field]="c.field" [header]="c.header" [dataType]="c.dataType">
+        </igx-column>
+    `;
     public static generatedEditable = `
     <igx-column *ngFor="let col of columns"
             [field]="col.key"

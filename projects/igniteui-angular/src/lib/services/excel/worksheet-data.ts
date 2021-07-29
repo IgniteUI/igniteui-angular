@@ -1,4 +1,4 @@
-import { ExportRecordType, IExportRecord } from '../exporter-common/base-export-service';
+import { ExportRecordType, IColumnList, IExportRecord } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { WorksheetDataDictionary } from './worksheet-data-dictionary';
@@ -15,7 +15,8 @@ export class WorksheetData {
                 public columnCount: number,
                 public rootKeys: string[],
                 public indexOfLastPinnedColumn: number,
-                public columnWidths: number[]) {
+                public columnWidths: number[],
+                public owner: IColumnList) {
             this.initializeData();
     }
 

@@ -2403,16 +2403,16 @@ export class GridExportGroupedDataComponent extends BasicGridComponent {
 
 /** Issue 9872 */
 @Component({
-    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType)
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithHeaderAndDataType)
 })
 export class ColumnsAddedOnInitComponent extends BasicGridComponent implements OnInit {
     public columns = [];
     public data = [];
     public ngOnInit(): void {
         this.columns = [
-            { field: 'CompanyName' },
-            { field: 'ContactName' },
-            { field: 'Address' }];
+            { field: 'CompanyName', header: 'Company Name' },
+            { field: 'ContactName', header: 'Contact Name' },
+            { field: 'Address', header: 'Address' }];
         this.data = SampleTestData.contactInfoData();
 
         for (let i = 0; i < 3; i++) {

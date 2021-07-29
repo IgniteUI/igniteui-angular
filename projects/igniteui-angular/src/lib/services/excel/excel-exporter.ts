@@ -82,6 +82,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         let columnCount;
         let columnWidths;
         let indexOfLastPinnedColumn;
+        let owner;
 
         const columnsExceedLimit = typeof firstDataElement !== 'undefined' ?
             isHierarchicalGrid ?
@@ -105,23 +106,24 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             }
 
             if (isHierarchicalGrid) {
+                owner = this._ownersMap.get(firstDataElement.owner);
                 columnCount = data
                     .map(a => this._ownersMap.get(a.owner).columns.length + a.level)
                     .sort((a,b) => b - a)[0];
 
-                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.header);
+                rootKeys = owner.columns.filter(c => !c.skip).map(c => c.field);
             } else {
-                const defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
-                const columns = defaultOwner.columns.filter(col => !col.skip);
-                columnWidths = defaultOwner.columnWidths;
-                indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
+                owner = this._ownersMap.get(DEFAULT_OWNER);
+                const columns = owner.columns.filter(col => !col.skip);
+                columnWidths = owner.columnWidths;
+                indexOfLastPinnedColumn = owner.indexOfLastPinnedColumn;
                 columnCount = columns.length;
-                rootKeys = columns.map(c => c.header);
+                rootKeys = columns.map(c => c.field);
             }
         }
 
         const worksheetData =
-            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths);
+            new WorksheetData(data, options, this._sort, columnCount, rootKeys, indexOfLastPinnedColumn, columnWidths, owner);
 
         this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
 
