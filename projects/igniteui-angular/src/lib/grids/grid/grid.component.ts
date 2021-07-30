@@ -493,7 +493,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
-            return new IgxGridCell(this, row.index, column.field);
+            return new IgxGridCell(this, rowIndex, column.field);
         }
     }
 

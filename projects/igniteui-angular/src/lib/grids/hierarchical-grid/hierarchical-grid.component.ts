@@ -301,7 +301,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.visibleIndex === index);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, row, column.field);
+            return new IgxGridCell(this, rowIndex, column.field);
         }
     }
 
