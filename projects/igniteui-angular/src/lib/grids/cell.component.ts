@@ -89,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowData);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -174,7 +174,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
          * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
          */
         Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType()
+            get: () => this.getCellType(true)
         });
         return ctx;
     }
@@ -1040,7 +1040,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
 
-    private getCellType(): CellType {
-        return new IgxGridCell(this.grid, this.intRow.index, this.column.field);
+    private getCellType(useRow?: boolean): CellType {
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }
