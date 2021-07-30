@@ -89,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowID);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -1041,7 +1041,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private getCellType(useRow?: boolean): CellType {
-        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowID) : this.intRow.index;
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.rowID;
         return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }
