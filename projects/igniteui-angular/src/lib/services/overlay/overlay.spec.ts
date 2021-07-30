@@ -3807,7 +3807,6 @@ describe('igxOverlay', () => {
         }));
 
         it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(async () => {
-            // TO DO replace Spies with css class and/or getBoundingClientRect.
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -3834,13 +3833,15 @@ describe('igxOverlay', () => {
             expect(overlay.show).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(0);
 
-            fixture.componentInstance.buttonElement.nativeElement.click();
+            document.documentElement.click();
             tick();
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.onClosing.emit)
                 .toHaveBeenCalledWith({
-                    id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                    event: new MouseEvent('click')
+                    id: firstCallId,
+                    componentRef: jasmine.any(ComponentRef) as any,
+                    cancel: false,
+                    event: jasmine.any(Event) as any
                 });
         }));
 
@@ -3861,7 +3862,8 @@ describe('igxOverlay', () => {
             spyOn(overlay.onClosing, 'emit');
             spyOn(overlay.onClosed, 'emit');
 
-            overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            let callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(callId);
             tick();
             expect(overlay.show).toHaveBeenCalledTimes(1);
 
@@ -3875,10 +3877,19 @@ describe('igxOverlay', () => {
             tick();
             expect(overlay.onClosing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.onClosed.emit).toHaveBeenCalledTimes(1);
+            expect(overlay.onClosing.emit)
+            .toHaveBeenCalledWith({
+                id: callId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: undefined
+            });
+            overlay.detachAll();
 
             overlaySettings.excludeFromOutsideClick = [];
             tick();
-            const callId = overlay.show(overlay.attach(SimpleDynamicComponent), overlaySettings);
+            callId = overlay.attach(SimpleDynamicComponent, overlaySettings);
+            overlay.show(callId);
             tick();
 
             expect(overlay.show).toHaveBeenCalledTimes(2);
@@ -3889,8 +3900,10 @@ describe('igxOverlay', () => {
             expect(overlay.onClosed.emit).toHaveBeenCalledTimes(2);
             expect(overlay.onClosing.emit)
                 .toHaveBeenCalledWith({
-                    id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                    event: new MouseEvent('click')
+                    id: callId,
+                    componentRef: jasmine.any(ComponentRef) as any,
+                    cancel: false,
+                    event: jasmine.any(Event) as any
                 });
         }));
     });
