@@ -238,7 +238,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      */
     @Input()
     @HostBinding('class.igx-button--disabled')
-    public get disabled() {
+    public get disabled(): boolean {
         return this._disabled;
     }
 
@@ -251,7 +251,7 @@ export class IgxButtonDirective extends DisplayDensityBase {
      * ```
      */
     public set disabled(val: boolean) {
-        this._disabled = !!val;
+        this._disabled = (val as any === '') || val;
     }
 
     /**

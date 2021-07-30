@@ -1116,12 +1116,12 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, 1);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, false, 1);
 
         // second level row
@@ -1133,11 +1133,11 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, 2);
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID), rowToDrag.nativeElement, rowDragDirective, 2);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index), rowToDrag.nativeElement, rowDragDirective, false, 2);
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID), rowToDrag.nativeElement, rowDragDirective, false, 2);
 
         // third level row
         dragIndicatorElement = dragIndicatorElements[3].nativeElement;
@@ -1148,12 +1148,12 @@ describe('Row Drag Tests #tGrid', () => {
 
         rowDragDirective.onPointerDown(pointerDownEvent);
         rowDragDirective.onPointerMove(pointerMoveEvent);
-        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragStartEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, 3);
         rowDragDirective.onPointerMove(pointerMoveToDropEvent);
         rowDragDirective.onPointerUp(pointerUpEvent);
         fixture.detectChanges();
-        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByIndex(rowToDrag.index),
+        verifyRowDragEndEvent(dragGrid, dragGrid.getRowByKey(rowToDrag.rowID),
             rowToDrag.nativeElement, rowDragDirective, false, 3);
     });
 });
