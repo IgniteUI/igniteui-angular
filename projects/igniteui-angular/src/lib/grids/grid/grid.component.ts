@@ -762,7 +762,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
-        return record.records && record.records.length;
+        return record && record?.records && record.records?.length;
     }
 
     /**
