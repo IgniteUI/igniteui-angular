@@ -1053,10 +1053,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => {
-            const rowID = this.primaryKey ? rec[this.primaryKey] : rec;
-            return this.createRow(index, rowID);
-        });
+        return this.dataView.map((rec, index) => this.createRow(index));
     }
 
     /**
