@@ -1041,6 +1041,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private getCellType(): CellType {
-        return new IgxGridCell(this.grid, this.row.index, this.column.field);
+        return new IgxGridCell(this.grid, this.intRow.index, this.column.field);
     }
 }
