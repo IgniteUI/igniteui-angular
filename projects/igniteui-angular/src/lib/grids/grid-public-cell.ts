@@ -35,6 +35,7 @@ export class IgxGridCell implements CellType {
 			this._rowIndex = row;
 		} else {
 			this._row = row;
+			this._rowIndex = row.index;
 		}
 		if (typeof column === 'string') {
 			this._columnField = column;
@@ -52,7 +53,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get row(): RowType {
-		return this._row || this.grid.createRow(this._rowIndex);
+		return this.grid.createRow(this._rowIndex);
 	}
 
 	/**
