@@ -481,7 +481,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index, rec));
+        return this.dataView.map((rec, index) => this.createRow(index));
     }
 
     /**
@@ -520,7 +520,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByIndex(rowIndex);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && row instanceof IgxHierarchicalGridRow && column) {
-            return new IgxGridCell(this, row, columnField);
+            return new IgxGridCell(this, rowIndex, columnField);
         }
     }
 
@@ -540,7 +540,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
         const row = this.getRowByKey(rowSelector);
         const column = this.columnList.find((col) => col.field === columnField);
         if (row && column) {
-            return new IgxGridCell(this, row, columnField);
+            return new IgxGridCell(this, row.index, columnField);
         }
     }
 
