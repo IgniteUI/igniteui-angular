@@ -3864,7 +3864,6 @@ describe('igxOverlay', () => {
                 cancel: false,
                 event: undefined
             });
-            overlay.detachAll();
 
             overlaySettings.excludeFromOutsideClick = [];
             tick();
