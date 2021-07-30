@@ -53,7 +53,7 @@ export class IgxGridCell implements CellType {
 	 * @memberof IgxGridCell
 	 */
 	public get row(): RowType {
-		return this.grid.createRow(this._rowIndex);
+		return this.grid.createRow(this._rowIndex, this._row?.key);
 	}
 
 	/**

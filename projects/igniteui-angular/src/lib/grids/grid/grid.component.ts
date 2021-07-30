@@ -1053,7 +1053,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((rec, index) => {
+            const rowID = this.primaryKey ? rec[this.primaryKey] : rec;
+            return this.createRow(index, rowID);
+        });
     }
 
     /**
@@ -1129,10 +1132,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, key?: any): RowType {
         let row: RowType;
 
-        const rec: any = this.dataView[index];
+        const rec: any = key ? this.gridAPI.getRowData(key) : this.dataView[index];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);

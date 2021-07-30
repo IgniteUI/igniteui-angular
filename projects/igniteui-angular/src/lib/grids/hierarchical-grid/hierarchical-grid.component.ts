@@ -483,7 +483,10 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
      * @hidden @internal
      */
     public allRows(): RowType[] {
-        return this.dataView.map((rec, index) => this.createRow(index));
+        return this.dataView.map((rec, index) => {
+            const rowID = this.primaryKey ? rec[this.primaryKey] : rec;
+            return this.createRow(index, rowID);
+        });
     }
 
     /**
@@ -822,9 +825,9 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, key? : any): RowType {
         let row: RowType;
-        const rec: any = this.dataView[index];
+        const rec: any = key ? this.gridAPI.getRowData(key) : this.dataView[index];
 
         if (!row && rec && !rec.childGridsData) {
             row = new IgxHierarchicalGridRow(this, index, rec);
