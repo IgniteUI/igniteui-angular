@@ -25,7 +25,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
+import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
@@ -165,11 +165,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get context(): any {
-        return {
+        const ctx = {
             $implicit: this.value,
-            cell: this.getCellType(),
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
         };
+        /* Turns the `cell` property from the template context object into lazy-evaluated one.
+         * Otherwise on each detection cycle the cell template is recreating N cell instances where
+         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+         */
+        Object.defineProperty(ctx, 'cell', {
+            get: () => this.getCellType()
+        });
+        return ctx;
     }
 
     /**
@@ -804,7 +811,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        const args = this.gridAPI.update_cell(cell);
+        this.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
@@ -831,7 +838,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             return;
         }
-        if(this.platformUtil.isFirefox) {
+        if (this.platformUtil.isFirefox) {
             event.preventDefault();
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
