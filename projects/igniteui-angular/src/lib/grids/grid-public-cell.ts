@@ -34,7 +34,6 @@ export class IgxGridCell implements CellType {
 		if (typeof row === 'number') {
 			this._rowIndex = row;
 		} else {
-			this._row = row;
 			this._rowIndex = row.index;
 		}
 		if (typeof column === 'string') {
