@@ -3948,7 +3948,6 @@ describe('igxOverlay', () => {
         }));
 
         it('Should collapse/close the component when click outside it (DropDown, DatePicker, NavBar etc.)', fakeAsync(async () => {
-            // TO DO replace Spies with css class and/or getBoundingClientRect.
             TestBed.overrideComponent(EmptyPageComponent, {
                 set: {
                     styles: [
@@ -3980,8 +3979,10 @@ describe('igxOverlay', () => {
             tick();
             expect(overlay.closing.emit).toHaveBeenCalledTimes(1);
             expect(overlay.closing.emit).toHaveBeenCalledWith({
-                id: firstCallId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                event: new PointerEvent('click')
+                id: firstCallId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: jasmine.any(Event) as any
             });
         }));
 
@@ -4019,7 +4020,9 @@ describe('igxOverlay', () => {
             expect(overlay.closed.emit).toHaveBeenCalledTimes(1);
             expect(overlay.closing.emit)
             .toHaveBeenCalledWith({
-                id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
+                id: callId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
                 event: undefined
             });
             overlay.detachAll();
@@ -4038,8 +4041,10 @@ describe('igxOverlay', () => {
             expect(overlay.closed.emit).toHaveBeenCalledTimes(2);
             expect(overlay.closing.emit)
             .toHaveBeenCalledWith({
-                id: callId, componentRef: jasmine.any(ComponentRef) as any, cancel: false,
-                event: new PointerEvent('click')
+                id: callId,
+                componentRef: jasmine.any(ComponentRef) as any,
+                cancel: false,
+                event: jasmine.any(Event) as any
             });
         }));
     });
