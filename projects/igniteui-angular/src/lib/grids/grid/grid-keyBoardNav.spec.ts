@@ -868,7 +868,7 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             grid.headerContainer.getScroll().scrollLeft = 1000;
             await wait(DEBOUNCETIME);
 
-            const cell = grid.gridAPI.get_cell_by_index(2, 'Released');
+            let cell = grid.getCellByColumn(2, 'Released');
             UIInteractions.simulateClickAndSelectEvent(cell);
             await wait();
             fix.detectChanges();
@@ -878,21 +878,21 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
 
                 if (!(row instanceof IgxGridGroupByRowComponent)) {
                     const selectedCell = grid.selectedCells[0];
-                    expect(selectedCell.row.index).toEqual(index);
+                    expect(selectedCell.rowIndex).toEqual(index);
                     expect(selectedCell.column.field).toEqual('Released');
                 }
                 UIInteractions.triggerEventHandlerKeyDown('arrowDown', gridContent);
                 await wait(DEBOUNCETIME);
                 fix.detectChanges();
             }
-            let cell2 = grid.getCellByColumn(9, 'Released');
-            expect(cell2.selected).toBe(true);
+            cell = grid.getCellByColumn(9, 'Released');
+            expect(cell.selected).toBe(true);
 
             for (let index = 9; index > 1; index--) {
                 row = grid.gridAPI.get_row_by_index(index);
                 if (!(row instanceof IgxGridGroupByRowComponent)) {
                     const selectedCell = grid.selectedCells[0];
-                    expect(selectedCell.row.index).toEqual(index);
+                    expect(selectedCell.rowIndex).toEqual(index);
                     expect(selectedCell.column.field).toEqual('Released');
                 }
                 UIInteractions.triggerEventHandlerKeyDown('arrowUp', gridContent);
@@ -904,8 +904,8 @@ describe('IgxGrid - Keyboard navigation #grid', () => {
             expect(row instanceof IgxGridGroupByRowComponent).toBe(true);
             expect(row.focused).toBe(true);
 
-            cell2 = grid.getCellByColumn(2, 'Released');
-            expect(cell2.selected).toBe(true);
+            cell = grid.getCellByColumn(2, 'Released');
+            expect(cell.selected).toBe(true);
         });
 
         it('should focus grouped row when press arrow keys up or down', (async () => {
