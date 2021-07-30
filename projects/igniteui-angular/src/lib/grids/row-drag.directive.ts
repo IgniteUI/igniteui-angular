@@ -27,7 +27,7 @@ export class IgxRowDragDirective extends IgxDragDirective implements OnDestroy {
     }
 
     public get data(): any {
-        return this._data.grid.createRow(this._data.index, this._data.rowID);
+        return this._data.grid.createRow(this._data.index);
     }
 
     private subscription$: Subscription;
