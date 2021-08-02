@@ -47,6 +47,7 @@ export interface IColumnInfo {
     dataType?: GridColumnDataType;
     skipFormatter?: boolean;
     formatter?: any;
+    maxLevel?: number;
 }
 
 /**
@@ -304,7 +305,7 @@ export abstract class IgxBaseExporter {
                         rawValue = rawValue.toString();
                     }
 
-                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});

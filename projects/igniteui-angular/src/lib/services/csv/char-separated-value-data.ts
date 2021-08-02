@@ -1,5 +1,6 @@
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { yieldingLoop } from '../../core/utils';
+import { IColumnInfo } from '../exporter-common/base-export-service';
 
 /**
  * @hidden
@@ -13,7 +14,7 @@ export class CharSeparatedValueData {
     private _delimiterLength = 1;
     private _isSpecialData = false;
 
-    constructor(private _data: any[], valueDelimiter: string)  {
+    constructor(private _data: any[], valueDelimiter: string, private columns: IColumnInfo[] = [])  {
         this.setDelimiter(valueDelimiter);
     }
 
@@ -46,7 +47,8 @@ export class CharSeparatedValueData {
             done('');
         }
 
-        const keys = ExportUtilities.getKeysFromData(this._data);
+        const columns = this.columns?.filter(c => !c.skip);
+        const keys = columns && columns.length ? columns.map(c => c.field) : ExportUtilities.getKeysFromData(this._data);
 
         if (keys.length === 0) {
             done('');
@@ -55,7 +57,10 @@ export class CharSeparatedValueData {
         this._isSpecialData = ExportUtilities.isSpecialData(this._data[0]);
         this._escapeCharacters.push(this._delimiter);
 
-        this._headerRecord = this.processHeaderRecord(keys);
+        const headers = columns && columns.length ?
+                        columns.map(c => c.header ? c.header : c.field) :
+                        keys;
+        this._headerRecord = this.processHeaderRecord(headers);
         this.processDataRecordsAsync(this._data, keys, (dr) => {
             done(this._headerRecord + dr);
         });

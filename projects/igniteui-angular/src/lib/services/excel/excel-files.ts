@@ -61,6 +61,7 @@ export class WorksheetFile implements IExcelFile {
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
+    private rowIndex = 0;
 
     public writeElement() {}
 
@@ -81,6 +82,7 @@ export class WorksheetFile implements IExcelFile {
         let sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
+        this.rowIndex = 0;
 
         if (worksheetData.isEmpty) {
             sheetData += '<sheetData/>';
@@ -93,13 +95,19 @@ export class WorksheetFile implements IExcelFile {
             const rowStyle = isHierarchicalGrid ? ' s="3"' : '';
             this.rowHeight = height ? ` ht="${height}" customHeight="1"` : '';
 
+            this.rowIndex++;
             sheetData += `<sheetData><row r="1"${this.rowHeight}>`;
 
-            for (let i = 0; i < worksheetData.rootKeys.length; i++) {
-                const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.rootKeys[i], true);
-                sheetData += `<c r="${column}"${rowStyle} t="s"><v>${value}</v></c>`;
-            }
+            const headers = worksheetData.owner ?
+                            worksheetData.owner.columns.filter(c => !c.skip).map(c => c.header ?? c.field):
+                            worksheetData.rootKeys;
+
+            headers.forEach((currentCol, index) => {
+                const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
+                const columnValue = dictionary.saveValue(currentCol, true);
+                sheetData += `<c r="${columnCoordinate}"${rowStyle} t="s"><v>${columnValue}</v></c>`;
+            });
+
             sheetData += '</row>';
 
             if (!isHierarchicalGrid) {
@@ -149,16 +157,24 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
+        const isHierarchicalGrid =
+            worksheetData.data.some(r => r.type === ExportRecordType.HeaderRecord || r.type === ExportRecordType.HierarchicalGridRecord);
+
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                rowDataArr[i] = this.processRow(worksheetData, i + 1);
+                const keys = !isHierarchicalGrid ?
+                                    worksheetData.rootKeys :
+                                    Object.keys(worksheetData.data[i].data);
+
+                rowDataArr[i] = this.processRow(worksheetData, i + 1, keys);
             },
             () => {
                 done(rowDataArr.join(''));
             });
     }
 
-    private processRow(worksheetData: WorksheetData, i: number) {
+    private processRow(worksheetData: WorksheetData, i: number, headers: any[]) {
+        // const rowData = new Array(worksheetData.columnCount + 2);
         const record = worksheetData.data[i - 1];
 
         const isHierarchicalGrid = record.type === ExportRecordType.HeaderRecord || record.type === ExportRecordType.HierarchicalGridRecord;
@@ -172,13 +188,11 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        const keys = worksheetData.isSpecialData ? [record.data] : Object.keys(record.data);
+        const keys = worksheetData.isSpecialData ? [record.data] : headers;
 
         for (let j = 0; j < keys.length; j++) {
             const col = j + (isHierarchicalGrid ? rowLevel : 0);
-
             const cellData = WorksheetFile.getCellData(worksheetData, i, col, keys[j]);
-
             rowData[j + 1] = cellData;
         }
 
@@ -284,7 +298,10 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.rootKeys;
+        const values = worksheetData.owner ?
+                        worksheetData.owner.columns.filter(c => !c.skip).map(c => c.header ?? c.field) :
+                        worksheetData.rootKeys;
+
         let sortString = '';
 
         let tableColumns = '<tableColumns count="' + columnCount + '">';
