@@ -16,7 +16,8 @@ import {
     GridHireDateComponent,
     GridExportGroupedDataComponent,
     MultiColumnHeadersExportComponent,
-    GridWithEmptyColumnsComponent
+    GridWithEmptyColumnsComponent,
+    ColumnsAddedOnInitComponent
 } from '../../test-utils/grid-samples.spec';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { first } from 'rxjs/operators';
@@ -59,7 +60,8 @@ describe('Excel Exporter', () => {
                 GridExportGroupedDataComponent,
                 IgxHierarchicalGridExportComponent,
                 MultiColumnHeadersExportComponent,
-                IgxHierarchicalGridMultiColumnHeadersExportComponent
+                IgxHierarchicalGridMultiColumnHeadersExportComponent,
+                ColumnsAddedOnInitComponent
             ],
             imports: [IgxGridModule, IgxTreeGridModule, IgxHierarchicalGridModule, NoopAnimationsModule]
         }).compileComponents();
@@ -690,6 +692,15 @@ describe('Excel Exporter', () => {
             fix.detectChanges();
 
             await exportAndVerify(grid, options, actualData.exportGroupedDataWithIgnoreGrouping);
+        });
+
+        it('should map dynamically added data & columns properly (#9872).', async () => {
+            const fix = TestBed.createComponent(ColumnsAddedOnInitComponent);
+            fix.detectChanges();
+            await wait();
+
+            const grid = fix.componentInstance.grid;
+            await exportAndVerify(grid, options, actualData.columnsAddedOnInit);
         });
     });
 
