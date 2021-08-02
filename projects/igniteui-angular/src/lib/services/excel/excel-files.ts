@@ -60,6 +60,7 @@ export class WorksheetFile implements IExcelFile {
     private dimension = '';
     private freezePane = '';
     private rowHeight = '';
+    private rowIndex = 0;
 
     public writeElement() {}
 
@@ -79,22 +80,27 @@ export class WorksheetFile implements IExcelFile {
         let sheetData = '';
         let cols = '';
         const dictionary = worksheetData.dataDictionary;
+        this.rowIndex = 0;
 
         if (worksheetData.isEmpty) {
             sheetData += '<sheetData/>';
             this.dimension = 'A1';
             done('', sheetData);
         } else {
+            const owner = worksheetData.owner;
             sheetData += '<sheetData>';
             const height =  worksheetData.options.rowHeight;
             this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
+
+            this.rowIndex++;
             sheetData += `<row r="1"${this.rowHeight}>`;
 
-            for (let i = 0; i < worksheetData.columnCount; i++) {
-                const column = ExcelStrings.getExcelColumn(i) + 1;
-                const value = dictionary.saveValue(worksheetData.keys[i], i, true);
-                sheetData += `<c r="${column}" t="s"><v>${value}</v></c>`;
-            }
+            owner.columns.filter(c => !c.skip).forEach((currentCol, index) => {
+                const columnCoordinate = ExcelStrings.getExcelColumn(index) + this.rowIndex;
+                const columnValue = dictionary.saveValue(currentCol.header, index, true);
+                sheetData += `<c r="${columnCoordinate}" t="s"><v>${columnValue}</v></c>`;
+            });
+
             sheetData += '</row>';
 
             this.dimension = 'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + worksheetData.rowCount;
@@ -136,16 +142,20 @@ export class WorksheetFile implements IExcelFile {
         const height =  worksheetData.options.rowHeight;
         this.rowHeight = height ? ' ht="' + height + '" customHeight="1"' : '';
 
+        const recordHeaders = worksheetData.owner.columns
+                    .filter(c => !c.skip)
+                    .map(c => c.field);
+
         yieldingLoop(worksheetData.rowCount - 1, 1000,
             (i) => {
-                rowDataArr[i] = this.processRow(worksheetData, i + 1);
+                rowDataArr[i] = this.processRow(worksheetData, i + 1, recordHeaders);
             },
             () => {
                 done(rowDataArr.join(''));
             });
     }
 
-    private processRow(worksheetData: WorksheetData, i: number) {
+    private processRow(worksheetData: WorksheetData, i: number, headers: any[]) {
         const rowData = new Array(worksheetData.columnCount + 2);
         const record = worksheetData.data[i - 1];
         const sHidden = record.hidden ? ` hidden="1"` : '';
@@ -156,8 +166,10 @@ export class WorksheetFile implements IExcelFile {
 
         rowData[0] = `<row r="${(i + 1)}"${this.rowHeight}${outlineLevel}${sHidden}>`;
 
-        for (let j = 0; j < worksheetData.columnCount; j++) {
-            const cellData = WorksheetFile.getCellData(worksheetData, i, j);
+        const keys = worksheetData.isSpecialData ? [record.data] : headers;
+
+        for (let j = 0; j < keys.length; j++) {
+            const cellData = WorksheetFile.getCellData(worksheetData, i, j, keys[j]);
             rowData[j + 1] = cellData;
         }
 
@@ -167,15 +179,14 @@ export class WorksheetFile implements IExcelFile {
     }
 
     /* eslint-disable  @typescript-eslint/member-ordering */
-    private static getCellData(worksheetData: WorksheetData, row: number, column: number): string {
+    private static getCellData(worksheetData: WorksheetData, row: number, column: number, key: string): string {
         const dictionary = worksheetData.dataDictionary;
         const columnName = ExcelStrings.getExcelColumn(column) + (row + 1);
-        const columnHeader = worksheetData.keys[column];
         const fullRow = worksheetData.data[row - 1];
 
         const cellValue = worksheetData.isSpecialData ?
             fullRow.data :
-            fullRow.data[columnHeader];
+            fullRow.data[key];
 
         if (cellValue === undefined || cellValue === null) {
             return `<c r="${columnName}" s="1"/>`;
@@ -261,7 +272,10 @@ export class TablesFile implements IExcelFile {
         const columnCount = worksheetData.columnCount;
         const lastColumn = ExcelStrings.getExcelColumn(columnCount - 1) + worksheetData.rowCount;
         const dimension = 'A1:' + lastColumn;
-        const values = worksheetData.keys;
+        const values = worksheetData.owner.columns
+                            .filter(c => !c.skip)
+                            .map(c => c.header);
+
         let sortString = '';
 
         let tableColumns = '<tableColumns count="' + columnCount + '">';
