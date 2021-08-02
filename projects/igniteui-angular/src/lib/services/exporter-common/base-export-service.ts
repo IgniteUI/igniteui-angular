@@ -375,7 +375,7 @@ export abstract class IgxBaseExporter {
                         rawValue = rawValue.toString();
                     }
 
-                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
