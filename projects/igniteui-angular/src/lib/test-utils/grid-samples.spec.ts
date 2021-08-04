@@ -1579,11 +1579,14 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
     @ViewChild('gridCustomSelectors', { static: true })
     public grid: IgxGridComponent;
+    public rowCheckboxClick: any;
+    public headerCheckboxClick: any;
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
     }
 
     public onRowCheckboxClick(event, rowContext) {
+        this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
@@ -1594,6 +1597,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     }
 
     public onHeaderCheckboxClick(event, headContext) {
+        this.headerCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (headContext.selected) {
@@ -2431,4 +2435,28 @@ export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();
+}
+
+/** Issue 9872 */
+@Component({
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType)
+})
+export class ColumnsAddedOnInitComponent extends BasicGridComponent implements OnInit {
+    public columns = [];
+    public data = [];
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'CompanyName' },
+            { field: 'ContactName' },
+            { field: 'Address' }];
+        this.data = SampleTestData.contactInfoData();
+
+        for (let i = 0; i < 3; i++) {
+            this.columns.push({ field: i.toString() }); //add columns for the horizon
+            this.data.forEach(
+                c => (c[i] = i * 2500)
+            ); //add random quantity to each customer for each period in the horizon
+        }
+    }
+
 }
