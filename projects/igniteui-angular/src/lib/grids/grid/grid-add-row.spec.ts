@@ -408,7 +408,7 @@ describe('IgxGrid - Row Adding #grid', () => {
 
             endTransition();
 
-            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(1, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'aaa');
             fixture.detectChanges();
@@ -433,7 +433,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             expect(grid.cellEditEnter.emit).toHaveBeenCalled();
             expect(grid.rowEditEnter.emit).toHaveBeenCalled();
 
-            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(1, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'aaa');
             fixture.detectChanges();
@@ -695,7 +695,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRow).toBeTrue();
 
-            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(1, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'Alan');
             grid.gridAPI.crudService.endEdit(true);
@@ -716,7 +716,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRow).toBeTrue();
 
-            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(1, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'Xuary');
             grid.gridAPI.crudService.endEdit(true);
@@ -770,7 +770,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             const newRow = grid.gridAPI.get_row_by_index(1);
             expect(newRow.addRow).toBeTrue();
 
-            const cell =  grid.getCellByColumn(1, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(1, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'Azua');
             grid.gridAPI.crudService.endEdit(true);
@@ -845,7 +845,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             });
             fixture.detectChanges();
 
-            const groupRows = grid.groupsRowList.toArray();
+            let groupRows = grid.groupsRowList.toArray();
             grid.toggleGroup(groupRows[2].groupRow);
             fixture.detectChanges();
             expect(groupRows[2].expanded).toBeFalse();
@@ -855,7 +855,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             endTransition();
 
-            const cell =  grid.getCellByColumn(2, 'CompanyName');
+            const cell =  grid.gridAPI.get_cell_by_index(2, 'CompanyName');
             const cellInput = cell.nativeElement.querySelector('[igxinput]');
             UIInteractions.setInputElementValue(cellInput, 'Antonio Moreno Taquería');
             grid.gridAPI.crudService.endEdit(true);
@@ -867,6 +867,7 @@ describe('IgxGrid - Row Adding #grid', () => {
             fixture.detectChanges();
             const row2 = grid.getRowByKey(addedRec[grid.primaryKey]);
 
+            groupRows = grid.groupsRowList.toArray();
             expect(row2).not.toBeNull();
             expect(groupRows[2].expanded).toBeTrue();
             expect(groupRows[2].groupRow.records.length).toEqual(2);

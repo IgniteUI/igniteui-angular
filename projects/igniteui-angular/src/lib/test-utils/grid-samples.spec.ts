@@ -1,5 +1,4 @@
 import { Component, TemplateRef, ViewChild, Input, AfterViewInit, ChangeDetectorRef, QueryList, ViewChildren, OnInit } from '@angular/core';
-import { IgxGridCellComponent } from '../grids/cell.component';
 import { IgxDateSummaryOperand, IgxNumberSummaryOperand, IgxSummaryResult } from '../grids/summaries/grid-summary';
 import { IGridCellEventArgs, IGridEditEventArgs } from '../grids/common/events';
 import {
@@ -14,7 +13,7 @@ import { IgxFilteringOperand, IgxNumberFilteringOperand } from '../data-operatio
 import { ExpressionUI } from '../grids/filtering/grid-filtering.service';
 import { IFilteringExpressionsTree, FilteringExpressionsTree } from '../data-operations/filtering-expressions-tree';
 import { FilteringStrategy } from '../data-operations/filtering-strategy';
-import { IgxGridComponent } from '../grids/grid/public_api';
+import { CellType, IgxGridComponent } from '../grids/grid/public_api';
 import { IgxRowEditTabStopDirective } from '../grids/grid.rowEdit.directive';
 import { IgxGridExcelStyleFilteringComponent } from '../grids/filtering/excel-style/grid.excel-style-filtering.component';
 import { FilteringLogic } from '../data-operations/filtering-expression.interface';
@@ -678,7 +677,7 @@ export class PinningComponent extends GridWithSizeComponent
     public width = '800px';
     public height = '300px';
 
-    public selectedCell: IgxGridCellComponent;
+    public selectedCell: CellType;
     public cellSelected(event: IGridCellEventArgs) {
         this.selectedCell = event.cell;
     }
@@ -954,7 +953,7 @@ export class VirtualGridComponent extends BasicGridComponent {
         { field: 'other' },
         { field: 'another' }
     ];
-    public selectedCell: IgxGridCellComponent;
+    public selectedCell: CellType;
     constructor() {
         super();
         this.data = this.generateData(1000);
@@ -1580,11 +1579,14 @@ export class DynamicColumnsComponent extends GridWithSizeComponent {
 export class GridCustomSelectorsComponent extends BasicGridComponent implements OnInit {
     @ViewChild('gridCustomSelectors', { static: true })
     public grid: IgxGridComponent;
+    public rowCheckboxClick: any;
+    public headerCheckboxClick: any;
     public ngOnInit(): void {
         this.data = SampleTestData.contactInfoDataFull();
     }
 
     public onRowCheckboxClick(event, rowContext) {
+        this.rowCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (rowContext.selected) {
@@ -1595,6 +1597,7 @@ export class GridCustomSelectorsComponent extends BasicGridComponent implements 
     }
 
     public onHeaderCheckboxClick(event, headContext) {
+        this.headerCheckboxClick = event;
         event.stopPropagation();
         event.preventDefault();
         if (headContext.selected) {
@@ -1715,7 +1718,7 @@ export class IgxGridCustomOverlayComponent extends BasicGridComponent {
         return this.grid.gridAPI.crudService.cell;
     }
 
-    public getCurrentEditCell(): IgxGridCellComponent {
+    public getCurrentEditCell(): CellType {
         const grid = this.grid as any;
         const currentCell = grid.gridAPI.crudService.cell;
         return this.grid.getCellByColumn(currentCell.id.rowIndex, currentCell.column.field);
@@ -2432,4 +2435,28 @@ export class GridWithEmptyColumnsComponent {
     @ViewChild('grid1', { static: true }) public grid: IgxGridComponent;
 
     public data = SampleTestData.personJobDataFull();
+}
+
+/** Issue 9872 */
+@Component({
+    template: GridTemplateStrings.declareGrid('', '', ColumnDefinitions.generatedWithDataType)
+})
+export class ColumnsAddedOnInitComponent extends BasicGridComponent implements OnInit {
+    public columns = [];
+    public data = [];
+    public ngOnInit(): void {
+        this.columns = [
+            { field: 'CompanyName' },
+            { field: 'ContactName' },
+            { field: 'Address' }];
+        this.data = SampleTestData.contactInfoData();
+
+        for (let i = 0; i < 3; i++) {
+            this.columns.push({ field: i.toString() }); //add columns for the horizon
+            this.data.forEach(
+                c => (c[i] = i * 2500)
+            ); //add random quantity to each customer for each period in the horizon
+        }
+    }
+
 }

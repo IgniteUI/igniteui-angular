@@ -495,20 +495,23 @@ import {
 |--- |--- |--- |
 |`toggle()`|void| Toggles the expand state of the group row. |
 
-## IgxGridCellComponent
+## IgxGridCell
 
 ### Getters/Setters
 
 |Name|Type|Getter|Setter|Description|
 |--- |--- |--- |--- |--- |
-|`column`|IgxColumnComponent|Yes|No|The column to which the cell belongs.|
-|`row`|IgxGridRowComponent|Yes|No|The row to which the cell belongs.|
-|`value`|any|Yes|No|The value in the cell.|
-|`rowIndex`|number|Yes|No|The index of the row this cell belongs to.|
-|`columnIndex`|number|Yes|No|The index of the column this cell belongs to.|
 |`grid`|IgxGridComponent|Yes|No|The grid component itself.|
-|`inEditMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
-|`nativeElement`|HTMLElement|Yes|No|The native DOM element representing the cell. Could be `null` in certain environments.|
+|`column`|IgxColumnComponent|Yes|No|The column to which the cell belongs.|
+|`row`|RowType|Yes|No|The row to which the cell belongs.|
+|`value`|any|Yes|Yes|The value in the cell.|
+|`editValue`|any|Yes|No|The value in the cell editor.|
+|`selected`|boolean|Yes|Yes|Returns if the cell is selected.|
+|`active`|boolean|Yes|No|Returns if the cell is active (focused).|
+|`editable`|boolean|Yes|No|Returns if the cell can enter edit mode).|
+|`editMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
+|`id`|object|Yes|No|An object describing the cell with `rowID`, `columnID` and `rowIndex`.|
+|`editMode`|boolean|Yes|Yes|Gets/Sets the cell in edit mode.|
 
 ### Methods
 

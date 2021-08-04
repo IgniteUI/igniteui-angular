@@ -25,10 +25,12 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { ISearchInfo } from './grid/public_api';
-import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
+import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
+import { ISearchInfo } from './common/events';
+import { CellType } from './common/cell.interface';
+import { IgxGridCell } from './grid-public-cell';
 
 /**
  * Providing reference to `IgxGridCellComponent`:
@@ -87,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowData);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -163,11 +165,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get context(): any {
-        return {
+        const ctx = {
             $implicit: this.value,
-            cell: this,
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
         };
+        /* Turns the `cell` property from the template context object into lazy-evaluated one.
+         * Otherwise on each detection cycle the cell template is recreating N cell instances where
+         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+         */
+        Object.defineProperty(ctx, 'cell', {
+            get: () => this.getCellType(true)
+        });
+        return ctx;
     }
 
     /**
@@ -193,9 +202,9 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the cell template.
+     * Gets the pinned indicator template.
      * ```typescript
-     * let template = this.cell.template;
+     * let template = this.cell.pinnedIndicatorTemplate;
      * ```
      *
      * @memberof IgxGridCellComponent
@@ -257,7 +266,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Gets the visible `index` of the in which the cell is stored.
+     * Returns the column visible index.
      * ```typescript
      * let visibleColumnIndex = this.cell.visibleColumnIndex;
      * ```
@@ -411,7 +420,6 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     public get gridColumnSpan(): number {
         return this.column.gridColumnSpan;
     }
-
 
     public get rowEnd(): number {
         return this.column.rowEnd;
@@ -678,7 +686,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
 
         this.grid.doubleClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     };
@@ -690,7 +698,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('click', ['$event'])
     public onClick(event: MouseEvent) {
         this.grid.cellClick.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     }
@@ -702,7 +710,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
     @HostListener('contextmenu', ['$event'])
     public onContextMenu(event: MouseEvent) {
         this.grid.contextMenu.emit({
-            cell: this,
+            cell: this.getCellType(),
             event
         });
     }
@@ -803,7 +811,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        const args = this.gridAPI.update_cell(cell);
+        this.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
@@ -830,7 +838,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             return;
         }
-        if(this.platformUtil.isFirefox) {
+        if (this.platformUtil.isFirefox) {
             event.preventDefault();
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
@@ -908,7 +916,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             this.selectionService.keyboardStateOnFocus(node, this.grid.rangeSelected, this.nativeElement);
         }
         if (this.grid.isCellSelectable && shouldEmitSelection) {
-            this.grid.selected.emit({ cell: this, event });
+            this.grid.selected.emit({ cell: this.getCellType(), event });
         }
     }
 
@@ -1030,5 +1038,10 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         }
         this.nativeElement.removeEventListener('pointerenter', this.pointerenter);
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
+    }
+
+    private getCellType(useRow?: boolean): CellType {
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }

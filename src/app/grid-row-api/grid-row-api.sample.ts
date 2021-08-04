@@ -179,6 +179,7 @@ export class GridRowAPISampleComponent implements OnInit {
     public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
         byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
+        const index2: number = row.index;
         if (row.pinned) {
             row.unpin();
         } else {
@@ -270,7 +271,12 @@ export class GridRowAPISampleComponent implements OnInit {
             inEditMode: ${row.inEditMode},
             selected: ${row.selected},
             hasChildren: ${row.hasChildren},
-            disabled: ${row.disabled}`;
+            disabled: ${row.disabled},
+            --------------------------------,
+            cells.length: ${row.cells?.length}`;
+            // firstCell: ${row.cells[0].value},
+            // lastCell: ${row.cells[row.cells.length - 1].value}`;
+
         const states = state.split(',');
         const createElem = this.renderer.createElement('p');
 
