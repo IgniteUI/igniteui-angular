@@ -5638,7 +5638,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public copyHandler(event) {
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        const selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        let selectedData;
+        if (event.type === 'copy'){
+            selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        };
 
         let data = [];
         let result;
@@ -6843,6 +6846,18 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let keys = [];
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
+
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+            const expansionRowIndexes = Array.from( this.expansionStates.keys());
+            if (expansionRowIndexes.length > 0) {
+                expansionRowIndexes.forEach(row => {
+                    if (activeEl.row > Number(row)) {
+                        activeEl.row--;
+                    }
+                });
+            }
+        }
+
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
         const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
