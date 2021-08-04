@@ -16,6 +16,7 @@ import { IgxRippleModule } from '../ripple/ripple.directive';
 import { takeUntil } from 'rxjs/operators';
 import { noop, Subject } from 'rxjs';
 import { mkenum } from '../../core/utils';
+import { DeprecateProperty } from '../../core/deprecateDecorators';
 
 /**
  * Determines the Radio Group alignment
@@ -24,7 +25,7 @@ export const RadioGroupAlignment = mkenum({
     horizontal: 'horizontal',
     vertical: 'vertical'
 });
-export type RadioGroupAlignment = (typeof RadioGroupAlignment)[keyof typeof RadioGroupAlignment];
+export type RadioGroupAlignment = typeof RadioGroupAlignment[keyof typeof RadioGroupAlignment];
 
 let nextId = 0;
 
@@ -123,29 +124,34 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
         return this._required;
     }
     public set required(value: boolean) {
-        this._required = (value as any === '') || value;
+        this._required = (value as any) === '' || value;
         this._setRadioButtonsRequired();
     }
 
     /**
      * An @Input property that allows you to disable the radio group. By default it's false.
      *
+     * @deprecated in version 12.2.0
+     *
      * @example
      *  ```html
-     * <igx-radio-group [disabled]="true"></igx-radio-group>
+     * <igx-radio-group disabled></igx-radio-group>
      * ```
      */
+    @DeprecateProperty('`disabled` is deprecated.')
     @Input()
     public get disabled(): boolean {
         return this._disabled;
     }
     public set disabled(value: boolean) {
-        this._disabled = (value as any === '') || value;
+        this._disabled = (value as any) === '' || value;
         this.setDisabledState(value);
     }
 
     /**
      * Sets/gets the position of the `label` in the child radio buttons.
+     *
+     * @deprecated in version 12.2.0
      *
      * @remarks
      * If not set, `labelPosition` will have value `"after"`.
@@ -155,6 +161,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * <igx-radio-group labelPosition = "before"></igx-radio-group>
      * ```
      */
+    @DeprecateProperty('`labelPosition` is deprecated.')
     @Input()
     public get labelPosition(): RadioLabelPosition | string {
         return this._labelPosition;
@@ -340,10 +347,10 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @hidden
      * @internal
      */
-     public setDisabledState(isDisabled: boolean) {
+    public setDisabledState(isDisabled: boolean) {
         if (this.radioButtons) {
             this.radioButtons.forEach((button) => {
-                button.disabled = isDisabled;
+                button.setDisabledState(isDisabled);
             });
         }
     }
@@ -396,7 +403,7 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
      * @internal
      */
     private _selectedRadioButtonChanged(args: IChangeRadioEventArgs) {
-        this.radioButtons.forEach(button => {
+        this.radioButtons.forEach((button) => {
             button.checked = button.id === args.radio.id;
         });
 
@@ -487,4 +494,4 @@ export class IgxRadioGroupDirective implements AfterContentInit, ControlValueAcc
     exports: [IgxRadioGroupDirective, IgxRadioComponent],
     imports: [IgxRippleModule]
 })
-export class IgxRadioModule { }
+export class IgxRadioModule {}
