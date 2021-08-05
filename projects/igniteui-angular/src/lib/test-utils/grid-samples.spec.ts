@@ -1786,6 +1786,7 @@ export class IgxGridCurrencyColumnComponent extends BasicGridComponent {
 })
 export class IgxGridPercentColumnComponent extends BasicGridComponent {
     public data = SampleTestData.foodPercentProductData();
+    public testFormatter = (val: string) => 'test' + val;
 }
 @Component({
     template: `
