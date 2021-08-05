@@ -6844,7 +6844,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         let selectedData = [];
         let keys = [];
-        let selectionCollection = new Map();
+        const selectionCollection = new Map();
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
@@ -6852,11 +6852,16 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
             const expansionRowIndexes = Array.from(this.expansionStates.keys());
             if (this.selectionService.selection.size > 0) {
                 if (expansionRowIndexes.length > 0) {
-                    for (let [key, value] of this.selectionService.selection.entries()) {
+                    for (const [key, value] of this.selectionService.selection.entries()) {
                         let updatedKey = key;
                         expansionRowIndexes.forEach(row => {
                             let rowIndex;
-                            row.ID ? rowIndex = Number(row.ID) : rowIndex = Number(row);
+                            if (row.ID) {
+                                rowIndex = Number(row.ID);
+                            }else {
+                                rowIndex = Number(row);
+                            }
+
                             if (updatedKey > Number(rowIndex)) {
                                 updatedKey--;
                             }
