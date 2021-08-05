@@ -48,7 +48,6 @@ describe('IgxGrid - Cell component #grid', () => {
         });
 
         it('verify that value of the cell title is correctly', fakeAsync(() => {
-            const grid = fix.componentInstance.grid;
             const titles = grid.getColumnByName('JobTitle');
 
             expect(titles.cells[0].title).toEqual('Vice President');
