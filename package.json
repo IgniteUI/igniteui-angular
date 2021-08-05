@@ -125,7 +125,7 @@
     "karma-junit-reporter": "~2.0.1",
     "karma-spec-reporter": "~0.0.32",
     "lunr": "^2.3.8",
-    "ng-packagr": "^12.1.0",
+    "ng-packagr": "^12.2.0",
     "pngcrush": "^2.0.1",
     "protractor": "~7.0.0",
     "sass": "^1.35.1",
