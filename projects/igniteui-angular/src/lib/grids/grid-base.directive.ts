@@ -6690,24 +6690,47 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         let selectedData = [];
         let keys = [];
+        let selectionCollection = new Map();
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
 
         if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
-            const expansionRowIndexes = Array.from( this.expansionStates.keys());
-            if (expansionRowIndexes.length > 0) {
-                expansionRowIndexes.forEach(row => {
-                    if (activeEl.row > Number(row)) {
-                        activeEl.row--;
+            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            if (this.selectionService.selection.size > 0) {
+                if (expansionRowIndexes.length > 0) {
+                    for (let [key, value] of this.selectionService.selection.entries()) {
+                        let updatedKey = key;
+                        expansionRowIndexes.forEach(row => {
+                            let rowIndex;
+                            row.ID ? rowIndex = Number(row.ID) : rowIndex = Number(row);
+                            if (updatedKey > Number(rowIndex)) {
+                                updatedKey--;
+                            }
+                        });
+                        selectionCollection.set(updatedKey, value);
                     }
-                });
+                }
+            } else if (activeEl) {
+                if (expansionRowIndexes.length > 0) {
+                    expansionRowIndexes.forEach(row => {
+                        if (activeEl.row > Number(row)) {
+                            activeEl.row--;
+                        }
+                    });
+                }
             }
         }
 
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
-        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+        let selectionMap;
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+            selectionMap = isRemote ? Array.from(selectionCollection) :
+            Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
+        }else {
+            selectionMap = isRemote ? Array.from(this.selectionService.selection) :
             Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+        }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
