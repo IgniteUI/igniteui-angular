@@ -5764,11 +5764,51 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let columnsArray: IgxColumnComponent[];
         let record = {};
         const selectedData = [];
+        const selectionCollection = new Map();
         const activeEl = this.selectionService.activeElement;
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
-        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            if (this.selectionService.selection.size > 0) {
+                if (expansionRowIndexes.length > 0) {
+                    for (const [key, value] of this.selectionService.selection.entries()) {
+                        let updatedKey = key;
+                        expansionRowIndexes.forEach(row => {
+                            let rowIndex;
+                            if (row.ID) {
+                                rowIndex = Number(row.ID);
+                            } else {
+                                rowIndex = Number(row);
+                            }
+
+                            if (updatedKey > Number(rowIndex)) {
+                                updatedKey--;
+                            }
+                        });
+                        selectionCollection.set(updatedKey, value);
+                    }
+                }
+            } else if (activeEl) {
+                if (expansionRowIndexes.length > 0) {
+                    expansionRowIndexes.forEach(row => {
+                        if (activeEl.row > Number(row)) {
+                            activeEl.row--;
+                        }
+                    });
+                }
+            }
+        }
+
+        let selectionMap;
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+            selectionMap = isRemote ? Array.from(selectionCollection) :
+            Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
+        } else {
+            selectionMap = isRemote ? Array.from(this.selectionService.selection) :
             Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+        }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);
@@ -5974,8 +6014,11 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         if (!this.clipboardOptions.enabled || this.crudService.cellInEditMode || (!isIE() && event.type === 'keydown')) {
             return;
         }
+        let data;
+        if (event.type === 'copy') {
+            data = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        }
 
-        const data = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
         const ev = { data, cancel: false } as IGridClipboardEvent;
         this.onGridCopy.emit(ev);
 
