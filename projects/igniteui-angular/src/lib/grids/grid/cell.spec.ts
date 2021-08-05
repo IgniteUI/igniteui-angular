@@ -47,6 +47,19 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(firstCell.readonly).toBe(true);
         });
 
+        it('verify that value of the cell title is correctly', fakeAsync(() => {
+            const titles = grid.getColumnByName('JobTitle');
+
+            expect(titles.cells[0].title).toEqual('Vice President');
+            expect(titles.cells[5].title).toEqual('CEO');
+
+            titles.formatter = fix.componentInstance.testFormatter;
+            fix.detectChanges();
+
+            expect(titles.cells[0].title).toEqual('testVice President');
+            expect(titles.cells[5].title).toEqual('testCEO');
+        }));
+
         it('selection and selection events', () => {
             expect(cellElem.nativeElement.getAttribute('aria-selected')).toMatch('false');
 
