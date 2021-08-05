@@ -7,7 +7,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
-import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent, IgxGridPercentColumnComponent } from '../../test-utils/grid-samples.spec';
+import { VirtualGridComponent, NoScrollsComponent,
+    NoColumnWidthGridComponent, IgxGridPercentColumnComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { IgxGridCellComponent } from '../tree-grid/public_api';
