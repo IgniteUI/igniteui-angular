@@ -1811,6 +1811,8 @@ export class IgxGridPercentColumnComponent extends BasicGridComponent {
 export class IgxGridDateTimeColumnComponent extends BasicGridComponent {
     public data = SampleTestData.foodProductDateTimeData();
     public paging = false;
+
+    public testFormatter = (val: string) => 'test' + val;
 }
 
 @Component({
