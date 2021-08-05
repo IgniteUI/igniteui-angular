@@ -253,6 +253,7 @@ export class ScrollsComponent extends BasicGridComponent {
 })
 export class NoScrollsComponent extends GridWithSizeComponent {
     data = SampleTestData.personIDNameJobCompany();
+    public testFormatter = (val: string) => 'test' + val;
 }
 
 @Component({
