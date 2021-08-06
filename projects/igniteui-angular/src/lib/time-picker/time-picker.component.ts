@@ -76,10 +76,6 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             multi: true
         },
         {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: TimePickerHammerConfig
-        },
-        {
             provide: IGX_TIME_PICKER_COMPONENT,
             useExisting: IgxTimePickerComponent
         },
@@ -957,6 +953,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
         this.updateEditorValue();
+        console.log(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -1295,6 +1292,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     ],
     imports: [
         CommonModule,
+        HammerModule,
         IgxDateTimeEditorModule,
         IgxInputGroupModule,
         IgxIconModule,
@@ -1303,6 +1301,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         IgxToggleModule,
         IgxTextSelectionModule
     ],
-    providers: []
+    providers: [
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: TimePickerHammerConfig
+        }
+    ]
 })
 export class IgxTimePickerModule { }

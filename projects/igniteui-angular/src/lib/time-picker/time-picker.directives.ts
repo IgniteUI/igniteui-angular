@@ -171,24 +171,7 @@ export class IgxItemListDirective implements OnInit, OnDestroy {
 
         const delta = event.deltaY;
         if (delta !== 0) {
-            switch (this.type) {
-                case 'hourList': {
-                    this.timePicker.nextHour(delta);
-                    break;
-                }
-                case 'minuteList': {
-                    this.timePicker.nextMinute(delta);
-                    break;
-                }
-                case 'secondsList': {
-                    this.timePicker.nextSeconds(delta);
-                    break;
-                }
-                case 'ampmList': {
-                    this.timePicker.nextAmPm(delta);
-                    break;
-                }
-            }
+            this.nextItem(delta);
         }
     }
 
