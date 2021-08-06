@@ -166,24 +166,7 @@ export class IgxItemListDirective {
 
         const delta = event.deltaY;
         if (delta !== 0) {
-            switch (this.type) {
-                case 'hourList': {
-                    this.timePicker.nextHour(delta);
-                    break;
-                }
-                case 'minuteList': {
-                    this.timePicker.nextMinute(delta);
-                    break;
-                }
-                case 'secondsList': {
-                    this.timePicker.nextSeconds(delta);
-                    break;
-                }
-                case 'ampmList': {
-                    this.timePicker.nextAmPm(delta);
-                    break;
-                }
-            }
+            this.nextItem(delta);
         }
     }
 
@@ -192,26 +175,10 @@ export class IgxItemListDirective {
      */
     @HostListener('panmove', ['$event'])
     public onPanMove(event) {
-        const delta = event.deltaY < 0 ? 1 : event.deltaY > 0 ? -1 : 0;
-        if (delta !== 0) {
-            switch (this.type) {
-                case 'hourList': {
-                    this.timePicker.nextHour(delta);
-                    break;
-                }
-                case 'minuteList': {
-                    this.timePicker.nextMinute(delta);
-                    break;
-                }
-                case 'secondsList': {
-                    this.timePicker.nextSeconds(delta);
-                    break;
-                }
-                case 'ampmList': {
-                    this.timePicker.nextAmPm(delta);
-                    break;
-                }
-            }
+        console.log(event.deltaY);
+        const delta = event.deltaY < 0 ? -1 : event.deltaY > 0 ? 1 : 0;
+        if (delta !== 0 ) {
+            this.nextItem(delta);
         }
     }
 

@@ -29,7 +29,7 @@ import {
     Validator,
     NG_VALIDATORS
 } from '@angular/forms';
-import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
+import { HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
@@ -65,12 +65,12 @@ import { IgxPickerClearComponent, IgxPickersCommonModule } from '../date-common/
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 
 let NEXT_ID = 0;
-const ITEMS_COUNT = 7;
 
 @Injectable()
 export class TimePickerHammerConfig extends HammerGestureConfig {
-    public overrides = {
-        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
+    public overrides = <any>{
+        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 10}
+        // pan: { enable: false }
     };
 }
 
@@ -85,10 +85,6 @@ export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
             provide: NG_VALUE_ACCESSOR,
             useExisting: IgxTimePickerComponent,
             multi: true
-        },
-        {
-            provide: HAMMER_GESTURE_CONFIG,
-            useClass: TimePickerHammerConfig
         },
         {
             provide: IGX_TIME_PICKER_COMPONENT,
@@ -968,6 +964,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         this._selectedDate = this.validateDropdownValue(this._selectedDate);
         this._selectedDate = new Date(this._selectedDate);
         this.updateEditorValue();
+        console.log(this._selectedDate);
     }
 
     /** @hidden @internal */
@@ -1306,6 +1303,7 @@ export class IgxTimePickerComponent extends PickerBaseDirective
     ],
     imports: [
         CommonModule,
+        HammerModule,
         IgxDateTimeEditorModule,
         IgxInputGroupModule,
         IgxIconModule,
@@ -1314,6 +1312,11 @@ export class IgxTimePickerComponent extends PickerBaseDirective
         IgxToggleModule,
         IgxTextSelectionModule
     ],
-    providers: []
+    providers: [
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: TimePickerHammerConfig
+        }
+    ]
 })
 export class IgxTimePickerModule { }
