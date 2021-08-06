@@ -297,7 +297,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.value;
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value) : this.value;
     }
 
     @HostBinding('class.igx-grid__td--bool-true')
