@@ -304,11 +304,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.column.dataType === GridColumnDataType.Percent ?
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value) :
+            this.column.dataType === GridColumnDataType.Percent ?
             this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
             this.column.dataType === GridColumnDataType.Currency ?
                 this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
                     this.column.pipeArgs.digitsInfo, this.grid.locale) :
+            (this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime ||
+            this.column.dataType === GridColumnDataType.Time) ?
+                this.grid.datePipe.transform(this.value, this.column.pipeArgs.format, this.column.pipeArgs.timezone, this.grid.locale) :
                 this.value;
     }
 
