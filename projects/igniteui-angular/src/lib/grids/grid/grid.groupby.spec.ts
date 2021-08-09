@@ -1786,7 +1786,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    it(`edit selected row so it goes to another group after row editing is Done.`,
+    fit(`edit selected row so it goes to another group after row editing is Done.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
@@ -1810,7 +1810,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             tick(100);
             fix.detectChanges();
 
-            const cell = grid.getCellByKey(5, 'ProductName');
+            const cell = grid.gridAPI.get_cell_by_key(5, 'ProductName');
             UIInteractions.simulateDoubleClickAndSelectEvent(cell);
             fix.detectChanges();
             expect(cell.editMode).toBe(true);
