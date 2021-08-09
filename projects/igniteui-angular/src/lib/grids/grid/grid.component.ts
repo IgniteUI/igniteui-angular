@@ -23,7 +23,7 @@ import { IgxGridSummaryService } from '../summaries/grid-summary.service';
 import { IgxGridSelectionService } from '../selection/selection.service';
 import { IgxForOfSyncService, IgxForOfScrollSyncService } from '../../directives/for-of/for_of.sync.service';
 import { IgxGridMRLNavigationService } from '../grid-mrl-navigation.service';
-import { FilterMode } from '../common/enums';
+import { FilterMode, GridInstanceType } from '../common/enums';
 import { GridType } from '../common/grid.interface';
 import { IgxGroupByRowSelectorDirective } from '../selection/row-selectors';
 import { IgxGridCRUDService } from '../common/crud.service';
@@ -31,6 +31,9 @@ import { IgxGridRow, IgxGroupByRow, IgxSummaryRow } from '../grid-public-row';
 import { RowType } from '../common/row.interface';
 import { StateUpdateEvent, TransactionEventOrigin, TransactionType } from '../../services/transaction/transaction';
 import { IgxGridGroupByAreaComponent } from '../grouping/grid-group-by-area.component';
+import { IgxGridCell } from '../grid-public-cell';
+import { CellType } from '../common/cell.interface';
+import { DeprecateMethod } from '../../core/deprecateDecorators';
 
 let NEXT_ID = 0;
 
@@ -159,7 +162,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-     @ViewChild(IgxGridGroupByAreaComponent)
+    @ViewChild(IgxGridGroupByAreaComponent)
     public groupArea: IgxGridGroupByAreaComponent;
 
     /**
@@ -231,6 +234,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * @hidden @internal
+     * Includes children of collapsed group rows.
      */
     public groupingResult: any[];
 
@@ -241,6 +245,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     /**
      * @hidden @internal
+     * Does not include children of collapsed group rows.
      */
     public groupingFlatResult: any[];
     /**
@@ -471,6 +476,26 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
 
     public get dropAreaMessage(): string {
         return this._dropAreaMessage || this.resourceStrings.igx_grid_groupByArea_message;
+    }
+
+    /**
+     * @deprecated
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumnVisibleIndex(2,"UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param index
+     */
+    @DeprecateMethod('`getCellByColumnVisibleIndex` is deprecated. Use `getCellByColumn` or `getCellByKey` instead')
+    public getCellByColumnVisibleIndex(rowIndex: number, index: number): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.visibleIndex === index);
+        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
+            return new IgxGridCell(this, rowIndex, column.field);
+        }
     }
 
     /**
@@ -738,7 +763,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
-        return record.records && record.records.length;
+        return record && record?.records && record.records?.length;
     }
 
     /**
@@ -814,7 +839,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         if (this.isDetailRecord(rowData)) {
             const cachedData = this.childDetailTemplates.get(rowData.detailsData);
-            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
+            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : rowData.detailsData;
             if (cachedData) {
                 const view = cachedData.view;
                 const tmlpOutlet = cachedData.owner;
@@ -823,13 +848,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     moveView: view,
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
-                    templateID: 'detailRow-' + rowID
+                    templateID: {
+                        type:'detailRow',
+                        id: rowID
+                    }
                 };
             } else {
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData.detailsData,
-                    templateID: 'detailRow-' + rowID,
+                    templateID: {
+                        type:'detailRow',
+                        id: rowID
+                    },
                     index: this.dataView.indexOf(rowData)
                 };
             }
@@ -837,7 +868,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return {
             $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            templateID: {
+                type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+                id: null
+            },
             disabled: this.isGhostRecord(rowData),
             addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
         };
@@ -847,7 +881,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewCreatedHandler(args) {
-        if (args.context.templateID.indexOf('detailRow') !== -1) {
+        if (args.context.templateID.type === 'detailRow') {
             this.childDetailTemplates.set(args.context.$implicit, args);
         }
     }
@@ -856,7 +890,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewMovedHandler(args) {
-        if (args.context.templateID.indexOf('detailRow') !== -1) {
+        if (args.context.templateID.type === 'detailRow') {
             // view was moved, update owner in cache
             const key = args.context.$implicit;
             const cachedData = this.childDetailTemplates.get(key);
@@ -1162,6 +1196,73 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return new IgxGridRow(this, index, rec);
     }
 
+    /**
+     * @hidden @internal
+     */
+    public allRows(): RowType[] {
+        return this.dataView.map((rec, index) => this.createRow(index));
+    }
+
+    /**
+     * Returns the collection of `IgxGridRow`s for current page.
+     *
+     * @hidden @internal
+     */
+    public dataRows(): RowType[] {
+        return this.allRows().filter(row => row instanceof IgxGridRow);
+    }
+
+    /**
+     * Returns an array of the selected `IgxGridCell`s.
+     *
+     * @example
+     * ```typescript
+     * const selectedCells = this.grid.selectedCells;
+     * ```
+     */
+    public get selectedCells(): CellType[] {
+        return this.dataRows().map((row) => row.cells.filter((cell) => cell.selected))
+            .reduce((a, b) => a.concat(b), []);
+    }
+
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @example
+     * ```typescript
+     * const myCell = this.grid1.getCellByColumn(2, "UnitPrice");
+     * ```
+     * @param rowIndex
+     * @param columnField
+     */
+    public getCellByColumn(rowIndex: number, columnField: string): CellType {
+        const row = this.getRowByIndex(rowIndex);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && row instanceof IgxGridRow && !row.data?.detailsData && column) {
+            return new IgxGridCell(this, rowIndex, columnField);
+        }
+    }
+
+    /**
+     * Returns a `CellType` object that matches the conditions.
+     *
+     * @remarks
+     * Requires that the primaryKey property is set.
+     * @example
+     * ```typescript
+     * grid.getCellByKey(1, 'index');
+     * ```
+     * @param rowSelector match any rowID
+     * @param columnField
+     */
+    public getCellByKey(rowSelector: any, columnField: string): CellType {
+        const row = this.getRowByKey(rowSelector);
+        const column = this.columnList.find((col) => col.field === columnField);
+        if (row && column) {
+            return new IgxGridCell(this, row.index, columnField);
+        }
+    }
+
     public pinRow(rowID: any, index?: number): boolean {
         const row = this.getRowByKey(rowID);
         return super.pinRow(rowID, index, row);
@@ -1175,10 +1276,32 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
+    public createRow(index: number, data?: any): RowType {
+        let row: RowType;
+
+        const rec: any = data ?? this.dataView[index];
+
+        if (rec && this.isGroupByRecord(rec)) {
+            row = new IgxGroupByRow(this, index, rec);
+        }
+        if (rec && this.isSummaryRow(rec)) {
+            row = new IgxSummaryRow(this, index, rec.summaries, GridInstanceType.Grid);
+        }
+        // if found record is a no a groupby or summary row, return IgxGridRow instance
+        if (!row && rec) {
+            row = new IgxGridRow(this, index, rec);
+        }
+
+        return row;
+    }
+
+    /**
+     * @hidden @internal
+     */
     protected get defaultTargetBodyHeight(): number {
         const allItems = this.totalItemCount || this.dataLength;
         return this.renderedRowHeight * Math.min(this._defaultTargetRecordNumber,
-            this.paging ? Math.min(allItems, this.perPage) : allItems);
+            this.paginator ? Math.min(allItems, this.paginator.perPage) : allItems);
     }
 
     /**
@@ -1230,28 +1353,6 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     protected _applyGrouping() {
         this._gridAPI.sort_multiple(this._groupingExpressions);
-    }
-
-    /**
-     * @hidden @internal
-     */
-    protected createRow(index: number): RowType {
-        let row: RowType;
-
-        const rec: any = this.dataView[index];
-
-        if (this.isGroupByRecord(rec)) {
-            row = new IgxGroupByRow(this, index, rec);
-        }
-        if (this.isSummaryRecord(rec)) {
-            row = new IgxSummaryRow(this, index, rec.summaries);
-        }
-        // if found record is a no a groupby or summary row, return IgxGridRow instance
-        if (!row && rec) {
-            row = new IgxGridRow(this, index, rec);
-        }
-
-        return row;
     }
 
     private getSiblingRecordID(group: IGroupByRecord, recID: any) {

@@ -167,7 +167,7 @@
             <igx-tabs [tabAlignment]="tabAlignment">
                 <igx-tab-item>
                     <igx-tab-header>
-                        1 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Tab 1
                     </igx-tab-header>
                     <igx-tab-content>
                         Content 1
@@ -176,10 +176,46 @@
 
                 <igx-tab-item>
                     <igx-tab-header>
-                        2 Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                        Tab 2
                     </igx-tab-header>
                     <igx-tab-content>
                         Content 2
+                    </igx-tab-content>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 3
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Content 3
+                    </igx-tab-content>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 4
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Content 4
+                    </igx-tab-content>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 5
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Content 5
+                    </igx-tab-content>
+                </igx-tab-item>
+
+                <igx-tab-item>
+                    <igx-tab-header>
+                        Tab 6
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        Content 6
                     </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>
@@ -221,6 +257,27 @@
                     </igx-tab-header>
                     <igx-tab-content>
                         Phone: {{contact.phone}}
+                    </igx-tab-content>
+                </igx-tab-item>
+            </igx-tabs>
+        </div>
+
+        <div>
+            <h3 class="sample-title">Bind selected property</h3>
+            <button [igxButton]="'outlined'" class="action-button" (click)="addSelectedTab()">Add Tab</button>
+
+            <igx-tabs
+                #dynamicTabs
+            >
+                <igx-tab-item
+                    *ngFor="let tab of tabsArray; index as i"
+                    [(selected)]="tab.selected"
+                >
+                    <igx-tab-header>
+                        <span igxTabHeaderLabel>{{tab.name}}</span>
+                    </igx-tab-header>
+                    <igx-tab-content>
+                        {{tab.name}}
                     </igx-tab-content>
                 </igx-tab-item>
             </igx-tabs>

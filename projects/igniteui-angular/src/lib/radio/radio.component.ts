@@ -245,8 +245,7 @@ export class IgxRadioComponent implements ControlValueAccessor, EditorProvider {
      * @memberof IgxRadioComponent
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output()
-    public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeRadioEventArgs> = new EventEmitter<IChangeRadioEventArgs>();
 
     /**
      * Returns the class of the radio component.

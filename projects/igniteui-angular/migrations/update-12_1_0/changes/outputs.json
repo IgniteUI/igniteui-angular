@@ -56,6 +56,255 @@
                 "selector": "igx-banner",
                 "type": "component"
             }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selectionChanging",
+            "owner": {
+                "selector": "igx-drop-down",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onAppended",
+            "replaceWith": "appended",
+            "owner": {
+                "selector": "igxToggle",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onSelectionChange",
+            "replaceWith": "selectionChanging",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSearchInput",
+            "replaceWith": "searchInputUpdate",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onAddition",
+            "replaceWith": "addition",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onDataPreLoad",
+            "replaceWith": "dataPreLoad",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-combo",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpening",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosing",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onSelection",
+            "replaceWith": "selectionChanging",
+            "owner": {
+                "selector": "igx-select",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onItemSelected",
+            "replaceWith": "selectionChanging",
+            "owner": {
+                "selector": "igxAutocomplete",
+                "type": "directive"
+            }
+        },
+        {
+            "name": "onOpen",
+            "replaceWith": "opening",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onOpened",
+            "replaceWith": "opened",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClose",
+            "replaceWith": "closing",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onClosed",
+            "replaceWith": "closed",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onLeftButtonSelect",
+            "replaceWith": "leftButtonSelect",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onRightButtonSelect",
+            "replaceWith": "rightButtonSelect",
+            "owner": {
+                "selector": "igx-dialog",
+                "type": "component"
+            }
+        },
+        {
+            "name": "onValueChange",
+            "replaceWith": "valueChanged",
+            "owner": {
+                "selector": "[igxMask]",
+                "type": "directive"
+            }
         }
+
     ]
 }

@@ -30,6 +30,11 @@ export class AppComponent implements OnInit {
 
     public componentLinks = [
         {
+            link: '/accordion',
+            icon: 'horizontal_split',
+            name: 'Accordion'
+        },
+        {
             link: '/action-strip',
             icon: 'view_list',
             name: 'Action Strip'
@@ -227,6 +232,11 @@ export class AppComponent implements OnInit {
             link: '/gridRowAPI',
             icon: 'view_column',
             name: 'Grid Row API'
+        },
+        {
+            link: '/gridCellAPI',
+            icon: 'view_column',
+            name: 'Grid Cell API'
         },
         {
             link: '/gridColumnResizing',

@@ -268,13 +268,15 @@ export abstract class IgxBaseExporter {
         if (this._ownersMap.size === 0) {
             const recordsData = records.map(r => r.data);
             const keys = ExportUtilities.getKeysFromData(recordsData);
-            const columns = keys.map((k) => ({ header: k, field: k, skip: false }));
+            const columns = keys.map((k) =>
+                ({ header: k, field: k, skip: false, headerType: HeaderType.ColumnHeader, level: 0, columnSpan: 1 }));
             const columnWidths = new Array<number>(keys.length).fill(DEFAULT_COLUMN_WIDTH);
 
             const mapRecord: IColumnList = {
                 columns,
                 columnWidths,
-                indexOfLastPinnedColumn: -1
+                indexOfLastPinnedColumn: -1,
+                maxLevel: 0
             };
 
             this._ownersMap.set(DEFAULT_OWNER, mapRecord);
@@ -373,7 +375,7 @@ export abstract class IgxBaseExporter {
                         rawValue = rawValue.toString();
                     }
 
-                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});

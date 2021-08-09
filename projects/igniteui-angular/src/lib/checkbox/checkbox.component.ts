@@ -66,8 +66,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
      * Provides references to the `IgxCheckboxComponent` and the `checked` property as event arguments.
      */
     // eslint-disable-next-line @angular-eslint/no-output-native
-    @Output()
-    public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
+    @Output() public readonly change: EventEmitter<IChangeCheckboxEventArgs> = new EventEmitter<IChangeCheckboxEventArgs>();
     /**
      * Returns reference to the native checkbox element.
      *
@@ -377,7 +376,7 @@ export class IgxCheckboxComponent implements ControlValueAccessor, EditorProvide
     }
     /** @hidden @internal */
     @HostListener('click', ['$event'])
-    public _onCheckboxClick(event: MouseEvent) {
+    public _onCheckboxClick(event: PointerEvent | MouseEvent) {
         // Since the original checkbox is hidden and the label
         // is used for styling and to change the checked state of the checkbox,
         // we need to prevent the checkbox click event from bubbling up

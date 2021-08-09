@@ -91,8 +91,10 @@ describe('IgxGrid - Clipboard #grid', () => {
 
     it('Copy data when paging is enabled', () => {
         grid.paging = true;
-        grid.perPage = 5;
         fix.detectChanges();
+        grid.paginator.perPage = 5;
+        fix.detectChanges();
+
         grid.page = 1;
         fix.detectChanges();
         const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
@@ -151,7 +153,7 @@ describe('IgxGrid - Clipboard #grid', () => {
     it('Copy when there is a cell in edit mode', fakeAsync(() => {
         const copySpy = spyOn<any>(grid.gridCopy, 'emit').and.callThrough();
         const cell = grid.getCellByColumn(0, 'ProductName');
-        cell.nativeElement.dispatchEvent( new Event('dblclick'));
+        grid.gridAPI.get_cell_by_index(0, 'ProductName').nativeElement.dispatchEvent( new Event('dblclick'));
         tick(16);
         fix.detectChanges();
         expect(cell.editMode).toBe(true);

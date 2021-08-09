@@ -1,7 +1,18 @@
+@use 'sass:math';
+
 ////
 /// @group Utilities
 /// @author <a href="https://github.com/simeonoff" target="_blank">Simeon Simeonoff</a>
 ////
+
+/// @access private
+@function private-div($a, $b) {
+    @if not global-variable-exists('__legacy-libsass') and call(get-function('function-exists'), 'div', 'math') {
+        @return call(get-function($name: 'div', $module: 'math'), $a, $b);
+    } @else {
+        @return $a / $b;
+    }
+}
 
 /// Converts pixels to relative values (em).
 /// @access public
@@ -14,7 +25,7 @@
     @if (unitless($context)) {
         $context: $context * 1px;
     }
-    @return ($pixels / $context) * 1em;
+    @return private-div($pixels, $context) * 1em;
 }
 
 /// Pixels to root relative values (rem).
@@ -28,7 +39,7 @@
     @if (unitless($context)) {
         $context: $context * 1px;
     }
-    @return ($pixels / $context) * 1rem;
+    @return private-div($pixels, $context) * 1rem;
 }
 
 /// Relative value(em/rem) to pixel.
@@ -37,7 +48,7 @@
 /// @param {number|string} $context [$browser-context] - The base context to convert against.
 @function px($num, $context: $browser-context) {
     @if type-of $num == 'number' {
-        @return ($num / ($num * 0 + 1)) * 16px;
+        @return private-div($num, $num * 0 + 1) * 16px;
     }
 
     @return $num;
@@ -68,7 +79,7 @@
     $backLum: luminance($background) + .05;
     $foreLum: luminance($foreground) + .05;
 
-    @return max($backLum, $foreLum) / min($backLum, $foreLum);
+    @return private-div(max($backLum, $foreLum), min($backLum, $foreLum));
 }
 
 /// Returns an alpha channel map for a given palette variant.
@@ -952,4 +963,3 @@ $p-test: igx-palette(#fff, #000);
     }
     @return $string;
 }
-

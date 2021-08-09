@@ -441,7 +441,6 @@ describe('IgxTimePicker', () => {
         let timePickerElement: DebugElement;
         let timePickerDebElement: DebugElement;
         let inputGroup: DebugElement;
-        let input: DebugElement;
         let hourColumn: DebugElement;
         let minutesColumn: DebugElement;
         let secondsColumn: DebugElement;
@@ -471,7 +470,6 @@ describe('IgxTimePicker', () => {
                 timePickerDebElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER));
                 timePickerElement = fixture.debugElement.query(By.css(CSS_CLASS_TIMEPICKER)).nativeElement;
                 inputGroup = fixture.debugElement.query(By.css(`.${CSS_CLASS_INPUTGROUP}`));
-                input = fixture.debugElement.query(By.css(CSS_CLASS_INPUT));
                 hourColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_HOURLIST}`));
                 minutesColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_MINUTELIST}`));
                 secondsColumn = fixture.debugElement.query(By.css(CSS_CLASS_SECONDSLIST));
@@ -1107,7 +1105,6 @@ describe('IgxTimePicker', () => {
             it('should initialize all IgxDateTimeEditorDirective input properties correctly', () => {
                 timePicker.itemsDelta = { hours: 2, minutes: 20, seconds: 15 };
                 timePicker.displayFormat = 'hh:mm';
-                timePicker.placeholder = 'Sample placeholder';
                 fixture.componentInstance.minValue = new Date(2020, 12, 12, 9, 30, 0);
                 fixture.componentInstance.maxValue = new Date(2020, 12, 12, 14, 35, 0);
                 fixture.detectChanges();
@@ -1121,7 +1118,6 @@ describe('IgxTimePicker', () => {
                 expect(dateTimeEditor.spinLoop).toEqual(true);
 
                 expect(dateTimeEditor.inputFormat).toEqual(DateTimeUtil.DEFAULT_TIME_INPUT_FORMAT);
-                expect(dateTimeEditor.placeholder).toEqual('Sample placeholder');
                 expect(dateTimeEditor.displayFormat).toEqual('hh:mm');
                 expect(dateTimeEditor.mask).toEqual('00:00 LL');
             });
@@ -1449,7 +1445,6 @@ describe('IgxTimePicker', () => {
                 hourColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_HOURLIST}`));
                 minutesColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_MINUTELIST}`));
                 ampmColumn = fixture.debugElement.query(By.css(`.${CSS_CLASS_AMPMLIST}`));
-                toggleDirectiveElement = fixture.debugElement.query(By.directive(IgxToggleDirective));
             }));
 
             it('should toggle the dropdown with ALT + DOWN/UP ARROW key', fakeAsync(() => {

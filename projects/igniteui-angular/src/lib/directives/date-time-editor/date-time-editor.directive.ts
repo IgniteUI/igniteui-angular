@@ -193,7 +193,7 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
    *
    * @example
    * ```html
-   * <input igxDateTimeEditor (valueChange)="onValueChanged($event)"/>
+   * <input igxDateTimeEditor (valueChange)="valueChange($event)"/>
    * ```
    */
   @Output()
@@ -406,8 +406,20 @@ export class IgxDateTimeEditorDirective extends IgxMaskDirective implements OnCh
   public setDisabledState?(_isDisabled: boolean): void { }
 
   /** @hidden @internal */
-  public onInputChanged(isComposing: boolean): void {
-    super.onInputChanged(isComposing);
+  public onCompositionEnd(): void {
+    super.onCompositionEnd();
+
+    this.updateValue(this.parseDate(this.inputValue));
+    this.updateMask();
+  }
+
+  /** @hidden @internal */
+  public onInputChanged(event): void {
+    super.onInputChanged(event);
+    if (this._composing) {
+      return;
+    }
+
     if (this.inputIsComplete()) {
       const parsedDate = this.parseDate(this.inputValue);
       if (DateTimeUtil.isValidDate(parsedDate)) {

@@ -296,7 +296,6 @@ export class UpdateChanges {
 
             let base: string;
             let replace: string;
-            let groups = 1;
             let searchPattern;
 
             if (type === BindingType.Output) {
@@ -306,7 +305,6 @@ export class UpdateChanges {
                 // Match both bound - [name] - and regular - name
                 base = String.raw`(\s\[?)${change.name}(\s*\]?=)(["'])(.*?)\3`;
                 replace = String.raw`$1${change.replaceWith}$2$3$4$3`;
-                groups = 3;
             }
 
             let reg = new RegExp(base, 'g');
@@ -491,16 +489,15 @@ export class UpdateChanges {
                 return;
             }
             let content;
-            try {
-                // there could be comments in the json file and JSON.parse would fail
-                // TODO: use some 3rd party parser or write our own.
-                // @angular-devkit/core.parseJson is deprecated
-                content = JSON.parse(originalContent);
-            } catch (e: any) {
+            // use ts parser as it handles jsonc-style files w/ comments
+            const result = ts.parseConfigFileTextToJson(TSCONFIG_PATH, originalContent);
+            if (!result.error) {
+                content = result.config;
+            } else {
                 this.context?.logger
                 .warn(`Could not parse ${TSCONFIG_PATH}. Angular Ivy language service might be unavailable during migrations.`);
                 this.context?.logger
-                .warn(`Error:\n${e}`);
+                .warn(`Error:\n${result.error}`);
                 return;
             }
             if (!content.angularCompilerOptions) {

@@ -598,8 +598,8 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
         spyOn(grid.groupingExpressionsChange, 'emit');
         fix.detectChanges();
-        const firstCell = grid.getCellByColumn(2, 'Downloads');
-        UIInteractions.simulateClickAndSelectEvent(firstCell);
+        const firstCellElem = grid.gridAPI.get_cell_by_index(2, 'Downloads');
+        UIInteractions.simulateClickAndSelectEvent(firstCellElem);
         fix.detectChanges();
         expect(grid.groupingExpressionsChange.emit).toHaveBeenCalledTimes(0);
     }));
@@ -975,6 +975,29 @@ describe('IgxGrid - GroupBy #grid', () => {
         // verify row location is the same
         expect(rect.left).toEqual(origRect.left);
         expect(rect.top).toEqual(origRect.top);
+    });
+
+    it('should obtain correct virtualization state after all groups are collapsed and column is resized.', () => {
+        const fix = TestBed.createComponent(DefaultGridComponent);
+        const grid = fix.componentInstance.instance;
+        grid.groupsExpanded = false;
+        grid.columnWidth = '200px';
+        fix.detectChanges();
+
+        let fDataRow = grid.dataRowList.toArray()[0];
+        expect(fDataRow.virtDirRow.sizesCache[1]).toBe(200);
+
+        grid.groupBy({ fieldName: 'Released', dir: SortingDirection.Desc, ignoreCase: false });
+        fix.detectChanges();
+
+        grid.columns[0].width = '500px';
+        fix.detectChanges();
+        const groupRows = grid.groupsRowList.toArray();
+        groupRows[0].toggle();
+        fix.detectChanges();
+
+        fDataRow = grid.dataRowList.toArray()[0];
+        expect(fDataRow.virtDirRow.sizesCache[1]).toBe(500);
     });
 
     // GroupBy + Filtering
@@ -1435,7 +1458,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
         }));
 
-    it(`group row checkbox should remain the right state after deleting a row and apply filter 
+    it(`group row checkbox should remain the right state after deleting a row and apply filter
          with enabled batch updating`, fakeAsync(() => {
         const fix = TestBed.createComponent(IgxGridRowEditingTransactionComponent);
         fix.detectChanges();
@@ -1833,7 +1856,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             cell.column.editable = true;
             fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1875,7 +1898,7 @@ describe('IgxGrid - GroupBy #grid', () => {
             cell.column.editable = true;
             fix.detectChanges();
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1922,7 +1945,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, true, false));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -1967,7 +1990,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(8, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -2012,7 +2035,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             expect(GridSelectionFunctions.verifyGroupByRowCheckboxState(grRow, false, true));
 
-            UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+            UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(2, 'ProductName'));
             fix.detectChanges();
 
             expect(cell.editMode).toBe(true);
@@ -2376,7 +2399,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         cell.column.editable = true;
         fix.detectChanges();
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_key(5, 'ProductName'));
         await wait();
         fix.detectChanges();
 
@@ -2403,7 +2426,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2427,7 +2450,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
         tick();
         fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
@@ -2463,7 +2486,9 @@ describe('IgxGrid - GroupBy #grid', () => {
         const fix = TestBed.createComponent(DefaultGridComponent);
         fix.detectChanges();
         const grid = fix.componentInstance.instance;
-        fix.componentInstance.instance.paging = true;
+        fix.componentInstance.paging = true;
+        tick();
+        fix.detectChanges();
         fix.componentInstance.instance.perPage = 4;
         tick();
         fix.detectChanges();
@@ -3774,9 +3799,8 @@ describe('IgxGrid - GroupBy #grid', () => {
             [height]='height'
             [dropAreaTemplate]='currentDropArea'
             [data]="data"
-            [autoGenerate]="true"
-            (columnInit)="columnsCreated($event)"
-            (onGroupingDone)="onGroupingDoneHandler($event)">
+            [autoGenerate]="true" (columnInit)="columnsCreated($event)" (onGroupingDone)="onGroupingDoneHandler($event)">
+            <igx-paginator *ngIf="paging"></igx-paginator>
         </igx-grid>
         <ng-template #dropArea>
             <span> Custom template </span>
@@ -3801,6 +3825,7 @@ export class DefaultGridComponent extends DataParent {
     public enableGrouping = true;
     public currentSortExpressions;
     public currentGroupingExpressions = [];
+    public paging = false;
 
     public columnsCreated(column: IgxColumnComponent) {
         column.sortable = this.enableSorting;
@@ -3841,8 +3866,7 @@ export class InitialGroupingGridComponent extends DataParent {
         <igx-grid
             [width]='width'
             [height]='height'
-            [data]="data"
-            [paging]="true">
+            [data]="data">
             <igx-column [field]="'ID'" [header]="'ID'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'ReleaseDate'" [header]="'ReleaseDate'" [width]="200" [groupable]="true" [hasSummary]="false"
                 dataType="date"></igx-column>
@@ -3850,6 +3874,7 @@ export class InitialGroupingGridComponent extends DataParent {
                 dataType="number"></igx-column>
             <igx-column [field]="'ProductName'" [header]="'ProductName'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
             <igx-column [field]="'Released'" [header]="'Released'" [width]="200" [groupable]="true" [hasSummary]="false"></igx-column>
+            <igx-paginator></igx-paginator>
         </igx-grid>
     `
 })
@@ -3989,7 +4014,9 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
+    public groupByRowClick: any;
     public onGroupByRowClick(_event, _context) {
         _event.stopPropagation();
+        this.groupByRowClick = _event;
     }
 }

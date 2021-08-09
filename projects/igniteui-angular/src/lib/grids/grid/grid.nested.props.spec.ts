@@ -179,7 +179,7 @@ class NestedPropertyGridComponent {
     }
 }
 
-describe('Grid - nested data source properties', () => {
+describe('Grid - nested data source properties #grid', () => {
 
     const NAMES = 'John Jane Ivan Bianka'.split(' ');
     const AGES = [30, 23, 33, 21];
@@ -326,7 +326,7 @@ describe('Grid - nested data source properties', () => {
 });
 
 // related to fix of issue #8343
-describe('Grid nested data advanced editing', () => {
+describe('Grid nested data advanced editing #grid', () => {
 
     let fixture: ComponentFixture<NestedPropertiesGrid2Component>;
     let grid: IgxGridComponent;
@@ -363,7 +363,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.first'));
         fixture.detectChanges();
         expect(cell1.editMode).toBe(true);
         cell1.editValue = 'Petar';
@@ -401,7 +401,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell2);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.last'));
         fixture.detectChanges();
         expect(cell2.editMode).toBe(true);
         cell2.editValue = 'Petrov';
@@ -422,7 +422,7 @@ describe('Grid nested data advanced editing', () => {
         const cell2 = grid.getCellByColumn(0, 'user.name.last');
         const cell3 = grid.getCellByColumn(0, 'user.email');
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(0, 'user.name.first'));
         fixture.detectChanges();
         expect(cell1.editMode).toBe(true);
         cell1.editValue = 'Petar';
@@ -466,7 +466,7 @@ describe('Grid nested data advanced editing', () => {
 
         GridFunctions.verifyHeaderSortIndicator(header, false, true);
 
-        const cell1 = grid.getCellByColumn(0, 'user.address.zip');
+        const cell1 = grid.gridAPI.get_cell_by_index(0, 'user.address.zip');
         expect(cell1.value).toEqual(1700);
 
         UIInteractions.simulateDoubleClickAndSelectEvent(cell1);
@@ -484,7 +484,7 @@ describe('Grid nested data advanced editing', () => {
 });
 
 // related to issue #8343
-describe('Edit cell with data of type Array', () => {
+describe('Edit cell with data of type Array #grid', () => {
 
     let fixture: ComponentFixture<NestedPropertyGridComponent>;
     let grid: IgxGridComponent;
@@ -523,9 +523,9 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.cellEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -533,7 +533,7 @@ describe('Edit cell with data of type Array', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            cellID: cell.cellID,
+            cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,
@@ -561,7 +561,7 @@ describe('Edit cell with data of type Array', () => {
 
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
 
         expect(cellArgs.newValue.length).toEqual(1);
@@ -585,9 +585,9 @@ describe('Edit cell with data of type Array', () => {
         spyOn(grid.cellEditExit, 'emit').and.callThrough();
 
         const cell = grid.getCellByColumn(2, 'locations');
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -595,7 +595,7 @@ describe('Edit cell with data of type Array', () => {
 
         const cellArgs: IGridEditEventArgs = {
             rowID: cell.row.key,
-            cellID: cell.cellID,
+            cellID: cell.id,
             rowData: initialRowData,
             oldValue: initialRowData.locations,
             cancel: false,
@@ -622,7 +622,7 @@ describe('Edit cell with data of type Array', () => {
 
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         cellArgs.rowData = initialRowData;
         cellArgs.newValue = initialRowData.locations;
 
@@ -652,9 +652,9 @@ describe('Edit cell with data of type Array', () => {
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -691,7 +691,7 @@ describe('Edit cell with data of type Array', () => {
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         rowArgs.newValue = initialRowData;
 
         delete rowArgs.cancel;
@@ -715,9 +715,9 @@ describe('Edit cell with data of type Array', () => {
 
         const cell = grid.getCellByColumn(2, 'locations');
         const row = grid.gridAPI.get_row_by_index(2);
-        let initialRowData = { ...cell.rowData };
+        let initialRowData = { ...cell.row.data };
 
-        UIInteractions.simulateDoubleClickAndSelectEvent(cell);
+        UIInteractions.simulateDoubleClickAndSelectEvent(grid.gridAPI.get_cell_by_index(2, 'locations'));
         fixture.detectChanges();
         combo = fixture.componentInstance.combo;
         fixture.detectChanges();
@@ -754,7 +754,7 @@ describe('Edit cell with data of type Array', () => {
         expect(row.inEditMode).toBeFalsy();
         expect(cell.editMode).toBeFalsy();
 
-        initialRowData = { ...cell.rowData };
+        initialRowData = { ...cell.row.data };
         rowArgs.newValue = initialRowData;
 
         expect(rowArgs.newValue.locations.length).toEqual(1);

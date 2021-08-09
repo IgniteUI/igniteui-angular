@@ -101,6 +101,13 @@ export class IgxExpansionPanelHeaderComponent {
     }
 
     /**
+     * @hidden @internal
+     */
+    public get innerElement() {
+        return this.elementRef.nativeElement.children[0];
+    }
+
+    /**
      * Gets/sets the position of the expansion-panel-header expand/collapse icon
      * Accepts `left`, `right` or `none`
      * ```typescript
@@ -222,7 +229,7 @@ export class IgxExpansionPanelHeaderComponent {
         evt.stopPropagation();
         return;
         }
-        const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, panel: this.panel, owner: this.panel, cancel: false };
+        const eventArgs: IExpansionPanelCancelableEventArgs  = { event: evt, owner: this.panel, cancel: false };
         this.interaction.emit(eventArgs);
         if (eventArgs.cancel === true) {
             return;
@@ -235,7 +242,7 @@ export class IgxExpansionPanelHeaderComponent {
     @HostListener('keydown.Alt.ArrowDown', ['$event'])
     public openPanel(event: KeyboardEvent) {
         if (event.altKey) {
-            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
+            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, owner: this.panel, cancel: false };
             this.interaction.emit(eventArgs);
             if (eventArgs.cancel === true) {
                 return;
@@ -248,7 +255,7 @@ export class IgxExpansionPanelHeaderComponent {
      @HostListener('keydown.Alt.ArrowUp', ['$event'])
      public closePanel(event: KeyboardEvent) {
         if (event.altKey) {
-            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, panel: this.panel, owner: this.panel, cancel: false };
+            const eventArgs: IExpansionPanelCancelableEventArgs  = { event, owner: this.panel, cancel: false };
             this.interaction.emit(eventArgs);
             if (eventArgs.cancel === true) {
                 return;

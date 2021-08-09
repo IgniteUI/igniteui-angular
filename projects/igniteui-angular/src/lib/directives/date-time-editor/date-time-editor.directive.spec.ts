@@ -19,7 +19,7 @@ describe('IgxDateTimeEditor', () => {
         const renderer2 = jasmine.createSpyObj('Renderer2', ['setAttribute']);
         const locale = 'en';
         const _ngModel = {
-            control: { touched: false, dirty: false, validator: null, setValue: (value: any) => { } },
+            control: { touched: false, dirty: false, validator: null, setValue: () => { } },
             valid: false,
             statusChanges: new EventEmitter(),
         };
@@ -1001,6 +1001,37 @@ describe('IgxDateTimeEditor', () => {
                 fixture.detectChanges();
                 expect(dateTimeEditorDirective.nativeElement.placeholder).toEqual(placeholder);
             });
+            it('should convert correctly full-width characters after blur', () => {
+                const fullWidthText = '１９１２０８';
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                UIInteractions.simulateCompositionEvent(fullWidthText, inputElement, 0, 8);
+                fixture.detectChanges();
+                expect(inputElement.nativeElement.value).toEqual('19/12/08');
+            });
+            it('should convert correctly full-width characters after enter', () => {
+                const fullWidthText = '１３０９４８';
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.detectChanges();
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                UIInteractions.simulateCompositionEvent(fullWidthText, inputElement, 0, 8, false);
+                fixture.detectChanges();
+                expect(inputElement.nativeElement.value).toEqual('13/09/48');
+            });
+            it('should convert correctly full-width characters on paste', () => {
+                fixture.componentInstance.dateTimeFormat = 'dd/MM/yy';
+                fixture.detectChanges();
+                const inputDate = '０７０５２０';
+                inputElement.triggerEventHandler('focus', {});
+                fixture.detectChanges();
+                UIInteractions.simulatePaste(inputDate, inputElement, 0, 8);
+                inputElement.triggerEventHandler('blur', { target: inputElement.nativeElement });
+                fixture.detectChanges();
+                expect(inputElement.nativeElement.value).toEqual('07/05/20');
+            });
         });
 
         describe('Form control tests: ', () => {
@@ -1030,7 +1061,6 @@ describe('IgxDateTimeEditor', () => {
             it('should validate properly when used as form control.', () => {
                 spyOn(dateTimeEditorDirective.validationFailed, 'emit').and.callThrough();
                 const dateEditor = form.controls['dateEditor'];
-                const args = { oldValue: '', newValue: null };
                 const inputDate = '99-99-9999';
 
                 inputElement.triggerEventHandler('focus', {});

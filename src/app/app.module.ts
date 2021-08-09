@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import {
     IgxIconModule, IgxBottomNavModule, IgxGridModule, IgxExcelExporterService, IgxCsvExporterService, IgxOverlayService,
-    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule,  IgxHierarchicalGridModule, IgxInputGroupModule,
+    IgxDragDropModule, IgxDividerModule, IgxTreeGridModule, IgxHierarchicalGridModule, IgxInputGroupModule,
     IgxIconService, DisplayDensityToken, DisplayDensity,
     IgxDateTimeEditorModule, IgxDateRangePickerModule, IgxButtonModule, IgxActionStripModule, GridBaseAPIService, IgxButtonGroupModule,
     IgxListModule,
@@ -93,7 +93,6 @@ import { RadioSampleComponent } from './radio/radio.sample';
 import { TooltipSampleComponent } from './tooltip/tooltip.sample';
 import { ExpansionPanelSampleComponent } from './expansion-panel/expansion-panel-sample';
 import { GridRowEditSampleComponent } from './grid-row-edit/grid-row-edit-sample.component';
-import { GridWithTransactionsComponent } from './grid-row-edit/grid-with-transactions.component';
 import { TreeGridSampleComponent } from './tree-grid/tree-grid.sample';
 import { TreeGridFlatDataSampleComponent } from './tree-grid-flat-data/tree-grid-flat-data.sample';
 import { HierarchicalGridSampleComponent } from './hierarchical-grid/hierarchical-grid.sample';
@@ -101,7 +100,6 @@ import { HierarchicalGridRemoteSampleComponent } from './hierarchical-grid-remot
 import { HierarchicalGridUpdatingSampleComponent } from './hierarchical-grid-updating/hierarchical-grid-updating.sample';
 import { GridColumnPercentageWidthsSampleComponent } from './grid-percentage-columns/grid-percantge-widths.sample';
 import { BannerSampleComponent } from './banner/banner.sample';
-import { TreeGridWithTransactionsComponent } from './tree-grid/tree-grid-with-transactions.component';
 import { CalendarViewsSampleComponent } from './calendar-views/calendar-views.sample';
 import { SelectSampleComponent } from './select/select.sample';
 import { GridSearchBoxComponent } from './grid-search-box/grid-search-box.component';
@@ -150,11 +148,14 @@ import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component
 import { TestInterceptorClass } from './interceptor.service';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
+import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
+import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 
 const components = [
+    AccordionSampleComponent,
     ActionStripSampleComponent,
     AppComponent,
     AutocompletePipeContains,
@@ -224,6 +225,7 @@ const components = [
     GridColumnActionsSampleComponent,
     GridRowPinningSampleComponent,
     GridRowAPISampleComponent,
+    GridCellAPISampleComponent,
     GridColumnResizingSampleComponent,
     GridGroupBySampleComponent,
     GridMasterDetailSampleComponent,
@@ -240,10 +242,8 @@ const components = [
     GridMRLCustomNavigationSampleComponent,
     GridCellStylingSampleComponent,
     GridRowEditSampleComponent,
-    GridWithTransactionsComponent,
     TreeGridSampleComponent,
     TreeGridFlatDataSampleComponent,
-    TreeGridWithTransactionsComponent,
     TreeGridLoadOnDemandSampleComponent,
     TreeGridGroupBySampleComponent,
     CustomContentComponent,

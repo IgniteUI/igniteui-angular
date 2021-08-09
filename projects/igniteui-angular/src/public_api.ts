@@ -53,6 +53,7 @@ export * from './lib/data-operations/data-util';
  * Components
  */
 export * from './lib/action-strip/public_api';
+export * from './lib/accordion/public_api';
 export * from './lib/avatar/avatar.component';
 export * from './lib/badge/badge.component';
 export * from './lib/banner/banner.component';
@@ -84,7 +85,7 @@ export * from './lib/expansion-panel/public_api';
 export * from './lib/navbar/navbar.component';
 export * from './lib/navigation-drawer/public_api';
 export * from './lib/paginator/public_api';
-export * from './lib/paginator/paginator_interfaces';
+export * from './lib/paginator/paginator-interfaces';
 export * from './lib/progressbar/progressbar.component';
 export * from './lib/radio/radio.component';
 export * from './lib/slider/public_api';

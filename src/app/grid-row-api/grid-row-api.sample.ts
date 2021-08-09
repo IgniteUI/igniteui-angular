@@ -1,24 +1,21 @@
 import { Component, OnInit, Renderer2, ViewChild } from '@angular/core';
 import {
     IgxGridComponent,
-    IgxTransactionService,
-    IgxGridTransaction,
     RowType,
     IgxTreeGridComponent,
     IgxHierarchicalGridComponent,
     IPinningConfig,
     RowPinningPosition,
-    IRowDragStartEventArgs
+    IRowDragStartEventArgs,
+    GridSummaryCalculationMode,
+    GridSummaryPosition
 } from 'igniteui-angular';
 import { HIERARCHICAL_SAMPLE_DATA } from '../shared/sample-data';
 
 @Component({
     selector: 'app-grid-row-api-sample',
     styleUrls: ['grid-row-api.sample.css'],
-    templateUrl: 'grid-row-api.sample.html',
-    providers: [
-        { provide: IgxGridTransaction, useClass: IgxTransactionService }
-    ],
+    templateUrl: 'grid-row-api.sample.html'
 })
 
 export class GridRowAPISampleComponent implements OnInit {
@@ -28,8 +25,8 @@ export class GridRowAPISampleComponent implements OnInit {
     @ViewChild('targetGrid', { static: true })
     private targetGrid: IgxGridComponent;
 
-    @ViewChild('treeGrid', { static: true })
-    private treeGrid: IgxTreeGridComponent;
+    @ViewChild('treeGridHier', { static: true })
+    private treeGridHier: IgxTreeGridComponent;
 
     @ViewChild('hGrid', { static: true })
     private hGrid: IgxTreeGridComponent;
@@ -60,6 +57,10 @@ export class GridRowAPISampleComponent implements OnInit {
     constructor(private renderer: Renderer2) { }
 
     public ngOnInit(): void {
+			this.grid.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
+			this.grid.summaryPosition = GridSummaryPosition.bottom;
+
+			this.treeGridHier.summaryCalculationMode = GridSummaryCalculationMode.childLevelsOnly;
         this.columns = [
             { field: 'ID', width: '200px', hidden: true },
             { field: 'CompanyName', width: '200px', groupable: true },
@@ -178,6 +179,7 @@ export class GridRowAPISampleComponent implements OnInit {
     public togglePinning(grid: IgxGridComponent | IgxTreeGridComponent | IgxHierarchicalGridComponent,
         byIndex: boolean, index: number, key: any) {
         const row: RowType = byIndex ? grid.getRowByIndex(index) : grid.getRowByKey(key);
+        const index2: number = row.index;
         if (row.pinned) {
             row.unpin();
         } else {
@@ -269,7 +271,12 @@ export class GridRowAPISampleComponent implements OnInit {
             inEditMode: ${row.inEditMode},
             selected: ${row.selected},
             hasChildren: ${row.hasChildren},
-            disabled: ${row.disabled}`;
+            disabled: ${row.disabled},
+            --------------------------------,
+            cells.length: ${row.cells?.length}`;
+            // firstCell: ${row.cells[0].value},
+            // lastCell: ${row.cells[row.cells.length - 1].value}`;
+
         const states = state.split(',');
         const createElem = this.renderer.createElement('p');
 

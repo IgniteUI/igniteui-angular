@@ -120,15 +120,21 @@ import { GridRowAPISampleComponent } from './grid-row-api/grid-row-api.sample';
 import { GridUpdatesComponent } from './grid-updates-test/grid-updates.component';
 import { TreeSampleComponent } from './tree/tree.sample';
 import { GridColumnTypesSampleComponent } from './grid-column-types/grid-column-types.sample';
+import { AccordionSampleComponent } from './accordion/accordion.sample';
 import { GridLocalizationSampleComponent } from './grid-localization/grid-localization.sample';
 import { TreeGridGroupBySampleComponent } from './tree-grid-groupby/tree-grid-groupby.sample';
 import { PaginationSampleComponent } from './pagination/pagination.component';
+import { GridCellAPISampleComponent } from './grid-cell-api/grid-cell-api.sample';
 
 const appRoutes = [
     {
         path: '',
         pathMatch: 'full',
         redirectTo: '/avatar'
+    },
+    {
+        path: 'accordion',
+        component: AccordionSampleComponent
     },
     {
         path: 'action-strip',
@@ -420,6 +426,10 @@ const appRoutes = [
         component: GridRowAPISampleComponent
     },
     {
+        path: 'gridCellAPI',
+        component: GridCellAPISampleComponent
+    },
+    {
         path: 'gridRemotePaging',
         component: GridRemotePagingSampleComponent
     },
@@ -502,7 +512,7 @@ const appRoutes = [
     {
         path: 'gridFinJS',
         component: MainComponent
-    },{
+    }, {
         path: 'tree',
         component: TreeSampleComponent
     },
