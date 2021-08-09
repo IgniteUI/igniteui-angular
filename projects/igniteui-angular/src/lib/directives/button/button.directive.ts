@@ -52,6 +52,7 @@ export type IgxButtonType = typeof IgxButtonType[keyof typeof IgxButtonType];
 })
 export class IgxButtonDirective extends DisplayDensityBase {
     private static ngAcceptInputType_type: IgxButtonType | '';
+    private static ngAcceptInputType_disabled: boolean | '';
 
     /**
      * Called when the button is clicked.
