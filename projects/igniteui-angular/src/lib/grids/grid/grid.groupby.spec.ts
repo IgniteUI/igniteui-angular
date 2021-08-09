@@ -1786,7 +1786,7 @@ describe('IgxGrid - GroupBy #grid', () => {
 
         }));
 
-    fit(`edit selected row so it goes to another group after row editing is Done.`,
+    it(`edit selected row so it goes to another group after row editing is Done.`,
         fakeAsync(() => {
             const fix = TestBed.createComponent(DefaultGridComponent);
             const grid = fix.componentInstance.instance;
