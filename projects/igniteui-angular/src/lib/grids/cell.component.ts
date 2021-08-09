@@ -89,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowData);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -174,7 +174,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
          * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
          */
         Object.defineProperty(ctx, 'cell', {
-            get: () => this.getCellType()
+            get: () => this.getCellType(true)
         });
         return ctx;
     }
@@ -304,11 +304,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.column.dataType === GridColumnDataType.Percent ?
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value) :
+            this.column.dataType === GridColumnDataType.Percent ?
             this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
             this.column.dataType === GridColumnDataType.Currency ?
                 this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
                     this.column.pipeArgs.digitsInfo, this.grid.locale) :
+            (this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime ||
+            this.column.dataType === GridColumnDataType.Time) ?
+                this.grid.datePipe.transform(this.value, this.column.pipeArgs.format, this.column.pipeArgs.timezone, this.grid.locale) :
                 this.value;
     }
 
@@ -1040,7 +1044,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
 
-    private getCellType(): CellType {
-        return new IgxGridCell(this.grid, this.intRow.index, this.column.field);
+    private getCellType(useRow?: boolean): CellType {
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }
