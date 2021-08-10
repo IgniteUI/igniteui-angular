@@ -15,6 +15,8 @@ import { IGridCellEventArgs, IgxColumnComponent } from '../grid/public_api';
 import { GridSelectionMode } from '../common/enums';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 
+const DEBOUNCETIME = 30;
+
 describe('Basic IgxHierarchicalGrid #hGrid', () => {
     let fixture;
     let hierarchicalGrid: IgxHierarchicalGridComponent;
@@ -1404,6 +1406,46 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
         expect(childGrid.hgridAPI.getChildGrids().length).toBe(1);
 
     });
+
+    fit(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
+            row island with <= 2 data records`, waitForAsync(async () => {
+        hierarchicalGrid.primaryKey = 'ID';
+        hierarchicalGrid.rowEditable = true;
+        hierarchicalGrid.getRowByIndex(0).expanded = true;
+        fixture.detectChanges();
+
+        const secondLevelGrid = hierarchicalGrid.hgridAPI.getChildGrids()[0];
+        expect(secondLevelGrid).not.toBeNull();
+        secondLevelGrid.getRowByIndex(0).expanded = true;
+        fixture.detectChanges();
+
+        const thirdLevelGrid = secondLevelGrid.hgridAPI.getChildGrids()[0];
+        thirdLevelGrid.primaryKey = 'ID';
+        thirdLevelGrid.rowEditable = true;
+        fixture.detectChanges();
+
+        expect(thirdLevelGrid).not.toBeNull();
+        expect(thirdLevelGrid.data.length).toBe(2);
+
+        const cellElem = thirdLevelGrid.gridAPI.get_cell_by_index(0, 'ChildLevels');
+        const row = thirdLevelGrid.gridAPI.get_row_by_index(0);
+
+        UIInteractions.simulateDoubleClickAndSelectEvent(cellElem);
+        fixture.detectChanges();
+        expect(row.inEditMode).toBe(true);
+        cellElem.editMode = true;
+        fixture.detectChanges();
+
+        let overlay = GridFunctions.getRowEditingOverlay(fixture);
+        expect(overlay).not.toBeNull();
+
+        await hierarchicalGrid.dragScroll({ left: 0, top: 10 });
+        fixture.detectChanges();
+        await wait(DEBOUNCETIME);
+
+        overlay = GridFunctions.getRowEditingOverlay(fixture);
+        expect(overlay).not.toBeNull();
+    }));
 
 });
 
