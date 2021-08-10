@@ -306,7 +306,7 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     }
 
     /**
-     * A list of `IgxGridRow`.
+     * A list of `IgxHierarchicalGridRow`.
      *
      * @example
      * ```typescript

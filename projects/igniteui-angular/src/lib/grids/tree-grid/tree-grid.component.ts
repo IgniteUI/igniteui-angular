@@ -328,7 +328,7 @@ export class IgxTreeGridComponent extends IgxGridBaseDirective implements GridTy
     }
 
     /**
-     * A list of `IgxGridRow`.
+     * A list of `IgxTreeGridRow`.
      *
      * @example
      * ```typescript

@@ -195,7 +195,7 @@ export class IgxRowIslandComponent extends IgxHierarchicalGridBaseDirective
     }
 
     /**
-     * A list of `IgxGridRow`.
+     * A list of `IgxHierarchicalGridRow`.
      *
      * @example
      * ```typescript
