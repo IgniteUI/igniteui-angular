@@ -1407,7 +1407,7 @@ describe('IgxHierarchicalGrid Runtime Row Island change Scenarios #hGrid', () =>
 
     });
 
-    fit(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
+    it(`Should keep the overlay when scrolling an igxHierarchicalGrid with an opened 
             row island with <= 2 data records`, waitForAsync(async () => {
         hierarchicalGrid.primaryKey = 'ID';
         hierarchicalGrid.rowEditable = true;
