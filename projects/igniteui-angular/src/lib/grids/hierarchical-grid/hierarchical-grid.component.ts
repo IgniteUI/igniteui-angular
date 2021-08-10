@@ -305,6 +305,13 @@ export class IgxHierarchicalGridComponent extends IgxHierarchicalGridBaseDirecti
     /**
      * @hidden
      */
+    public get parentRowOutletDirective() {
+        return this.parent.rowOutletDirective;
+    }
+
+    /**
+     * @hidden
+     */
     public ngOnInit() {
         if (this._transactions instanceof IgxTransactionService) {
             // transaction service cannot be injected in a derived class in a factory manner
