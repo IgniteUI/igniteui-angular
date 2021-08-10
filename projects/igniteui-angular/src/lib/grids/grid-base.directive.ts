@@ -2866,6 +2866,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         return this.verticalScrollContainer.getScrollNativeSize();
     }
 
+    private _rendered = false;
     private _columnPinningTitle: string;
     private _columnHidingTitle: string;
 
@@ -3638,6 +3639,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
                 this.paginator.totalRecords = this.totalRecords;
                 this.paginator.overlaySettings = { outlet: this.outlet };
             }
+            this._rendered = true;
         });
         Promise.resolve().then(() => this.rendered.next(true));
     }
@@ -4001,7 +4003,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      * ```
      */
     public get columns(): IgxColumnComponent[] {
-        return this._columns;
+        return this._rendered ?  this._columns : [];
     }
 
     /**
@@ -6657,6 +6659,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         }
         this._maxLevelHeaderDepth = null;
         this._columns = this.columnList.toArray();
+
         collection.forEach((column: IgxColumnComponent) => {
             column.defaultWidth = this.columnWidthSetByUser ? this._columnWidth : column.defaultWidth ? column.defaultWidth : '';
 
