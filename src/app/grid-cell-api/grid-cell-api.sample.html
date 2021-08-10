@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="grid-wrapper">
-        <igx-grid #grid [rowDraggable]="true" (rowDragStart)="onRowDragStart($event)" (onRowDragEnd)="onRowDragEnd($event)" [data]="data" [cellSelection]="true" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [columnSelection]="'single'"
+        <igx-grid #grid [rowDraggable]="true" [data]="data" [cellSelection]="'multiple'" [rowEditable]="true" [allowFiltering]='true' [primaryKey]='"ID"' [paging]="true" [columnSelection]="'single'"
             [width]="'800px'" [height]="'600px'" [rowSelection]="'multiple'">
             <igx-paginator>
             </igx-paginator>
@@ -138,7 +138,7 @@
             <button (click)="setEditMode(treeGridHier, tHIndex, tHGridLogger)">Set editMode</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
-            <button (click)="logState(treeGridHier, tHIndex, tHGridLogger, tHGridLogger)">Log state By Index</button>
+            <button (click)="logState(treeGridHier, tHIndex, tHGridLogger)">Log state By Index</button>
         </div>
         <div style="margin-right: 5px; text-align: start">
             <button (click)="logStateByKey(treeGridHier, tHCellKey, tHcolumnField, tHGridLogger)">Log state by key</button>
