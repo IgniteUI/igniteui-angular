@@ -110,7 +110,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                     .map(a => this._ownersMap.get(a.owner).columns.length + a.level)
                     .sort((a,b) => b - a)[0];
 
-                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.header);
+                rootKeys = this._ownersMap.get(firstDataElement.owner).columns.map(c => c.field);
                 defaultOwner = this._ownersMap.get(firstDataElement.owner);
             } else {
                 defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
@@ -119,7 +119,7 @@ export class IgxExcelExporterService extends IgxBaseExporter {
                 columnWidths = defaultOwner.columnWidths;
                 indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
                 columnCount = columns.length;
-                rootKeys = columns.map(c => c.header);
+                rootKeys = columns.map(c => c.field);
             }
         }
 

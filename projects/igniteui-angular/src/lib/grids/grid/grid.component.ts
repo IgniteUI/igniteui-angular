@@ -783,7 +783,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      */
     public isGroupByRecord(record: any): boolean {
         // return record.records instance of GroupedRecords fails under Webpack
-        return record.records && record.records.length;
+        return record && record?.records && record.records?.length;
     }
 
     /**
@@ -859,7 +859,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     public getContext(rowData: any, rowIndex: number, pinned?: boolean): any {
         if (this.isDetailRecord(rowData)) {
             const cachedData = this.childDetailTemplates.get(rowData.detailsData);
-            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : this.data.indexOf(rowData.detailsData);
+            const rowID = this.primaryKey ? rowData.detailsData[this.primaryKey] : rowData.detailsData;
             if (cachedData) {
                 const view = cachedData.view;
                 const tmlpOutlet = cachedData.owner;
@@ -868,13 +868,19 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
                     moveView: view,
                     owner: tmlpOutlet,
                     index: this.dataView.indexOf(rowData),
-                    templateID: 'detailRow-' + rowID
+                    templateID: {
+                        type:'detailRow',
+                        id: rowID
+                    }
                 };
             } else {
                 // child rows contain unique grids, hence should have unique templates
                 return {
                     $implicit: rowData.detailsData,
-                    templateID: 'detailRow-' + rowID,
+                    templateID: {
+                        type:'detailRow',
+                        id: rowID
+                    },
                     index: this.dataView.indexOf(rowData)
                 };
             }
@@ -882,7 +888,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
         return {
             $implicit: this.isGhostRecord(rowData) || this.isAddRowRecord(rowData) ? rowData.recordRef : rowData,
             index: this.getDataViewIndex(rowIndex, pinned),
-            templateID: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+            templateID: {
+                type: this.isGroupByRecord(rowData) ? 'groupRow' : this.isSummaryRow(rowData) ? 'summaryRow' : 'dataRow',
+                id: null
+            },
             disabled: this.isGhostRecord(rowData),
             addRow: this.isAddRowRecord(rowData) ? rowData.addRow : false
         };
@@ -892,7 +901,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewCreatedHandler(args) {
-        if (args.context.templateID.indexOf('detailRow') !== -1) {
+        if (args.context.templateID.type === 'detailRow') {
             this.childDetailTemplates.set(args.context.$implicit, args);
         }
     }
@@ -901,7 +910,7 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
      * @hidden @internal
      */
     public viewMovedHandler(args) {
-        if (args.context.templateID.indexOf('detailRow') !== -1) {
+        if (args.context.templateID.type === 'detailRow') {
             // view was moved, update owner in cache
             const key = args.context.$implicit;
             const cachedData = this.childDetailTemplates.get(key);
@@ -1150,10 +1159,10 @@ export class IgxGridComponent extends IgxGridBaseDirective implements GridType, 
     /**
      * @hidden @internal
      */
-    public createRow(index: number): RowType {
+    public createRow(index: number, data?: any): RowType {
         let row: RowType;
 
-        const rec: any = this.dataView[index];
+        const rec: any = data ?? this.dataView[index];
 
         if (rec && this.isGroupByRecord(rec)) {
             row = new IgxGroupByRow(this, index, rec);

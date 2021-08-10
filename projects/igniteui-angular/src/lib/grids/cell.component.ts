@@ -25,7 +25,7 @@ import { ColumnType } from './common/column.interface';
 import { RowType } from './common/row.interface';
 import { GridSelectionMode } from './common/enums';
 import { GridType } from './common/grid.interface';
-import { getCurrencySymbol, getLocaleCurrencyCode} from '@angular/common';
+import { getCurrencySymbol, getLocaleCurrencyCode } from '@angular/common';
 import { GridColumnDataType } from '../data-operations/data-util';
 import { IgxRowDirective } from './row.directive';
 import { ISearchInfo } from './common/events';
@@ -89,7 +89,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      */
     @Input()
     public get row(): RowType {
-        return this.grid.createRow(this.intRow.index, this.intRow.rowData);
+        return this.grid.createRow(this.intRow.index);
     }
 
     /**
@@ -165,11 +165,18 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
      * @memberof IgxGridCellComponent
      */
     public get context(): any {
-        return {
+        const ctx = {
             $implicit: this.value,
-            cell: this.getCellType(),
-            additionalTemplateContext: this.column.additionalTemplateContext
+            additionalTemplateContext: this.column.additionalTemplateContext,
         };
+        /* Turns the `cell` property from the template context object into lazy-evaluated one.
+         * Otherwise on each detection cycle the cell template is recreating N cell instances where
+         * N = number of visible cells in the grid, leading to massive performance degradation in large grids.
+         */
+        Object.defineProperty(ctx, 'cell', {
+            get: () => this.getCellType(true)
+        });
+        return ctx;
     }
 
     /**
@@ -297,11 +304,15 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
 
     @HostBinding('attr.title')
     public get title() {
-        return this.editMode || this.cellTemplate ? '' : this.column.dataType === GridColumnDataType.Percent ?
+        return this.editMode || this.cellTemplate ? '' : this.formatter ? this.formatter(this.value) :
+            this.column.dataType === GridColumnDataType.Percent ?
             this.grid.percentPipe.transform(this.value, this.column.pipeArgs.digitsInfo, this.grid.locale) :
             this.column.dataType === GridColumnDataType.Currency ?
                 this.grid.currencyPipe.transform(this.value, this.currencyCode, this.column.pipeArgs.display,
                     this.column.pipeArgs.digitsInfo, this.grid.locale) :
+            (this.column.dataType === GridColumnDataType.Date || this.column.dataType === GridColumnDataType.DateTime ||
+            this.column.dataType === GridColumnDataType.Time) ?
+                this.grid.datePipe.transform(this.value, this.column.pipeArgs.format, this.column.pipeArgs.timezone, this.grid.locale) :
                 this.value;
     }
 
@@ -804,7 +815,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             cell = this.grid.crudService.createCell(this);
         }
         cell.editValue = val;
-        const args = this.gridAPI.update_cell(cell);
+        this.gridAPI.update_cell(cell);
         this.grid.crudService.endCellEdit();
         this.cdr.markForCheck();
     }
@@ -831,7 +842,7 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
             }
             return;
         }
-        if(this.platformUtil.isFirefox) {
+        if (this.platformUtil.isFirefox) {
             event.preventDefault();
         }
         this.selectionService.pointerDown(this.selectionNode, event.shiftKey, event.ctrlKey);
@@ -1033,7 +1044,8 @@ export class IgxGridCellComponent implements OnInit, OnChanges, OnDestroy {
         this.nativeElement.removeEventListener('pointerup', this.pointerup);
     }
 
-    private getCellType(): CellType {
-        return new IgxGridCell(this.grid, this.row.index, this.column.field);
+    private getCellType(useRow?: boolean): CellType {
+        const rowID = useRow ? this.grid.createRow(this.intRow.index, this.intRow.rowData) : this.intRow.index;
+        return new IgxGridCell(this.grid, rowID, this.column.field);
     }
 }
