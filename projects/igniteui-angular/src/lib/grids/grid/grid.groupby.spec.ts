@@ -2208,7 +2208,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         spyOn(fix.componentInstance, 'onGroupByRowClick').and.callThrough();
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextDeselected);
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextDeselected);
 
         grid.selectRows([2], true);
         fix.detectChanges();
@@ -2216,7 +2216,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextIndeterminate);
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextIndeterminate);
 
         grid.selectRows([8]);
         fix.detectChanges();
@@ -2224,7 +2224,7 @@ describe('IgxGrid - GroupBy #grid', () => {
         fix.detectChanges();
 
         grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
-        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelected);
+        expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextSelected);
     }));
 
     // GroupBy + Resizing
