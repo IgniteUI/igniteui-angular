@@ -762,9 +762,9 @@ import { GridPagingMode } from "igniteui-angular";
     styleUrls: ["./paging-test.component.scss"],
     templateUrl: "./paging-test.component.html"
 })
-export class CsvExportComponent {
-    public pagingLocal: GridPagingMode = GridPagingMode.local;
-    public pagingRemote: GridPagingMode = GridPagingMode.remote;
+export class PagingComponent {
+    public pagingLocal: GridPagingMode = GridPagingMode.Local;
+    public pagingRemote: GridPagingMode = GridPagingMode.Remote;
     constructor(){}
 }
 `);
@@ -782,7 +782,7 @@ import { GridPagingMode } from "igniteui-angular";
     styleUrls: ["./paging-test.component.scss"],
     templateUrl: "./paging-test.component.html"
 })
-export class CsvExportComponent {
+export class PagingComponent {
     public pagingLocal: GridPagingMode = GridPagingMode.local;
     public pagingRemote: GridPagingMode = GridPagingMode.remote;
     constructor(){}
@@ -790,7 +790,7 @@ export class CsvExportComponent {
 `;
         expect(
             tree.readContent(
-                '/testSrc/appPrefix/component/csv-export.component.ts'
+                '/testSrc/appPrefix/component/paging-test.component.ts'
             )
         ).toEqual(expectedContent);
     });
