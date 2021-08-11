@@ -158,7 +158,7 @@ describe('igxMask', () => {
         UIInteractions.simulateCompositionEvent('０９０６２０２１', input, 0, 10);
         fixture.detectChanges();
 
-        input.triggerEventHandler('blur', {});
+        input.triggerEventHandler('blur', { target: input.nativeElement });
         tick();
         fixture.detectChanges();
 
@@ -178,7 +178,7 @@ describe('igxMask', () => {
         UIInteractions.simulateCompositionEvent('あんｓ', input, 0, 3);
         fixture.detectChanges();
 
-        input.triggerEventHandler('blur', {});
+        input.triggerEventHandler('blur', { target: input.nativeElement });
         tick();
         fixture.detectChanges();
 
