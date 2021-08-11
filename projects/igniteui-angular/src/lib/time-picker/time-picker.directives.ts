@@ -38,15 +38,6 @@ export class IgxItemListDirective implements OnInit {
         private touchManager: HammerGesturesManager
     ) { }
 
-    /**
-    * @hidden
-    * @internal
-    */
-    public ngOnInit() {
-        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
-        this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
-    }
-
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
         return true;
@@ -183,10 +174,18 @@ export class IgxItemListDirective implements OnInit {
         }
     }
 
+    /**
+     * @hidden @internal
+     */
+    public ngOnInit() {
+        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
+        this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
+    }
+
     private onPanMove = (event: HammerInput) => {
         const delta = event.deltaY < 0 ? -1 : 1;
         this.nextItem(delta);
-    }
+    };
 
     private nextItem(delta: number): void {
         switch (this.type) {
