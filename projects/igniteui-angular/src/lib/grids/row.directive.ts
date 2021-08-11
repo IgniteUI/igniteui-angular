@@ -421,17 +421,6 @@ export class IgxRowDirective<T extends IgxGridBaseDirective & GridType> implemen
         }
     }
 
-    /**
-     * @hidden
-     * @internal
-     */
-    @HostListener('mouseleave')
-    public hideActionStrip() {
-        if (this.grid.actionStrip) {
-            this.grid.actionStrip.context = null;
-        }
-    }
-
     public ngAfterViewInit() {
         // If the template of the row changes, the forOf in it is recreated and is not detected by the grid and rows can't be scrolled.
         this._virtDirRow.changes.pipe(takeUntil(this.destroy$)).subscribe(() => this.grid.resetHorizontalForOfs());
