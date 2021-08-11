@@ -5,7 +5,7 @@ import { ExcelElementsFactory } from './excel-elements-factory';
 import { ExcelFolderTypes } from './excel-enums';
 import { IgxExcelExporterOptions } from './excel-exporter-options';
 import { IExcelFolder } from './excel-interfaces';
-import { IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
+import { DEFAULT_OWNER, IExportRecord, IgxBaseExporter } from '../exporter-common/base-export-service';
 import { ExportUtilities } from '../exporter-common/export-utilities';
 import { WorksheetData } from './worksheet-data';
 import { IBaseEventArgs } from '../../core/utils';
@@ -78,6 +78,11 @@ export class IgxExcelExporterService extends IgxBaseExporter {
         const firstDataElement = data[0];
         const columnsLength = firstDataElement ? Object.keys(firstDataElement.data).length : 0;
 
+        let columnCount;
+        let columnWidths;
+        let indexOfLastPinnedColumn;
+        let defaultOwner;
+
         if(data.length > EXCEL_MAX_ROWS || columnsLength > EXCEL_MAX_COLS) {
             throw Error('The Excel file can contain up to 1,048,576 rows and 16,384 columns.');
         }
@@ -94,9 +99,17 @@ export class IgxExcelExporterService extends IgxBaseExporter {
             if (maxLevel > 7) {
                 throw Error('Can create an outline of up to eight levels!');
             }
+
+            defaultOwner = this._ownersMap.get(DEFAULT_OWNER);
+            const columns = defaultOwner.columns.filter(col => !col.skip);
+
+            columnWidths = defaultOwner.columnWidths;
+            indexOfLastPinnedColumn = defaultOwner.indexOfLastPinnedColumn;
+            columnCount = columns.length;
         }
 
-        const worksheetData = new WorksheetData(data, this.columnWidthList, options, this._indexOfLastPinnedColumn, this._sort);
+        const worksheetData = new WorksheetData(data, options, this._sort, columnCount,
+                                                indexOfLastPinnedColumn, columnWidths, defaultOwner);
 
         this._xlsx = typeof (JSZip as any).default === 'function' ? new (JSZip as any).default() : new JSZip();
 

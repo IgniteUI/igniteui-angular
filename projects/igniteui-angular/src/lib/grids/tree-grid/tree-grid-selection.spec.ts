@@ -1937,14 +1937,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(fix.componentInstance.rowCheckboxClick, context);
 
             // Verify correct properties when unselecting a row
             (firstCheckbox as HTMLElement).click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledTimes(2);
-            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+            expect(fix.componentInstance.onRowCheckboxClick).toHaveBeenCalledWith(fix.componentInstance.rowCheckboxClick, contextUnselect);
         });
 
         it('Should have the correct properties in the custom row selector header template', () => {
@@ -1956,13 +1956,14 @@ describe('IgxTreeGrid - Selection #tGrid', () => {
             fix.detectChanges();
 
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(1);
-            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), context);
+            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(fix.componentInstance.headerCheckboxClick, context);
 
             headerCheckbox.click();
             fix.detectChanges();
 
             expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledTimes(2);
-            expect(fix.componentInstance.onHeaderCheckboxClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+            expect(fix.componentInstance.onHeaderCheckboxClick).
+                toHaveBeenCalledWith(fix.componentInstance.headerCheckboxClick, contextUnselect);
         });
 
         it('Should have correct indices on all pages', () => {

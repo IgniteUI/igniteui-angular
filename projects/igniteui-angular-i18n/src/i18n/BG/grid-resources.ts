@@ -104,6 +104,8 @@ const GridResourceStringsBG_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Скрий всички',
     igx_grid_pinning_check_all_label: 'Закачи всички',
     igx_grid_pinning_uncheck_all_label: 'Разкачи всички',
+    igx_grid_row_edit_btn_done: 'Запази',
+    igx_grid_row_edit_btn_cancel: 'Откажи',
     igx_grid_toolbar_actions_filter_prompt: 'Филтрирай списъка с колони...',
     igx_grid_toolbar_pinning_button_tooltip: 'Отвори списъка със закачени колони.',
     igx_grid_toolbar_hiding_button_tooltip: 'Отвори списъка със скрити колони.',

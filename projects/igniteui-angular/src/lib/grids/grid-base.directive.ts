@@ -2651,11 +2651,6 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     /**
      * @hidden @internal
      */
-    public snackbarLabel = this.resourceStrings.igx_grid_snackbar_addrow_label;
-
-    /**
-     * @hidden @internal
-     */
     public pagingState;
     /**
      * @hidden @internal
@@ -5643,7 +5638,10 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
     public copyHandler(event) {
         const selectedColumns = this.gridAPI.grid.selectedColumns();
         const columnData = this.getSelectedColumnsData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
-        const selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        let selectedData;
+        if (event.type === 'copy'){
+            selectedData = this.getSelectedData(this.clipboardOptions.copyFormatters, this.clipboardOptions.copyHeaders);
+        };
 
         let data = [];
         let result;
@@ -5905,7 +5903,7 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
      */
     public cachedViewLoaded(args: ICachedViewLoadedEventArgs) {
         if (this.hasHorizontalScroll()) {
-            const tmplId = args.context.templateID;
+            const tmplId = args.context.templateID.type;
             const index = args.context.index;
             args.view.detectChanges();
             this.zone.onStable.pipe(first()).subscribe(() => {
@@ -6846,12 +6844,52 @@ export abstract class IgxGridBaseDirective extends DisplayDensityBase implements
         let record = {};
         let selectedData = [];
         let keys = [];
+        const selectionCollection = new Map();
         const keysAndData = [];
         const activeEl = this.selectionService.activeElement;
+
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid') {
+            const expansionRowIndexes = Array.from(this.expansionStates.keys());
+            if (this.selectionService.selection.size > 0) {
+                if (expansionRowIndexes.length > 0) {
+                    for (const [key, value] of this.selectionService.selection.entries()) {
+                        let updatedKey = key;
+                        expansionRowIndexes.forEach(row => {
+                            let rowIndex;
+                            if (row.ID) {
+                                rowIndex = Number(row.ID);
+                            }else {
+                                rowIndex = Number(row);
+                            }
+
+                            if (updatedKey > Number(rowIndex)) {
+                                updatedKey--;
+                            }
+                        });
+                        selectionCollection.set(updatedKey, value);
+                    }
+                }
+            } else if (activeEl) {
+                if (expansionRowIndexes.length > 0) {
+                    expansionRowIndexes.forEach(row => {
+                        if (activeEl.row > Number(row)) {
+                            activeEl.row--;
+                        }
+                    });
+                }
+            }
+        }
+
         const totalItems = (this as any).totalItemCount ?? 0;
         const isRemote = totalItems && totalItems > this.dataView.length;
-        const selectionMap = isRemote ? Array.from(this.selectionService.selection) :
+        let selectionMap;
+        if (this.nativeElement.tagName.toLowerCase() === 'igx-hierarchical-grid' && selectionCollection.size > 0) {
+            selectionMap = isRemote ? Array.from(selectionCollection) :
+            Array.from(selectionCollection).filter((tuple) => tuple[0] < source.length);
+        }else {
+            selectionMap = isRemote ? Array.from(this.selectionService.selection) :
             Array.from(this.selectionService.selection).filter((tuple) => tuple[0] < source.length);
+        }
 
         if (this.cellSelection === GridSelectionMode.single && activeEl) {
             selectionMap.push([activeEl.row, new Set<number>().add(activeEl.column)]);

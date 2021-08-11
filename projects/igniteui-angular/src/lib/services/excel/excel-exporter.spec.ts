@@ -91,7 +91,7 @@ describe('Excel Exporter', () => {
         await wrapper.verifyDataFilesContent(actualData.contactsPartialDataContent);
     });
 
-    it('should export data with special characters successully.', async () => {
+    it('should export data with special characters successfully.', async () => {
         options.columnWidth = 50;
         const wrapper = await getExportedData(SampleTestData.contactsFunkyData(), options);
 
