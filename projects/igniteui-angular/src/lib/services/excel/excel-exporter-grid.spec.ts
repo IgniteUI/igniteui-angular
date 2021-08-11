@@ -241,7 +241,7 @@ describe('Excel Exporter', () => {
             const grid = result.grid;
 
             options.ignorePinning = false;
-            options.ignoreFreezedHeaders = false;
+            options.freezeHeaders = true;
             fix.detectChanges();
 
             let wrapper = await getExportedData(grid, options);
@@ -255,7 +255,7 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.gridFrozenHeaders,
                 'No frozen columns and frozen headers should have been exported!');
 
-            options.ignoreFreezedHeaders = true;
+            options.freezeHeaders = false;
             fix.detectChanges();
             wrapper = await getExportedData(grid, options);
             await wrapper.verifyDataFilesContent(actualData.gridNameIDJobTitle,
@@ -823,6 +823,13 @@ describe('Excel Exporter', () => {
 
             await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithExpandedRows);
         });
+
+        it('should export hierarchical grid data with freezed headers', async () => {
+            options.freezeHeaders = true;
+            fix.detectChanges();
+
+            await exportAndVerify(hGrid, options, actualData.exportHierarchicalDataWithFreezedHeaders);
+        });
     });
 
     describe('', () => {
@@ -1072,7 +1079,7 @@ describe('Excel Exporter', () => {
         });
 
         it('should export grid with frozen multi column headers', async () => {
-            options.ignoreFreezedHeaders = false;
+            options.freezeHeaders = true;
             fix.detectChanges();
             await exportAndVerify(grid, options, actualData.exportFrozenMultiColumnHeadersData, false);
         });

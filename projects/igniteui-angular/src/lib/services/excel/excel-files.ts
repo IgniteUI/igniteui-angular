@@ -151,6 +151,9 @@ export class WorksheetFile implements IExcelFile {
                 sheetData += `</row>`;
             }
 
+            const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
+            const freezeHeaders = worksheetData.options.freezeHeaders ? 2 + multiColumnHeaderLevel : 1;
+
             if (!isHierarchicalGrid) {
                 this.dimension =
                     'A1:' + ExcelStrings.getExcelColumn(worksheetData.columnCount - 1) + (worksheetData.rowCount + owner.maxLevel);
@@ -177,10 +180,7 @@ export class WorksheetFile implements IExcelFile {
                 cols += '</cols>';
 
                 const indexOfLastPinnedColumn = worksheetData.indexOfLastPinnedColumn;
-
                 const frozenColumnCount = indexOfLastPinnedColumn + 1;
-                const multiColumnHeaderLevel = worksheetData.options.ignoreMultiColumnHeaders ? 0 : owner.maxLevel;
-                const freezeHeaders = worksheetData.options.ignoreFreezedHeaders ? 1 : 2 + multiColumnHeaderLevel;
                 let firstCell = ExcelStrings.getExcelColumn(frozenColumnCount) + freezeHeaders;
                 if (indexOfLastPinnedColumn !== -1 &&
                     !worksheetData.options.ignorePinning &&
@@ -188,7 +188,7 @@ export class WorksheetFile implements IExcelFile {
                     this.freezePane =
                         `<pane xSplit="${frozenColumnCount}" ySplit="${freezeHeaders - 1}"
                          topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
-                } else if (!worksheetData.options.ignoreFreezedHeaders) {
+                } else if (worksheetData.options.freezeHeaders) {
                     firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
                     this.freezePane =
                         `<pane xSplit="0" ySplit="${freezeHeaders - 1}"
@@ -197,6 +197,12 @@ export class WorksheetFile implements IExcelFile {
             } else {
                 const columnWidth = worksheetData.options.columnWidth ? worksheetData.options.columnWidth : 20;
                 cols += `<cols><col min="1" max="${worksheetData.columnCount}" width="${columnWidth}" customWidth="1"/></cols>`;
+                if (worksheetData.options.freezeHeaders) {
+                    const firstCell = ExcelStrings.getExcelColumn(0) + freezeHeaders;
+                    this.freezePane =
+                        `<pane xSplit="0" ySplit="${freezeHeaders - 1}"
+                         topLeftCell="${firstCell}" activePane="topRight" state="frozen"/>`;
+                }
             }
 
             this.processDataRecordsAsync(worksheetData, (rows) => {

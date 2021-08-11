@@ -70,13 +70,13 @@ export abstract class IgxExporterOptionsBase {
     /**
      * Specifies whether the exported data should have freezed headers.
      * ```typescript
-     * let ignoreFreezedHeaders = this.exportOptions.ignoreFreezedHeaders;
-     * this.exportOptions.ignoreFreezedHeaders = false;
+     * let freezeHeaders = this.exportOptions.freezeHeaders;
+     * this.exportOptions.freezeHeaders = true;
      * ```
      *
      * @memberof IgxExporterOptionsBase
      */
-     public ignoreFreezedHeaders = true;
+     public freezeHeaders = false;
 
     private _fileName: string;
 
