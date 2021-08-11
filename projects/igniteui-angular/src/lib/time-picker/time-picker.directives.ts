@@ -11,16 +11,19 @@ import {
     HostListener,
     Inject,
     Input,
+    OnInit,
     TemplateRef
 } from '@angular/core';
+import { HammerGesturesManager } from '../core/touch';
 import { DateTimeUtil } from '../date-common/util/date-time.util';
 import { IgxTimePickerBase, IGX_TIME_PICKER_COMPONENT } from './time-picker.common';
 
 /** @hidden */
 @Directive({
-    selector: '[igxItemList]'
+    selector: '[igxItemList]',
+    providers: [HammerGesturesManager]
 })
-export class IgxItemListDirective {
+export class IgxItemListDirective implements OnInit {
     @HostBinding('attr.tabindex')
     public tabindex = 0;
 
@@ -31,8 +34,18 @@ export class IgxItemListDirective {
 
     constructor(
         @Inject(IGX_TIME_PICKER_COMPONENT) public timePicker: IgxTimePickerBase,
-        private elementRef: ElementRef
+        private elementRef: ElementRef,
+        private touchManager: HammerGesturesManager
     ) { }
+
+    /**
+    * @hidden
+    * @internal
+    */
+    public ngOnInit() {
+        const hammerOptions: HammerOptions = { recognizers: [[Hammer.Pan, { direction: Hammer.DIRECTION_VERTICAL, threshold: 5 }]] };
+        this.touchManager.addEventListener(this.elementRef.nativeElement, 'pan', this.onPanMove, hammerOptions);
+    }
 
     @HostBinding('class.igx-time-picker__column')
     public get defaultCSS(): boolean {
@@ -187,32 +200,9 @@ export class IgxItemListDirective {
         }
     }
 
-    /**
-     * @hidden
-     */
-    @HostListener('panmove', ['$event'])
-    public onPanMove(event) {
-        const delta = event.deltaY < 0 ? 1 : event.deltaY > 0 ? -1 : 0;
-        if (delta !== 0) {
-            switch (this.type) {
-                case 'hourList': {
-                    this.timePicker.nextHour(delta);
-                    break;
-                }
-                case 'minuteList': {
-                    this.timePicker.nextMinute(delta);
-                    break;
-                }
-                case 'secondsList': {
-                    this.timePicker.nextSeconds(delta);
-                    break;
-                }
-                case 'ampmList': {
-                    this.timePicker.nextAmPm(delta);
-                    break;
-                }
-            }
-        }
+    private onPanMove = (event: HammerInput) => {
+        const delta = event.deltaY < 0 ? -1 : 1;
+        this.nextItem(delta);
     }
 
     private nextItem(delta: number): void {

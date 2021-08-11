@@ -14,7 +14,6 @@ import {
     ViewChild,
     ContentChild,
     Inject,
-    Injectable,
     AfterViewInit,
     Injector,
     PipeTransform,
@@ -29,7 +28,6 @@ import {
     Validator,
     NG_VALIDATORS
 } from '@angular/forms';
-import { HAMMER_GESTURE_CONFIG, HammerGestureConfig } from '@angular/platform-browser';
 import { IgxIconModule } from '../icon/public_api';
 import { IgxInputGroupModule, IgxInputGroupComponent } from '../input-group/input-group.component';
 import { IgxInputDirective, IgxInputState } from '../directives/input/input.directive';
@@ -65,15 +63,6 @@ import { IgxPickerClearComponent, IgxPickersCommonModule } from '../date-common/
 import { TimeFormatPipe, TimeItemPipe } from './time-picker.pipes';
 
 let NEXT_ID = 0;
-const ITEMS_COUNT = 7;
-
-@Injectable()
-export class TimePickerHammerConfig extends HammerGestureConfig {
-    public overrides = {
-        pan: { direction: Hammer.DIRECTION_VERTICAL, threshold: 1 }
-    };
-}
-
 export interface IgxTimePickerValidationFailedEventArgs extends IBaseEventArgs {
     previousValue: Date | string;
     currentValue: Date | string;
