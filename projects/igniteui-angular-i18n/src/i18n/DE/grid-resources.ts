@@ -2,7 +2,7 @@ import { IGridResourceStrings } from 'igniteui-angular';
 
 // exported below as re-cast to create declaration type with expanded properties
 const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
-    igx_grid_groupByArea_message: 'Lege eine Spaltenüberschrift hier ab, um danach zu sortieren.',
+    igx_grid_groupByArea_message: 'Lege eine Spaltenüberschrift hier ab, um danach zu gruppieren.',
     igx_grid_emptyFilteredGrid_message: 'Keine Einträge gefunden.',
     igx_grid_emptyGrid_message: 'Grid hat keine Daten.',
     igx_grid_filter: 'Filter',
@@ -102,6 +102,8 @@ const GridResourceStringsDE_: ExpandRequire<IGridResourceStrings> = {
     igx_grid_hiding_uncheck_all_label: 'Verstecke alle',
     igx_grid_pinning_check_all_label: 'Fixiere alle',
     igx_grid_pinning_uncheck_all_label: 'Löse alle',
+    igx_grid_row_edit_btn_done: 'Fertig',
+    igx_grid_row_edit_btn_cancel: 'Abbrechen',
     igx_grid_toolbar_actions_filter_prompt: 'Filter Spalten-Liste...',
     igx_grid_toolbar_pinning_button_tooltip: 'Öffne Menü, um Spalten zu fixieren',
     igx_grid_toolbar_hiding_button_tooltip: 'Öffne Menü, um Spalten zu verstecken',

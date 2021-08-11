@@ -1,5 +1,5 @@
 import { Component, ViewChild, OnInit, NgZone, DebugElement } from '@angular/core';
-import { TestBed, fakeAsync, tick, waitForAsync } from '@angular/core/testing';
+import { TestBed, fakeAsync, waitForAsync } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IgxColumnComponent, IgxGridComponent, IgxGridModule, IGridCellEventArgs } from './public_api';
 import { UIInteractions, wait } from '../../test-utils/ui-interactions.spec';
@@ -7,7 +7,8 @@ import { configureTestSuite } from '../../test-utils/configure-suite';
 import { SampleTestData } from '../../test-utils/sample-test-data.spec';
 import { HammerGesturesManager } from '../../core/touch';
 import { PlatformUtil } from '../../core/utils';
-import { VirtualGridComponent, NoScrollsComponent, NoColumnWidthGridComponent } from '../../test-utils/grid-samples.spec';
+import { VirtualGridComponent, NoScrollsComponent,
+    NoColumnWidthGridComponent, IgxGridPercentColumnComponent } from '../../test-utils/grid-samples.spec';
 import { GridFunctions } from '../../test-utils/grid-functions.spec';
 import { TestNgZone } from '../../test-utils/helper-utils.spec';
 import { IgxGridCellComponent } from '../tree-grid/public_api';
@@ -377,6 +378,41 @@ describe('IgxGrid - Cell component #grid', () => {
             expect(grid.getColumnByName('ProductName').cells[4].nativeElement.classList).toContain('test2');
             expect(grid.getColumnByName('InStock').cells[4].nativeElement.classList).toContain('test2');
             expect(grid.getColumnByName('OrderDate').cells[4].nativeElement.classList).toContain('test2');
+        }));
+    });
+
+    describe('Cell properties', () => {
+        configureTestSuite();
+        beforeAll(waitForAsync(() => {
+            TestBed.configureTestingModule({
+                declarations: [
+                    IgxGridPercentColumnComponent
+                ],
+                imports: [NoopAnimationsModule, IgxGridModule]
+            }).compileComponents();
+        }));
+
+        it('verify that value of the cell title is correctly', fakeAsync(() => {
+            const fixture = TestBed.createComponent(IgxGridPercentColumnComponent);
+            fixture.detectChanges();
+
+            const grid = fixture.componentInstance.grid;
+            const unitsInStock = grid.getColumnByName('UnitsInStock');
+
+            expect(unitsInStock.cells[0].title).toEqual('$2,760');
+            expect(unitsInStock.cells[5].title).toEqual('$1,098');
+
+            const product = grid.getColumnByName('ProductName');
+
+            expect(product.cells[2].title).toEqual('Seasoning');
+            expect(product.cells[6].title).toEqual('Queso Cabrale');
+
+            product.formatter = fixture.componentInstance.testFormatter;
+            fixture.detectChanges();
+
+            expect(product.cells[2].title).toEqual('testSeasoning');
+            expect(product.cells[6].title).toEqual('testQueso Cabrale');
+
         }));
     });
 });

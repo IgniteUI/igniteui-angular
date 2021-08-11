@@ -1855,11 +1855,11 @@ describe('IgxGrid - GroupBy #grid', () => {
 
             grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
             fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextSelect);
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextSelect);
 
             grRow.nativeElement.querySelector('.igx-checkbox__composite').click();
             fix.detectChanges();
-            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(new MouseEvent('click'), contextUnselect);
+            expect(fix.componentInstance.onGroupByRowClick).toHaveBeenCalledWith(fix.componentInstance.groupByRowClick, contextUnselect);
         }));
 
     // GroupBy + Resizing
@@ -3630,5 +3630,8 @@ export class GridGroupByRowCustomSelectorsComponent extends DataParent {
 
     public width = '800px';
     public height = '700px';
-    public onGroupByRowClick(event, context) {}
+    public groupByRowClick: any;
+    public onGroupByRowClick(_event, _context) {
+        this.groupByRowClick = _event;
+    }
 }

@@ -26,10 +26,25 @@ export enum ExportRecordType {
 export interface IExportRecord {
     data: any;
     level: number;
-    hidden?: boolean;
     type: ExportRecordType;
+    owner?: string | IgxGridBaseDirective;
+    hidden?: boolean;
+}
+export interface IColumnList {
+    columns: IColumnInfo[];
+    columnWidths: number[];
+    indexOfLastPinnedColumn: number;
+    maxLevel?: number;
 }
 
+export interface IColumnInfo {
+    header: string;
+    field: string;
+    dataType: any;
+    skip: boolean;
+    skipFormatter?: boolean;
+    formatter?: any;
+}
 /**
  * rowExporting event arguments
  * this.exporterService.rowExporting.subscribe((args: IRowExportingEventArgs) => {
@@ -88,6 +103,7 @@ export interface IColumnExportingEventArgs extends IBaseEventArgs {
     skipFormatter: boolean;
 }
 
+export const DEFAULT_OWNER = 'default';
 const DEFAULT_COLUMN_WIDTH = 8.43;
 
 export abstract class IgxBaseExporter {
@@ -119,6 +135,7 @@ export abstract class IgxBaseExporter {
 
     protected _indexOfLastPinnedColumn = -1;
     protected _sort = null;
+    protected _ownersMap: Map<any, IColumnList> = new Map<any, IColumnList>();
 
     private _columnList: any[];
     private _columnWidthList: number[];
@@ -154,7 +171,7 @@ export abstract class IgxBaseExporter {
             const index = options.ignoreColumnsOrder || options.ignoreColumnsVisibility ? column.index : column.visibleIndex;
             const columnWidth = Number(column.width.slice(0, -2));
 
-            const columnInfo = {
+            const columnInfo: IColumnInfo = {
                 header: columnHeader,
                 dataType: column.dataType,
                 field: column.field,
@@ -262,6 +279,14 @@ export abstract class IgxBaseExporter {
         const actualData = records.map(r => r.data);
         const isSpecialData = ExportUtilities.isSpecialData(actualData);
 
+        const columnList: IColumnList = {
+            columns: this._columnList,
+            columnWidths: this._columnWidthList,
+            indexOfLastPinnedColumn: this._indexOfLastPinnedColumn
+        };
+
+        this._ownersMap.set(DEFAULT_OWNER, columnList);
+
         yieldingLoop(records.length, 100, (i) => {
             const row = records[i];
             this.exportRow(dataToExport, row, i, isSpecialData);
@@ -289,7 +314,7 @@ export abstract class IgxBaseExporter {
                         rawValue = rawValue.toString();
                     }
 
-                    a[e.header] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
+                    a[e.field] = shouldApplyFormatter ? e.formatter(rawValue) : rawValue;
                 }
                 return a;
             }, {});
