@@ -235,7 +235,7 @@ describe('Excel Exporter', () => {
             await wrapper.verifyDataFilesContent(actualData.gridJobTitleIdFrozen, 'Not all pinned columns are frozen in the export!');
         });
 
-        it('should honor \'ignoreFreezedHeaders\' option.', async () => {
+        it('should honor \'freezeHeaders\' option.', async () => {
             const result = await TestMethods.createGridAndPinColumn([1]);
             const fix = result.fixture;
             const grid = result.grid;
