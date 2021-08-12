@@ -146,7 +146,6 @@ export class IgxCellCrudState {
     public cell: IgxCell | null = null;
     public row: IgxEditRow | null = null;
     public isInCompositionMode = false;
-    public cancelAddMode = false;
 
     public createCell(cell): IgxCell {
         // cell.rowData ?? cell.row.data covers the cases, where
@@ -353,8 +352,11 @@ export class IgxRowCrudState extends IgxCellCrudState {
             nonCancelableArgs = this.rowEditDone(rowEditArgs.oldValue, event);
         } else {
             this.grid.transactions.endPending(false);
+
             const parentId = this.getParentRowId();
             this.grid.gridAPI.addRowToData(this.row.newData ?? this.row.data, parentId);
+            this.grid.triggerPipes();
+
             nonCancelableArgs = this.rowEditDone(null, event);
         }
 
@@ -559,7 +561,6 @@ export class IgxGridCRUDService extends IgxRowAddCrudState {
             return;
         }
         this.endEdit(true, event);
-        this.cancelAddMode = false;
 
         if (parentRow != null && this.grid.expansionStates.get(parentRow.rowID)) {
             this.grid.collapseRow(parentRow.rowID);
